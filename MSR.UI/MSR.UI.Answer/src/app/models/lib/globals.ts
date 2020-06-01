@@ -22,7 +22,6 @@ export class Globals {
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
         this.setActiveMenuItem(router);
-        this.loadViewsFromLocalStorage();
     }
 
     setActiveMenuItem(router) {
@@ -48,123 +47,6 @@ export class Globals {
         }
         if (localStorage.user !== undefined) {
             this.user = JSON.parse(localStorage.user);
-        }
-    }
-
-    loadViewsFromLocalStorage() {
-        const savedViews = localStorage.getItem('viewsSaved');
-        if (savedViews !== undefined && savedViews !== null) {
-            // this.views = JSON.parse(savedViews);
-            this.views = JSON.parse(savedViews).map(x => {
-                if (Array.isArray(x.columns)) {
-                    x.columns = x.columns.map(y => new ColumnsSaved(y))
-                }
-                return new ViewSaved(x);
-            });
-            this.setDefaultViews();
-        } else {
-            this.views = new Array<ViewSaved>();
-        }
-    }
-
-    public isVisibleCol(id, gridSettings) {
-        return gridSettings.filter(x => x.id === id)[0].visible;
-    }
-
-    filter(table, field) {
-        if (table.filterTimeout) {
-          clearTimeout(table.filterTimeout);
-        }
-    
-        if (table.filters[field]) {
-          delete table.filters[field];
-        }
-    
-        table.filterTimeout = setTimeout(() => {
-          table._filter();
-          table.filterTimeout = null;
-        }, table.filterDelay);
-    
-        table.anchorRowIndex = null;
-      }
-
-    defPlaceholder(grid, id, arr, defaultLabel) {
-        const ret = grid?.filters[id]?.value;
-        if (ret === undefined) {
-            return defaultLabel;
-        }
-
-        return arr.find(x => x.value === ret).label;
-    }
-
-    addView(view: ViewSaved) {
-        if (this.views.findIndex(x => x.viewName === view.viewName && x.gridId === view.gridId) !== -1) {
-            this.toastr.error(`Sorry a view with the name ${view.viewName} alread exists.`);
-            return;
-        }
-        view.gridPagingData = localStorage.getItem(view.gridId);
-        if (view.gridPagingData === null) {
-            this.toastr.error(`Sorry there are no filters applied to the grid to save this as a template.`);
-            return;
-        }
-        this.views.push(view);
-        if (view.isDefault) {
-            this.setAsDefault(view, false);
-        }
-        else {
-            localStorage.setItem('viewsSaved', JSON.stringify(this.views));
-        }
-    }
-
-    deleteView(view: ViewSaved) {
-        const index = this.views.findIndex(x => x.viewName === view.viewName && x.gridId === view.gridId);
-        if (index !== -1) {
-            this.views.splice(index, 1);
-            localStorage.setItem('viewsSaved', JSON.stringify(this.views));
-        }
-        else {
-            this.toastr.error(`View ${view.viewName} not found.`)
-        }
-    }
-
-    setAsDefault(view: ViewSaved, showSuccess: boolean = true) {
-        const views = this.views.filter(x => x.gridId === view.gridId);
-        if (views.length === 0) {
-            this.toastr.error(`View ${view.viewName} not found.`);
-            return
-        }
-        views.forEach(x => {
-            x.isDefault = view.viewName === x.viewName && view.isDefault;
-        });
-        localStorage.setItem('viewsSaved', JSON.stringify(this.views));
-        if (showSuccess) {
-            this.toastr.success(`View ${view.viewName} status changed to ${view.isDefault ? 'Default' : 'Not Default'}.`);
-        }
-    }
-
-    getViews(gridId: string): Array<ViewSaved> {
-        const views = this.views.filter(x => x.gridId === gridId);
-        return views;
-    }
-
-    setDefaultViews() {
-        this.views.forEach((view) => {
-            if (view.isDefault) {
-                localStorage.setItem(view.gridId, view.gridPagingData);
-            }
-        });
-    }
-
-    getDefaultView(gridId: string): ViewSaved {
-        const viewIndex = this.views.findIndex(x => x.gridId === gridId && x.isDefault);
-        if (viewIndex === -1) {
-            localStorage.removeItem(gridId);
-            return null;
-        }
-        else {
-            const view = this.views[viewIndex];
-            localStorage.setItem(gridId, view.gridPagingData);
-            return view;
         }
     }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter, ElementRef } from '@angular/core';
 import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
+import { CommonGrid } from '../../models/lib/CommonGrid'
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { Globals } from '../../models/lib/globals';
 import { TableState } from 'primeng/api';
@@ -30,11 +31,11 @@ export class GridOptionsComponent implements OnInit {
   @Input() gridStorageId: string;
   @Input() gridVersion: string;
   @Input() ptable: any;
-  constructor(public globals: Globals, private _eref: ElementRef) {
+  constructor(public globals: Globals, private _eref: ElementRef, public cg: CommonGrid) {
   }
 
   ngOnInit(): void {
-    this.updateDefaultColumns(this.globals.getDefaultView(this.gridStorageId));
+    this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId));
 
     this.columnPicker = this.defaultColumns.map((elem) => {
       return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } }
@@ -47,7 +48,7 @@ export class GridOptionsComponent implements OnInit {
       version: this.gridVersion, isDefault: false, gridId: this.gridStorageId
     });
 
-    this.viewsSaved = this.globals.getViews(this.gridStorageId);
+    this.viewsSaved = this.cg.getViews(this.gridStorageId);
   }
 
   onClick(event) {
@@ -85,7 +86,7 @@ export class GridOptionsComponent implements OnInit {
 
   public savedViewChange(view: ViewSaved) {
     view.isDefault = !view.isDefault;
-    this.globals.setAsDefault(view);
+    this.cg.setAsDefault(view);
     this.defaultView = view;
   }
 
@@ -161,8 +162,8 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public deleteView(view: ViewSaved) {
-    this.globals.deleteView(view);
-    this.viewsSaved = this.globals.getViews(this.gridStorageId);
+    this.cg.deleteView(view);
+    this.viewsSaved = this.cg.getViews(this.gridStorageId);
   }
 
   public showSaveViewDiv() {
@@ -172,11 +173,15 @@ export class GridOptionsComponent implements OnInit {
     }
   }
 
+  public updateTemplateWithCurrentView(tplView: ViewSaved) {
+    this.cg.updateView(tplView, this.viewToSave);
+  }
+
   public saveView() {
     const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false });
     Object.assign(savedView, this.viewToSave);
-    this.globals.addView(savedView);
-    this.viewsSaved = this.globals.getViews(this.gridStorageId);
+    this.cg.addView(savedView);
+    this.viewsSaved = this.cg.getViews(this.gridStorageId);
   }
 
   public stopEvent(event) {

@@ -25,56 +25,56 @@
         <th></th>
       </tr>
       <tr>
-        <th [hidden]="!globals.isVisibleCol('id',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
           <div class="position-relative">
             <input id="id" pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
               placeholder="Id" class="ui-column-filter" [value]="dt.filters['id']?.value">
             <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
-              (click)="globals.filter(dt,'id')"></i>
+              (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
-        <th [hidden]="!globals.isVisibleCol('isActive',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
           <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
-            [placeholder]="globals.defPlaceholder(dt, 'isActive',statuses,'Select a Status')"
+            [placeholder]="cg.defPlaceholder(dt, 'isActive',statuses,'Select a Status')"
             styleClass="ui-column-filter" [showClear]="true">
           </p-dropdown>
         </th>
-        <th [hidden]="!globals.isVisibleCol('isAnswerUser',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('isAnswerUser',gridSettings)">
           <p-dropdown [options]="userTypes" (onChange)="dt.filter($event.value, 'isAnswerUser', 'equals')"
-            [placeholder]="globals.defPlaceholder(dt, 'isAnswerUser',statuses,'Select User Type')"
+            [placeholder]="cg.defPlaceholder(dt, 'isAnswerUser',userTypes,'Select User Type')"
             styleClass="ui-column-filter" [showClear]="true">
           </p-dropdown>
         </th>
-        <th [hidden]="!globals.isVisibleCol('firstName',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('firstName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
               placeholder="Search by First Name" class="ui-column-filter" [value]="dt.filters['firstName']?.value">
             <i *ngIf="dt.filters['firstName']?.value" class="fclear pi pi-times pointer"
-            (click)="globals.filter(dt,'id')"></i>
+            (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
-        <th [hidden]="!globals.isVisibleCol('lastName',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('lastName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
               placeholder="Search by Last Name" class="ui-column-filter" [value]="dt.filters['lastName']?.value">
             <i *ngIf="dt.filters['lastName']?.value" class="fclear pi pi-times pointer"
-            (click)="globals.filter(dt,'id')"></i>
+            (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
-        <th [hidden]="!globals.isVisibleCol('userName',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('userName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
               placeholder="Search by User Name" class="ui-column-filter" [value]="dt.filters['userName']?.value">
             <i *ngIf="dt.filters['userName']?.value" class="fclear pi pi-times pointer"
-            (click)="globals.filter(dt,'id')"></i>
+            (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
-        <th [hidden]="!globals.isVisibleCol('email',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('email',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
               placeholder="Search by Email" class="ui-column-filter" [value]="dt.filters['email']?.value">
             <i *ngIf="dt.filters['email']?.value" class="fclear pi pi-times pointer"
-            (click)="globals.filter(dt,'id')"></i>
+            (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
         <th></th>
@@ -82,11 +82,11 @@
     </ng-template>
     <ng-template pTemplate="body" let-user>
       <tr class="ui-selectable-row">
-        <td [hidden]="!globals.isVisibleCol('id',gridSettings)">
+        <td [hidden]="!cg.isVisibleCol('id',gridSettings)">
           <span class="ui-column-title">Id</span>
           {{user.id}}
         </td>
-        <td class="text-center" [hidden]="!globals.isVisibleCol('isActive',gridSettings)">
+        <td class="text-center" [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
           <ng-template [ngIf]="!canActivate">
             <p-inputSwitch disabled="true" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
             </p-inputSwitch>
@@ -96,7 +96,7 @@
             </p-inputSwitch>
           </ng-template>
         </td>
-        <td class="text-center" [hidden]="!globals.isVisibleCol('isAnswerUser',gridSettings)">
+        <td class="text-center" [hidden]="!cg.isVisibleCol('isAnswerUser',gridSettings)">
           <ng-template [ngIf]="!canEditUsers">
             <p-inputSwitch disabled="true" [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)">
             </p-inputSwitch>
@@ -105,19 +105,19 @@
             <p-inputSwitch [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)"></p-inputSwitch>
           </ng-template>
         </td>
-        <td [hidden]="!globals.isVisibleCol('firstName',gridSettings)">
+        <td [hidden]="!cg.isVisibleCol('firstName',gridSettings)">
           <span class="ui-column-title">First Name</span>
           <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
         </td>
-        <td [hidden]="!globals.isVisibleCol('lastName',gridSettings)">
+        <td [hidden]="!cg.isVisibleCol('lastName',gridSettings)">
           <span class="ui-column-title">Last Name</span>
           <span style="vertical-align: middle; margin-left: .5em">{{user.lastName}}</span>
         </td>
-        <td [hidden]="!globals.isVisibleCol('userName',gridSettings)">
+        <td [hidden]="!cg.isVisibleCol('userName',gridSettings)">
           <span class="ui-column-title">Username</span>
           {{user.userName}}
         </td>
-        <td [hidden]="!globals.isVisibleCol('email',gridSettings)">
+        <td [hidden]="!cg.isVisibleCol('email',gridSettings)">
           <span class="ui-column-title">Email</span>
           {{user.email}}
         </td>

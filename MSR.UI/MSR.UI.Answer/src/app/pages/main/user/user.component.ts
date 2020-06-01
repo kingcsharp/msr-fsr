@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Injector, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
@@ -9,7 +9,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Observable } from 'rxjs';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { TableState } from 'primeng/api';
+import { CommonGrid } from '../../../models/lib/CommonGrid';
 
 declare let jQuery: any;
 
@@ -27,7 +27,6 @@ export class UserComponent implements OnInit {
   loading: boolean = true;
   display: boolean = false;
   currUser: User;
-  injector: Injector;
   phoneValue = '';
   statuses: any[];
   userTypes: any[];
@@ -53,7 +52,7 @@ export class UserComponent implements OnInit {
   columnPicker: any;
   columnDropdown: boolean = false;
   gridOptionsRotate: boolean = false;
-  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
+  constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
     public globals: Globals, private elem: ElementRef) {
   }
 
@@ -93,8 +92,6 @@ export class UserComponent implements OnInit {
         this.loading = false;
       }));
   }
-
-  
 
   hasPrivilege(privName) {
     return this.globals.hasPrivilege('users', privName);

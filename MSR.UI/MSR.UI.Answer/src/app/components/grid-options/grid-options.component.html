@@ -16,7 +16,7 @@
                 {{view.viewName | titlecase}}
             </a>
             <div class="view-options text-right">
-                <i class="fas fa-sync pointer text-secondary" tooltip="Update view"></i>&nbsp;
+                <i class="fas fa-sync pointer text-secondary" (click)="updateTemplateWithCurrentView(view)" tooltip="Update Using Current View"></i>&nbsp;
                 <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
                     [ngClass]="view.isDefault?'text-success':'text-secondary'"
                     tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>&nbsp;
@@ -28,8 +28,8 @@
         <div class="text-center">
             <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
                 (click)="showSaveViewDiv()">
-                Save current View
-            </button>
+                Save Current View
+            </button> &nbsp;
             <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
                 (click)="resetgr(ptable)">
                 Clear View
