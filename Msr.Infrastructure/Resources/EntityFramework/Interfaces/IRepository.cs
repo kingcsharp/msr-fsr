@@ -10,11 +10,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
     public interface IRepository<TEntity> where TEntity : class
     {
         TEntity Find(bool validateOwnership, params object[] keyValues);
+        Task<TEntity> FindAsync(bool validateOwnership, params object[] keyValues);
         bool Exist(object id);
         EntityEntry<TEntity> Add(TEntity entity);
+        Task<EntityEntry<TEntity>> AddAsync(TEntity entity);
         EntityEntry<TEntity> AddAndSaveChanges(TEntity entity);
+        Task<EntityEntry<TEntity>> AddAndSaveChangesAsync(TEntity entity);
         TEntity AttachAndInsert(TEntity entity);
         void InsertRange(IEnumerable<TEntity> entities);
+        Task InsertRangeAsync(IEnumerable<TEntity> entities);
         void Delete(bool validateOwnership, int id, bool force = false);
         void DeleteAndSaveChanges(bool validateOwnership, int id, bool force = false);
         void Delete(bool validateOwnership, TEntity entity, bool force = false);
@@ -23,8 +27,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
         void ApplyCurrentValues(TEntity entityToUpdate, TEntity updatedEntity);
         IEnumerable<TEntity> SqlQuery(string query, params object[] parameters);
         int Count(Expression<Func<TEntity, bool>> filter);
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> filter);
         int Count();
+        Task<int> CountAsync();
         bool Exists(Expression<Func<TEntity, bool>> filter);
+        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter);
         IQueryable<TEntity> Query();
         IQueryable<TEntity> QueryAsNoTracking();
         void LoadReference(TEntity entity, Expression<Func<TEntity, object>> navSelector);

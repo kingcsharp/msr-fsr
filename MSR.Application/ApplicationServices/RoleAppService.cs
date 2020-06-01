@@ -9,7 +9,8 @@ namespace MSR.Application.ApplicationServices
 {
     public class RoleAppService :
         ICommandHandler<CreateMenuRoleMap>,
-        ICommandHandler<UpdateMenuRoleMap>
+        ICommandHandler<UpdateMenuRoleMap>,
+        ICommandHandler<RemoveMenuRoleMap>
     {
         private readonly IRoleService _roleService;
 
@@ -21,13 +22,19 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(CreateMenuRoleMap command, CancellationToken cancellationToken = default)
         {
             var ret = await _roleService.CreateMenuRoleMapAsync(command);
-
             return new CommandResponse<int>(ret);
         }
 
-        public Task<ICommandResponse> HandleAsync(UpdateMenuRoleMap command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(UpdateMenuRoleMap command, CancellationToken cancellationToken = default)
         {
-            var ret = await _roleService.
+            var ret = await _roleService.UpdateMenuRoleMapAsync(command);
+            return new CommandResponse<bool>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(RemoveMenuRoleMap command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _roleService.RemoveMenuRoleMap(command.Id);
+            return new CommandResponse<bool>(ret);
         }
     }
 }
