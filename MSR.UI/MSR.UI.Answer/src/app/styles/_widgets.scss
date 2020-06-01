@@ -1313,6 +1313,7 @@ body
   .ui-multiselect-item:not(.ui-state-highlight):not(.ui-state-disabled):hover,
 body .ui-multiselect {
   background-color: #222d3c;
+  border: #222d3c;
 }
 body .ui-multiselect .ui-multiselect-trigger {
   background-color: #313c48;
@@ -1369,4 +1370,10 @@ body .ui-multiselect .ui-multiselect-label {
   font-size: 1em;
   height: 1em;
   margin-top: -0.5em;
+}
+
+.gridDropdown{
+  position: relative !important;
+  display: inline !important;
+  top: -2px;
 }
