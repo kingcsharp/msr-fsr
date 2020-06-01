@@ -70,7 +70,6 @@ pipeline {
                         }
                     }
                 }
-                /*
                 stage('Build and Deploy API') {
                     agent { label 'master'}
                     steps {
@@ -132,9 +131,9 @@ pipeline {
                         }
                     }
                 }
-                */
             }
         }
+        /*
         stage("Running API Tests") {
             agent { label 'master' }
             steps {
@@ -147,6 +146,7 @@ pipeline {
                 }
             }
         }
+        */
     }
 }
 
