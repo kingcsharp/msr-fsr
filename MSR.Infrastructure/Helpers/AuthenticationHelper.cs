@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MSR.Infrastructure.Helpers.Abstractions;
+using System;
 
 namespace MSR.Infrastructure.Helpers
 {
-    public static class AuthenticationHelper
+    public class AuthenticationHelper: IAuthenticationHelper
     {
-        public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
@@ -16,7 +17,7 @@ namespace MSR.Infrastructure.Helpers
             }
         }
 
-        public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+        public bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
             if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
@@ -35,7 +36,7 @@ namespace MSR.Infrastructure.Helpers
             return true;
         }
 
-        public static string CreateRandomPassword(int length = 15)
+        public string CreateRandomPassword(int length = 15)
         {
             // Create a string of characters, numbers, special characters that allowed in the password  
             string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?_-";

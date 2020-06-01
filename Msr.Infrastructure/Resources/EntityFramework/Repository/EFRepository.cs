@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using MSR.Domain.Helpers;
+using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 {
@@ -48,10 +49,21 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             return _dbSet.Add(entity);
         }
 
+        public virtual async Task<EntityEntry<TEntity>> AddAsync(TEntity entity)
+        {
+            return await _dbSet.AddAsync(entity);
+        }
         public virtual EntityEntry<TEntity> AddAndSaveChanges(TEntity entity)
         {
             EntityEntry<TEntity> addedEntity = Add(entity);
             SaveChanges();
+            return addedEntity;
+        }
+
+        public virtual async Task<EntityEntry<TEntity>> AddAndSaveChangesAsync(TEntity entity)
+        {
+            EntityEntry<TEntity> addedEntity = await AddAsync(entity);
+            await SaveChangesAsync();
             return addedEntity;
         }
 
@@ -186,12 +198,45 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             return entity;
         }
 
+        public virtual async Task<TEntity> FirstOrDefaultAsync(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
+            params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Query();
+
+            if (includes != null && includes.Length > 0)
+                foreach (Expression<Func<TEntity, object>> include in includes)
+                    query = query.Include(include);
+
+            TEntity entity = await query.FirstOrDefaultAsync(filter);
+
+            if (validateOwnership)
+                ValidateOwnership(entity);
+
+            return entity;
+        }
+
+        public virtual async Task<TEntity> FirstOrDefaultAsNoTrackingAsync(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
+            params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Query().AsNoTracking();
+
+            if (includes != null && includes.Length > 0)
+                foreach (Expression<Func<TEntity, object>> include in includes)
+                    query = query.Include(include);
+
+            TEntity entity = await query.FirstOrDefaultAsync(filter);
+
+            if (validateOwnership)
+                ValidateOwnership(entity);
+
+            return entity;
+        }
+
 
         public void Attach(TEntity entity)
         {
             _dbSet.Attach(entity);
         }
-
 
         public void ValidateOwnership(TEntity entity)
         {
@@ -261,6 +306,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             _context.SaveChanges();
         }
 
+        private async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
         #endregion
 
     }

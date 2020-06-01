@@ -22,8 +22,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(100)]
         public string OldId { get; set; }
 
-        public ICollection<UserRole> Users { get; set; }
+        public virtual ICollection<UserRole> Users { get; set; }
 
-        public ICollection<MenuRole> Menus { get; set; }
+        public virtual ICollection<MenuRole> Menus { get; set; }
     }
 }
