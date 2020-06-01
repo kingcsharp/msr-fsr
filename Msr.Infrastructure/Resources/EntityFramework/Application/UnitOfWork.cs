@@ -56,9 +56,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<UserRoleApproval> UserRoleApprovals { get { return _userRoleApproval ?? (_userRoleApproval = new EFRepository<UserRoleApproval>(Context)); } }
         #endregion Repositories
 
-        public UnitOfWork()
+        public UnitOfWork(AnswerContext context)
         {
-            Context = new AnswerContext();
+            Context = context;
         }
 
         public AnswerContext Context { get; }
@@ -80,7 +80,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
 
         public DbSet<T> Query<T>() where T : class
         {
-            return Context.Set<T>();//.AsNoTracking();
+            return Context.Set<T>();
         }
 
         public void LoadCollection<TEntity>(TEntity entity, string navSelector) where TEntity : class

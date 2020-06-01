@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using MSR.Domain.Abstractions.Services;
 using Xunit;
 using FluentAssertions;
+using System;
+using MSR.Domain.Exceptions;
 
 namespace MSR.Infrastructure.Tests.Resources.Services
 {
@@ -22,6 +24,23 @@ namespace MSR.Infrastructure.Tests.Resources.Services
             var response = await _accountService.LoginAsync(SystemLoginTestFixture.SuccessCommand);
 
             response.Should().NotBeNullOrWhiteSpace();
+        }
+
+        [Fact]
+        public async Task CallingLogin_WithFailureSystemLoginCommand_ThrowsDomainException()
+        {
+            Func<Task<string>> response = () => _accountService.LoginAsync(SystemLoginTestFixture.FailCommand);
+
+            response.Should().Throw<DomainException>();
+        }
+
+
+        [Fact]
+        public async Task CallingLogin_WithExceptionSystemLoginCommand_ThrowsArgumentException()
+        {
+            Func<Task<string>> response = () => _accountService.LoginAsync(SystemLoginTestFixture.ExceptionCommand);
+
+            response.Should().Throw<ArgumentException>();
         }
     }
 }

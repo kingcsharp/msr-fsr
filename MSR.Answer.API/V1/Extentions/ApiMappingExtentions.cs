@@ -104,5 +104,19 @@ namespace MSR.Answer.API.V1.Extentions
                 TimeZoneId = request.TimeZoneId
             };
         }
+
+        public static CreateMenuRoleMap ToCreateMenuRoleMapCommand(this CreateMenuRoleMapRequest request)
+        {
+            return new CreateMenuRoleMap()
+            {
+                MenuId = request.MenuId,
+                RoleId = request.RoleId
+            };
+        }
+
+        public static UpdateMenuRoleMap ToUpdateMenuRoleMapCommand(this UpdateMenuRoleMapRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateMenuRoleMap>(request);
+        }
     }
 }

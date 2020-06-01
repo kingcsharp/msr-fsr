@@ -27,6 +27,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int MenuGroupId { get; set; }
         public virtual MenuGroup MenuGroup { get; set; }
 
-        public ICollection<MenuRole> Roles { get; set;}
+        public virtual ICollection<MenuRole> Roles { get; set;}
     }
 }

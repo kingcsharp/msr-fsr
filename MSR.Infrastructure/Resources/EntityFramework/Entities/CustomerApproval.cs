@@ -19,9 +19,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(20)]
         public string Phone { get; set; }
 
-        public User PrimaryContactUser { get; set; }
+        public virtual User PrimaryContactUser { get; set; }
 
-        public User SecondarContactUser { get; set; }
+        public virtual User SecondarContactUser { get; set; }
 
         public int? LocationId { get; set; }
 

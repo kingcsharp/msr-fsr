@@ -7,7 +7,6 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using System.Linq.Expressions;
 using System;
-using Neleus.LambdaCompare;
 using MSR.Infrastructure.Tests.TestFixtures;
 using AutoMapper;
 using MSR.Infrastructure.Profiles;
@@ -16,6 +15,9 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using MSR.Domain.Models.Config;
+using System.Linq;
+using MSR.Infrastructure.Helpers.Abstractions;
+using Bogus.Extensions;
 
 namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 {
@@ -28,17 +30,34 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockIRepositoryUser = new Mock<IRepository<User>>();
             var mockEmailService = new Mock<IEmailService>();
+            var mockAuthenticationHelper = new Mock<IAuthenticationHelper>();
 
-            Expression<Func<User, bool>> testExpression = user => user.UserName == Constants.GoodUserName;
+            Expression<Func<User, bool>> testExpression = i => i.UserName == Constants.GoodUserName;
 
-            mockIRepositoryUser.Setup(m => m.FirstOrDefault(It.IsAny<bool>(), 
-                                        It.Is<Expression<Func<User, bool>>>(criteria => Lambda.Eq(criteria, testExpression))))
-                               .Returns(EFUserTestFixture.GoodUser);
-           
-            mockUnitOfWork.SetupGet(m => m.Users).Returns(mockIRepositoryUser.Object);
+            mockIRepositoryUser.Setup(m => m.FirstOrDefault(It.IsAny<bool>(),
+                                        It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<Expression<Func<User, object>>>()))
+                .Returns(EFUserTestFixture.GoodUser);
+
+            mockIRepositoryUser.Setup(m => m.FirstOrDefaultAsync(It.IsAny<bool>(),
+                                        It.IsAny<Expression<Func<User, bool>>>(), null))
+                .ReturnsAsync(EFUserTestFixture.GoodUser);
+            
+            mockIRepositoryUser.Setup(m => m.Query())
+                .Returns(new List<User>() { EFUserTestFixture.GoodUser }.AsQueryable());
+                       
+            mockUnitOfWork.SetupGet(m => m.Users)
+                .Returns(mockIRepositoryUser.Object);
 
             mockEmailService.Setup(i => i.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<bool>(), It.IsAny<Attachment>()))
                 .Returns(Task.FromResult(true));
+
+            mockAuthenticationHelper.Setup(i => i.VerifyPasswordHash(It.Is<string>(i => i == Constants.GoodPassword), It.IsAny<byte[]>(), It.IsAny<byte[]>()))
+                .Returns(true);
+            mockAuthenticationHelper.Setup(i => i.VerifyPasswordHash(It.Is<string>(i => i == Constants.FailPassword), It.IsAny<byte[]>(), It.IsAny<byte[]>()))
+                .Returns(false);
+            mockAuthenticationHelper.Setup(i => i.VerifyPasswordHash(It.Is<string>(i => i == Constants.ExceptionPassword), It.IsAny<byte[]>(), It.IsAny<byte[]>()))
+                .Throws<ArgumentException>();
+
 
             var services = new ServiceCollection()
             .AddLogging()
@@ -47,7 +66,8 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
             .AddSingleton(mockIRepositoryUser.Object)
             .AddSingleton(mockUnitOfWork.Object)
             .AddSingleton(mockEmailService.Object)
-            .AddSingleton(new JwtData() { Secret = "ABC123" })
+            .AddSingleton(mockAuthenticationHelper.Object)
+            .AddSingleton(new JwtData() { Secret = "ks1YvoEvXrofzYLABCDE9hNqM9gafA0cciHg7S31nwATocYvhjj2VF5xTAd5z1NQQid6zqAEUcaDBpuXeRP8A3hbURV10NEESXxSlPWjLINn4U6DEAysjPWeexsXPI" })
             .AddSingleton(new EmailInformation() 
             { 
                 EnableSsl = false, 
