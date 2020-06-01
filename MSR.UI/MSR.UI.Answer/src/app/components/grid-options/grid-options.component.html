@@ -16,7 +16,8 @@
                 {{view.viewName | titlecase}}
             </a>
             <div class="view-options text-right">
-                <i class="fas fa-sync pointer text-secondary" (click)="updateTemplateWithCurrentView(view)" tooltip="Update Using Current View"></i>&nbsp;
+                <i class="fas fa-sync pointer text-secondary" (click)="updateTemplateWithCurrentView(view)"
+                    tooltip="Update Using Current View"></i>&nbsp;
                 <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
                     [ngClass]="view.isDefault?'text-success':'text-secondary'"
                     tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>&nbsp;
@@ -63,3 +64,29 @@
         </ng-template>
     </p-multiSelect>
 </div>
+
+<p-dialog class="text-left" header="Remove Template" [(visible)]="showRemove" [style]="{width: '21vw'}">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    Are you sure you want to delete this view?
+                </h5>
+            </header>
+            <div class="widget-body"></div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="button" (click)="removeView()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Yes
+                </button>&nbsp;
+                <button type="button" (click)="showRemove=false" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    No
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

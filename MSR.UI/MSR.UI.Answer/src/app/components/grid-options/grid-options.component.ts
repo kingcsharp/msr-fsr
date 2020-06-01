@@ -25,6 +25,8 @@ export class GridOptionsComponent implements OnInit {
   showSaveView: boolean = false;
   savedViewsOptions: any;
   defaultView: ViewSaved;
+  showRemove: boolean = false;
+  toDeleteView: ViewSaved;
 
   @Input() defaultColumns: Array<ColumnsSaved>;
   @Output() defaultColumnsChange: EventEmitter<Array<ColumnsSaved>> = new EventEmitter<Array<ColumnsSaved>>();
@@ -95,7 +97,7 @@ export class GridOptionsComponent implements OnInit {
       filters: {},
       filteredValue: null
     });
-    
+
     this.ptable._sortField = null;
     this.ptable._sortOrder = this.ptable.defaultSortOrder;
     this.ptable._multiSortMeta = null;
@@ -167,8 +169,13 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public deleteView(view: ViewSaved) {
-    this.cg.deleteView(view);
+    this.toDeleteView = view;
+    this.showRemove = true;
+  }
+  public removeView(){
+    this.cg.deleteView(this.toDeleteView);
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
+    this.showRemove = false;
   }
 
   public showSaveViewDiv() {

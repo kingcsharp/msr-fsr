@@ -100,7 +100,8 @@
         <th [hidden]="!cg.isVisibleCol('supervisorId', gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'supervisorId', 'contains')"
-              placeholder="Search by Supervisor Id" class="ui-column-filter" [value]="dt.filters['supervisorId']?.value">
+              placeholder="Search by Supervisor Id" class="ui-column-filter"
+              [value]="dt.filters['supervisorId']?.value">
             <i *ngIf="dt.filters['supervisorId']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'supervisorId')"></i>
           </div>
@@ -170,9 +171,6 @@
 </widget>
 <p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
   [style]="{width: '50vw'}">
-  <!-- <p-header>
-  </p-header> -->
-  <!-- <div class="row"> -->
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -182,15 +180,8 @@
           </span>
           User Details
         </h5>
-        <!-- <div class="widget-controls">
-          <a data-widgster="expand" title="Expand" href="#"><i class="la la-angle-up"></i></a>
-          <a data-widgster="collapse" title="Collapse" href="#"><i class="la la-angle-down"></i></a>
-          <a data-widgster="close" title="Close" href="#"><i class="la la-remove"></i></a>
-        </div>  -->
       </header>
       <div class="widget-body">
-        <!-- <form class="form-horizontal form-label-left parsleyjs" method="post" data-parsley-priority-enabled="false"
-        novalidate="novalidate"> -->
         <fieldset>
           <legend>
           </legend>
@@ -275,11 +266,8 @@
             </div>
           </div>
         </fieldset>
-        <!-- </form> -->
       </div>
-      <!-- <pre>{{currUser | json}}</pre> -->
     </section>
-    <!-- </div> -->
     <p-footer>
       <div class="pull-right">
         <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button">

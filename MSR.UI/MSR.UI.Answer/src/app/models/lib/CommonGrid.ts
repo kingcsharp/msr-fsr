@@ -80,6 +80,7 @@ export class CommonGrid {
         if (index !== -1) {
             this.views.splice(index, 1);
             localStorage.setItem('viewsSaved', JSON.stringify(this.views));
+            this.toastr.success(`View ${view.viewName} was successfully removed.`)
         }
         else {
             this.toastr.error(`View ${view.viewName} not found.`)
