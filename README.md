@@ -46,7 +46,7 @@ UI is running on port 3000
 
 **API:** 
 
-    dotnet run -p MSR.Answer.API/MSR.Answer.API.csproj
+    dotnet run -p MSR.Answer.API/MSR.Answer.API.csproj --launch-profile local
 
 API is running on port 5000 (http) & 5001 (https)
 
