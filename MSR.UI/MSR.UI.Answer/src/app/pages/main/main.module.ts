@@ -39,8 +39,8 @@ import { NasdaqSparklineWidgetComponent } from './widgets/nasdaq-sparkline-widge
 import { RealtimeTrafficWidgetComponent } from './widgets/realtime-traffic-widget/realtime-traffic-widget.component';
 import { YearsMapWidgetComponent } from './widgets/years-map-widget/years-map-widget.component';
 import { FakeWorldData } from './widgets/years-map-widget/fake-world-data.service';
-import { AnalyticsService } from "./analytics/analytics.service";
-import { NewWidgetModule } from "../../layout/new-widget/widget.module";
+import { AnalyticsService } from './analytics/analytics.service';
+import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { UserComponent } from './user/user.component';
 import { FormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';

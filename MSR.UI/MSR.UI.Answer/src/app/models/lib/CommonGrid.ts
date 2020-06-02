@@ -16,7 +16,7 @@ export class CommonGrid {
         if (savedViews !== undefined && savedViews !== null) {
             this.views = JSON.parse(savedViews).map(x => {
                 if (Array.isArray(x.columns)) {
-                    x.columns = x.columns.map(y => new ColumnsSaved(y))
+                    x.columns = x.columns.map(y => new ColumnsSaved(y));
                 }
                 return new ViewSaved(x);
             });
@@ -69,8 +69,7 @@ export class CommonGrid {
         this.views.push(view);
         if (view.isDefault) {
             this.setAsDefault(view, false);
-        }
-        else {
+        } else {
             localStorage.setItem('viewsSaved', JSON.stringify(this.views));
         }
     }
@@ -80,10 +79,9 @@ export class CommonGrid {
         if (index !== -1) {
             this.views.splice(index, 1);
             localStorage.setItem('viewsSaved', JSON.stringify(this.views));
-            this.toastr.success(`View ${view.viewName} was successfully removed.`)
-        }
-        else {
-            this.toastr.error(`View ${view.viewName} not found.`)
+            this.toastr.success(`View ${view.viewName} was successfully removed.`);
+        } else {
+            this.toastr.error(`View ${view.viewName} not found.`);
         }
     }
 
@@ -91,7 +89,7 @@ export class CommonGrid {
         const views = this.views.filter(x => x.gridId === view.gridId);
         if (views.length === 0) {
             this.toastr.error(`View ${view.viewName} not found.`);
-            return
+            return;
         }
         views.forEach(x => {
             x.isDefault = view.viewName === x.viewName && view.isDefault;
@@ -130,12 +128,10 @@ export class CommonGrid {
         if (viewIndex === -1) {
             localStorage.removeItem(gridId);
             return null;
-        }
-        else {
+        } else {
             const view = this.views[viewIndex];
             localStorage.setItem(gridId, view.gridPagingData);
             return view;
         }
     }
-
 }

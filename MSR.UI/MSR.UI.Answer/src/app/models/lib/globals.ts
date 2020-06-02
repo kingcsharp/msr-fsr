@@ -55,7 +55,7 @@ export class Globals {
     }
 
     hasPrivilege(controllerName, privilege) {
-        const menuItem = this.user.roles[0].menus.filter(x => x.name.replace(' ', '').replace('/', '').toLowerCase() === controllerName.toLowerCase())
+        const menuItem = this.user.roles[0].menus.filter(x => x.name.replace(' ', '').replace('/', '').toLowerCase() === controllerName.toLowerCase());
         const ret = menuItem[0].permissions.indexOf(privilege) > -1;
         return ret;
     }

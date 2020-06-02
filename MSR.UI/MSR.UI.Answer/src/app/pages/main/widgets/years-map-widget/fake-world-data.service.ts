@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 /* tslint:disable */
 @Injectable()
 export class FakeWorldData {

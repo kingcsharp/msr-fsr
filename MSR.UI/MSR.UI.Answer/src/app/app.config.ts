@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-//44398
-//const hostApi = environment.production ? 'https://dev-api.answer.msr-fsr.com' : 'http://localhost';
+// 44398
+// const hostApi = environment.production ? 'https://dev-api.answer.msr-fsr.com' : 'http://localhost';
 const hostApi = environment.url;
 const portApi = environment.production ? 5000 : 443;
 
 // const baseURLApi = `${environment.url}/${environment.version}`;
 // const baseURLApi = `${environment.url}`;
-const baseURLApi ='';
+const baseURLApi = '';
 @Injectable()
 export class AppConfig {
   config = {

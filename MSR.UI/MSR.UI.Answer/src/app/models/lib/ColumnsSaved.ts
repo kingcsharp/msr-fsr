@@ -10,18 +10,11 @@ export class ColumnsSaved implements IColumnsSaved {
 
     constructor(data?: IColumnsSaved) {
         if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
+            for (let property in data) {
+                if (data.hasOwnProperty(property)) {
                     (<any>this)[property] = (<any>data)[property];
+                }
             }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.label = _data["label"];
-            this.visible = _data["visible"];
         }
     }
 
@@ -32,11 +25,23 @@ export class ColumnsSaved implements IColumnsSaved {
         return result;
     }
 
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data['id'];
+            this.label = _data['label'];
+            this.visible = _data['visible'];
+        }
+    }
+
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["label"] = this.label;
-        data["visible"] = this.visible;
+        data['id'] = this.id;
+        data['label'] = this.label;
+        data['visible'] = this.visible;
         return data;
     }
+
+
+
+
 }

@@ -13,9 +13,7 @@ export class ResetpasswordService {
     constructor(
         private router: Router,
         private accountService: AccountService
-    ) {
-        
-    }
+    ) { }
 
     get isFetching() {
         return this._isFetching;
@@ -37,12 +35,12 @@ export class ResetpasswordService {
         this.requestLogin();
         if (creds.token.length > 0 && creds.password.length > 0) {
             this.accountService.resetpassword(new ResetPasswordRequest({ token: creds.token, newPassword: creds.password }), env.apiVersion).pipe(take(1))
-            .subscribe(responseHandler(() => {
-                this.loginError('Password was updated!');
-                setTimeout(() => {
-                    this.logoutUser();
-                }, 3000);
-            }));
+                .subscribe(responseHandler(() => {
+                    this.loginError('Password was updated!');
+                    setTimeout(() => {
+                        this.logoutUser();
+                    }, 3000);
+                }));
         } else {
             this.loginError('Something was wrong. Try again');
         }

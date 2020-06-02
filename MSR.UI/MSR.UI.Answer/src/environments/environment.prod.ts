@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  url:"https://dev-api.answer.msr-fsr.com",
-  API_BASE_URL:"https://dev-api.answer.msr-fsr.com",
+  url: 'https://dev-api.answer.msr-fsr.com',
+  API_BASE_URL: 'https://dev-api.answer.msr-fsr.com',
   hmr: false,
   backend: true,
-  version: "v1",
-  apiVersion:"1"
+  version: 'v1',
+  apiVersion: '1'
 };

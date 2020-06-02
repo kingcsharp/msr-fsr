@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class MultiselectWrapperComponent implements OnInit {
   selectedColumns: Array<any>;
-  subscriptions: Subscription[] = []
+  subscriptions: Subscription[] = [];
 
   @Input() gridStorageId: string;
   @Input() options: any;

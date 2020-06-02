@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit } from '@angular/core';
-import { LoginService } from "../../pages/login/login.service";
+import { LoginService } from '../../pages/login/login.service';
 import { take } from 'rxjs/operators';
-import { WorkflowService, PendingApprovalNotification } from "../../services/api.client.generated";
+import { WorkflowService, PendingApprovalNotification } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Observable } from 'rxjs';

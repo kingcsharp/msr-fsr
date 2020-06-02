@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter, ElementRef } from '@angular/core';
 import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../models/lib/CommonGrid'
+import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { Globals } from '../../models/lib/globals';
 import { TableState } from 'primeng/api';
@@ -40,10 +40,10 @@ export class GridOptionsComponent implements OnInit {
     this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId));
 
     this.columnPicker = this.defaultColumns.map((elem) => {
-      return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } }
+      return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } };
     });
     this.selectedColumns = this.defaultColumns.filter(x => x.visible).map((elem) => {
-      return { id: elem.id, name: elem.label, visible: elem.visible }
+      return { id: elem.id, name: elem.label, visible: elem.visible };
     });
 
     this.viewToSave = new ViewSaved({
@@ -54,8 +54,7 @@ export class GridOptionsComponent implements OnInit {
   }
 
   onClick(event) {
-    if (!this._eref.nativeElement.contains(event.target)) // or some similar check
-    {
+    if (!this._eref.nativeElement.contains(event.target)) {
       this.columnDropdown = false;
     }
   }
@@ -63,7 +62,7 @@ export class GridOptionsComponent implements OnInit {
   public columnDropdownFn() {
     this.columnDropdown = !this.columnDropdown;
     this.gridOptionsRotate = true;
-    setTimeout(() => { this.gridOptionsRotate = false }, 900);
+    setTimeout(() => { this.gridOptionsRotate = false; }, 900);
   }
 
   public changeColVisibility(value) {
@@ -71,7 +70,7 @@ export class GridOptionsComponent implements OnInit {
       return;
     }
     this.defaultColumns.forEach((elem) => {
-      elem.visible = value.findIndex(x => x.id == elem.id) > -1;
+      elem.visible = value.findIndex(x => x.id === elem.id) > -1;
     });
     this.defaultColumnsChange.emit(this.defaultColumns);
   }
@@ -81,7 +80,7 @@ export class GridOptionsComponent implements OnInit {
       return;
     }
     this.defaultColumns.forEach((elem) => {
-      elem.visible = view.columns.find(x => x.id == elem.id).visible;
+      elem.visible = view.columns.find(x => x.id === elem.id).visible;
     });
     this.defaultColumnsChange.emit(this.defaultColumns);
   }
@@ -111,8 +110,7 @@ export class GridOptionsComponent implements OnInit {
 
     if (this.ptable.lazy) {
       this.ptable.onLazyLoad.emit(this.ptable.createLazyLoadMetadata());
-    }
-    else {
+    } else {
       this.ptable.totalRecords = (this.ptable._value ? this.ptable._value.length : 0);
     }
   }
@@ -172,7 +170,7 @@ export class GridOptionsComponent implements OnInit {
     this.toDeleteView = view;
     this.showRemove = true;
   }
-  public removeView(){
+  public removeView() {
     this.cg.deleteView(this.toDeleteView);
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
     this.showRemove = false;

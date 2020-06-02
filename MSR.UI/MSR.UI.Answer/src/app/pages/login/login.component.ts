@@ -41,7 +41,7 @@ export class Login {
     this.accountService.forgotpassword(new ForgotPasswordRequest({ userName: this.username }), env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(() => {
-        ctrl.loginService.loginError("Reset password email has been sent.");
+        ctrl.loginService.loginError('Reset password email has been sent.');
         ctrl.showLoginDiv();
       }, () => {
         ctrl.fogotPassword();
@@ -57,7 +57,7 @@ export class Login {
     this.accountService.forgotusername(new ForgotUserNameRequest({ email: this.email }), env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(() => {
-        ctrl.loginService.loginError("An email has been sent with your information.");
+        ctrl.loginService.loginError('An email has been sent with your information.');
         ctrl.showLoginDiv();
       }, () => {
         ctrl.fogotUserName();

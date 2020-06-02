@@ -50,7 +50,7 @@ export class FlotChartAnimatorDirective implements AfterViewInit {
         },
         legend: false
       });
-    }
+    };
 
     jQuery(window).on('sn:resize', resize);
     resize();

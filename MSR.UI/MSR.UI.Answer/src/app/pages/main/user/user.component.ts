@@ -45,7 +45,7 @@ export class UserComponent implements OnInit {
   viewsSaved: Array<ViewSaved>;
   viewToSave: ViewSaved;
   controllerName: string;
-  gridVersion: string; //IF YOU ADD COLUMNS OR EDIT DATA TYPE YOU NEED TO UPGRADE THIS VERSION
+  gridVersion: string; // IF YOU ADD COLUMNS OR EDIT DATA TYPE YOU NEED TO UPGRADE THIS VERSION
   defaultView: ViewSaved;
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
@@ -59,9 +59,9 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.currUser = new User();
-    this.gridVersion = "1.0.0";
+    this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elem.nativeElement.tagName.toLowerCase();
-    //SET DEFAULT VIEW COLS
+    // SET DEFAULT VIEW COLS
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'isActive', label: 'Active', visible: true }),
     new ColumnsSaved({ id: 'isAnswerUser', label: 'User Type', visible: true }),
@@ -128,7 +128,7 @@ export class UserComponent implements OnInit {
       ctrl.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
     }, () => {
       user.isActive = !user.isActive;
-    }))
+    }));
   }
 
   changeUserType(user: User) {
@@ -169,7 +169,7 @@ export class UserComponent implements OnInit {
           ctrl.clseDialog();
         }
       }, () => {
-        //DO not update user
+        // DO not update user
       }));
     }
   }
@@ -181,8 +181,7 @@ export class UserComponent implements OnInit {
       ret.isAnswerUser = true;
       ret.firstName = '';
       return ret;
-    }
-    else {
+    } else {
       return user;
     }
   }

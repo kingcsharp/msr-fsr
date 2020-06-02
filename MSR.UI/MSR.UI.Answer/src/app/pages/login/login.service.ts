@@ -87,7 +87,7 @@ export class LoginService {
         localStorage.setItem('user', JSON.stringify(user));
         if (user.roles.length === 0) {
           this.logoutUser();
-          this.loginError("Sorry you do not have roles associated with your user.");
+          this.loginError('Sorry you do not have roles associated with your user.');
           return;
         }
         this.receiveLogin();

@@ -20,7 +20,7 @@ export class AppInterceptor implements HttpInterceptor {
   }
 
   turnOffLoader() {
-    if (this.requests == 0) {
+    if (this.requests === 0) {
       this.globals.showLoader(false);
     }
   }
