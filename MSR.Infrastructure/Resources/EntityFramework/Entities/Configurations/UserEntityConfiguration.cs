@@ -9,6 +9,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
         {
             builder.ToTable(nameof(User));
             builder.HasOne(u => u.Customer).WithMany().HasForeignKey(u => u.CustomerId);
+            builder.HasOne(u => u.Supervisor).WithMany().HasForeignKey(u => u.SupervisorId);
         }
     }
 }

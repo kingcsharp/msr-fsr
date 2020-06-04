@@ -21,6 +21,7 @@ namespace MSR.Domain.Models
         public string SecurityStamp { get; set; }
         public string Phone { get; set; }
         public int? SupervisorId { get; set; }
+        public string SupervisorName { get; set; }
         public int LocationId { get; set; }
         public bool IsAnswerUser { get; set; }
         public int CustomerId { get; set; }

@@ -40,7 +40,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 throw new DomainException($"{nameof(command.UserName)} already Exists", DomainError.Conflict);
             }
-            
+
             var password = AuthenticationHelper.CreateRandomPassword();
             AuthenticationHelper.CreatePasswordHash(password, out var hash, out var salt);
             efUser.PasswordHash = hash;
@@ -54,7 +54,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 await _unitOfWork.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var data = ex.Message;
             }
@@ -64,9 +64,9 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task DeactivateUserAsync(DeactivateUser command)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false,i => i.Id == command.AccountId);
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.AccountId);
 
-            if(user == null) { return; }
+            if (user == null) { return; }
 
             user.IsActive = !user.IsActive;
 
@@ -84,11 +84,11 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
             var userType = efUser.GetType();
 
-            foreach(var property in typeof(UpdateUser).GetProperties().Where(i => i.Name != nameof(command.Id)))
+            foreach (var property in typeof(UpdateUser).GetProperties().Where(i => i.Name != nameof(command.Id)))
             {
                 var prop = userType.GetProperty(property.Name);
 
-                if(prop == null) { continue; }
+                if (prop == null) { continue; }
 
                 prop.SetValue(efUser, property.GetValue(command), null);
             }
@@ -153,12 +153,22 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
 
             var userList = new List<Domain.Models.User>();
-            var usersTo = users.ToList();
+            var usersTo = users.Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).ToList();
 
             foreach (var user in usersTo)
             {
-                userList.Add(_mapper.Map<Domain.Models.User>(user));
+                var userToAdd = _mapper.Map<Domain.Models.User>(user);
+                userToAdd.SupervisorName = user?.Supervisor?.GetFullName();
+                foreach (var role in user.Roles ?? new List<UserRole>())
+                {
+                    userToAdd.Roles.Add(new Domain.Models.Role()
+                    {
+                        Name = role.Role.Name
+                    });
+                }
+                userList.Add(userToAdd);
             }
+
 
             return userList;
         }
@@ -181,7 +191,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             var domainUser = _mapper.Map<Domain.Models.User>(user);
 
-            foreach(var role in user.Roles ?? new List<UserRole>())
+            foreach (var role in user.Roles ?? new List<UserRole>())
             {
                 var efRole = role.Role;
                 var domainRole = new Domain.Models.Role()
@@ -190,7 +200,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     Name = efRole.Name
                 };
 
-                foreach(var menuItem in (efRole ?? new EntityFramework.Entities.Role()).Menus)
+                foreach (var menuItem in (efRole ?? new EntityFramework.Entities.Role()).Menus)
                 {
                     if (menuItem.MenuItem == null) continue;
                     var efMenuItem = menuItem.MenuItem;
@@ -204,7 +214,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
                         EnumMenuItem = EnumUtils.ParseMenuType(efMenuItem.Name)
                     };
 
-                    if (efMenuItem.MenuGroup != null) {
+                    if (efMenuItem.MenuGroup != null)
+                    {
                         domainMenuItem.MenuGroup = new Domain.Models.MenuGroup()
                         {
                             Icon = efMenuItem.MenuGroup.Icon,
@@ -215,7 +226,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                         };
                     }
 
-                    if(menuItem.MenuRolePermission != null)
+                    if (menuItem.MenuRolePermission != null)
                     {
                         var listEnumPrivilege = new List<int>();
                         if (menuItem.MenuRolePermission != null)

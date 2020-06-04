@@ -30,6 +30,7 @@ export class UserComponent implements OnInit {
   phoneValue = '';
   statuses: any[];
   roles: any[];
+  allUsers: any[];
   userTypes: any[];
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
@@ -53,6 +54,7 @@ export class UserComponent implements OnInit {
   columnPicker: any;
   columnDropdown: boolean = false;
   gridOptionsRotate: boolean = false;
+
   constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
     public globals: Globals, private elem: ElementRef) {
   }
@@ -73,12 +75,11 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
     new ColumnsSaved({ id: 'locationId', label: 'Location Id', visible: false }),
-    new ColumnsSaved({ id: 'supervisorId', label: 'Supervisor Id', visible: false })
+    new ColumnsSaved({ id: 'supervisorName', label: 'Supervisor Name', visible: false })
     ];
 
-    this.roles = [
-      { label: 'Admin', value: 'Admin' }
-    ];
+    this.roles = [];
+    this.allUsers = [];
 
     this.statuses = [
       { label: 'Active', value: true },
@@ -96,11 +97,24 @@ export class UserComponent implements OnInit {
   }
 
   async getUsers() {
+    const ctrl = this;
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.data = response.object;
-        this.loading = false;
+        ctrl.data = response.object;
+        ctrl.data = ctrl.data.map((x) => {
+          ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
+          const roles = [];
+          x.roles.forEach((role) => {
+            roles.push(role.name);
+            if (ctrl.roles.findIndex(x => x.value === role.name) === -1) {
+              ctrl.roles.push({ label: role.name, value: role.name });
+            }
+          });
+          x.rolesStr = roles.join(',');
+          return x;
+        });
+        ctrl.loading = false;
       }));
   }
 

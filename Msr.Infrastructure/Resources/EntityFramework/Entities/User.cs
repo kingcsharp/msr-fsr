@@ -22,6 +22,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string SecurityStamp { get; set; }
         public string Phone { get; set; }
         public int? SupervisorId { get; set; }
+        public User Supervisor { get; set; }
         public int? LocationId { get; set; }
         public bool? IsAnswerUser { get; set; }
         public int? CustomerId { get; set; }
@@ -31,6 +32,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
         public ICollection<UserRole> Roles { get; set; }
+
+        public string GetFullName()
+        {
+            return this.FirstName + " " + this.LastName;
+        }
     }
 }
 

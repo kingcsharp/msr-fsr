@@ -1054,6 +1054,7 @@ export class User implements IUser {
     securityStamp?: string | undefined;
     phone?: string | undefined;
     supervisorId?: number | undefined;
+    supervisorName?: string | undefined;
     locationId!: number;
     isAnswerUser!: boolean;
     customerId!: number;
@@ -1089,6 +1090,7 @@ export class User implements IUser {
             this.securityStamp = _data["securityStamp"];
             this.phone = _data["phone"];
             this.supervisorId = _data["supervisorId"];
+            this.supervisorName = _data["supervisorName"];
             this.locationId = _data["locationId"];
             this.isAnswerUser = _data["isAnswerUser"];
             this.customerId = _data["customerId"];
@@ -1128,6 +1130,7 @@ export class User implements IUser {
         data["securityStamp"] = this.securityStamp;
         data["phone"] = this.phone;
         data["supervisorId"] = this.supervisorId;
+        data["supervisorName"] = this.supervisorName;
         data["locationId"] = this.locationId;
         data["isAnswerUser"] = this.isAnswerUser;
         data["customerId"] = this.customerId;
@@ -1160,6 +1163,7 @@ export interface IUser {
     securityStamp?: string | undefined;
     phone?: string | undefined;
     supervisorId?: number | undefined;
+    supervisorName?: string | undefined;
     locationId: number;
     isAnswerUser: boolean;
     customerId: number;

@@ -80,11 +80,13 @@
               placeholder="Search by createdOn" class="ui-column-filter" [value]="dt.filters['createdOn']?.value">
             <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'createdOn')"></i>
+
+            <p-calendar [(ngModel)]="date7" [showTime]="true"></p-calendar>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('roles',gridSettings)">
           <div class="position-relative">
-            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="userRoles" [filterId]="'roles'"
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="roles" [filterId]="'rolesStr'"
               [defaultText]="'Select Roles'" [defaultTextTooltip]="''" [datatable]="dt">
             </multiselect-wrapper>
           </div>
@@ -97,13 +99,13 @@
               (click)="cg.filter(dt,'locationId')"></i>
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('supervisorId', gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('supervisorName', gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'supervisorId', 'contains')"
-              placeholder="Search by Supervisor Id" class="ui-column-filter"
-              [value]="dt.filters['supervisorId']?.value">
-            <i *ngIf="dt.filters['supervisorId']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'supervisorId')"></i>
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'supervisorName', 'contains')"
+              placeholder="Search by Supervisor Name" class="ui-column-filter"
+              [value]="dt.filters['supervisorName']?.value">
+            <i *ngIf="dt.filters['supervisorName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'supervisorName')"></i>
           </div>
         </th>
         <th></th>
@@ -149,13 +151,13 @@
           {{user.createdOn | date :'short' }}
         </td>
         <td [hidden]="!cg.isVisibleCol('roles',gridSettings)">
-          {{user.roles.join(',').toString()}}
+          {{user.rolesStr}}
         </td>
         <td [hidden]="!cg.isVisibleCol('locationId',gridSettings)">
           {{user.locationId}}
         </td>
-        <td [hidden]="!cg.isVisibleCol('supervisorId',gridSettings)">
-          {{user.supervisorId}}
+        <td [hidden]="!cg.isVisibleCol('supervisorName',gridSettings)">
+          {{user.supervisorName}}
         </td>
         <td>
           <i *ngIf="canEditUsers" class="fa fa-cog pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
