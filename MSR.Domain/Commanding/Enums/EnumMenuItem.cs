@@ -37,5 +37,6 @@
         ,WIPHistory
         ,WIPMenu
         ,WipStatus
+        ,Roles
     }
 }

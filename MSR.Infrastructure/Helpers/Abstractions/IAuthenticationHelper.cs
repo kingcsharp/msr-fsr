@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MSR.Infrastructure.Helpers.Abstractions
+﻿namespace MSR.Infrastructure.Helpers.Abstractions
 {
     public interface IAuthenticationHelper
     {

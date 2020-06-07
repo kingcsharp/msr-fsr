@@ -2,7 +2,6 @@
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
 using System.Text;
-using Xunit;
 
 namespace MSR.Infrastructure.Tests
 {
