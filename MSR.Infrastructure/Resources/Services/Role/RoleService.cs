@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore.Internal;
 using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Role
@@ -32,26 +26,30 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             if (roleMenu != null) return roleMenu.Id;
 
-            var role = _unitOfWork.Roles.FirstOrDefault(false, i => i.Id == command.RoleId);
-            var menu = _unitOfWork.MenuItems.FirstOrDefault(false, i => i.Id == command.MenuId);
+            var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.RoleId,null);
+            var menu = await _unitOfWork.MenuItems.FirstOrDefaultAsync(false, i => i.Id == command.MenuId, null);
             
             if(role is null || menu is null)
             {
                 throw new DomainException("Role or Menu not found", DomainError.BadRequest);
             }
 
-            var entity = _unitOfWork.MenuRoles.AddAndSaveChanges(new EntityFramework.Entities.MenuRole()
+            var menuRole = new MenuRole()
             {
                 MenuItem = menu,
                 Role = role
-            });
+            };
 
-            return entity.Entity.Id;
+            await _unitOfWork.MenuRoles.AddAsync(menuRole);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return menuRole.Id;
         }
 
         public async Task<bool> RemoveMenuRoleMap(int id)
         {
-            var roleMenuPermission = _unitOfWork.MenuRolePermissions.FirstOrDefault(false, i => i.MenuRole.Id == id);
+            var roleMenuPermission = await _unitOfWork.MenuRolePermissions.FirstOrDefaultAsync(false, i => i.MenuRole.Id == id);
 
             if(roleMenuPermission != null)
             {
@@ -74,7 +72,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             menuRolePermission.MenuRole = roleMenu;
             menuRolePermission.MenuRoleId = roleMenu.Id;
 
-            _unitOfWork.MenuRolePermissions.Add(menuRolePermission);
+            await _unitOfWork.MenuRolePermissions.AddAsync(menuRolePermission);
             await _unitOfWork.SaveChangesAsync();
 
             return true;

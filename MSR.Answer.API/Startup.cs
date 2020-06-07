@@ -29,8 +29,9 @@ namespace MSR.Answer.API
             services.AddControllers();
             services.AddApiVersioning();
             services.AddApiServices(Configuration);
-            services.AddSwaggerDocument(settings =>
+            services.AddOpenApiDocument(settings =>
             {
+                settings.DocumentName = "Answer3";
                 settings.PostProcess = document =>
                 {
                     document.Info.Version = "v1";

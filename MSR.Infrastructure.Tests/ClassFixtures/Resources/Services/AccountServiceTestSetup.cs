@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using MSR.Domain.Models.Config;
 using System.Linq;
 using MSR.Infrastructure.Helpers.Abstractions;
-using Bogus.Extensions;
 
 namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 {

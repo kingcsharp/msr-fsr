@@ -1,5 +1,4 @@
-﻿using Amazon.CloudWatchLogs;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Application.Extentions;
@@ -7,10 +6,8 @@ using MSR.Domain.Extensions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Extensions;
-using NSwag;
 using Serilog;
 using Serilog.Formatting.Json;
-using Serilog.Sinks.AwsCloudWatch;
 
 namespace MSR.Answer.API.Extentions
 {

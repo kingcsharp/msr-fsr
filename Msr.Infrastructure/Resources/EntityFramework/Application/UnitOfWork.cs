@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.EntityFramework.Repository;
-using System.Runtime.CompilerServices;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
