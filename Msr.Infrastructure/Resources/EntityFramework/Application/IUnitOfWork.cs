@@ -36,12 +36,18 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         DbSet<T> Query<T>() where T : class;
 
         void LoadCollection<TEntity>(TEntity entity, string navSelector) where TEntity : class;
+        Task LoadCollectionAsync<TEntity>(TEntity entity, string navSelector) where TEntity : class;
         void LoadReference<TEntity>(TEntity entity, Expression<Func<TEntity, object>> navSelector) where TEntity : class;
         void LoadReference<TEntity>(TEntity entity, string navSelector) where TEntity : class;
-
+        Task LoadReferenceAsync<TEntity>(TEntity entity, Expression<Func<TEntity, object>> navSelector) where TEntity : class;
+        Task LoadReferenceAsync<TEntity>(TEntity entity, string navSelector) where TEntity : class;
         /// <summary>
         /// Reloads entity from the database. See <see cref="DbEntityEntry.Reload"/>
         /// </summary>
         void ReloadEntity<T>(T entity) where T : class;
+        /// <summary>
+        /// Reloads entity from the database. See <see cref="DbEntityEntry.ReloadAsync"/>
+        /// </summary>
+        Task ReloadEntityAsync<T>(T entity) where T : class;
     }
 }

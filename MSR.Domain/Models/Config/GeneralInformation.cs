@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MSR.Domain.Models.Config
+﻿namespace MSR.Domain.Models.Config
 {
     public class GeneralInformation
     {

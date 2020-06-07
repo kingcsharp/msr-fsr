@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using MSR.Domain.Helpers;
+using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 {
@@ -48,10 +49,22 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             return _dbSet.Add(entity);
         }
 
+        public virtual async Task<EntityEntry<TEntity>> AddAsync(TEntity entity)
+        {
+            return await _dbSet.AddAsync(entity);
+        }
+
         public virtual EntityEntry<TEntity> AddAndSaveChanges(TEntity entity)
         {
             EntityEntry<TEntity> addedEntity = Add(entity);
             SaveChanges();
+            return addedEntity;
+        }
+
+        public virtual async Task<EntityEntry<TEntity>> AddAndSaveChangesAsync(TEntity entity)
+        {
+            EntityEntry<TEntity> addedEntity = await AddAsync(entity);
+            await SaveChangesAsync();
             return addedEntity;
         }
 
@@ -70,17 +83,28 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             }
         }
 
-        public virtual void Delete(bool validateOwnership, int id, bool force = false)
+        public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities)
         {
-            TEntity entityToDelete = Find(validateOwnership, id);
-            //if (entityToDelete != null)
-            Delete(validateOwnership, entityToDelete, force);
+            var taskList = new List<Task>();
+
+            foreach(var entity in entities)
+            {
+                taskList.Add(AddAsync(entity));
+            }
+
+            await Task.WhenAll(taskList);
         }
 
         public void DeleteAndSaveChanges(bool validateOwnership, int id, bool force = false)
         {
             Delete(validateOwnership, id, force);
             SaveChanges();
+        }
+        public virtual void Delete(bool validateOwnership, int id, bool force = false)
+        {
+            TEntity entityToDelete = Find(validateOwnership, id);
+            //if (entityToDelete != null)
+            Delete(validateOwnership, entityToDelete, force);
         }
 
         public virtual void Delete(bool validateOwnership, TEntity entityToDelete, bool force = false)
@@ -142,14 +166,29 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             return _dbSet.Count(filter);
         }
 
+        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            return await _dbSet.CountAsync(filter);
+        }
+
         public virtual int Count()
         {
             return _dbSet.Count();
         }
 
+        public virtual async Task<int> CountAsync()
+        {
+            return await _dbSet.CountAsync();
+        }
+
         public virtual bool Exists(Expression<Func<TEntity, bool>> filter)
         {
             return _dbSet.Any(filter);
+        }
+
+        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            return await _dbSet.AnyAsync(filter);
         }
 
         public virtual TEntity FirstOrDefault(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
@@ -186,12 +225,45 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             return entity;
         }
 
+        public virtual async Task<TEntity> FirstOrDefaultAsync(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
+            params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Query();
+
+            if (includes != null && includes.Length > 0)
+                foreach (Expression<Func<TEntity, object>> include in includes)
+                    query = query.Include(include);
+
+            TEntity entity = await query.FirstOrDefaultAsync(filter);
+
+            if (validateOwnership)
+                ValidateOwnership(entity);
+
+            return entity;
+        }
+
+        public virtual async Task<TEntity> FirstOrDefaultAsNoTrackingAsync(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
+            params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = Query().AsNoTracking();
+
+            if (includes != null && includes.Length > 0)
+                foreach (Expression<Func<TEntity, object>> include in includes)
+                    query = query.Include(include);
+
+            TEntity entity = await query.FirstOrDefaultAsync(filter);
+
+            if (validateOwnership)
+                ValidateOwnership(entity);
+
+            return entity;
+        }
+
 
         public void Attach(TEntity entity)
         {
             _dbSet.Attach(entity);
         }
-
 
         public void ValidateOwnership(TEntity entity)
         {
@@ -211,6 +283,16 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
         public virtual TEntity Find(bool validateOwnership, params object[] keyValues)
         {
             TEntity entity = _dbSet.Find(keyValues);
+
+            if (validateOwnership)
+                ValidateOwnership(entity);
+
+            return entity;
+        }
+
+        public virtual async Task<TEntity> FindAsync(bool validateOwnership, params object[] keyValues)
+        {
+            TEntity entity = await _dbSet.FindAsync(keyValues);
 
             if (validateOwnership)
                 ValidateOwnership(entity);
@@ -261,6 +343,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             _context.SaveChanges();
         }
 
+        private async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
         #endregion
 
     }

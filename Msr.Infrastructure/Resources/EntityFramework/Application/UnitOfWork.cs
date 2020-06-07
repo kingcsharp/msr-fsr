@@ -56,9 +56,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<UserRoleApproval> UserRoleApprovals { get { return _userRoleApproval ?? (_userRoleApproval = new EFRepository<UserRoleApproval>(Context)); } }
         #endregion Repositories
 
-        public UnitOfWork()
+        public UnitOfWork(AnswerContext context)
         {
-            Context = new AnswerContext();
+            Context = context;
         }
 
         public AnswerContext Context { get; }
@@ -66,6 +66,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public void Dispose()
         {
             Context.Dispose();
+        }
+
+        public async Task DisposeAsync()
+        {
+            await Context.DisposeAsync();
         }
 
         public void SaveChanges()
@@ -80,12 +85,17 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
 
         public DbSet<T> Query<T>() where T : class
         {
-            return Context.Set<T>();//.AsNoTracking();
+            return Context.Set<T>();
         }
 
         public void LoadCollection<TEntity>(TEntity entity, string navSelector) where TEntity : class
         {
             Context.Entry(entity).Collection(navSelector).Load();
+        }
+
+        public async Task LoadCollectionAsync<TEntity>(TEntity entity, string navSelector) where TEntity : class
+        {
+            await Context.Entry(entity).Collection(navSelector).LoadAsync();
         }
 
         public void LoadReference<TEntity>(TEntity entity, Expression<Func<TEntity, object>> navSelector) where TEntity : class
@@ -98,12 +108,30 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             Context.Entry(entity).Reference(navSelector).Load();
         }
 
+        public async Task LoadReferenceAsync<TEntity>(TEntity entity, Expression<Func<TEntity, object>> navSelector) where TEntity : class
+        {
+            await Context.Entry(entity).Reference(navSelector).LoadAsync();
+        }
+
+        public async Task LoadReferenceAsync<TEntity>(TEntity entity, string navSelector) where TEntity : class
+        {
+            await Context.Entry(entity).Reference(navSelector).LoadAsync();
+        }
+
         /// <summary>
         /// Reloads entity from the database. See <see cref="DbEntityEntry.Reload"/>
         /// </summary>
         public void ReloadEntity<T>(T entity) where T : class
         {
             Context.Entry(entity).Reload();
+        }
+
+        /// <summary>
+        /// Reloads entity from the database. See <see cref="DbEntityEntry.ReloadAsync"/>
+        /// </summary>
+        public async Task ReloadEntityAsync<T>(T entity) where T : class
+        {
+            await Context.Entry(entity).ReloadAsync();
         }
     }
 }

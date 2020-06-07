@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
@@ -14,8 +13,6 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    [ApiController]
-    [Authorize]
     public class WorkflowController : BaseApiController
     {
         private readonly ILogger _logger;

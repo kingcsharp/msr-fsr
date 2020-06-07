@@ -4,10 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
-using NSwag;
-using NSwag.AspNetCore;
-using Serilog;
-using Serilog.Formatting.Json;
 
 namespace MSR.Answer.API
 {
@@ -33,13 +29,9 @@ namespace MSR.Answer.API
             services.AddControllers();
             services.AddApiVersioning();
             services.AddApiServices(Configuration);
-            //services.AddSwaggerDocument(configure =>
-            //{
-            //    configure.Title = "MSR API";
-            //    //add token authorization
-            //});
-            services.AddSwaggerDocument(settings =>
+            services.AddOpenApiDocument(settings =>
             {
+                settings.DocumentName = "Answer3";
                 settings.PostProcess = document =>
                 {
                     document.Info.Version = "v1";
@@ -72,14 +64,6 @@ namespace MSR.Answer.API
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
-
-            //app.UseSwagger();   
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MSR API");
-            //    c.RoutePrefix = string.Empty;
-            //});
-
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
