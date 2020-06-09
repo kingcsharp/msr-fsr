@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location } from '../../../services/api.client.generated';
+import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location, UpdateUserRequest } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -162,9 +162,10 @@ export class UserComponent implements OnInit {
     }));
   }
 
-  changeUserType(user: User) {
+  changeUserType(user: UpdateUserRequest) {
     const ctrl = this;
-    this.userService.userPatch(user, env.apiVersion).pipe(take(1)).subscribe(responseHandler((resp) => {
+
+    this.userService.userPatch(env.apiVersion, user).pipe(take(1)).subscribe(responseHandler((resp) => {
       if (!resp.hasErrors) {
         if (user.isAnswerUser) {
           ctrl.toastr.success('User type changed to Is Answer User!');
@@ -184,9 +185,11 @@ export class UserComponent implements OnInit {
       let method: Observable<IAuditActionResultOfUser> = null;
       this.globals.showLoader(true);
       if (this.currUser.id === undefined) {
-        method = this.userService.userPost(this.currUser, env.apiVersion);
+        method = this.userService.userPost(env.apiVersion, this.currUser);
       } else {
-        method = this.userService.userPatch(this.currUser, env.apiVersion);
+        let updateUserReq = new UpdateUserRequest();
+        Object.assign(updateUserReq, this.currUser);
+        method = this.userService.userPatch(env.apiVersion, updateUserReq);
       }
 
       method.pipe(take(1)).subscribe(responseHandler((resp) => {

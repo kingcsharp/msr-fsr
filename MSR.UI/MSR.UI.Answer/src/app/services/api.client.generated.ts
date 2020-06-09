@@ -25,7 +25,7 @@ export class AccountService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    login(request: SystemLoginRequest, version: string): Observable<AuditActionResultOfString> {
+    login(version: string, request: SystemLoginRequest): Observable<AuditActionResultOfString> {
         let url_ = this.baseUrl + "/v{version}/Account/login";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -80,7 +80,7 @@ export class AccountService {
         return _observableOf<AuditActionResultOfString>(<any>null);
     }
 
-    forgotpassword(request: ForgotPasswordRequest, version: string): Observable<void> {
+    forgotpassword(version: string, request: ForgotPasswordRequest): Observable<void> {
         let url_ = this.baseUrl + "/v{version}/Account/forgotpassword";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -131,7 +131,7 @@ export class AccountService {
         return _observableOf<void>(<any>null);
     }
 
-    forgotusername(request: ForgotUserNameRequest, version: string): Observable<void> {
+    forgotusername(version: string, request: ForgotUserNameRequest): Observable<void> {
         let url_ = this.baseUrl + "/v{version}/Account/forgotusername";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -182,7 +182,7 @@ export class AccountService {
         return _observableOf<void>(<any>null);
     }
 
-    resetpassword(request: ResetPasswordRequest, version: string): Observable<void> {
+    resetpassword(version: string, request: ResetPasswordRequest): Observable<void> {
         let url_ = this.baseUrl + "/v{version}/Account/resetpassword";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -235,6 +235,71 @@ export class AccountService {
 }
 
 @Injectable()
+export class LocationService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    location(parentId: number | null | undefined, version: string): Observable<AuditActionResultOfLocation> {
+        let url_ = this.baseUrl + "/v{version}/Location?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (parentId !== undefined && parentId !== null)
+            url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLocation(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLocation(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfLocation>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfLocation>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLocation(response: HttpResponseBase): Observable<AuditActionResultOfLocation> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfLocation.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfLocation>(<any>null);
+    }
+}
+
+@Injectable()
 export class MenuService {
     private http: HttpClient;
     private baseUrl: string;
@@ -245,7 +310,7 @@ export class MenuService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    menu(version: string): Observable<FileResponse | null> {
+    menu(version: string): Observable<FileResponse> {
         let url_ = this.baseUrl + "/v{version}/Menu";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -267,14 +332,14 @@ export class MenuService {
                 try {
                     return this.processMenu(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                    return <Observable<FileResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+                return <Observable<FileResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processMenu(response: HttpResponseBase): Observable<FileResponse | null> {
+    protected processMenu(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -291,7 +356,7 @@ export class MenuService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse | null>(<any>null);
+        return _observableOf<FileResponse>(<any>null);
     }
 }
 
@@ -306,7 +371,7 @@ export class RoleService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    rolePost(request: CreateMenuRoleMapRequest, version: string): Observable<AuditActionResult> {
+    rolePost(version: string, request: CreateMenuRoleMapRequest): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -361,7 +426,7 @@ export class RoleService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    rolePatch(request: UpdateMenuRoleMapRequest, version: string): Observable<AuditActionResult> {
+    rolePatch(version: string, request: UpdateMenuRoleMapRequest): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -416,7 +481,7 @@ export class RoleService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    roleDelete(id: number, version: string): Observable<FileResponse | null> {
+    roleDelete(id: number, version: string): Observable<FileResponse> {
         let url_ = this.baseUrl + "/v{version}/Role/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -441,14 +506,14 @@ export class RoleService {
                 try {
                     return this.processRoleDelete(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                    return <Observable<FileResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+                return <Observable<FileResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRoleDelete(response: HttpResponseBase): Observable<FileResponse | null> {
+    protected processRoleDelete(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -465,7 +530,7 @@ export class RoleService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse | null>(<any>null);
+        return _observableOf<FileResponse>(<any>null);
     }
 }
 
@@ -547,7 +612,7 @@ export class UserService {
         return _observableOf<AuditActionResultOfICollectionOfUser>(<any>null);
     }
 
-    userPost(request: CreateUserRequest, version: string): Observable<AuditActionResultOfUser> {
+    userPost(version: string, request: CreateUserRequest): Observable<AuditActionResultOfUser> {
         let url_ = this.baseUrl + "/v{version}/User";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -602,7 +667,7 @@ export class UserService {
         return _observableOf<AuditActionResultOfUser>(<any>null);
     }
 
-    userPatch(request: UpdateUserRequest, version: string): Observable<AuditActionResultOfUser> {
+    userPatch(version: string, request: UpdateUserRequest): Observable<AuditActionResultOfUser> {
         let url_ = this.baseUrl + "/v{version}/User";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -826,9 +891,9 @@ export class AuditActionResult implements IAuditActionResult {
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
     returnedObject?: any | undefined;
-    id!: number;
-    hasErrors!: boolean;
-    hasValidationErrors!: boolean;
+    id?: number;
+    hasErrors?: boolean;
+    hasValidationErrors?: boolean;
 
     constructor(data?: IAuditActionResult) {
         if (data) {
@@ -881,9 +946,9 @@ export interface IAuditActionResult {
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
     returnedObject?: any | undefined;
-    id: number;
-    hasErrors: boolean;
-    hasValidationErrors: boolean;
+    id?: number;
+    hasErrors?: boolean;
+    hasValidationErrors?: boolean;
 }
 
 export class AuditActionResultOfString extends AuditActionResult implements IAuditActionResultOfString {
@@ -924,10 +989,9 @@ export interface IAuditActionResultOfString extends IAuditActionResult {
 }
 
 export class ErrorMessage implements IErrorMessage {
-    number!: number;
+    number?: number;
     message?: string | undefined;
-    exception?: Exception | undefined;
-    isValidationMessage!: boolean;
+    isValidationMessage?: boolean;
 
     constructor(data?: IErrorMessage) {
         if (data) {
@@ -942,7 +1006,6 @@ export class ErrorMessage implements IErrorMessage {
         if (_data) {
             this.number = _data["number"];
             this.message = _data["message"];
-            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
             this.isValidationMessage = _data["isValidationMessage"];
         }
     }
@@ -958,65 +1021,15 @@ export class ErrorMessage implements IErrorMessage {
         data = typeof data === 'object' ? data : {};
         data["number"] = this.number;
         data["message"] = this.message;
-        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["isValidationMessage"] = this.isValidationMessage;
         return data; 
     }
 }
 
 export interface IErrorMessage {
-    number: number;
+    number?: number;
     message?: string | undefined;
-    exception?: Exception | undefined;
-    isValidationMessage: boolean;
-}
-
-export class Exception implements IException {
-    stackTrace?: string | undefined;
-    message!: string;
-    innerException?: Exception | undefined;
-    source?: string | undefined;
-
-    constructor(data?: IException) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.stackTrace = _data["StackTrace"];
-            this.message = _data["Message"];
-            this.innerException = _data["InnerException"] ? Exception.fromJS(_data["InnerException"]) : <any>undefined;
-            this.source = _data["Source"];
-        }
-    }
-
-    static fromJS(data: any): Exception {
-        data = typeof data === 'object' ? data : {};
-        let result = new Exception();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["StackTrace"] = this.stackTrace;
-        data["Message"] = this.message;
-        data["InnerException"] = this.innerException ? this.innerException.toJSON() : <any>undefined;
-        data["Source"] = this.source;
-        return data; 
-    }
-}
-
-export interface IException {
-    stackTrace?: string | undefined;
-    message: string;
-    innerException?: Exception | undefined;
-    source?: string | undefined;
+    isValidationMessage?: boolean;
 }
 
 export class SystemLoginRequest implements ISystemLoginRequest {
@@ -1171,6 +1184,127 @@ export interface IResetPasswordRequest {
     newPassword: string;
 }
 
+export class AuditActionResultOfLocation extends AuditActionResult implements IAuditActionResultOfLocation {
+    object?: Location | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfLocation) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? Location.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfLocation {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfLocation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfLocation extends IAuditActionResult {
+    object?: Location | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class Location implements ILocation {
+    id?: number;
+    oldId?: number;
+    name?: string | undefined;
+    address1?: string | undefined;
+    address2?: string | undefined;
+    city?: string | undefined;
+    state?: string | undefined;
+    postalCode?: string | undefined;
+    country?: string | undefined;
+    phone?: string | undefined;
+    parentId?: number | undefined;
+    internalAddress?: string | undefined;
+    invoiceClass?: string | undefined;
+
+    constructor(data?: ILocation) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.oldId = _data["oldId"];
+            this.name = _data["name"];
+            this.address1 = _data["address1"];
+            this.address2 = _data["address2"];
+            this.city = _data["city"];
+            this.state = _data["state"];
+            this.postalCode = _data["postalCode"];
+            this.country = _data["country"];
+            this.phone = _data["phone"];
+            this.parentId = _data["parentId"];
+            this.internalAddress = _data["internalAddress"];
+            this.invoiceClass = _data["invoiceClass"];
+        }
+    }
+
+    static fromJS(data: any): Location {
+        data = typeof data === 'object' ? data : {};
+        let result = new Location();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["oldId"] = this.oldId;
+        data["name"] = this.name;
+        data["address1"] = this.address1;
+        data["address2"] = this.address2;
+        data["city"] = this.city;
+        data["state"] = this.state;
+        data["postalCode"] = this.postalCode;
+        data["country"] = this.country;
+        data["phone"] = this.phone;
+        data["parentId"] = this.parentId;
+        data["internalAddress"] = this.internalAddress;
+        data["invoiceClass"] = this.invoiceClass;
+        return data; 
+    }
+}
+
+export interface ILocation {
+    id?: number;
+    oldId?: number;
+    name?: string | undefined;
+    address1?: string | undefined;
+    address2?: string | undefined;
+    city?: string | undefined;
+    state?: string | undefined;
+    postalCode?: string | undefined;
+    country?: string | undefined;
+    phone?: string | undefined;
+    parentId?: number | undefined;
+    internalAddress?: string | undefined;
+    invoiceClass?: string | undefined;
+}
+
 export class CreateMenuRoleMapRequest implements ICreateMenuRoleMapRequest {
     menuId!: number;
     roleId!: number;
@@ -1212,13 +1346,13 @@ export interface ICreateMenuRoleMapRequest {
 }
 
 export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
-    menuRoleId!: number;
-    canRead!: boolean;
-    canCreate!: boolean;
-    canEdit!: boolean;
-    canDelete!: boolean;
-    canActivate!: boolean;
-    canApprove!: boolean;
+    menuRoleId?: number;
+    canRead?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canDelete?: boolean;
+    canActivate?: boolean;
+    canApprove?: boolean;
 
     constructor(data?: IUpdateMenuRoleMapRequest) {
         if (data) {
@@ -1262,13 +1396,13 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
 }
 
 export interface IUpdateMenuRoleMapRequest {
-    menuRoleId: number;
-    canRead: boolean;
-    canCreate: boolean;
-    canEdit: boolean;
-    canDelete: boolean;
-    canActivate: boolean;
-    canApprove: boolean;
+    menuRoleId?: number;
+    canRead?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canDelete?: boolean;
+    canActivate?: boolean;
+    canApprove?: boolean;
 }
 
 export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
@@ -1317,8 +1451,8 @@ export interface IAuditActionResultOfICollectionOfUser extends IAuditActionResul
 }
 
 export class User implements IUser {
-    id!: number;
-    isActive!: boolean;
+    id?: number;
+    isActive?: boolean;
     userRoleId?: string | undefined;
     userName?: string | undefined;
     firstName?: string | undefined;
@@ -1328,16 +1462,17 @@ export class User implements IUser {
     securityStamp?: string | undefined;
     phone?: string | undefined;
     supervisorId?: number | undefined;
-    locationId!: number;
-    isAnswerUser!: boolean;
-    customerId!: number;
+    supervisorName?: string | undefined;
+    locationId?: number;
+    isAnswerUser?: boolean;
+    customerId?: number;
     lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled!: boolean;
-    accessFailedCount!: number;
-    timeZoneId!: number;
-    lastUpdatedOn!: Date;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    timeZoneId?: number;
+    lastUpdatedOn?: Date;
     lastUpdatedBy?: number | undefined;
-    createdOn!: Date;
+    createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
 
@@ -1363,6 +1498,7 @@ export class User implements IUser {
             this.securityStamp = _data["securityStamp"];
             this.phone = _data["phone"];
             this.supervisorId = _data["supervisorId"];
+            this.supervisorName = _data["supervisorName"];
             this.locationId = _data["locationId"];
             this.isAnswerUser = _data["isAnswerUser"];
             this.customerId = _data["customerId"];
@@ -1402,6 +1538,7 @@ export class User implements IUser {
         data["securityStamp"] = this.securityStamp;
         data["phone"] = this.phone;
         data["supervisorId"] = this.supervisorId;
+        data["supervisorName"] = this.supervisorName;
         data["locationId"] = this.locationId;
         data["isAnswerUser"] = this.isAnswerUser;
         data["customerId"] = this.customerId;
@@ -1423,8 +1560,8 @@ export class User implements IUser {
 }
 
 export interface IUser {
-    id: number;
-    isActive: boolean;
+    id?: number;
+    isActive?: boolean;
     userRoleId?: string | undefined;
     userName?: string | undefined;
     firstName?: string | undefined;
@@ -1434,16 +1571,17 @@ export interface IUser {
     securityStamp?: string | undefined;
     phone?: string | undefined;
     supervisorId?: number | undefined;
-    locationId: number;
-    isAnswerUser: boolean;
-    customerId: number;
+    supervisorName?: string | undefined;
+    locationId?: number;
+    isAnswerUser?: boolean;
+    customerId?: number;
     lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled: boolean;
-    accessFailedCount: number;
-    timeZoneId: number;
-    lastUpdatedOn: Date;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    timeZoneId?: number;
+    lastUpdatedOn?: Date;
     lastUpdatedBy?: number | undefined;
-    createdOn: Date;
+    createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
 }
@@ -1505,10 +1643,10 @@ export class MenuItem implements IMenuItem {
     name?: string | undefined;
     info?: string | undefined;
     icon?: string | undefined;
-    orderNumber!: number;
+    orderNumber?: number;
     menuGroup?: MenuGroup | undefined;
     permissions?: number[] | undefined;
-    enumMenuItem!: EnumMenuItem;
+    enumMenuItem?: EnumMenuItem;
 
     constructor(data?: IMenuItem) {
         if (data) {
@@ -1566,10 +1704,10 @@ export interface IMenuItem {
     name?: string | undefined;
     info?: string | undefined;
     icon?: string | undefined;
-    orderNumber: number;
+    orderNumber?: number;
     menuGroup?: MenuGroup | undefined;
     permissions?: number[] | undefined;
-    enumMenuItem: EnumMenuItem;
+    enumMenuItem?: EnumMenuItem;
 }
 
 export class MenuGroup implements IMenuGroup {
@@ -1577,7 +1715,7 @@ export class MenuGroup implements IMenuGroup {
     name?: string | undefined;
     info?: string | undefined;
     icon?: string | undefined;
-    orderNumber!: number;
+    orderNumber?: number;
 
     constructor(data?: IMenuGroup) {
         if (data) {
@@ -1621,7 +1759,7 @@ export interface IMenuGroup {
     name?: string | undefined;
     info?: string | undefined;
     icon?: string | undefined;
-    orderNumber: number;
+    orderNumber?: number;
 }
 
 export enum EnumMenuItem {
@@ -1656,6 +1794,7 @@ export enum EnumMenuItem {
     WIPHistory = 28,
     WIPMenu = 29,
     WipStatus = 30,
+    Roles = 31,
 }
 
 export class AuditActionResultOfUser extends AuditActionResult implements IAuditActionResultOfUser {
@@ -1705,12 +1844,12 @@ export class CreateUserRequest implements ICreateUserRequest {
     phone?: string | undefined;
     supervisorId?: number | undefined;
     locationId?: number | undefined;
-    isActive!: boolean;
+    isActive?: boolean;
     isAnswerUser?: boolean | undefined;
     customerId?: number | undefined;
     lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled!: boolean;
-    accessFailedCount!: number;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
     timeZoneId?: number | undefined;
 
     constructor(data?: ICreateUserRequest) {
@@ -1782,12 +1921,12 @@ export interface ICreateUserRequest {
     phone?: string | undefined;
     supervisorId?: number | undefined;
     locationId?: number | undefined;
-    isActive: boolean;
+    isActive?: boolean;
     isAnswerUser?: boolean | undefined;
     customerId?: number | undefined;
     lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled: boolean;
-    accessFailedCount: number;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
     timeZoneId?: number | undefined;
 }
 
@@ -1862,12 +2001,12 @@ export interface IAuditActionResultOfPendingApprovalNotification extends IAuditA
 }
 
 export class PendingApprovalNotification implements IPendingApprovalNotification {
-    customers!: number;
-    locations!: number;
-    parts!: number;
-    procedures!: number;
-    purchaseOrders!: number;
-    users!: number;
+    customers?: number;
+    locations?: number;
+    parts?: number;
+    procedures?: number;
+    purchaseOrders?: number;
+    users?: number;
 
     constructor(data?: IPendingApprovalNotification) {
         if (data) {
@@ -1909,12 +2048,12 @@ export class PendingApprovalNotification implements IPendingApprovalNotification
 }
 
 export interface IPendingApprovalNotification {
-    customers: number;
-    locations: number;
-    parts: number;
-    procedures: number;
-    purchaseOrders: number;
-    users: number;
+    customers?: number;
+    locations?: number;
+    parts?: number;
+    procedures?: number;
+    purchaseOrders?: number;
+    users?: number;
 }
 
 export interface FileResponse {

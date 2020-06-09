@@ -64,7 +64,7 @@ export class LoginService {
       this.loginError('Something was wrong. Try again');
     }
 
-    this.accountService.login(new SystemLoginRequest({ userName: creds.email, password: creds.password }), env.apiVersion)
+    this.accountService.login(env.apiVersion, new SystemLoginRequest({ userName: creds.email, password: creds.password }))
       .pipe(take(1))
       .subscribe(responseHandler((result) => {
         ctrl.receiveToken(result.object);

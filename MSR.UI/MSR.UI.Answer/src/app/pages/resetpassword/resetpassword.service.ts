@@ -34,7 +34,7 @@ export class ResetpasswordService {
     resetPassword(creds) {
         this.requestLogin();
         if (creds.token.length > 0 && creds.password.length > 0) {
-            this.accountService.resetpassword(new ResetPasswordRequest({ token: creds.token, newPassword: creds.password }), env.apiVersion).pipe(take(1))
+            this.accountService.resetpassword(env.apiVersion, new ResetPasswordRequest({ token: creds.token, newPassword: creds.password })).pipe(take(1))
                 .subscribe(responseHandler(() => {
                     this.loginError('Password was updated!');
                     setTimeout(() => {
