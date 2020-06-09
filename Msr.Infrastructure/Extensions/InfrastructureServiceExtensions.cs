@@ -32,6 +32,8 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
 

@@ -1,6 +1,6 @@
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public partial class Customer: TrackableEntity
+    public partial class Customer: DeletableEntity
     {
         public int OldId { get; set; }
 
@@ -20,6 +20,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual Location Location { get; set; }
 
-
+        public int? LocationId { get; set; }
     }
 }

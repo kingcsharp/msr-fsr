@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.V1.Extentions;
+using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using NSwag.Annotations;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -30,6 +34,32 @@ namespace MSR.Answer.API.V1.Controllers
             await _dispatcher.DispatchAsync(command);
 
             return Ok();
+        }
+
+        [HttpPost("Role")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> CreateMenuRoleMap([FromBody, Required] CreateMenuRoleMapRequest request)
+        {
+            var command = request.ToCreateMenuRoleMapCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToCreatedResponse<string>();
+        }
+
+        [HttpPatch("Role")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> AddPermissionsToMenuRoleMap([FromBody, Required] UpdateMenuRoleMapRequest request)
+        {
+            var command = request.ToUpdateMenuRoleMapCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
+        }
+
+        [HttpDelete("Role/{id}")]
+        public async Task<IActionResult> RemoveMenuRoleMap(int id)
+        {
+            var command = new RemoveMenuRoleMap() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
         }
     }
 }
