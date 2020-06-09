@@ -6,6 +6,7 @@ using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Resources.Email;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.Services.Account;
+using MSR.Infrastructure.Resources.Services.Location;
 using MSR.Infrastructure.Resources.Services.Menu;
 using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
@@ -18,6 +19,7 @@ namespace MSR.Infrastructure.Extensions
         {
 
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

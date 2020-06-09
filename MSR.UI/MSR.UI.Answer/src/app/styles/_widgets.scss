@@ -810,6 +810,8 @@ body .ui-dropdown {
   background: none;
   border: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #1d232a;
+  color: #ffffff;
   .ui-dropdown-trigger {
     background-color: #313c48;
     color: #ffffff;
@@ -818,6 +820,8 @@ body .ui-dropdown {
 }
 body .ui-dropdown .ui-dropdown-label {
   padding-right: 3em;
+  background: #1d232a;
+  color: #fff;
 }
 
 .ui-table-customers .ui-table-globalfilter-container input {
@@ -1373,14 +1377,36 @@ body .ui-multiselect .ui-multiselect-label {
   height: 1em;
   margin-top: -0.5em;
 }
+.fextra {
+  right: 30px;
+}
 
-.gridDropdown{
+.gridDropdown {
   position: relative !important;
   display: inline !important;
   top: -2px;
 }
 
-multiselect-wrapper .ui-multiselect{
+multiselect-wrapper .ui-multiselect {
   width: 100%;
 }
 
+body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item,
+body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item-group,
+body .ui-paginator .ui-dropdown:hover .ui-dropdown-trigger,
+body .ui-paginator .ui-dropdown:hover .ui-dropdown-label,
+body .ui-paginator .ui-dropdown .ui-dropdown-label {
+  color: #fff;
+  background-color: #323c48;
+}
+
+body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item:not(.ui-state-highlight):not(.ui-state-disabled):hover,
+body
+  .ui-dropdown-panel
+  .ui-dropdown-items
+  .ui-dropdown-item-group:not(.ui-state-highlight):not(.ui-state-disabled):hover,
+body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight,
+body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item-group.ui-state-highlight {
+  color: #ffffff;
+  background-color: #1d232a;
+}

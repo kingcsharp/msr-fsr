@@ -76,12 +76,8 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'createdOn', 'contains')"
-              placeholder="Search by createdOn" class="ui-column-filter" [value]="dt.filters['createdOn']?.value">
-            <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'createdOn')"></i>
-
-            <p-calendar [(ngModel)]="date7" [showTime]="true"></p-calendar>
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            </pcalendar-wrapper>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('roles',gridSettings)">
@@ -243,6 +239,43 @@
                 (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text" />
             </div>
           </div>
+          <div class="form-group row">
+            <label for="createdOn" *ngIf="currUser.id !== undefined" class="col-md-2  col-form-label text-md-right">
+              Created On
+            </label>
+            <div class="col-md-4" *ngIf="currUser.id !== undefined">
+              <label class="col-form-label">{{currUser.createdOn | date :'short'}}</label>
+            </div>
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+              Supervisor
+            </label>
+            <div class="col-md-4 col-12">
+              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers"
+                [(ngModel)]="currUser.supervisorId">
+              </p-dropdown>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <!-- <label for="createdOn" *ngIf="currUser.id !== undefined" class="col-md-2  col-form-label text-md-right">
+              Created On
+            </label>
+            <div class="col-md-4" *ngIf="currUser.id !== undefined">
+              <label class="col-form-label">{{currUser.createdOn | date :'short'}}</label>
+            </div> -->
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+              Location
+            </label>
+            <div class="col-md-4 col-12">
+              <p-dropdown placeholder="Select Location" name="locations" [options]="locations"
+                [(ngModel)]="currUser.locationId">
+              </p-dropdown>
+            </div>
+          </div>
+
+          
+
+
           <div class="form-group row">
             <label class="col-md-2  col-form-label text-md-right">
               Is Active

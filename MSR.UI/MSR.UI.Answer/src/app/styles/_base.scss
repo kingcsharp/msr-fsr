@@ -103,17 +103,6 @@
 
   li {
     list-style: none;
-
-    i[class*="fi"] {
-      width: 16px;
-      margin-right: 10px;
-      float: left;
-      line-height: 20px;
-      font-size: 14px;
-      opacity: 0.4;
-      text-align: right;
-    }
-
     a:hover,
     a:focus {
       background: $sidebar-item-active-bg;

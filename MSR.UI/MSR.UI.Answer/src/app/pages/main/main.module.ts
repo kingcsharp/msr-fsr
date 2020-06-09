@@ -22,7 +22,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TrendModule } from 'ngx-trend';
 import { TaskContainerComponent } from './analytics/components/task-container/task-container.component';
 import { TaskComponent } from './analytics/components/task/task';
-import { CalendarModule } from './visits/calendar/calendar.module';
 import { VisitsComponent } from './visits/visits.component';
 import { UtilsModule } from '../../layout/utils/utils.module';
 import { RickshawChartModule } from '../../components/rickshaw/rickshaw.module';
@@ -49,9 +48,11 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
+import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
+import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -66,6 +67,7 @@ export const routes = [
     // Components / Directives/ Pipes
     GridOptionsComponent,
     MultiselectWrapperComponent,
+    PcalendarWrapperComponent,
     AnalyticsComponent,
     MainChartComponent,
     BigStatComponent,

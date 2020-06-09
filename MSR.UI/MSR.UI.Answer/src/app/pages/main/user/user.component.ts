@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { UserService, CreateUserRequest, User, IAuditActionResultOfUser } from '../../../services/api.client.generated';
+import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -54,9 +54,11 @@ export class UserComponent implements OnInit {
   columnPicker: any;
   columnDropdown: boolean = false;
   gridOptionsRotate: boolean = false;
+  locations: any[] = [];
+  getLocationsFlag: boolean = false;
 
   constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
-    public globals: Globals, private elem: ElementRef) {
+    public globals: Globals, private elem: ElementRef, public locationService: LocationService) {
   }
 
   ngOnInit(): void {
@@ -94,6 +96,20 @@ export class UserComponent implements OnInit {
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
     this.getUsers();
+  }
+
+  getLocations() {
+    const ctrl = this;
+    if (ctrl.getLocationsFlag) {
+      return ctrl.locations;
+    }
+    this.locationService.location(null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        ctrl.data = response.returnedObject.map((x) => {
+          ctrl.locations.push({ label: x.name, value: x.id });
+        });
+        ctrl.getLocationsFlag = true;
+      }))
   }
 
   async getUsers() {
@@ -189,6 +205,7 @@ export class UserComponent implements OnInit {
   }
 
   getUser(user: User) {
+    this.getLocations();
     if (user === undefined) {
       let ret = new User();
       ret.isActive = true;
