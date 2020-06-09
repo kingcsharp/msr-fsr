@@ -235,71 +235,6 @@ export class AccountService {
 }
 
 @Injectable()
-export class LocationService {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
-    }
-
-    location(parentId: number | null | undefined, version: string): Observable<AuditActionResultOfLocation> {
-        let url_ = this.baseUrl + "/v{version}/Location?";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (parentId !== undefined && parentId !== null)
-            url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processLocation(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processLocation(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResultOfLocation>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResultOfLocation>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processLocation(response: HttpResponseBase): Observable<AuditActionResultOfLocation> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfLocation.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResultOfLocation>(<any>null);
-    }
-}
-
-@Injectable()
 export class MenuService {
     private http: HttpClient;
     private baseUrl: string;
@@ -340,6 +275,180 @@ export class MenuService {
     }
 
     protected processMenu(response: HttpResponseBase): Observable<FileResponse | null> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse | null>(<any>null);
+    }
+}
+
+@Injectable()
+export class RoleService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    rolePost(request: CreateMenuRoleMapRequest, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Role";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    rolePatch(request: UpdateMenuRoleMapRequest, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Role";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRolePatch(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    roleDelete(id: number, version: string): Observable<FileResponse | null> {
+        let url_ = this.baseUrl + "/v{version}/Role/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRoleDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRoleDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRoleDelete(response: HttpResponseBase): Observable<FileResponse | null> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1062,58 +1171,11 @@ export interface IResetPasswordRequest {
     newPassword: string;
 }
 
-export class AuditActionResultOfLocation extends AuditActionResult implements IAuditActionResultOfLocation {
-    object?: Location | undefined;
-    returnedObject?: any | undefined;
+export class CreateMenuRoleMapRequest implements ICreateMenuRoleMapRequest {
+    menuId!: number;
+    roleId!: number;
 
-    constructor(data?: IAuditActionResultOfLocation) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? Location.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfLocation {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfLocation();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfLocation extends IAuditActionResult {
-    object?: Location | undefined;
-    returnedObject?: any | undefined;
-}
-
-export class Location implements ILocation {
-    oldId!: number;
-    name?: string | undefined;
-    address1?: string | undefined;
-    address2?: string | undefined;
-    city?: string | undefined;
-    state?: string | undefined;
-    postalCode?: string | undefined;
-    country?: string | undefined;
-    phone?: string | undefined;
-    parentId?: number | undefined;
-    internalAddress?: string | undefined;
-    invoiceClass?: string | undefined;
-
-    constructor(data?: ILocation) {
+    constructor(data?: ICreateMenuRoleMapRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1124,59 +1186,89 @@ export class Location implements ILocation {
 
     init(_data?: any) {
         if (_data) {
-            this.oldId = _data["oldId"];
-            this.name = _data["name"];
-            this.address1 = _data["address1"];
-            this.address2 = _data["address2"];
-            this.city = _data["city"];
-            this.state = _data["state"];
-            this.postalCode = _data["postalCode"];
-            this.country = _data["country"];
-            this.phone = _data["phone"];
-            this.parentId = _data["parentId"];
-            this.internalAddress = _data["internalAddress"];
-            this.invoiceClass = _data["invoiceClass"];
+            this.menuId = _data["menuId"];
+            this.roleId = _data["roleId"];
         }
     }
 
-    static fromJS(data: any): Location {
+    static fromJS(data: any): CreateMenuRoleMapRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new Location();
+        let result = new CreateMenuRoleMapRequest();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["oldId"] = this.oldId;
-        data["name"] = this.name;
-        data["address1"] = this.address1;
-        data["address2"] = this.address2;
-        data["city"] = this.city;
-        data["state"] = this.state;
-        data["postalCode"] = this.postalCode;
-        data["country"] = this.country;
-        data["phone"] = this.phone;
-        data["parentId"] = this.parentId;
-        data["internalAddress"] = this.internalAddress;
-        data["invoiceClass"] = this.invoiceClass;
+        data["menuId"] = this.menuId;
+        data["roleId"] = this.roleId;
         return data; 
     }
 }
 
-export interface ILocation {
-    oldId: number;
-    name?: string | undefined;
-    address1?: string | undefined;
-    address2?: string | undefined;
-    city?: string | undefined;
-    state?: string | undefined;
-    postalCode?: string | undefined;
-    country?: string | undefined;
-    phone?: string | undefined;
-    parentId?: number | undefined;
-    internalAddress?: string | undefined;
-    invoiceClass?: string | undefined;
+export interface ICreateMenuRoleMapRequest {
+    menuId: number;
+    roleId: number;
+}
+
+export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
+    menuRoleId!: number;
+    canRead!: boolean;
+    canCreate!: boolean;
+    canEdit!: boolean;
+    canDelete!: boolean;
+    canActivate!: boolean;
+    canApprove!: boolean;
+
+    constructor(data?: IUpdateMenuRoleMapRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.menuRoleId = _data["menuRoleId"];
+            this.canRead = _data["canRead"];
+            this.canCreate = _data["canCreate"];
+            this.canEdit = _data["canEdit"];
+            this.canDelete = _data["canDelete"];
+            this.canActivate = _data["canActivate"];
+            this.canApprove = _data["canApprove"];
+        }
+    }
+
+    static fromJS(data: any): UpdateMenuRoleMapRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateMenuRoleMapRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["menuRoleId"] = this.menuRoleId;
+        data["canRead"] = this.canRead;
+        data["canCreate"] = this.canCreate;
+        data["canEdit"] = this.canEdit;
+        data["canDelete"] = this.canDelete;
+        data["canActivate"] = this.canActivate;
+        data["canApprove"] = this.canApprove;
+        return data; 
+    }
+}
+
+export interface IUpdateMenuRoleMapRequest {
+    menuRoleId: number;
+    canRead: boolean;
+    canCreate: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+    canActivate: boolean;
+    canApprove: boolean;
 }
 
 export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
@@ -1236,7 +1328,6 @@ export class User implements IUser {
     securityStamp?: string | undefined;
     phone?: string | undefined;
     supervisorId?: number | undefined;
-    supervisorName?: string | undefined;
     locationId!: number;
     isAnswerUser!: boolean;
     customerId!: number;
@@ -1272,7 +1363,6 @@ export class User implements IUser {
             this.securityStamp = _data["securityStamp"];
             this.phone = _data["phone"];
             this.supervisorId = _data["supervisorId"];
-            this.supervisorName = _data["supervisorName"];
             this.locationId = _data["locationId"];
             this.isAnswerUser = _data["isAnswerUser"];
             this.customerId = _data["customerId"];
@@ -1312,7 +1402,6 @@ export class User implements IUser {
         data["securityStamp"] = this.securityStamp;
         data["phone"] = this.phone;
         data["supervisorId"] = this.supervisorId;
-        data["supervisorName"] = this.supervisorName;
         data["locationId"] = this.locationId;
         data["isAnswerUser"] = this.isAnswerUser;
         data["customerId"] = this.customerId;
@@ -1345,7 +1434,6 @@ export interface IUser {
     securityStamp?: string | undefined;
     phone?: string | undefined;
     supervisorId?: number | undefined;
-    supervisorName?: string | undefined;
     locationId: number;
     isAnswerUser: boolean;
     customerId: number;

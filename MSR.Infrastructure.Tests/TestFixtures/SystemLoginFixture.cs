@@ -2,7 +2,7 @@
 
 namespace MSR.Infrastructure.Tests.TestFixtures
 {
-    public class SystemLoginTestFixture
+    public class SystemLoginFixture
     {
         public static SystemLogin SuccessCommand => new SystemLogin() { Password = Constants.GoodPassword, UserName = Constants.GoodUserName };
         public static SystemLogin FailCommand => new SystemLogin() { Password = Constants.FailPassword, UserName = Constants.FailUserName };

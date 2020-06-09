@@ -8,19 +8,17 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models.Config;
-using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using User = MSR.Domain.Models.User;
 using Newtonsoft.Json;
+using MSR.Infrastructure.Helpers.Abstractions;
 
 namespace MSR.Infrastructure.Resources.Services.Account
 {
@@ -33,6 +31,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private readonly JwtData _jwtData;
         private readonly EmailInformation _emailInformation;
         private readonly GeneralInformation _generalInformation;
+        private readonly IAuthenticationHelper _authenticationHelper;
 
         public AccountService(
             IUnitOfWork unitOfWork,
@@ -41,7 +40,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
             IEmailService emailService,
             JwtData jwtData,
             EmailInformation emailInformation,
-            GeneralInformation generalInformation)
+            GeneralInformation generalInformation,
+            IAuthenticationHelper authenticationHelper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -50,30 +50,18 @@ namespace MSR.Infrastructure.Resources.Services.Account
             _jwtData = jwtData;
             _emailInformation = emailInformation;
             _generalInformation = generalInformation;
+            _authenticationHelper = authenticationHelper;
         }
 
         public async Task<string> LoginAsync(SystemLogin command)
         {
-            //ToDO PUT THIS BACK ON.
-            //var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == command.UserName);
-            //var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == 107);
-            var user = _unitOfWork.Users.Query().Include(u => u.Roles)
-                .ThenInclude(rs => rs.Role)
-                .ThenInclude(r => r.Menus)
-                .ThenInclude(m => m.MenuRolePermission)
-                .Include(u => u.Roles)
-                .ThenInclude(rs => rs.Role)
-                .ThenInclude(r => r.Menus)
-                .ThenInclude(r => r.MenuItem)
-                .ThenInclude(mi => mi.MenuGroup)
-                .FirstOrDefault(i => i.UserName == command.UserName);
-
+            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false,i => i.UserName == command.UserName,null);
             if (user == null)
             {
                 throw new DomainException("Username Or Password are invalid");
             }
 
-            if (!AuthenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
+            if (!_authenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
             {
                 throw new DomainException("Username Or Password are invalid");
             }
@@ -128,7 +116,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
             DelegateHandler.GetCurrentUserId = () => user.Id;
 
-            AuthenticationHelper.CreatePasswordHash(command.Password, out var hash, out var salt);
+            _authenticationHelper.CreatePasswordHash(command.Password, out var hash, out var salt);
             user.PasswordHash = hash;
             user.PasswordSalt = salt;
 
@@ -195,7 +183,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private static int[][] GetTokenUserRoles(EntityFramework.Entities.User user)
         {
             var totalMenuItems = Enum.GetNames(typeof(EnumMenuItem)).Length;
-            //var totalPrivilegeItems = Enum.GetNames(typeof(EnumPrivilege)).Length;
             var jaggedArray = new int[totalMenuItems][];
 
             foreach (var role in user.Roles ?? new List<UserRole>())

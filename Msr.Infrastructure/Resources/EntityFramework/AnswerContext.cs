@@ -40,11 +40,18 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory).UseSqlServer(ConnectionString_);
-            base.OnConfiguring(optionsBuilder);
-        }
+
+        public AnswerContext(DbContextOptions<AnswerContext> options)
+        : base(options)
+        {}
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory)
+        //        .UseLazyLoadingProxies()
+        //        .UseSqlServer(ConnectionString_);
+        //    base.OnConfiguring(optionsBuilder);
+        //}
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -58,10 +65,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
                     case EntityState.Modified:
                         HandleTrackableEntity(entry, now);
                         break;
-                        //case EntityState.Deleted:
-                        //    HandleDeletedEntry(entry);
-                        //    HandleTrackableEntity(entry, now);
-                        //    break;
                 }
             }
 
@@ -82,10 +85,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
                     case EntityState.Modified:
                         HandleTrackableEntity(entry, now);
                         break;
-                        //case EntityState.Deleted:
-                        //    HandleDeletedEntry(entry);
-                        //    HandleTrackableEntity(entry, now);
-                        //    break;
                 }
             }
 
@@ -113,10 +112,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         public static readonly ILoggerFactory ConsoleLoggerFactory = LoggerFactory.Create(builder =>
         {
-            //builder.AddFilter((category, level) =>
-            //category == DbLoggerCategory.Database.Command.Name
-            //&& level == LogLevel.Information)
-            //.AddConsole();
         });
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

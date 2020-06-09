@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Infrastructure.Extensions;
-using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
@@ -13,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Helpers;
+using MSR.Infrastructure.Helpers.Abstractions;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -20,11 +19,13 @@ namespace MSR.Infrastructure.Resources.Services.Users
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IAuthenticationHelper _authenticationHelper;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationHelper authenticationHelper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _authenticationHelper = authenticationHelper;
         }
 
         public async Task<Domain.Models.User> CreateUserAsync(CreateUser command)
@@ -40,9 +41,9 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 throw new DomainException($"{nameof(command.UserName)} already Exists", DomainError.Conflict);
             }
-
-            var password = AuthenticationHelper.CreateRandomPassword();
-            AuthenticationHelper.CreatePasswordHash(password, out var hash, out var salt);
+            
+            var password = _authenticationHelper.CreateRandomPassword();
+            _authenticationHelper.CreatePasswordHash(password, out var hash, out var salt);
             efUser.PasswordHash = hash;
             efUser.PasswordSalt = salt;
 
@@ -175,16 +176,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.User> GetLoggedInUserData(int Id)
         {
-            var user = _unitOfWork.Users.Query().Include(u => u.Roles)
-                                                .ThenInclude(rs => rs.Role)
-                                                .ThenInclude(r => r.Menus)
-                                                .ThenInclude(m => m.MenuRolePermission)
-                                                .Include(u => u.Roles)
-                                                .ThenInclude(rs => rs.Role)
-                                                .ThenInclude(r => r.Menus)
-                                                .ThenInclude(r => r.MenuItem)
-                                                .ThenInclude(mi => mi.MenuGroup)
-                                                .FirstOrDefault(i => i.Id == Id);
+            var user = _unitOfWork.Users.FirstOrDefault(false,i => i.Id == Id);
 
             if (user == null)
                 throw new DomainException($"{nameof(Domain.Models.User)} not found", DomainError.NotFound);

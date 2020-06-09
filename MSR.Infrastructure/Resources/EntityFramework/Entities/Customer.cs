@@ -12,11 +12,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? PrimaryContactUserId { get; set; }
 
-        public User PrimaryContactUser { get; set; }
+        public virtual User PrimaryContactUser { get; set; }
 
         public int? SecondaryContactUserId { get; set; }
 
-        public User SecondaryContactUser { get; set; }
+        public virtual User SecondaryContactUser { get; set; }
 
         public virtual Location Location { get; set; }
 
