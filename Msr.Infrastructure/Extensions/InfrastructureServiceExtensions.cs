@@ -10,6 +10,7 @@ using MSR.Infrastructure.Resources.Email;
 using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.Services.Account;
+using MSR.Infrastructure.Resources.Services.Customers;
 using MSR.Infrastructure.Resources.Services.Menu;
 using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
@@ -22,12 +23,15 @@ namespace MSR.Infrastructure.Extensions
         {
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
             services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dbConfig.ConnectionString));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMenuService, MenuService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
 

@@ -118,5 +118,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateMenuRoleMap>(request);
         }
+
+        public static GetMultipleCustomers ToGetMultipleCustomersCommand(this GetMultipleCustomersRequest request)
+        {
+
+        }
     }
 }
