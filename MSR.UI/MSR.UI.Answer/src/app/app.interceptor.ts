@@ -25,9 +25,26 @@ export class AppInterceptor implements HttpInterceptor {
     }
   }
 
+  nextSuccessHandler(blob) {
+    let reader = new FileReader();
+    reader.onload = event => {
+      const value = JSON.parse(event.target.result.toString());
+      if (value === undefined || value === null) {
+        return;
+      }
+      if (!value.hasErrors && value.successMessage) {
+        this.toastr.success(value.successMessage);
+      } else if (value.hasErrors && value.errorMessages.length > 0) {
+        this.toastr.error(value.errorMessages[0].message);
+      }
+    };
+    reader.readAsText(blob);
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     req = req.clone({ url: this.config.baseURLApi + req.url });
     this.requests++;
+    const method = req.method;
     const token: string = localStorage.getItem('token');
     req = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + token)
@@ -67,12 +84,13 @@ export class AppInterceptor implements HttpInterceptor {
         }
       }), map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
+          if (method === 'PATCH' || method === 'POST') {
+            this.nextSuccessHandler(event.body);
+          }
           this.requests--;
           this.turnOffLoader();
         }
         return event;
       }));
-
-    // return next.handle(req);
   }
 }

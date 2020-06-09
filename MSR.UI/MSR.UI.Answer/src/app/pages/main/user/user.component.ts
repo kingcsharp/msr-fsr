@@ -96,6 +96,7 @@ export class UserComponent implements OnInit {
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
     this.getUsers();
+    this.getLocations();
   }
 
   getLocations() {
@@ -105,7 +106,7 @@ export class UserComponent implements OnInit {
     }
     this.locationService.location(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        ctrl.data = response.returnedObject.map((x) => {
+        response.returnedObject.map((x) => {
           ctrl.locations.push({ label: x.name, value: x.id });
         });
         ctrl.getLocationsFlag = true;
@@ -192,9 +193,6 @@ export class UserComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currUser.id === undefined) {
             ctrl.data.push(new User(resp.returnedObject));
-            ctrl.toastr.success('User has been successfully created!');
-          } else {
-            ctrl.toastr.success('User has been successfully updated!');
           }
           ctrl.clseDialog();
         }
@@ -205,7 +203,6 @@ export class UserComponent implements OnInit {
   }
 
   getUser(user: User) {
-    this.getLocations();
     if (user === undefined) {
       let ret = new User();
       ret.isActive = true;

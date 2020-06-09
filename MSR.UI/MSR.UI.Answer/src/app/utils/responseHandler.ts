@@ -1,10 +1,6 @@
-import { ToastrService } from 'ngx-toastr';
-
-
 function responseHandler(nextFn, errorFn = undefined) {
     let subscriberA = {
         next(value: any) {
-            nexthandler(value);
             if (nextFn !== undefined) {
                 nextFn(value);
             }
@@ -32,19 +28,6 @@ function responseHandler(nextFn, errorFn = undefined) {
         }
     };
     return subscriberA;
-}
-
-function nexthandler(value: any) {
-    const toastr: ToastrService = null;
-    if (value === undefined || value === null) {
-        return;
-    }
-
-    if (!value.hasErrors && value.successMessage) {
-        toastr.success(value.successMessage);
-    } else if (value.hasErrors && value.errorMessages.length > 0) {
-        toastr.error(value.errorMessages[0].message);
-    }
 }
 
 export {
