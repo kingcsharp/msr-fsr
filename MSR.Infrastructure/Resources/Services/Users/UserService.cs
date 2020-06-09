@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -154,21 +155,28 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
 
             var userList = new List<Domain.Models.User>();
-            var usersTo = users.Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).ToList();
+            var usersTo = users.Include(x=>x.Supervisor).ToList();
 
             foreach (var user in usersTo)
             {
-                var userToAdd = _mapper.Map<Domain.Models.User>(user);
-                userToAdd.SupervisorName = user?.Supervisor?.GetFullName();
-                foreach (var role in user.Roles ?? new List<UserRole>())
-                {
-                    userToAdd.Roles.Add(new Domain.Models.Role()
-                    {
-                        Name = role.Role.Name
-                    });
-                }
-                userList.Add(userToAdd);
+                userList.Add(_mapper.Map<Domain.Models.User>(user));
             }
+
+            //var usersTo = users.Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).ToList();
+
+            //foreach (var user in usersTo)
+            //{
+            //    var userToAdd = _mapper.Map<Domain.Models.User>(user);
+            //    userToAdd.SupervisorName = user?.Supervisor?.GetFullName();
+            //    foreach (var role in user.Roles ?? new List<UserRole>())
+            //    {
+            //        userToAdd.Roles.Add(new Domain.Models.Role()
+            //        {
+            //            Name = role.Role.Name
+            //        });
+            //    }
+            //    userList.Add(userToAdd);
+            //}
 
 
             return userList;
