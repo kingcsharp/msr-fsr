@@ -188,5 +188,10 @@ namespace MSR.Answer.API.V1.Extentions
                 MenuRoleId = request.MenuRoleId
             };
         }
+
+        public static GetMultipleCustomers ToGetMultipleCustomersCommand(this GetMultipleCustomersRequest request)
+        {
+
+        }
     }
 }
