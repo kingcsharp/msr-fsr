@@ -193,5 +193,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
 
         }
+
+        public static GetMultipleCustomers ToGetMultipleCustomersCommand(this GetMultipleCustomersRequest request)
+        {
+
+        }
     }
 }

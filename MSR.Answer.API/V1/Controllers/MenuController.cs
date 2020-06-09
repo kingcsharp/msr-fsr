@@ -62,5 +62,31 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToNoContentResponse();
         }
+
+        [HttpPost("Role")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> CreateMenuRoleMap([FromBody, Required] CreateMenuRoleMapRequest request)
+        {
+            var command = request.ToCreateMenuRoleMapCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToCreatedResponse<string>();
+        }
+
+        [HttpPatch("Role")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> AddPermissionsToMenuRoleMap([FromBody, Required] UpdateMenuRoleMapRequest request)
+        {
+            var command = request.ToUpdateMenuRoleMapCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
+        }
+
+        [HttpDelete("Role/{id}")]
+        public async Task<IActionResult> RemoveMenuRoleMap(int id)
+        {
+            var command = new RemoveMenuRoleMap() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
+        }
     }
 }
