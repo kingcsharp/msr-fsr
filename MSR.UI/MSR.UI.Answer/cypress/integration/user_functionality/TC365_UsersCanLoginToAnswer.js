@@ -10,7 +10,7 @@ describe('User Functionality', () => {
         
         cy.get('[data-cy=submit-button]').click()
 
-        cy.get('[data-cy=logout-link]').url().should('include', '/people/people')
+        cy.get('[data-cy=logout-link]', {timeout: 20000}).url().should('include', '/people/people')
 
         cy.get('[data-cy=logout-link]').click()
 
