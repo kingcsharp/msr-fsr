@@ -3,7 +3,7 @@
     [title]="'<h3 class=mt-0> <img width=72 src=../../../assets/head/android-chrome-72x72.png> </widget>ANSWER Login</h3>'"
     [customHeader]="true" class="widget-auth mx-auto">
     <form>
-      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0 text-center">
+      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0 text-center" data-cy="alert-message">
         {{loginService.errorMessage}}
       </alert>
       <div class="form-group mt">
@@ -34,8 +34,8 @@
           Login
         </button>
         <div class="d-block text-center sm-mg">
-          <a (click)="fogotUserName()" class="text-center mb-4">Forgot Username?</a> |
-          <a (click)="fogotPassword()" class="text-center mb-4">Forgot Password?</a>
+          <a (click)="fogotUserName()" class="text-center mb-4" data-cy="forgotusername-link">Forgot Username?</a> |
+          <a (click)="fogotPassword()" class="text-center mb-4" data-cy="forgotpassword-link">Forgot Password?</a>
         </div>
       </div>
     </form>
@@ -54,11 +54,11 @@
             <i class="la la-user text-white"></i>
           </div>
           <input id="email" class="form-control input-transparent pl-3" [(ngModel)]="email" type="email" required
-            name="email" placeholder="Email" />
+            name="email" placeholder="Email" data-cy="email-input"/>
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="forgotUserName()" type="submit" class="btn btn-sm btn-danger auth-btn">
+        <button (click)="forgotUserName()" type="submit" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button">
           <span class="auth-btn-circle">
             <i class="la la-caret-right"></i>
           </span>

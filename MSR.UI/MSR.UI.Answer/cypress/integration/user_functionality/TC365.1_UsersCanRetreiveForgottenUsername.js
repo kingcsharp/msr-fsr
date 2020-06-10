@@ -15,7 +15,7 @@ describe('User Functionality', () => {
 
         cy.get('[data-cy=forgotusername-link]').click()
 
-        cy.get('[data-cy=username-input]').type('robert.lara@cmhworks.com').should('have.value','robert.lara@cmhworks.com')
+        cy.get('[data-cy=email-input]').type('admin-msrfsr@cmhworks.com').should('have.value','admin-msrfsr@cmhworks.com')
 
         cy.get('[data-cy=submit-button]').click()
 

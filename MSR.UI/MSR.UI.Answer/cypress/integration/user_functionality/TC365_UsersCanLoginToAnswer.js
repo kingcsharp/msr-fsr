@@ -5,8 +5,8 @@ describe('User Functionality', () => {
 
         cy.url().should('include', '/login')
 
-        cy.get('[data-cy=username-input]').type('rlara').should('have.value', 'rlara')
-        cy.get('[data-cy=password-input]').type('Password123.').should('have.value', 'Password123.')
+        cy.get('[data-cy=username-input]').type('admin').should('have.value', 'admin')
+        cy.get('[data-cy=password-input]').type('cmhworks.2020').should('have.value', 'cmhworks.2020')
         
         cy.get('[data-cy=submit-button]').click()
 
