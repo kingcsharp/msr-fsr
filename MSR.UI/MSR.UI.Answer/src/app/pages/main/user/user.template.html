@@ -13,13 +13,13 @@
           + Add
         </button>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
-          [gridVersion]="gridVersion">
+          [gridVersion]="gridVersion" data-cy="usergrid-options">
         </grid-options>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id">
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id" data-cy="usertable-header">
           {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
         </th>
         <th></th>
