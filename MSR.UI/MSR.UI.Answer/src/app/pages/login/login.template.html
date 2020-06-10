@@ -84,11 +84,11 @@
             <i class="la la-user text-white"></i>
           </div>
           <input id="username" class="form-control input-transparent pl-3" [(ngModel)]="username" type="username"
-            required name="username" placeholder="Username" />
+            required name="username" placeholder="Username" data-cy="username-input"/>
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="forgotUserPassword()" type="submit" class="btn btn-sm btn-danger auth-btn">
+        <button (click)="forgotUserPassword()" type="submit" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button"> 
           <span class="auth-btn-circle">
             <i class="la la-caret-right"></i>
           </span>
