@@ -148,11 +148,10 @@
           {{user.createdOn | date :'short' }}
         </td>
         <td [hidden]="!cg.isVisibleCol('roles',gridSettings)">
-          {{user.rolesStr}}
+          <span *ngFor="let role of user.roles" class="badge mr-xs badge-secondary">{{role.name}}</span>
         </td>
         <td [hidden]="!cg.isVisibleCol('locationName',gridSettings)">
           {{user.locationName}}
-          <!-- {{user | json}} -->
         </td>
         <td [hidden]="!cg.isVisibleCol('supervisorName',gridSettings)">
           {{user.supervisorName}}
@@ -250,7 +249,7 @@
                 [(ngModel)]="currUser.supervisorId">
               </p-dropdown>
             </div>
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="locations">
               Location
             </label>
             <div class="col-md-4 col-12">
@@ -261,11 +260,11 @@
           </div>
 
           <div class="form-group row">
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
-              Location
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Roles
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect [options]="allRoles" [(ngModel)]="currUser.roles" [itemSize]="15">
+              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="'Select Roles'">Select Roles</div>
                 </ng-template>

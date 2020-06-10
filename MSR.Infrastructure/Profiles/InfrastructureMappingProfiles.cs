@@ -16,7 +16,9 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateUser, Resources.EntityFramework.Entities.User>();
             CreateMap<GetLocations, Resources.EntityFramework.Entities.Location>();
 
-            CreateMap<Resources.EntityFramework.Entities.Role, Domain.Models.Role>();
+            CreateMap<Resources.EntityFramework.Entities.Role, Domain.Models.Role>()
+                .ForMember(dest => dest.Menus, opt => opt.Ignore());
+
             CreateMap<Resources.EntityFramework.Entities.Location, Domain.Models.Location> ();
         }
     }

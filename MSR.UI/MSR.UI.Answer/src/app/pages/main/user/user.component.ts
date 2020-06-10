@@ -133,14 +133,7 @@ export class UserComponent implements OnInit {
         ctrl.data = response.object;
         ctrl.data = ctrl.data.map((x) => {
           ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
-          const roles = [];
-          x.roles.forEach((role) => {
-            roles.push(role.name);
-            if (ctrl.roles.findIndex(x => x.value === role.name) === -1) {
-              ctrl.roles.push({ label: role.name, value: role.name });
-            }
-          });
-          x.rolesStr = roles.join(',');
+          x.rolesSaved = x.roles.map(x => { return { label: x.name, value: x.id } });
           return x;
         });
         ctrl.loading = false;
