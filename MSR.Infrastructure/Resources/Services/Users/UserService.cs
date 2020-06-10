@@ -42,7 +42,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 throw new DomainException($"{nameof(command.UserName)} already Exists", DomainError.Conflict);
             }
-            
+
             var password = _authenticationHelper.CreateRandomPassword();
             _authenticationHelper.CreatePasswordHash(password, out var hash, out var salt);
             efUser.PasswordHash = hash;
@@ -156,7 +156,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             var userList = new List<Domain.Models.User>();
 
-            var usersTo = users.Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).ToList();
+            var usersTo = users.Include(x => x.Location).Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).ToList();
 
             foreach (var user in usersTo)
             {
@@ -166,9 +166,15 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 {
                     userToAdd.Roles.Add(new Domain.Models.Role()
                     {
+                        Id = role.Role.Id,
                         Name = role.Role.Name
                     });
                 }
+                //if(user.Location!= null)
+                //{
+                //    userToAdd.LocationName = user.Location.Name;
+                //}
+                
                 userList.Add(userToAdd);
             }
 
@@ -178,7 +184,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.User> GetLoggedInUserData(int Id)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false,i => i.Id == Id);
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == Id);
 
             if (user == null)
                 throw new DomainException($"{nameof(Domain.Models.User)} not found", DomainError.NotFound);

@@ -87,12 +87,13 @@
             </multiselect-wrapper>
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('locationId',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('locationName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'locationId', 'contains')"
-              placeholder="Search by Location Id" class="ui-column-filter" [value]="dt.filters['locationId']?.value">
-            <i *ngIf="dt.filters['locationId']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'locationId')"></i>
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'locationName', 'contains')"
+              placeholder="Search by Location Name" class="ui-column-filter"
+              [value]="dt.filters['locationName']?.value">
+            <i *ngIf="dt.filters['locationName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'locationName')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('supervisorName', gridSettings)">
@@ -149,8 +150,9 @@
         <td [hidden]="!cg.isVisibleCol('roles',gridSettings)">
           {{user.rolesStr}}
         </td>
-        <td [hidden]="!cg.isVisibleCol('locationId',gridSettings)">
-          {{user.locationId}}
+        <td [hidden]="!cg.isVisibleCol('locationName',gridSettings)">
+          {{user.locationName}}
+          <!-- {{user | json}} -->
         </td>
         <td [hidden]="!cg.isVisibleCol('supervisorName',gridSettings)">
           {{user.supervisorName}}
@@ -259,6 +261,16 @@
           </div>
 
           <div class="form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+              Location
+            </label>
+            <div class="col-md-4 col-12">
+              <p-multiSelect [options]="allRoles" [(ngModel)]="currUser.roles" [itemSize]="15">
+                <ng-template pTemplate="selectedItems">
+                  <div tooltip="'Select Roles'">Select Roles</div>
+                </ng-template>
+              </p-multiSelect>
+            </div>
             <label for="createdOn" *ngIf="currUser.id !== undefined" class="col-md-2  col-form-label text-md-right">
               Created On
             </label>

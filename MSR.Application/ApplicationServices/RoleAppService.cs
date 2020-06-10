@@ -2,6 +2,7 @@
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +11,8 @@ namespace MSR.Application.ApplicationServices
     public class RoleAppService :
         ICommandHandler<CreateMenuRoleMap>,
         ICommandHandler<UpdateMenuRoleMap>,
-        ICommandHandler<RemoveMenuRoleMap>
+        ICommandHandler<RemoveMenuRoleMap>,
+        ICommandHandler<GetRoles>
     {
         private readonly IRoleService _roleService;
 
@@ -35,6 +37,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _roleService.RemoveMenuRoleMap(command.Id);
             return new CommandResponse<bool>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetRoles command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _roleService.GetRolesMapAsync(command);
+            return new CommandResponse<ICollection<MSR.Domain.Models.Role>>(ret);
         }
     }
 }

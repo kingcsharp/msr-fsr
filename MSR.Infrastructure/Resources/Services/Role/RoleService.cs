@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Role
@@ -22,14 +25,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
         public async Task<int> CreateMenuRoleMapAsync(CreateMenuRoleMap command)
         {
-            var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false,i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId);
+            var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false, i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId);
 
             if (roleMenu != null) return roleMenu.Id;
 
-            var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.RoleId,null);
+            var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.RoleId, null);
             var menu = await _unitOfWork.MenuItems.FirstOrDefaultAsync(false, i => i.Id == command.MenuId, null);
-            
-            if(role is null || menu is null)
+
+            if (role is null || menu is null)
             {
                 throw new DomainException("Role or Menu not found", DomainError.BadRequest);
             }
@@ -47,11 +50,18 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return menuRole.Id;
         }
 
+        public async Task<ICollection<Domain.Models.Role>> GetRolesMapAsync(GetRoles command)
+        {
+            var roles = await _unitOfWork.Roles.Query().ToListAsync();
+            var result = roles.Select(x => _mapper.Map<Domain.Models.Role>(x)).ToList();
+            return result;
+        }
+
         public async Task<bool> RemoveMenuRoleMap(int id)
         {
             var roleMenuPermission = await _unitOfWork.MenuRolePermissions.FirstOrDefaultAsync(false, i => i.MenuRole.Id == id);
 
-            if(roleMenuPermission != null)
+            if (roleMenuPermission != null)
             {
                 _unitOfWork.MenuRolePermissions.Delete(false, roleMenuPermission.Id);
             }
@@ -65,7 +75,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false, i => i.Id == command.MenuRoleId);
 
-            if(roleMenu == null) { throw new DomainException("MenuRole does not exist", DomainError.BadRequest); }
+            if (roleMenu == null) { throw new DomainException("MenuRole does not exist", DomainError.BadRequest); }
 
             var menuRolePermission = _mapper.Map<MenuRolePermission>(command);
 

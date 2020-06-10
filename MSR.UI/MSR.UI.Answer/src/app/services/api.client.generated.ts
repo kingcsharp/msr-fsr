@@ -426,6 +426,57 @@ export class RoleService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
+    roleGet(version: string): Observable<AuditActionResultOfICollectionOfRole> {
+        let url_ = this.baseUrl + "/v{version}/Role";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRoleGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRoleGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfRole>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfRole>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRoleGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRole> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfRole.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfRole>(<any>null);
+    }
+
     rolePatch(version: string, request: UpdateMenuRoleMapRequest): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Role";
         if (version === undefined || version === null)
@@ -1345,71 +1396,11 @@ export interface ICreateMenuRoleMapRequest {
     roleId: number;
 }
 
-export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
-    menuRoleId?: number;
-    canRead?: boolean;
-    canCreate?: boolean;
-    canEdit?: boolean;
-    canDelete?: boolean;
-    canActivate?: boolean;
-    canApprove?: boolean;
-
-    constructor(data?: IUpdateMenuRoleMapRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.menuRoleId = _data["menuRoleId"];
-            this.canRead = _data["canRead"];
-            this.canCreate = _data["canCreate"];
-            this.canEdit = _data["canEdit"];
-            this.canDelete = _data["canDelete"];
-            this.canActivate = _data["canActivate"];
-            this.canApprove = _data["canApprove"];
-        }
-    }
-
-    static fromJS(data: any): UpdateMenuRoleMapRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateMenuRoleMapRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["menuRoleId"] = this.menuRoleId;
-        data["canRead"] = this.canRead;
-        data["canCreate"] = this.canCreate;
-        data["canEdit"] = this.canEdit;
-        data["canDelete"] = this.canDelete;
-        data["canActivate"] = this.canActivate;
-        data["canApprove"] = this.canApprove;
-        return data; 
-    }
-}
-
-export interface IUpdateMenuRoleMapRequest {
-    menuRoleId?: number;
-    canRead?: boolean;
-    canCreate?: boolean;
-    canEdit?: boolean;
-    canDelete?: boolean;
-    canActivate?: boolean;
-    canApprove?: boolean;
-}
-
-export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
-    object?: User[] | undefined;
+export class AuditActionResultOfICollectionOfRole extends AuditActionResult implements IAuditActionResultOfICollectionOfRole {
+    object?: Role[] | undefined;
     returnedObject?: any | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfUser) {
+    constructor(data?: IAuditActionResultOfICollectionOfRole) {
         super(data);
     }
 
@@ -1419,15 +1410,15 @@ export class AuditActionResultOfICollectionOfUser extends AuditActionResult impl
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(User.fromJS(item));
+                    this.object!.push(Role.fromJS(item));
             }
             this.returnedObject = _data["returnedObject"];
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfUser {
+    static fromJS(data: any): AuditActionResultOfICollectionOfRole {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfUser();
+        let result = new AuditActionResultOfICollectionOfRole();
         result.init(data);
         return result;
     }
@@ -1445,148 +1436,13 @@ export class AuditActionResultOfICollectionOfUser extends AuditActionResult impl
     }
 }
 
-export interface IAuditActionResultOfICollectionOfUser extends IAuditActionResult {
-    object?: User[] | undefined;
+export interface IAuditActionResultOfICollectionOfRole extends IAuditActionResult {
+    object?: Role[] | undefined;
     returnedObject?: any | undefined;
 }
 
-export class User implements IUser {
-    id?: number;
-    isActive?: boolean;
-    userRoleId?: string | undefined;
-    userName?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    title?: string | undefined;
-    email?: string | undefined;
-    securityStamp?: string | undefined;
-    phone?: string | undefined;
-    supervisorId?: number | undefined;
-    supervisorName?: string | undefined;
-    locationId?: number;
-    isAnswerUser?: boolean;
-    customerId?: number;
-    lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    timeZoneId?: number;
-    lastUpdatedOn?: Date;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-    roles?: Role[] | undefined;
-
-    constructor(data?: IUser) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.isActive = _data["isActive"];
-            this.userRoleId = _data["userRoleId"];
-            this.userName = _data["userName"];
-            this.firstName = _data["firstName"];
-            this.lastName = _data["lastName"];
-            this.title = _data["title"];
-            this.email = _data["email"];
-            this.securityStamp = _data["securityStamp"];
-            this.phone = _data["phone"];
-            this.supervisorId = _data["supervisorId"];
-            this.supervisorName = _data["supervisorName"];
-            this.locationId = _data["locationId"];
-            this.isAnswerUser = _data["isAnswerUser"];
-            this.customerId = _data["customerId"];
-            this.lockoutEndDateUtc = _data["lockoutEndDateUtc"] ? new Date(_data["lockoutEndDateUtc"].toString()) : <any>undefined;
-            this.lockoutEnabled = _data["lockoutEnabled"];
-            this.accessFailedCount = _data["accessFailedCount"];
-            this.timeZoneId = _data["timeZoneId"];
-            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
-            this.lastUpdatedBy = _data["lastUpdatedBy"];
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.createdBy = _data["createdBy"];
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(Role.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): User {
-        data = typeof data === 'object' ? data : {};
-        let result = new User();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["isActive"] = this.isActive;
-        data["userRoleId"] = this.userRoleId;
-        data["userName"] = this.userName;
-        data["firstName"] = this.firstName;
-        data["lastName"] = this.lastName;
-        data["title"] = this.title;
-        data["email"] = this.email;
-        data["securityStamp"] = this.securityStamp;
-        data["phone"] = this.phone;
-        data["supervisorId"] = this.supervisorId;
-        data["supervisorName"] = this.supervisorName;
-        data["locationId"] = this.locationId;
-        data["isAnswerUser"] = this.isAnswerUser;
-        data["customerId"] = this.customerId;
-        data["lockoutEndDateUtc"] = this.lockoutEndDateUtc ? this.lockoutEndDateUtc.toISOString() : <any>undefined;
-        data["lockoutEnabled"] = this.lockoutEnabled;
-        data["accessFailedCount"] = this.accessFailedCount;
-        data["timeZoneId"] = this.timeZoneId;
-        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
-        data["lastUpdatedBy"] = this.lastUpdatedBy;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["createdBy"] = this.createdBy;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IUser {
-    id?: number;
-    isActive?: boolean;
-    userRoleId?: string | undefined;
-    userName?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    title?: string | undefined;
-    email?: string | undefined;
-    securityStamp?: string | undefined;
-    phone?: string | undefined;
-    supervisorId?: number | undefined;
-    supervisorName?: string | undefined;
-    locationId?: number;
-    isAnswerUser?: boolean;
-    customerId?: number;
-    lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    timeZoneId?: number;
-    lastUpdatedOn?: Date;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-    roles?: Role[] | undefined;
-}
-
 export class Role implements IRole {
+    id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     menus?: MenuItem[] | undefined;
@@ -1602,6 +1458,7 @@ export class Role implements IRole {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.name = _data["name"];
             this.isCertificationRole = _data["isCertificationRole"];
             if (Array.isArray(_data["menus"])) {
@@ -1621,6 +1478,7 @@ export class Role implements IRole {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["name"] = this.name;
         data["isCertificationRole"] = this.isCertificationRole;
         if (Array.isArray(this.menus)) {
@@ -1633,6 +1491,7 @@ export class Role implements IRole {
 }
 
 export interface IRole {
+    id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     menus?: MenuItem[] | undefined;
@@ -1795,6 +1654,251 @@ export enum EnumMenuItem {
     WIPMenu = 29,
     WipStatus = 30,
     Roles = 31,
+}
+
+export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
+    menuRoleId?: number;
+    canRead?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canDelete?: boolean;
+    canActivate?: boolean;
+    canApprove?: boolean;
+
+    constructor(data?: IUpdateMenuRoleMapRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.menuRoleId = _data["menuRoleId"];
+            this.canRead = _data["canRead"];
+            this.canCreate = _data["canCreate"];
+            this.canEdit = _data["canEdit"];
+            this.canDelete = _data["canDelete"];
+            this.canActivate = _data["canActivate"];
+            this.canApprove = _data["canApprove"];
+        }
+    }
+
+    static fromJS(data: any): UpdateMenuRoleMapRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateMenuRoleMapRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["menuRoleId"] = this.menuRoleId;
+        data["canRead"] = this.canRead;
+        data["canCreate"] = this.canCreate;
+        data["canEdit"] = this.canEdit;
+        data["canDelete"] = this.canDelete;
+        data["canActivate"] = this.canActivate;
+        data["canApprove"] = this.canApprove;
+        return data; 
+    }
+}
+
+export interface IUpdateMenuRoleMapRequest {
+    menuRoleId?: number;
+    canRead?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canDelete?: boolean;
+    canActivate?: boolean;
+    canApprove?: boolean;
+}
+
+export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
+    object?: User[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfUser) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(User.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfUser {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfUser();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfUser extends IAuditActionResult {
+    object?: User[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class User implements IUser {
+    id?: number;
+    isActive?: boolean;
+    userRoleId?: string | undefined;
+    userName?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    title?: string | undefined;
+    email?: string | undefined;
+    securityStamp?: string | undefined;
+    phone?: string | undefined;
+    supervisorId?: number | undefined;
+    supervisorName?: string | undefined;
+    locationId?: number;
+    locationName?: string | undefined;
+    isAnswerUser?: boolean;
+    customerId?: number;
+    lockoutEndDateUtc?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    timeZoneId?: number;
+    lastUpdatedOn?: Date;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+    roles?: Role[] | undefined;
+
+    constructor(data?: IUser) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isActive = _data["isActive"];
+            this.userRoleId = _data["userRoleId"];
+            this.userName = _data["userName"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.title = _data["title"];
+            this.email = _data["email"];
+            this.securityStamp = _data["securityStamp"];
+            this.phone = _data["phone"];
+            this.supervisorId = _data["supervisorId"];
+            this.supervisorName = _data["supervisorName"];
+            this.locationId = _data["locationId"];
+            this.locationName = _data["locationName"];
+            this.isAnswerUser = _data["isAnswerUser"];
+            this.customerId = _data["customerId"];
+            this.lockoutEndDateUtc = _data["lockoutEndDateUtc"] ? new Date(_data["lockoutEndDateUtc"].toString()) : <any>undefined;
+            this.lockoutEnabled = _data["lockoutEnabled"];
+            this.accessFailedCount = _data["accessFailedCount"];
+            this.timeZoneId = _data["timeZoneId"];
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(Role.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): User {
+        data = typeof data === 'object' ? data : {};
+        let result = new User();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["isActive"] = this.isActive;
+        data["userRoleId"] = this.userRoleId;
+        data["userName"] = this.userName;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["title"] = this.title;
+        data["email"] = this.email;
+        data["securityStamp"] = this.securityStamp;
+        data["phone"] = this.phone;
+        data["supervisorId"] = this.supervisorId;
+        data["supervisorName"] = this.supervisorName;
+        data["locationId"] = this.locationId;
+        data["locationName"] = this.locationName;
+        data["isAnswerUser"] = this.isAnswerUser;
+        data["customerId"] = this.customerId;
+        data["lockoutEndDateUtc"] = this.lockoutEndDateUtc ? this.lockoutEndDateUtc.toISOString() : <any>undefined;
+        data["lockoutEnabled"] = this.lockoutEnabled;
+        data["accessFailedCount"] = this.accessFailedCount;
+        data["timeZoneId"] = this.timeZoneId;
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IUser {
+    id?: number;
+    isActive?: boolean;
+    userRoleId?: string | undefined;
+    userName?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    title?: string | undefined;
+    email?: string | undefined;
+    securityStamp?: string | undefined;
+    phone?: string | undefined;
+    supervisorId?: number | undefined;
+    supervisorName?: string | undefined;
+    locationId?: number;
+    locationName?: string | undefined;
+    isAnswerUser?: boolean;
+    customerId?: number;
+    lockoutEndDateUtc?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    timeZoneId?: number;
+    lastUpdatedOn?: Date;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+    roles?: Role[] | undefined;
 }
 
 export class AuditActionResultOfUser extends AuditActionResult implements IAuditActionResultOfUser {

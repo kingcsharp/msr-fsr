@@ -24,6 +24,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? SupervisorId { get; set; }
         public virtual User Supervisor { get; set; }
         public int? LocationId { get; set; }
+        public virtual Location Location { get; set; }
         public bool? IsAnswerUser { get; set; }
         public int? CustomerId { get; set; }
         public virtual Customer Customer { get; set; }

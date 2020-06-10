@@ -23,6 +23,7 @@ namespace MSR.Domain.Models
         public int? SupervisorId { get; set; }
         public string SupervisorName { get; set; }
         public int LocationId { get; set; }
+        public string LocationName { get; set; }
         public bool IsAnswerUser { get; set; }
         public int CustomerId { get; set; }
         public DateTime? LockoutEndDateUtc { get; set; }

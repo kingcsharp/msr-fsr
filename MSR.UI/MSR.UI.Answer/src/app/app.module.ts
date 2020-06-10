@@ -22,7 +22,7 @@ import { EnumPrivilege } from './models/enums/privileges';
 import { environment } from '../environments/environment';
 
 import * as $ from 'jquery';
-import { UserService, AccountService, API_BASE_URL, WorkflowService, LocationService } from './services/api.client.generated';
+import { UserService, AccountService, API_BASE_URL, WorkflowService, LocationService, RoleService } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
   CheckAllService,
@@ -66,7 +66,8 @@ const APP_PROVIDERS = [
       provide: API_BASE_URL,
       useValue: environment.url
     },
-    LocationService
+    LocationService,
+    RoleService
   ]
 })
 // { //we have this bse url set in the app.config that's why we define as ''

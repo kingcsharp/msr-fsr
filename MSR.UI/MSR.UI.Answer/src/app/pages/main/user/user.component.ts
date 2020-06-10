@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location, UpdateUserRequest } from '../../../services/api.client.generated';
+import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location, UpdateUserRequest, RoleService } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -30,6 +30,7 @@ export class UserComponent implements OnInit {
   phoneValue = '';
   statuses: any[];
   roles: any[];
+  allRoles: any[];
   allUsers: any[];
   userTypes: any[];
   canAddUsers: boolean = false;
@@ -58,7 +59,7 @@ export class UserComponent implements OnInit {
   getLocationsFlag: boolean = false;
 
   constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
-    public globals: Globals, private elem: ElementRef, public locationService: LocationService) {
+    public globals: Globals, private elem: ElementRef, public locationService: LocationService, public roleService: RoleService) {
   }
 
   ngOnInit(): void {
@@ -76,7 +77,7 @@ export class UserComponent implements OnInit {
 
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
-    new ColumnsSaved({ id: 'locationId', label: 'Location Id', visible: false }),
+    new ColumnsSaved({ id: 'locationName', label: 'Location Name', visible: false }),
     new ColumnsSaved({ id: 'supervisorName', label: 'Supervisor Name', visible: false })
     ];
 
@@ -97,6 +98,17 @@ export class UserComponent implements OnInit {
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
     this.getUsers();
     this.getLocations();
+    this.getRoles();
+  }
+
+  getRoles() {
+    const ctrl = this;
+    this.roleService.roleGet(env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        response.returnedObject.map((x) => {
+          ctrl.allRoles.push({ label: x.name, value: x.id });
+        });
+      }))
   }
 
   getLocations() {
