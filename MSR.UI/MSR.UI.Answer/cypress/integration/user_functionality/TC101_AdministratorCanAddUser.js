@@ -4,17 +4,20 @@ describe('User Functionality', () => {
         cy.server()
 
         cy.route({
-            method: 'POST',      // Route all GET requests
-            url: '/v1/User',    // that have a URL that matches '/users/*'
-            response: []        // and force the response to be: []
+            method: 'POST',
+            url: '/v1/User',
+            response: []
           })
+
+        var adminUsername = Cypress.env('admin-username')
+        var adminPassword = Cypress.env('admin-password')
 
         cy.visit('/')
 
         cy.url().should('include', '/login')
 
-        cy.get('[data-cy=username-input]').type('admin').should('have.value', 'admin')
-        cy.get('[data-cy=password-input]').type('cmhworks.2020').should('have.value', 'cmhworks.2020')
+        cy.get('[data-cy=username-input]').type(adminUsername).should('have.value', adminUsername)
+        cy.get('[data-cy=password-input]').type(adminPassword).should('have.value', adminPassword)
         
         cy.get('[data-cy=submit-button]').click()
 

@@ -1,0 +1,8 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "env": {
+    "admin-username": "admin",
+    "admin-password": "cmhworks.2020",
+    "admin-email": "admin-msrfsr@cmhworks.com"
+  }
+}

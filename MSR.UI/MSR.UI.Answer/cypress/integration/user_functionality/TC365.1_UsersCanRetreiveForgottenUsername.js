@@ -4,10 +4,12 @@ describe('User Functionality', () => {
         cy.server()
 
         cy.route({
-            method: 'POST',      // Route all GET requests
-            url: '/v1/Account/forgotusername',    // that have a URL that matches '/users/*'
-            response: []        // and force the response to be: []
+            method: 'POST',
+            url: '/v1/Account/forgotusername',
+            response: []
           })
+
+        var adminEmail = Cypress.env('admin-email')
 
         cy.visit('/')
 
@@ -15,7 +17,7 @@ describe('User Functionality', () => {
 
         cy.get('[data-cy=forgotusername-link]').click()
 
-        cy.get('[data-cy=email-input]').type('admin-msrfsr@cmhworks.com').should('have.value','admin-msrfsr@cmhworks.com')
+        cy.get('[data-cy=email-input]').type(adminEmail).should('have.value',adminEmail)
 
         cy.get('[data-cy=submit-button]').click()
 
