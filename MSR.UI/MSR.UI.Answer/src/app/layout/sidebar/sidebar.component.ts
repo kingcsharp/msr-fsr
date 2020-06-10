@@ -37,7 +37,7 @@ export class Sidebar {
 
     menuStructure.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
     menuStructure.forEach(function (item) {
-      item.submenu.sort((a, b) => (a.orderNumber < b.orderNumber) ? 1 : -1);
+      item.submenu.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
     });
 
     return menuStructure;
