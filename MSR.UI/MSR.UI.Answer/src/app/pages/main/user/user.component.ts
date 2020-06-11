@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location, UpdateUserRequest, RoleService } from '../../../services/api.client.generated';
+import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location, UpdateUserRequest, RoleService, Role } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -26,11 +26,11 @@ export class UserComponent implements OnInit {
   data: any;
   loading: boolean = true;
   display: boolean = false;
-  currUser: User;
+  currUser: any;
   phoneValue = '';
   statuses: any[];
   roles: any[];
-  allRoles: any[];
+  allRoles: any[] = [];
   allUsers: any[];
   userTypes: any[];
   canAddUsers: boolean = false;
@@ -57,6 +57,7 @@ export class UserComponent implements OnInit {
   gridOptionsRotate: boolean = false;
   locations: any[] = [];
   getLocationsFlag: boolean = false;
+  backendRoles: Array<Role>;
 
   constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
     public globals: Globals, private elem: ElementRef, public locationService: LocationService, public roleService: RoleService) {
@@ -108,7 +109,8 @@ export class UserComponent implements OnInit {
         response.returnedObject.map((x) => {
           ctrl.allRoles.push({ label: x.name, value: x.id });
         });
-      }))
+        ctrl.backendRoles = response.returnedObject;
+      }));
   }
 
   getLocations() {
@@ -133,7 +135,7 @@ export class UserComponent implements OnInit {
         ctrl.data = response.object;
         ctrl.data = ctrl.data.map((x) => {
           ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
-          x.rolesSaved = x.roles.map(x => { return { label: x.name, value: x.id } });
+          x.rolesSaved = x.roles.map(x => x.id);
           return x;
         });
         ctrl.loading = false;
@@ -189,6 +191,11 @@ export class UserComponent implements OnInit {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method: Observable<IAuditActionResultOfUser> = null;
       this.globals.showLoader(true);
+      this.currUser.roles = [];
+      this.currUser.rolesSaved.map(x => {
+        this.currUser.roles.push(new Role(ctrl.backendRoles.find(r => r.id == x)));
+      });
+
       if (this.currUser.id === undefined) {
         method = this.userService.userPost(env.apiVersion, this.currUser);
       } else {

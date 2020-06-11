@@ -76,7 +76,8 @@ namespace MSR.Answer.API.V1.Extentions
                 LockoutEndDateUtc = request.LockoutEndDateUtc,
                 LockoutEnabled = request.LockoutEnabled,
                 AccessFailedCount = request.AccessFailedCount,
-                TimeZoneId = request.TimeZoneId
+                TimeZoneId = request.TimeZoneId,
+                Roles = request.Roles
 
             };
         }
@@ -101,7 +102,8 @@ namespace MSR.Answer.API.V1.Extentions
                 LockoutEndDateUtc = request.LockoutEndDateUtc,
                 LockoutEnabled = request.LockoutEnabled,
                 AccessFailedCount = request.AccessFailedCount,
-                TimeZoneId = request.TimeZoneId
+                TimeZoneId = request.TimeZoneId,
+                Roles = request.Roles
             };
         }
 

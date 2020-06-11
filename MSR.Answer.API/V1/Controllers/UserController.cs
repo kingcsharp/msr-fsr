@@ -53,12 +53,11 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
-
             var command = request.ToCreateUserCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToCreatedResponse<User>("User has been successfully created.");
+            return ret.ToOkObjectResponse<User>("User has been successfully created.");
         }
 
         [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<User>))]

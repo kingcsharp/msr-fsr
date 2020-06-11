@@ -1,5 +1,7 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Models;
 using System;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
@@ -22,5 +24,6 @@ namespace MSR.Domain.Commands
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
     }
 }

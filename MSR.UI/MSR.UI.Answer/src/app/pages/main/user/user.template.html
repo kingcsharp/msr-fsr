@@ -241,13 +241,15 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
-              Supervisor
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Roles
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers"
-                [(ngModel)]="currUser.supervisorId">
-              </p-dropdown>
+              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15">
+                <ng-template pTemplate="selectedItems">
+                  <div tooltip="Select Roles">Select Roles</div>
+                </ng-template>
+              </p-multiSelect>
             </div>
             <label class="form-control-label col-md-2 col-12 text-md-right" for="locations">
               Location
@@ -258,17 +260,14 @@
               </p-dropdown>
             </div>
           </div>
-
           <div class="form-group row">
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
-              Roles
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+              Supervisor
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15">
-                <ng-template pTemplate="selectedItems">
-                  <div tooltip="'Select Roles'">Select Roles</div>
-                </ng-template>
-              </p-multiSelect>
+              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers"
+                [(ngModel)]="currUser.supervisorId">
+              </p-dropdown>
             </div>
             <label for="createdOn" *ngIf="currUser.id !== undefined" class="col-md-2  col-form-label text-md-right">
               Created On

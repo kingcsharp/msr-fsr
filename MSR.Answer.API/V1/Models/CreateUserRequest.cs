@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MSR.Domain.Models;
+using System;
+using System.Collections.Generic;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -20,5 +22,6 @@ namespace MSR.Answer.API.V1.Models
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
     }
 }

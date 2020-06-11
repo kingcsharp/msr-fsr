@@ -43,7 +43,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         public AnswerContext(DbContextOptions<AnswerContext> options)
         : base(options)
-        {}
+        { }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -55,22 +55,31 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var now = DateTime.UtcNow;
-
-            foreach (EntityEntry entry in ChangeTracker.Entries())
+            try
             {
-                switch (entry.State)
+                var now = DateTime.UtcNow;
+
+                foreach (EntityEntry entry in ChangeTracker.Entries())
                 {
-                    case EntityState.Added:
-                    case EntityState.Modified:
-                        HandleTrackableEntity(entry, now);
-                        break;
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                        case EntityState.Modified:
+                            HandleTrackableEntity(entry, now);
+                            break;
+                    }
                 }
+
+                int result = await base.SaveChangesAsync(cancellationToken);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw;
             }
 
-            int result = await base.SaveChangesAsync(cancellationToken);
-
-            return result;
         }
 
         public override int SaveChanges()

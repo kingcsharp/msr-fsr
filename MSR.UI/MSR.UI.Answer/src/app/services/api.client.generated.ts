@@ -1955,6 +1955,7 @@ export class CreateUserRequest implements ICreateUserRequest {
     lockoutEnabled?: boolean;
     accessFailedCount?: number;
     timeZoneId?: number | undefined;
+    roles?: Role[] | undefined;
 
     constructor(data?: ICreateUserRequest) {
         if (data) {
@@ -1983,6 +1984,11 @@ export class CreateUserRequest implements ICreateUserRequest {
             this.lockoutEnabled = _data["lockoutEnabled"];
             this.accessFailedCount = _data["accessFailedCount"];
             this.timeZoneId = _data["timeZoneId"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(Role.fromJS(item));
+            }
         }
     }
 
@@ -2011,6 +2017,11 @@ export class CreateUserRequest implements ICreateUserRequest {
         data["lockoutEnabled"] = this.lockoutEnabled;
         data["accessFailedCount"] = this.accessFailedCount;
         data["timeZoneId"] = this.timeZoneId;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -2032,6 +2043,7 @@ export interface ICreateUserRequest {
     lockoutEnabled?: boolean;
     accessFailedCount?: number;
     timeZoneId?: number | undefined;
+    roles?: Role[] | undefined;
 }
 
 export class UpdateUserRequest extends CreateUserRequest implements IUpdateUserRequest {

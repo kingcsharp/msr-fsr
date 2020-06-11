@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -31,7 +32,13 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.User> CreateUserAsync(CreateUser command)
         {
-            var efUser = _mapper.Map<User>(command);
+
+
+            var rolesToAdd = new List<UserRole>();
+            var getRolesFromDb = _unitOfWork.Roles.Query().Where(x => command.Roles.Select(y => y.Id).Contains(x.Id)).ToList();
+            command.Roles = null;
+
+            var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
 
             if (efUser.EmailAlreadyExists(_unitOfWork))
             {
@@ -43,6 +50,10 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 throw new DomainException($"{nameof(command.UserName)} already Exists", DomainError.Conflict);
             }
 
+            //supervisor location
+            efUser.Supervisor = _unitOfWork.Users.Query().FirstOrDefault(x => x.Id == command.SupervisorId);
+            efUser.Location = _unitOfWork.Locations.Query().FirstOrDefault(x => x.Id == command.LocationId);
+
             var password = _authenticationHelper.CreateRandomPassword();
             _authenticationHelper.CreatePasswordHash(password, out var hash, out var salt);
             efUser.PasswordHash = hash;
@@ -52,6 +63,16 @@ namespace MSR.Infrastructure.Resources.Services.Users
             efUser.CreatedOn = DateTime.UtcNow;
 
             _unitOfWork.Users.Add(efUser);
+
+            foreach (var role in getRolesFromDb)
+            {
+                var userRoleAdd = new UserRole() { Role = role, UserId = efUser.Id };
+                _unitOfWork.UserRoles.AttachAndInsert(userRoleAdd);
+                rolesToAdd.Add(userRoleAdd);
+            }
+
+            efUser.Roles = rolesToAdd;
+
             try
             {
                 await _unitOfWork.SaveChangesAsync();
@@ -61,7 +82,11 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 var data = ex.Message;
             }
 
-            return _mapper.Map<Domain.Models.User>(efUser);
+            var domainUser = _mapper.Map<Domain.Models.User>(efUser);
+            SetRolesToUser(efUser, domainUser);
+            domainUser.SupervisorName = efUser.Supervisor.GetFullName();
+            domainUser.LocationName = efUser.Location.Name;
+            return domainUser;
         }
 
         public async Task DeactivateUserAsync(DeactivateUser command)
@@ -86,6 +111,33 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
             var userType = efUser.GetType();
 
+            var rolesToAdd = new List<UserRole>();
+
+            foreach (var role in efUser.Roles)
+            {
+                if (!command.Roles.Any(x => x.Id == role.RoleId))
+                {
+                    _unitOfWork.UserRoles.Delete(false, role);
+                }
+                else
+                {
+                    rolesToAdd.Add(role);
+                }
+            }
+            var getRolesFromDb = _unitOfWork.Roles.Query().Where(x => command.Roles.Select(y => y.Id).Contains(x.Id)).ToList();
+
+            foreach (var role in command.Roles)
+            {
+                if (!efUser.Roles.Any(x => x.RoleId == role.Id))
+                {
+                    var userRoleAdd = new UserRole() { Role = getRolesFromDb.FirstOrDefault(x => x.Id == role.Id), UserId = efUser.Id };
+                    _unitOfWork.UserRoles.AttachAndInsert(userRoleAdd);
+                    rolesToAdd.Add(userRoleAdd);
+                }
+            }
+
+            command.Roles = null;
+
             foreach (var property in typeof(UpdateUser).GetProperties().Where(i => i.Name != nameof(command.Id)))
             {
                 var prop = userType.GetProperty(property.Name);
@@ -94,6 +146,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
                 prop.SetValue(efUser, property.GetValue(command), null);
             }
+
+            efUser.Roles = rolesToAdd;
 
             try
             {
@@ -106,7 +160,10 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 throw;
             }
 
-            return _mapper.Map<Domain.Models.User>(efUser);
+            var domainUser = _mapper.Map<Domain.Models.User>(efUser);
+            SetRolesToUser(efUser, domainUser);
+
+            return domainUser;
         }
 
         public async Task<ICollection<Domain.Models.User>> GetUsersAsync(GetUsers command)
@@ -162,24 +219,27 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 var userToAdd = _mapper.Map<Domain.Models.User>(user);
                 userToAdd.SupervisorName = user?.Supervisor?.GetFullName();
-                foreach (var role in user.Roles ?? new List<UserRole>())
-                {
-                    userToAdd.Roles.Add(new Domain.Models.Role()
-                    {
-                        Id = role.Role.Id,
-                        Name = role.Role.Name
-                    });
-                }
-                //if(user.Location!= null)
-                //{
-                //    userToAdd.LocationName = user.Location.Name;
-                //}
-                
+                SetRolesToUser(user, userToAdd);
                 userList.Add(userToAdd);
             }
 
-
             return userList;
+        }
+
+        private static void SetRolesToUser(EntityFramework.Entities.User user, Domain.Models.User userToAdd)
+        {
+            foreach (var role in user.Roles ?? new List<UserRole>())
+            {
+                if (userToAdd.Roles == null)
+                {
+                    userToAdd.Roles = new List<Domain.Models.Role>();
+                }
+                userToAdd.Roles.Add(new Domain.Models.Role()
+                {
+                    Id = role.Role.Id,
+                    Name = role.Role.Name
+                });
+            }
         }
 
         public async Task<Domain.Models.User> GetLoggedInUserData(int Id)
