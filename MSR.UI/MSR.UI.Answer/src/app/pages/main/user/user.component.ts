@@ -138,6 +138,8 @@ export class UserComponent implements OnInit {
           x.rolesSaved = x.roles.map(x => x.id);
           return x;
         });
+        ctrl.allUsers.sort((a, b) => (a.label > b.label) ? 1 : -1);
+
         ctrl.loading = false;
       }));
   }

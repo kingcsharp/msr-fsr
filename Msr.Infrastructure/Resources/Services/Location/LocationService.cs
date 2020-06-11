@@ -29,7 +29,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
         public async Task<ICollection<Domain.Models.Location>> GetLocationsAsync(GetLocations command)
         {
             var locations = _unitOfWork.Locations.Query().Where(x => x.ParentId == command.ParentId).ToList();
-            var ret = locations.Select(x => _mapper.Map<Domain.Models.Location>(x)).ToList();
+            var ret = locations.Select(x => _mapper.Map<Domain.Models.Location>(x)).OrderBy(x=>x.Name).ToList();
 
             return ret;
         }

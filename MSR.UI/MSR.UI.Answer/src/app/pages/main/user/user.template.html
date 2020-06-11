@@ -9,7 +9,8 @@
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button" data-cy="add-button">
+        <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button"
+          data-cy="add-button">
           + Add
         </button>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
@@ -19,7 +20,8 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id" data-cy="usertable-header">
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+          data-cy="usertable-header">
           {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
         </th>
         <th></th>
@@ -200,7 +202,8 @@
             <div class="col-md-4 ">
               <input type="text" id="lastName" name="lastName" [(ngModel)]="currUser.lastName"
                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Last Name" data-cy="lastname-input">
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Last Name"
+                data-cy="lastname-input">
             </div>
           </div>
           <div class="form-group row">
@@ -218,7 +221,8 @@
             <div class="col-md-4 ">
               <input type="text" id="userName" [(ngModel)]="currUser.userName" data-parsley-trigger="change"
                 data-parsley-minlength="3" name="userName" class="form-control input-transparent"
-                data-parsley-required="true" tooltip="Min length 3 characters" placeholder="UserName" data-cy="username-input">
+                data-parsley-required="true" tooltip="Min length 3 characters" placeholder="UserName"
+                data-cy="username-input">
             </div>
           </div>
           <div class="form-group row">
@@ -228,7 +232,8 @@
             <div class="col-md-4 ">
               <input type="text" id="title" [(ngModel)]="currUser.title" data-parsley-trigger="change"
                 data-parsley-minlength="3" name="title" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Title" data-cy="title-input">
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Title"
+                data-cy="title-input">
             </div>
             <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
               Phone
@@ -237,7 +242,8 @@
             <div class="col-md-4 col-12">
               <input id="mask-phone" name="mask-phone" class="form-control input-transparent"
                 data-parsley-required="true" [textMask]="phoneMask" [(ngModel)]="currUser.phone"
-                (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text" data-cy="phone-input"/>
+                (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text"
+                data-cy="phone-input" />
             </div>
           </div>
           <div class="form-group row">
@@ -245,7 +251,7 @@
               Roles
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15">
+              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Roles</div>
                 </ng-template>
@@ -255,7 +261,7 @@
               Location
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Location" name="locations" [options]="locations"
+              <p-dropdown placeholder="Select Location" name="locations" [options]="locations"  appendTo="body"
                 [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
@@ -265,7 +271,7 @@
               Supervisor
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers"
+              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body"
                 [(ngModel)]="currUser.supervisorId">
               </p-dropdown>
             </div>
@@ -295,7 +301,7 @@
               <div class="display-inline-block isAnswerUser">
                 <label class="form-check-label" for="isAnswerUser" class="switch">
                   <input class="form-check-input" [(ngModel)]="currUser.isAnswerUser" name="isAnswerUser"
-                    type="checkbox" class="ios" checked id="isAnswerUser"/><i data-cy="isansweruser-checkbox"></i>
+                    type="checkbox" class="ios" checked id="isAnswerUser" /><i data-cy="isansweruser-checkbox"></i>
                 </label>
               </div>
             </div>

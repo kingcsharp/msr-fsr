@@ -1367,6 +1367,11 @@ body .ui-multiselect .ui-multiselect-label {
   top: 27px;
   right: -2px;
 }
+
+form .ui-multiselect,form .ui-dropdown{
+  width: 100%;
+  background: #1d232a;
+}
 /*end multiselect*/
 .fclear {
   color: #848484;

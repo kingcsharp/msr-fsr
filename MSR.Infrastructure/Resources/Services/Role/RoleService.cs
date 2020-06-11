@@ -53,7 +53,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.Role>> GetRolesMapAsync(GetRoles command)
         {
             var roles = await _unitOfWork.Roles.Query().ToListAsync();
-            var result = roles.Select(x => _mapper.Map<Domain.Models.Role>(x)).ToList();
+            var result = roles.Select(x => _mapper.Map<Domain.Models.Role>(x)).OrderBy(x => x.Name).ToList();
             return result;
         }
 
