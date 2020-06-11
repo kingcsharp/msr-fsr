@@ -9,17 +9,17 @@
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button">
+        <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button" data-cy="add-button">
           + Add
         </button>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
-          [gridVersion]="gridVersion">
+          [gridVersion]="gridVersion" data-cy="usergrid-options">
         </grid-options>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id">
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id" data-cy="usertable-header">
           {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
         </th>
         <th></th>
@@ -168,7 +168,7 @@
   </p-table>
 </widget>
 <p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
-  [style]="{width: '50vw'}">
+  [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -191,7 +191,7 @@
               <input type="text" id="firstName" name="firstName" [(ngModel)]="currUser.firstName"
                 data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                 data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
-                placeholder="First Name">
+                placeholder="First Name" data-cy="firstname-input">
             </div>
             <label for="lastName" class="col-md-2  col-form-label text-md-right">
               Last Name
@@ -199,7 +199,7 @@
             <div class="col-md-4 ">
               <input type="text" id="lastName" name="lastName" [(ngModel)]="currUser.lastName"
                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Last Name">
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Last Name" data-cy="lastname-input">
             </div>
           </div>
           <div class="form-group row">
@@ -209,7 +209,7 @@
             <div class="col-md-4 col-12">
               <input type="email" id="email" [(ngModel)]="currUser.email" name="email"
                 class="form-control input-transparent" data-parsley-trigger="change" data-parsley-required="true"
-                data-parsley-validation-threshold="1" required="required" placeholder="Email">
+                data-parsley-validation-threshold="1" required="required" placeholder="Email" data-cy="email-input">
             </div>
             <label for="userName" class="col-md-2  col-form-label text-md-right">
               Username
@@ -217,7 +217,7 @@
             <div class="col-md-4 ">
               <input type="text" id="userName" [(ngModel)]="currUser.userName" data-parsley-trigger="change"
                 data-parsley-minlength="3" name="userName" class="form-control input-transparent"
-                data-parsley-required="true" tooltip="Min length 3 characters" placeholder="UserName">
+                data-parsley-required="true" tooltip="Min length 3 characters" placeholder="UserName" data-cy="username-input">
             </div>
           </div>
           <div class="form-group row">
@@ -227,7 +227,7 @@
             <div class="col-md-4 ">
               <input type="text" id="title" [(ngModel)]="currUser.title" data-parsley-trigger="change"
                 data-parsley-minlength="3" name="title" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Title">
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Title" data-cy="title-input">
             </div>
             <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
               Phone
@@ -236,7 +236,7 @@
             <div class="col-md-4 col-12">
               <input id="mask-phone" name="mask-phone" class="form-control input-transparent"
                 data-parsley-required="true" [textMask]="phoneMask" [(ngModel)]="currUser.phone"
-                (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text" />
+                (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text" data-cy="phone-input"/>
             </div>
           </div>
           <div class="form-group row">
@@ -274,7 +274,7 @@
               <div class="display-inline-block isActive">
                 <label class="form-check-label" for="isActive" class="switch">
                   <input class="form-check-input" [(ngModel)]="currUser.isActive" name="isActive" type="checkbox"
-                    class="ios" checked id="isActive" /><i></i>
+                    class="ios" checked id="isActive" /><i data-cy="isactive-checkbox"></i>
                 </label>
               </div>
             </div>
@@ -285,7 +285,7 @@
               <div class="display-inline-block isAnswerUser">
                 <label class="form-check-label" for="isAnswerUser" class="switch">
                   <input class="form-check-input" [(ngModel)]="currUser.isAnswerUser" name="isAnswerUser"
-                    type="checkbox" class="ios" checked id="isAnswerUser" /><i></i>
+                    type="checkbox" class="ios" checked id="isAnswerUser"/><i data-cy="isansweruser-checkbox"></i>
                 </label>
               </div>
             </div>
@@ -295,7 +295,7 @@
     </section>
     <p-footer>
       <div class="pull-right">
-        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
           Save
         </button>
         <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">

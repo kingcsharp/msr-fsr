@@ -16,7 +16,7 @@
     "lint": "ng lint",
     "cypress": "./node_modules/.bin/cypress open",
     "cypress:test": "concurrently \"npm run start\" \"npm run cypress:wait\"",
-    "cypress:wait": "wait-on http://localhost:3000/ && npm run cypress"
+    "cypress:wait": "wait-on http://localhost:3000/ && npm run cypress -env configFile=local"
   },
   "private": true,
   "dependencies": {
