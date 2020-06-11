@@ -24,20 +24,20 @@ export class PcalendarWrapperComponent implements OnInit {
     // this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
     this.en = {
       firstDayOfWeek: 0,
-      dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-      monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+      monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       today: 'Today',
       clear: 'Clear',
       dateFormat: 'yyy-mm-dd'
     };
     const ctrl = this;
     FilterUtils['dateRangeFilter'] = (value, filter): boolean => {
-      //IF WE USE RANGE AS FILTER THEN it would just be setting range in the pcalendar-wrapper selectionMode="range" and here filter would be an array.
+      // IF WE USE RANGE AS FILTER THEN it would just be setting range in the pcalendar-wrapper selectionMode='range' and here filter would be an array.
       return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);
-    }
+    };
 
     this.setSelectedDate(this.datatable.filters[this.filterId]);
 

@@ -124,7 +124,7 @@ export class UserComponent implements OnInit {
           ctrl.locations.push({ label: x.name, value: x.id });
         });
         ctrl.getLocationsFlag = true;
-      }))
+      }));
   }
 
   async getUsers() {
@@ -135,11 +135,11 @@ export class UserComponent implements OnInit {
         ctrl.data = response.object;
         ctrl.data = ctrl.data.map((x) => {
           ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
-          x.rolesSaved = x.roles.map(x => x.id);
+          x.rolesSaved = x.roles.map(u => u.id);
           const roles = [];
           x.roles.forEach((role) => {
             roles.push(role.name);
-            if (ctrl.roles.findIndex(x => x.value === role.name) === -1) {
+            if (ctrl.roles.findIndex(z => z.value === role.name) === -1) {
               ctrl.roles.push({ label: role.name, value: role.name });
             }
           });
@@ -205,7 +205,7 @@ export class UserComponent implements OnInit {
       this.globals.showLoader(true);
       this.currUser.roles = [];
       this.currUser.rolesSaved.map(x => {
-        this.currUser.roles.push(new Role(ctrl.backendRoles.find(r => r.id == x)));
+        this.currUser.roles.push(new Role(ctrl.backendRoles.find(r => r.id === x)));
       });
 
       if (this.currUser.id === undefined) {
