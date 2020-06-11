@@ -121,7 +121,7 @@
             </p-inputSwitch>
           </ng-template>
           <ng-template [ngIf]="canActivate">
-            <p-inputSwitch [ngIF]="canActivate" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
+            <p-inputSwitch [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
             </p-inputSwitch>
           </ng-template>
         </td>
