@@ -30,7 +30,7 @@
         <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
           <div class="position-relative">
             <input id="id" pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
-              placeholder="Id" class="ui-column-filter" [value]="dt.filters['id']?.value">
+              class="ui-column-filter" [value]="dt.filters['id']?.value">
             <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
@@ -47,7 +47,7 @@
         <th [hidden]="!cg.isVisibleCol('firstName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
-              placeholder="Search by First Name" class="ui-column-filter" [value]="dt.filters['firstName']?.value">
+              class="ui-column-filter" [value]="dt.filters['firstName']?.value">
             <i *ngIf="dt.filters['firstName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'firstName')"></i>
           </div>
@@ -55,7 +55,7 @@
         <th [hidden]="!cg.isVisibleCol('lastName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
-              placeholder="Search by Last Name" class="ui-column-filter" [value]="dt.filters['lastName']?.value">
+              class="ui-column-filter" [value]="dt.filters['lastName']?.value">
             <i *ngIf="dt.filters['lastName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'lastName')"></i>
           </div>
@@ -63,7 +63,7 @@
         <th [hidden]="!cg.isVisibleCol('userName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
-              placeholder="Search by User Name" class="ui-column-filter" [value]="dt.filters['userName']?.value">
+              class="ui-column-filter" [value]="dt.filters['userName']?.value">
             <i *ngIf="dt.filters['userName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'userName')"></i>
           </div>
@@ -71,7 +71,7 @@
         <th [hidden]="!cg.isVisibleCol('email',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
-              placeholder="Search by Email" class="ui-column-filter" [value]="dt.filters['email']?.value">
+              class="ui-column-filter" [value]="dt.filters['email']?.value">
             <i *ngIf="dt.filters['email']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'email')"></i>
           </div>
@@ -92,8 +92,7 @@
         <th [hidden]="!cg.isVisibleCol('locationName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'locationName', 'contains')"
-              placeholder="Search by Location Name" class="ui-column-filter"
-              [value]="dt.filters['locationName']?.value">
+              class="ui-column-filter" [value]="dt.filters['locationName']?.value">
             <i *ngIf="dt.filters['locationName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'locationName')"></i>
           </div>
@@ -101,8 +100,7 @@
         <th [hidden]="!cg.isVisibleCol('supervisorName', gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'supervisorName', 'contains')"
-              placeholder="Search by Supervisor Name" class="ui-column-filter"
-              [value]="dt.filters['supervisorName']?.value">
+              class="ui-column-filter" [value]="dt.filters['supervisorName']?.value">
             <i *ngIf="dt.filters['supervisorName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'supervisorName')"></i>
           </div>
@@ -251,7 +249,8 @@
               Roles
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15" appendTo="body">
+              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15"
+                appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Roles</div>
                 </ng-template>
@@ -261,7 +260,7 @@
               Location
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Location" name="locations" [options]="locations"  appendTo="body"
+              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body"
                 [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
