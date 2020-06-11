@@ -17,7 +17,7 @@ declare let Raphael: any;
   encapsulation: ViewEncapsulation.None,
   templateUrl: './layout.template.html'
 })
-export class Layout {
+export class Layout{
   open: boolean = true;
   sidebarState: boolean = true;
   globals: Globals;

@@ -1,12 +1,13 @@
-<!-- <p-blockUI [blocked]="globals.loader"></p-blockUI> -->
-<p-blockUI [target]="body" [blocked]="globals.loader">
+<p-blockUI [blocked]="globals.loader"> 
   <i class="fad fa-spinner-third fa-spin"
     style="position:absolute;top:35%;left:50%;font-size: 60px;font-weight: bold"></i>
 </p-blockUI>
+<!-- [target]="body"  -->
 <!-- <nav sidebar id="sidebar" [ngClass]="" -->
 <nav sidebar id="sidebar" [ngClass]="open?'active':''" (mouseenter)="open=false" (mouseleave)="open=true"
   class="sidebar nav-collapse collapse">
 </nav>
+
 <div class="wrap">
   <header navbar (changeSidebarPosition)="sidebarPosition($event)" (changeSidebarDisplay)="sidebarDisplay($event)"
     (openSidebar)="openSidebar()" class="page-header"></header>
