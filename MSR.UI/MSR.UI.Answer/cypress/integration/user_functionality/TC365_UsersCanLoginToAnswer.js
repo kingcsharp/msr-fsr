@@ -8,6 +8,13 @@ describe('User Functionality', () => {
 
         cy.url().should('include', '/login')
 
+        cy.window().then((win) => {
+
+            cy.spy(win.console, 'error').as('errorMessage')
+            cy.spy(win.console, 'warn').as('warningMessage')
+
+        })
+        
         cy.get('[data-cy=username-input]').type(adminUsername).should('have.value', adminUsername)
         cy.get('[data-cy=password-input]').type(adminPassword).should('have.value', adminPassword)
         
@@ -19,5 +26,7 @@ describe('User Functionality', () => {
 
         cy.get('[data-cy=username-input]').url().should('include', '/login')
 
+        cy.get('@warningMessage').should("not.called")
+        cy.get('@errorMessage').should("not.called") 
     })
 })

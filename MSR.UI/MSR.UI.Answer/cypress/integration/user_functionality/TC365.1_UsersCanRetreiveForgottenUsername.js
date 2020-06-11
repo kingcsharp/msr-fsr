@@ -15,6 +15,13 @@ describe('User Functionality', () => {
 
         cy.url().should('include', '/login')
 
+        cy.window().then((win) => {
+
+            cy.spy(win.console, 'error').as('errorMessage')
+            cy.spy(win.console, 'warn').as('warningMessage')
+
+        })
+        
         cy.get('[data-cy=forgotusername-link]').click()
 
         cy.get('[data-cy=email-input]').type(adminEmail).should('have.value',adminEmail)
@@ -23,5 +30,7 @@ describe('User Functionality', () => {
 
         cy.get('[data-cy=alert-message] > div').contains(' An email has been sent with your information. ')
 
+        cy.get('@warningMessage').should("not.called")
+        cy.get('@errorMessage').should("not.called") 
     })
 })
