@@ -78,8 +78,8 @@ export class UserComponent implements OnInit {
 
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
-    new ColumnsSaved({ id: 'locationName', label: 'Location Name', visible: false }),
-    new ColumnsSaved({ id: 'supervisorName', label: 'Supervisor Name', visible: false })
+    new ColumnsSaved({ id: 'locationName', label: 'Location', visible: false }),
+    new ColumnsSaved({ id: 'supervisorName', label: 'Supervisor', visible: false })
     ];
 
     this.roles = [];
