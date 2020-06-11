@@ -178,7 +178,8 @@ export class UserComponent implements OnInit {
       ctrl.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
     }, () => {
       user.isActive = !user.isActive;
-    }));
+    })
+    );
   }
 
   changeUserType(user: UpdateUserRequest) {

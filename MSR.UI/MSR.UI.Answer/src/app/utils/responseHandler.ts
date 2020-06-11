@@ -1,4 +1,4 @@
-function responseHandler(nextFn, errorFn = undefined) {
+function responseHandler(nextFn, errorFn?) {
     let subscriberA = {
         next(value: any) {
             if (nextFn !== undefined) {

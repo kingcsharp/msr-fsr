@@ -47,7 +47,9 @@ export class ViewSaved implements IViewSaved {
             if (Array.isArray(_data['columns'])) {
                 this.columns = [] as any;
                 for (let item of _data['columns']) {
-                    this.columns!.push(ColumnsSaved.fromJS(item));
+                    if (this.columns !== undefined) {
+                        this.columns.push(ColumnsSaved.fromJS(item));
+                    }
                 }
             }
         }
