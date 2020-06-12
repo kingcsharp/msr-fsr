@@ -29,7 +29,7 @@
       <tr>
         <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
           <div class="position-relative">
-            <input id="id" pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
+            <input id="id" pInputText type="text" tooltip="Search by Id" (input)="dt.filter($event.target.value, 'id', 'contains')"
               class="ui-column-filter" [value]="dt.filters['id']?.value">
             <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
@@ -46,7 +46,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('firstName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
+            <input pInputText type="text" tooltip="Search by First Name" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
               class="ui-column-filter" [value]="dt.filters['firstName']?.value">
             <i *ngIf="dt.filters['firstName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'firstName')"></i>
@@ -54,7 +54,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('lastName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
+            <input pInputText type="text" tooltip="Search by Last Name" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
               class="ui-column-filter" [value]="dt.filters['lastName']?.value">
             <i *ngIf="dt.filters['lastName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'lastName')"></i>
@@ -62,7 +62,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('userName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
+            <input pInputText type="text" tooltip="Search by User Name" (input)="dt.filter($event.target.value, 'userName', 'contains')"
               class="ui-column-filter" [value]="dt.filters['userName']?.value">
             <i *ngIf="dt.filters['userName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'userName')"></i>
@@ -70,14 +70,14 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('email',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
+            <input pInputText type="text" tooltip="Search by Email" (input)="dt.filter($event.target.value, 'email', 'contains')"
               class="ui-column-filter" [value]="dt.filters['email']?.value">
             <i *ngIf="dt.filters['email']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'email')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          <div class="position-relative">
+          <div class="position-relative" tooltip="Search by Created Date">
             <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
             </pcalendar-wrapper>
           </div>
@@ -91,7 +91,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('locationName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'locationName', 'contains')"
+            <input pInputText type="text" tooltip="Search by Location" (input)="dt.filter($event.target.value, 'locationName', 'contains')"
               class="ui-column-filter" [value]="dt.filters['locationName']?.value">
             <i *ngIf="dt.filters['locationName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'locationName')"></i>
@@ -99,7 +99,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('supervisorName', gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" (input)="dt.filter($event.target.value, 'supervisorName', 'contains')"
+            <input pInputText type="text" tooltip="Search by Supervisor Name" (input)="dt.filter($event.target.value, 'supervisorName', 'contains')"
               class="ui-column-filter" [value]="dt.filters['supervisorName']?.value">
             <i *ngIf="dt.filters['supervisorName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'supervisorName')"></i>
