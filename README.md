@@ -31,6 +31,9 @@
     To run the backend, open the solution in Visual Studio 2019 and run it with MSR.Answer.API as your startup project
 
 **UI:** 
+Beware that the UI will not start if the backend isn't running or
+otherwise cannot be connected to.  Usually running it first in visual
+studio will suffice.
 
     cd MSR.UI/MSR.UI.Answer
 

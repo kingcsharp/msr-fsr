@@ -10,7 +10,8 @@ After cloning the project, run the following command to install required package
 
 The following options allow the application to run for different purposes
 
-Option 1) Run with dev server as the backend
+Option 1) Run with dev server as the backend (The backend needs to
+be running before issuing this command, or it will fail).
 
     npm run start
 
