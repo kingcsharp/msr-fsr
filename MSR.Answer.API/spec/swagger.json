@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:44398"
+      "url": "https://5c68e182d643.ngrok.io"
     }
   ],
   "paths": {
@@ -42,7 +42,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "400": {
             "description": "",
             "content": {
               "application/json": {
@@ -715,7 +715,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "type": "string",
@@ -730,7 +730,7 @@
       },
       "AuditActionResult": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "successMessage": {
             "type": "string",
@@ -760,7 +760,7 @@
       },
       "ErrorMessage": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "number": {
             "type": "integer",
@@ -777,7 +777,7 @@
       },
       "SystemLoginRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "userName",
           "password"
@@ -795,7 +795,7 @@
       },
       "ForgotPasswordRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "userName"
         ],
@@ -808,7 +808,7 @@
       },
       "ForgotUserNameRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "email"
         ],
@@ -821,7 +821,7 @@
       },
       "ResetPasswordRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "token",
           "newPassword"
@@ -844,15 +844,14 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
+                "type": "array",
                 "nullable": true,
-                "oneOf": [
-                  {
+                "items": {
                     "$ref": "#/components/schemas/Location"
-                  }
-                ]
+                }
               },
               "returnedObject": {
                 "nullable": true
@@ -863,7 +862,7 @@
       },
       "Location": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "id": {
             "type": "integer",
@@ -927,7 +926,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "type": "boolean"
@@ -941,7 +940,7 @@
       },
       "CreateMenuRoleMapRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "menuId",
           "roleId"
@@ -964,7 +963,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "type": "array",
@@ -982,7 +981,7 @@
       },
       "Role": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "id": {
             "type": "integer",
@@ -1007,7 +1006,7 @@
       },
       "MenuItem": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "url": {
             "type": "string",
@@ -1052,7 +1051,7 @@
       },
       "MenuGroup": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "url": {
             "type": "string",
@@ -1150,7 +1149,7 @@
       },
       "UpdateMenuRoleMapRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "menuRoleId": {
             "type": "integer",
@@ -1183,7 +1182,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "type": "array",
@@ -1201,7 +1200,7 @@
       },
       "User": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "id": {
             "type": "integer",
@@ -1316,7 +1315,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "nullable": true,
@@ -1335,7 +1334,7 @@
       },
       "CreateUserRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "userName": {
             "type": "string",
@@ -1420,7 +1419,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "required": [
               "id"
             ],
@@ -1440,7 +1439,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "nullable": true,
@@ -1459,7 +1458,7 @@
       },
       "PendingApprovalNotification": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "customers": {
             "type": "integer",
