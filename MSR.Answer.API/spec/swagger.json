@@ -267,6 +267,48 @@
         }
       }
     },
+    "/v{version}/Part/{id}": {
+      "get": {
+        "tags": [
+          "Part"
+        ],
+        "operationId": "Part_GetPart",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 2
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfBoolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Role": {
       "post": {
         "tags": [

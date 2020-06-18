@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
 using NSwag.Annotations;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -17,13 +21,22 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<bool>))]
-        public IActionResult GetParts()
+        [HttpGet]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        public async Task<IActionResult> GetPartsAsync()
+        {
+            var ret = await _dispatcher.DispatchAsync(new GetParts());
+            return ret.ToOkObjectResponse<ICollection<bool>>();
+        }
+
+        [HttpGet("{id}")]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        public IActionResult GetPart(int id)
         {
             return new OkObjectResult(new AuditActionResult<bool>()
             {
                 Object = true,
-                SuccessMessage = "Hey you guys",
+                SuccessMessage = "gets a part",
             });;
         }
     }
