@@ -16,6 +16,7 @@ namespace MSR.Application.Extentions
         {
             services.AddScoped<AccountAppService>();
             services.AddScoped<UserAppService>();
+            services.AddScoped<WorkflowAppService>();
             services.AddScoped<MenuAppService>();
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

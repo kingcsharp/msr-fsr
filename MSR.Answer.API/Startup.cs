@@ -4,6 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
+using NSwag;
+using NSwag.Generation.Processors.Security;
+using System.Linq;
+using System.Net;
 
 namespace MSR.Answer.API
 {
@@ -38,6 +42,17 @@ namespace MSR.Answer.API
                     document.Info.Title = "MSR API";
                     document.Info.Description = "REST API for example.";
                 };
+
+                settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
+                settings.AddSecurity("Bearer", Enumerable.Empty<string>(),
+                    new OpenApiSecurityScheme()
+                    {
+                        Type = OpenApiSecuritySchemeType.ApiKey,
+                        Name = nameof(Authorization),
+                        In = OpenApiSecurityApiKeyLocation.Header,
+                        Description = "Copy this into the value field: Bearer {token}"
+                    }
+                );
             });
         }
 

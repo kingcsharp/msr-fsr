@@ -11,16 +11,16 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
     {
         IRepository<User> Users { get; }
         IRepository<Customer> Customers { get; }
-        IRepository<CustomerApproval> CustomerApprovals{ get; }
-        IRepository<Location> Locations{ get; }
-        IRepository<LocationApproval> LocationApprovals{ get; }
-        IRepository<MenuGroup> MenuGroups{ get; }
-        IRepository<MenuItem> MenuItems{ get; }
-        IRepository<MenuRole> MenuRoles{ get; }
-        IRepository<MenuRolePermission> MenuRolePermissions{ get; }
-        IRepository<Role> Roles{ get; }
-        IRepository<Status> Status{ get; }
-        IRepository<UserRole> UserRoles{ get; }
+        IRepository<CustomerApproval> CustomerApprovals { get; }
+        IRepository<Location> Locations { get; }
+        IRepository<LocationApproval> LocationApprovals { get; }
+        IRepository<MenuGroup> MenuGroups { get; }
+        IRepository<MenuItem> MenuItems { get; }
+        IRepository<MenuRole> MenuRoles { get; }
+        IRepository<MenuRolePermission> MenuRolePermissions { get; }
+        IRepository<Role> Roles { get; }
+        IRepository<Status> Status { get; }
+        IRepository<UserRole> UserRoles { get; }
         IRepository<PartApproval> PartApprovals { get; }
         IRepository<ProcedureApproval> ProcedureApprovals { get; }
         IRepository<ProcedureStepApproval> ProcedureStepApprovals { get; }
@@ -30,6 +30,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get; }
         IRepository<UserApproval> UserApprovals { get; }
         IRepository<UserRoleApproval> UserRoleApprovals { get; }
+        IRepository<WorkflowGroup> WorkflowGroups { get; }
+        IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get; }
+
+
 
         void SaveChanges();
         Task SaveChangesAsync();

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MSR.Domain.Commands;
+using MSR.Domain.Commands.Workflow;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -7,19 +9,27 @@ namespace MSR.Infrastructure.Profiles
     {
         public InfrastructureMappingProfiles()
         {
-            CreateMap<Resources.EntityFramework.Entities.User, Domain.Models.User>()
+            CreateMap<User, Domain.Models.User>()
                 .ForMember(dest => dest.Roles, opts => opts.Ignore())
                 .ReverseMap();
 
-            CreateMap<CreateUser, Resources.EntityFramework.Entities.User>();
+            CreateMap<CreateUser, User>();
 
-            CreateMap<UpdateUser, Resources.EntityFramework.Entities.User>();
-            CreateMap<GetLocations, Resources.EntityFramework.Entities.Location>();
+            CreateMap<UpdateUser, User>();
+            CreateMap<GetLocations, Location>();
 
-            CreateMap<Resources.EntityFramework.Entities.Role, Domain.Models.Role>()
+            CreateMap<Role, Domain.Models.Role>()
                 .ForMember(dest => dest.Menus, opt => opt.Ignore());
 
-            CreateMap<Resources.EntityFramework.Entities.Location, Domain.Models.Location> ();
+            CreateMap<Location, Domain.Models.Location>();
+
+            /*Workflow*/
+            CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
+            CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
+            CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
+
+            CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>();
+            CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>();
         }
     }
 }

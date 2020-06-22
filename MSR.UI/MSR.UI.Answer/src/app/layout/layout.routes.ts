@@ -8,6 +8,7 @@ const routes: Routes = [
     path: '', component: Layout, children: [
       { path: '', redirectTo: 'people', pathMatch: 'full' },
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
+      { path: 'workflow', loadChildren: () => import('../pages/workflow/workflow.module').then(m => m.WorkflowModule) },
       { path: 'inbox', loadChildren: () => import('../pages/inbox/inbox.module').then(m => m.InboxModule) },
       { path: 'charts', loadChildren: () => import('../pages/charts/charts.module').then(m => m.ChartsModule) },
       { path: 'profile', loadChildren: () => import('../pages/profile/profile.module').then(m => m.ProfileModule) },
