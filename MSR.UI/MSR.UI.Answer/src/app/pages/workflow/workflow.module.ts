@@ -23,9 +23,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
-import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
-import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { PendingApprovalsComponent } from './pending-approvals/pending-approvals.component';
 import { ApprovalGroupsComponent } from './approval-groups/approval-groups.component';
 import { ApprovalStagesComponent } from './approval-stages/approval-stages.component';
@@ -40,9 +37,6 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    GridOptionsComponent,
-    MultiselectWrapperComponent,
-    PcalendarWrapperComponent,
     PendingApprovalsComponent,
     ApprovalGroupsComponent,
     ApprovalStagesComponent

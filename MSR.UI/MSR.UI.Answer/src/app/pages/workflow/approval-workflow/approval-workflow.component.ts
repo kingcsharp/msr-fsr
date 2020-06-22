@@ -7,11 +7,11 @@ import { Globals } from '../../../models/lib/globals';
   styleUrls: ['./approval-workflow.component.scss']
 })
 export class ApprovalWorkflowComponent implements OnInit {
-
+  icon: string;
   constructor(public globals: Globals) { }
 
   ngOnInit(): void {
-    
+    this.icon = this.globals.activeMenu.icon;
   }
 
 }

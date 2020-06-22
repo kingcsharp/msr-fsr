@@ -50,9 +50,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
-import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
-import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -65,9 +62,6 @@ export const routes = [
 @NgModule({
   declarations: [
     // Components / Directives/ Pipes
-    GridOptionsComponent,
-    MultiselectWrapperComponent,
-    PcalendarWrapperComponent,
     AnalyticsComponent,
     MainChartComponent,
     BigStatComponent,
@@ -83,7 +77,6 @@ export const routes = [
     NasdaqSparklineWidgetComponent,
     RealtimeTrafficWidgetComponent,
     YearsMapWidgetComponent
-    // GridOptionsComponent
   ],
   imports: [
     CommonModule,
