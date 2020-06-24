@@ -2430,10 +2430,17 @@ export interface IAuditActionResultOfICollectionOfWorkflowGroupModel extends IAu
     returnedObject?: any | undefined;
 }
 
-export abstract class EntityModel implements IEntityModel {
+export class WorkflowGroupModel implements IWorkflowGroupModel {
+    name?: string | undefined;
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
     id?: number;
+    isActive?: boolean;
+    groupRoles?: WorkflowGroupRoleMapModel[] | undefined;
 
-    constructor(data?: IEntityModel) {
+    constructor(data?: IWorkflowGroupModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2444,38 +2451,13 @@ export abstract class EntityModel implements IEntityModel {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): EntityModel {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'EntityModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        return data; 
-    }
-}
-
-export interface IEntityModel {
-    id?: number;
-}
-
-export class WorkflowGroupModel extends EntityModel implements IWorkflowGroupModel {
-    name?: string | undefined;
-    groupRoles?: WorkflowGroupRoleMapModel[] | undefined;
-
-    constructor(data?: IWorkflowGroupModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
             this.name = _data["name"];
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.id = _data["id"];
+            this.isActive = _data["isActive"];
             if (Array.isArray(_data["groupRoles"])) {
                 this.groupRoles = [] as any;
                 for (let item of _data["groupRoles"])
@@ -2494,18 +2476,29 @@ export class WorkflowGroupModel extends EntityModel implements IWorkflowGroupMod
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["id"] = this.id;
+        data["isActive"] = this.isActive;
         if (Array.isArray(this.groupRoles)) {
             data["groupRoles"] = [];
             for (let item of this.groupRoles)
                 data["groupRoles"].push(item.toJSON());
         }
-        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IWorkflowGroupModel extends IEntityModel {
+export interface IWorkflowGroupModel {
     name?: string | undefined;
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+    id?: number;
+    isActive?: boolean;
     groupRoles?: WorkflowGroupRoleMapModel[] | undefined;
 }
 

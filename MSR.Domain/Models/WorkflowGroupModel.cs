@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MSR.Domain.Models
 {
-    public class WorkflowGroupModel : EntityModel
+    public class WorkflowGroupModel 
     {
         public WorkflowGroupModel()
         {
@@ -13,6 +13,13 @@ namespace MSR.Domain.Models
         }
 
         public string Name { get; set; }
+
+        public DateTime? LastUpdatedOn { get; set; }
+        public int? LastUpdatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public int Id { get; set; }
+        public bool IsActive { get; set; }
 
         public ICollection<WorkflowGroupRoleMapModel> GroupRoles { get; set; }
     }

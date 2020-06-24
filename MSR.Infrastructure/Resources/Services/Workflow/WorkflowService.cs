@@ -51,7 +51,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 workflowGroups = workflowGroups.Where(i => i.Id == command.Id.Value);
             }
 
-            var result = await workflowGroups.ToListAsync();
+            var result = await workflowGroups.Include(x => x.GroupRoles).ToListAsync();
             var ret = result.Select(workflowGrou => _mapper.Map<WorkflowGroupModel>(workflowGrou)).ToList();
             return ret;
         }

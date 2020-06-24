@@ -43,8 +43,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToGetWorkflowGroupCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+            var result = ret.ToOkObjectResponse<ICollection<WorkflowGroupModel>>();
 
-            return ret.ToOkObjectResponse<WorkflowGroupModel>();
+            return result;
         }
 
         [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowGroupModel>))]
@@ -75,5 +76,16 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToNoContentResponse();
         }
+
+        //[HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
+        //public async Task<IActionResult> Delete(int workflowId)
+        //{
+        //    var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflow()
+        //    {
+        //        Id = workflowId
+        //    });
+
+        //    return ret.ToNoContentResponse();
+        //}
     }
 }
