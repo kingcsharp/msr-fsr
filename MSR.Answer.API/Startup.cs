@@ -40,7 +40,7 @@ namespace MSR.Answer.API
                 {
                     document.Info.Version = "v1";
                     document.Info.Title = "MSR API";
-                    document.Info.Description = "REST API for example.";
+                    document.Info.Description = "REST API Answer 3";
                 };
 
                 settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
