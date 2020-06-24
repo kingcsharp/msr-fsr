@@ -20,6 +20,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Menus, opt => opt.Ignore());
 
             CreateMap<Resources.EntityFramework.Entities.Location, Domain.Models.Location> ();
+            CreateMap<Resources.EntityFramework.Entities.Part, Domain.Models.Part> ();
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,9 +20,10 @@ namespace MSR.Application.ApplicationServices
             _partService = partService;
         }
 
-        public Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            var ret = await _partService.GetPartsAsync(command);
+            return new CommandResponse<ICollection<Part>>(ret);
         }
     }
 }

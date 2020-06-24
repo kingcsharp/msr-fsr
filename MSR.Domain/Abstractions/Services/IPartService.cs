@@ -1,7 +1,12 @@
-﻿namespace MSR.Domain.Abstractions.Services
+﻿using MSR.Domain.Commands;
+using MSR.Domain.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace MSR.Domain.Abstractions.Services
 {
     public interface IPartService
     {
-
+        Task<ICollection<Part>> GetPartsAsync(GetParts command);
     }
 }

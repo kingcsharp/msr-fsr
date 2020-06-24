@@ -4,6 +4,7 @@ using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,11 +23,11 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<Part>>))]
         public async Task<IActionResult> GetPartsAsync()
         {
             var ret = await _dispatcher.DispatchAsync(new GetParts());
-            return ret.ToOkObjectResponse<ICollection<bool>>();
+            return ret.ToOkObjectResponse<ICollection<Part>>();
         }
 
         [HttpGet("{id}")]
