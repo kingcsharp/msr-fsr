@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.V1.Extentions;
+using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using NSwag.Annotations;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -21,15 +24,16 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
         public async Task<IActionResult> GetMenu()
         {
             if (UserId == 0) return BadRequest();
 
             var command = new GetMenu() { UserId = UserId };
 
-            await _dispatcher.DispatchAsync(command);
+            var result = await _dispatcher.DispatchAsync(command);
 
-            return Ok();
+            return result.ToOkObjectResponse<bool>("placeholder");
         }
     }
 }
