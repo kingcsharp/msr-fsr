@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://5c68e182d643.ngrok.io"
+      "url": "https://232aff63c708.ngrok.io"
     }
   ],
   "paths": {
@@ -157,7 +157,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "404": {
             "description": ""
           }
         }
@@ -791,6 +791,10 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "example": {
+            "userName": "dummy",
+            "password": "dummy"
         }
       },
       "ForgotPasswordRequest": {
@@ -835,6 +839,10 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "example": {
+            "token": "kvcNhL+3YY5K4WfYNxC31POQcgSvdpsnSgrsfqeAncE=",
+            "newPassword": "dummy"
         }
       },
       "AuditActionResultOfLocation": {
