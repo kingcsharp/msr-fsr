@@ -57,6 +57,10 @@ export class AppInterceptor implements HttpInterceptor {
         if (err.error) {
           let reader = new FileReader();
           reader.onload = event => {
+            if(event.target.result === ""){
+              this.toastr.error('Internal Server Error, please try again later.');
+              return throwError(undefined);
+            }
             const errorParsed = JSON.parse(event.target.result.toString());
             if (err.status === 401) {
               this.toastr.error('You are not authorized to do this action.');

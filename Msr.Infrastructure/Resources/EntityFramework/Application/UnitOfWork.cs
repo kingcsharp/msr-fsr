@@ -32,6 +32,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<PurchaseOrderProductApproval> _purchaseOrderProductApproval;
         private IRepository<UserApproval> _userApproval;
         private IRepository<UserRoleApproval> _userRoleApproval;
+        private IRepository<WorkflowGroup> _workflowGroup;
+        private IRepository<WorkflowGroupRoleMap> _workflowGroupRoleMap;
 
         public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
         public IRepository<Customer> Customers { get { return _customers ?? (_customers = new EFRepository<Customer>(Context)); } }
@@ -54,6 +56,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get { return _purchaseOrderProductApproval ?? (_purchaseOrderProductApproval = new EFRepository<PurchaseOrderProductApproval>(Context)); } }
         public IRepository<UserApproval> UserApprovals { get { return _userApproval ?? (_userApproval = new EFRepository<UserApproval>(Context)); } }
         public IRepository<UserRoleApproval> UserRoleApprovals { get { return _userRoleApproval ?? (_userRoleApproval = new EFRepository<UserRoleApproval>(Context)); } }
+        public IRepository<WorkflowGroup> WorkflowGroups { get { return _workflowGroup ?? (_workflowGroup = new EFRepository<WorkflowGroup>(Context)); } }
+        public IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get { return _workflowGroupRoleMap ?? (_workflowGroupRoleMap = new EFRepository<WorkflowGroupRoleMap>(Context)); } }
         #endregion Repositories
 
         public UnitOfWork(AnswerContext context)

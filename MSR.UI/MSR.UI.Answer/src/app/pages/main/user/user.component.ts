@@ -22,7 +22,6 @@ declare let jQuery: any;
 })
 export class UserComponent implements OnInit {
   privileges = EnumPrivilege;
-  config: any;
   data: any;
   loading: boolean = true;
   display: boolean = false;
@@ -80,7 +79,7 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
     new ColumnsSaved({ id: 'locationName', label: 'Location', visible: false }),
     new ColumnsSaved({ id: 'supervisorName', label: 'Supervisor', visible: false })
-    ];
+    ]; 
 
     this.roles = [];
     this.allUsers = [];
@@ -155,7 +154,7 @@ export class UserComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('users', privName);
+    return this.globals.hasPrivilege('ApprovalWorkflows', privName);
   }
 
   unmask(event) {

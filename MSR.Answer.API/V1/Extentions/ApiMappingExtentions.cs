@@ -1,6 +1,9 @@
 ﻿using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
+using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Helpers;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -32,7 +35,7 @@ namespace MSR.Answer.API.V1.Extentions
                 UserName = request.UserName
             };
         }
-        
+
         public static ForgotUserName ToForgotUserNameCommand(this ForgotUserNameRequest request)
         {
             return new ForgotUserName()
@@ -79,6 +82,35 @@ namespace MSR.Answer.API.V1.Extentions
                 TimeZoneId = request.TimeZoneId,
                 Roles = request.Roles
 
+            };
+        }
+
+        public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
+        {
+            return new GetWorkflowGroupsModel()
+            {
+                Id = request.Id
+            };
+        }
+
+        public static CreateWorkflowGroupModel ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
+        {
+            return new CreateWorkflowGroupModel()
+            {
+                IsActive = request.IsActive,
+                Name = request.Name,
+                Roles = request.Roles
+            };
+        }
+
+        public static UpdateWorkflowGroupModel ToUpdateWorkflowGroupCommand(this UpdateWorkflowGroupRequest request)
+        {
+            return new UpdateWorkflowGroupModel()
+            {
+                Id = request.Id,
+                IsActive = request.IsActive,
+                Name = request.Name,
+                Roles = request.Roles
             };
         }
 
