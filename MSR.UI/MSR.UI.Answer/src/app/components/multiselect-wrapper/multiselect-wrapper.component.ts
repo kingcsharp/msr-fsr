@@ -1,10 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-// import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
-// import { CommonGrid } from '../../models/lib/CommonGrid'
-// import { ViewSaved } from '../../models/lib/ViewSaved';
-// import { Globals } from '../../models/lib/globals';
-// import { TableState } from 'primeng/api';
+import { FilterUtils } from 'primeng/utils';
 
 @Component({
   selector: 'multiselect-wrapper',
@@ -22,11 +18,26 @@ export class MultiselectWrapperComponent implements OnInit {
   @Input() defaultTextTooltip: string;
   @Input() datatable: any;
   @Input() reset: any;
+  @Input() filterProp: string;
+  @Input() multipleValues: boolean;
   constructor() {
 
   }
 
   ngOnInit(): void {
+    const ctrl = this;
+    FilterUtils['multipleValuesFilter'] = (value, filter): boolean => {
+      let found = false;
+      filter.forEach(fElement => {
+        value.forEach(vElement => {
+          if (fElement === vElement[ctrl.filterProp]) {
+            found = true;
+            return;
+          }
+        });
+      });
+      return found;
+    };
     this.selectedColumns = [];
     this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
     const sub1 = this.datatable.onFilter.subscribe((elem) => {
@@ -46,6 +57,14 @@ export class MultiselectWrapperComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  filterGrid() {
+    if (this.multipleValues) {
+      this.datatable.filter(this.selectedColumns, this.filterId, 'multipleValuesFilter');
+    } else {
+      this.datatable.filter(this.selectedColumns, this.filterId, 'in');
+    }
   }
 
   setSelectedColumns(options, filters) {

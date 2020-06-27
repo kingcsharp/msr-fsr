@@ -76,16 +76,5 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToNoContentResponse();
         }
-
-        //[HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
-        //public async Task<IActionResult> Delete(int workflowId)
-        //{
-        //    var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflow()
-        //    {
-        //        Id = workflowId
-        //    });
-
-        //    return ret.ToNoContentResponse();
-        //}
     }
 }

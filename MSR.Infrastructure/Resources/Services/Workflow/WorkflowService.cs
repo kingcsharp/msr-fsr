@@ -51,7 +51,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 workflowGroups = workflowGroups.Where(i => i.Id == command.Id.Value);
             }
 
-            var result = await workflowGroups.Include(x => x.GroupRoles).ToListAsync();
+            var result = await workflowGroups.Include(x => x.Created)
+                .Include(x => x.LastUpdated).Include(x => x.GroupRoles).ToListAsync();
             var ret = result.Select(workflowGrou => _mapper.Map<WorkflowGroupModel>(workflowGrou)).ToList();
             return ret;
         }
@@ -105,9 +106,12 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         public async Task DeactivateWorkFlowGroupAsync(DeactivateWorkflow command)
         {
             var workFlow = await _unitOfWork.WorkflowGroups.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-            if (workFlow == null) { return; }
+            if (workFlow == null)
+            {
+                return;
+            }
             workFlow.IsActive = !workFlow.IsActive;
-            _unitOfWork.WorkflowGroups.Update(workFlow);
+            _unitOfWork.WorkflowGroups.Delete(false, workFlow, true);
             await _unitOfWork.SaveChangesAsync();
         }
     }

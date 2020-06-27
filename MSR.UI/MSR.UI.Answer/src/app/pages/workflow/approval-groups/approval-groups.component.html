@@ -50,8 +50,9 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('groupRoles',gridSettings)">
           <div class="position-relative">
-            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="roles" [filterId]="'rolesStr'"
-              [defaultText]="'Select Group Roles'" [defaultTextTooltip]="''" [datatable]="dt">
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="roles" [filterId]="'groupRoles'"
+              [defaultText]="'Select Group Roles'" [filterProp]="'name'" [multipleValues]="true" [defaultTextTooltip]="''"
+              [datatable]="dt">
             </multiselect-wrapper>
           </div>
         </th>
@@ -61,10 +62,30 @@
             </pcalendar-wrapper>
           </div>
         </th>
+        <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+          <div class="position-relative">
+            <input id="createdByName" pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'createdByName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['createdByName']?.value">
+            <i *ngIf="dt.filters['createdByName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'createdByName')"></i>
+          </div>
+        </th>
+
         <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
           <div class="position-relative" tooltip="Search by Last Updated On Date">
             <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'" [datatable]="dt">
             </pcalendar-wrapper>
+          </div>
+        </th>
+
+        <th [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+          <div class="position-relative">
+            <input id="lastUpdatedByName" pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'lastUpdatedByName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['lastUpdatedByName']?.value">
+            <i *ngIf="dt.filters['lastUpdatedByName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'lastUpdatedByName')"></i>
           </div>
         </th>
         <th></th>
@@ -90,19 +111,20 @@
           {{workflowGroup.name}}
         </td>
         <td [hidden]="!cg.isVisibleCol('groupRoles',gridSettings)">
+          {{workflowGroup.rolesStr}}
           <span *ngFor="let role of workflowGroup.groupRoles" class="badge mr-xs badge-secondary">{{role.name}}</span>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           {{workflowGroup.createdOn | date :'short' }}
         </td>
-        <td [hidden]="!cg.isVisibleCol('createdBy',gridSettings)">
-          {{workflowGroup.createdBy }}
+        <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+          {{workflowGroup.createdByName }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
           {{workflowGroup.lastUpdatedOn | date :'short' }}
         </td>
-        <td [hidden]="!cg.isVisibleCol('lastUpdatedBy',gridSettings)">
-          {{workflowGroup.lastUpdatedBy }}
+        <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+          {{workflowGroup.lastUpdatedByName }}
         </td>
         <td>
           <i *ngIf="canEditGroups" class="fa fa-cog pointer" tooltip="Edit User"

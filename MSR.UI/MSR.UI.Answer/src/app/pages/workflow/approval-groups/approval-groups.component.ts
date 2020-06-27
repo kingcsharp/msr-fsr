@@ -47,9 +47,9 @@ export class ApprovalGroupsComponent implements OnInit {
     new ColumnsSaved({ id: 'name', label: 'Approval Group Name', visible: true }),
     new ColumnsSaved({ id: 'groupRoles', label: 'Group Roles', visible: true }),
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
-    new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: false }),
+    new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdatedBy', label: 'Updated By', visible: false })
+    new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
 
     this.statuses = [
@@ -73,6 +73,14 @@ export class ApprovalGroupsComponent implements OnInit {
     this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.data = response.object;
+        ctrl.data.map((elem) => {
+          elem.groupRoles.forEach(role => {
+            if (ctrl.roles.findIndex(z => z.value === role.name) === -1) {
+              ctrl.roles.push({ label: role.name, value: role.name });
+            }
+          });
+          return elem;
+        });
       }));
   }
 
