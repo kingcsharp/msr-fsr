@@ -95,8 +95,16 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 .AttachAndInsert(_mapper.Map<WorkflowGroupRoleMap>(x)))
                 .ToList();
 
-            _unitOfWork.WorkflowGroups.Update(efWorkFlow);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                _unitOfWork.WorkflowGroups.Update(efWorkFlow);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
 
             var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkFlow);
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
-import { WorkflowService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, Role } from '../../../services/api.client.generated';
+import { WorkflowService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { EnumPrivilege } from '../../../models/enums/privileges';
@@ -9,6 +9,7 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 declare let jQuery: any;
 
 
@@ -29,7 +30,7 @@ export class ApprovalGroupsComponent implements OnInit {
   canActivateGroups: boolean = false;
   canEditGroups: boolean = false;
   display: boolean = false;
-  currWorkflowGroup: WorkflowGroupModel;
+  currWorkflowGroup: any;
   backendRoles: Array<Role>;
   data: any;
   statuses: any[];
@@ -74,14 +75,30 @@ export class ApprovalGroupsComponent implements OnInit {
       .subscribe(responseHandler(response => {
         ctrl.data = response.object;
         ctrl.data.map((elem) => {
-          elem.groupRoles.forEach(role => {
-            if (ctrl.roles.findIndex(z => z.value === role.name) === -1) {
-              ctrl.roles.push({ label: role.name, value: role.name });
-            }
-          });
+          this.updateRolesSavedForItem(elem);
+          this.addToGridRolesDropdown(elem.groupRoles);
           return elem;
         });
       }));
+  }
+
+  updateRolesSavedForItem(elem: any) {
+    const ctrl = this;
+    elem.rolesSaved = [];
+    elem.groupRoles.forEach(role => {
+      const foundRole = ctrl.backendRoles.find(r => r.id === role.roleId);
+      role.name = foundRole.name;
+      elem.rolesSaved.push(role.roleId);
+    });
+  }
+
+  addToGridRolesDropdown(groupRoles: any) {
+    const ctrl = this;
+    groupRoles.forEach(role => {
+      if (ctrl.roles.findIndex(z => z.value === role.name) === -1) {
+        ctrl.roles.push({ label: role.name, value: role.name });
+      }
+    });
   }
 
   getRoles() {
@@ -113,9 +130,46 @@ export class ApprovalGroupsComponent implements OnInit {
     if (workflowGroup === undefined) {
       let ret = new WorkflowGroupModel();
       ret.name = '';
+      ret.isActive = true;
       return ret;
     } else {
       return workflowGroup;
+    }
+  }
+  //onWorkflowSubmit
+  onWorkflowSubmit() {
+    jQuery('.parsleyjs').parsley().validate();
+    const ctrl = this;
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      let method: Observable<AuditActionResultOfWorkflowGroupModel> = null;
+      this.globals.showLoader(true);
+      this.currWorkflowGroup.groupRoles = [];
+      this.currWorkflowGroup.rolesSaved.forEach(x => {
+        const role = ctrl.backendRoles.find(r => r.id === x);
+        this.currWorkflowGroup.groupRoles
+          .push(new WorkflowGroupRoleMapModel({ roleId: x, name: role.name, workflowGroupId: this.currWorkflowGroup.id }));
+      });
+
+      if (this.currWorkflowGroup.id === undefined) {
+        const createWorkflow = new CreateWorkflowGroupRequest({ name: this.currWorkflowGroup.name, roles: this.currWorkflowGroup.groupRoles, isActive: this.currWorkflowGroup.isActive });
+        method = this.workflowService.workflowPost(env.apiVersion, createWorkflow);
+      } else {
+        const updateWorkflow = new UpdateWorkflowGroupRequest({ id: this.currWorkflowGroup.id, name: this.currWorkflowGroup.name, roles: this.currWorkflowGroup.groupRoles, isActive: this.currWorkflowGroup.isActive });
+        method = this.workflowService.workflowPatch(env.apiVersion, updateWorkflow);
+      }
+
+      method.pipe(take(1)).subscribe(responseHandler((resp) => {
+        if (!resp.hasErrors) {
+          if (ctrl.currWorkflowGroup.id === undefined) {
+            this.updateRolesSavedForItem(resp.object);
+            this.addToGridRolesDropdown(resp.object.groupRoles);
+            ctrl.data.push(resp.object);
+          }
+          ctrl.clseDialog();
+        }
+      }, () => {
+        // DO not update user
+      }));
     }
   }
 
