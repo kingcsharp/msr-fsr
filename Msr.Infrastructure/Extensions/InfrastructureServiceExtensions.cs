@@ -11,6 +11,7 @@ using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.Services.Account;
 using MSR.Infrastructure.Resources.Services.Location;
+using MSR.Infrastructure.Resources.Services.Customers;
 using MSR.Infrastructure.Resources.Services.Menu;
 using MSR.Infrastructure.Resources.Services.Role;
 using MSR.Infrastructure.Resources.Services.Users;
