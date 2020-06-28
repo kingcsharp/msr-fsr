@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
-import { WorkflowService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest } from '../../../services/api.client.generated';
+import { WorkflowGroupService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { EnumPrivilege } from '../../../models/enums/privileges';
@@ -36,7 +36,7 @@ export class ApprovalGroupsComponent implements OnInit {
   statuses: any[];
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
-    private elem: ElementRef, private roleService: RoleService, private workflowService: WorkflowService) {
+    private elem: ElementRef, private roleService: RoleService, private workflowGroupService: WorkflowGroupService) {
 
   }
 
@@ -72,7 +72,7 @@ export class ApprovalGroupsComponent implements OnInit {
   getWorkflowGroups() {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1))
+    this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.data = response.object;
         ctrl.data.map((elem) => {
@@ -144,7 +144,8 @@ export class ApprovalGroupsComponent implements OnInit {
       id: workflowGroup.id, name: workflowGroup.name,
       roles: workflowGroup.groupRoles, isActive: workflowGroup.isActive
     });
-    this.workflowService.workflowPatch(env.apiVersion, updateWorkflow).pipe(take(1)).subscribe(responseHandler((resp) => {
+    this.globals.showLoader(true);
+    this.workflowGroupService.workflowGroupPatch(env.apiVersion, updateWorkflow).pipe(take(1)).subscribe(responseHandler((resp) => {
       if (resp.hasErrors) {
         workflowGroup.isActive = !workflowGroup.isActive;
       }
@@ -156,7 +157,7 @@ export class ApprovalGroupsComponent implements OnInit {
   removeRow(workflowGroup) {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowService.workflowDelete(workflowGroup.id, env.apiVersion)
+    this.workflowGroupService.workflowGroupDelete(workflowGroup.id, env.apiVersion)
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflowGroup.id);
         this.data.splice(index, 1);
@@ -181,10 +182,10 @@ export class ApprovalGroupsComponent implements OnInit {
 
       if (this.currWorkflowGroup.id === undefined) {
         const createWorkflow = new CreateWorkflowGroupRequest({ name: this.currWorkflowGroup.name, roles: this.currWorkflowGroup.groupRoles, isActive: this.currWorkflowGroup.isActive });
-        method = this.workflowService.workflowPost(env.apiVersion, createWorkflow);
+        method = this.workflowGroupService.workflowGroupPost(env.apiVersion, createWorkflow);
       } else {
         const updateWorkflow = new UpdateWorkflowGroupRequest({ id: this.currWorkflowGroup.id, name: this.currWorkflowGroup.name, roles: this.currWorkflowGroup.groupRoles, isActive: this.currWorkflowGroup.isActive });
-        method = this.workflowService.workflowPatch(env.apiVersion, updateWorkflow);
+        method = this.workflowGroupService.workflowGroupPatch(env.apiVersion, updateWorkflow);
       }
       this.globals.showLoader(true);
       method.pipe(take(1)).subscribe(responseHandler((resp) => {

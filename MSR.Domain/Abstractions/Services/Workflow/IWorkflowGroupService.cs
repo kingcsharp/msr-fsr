@@ -1,14 +1,13 @@
-﻿using MSR.Domain.Commands;
+﻿using System.Collections.Generic;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using MSR.Domain.Commands.Workflow;
 
-namespace MSR.Domain.Abstractions.Services
+namespace MSR.Domain.Abstractions.Services.Workflow
 {
-    public interface IWorkflowService
+    public interface IWorkflowGroupService
     {
-        Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovals command);
         Task<ICollection<WorkflowGroupModel>> GetWorkFlowGroupsAsync(GetWorkflowGroupsModel command);
         Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroupModel command);
         Task<WorkflowGroupModel> UpdateWorkFlowGroupAsync(UpdateWorkflowGroupModel command);

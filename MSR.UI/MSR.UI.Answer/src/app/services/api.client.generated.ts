@@ -999,9 +999,21 @@ export class WorkflowService {
         }
         return _observableOf<AuditActionResultOfPendingApprovalNotification>(<any>null);
     }
+}
 
-    workflowGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
-        let url_ = this.baseUrl + "/v{version}/Workflow?";
+@Injectable()
+export class WorkflowGroupService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    workflowGroupGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowGroup?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -1018,11 +1030,11 @@ export class WorkflowService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processWorkflowGet(response_);
+            return this.processWorkflowGroupGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processWorkflowGet(<any>response_);
+                    return this.processWorkflowGroupGet(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfICollectionOfWorkflowGroupModel>><any>_observableThrow(e);
                 }
@@ -1031,7 +1043,7 @@ export class WorkflowService {
         }));
     }
 
-    protected processWorkflowGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
+    protected processWorkflowGroupGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkflowGroupModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1053,8 +1065,8 @@ export class WorkflowService {
         return _observableOf<AuditActionResultOfICollectionOfWorkflowGroupModel>(<any>null);
     }
 
-    workflowPost(version: string, request: CreateWorkflowGroupRequest): Observable<AuditActionResultOfWorkflowGroupModel> {
-        let url_ = this.baseUrl + "/v{version}/Workflow";
+    workflowGroupPost(version: string, request: CreateWorkflowGroupRequest): Observable<AuditActionResultOfWorkflowGroupModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowGroup";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -1073,11 +1085,11 @@ export class WorkflowService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processWorkflowPost(response_);
+            return this.processWorkflowGroupPost(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processWorkflowPost(<any>response_);
+                    return this.processWorkflowGroupPost(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfWorkflowGroupModel>><any>_observableThrow(e);
                 }
@@ -1086,7 +1098,7 @@ export class WorkflowService {
         }));
     }
 
-    protected processWorkflowPost(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowGroupModel> {
+    protected processWorkflowGroupPost(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowGroupModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1108,8 +1120,8 @@ export class WorkflowService {
         return _observableOf<AuditActionResultOfWorkflowGroupModel>(<any>null);
     }
 
-    workflowPatch(version: string, request: UpdateWorkflowGroupRequest): Observable<AuditActionResultOfWorkflowGroupModel> {
-        let url_ = this.baseUrl + "/v{version}/Workflow";
+    workflowGroupPatch(version: string, request: UpdateWorkflowGroupRequest): Observable<AuditActionResultOfWorkflowGroupModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowGroup";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -1128,11 +1140,11 @@ export class WorkflowService {
         };
 
         return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processWorkflowPatch(response_);
+            return this.processWorkflowGroupPatch(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processWorkflowPatch(<any>response_);
+                    return this.processWorkflowGroupPatch(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfWorkflowGroupModel>><any>_observableThrow(e);
                 }
@@ -1141,7 +1153,7 @@ export class WorkflowService {
         }));
     }
 
-    protected processWorkflowPatch(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowGroupModel> {
+    protected processWorkflowGroupPatch(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowGroupModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1163,8 +1175,8 @@ export class WorkflowService {
         return _observableOf<AuditActionResultOfWorkflowGroupModel>(<any>null);
     }
 
-    workflowDelete(workflowId: number, version: string): Observable<void> {
-        let url_ = this.baseUrl + "/v{version}/Workflow/{workflowId}";
+    workflowGroupDelete(workflowId: number, version: string): Observable<void> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowGroup/{workflowId}";
         if (workflowId === undefined || workflowId === null)
             throw new Error("The parameter 'workflowId' must be defined.");
         url_ = url_.replace("{workflowId}", encodeURIComponent("" + workflowId));
@@ -1181,11 +1193,11 @@ export class WorkflowService {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processWorkflowDelete(response_);
+            return this.processWorkflowGroupDelete(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processWorkflowDelete(<any>response_);
+                    return this.processWorkflowGroupDelete(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -1194,7 +1206,7 @@ export class WorkflowService {
         }));
     }
 
-    protected processWorkflowDelete(response: HttpResponseBase): Observable<void> {
+    protected processWorkflowGroupDelete(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

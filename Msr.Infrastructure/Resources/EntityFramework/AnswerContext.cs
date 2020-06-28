@@ -47,14 +47,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         : base(options)
         { }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory)
-        //        .UseLazyLoadingProxies()
-        //        .UseSqlServer(ConnectionString_);
-        //    base.OnConfiguring(optionsBuilder);
-        //}
-
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             try
