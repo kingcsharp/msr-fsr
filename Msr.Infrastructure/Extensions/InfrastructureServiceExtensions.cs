@@ -32,6 +32,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<IWorkflowGroupService, WorkflowGroupService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
 

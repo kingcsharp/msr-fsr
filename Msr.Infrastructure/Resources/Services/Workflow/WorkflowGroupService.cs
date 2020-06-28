@@ -25,23 +25,6 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             _mapper = mapper;
         }
 
-        public async Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovals command)
-        {
-            //TODO: Make this less brittle
-            var inProcressStatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "In Progress").Id;
-            var pendingStatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
-
-            return new PendingApprovalNotification()
-            {
-                Customers = _unitOfWork.CustomerApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                Locations = _unitOfWork.LocationApprovals.Count(),
-                Parts = _unitOfWork.PartApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                Procedures = _unitOfWork.ProcedureApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                PurchaseOrders = _unitOfWork.PurchaseOrderApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                Users = _unitOfWork.UserApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-            };
-        }
-
         public async Task<ICollection<WorkflowGroupModel>> GetWorkFlowGroupsAsync(GetWorkflowGroupsModel command)
         {
             var workflowGroups = _unitOfWork.WorkflowGroups.Query();
