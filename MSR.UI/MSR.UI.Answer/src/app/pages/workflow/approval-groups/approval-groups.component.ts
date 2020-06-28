@@ -71,6 +71,7 @@ export class ApprovalGroupsComponent implements OnInit {
 
   getWorkflowGroups() {
     const ctrl = this;
+    this.globals.showLoader(true);
     this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.data = response.object;
@@ -136,6 +137,34 @@ export class ApprovalGroupsComponent implements OnInit {
       return workflowGroup;
     }
   }
+
+  workflowGroupStatus(workflowGroup: WorkflowGroupModel) {
+    const ctrl = this;
+    const updateWorkflow = new UpdateWorkflowGroupRequest({
+      id: workflowGroup.id, name: workflowGroup.name,
+      roles: workflowGroup.groupRoles, isActive: workflowGroup.isActive
+    });
+    this.workflowService.workflowPatch(env.apiVersion, updateWorkflow).pipe(take(1)).subscribe(responseHandler((resp) => {
+      if (resp.hasErrors) {
+        workflowGroup.isActive = !workflowGroup.isActive;
+      }
+    }, () => {
+      workflowGroup.isActive = !workflowGroup.isActive;
+    }));
+  }
+
+  removeRow(workflowGroup) {
+    const ctrl = this;
+    this.globals.showLoader(true);
+    this.workflowService.workflowDelete(workflowGroup.id, env.apiVersion)
+      .pipe(take(1)).subscribe(responseHandler((resp) => {
+        const index = this.data.findIndex(x => x.id === workflowGroup.id);
+        this.data.splice(index, 1);
+        ctrl.toastr.success(`Workflow Group has been successfully removed.`);
+      }, () => {
+        // DO not update user
+      }));
+  }
   //onWorkflowSubmit
   onWorkflowSubmit() {
     jQuery('.parsleyjs').parsley().validate();
@@ -157,7 +186,7 @@ export class ApprovalGroupsComponent implements OnInit {
         const updateWorkflow = new UpdateWorkflowGroupRequest({ id: this.currWorkflowGroup.id, name: this.currWorkflowGroup.name, roles: this.currWorkflowGroup.groupRoles, isActive: this.currWorkflowGroup.isActive });
         method = this.workflowService.workflowPatch(env.apiVersion, updateWorkflow);
       }
-
+      this.globals.showLoader(true);
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
           if (ctrl.currWorkflowGroup.id === undefined) {

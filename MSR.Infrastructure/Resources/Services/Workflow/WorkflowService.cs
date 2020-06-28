@@ -89,22 +89,15 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             }
 
             efWorkFlow.Name = command.Name;
+            efWorkFlow.IsActive = command.IsActive;
 
             efWorkFlow.GroupRoles = command.Roles.Select(
                 x => _unitOfWork.WorkflowGroupRoleMaps
                 .AttachAndInsert(_mapper.Map<WorkflowGroupRoleMap>(x)))
                 .ToList();
 
-            try
-            {
-                _unitOfWork.WorkflowGroups.Update(efWorkFlow);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            _unitOfWork.WorkflowGroups.Update(efWorkFlow);
+            await _unitOfWork.SaveChangesAsync();
 
             var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkFlow);
 
@@ -113,12 +106,11 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task DeactivateWorkFlowGroupAsync(DeactivateWorkflow command)
         {
-            var workFlow = await _unitOfWork.WorkflowGroups.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            var workFlow = await _unitOfWork.WorkflowGroups.Query().Include(x => x.GroupRoles).FirstOrDefaultAsync(x => x.Id == command.Id);
             if (workFlow == null)
             {
                 return;
             }
-            workFlow.IsActive = !workFlow.IsActive;
             _unitOfWork.WorkflowGroups.Delete(false, workFlow, true);
             await _unitOfWork.SaveChangesAsync();
         }

@@ -54,7 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToCreateWorkflowGroupCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<WorkflowGroupModel>();
+            return ret.ToOkObjectResponse<WorkflowGroupModel>("Workflow Group has been successfully created.");
         }
 
         [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowGroupModel>))]
@@ -63,7 +63,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUpdateWorkflowGroupCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<WorkflowGroupModel>();
+            return ret.ToOkObjectResponse<WorkflowGroupModel>("Workflow Group has been successfully updated.");
         }
 
         [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]

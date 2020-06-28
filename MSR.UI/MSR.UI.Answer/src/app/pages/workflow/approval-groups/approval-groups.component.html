@@ -9,7 +9,7 @@
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="canAddGroups" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button"
+        <button *ngIf="canAddGroups" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
           data-cy="add-button">
           + Add
         </button>
@@ -97,13 +97,13 @@
           {{workflowGroup.id}}
         </td>
         <td class="text-center" [hidden]="!cg.isVisibleCol('isActive', gridSettings)">
-          <ng-template [ngIf]="!canActivate">
+          <ng-template [ngIf]="!canActivateGroups">
             <p-inputSwitch disabled="true" [(ngModel)]="workflowGroup.isActive"
-              (ngModelChange)="changeUserStatus(workflowGroup)">
+              (ngModelChange)="workflowGroupStatus(workflowGroup)">
             </p-inputSwitch>
           </ng-template>
-          <ng-template [ngIf]="canActivate">
-            <p-inputSwitch [(ngModel)]="workflowGroup.isActive" (ngModelChange)="changeUserStatus(workflowGroup)">
+          <ng-template [ngIf]="canActivateGroups">
+            <p-inputSwitch [(ngModel)]="workflowGroup.isActive" (ngModelChange)="workflowGroupStatus(workflowGroup)">
             </p-inputSwitch>
           </ng-template>
         </td>
@@ -127,8 +127,10 @@
           {{workflowGroup.lastUpdatedByName }}
         </td>
         <td>
-          <i *ngIf="canEditGroups" class="fa fa-cog pointer" tooltip="Edit User"
+          <i *ngIf="canEditGroups" class="fa fa-cog pointer" tooltip="Edit Workflow Group"
             (click)="showDialog(workflowGroup)"></i>
+
+          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow Group" (click)="removeRow(workflowGroup)"></i>
         </td>
       </tr>
     </ng-template>
