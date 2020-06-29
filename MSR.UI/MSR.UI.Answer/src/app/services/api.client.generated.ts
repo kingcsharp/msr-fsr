@@ -1226,6 +1226,231 @@ export class WorkflowGroupService {
     }
 }
 
+@Injectable()
+export class WorkflowStageService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    workflowStageGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowStageModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowStage?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowStageGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowStageGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkflowStageModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkflowStageModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowStageGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkflowStageModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkflowStageModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkflowStageModel>(<any>null);
+    }
+
+    workflowStagePost(version: string, request: CreateWorkflowStageRequest): Observable<AuditActionResultOfWorkflowStageModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowStage";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowStagePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowStagePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkflowStageModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkflowStageModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowStagePost(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowStageModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkflowStageModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkflowStageModel>(<any>null);
+    }
+
+    workflowStagePatch(version: string, request: UpdateWorkflowStageRequest): Observable<AuditActionResultOfWorkflowStageModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowStage";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowStagePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowStagePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkflowStageModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkflowStageModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowStagePatch(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowStageModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkflowStageModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkflowStageModel>(<any>null);
+    }
+
+    workflowStageDelete(workflowId: number, version: string): Observable<void> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowStage/{workflowId}";
+        if (workflowId === undefined || workflowId === null)
+            throw new Error("The parameter 'workflowId' must be defined.");
+        url_ = url_.replace("{workflowId}", encodeURIComponent("" + workflowId));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowStageDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowStageDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowStageDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
 export class AuditActionResult implements IAuditActionResult {
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
@@ -2785,6 +3010,312 @@ export class UpdateWorkflowGroupRequest extends CreateWorkflowGroupRequest imple
 }
 
 export interface IUpdateWorkflowGroupRequest extends ICreateWorkflowGroupRequest {
+    id: number;
+}
+
+export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowStageModel {
+    object?: WorkflowStageModel[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkflowStageModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkflowStageModel.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowStageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkflowStageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfWorkflowStageModel extends IAuditActionResult {
+    object?: WorkflowStageModel[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export abstract class EntityModel implements IEntityModel {
+    id?: number;
+
+    constructor(data?: IEntityModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): EntityModel {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'EntityModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IEntityModel {
+    id?: number;
+}
+
+export abstract class TrackableModel extends EntityModel implements ITrackableModel {
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+
+    constructor(data?: ITrackableModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+        }
+    }
+
+    static fromJS(data: any): TrackableModel {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'TrackableModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ITrackableModel extends IEntityModel {
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+}
+
+export class DeletableModel extends TrackableModel implements IDeletableModel {
+    isActive?: boolean;
+
+    constructor(data?: IDeletableModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): DeletableModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeletableModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isActive"] = this.isActive;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IDeletableModel extends ITrackableModel {
+    isActive?: boolean;
+}
+
+export class WorkflowStageModel extends DeletableModel implements IWorkflowStageModel {
+    name?: string | undefined;
+    lastUpdatedByName?: string | undefined;
+    createdByName?: string | undefined;
+
+    constructor(data?: IWorkflowStageModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.lastUpdatedByName = _data["lastUpdatedByName"];
+            this.createdByName = _data["createdByName"];
+        }
+    }
+
+    static fromJS(data: any): WorkflowStageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowStageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["lastUpdatedByName"] = this.lastUpdatedByName;
+        data["createdByName"] = this.createdByName;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IWorkflowStageModel extends IDeletableModel {
+    name?: string | undefined;
+    lastUpdatedByName?: string | undefined;
+    createdByName?: string | undefined;
+}
+
+export class AuditActionResultOfWorkflowStageModel extends AuditActionResult implements IAuditActionResultOfWorkflowStageModel {
+    object?: WorkflowStageModel | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkflowStageModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkflowStageModel.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkflowStageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkflowStageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfWorkflowStageModel extends IAuditActionResult {
+    object?: WorkflowStageModel | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateWorkflowStageRequest implements ICreateWorkflowStageRequest {
+    name!: string;
+    isActive?: boolean;
+
+    constructor(data?: ICreateWorkflowStageRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): CreateWorkflowStageRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateWorkflowStageRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        return data; 
+    }
+}
+
+export interface ICreateWorkflowStageRequest {
+    name: string;
+    isActive?: boolean;
+}
+
+export class UpdateWorkflowStageRequest extends CreateWorkflowStageRequest implements IUpdateWorkflowStageRequest {
+    id!: number;
+
+    constructor(data?: IUpdateWorkflowStageRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWorkflowStageRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWorkflowStageRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdateWorkflowStageRequest extends ICreateWorkflowStageRequest {
     id: number;
 }
 
