@@ -143,8 +143,7 @@ pipeline {
                             "version": "v1",
                             "ref": "'"$(git rev-parse HEAD)"'",
                             "github": true
-                        }\'
-                    }\''''
+                    }'''
                 }
             }
         }
