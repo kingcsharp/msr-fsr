@@ -1,4 +1,4 @@
-﻿using MSR.Domain.Abstractions.Services;
+﻿using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -8,25 +8,17 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MSR.Application.ApplicationServices
+namespace MSR.Application.ApplicationServices.Workflow
 {
-    public class WorkflowAppService :
-            ICommandHandler<GetPendingApprovals>,
-        ICommandHandler<GetWorkflowGroupsModel>,
+    public class WorkflowGroupAppService: ICommandHandler<GetWorkflowGroupsModel>,
         ICommandHandler<CreateWorkflowGroupModel>,
         ICommandHandler<UpdateWorkflowGroupModel>,
         ICommandHandler<DeactivateWorkflow>
     {
-        private IWorkflowService _workflowService;
-        public WorkflowAppService(IWorkflowService workflowService)
+        private IWorkflowGroupService _workflowService;
+        public WorkflowGroupAppService(IWorkflowGroupService workflowService)
         {
             _workflowService = workflowService;
-        }
-
-        public async Task<ICommandResponse> HandleAsync(GetPendingApprovals command, CancellationToken cancellationToken = default)
-        {
-            var ret = await _workflowService.GetApprovalNotificationsAsync(command);
-            return new CommandResponse<PendingApprovalNotification>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(GetWorkflowGroupsModel command, CancellationToken cancellationToken = default)
@@ -52,5 +44,6 @@ namespace MSR.Application.ApplicationServices
             await _workflowService.DeactivateWorkFlowGroupAsync(command);
             return new CommandResponse();
         }
+
     }
 }

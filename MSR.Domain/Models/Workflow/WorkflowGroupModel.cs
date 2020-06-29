@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MSR.Domain.Models
 {
-    public class WorkflowGroupModel 
+    public class WorkflowGroupModel
     {
         public WorkflowGroupModel()
         {
@@ -16,8 +16,10 @@ namespace MSR.Domain.Models
 
         public DateTime? LastUpdatedOn { get; set; }
         public int? LastUpdatedBy { get; set; }
+        public string LastUpdatedByName { get; set; }
         public DateTime CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
+        public string CreatedByName { get; set; }
         public int Id { get; set; }
         public bool IsActive { get; set; }
 

@@ -34,6 +34,7 @@ export class PcalendarWrapperComponent implements OnInit {
       dateFormat: 'yyy-mm-dd'
     };
     const ctrl = this;
+    
     FilterUtils['dateRangeFilter'] = (value, filter): boolean => {
       // IF WE USE RANGE AS FILTER THEN it would just be setting range in the pcalendar-wrapper selectionMode='range' and here filter would be an array.
       return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);

@@ -114,6 +114,33 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
+        public static GetWorkflowStageModel ToGetWorkflowStageCommand(this GetWorkflowStageRequest request)
+        {
+            return new GetWorkflowStageModel()
+            {
+                Id = request.Id
+            };
+        }
+
+        public static CreateWorkflowStageModel ToCreateWorkflowStageCommand(this CreateWorkflowStageRequest request)
+        {
+            return new CreateWorkflowStageModel()
+            {
+                IsActive = request.IsActive,
+                Name = request.Name
+            };
+        }
+
+        public static UpdateWorkflowStageModel ToUpdateWorkflowStageCommand(this UpdateWorkflowStageRequest request)
+        {
+            return new UpdateWorkflowStageModel()
+            {
+                Id = request.Id,
+                IsActive = request.IsActive,
+                Name = request.Name
+            };
+        }
+
         public static UpdateUser ToUpdateUserCommand(this UpdateUserRequest request)
         {
             return new UpdateUser()

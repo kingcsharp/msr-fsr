@@ -37,19 +37,10 @@ export class Sidebar {
 
     menuStructure.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
     menuStructure.forEach(function (item) {
-      item.submenu.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
+      item.submenu.sort((a, b) => (a.orderNumber > b.orderNumber) ? -1 : 1);
     });
 
     return menuStructure;
-  }
-
-  ngAfterViewInit() {
-    // this.sidebarMenu = this.el.nativeElement.querySelector('#side-nav');
-    // if (window.innerWidth > 768) {
-    //   setTimeout(() => {
-    //     jQuery(this.sidebarMenu).find('.accordion-group.active .accordion-body').collapse('show');
-    //   });
-    // }
   }
 
   setSidebarHeight(event) {
@@ -78,27 +69,8 @@ export class Sidebar {
     }
   }
 
-  collapseSubMenu(event) {
-    // let currentMenu = event.target
-    //   .closest('.accordion-group')
-    //   .querySelector('.accordion-body');
-    // let collapsingMenu = this.sidebarMenu
-    //   .querySelector('.accordion-group .accordion-body.collapse.show');
-    // jQuery(collapsingMenu).collapse('hide');
-    // jQuery(currentMenu).collapse('show');
-    // if (collapsingMenu && currentMenu !== collapsingMenu && window.innerWidth < 768) {
-    //   let submenuHeight = 0;
-    //   let submenuItems = collapsingMenu.querySelectorAll('li');
-    //   submenuItems.forEach(() => {
-    //     submenuHeight += 26;
-    //   });
-    //   this.sidebarHeight -= submenuHeight;
-    // }
-  }
-
   sidebarBehavior(event) {
     this.setSidebarHeight(event);
-    this.collapseSubMenu(event);
     this.renderer.setStyle(document
       .querySelector('.content'), 'margin-top', this.sidebarHeight + 'px');
   }
