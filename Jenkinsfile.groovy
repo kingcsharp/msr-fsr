@@ -140,7 +140,7 @@ pipeline {
                 script {
                     sh label: '', script: '''curl -u Vi5GHlZj0Cb5sUlC: "https://assertible.com/deployments" -d\'{
                         "service": "7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a",
-                        "environment": "production",
+                        "environment": "dev",
                         "version": "v1",
                         "ref": "'"$(git rev-parse HEAD)"'",
                         "github": true
