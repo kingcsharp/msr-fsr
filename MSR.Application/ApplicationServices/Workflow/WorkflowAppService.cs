@@ -4,6 +4,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Workflow;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,11 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class WorkflowAppService :
-            ICommandHandler<GetPendingApprovals>
+            ICommandHandler<GetPendingApprovals>,
+        ICommandHandler<GetWorkflowModel>,
+        ICommandHandler<CreateWorkflowModel>,
+        ICommandHandler<UpdateWorkflowModel>,
+        ICommandHandler<DeactivateWorkflowModel>
     {
         private IWorkflowService _workflowService;
         public WorkflowAppService(IWorkflowService workflowService)
@@ -23,6 +28,30 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workflowService.GetApprovalNotificationsAsync(command);
             return new CommandResponse<PendingApprovalNotification>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkflowModel command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workflowService.GetWorkFlowAsync(command);
+            return new CommandResponse<ICollection<WorkflowModel>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateWorkflowModel command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workflowService.CreateWorkFlowAsync(command);
+            return new CommandResponse<WorkflowModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateWorkflowModel command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workflowService.UpdateWorkFlowAsync(command);
+            return new CommandResponse<WorkflowModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeactivateWorkflowModel command, CancellationToken cancellationToken = default)
+        {
+            await _workflowService.DeactivateWorkFlowAsync(command);
+            return new CommandResponse();
         }
     }
 }

@@ -61,7 +61,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
         [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
         public async Task<IActionResult> Delete(int workflowId)
         {
-            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflow()
+            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowGroup()
             {
                 Id = workflowId
             });

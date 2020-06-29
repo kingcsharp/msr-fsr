@@ -2,7 +2,7 @@
 
 namespace MSR.Domain.Commands.Workflow
 {
-    public class DeactivateWorkflow : Command
+    public class DeactivateWorkflowModel : Command
     {
         public int Id { get; set; }
     }

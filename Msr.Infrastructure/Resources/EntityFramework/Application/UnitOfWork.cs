@@ -34,7 +34,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<UserRoleApproval> _userRoleApproval;
         private IRepository<WorkflowGroup> _workflowGroup;
         private IRepository<WorkflowStage> _workflowStage;
+        private IRepository<WorkflowActivityMap> _workflowActivityMap;
+        private IRepository<WorkflowActivity> _workflowActivity;
         private IRepository<WorkflowGroupRoleMap> _workflowGroupRoleMap;
+        private IRepository<WorkflowStageMap> _workflowStageMap;
+        private IRepository<Workflow> _workflow;
 
         public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
         public IRepository<Customer> Customers { get { return _customers ?? (_customers = new EFRepository<Customer>(Context)); } }
@@ -60,7 +64,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowGroup> WorkflowGroups { get { return _workflowGroup ?? (_workflowGroup = new EFRepository<WorkflowGroup>(Context)); } }
         public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ?? (_workflowStage = new EFRepository<WorkflowStage>(Context)); } }
         
+        public IRepository<Workflow> Workflows { get { return _workflow ?? (_workflow = new EFRepository<Workflow>(Context)); } }
+        public IRepository<WorkflowStageMap> WorkflowStagesMap { get { return _workflowStageMap ?? (_workflowStageMap = new EFRepository<WorkflowStageMap>(Context)); } }
+
         public IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get { return _workflowGroupRoleMap ?? (_workflowGroupRoleMap = new EFRepository<WorkflowGroupRoleMap>(Context)); } }
+
+        public IRepository<WorkflowActivityMap> WorkflowActivityMaps { get { return _workflowActivityMap ?? (_workflowActivityMap = new EFRepository<WorkflowActivityMap>(Context)); } }
+        public IRepository<WorkflowActivity> WorkflowActivities { get { return _workflowActivity ?? (_workflowActivity = new EFRepository<WorkflowActivity>(Context)); } }
+        
         #endregion Repositories
 
         public UnitOfWork(AnswerContext context)

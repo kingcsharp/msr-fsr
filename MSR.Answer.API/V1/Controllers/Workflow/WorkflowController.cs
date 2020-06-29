@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using MSR.Answer.API.V1.Models.Workflow;
 using System.Collections.Generic;
 using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Models.Workflow;
 
 namespace MSR.Answer.API.V1.Controllers.Workflow
 {
@@ -37,6 +38,46 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
 
             return ret.ToOkObjectResponse<PendingApprovalNotification>();
         }
+
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowModel>>))]
+        public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowRequest request)
+        {
+            var command = request.ToGetWorkflowCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            var result = ret.ToOkObjectResponse<ICollection<WorkflowModel>>();
+
+            return result;
+        }
+
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowModel>))]
+        public async Task<IActionResult> Post([FromBody, Required] CreateWorkflowRequest request)
+        {
+            var command = request.ToCreateWorkflowGroupCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse<WorkflowModel>("Workflow has been successfully created.");
+        }
+
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowModel>))]
+        public async Task<IActionResult> Update([FromBody, Required] UpdateWorkflowRequest request)
+        {
+            var command = request.ToUpdateWorkflowGroupCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse<WorkflowModel>("Workflow has been successfully updated.");
+        }
+
+        [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
+        public async Task<IActionResult> Delete(int workflowId)
+        {
+            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowModel()
+            {
+                Id = workflowId
+            });
+
+            return ret.ToNoContentResponse();
+        }
+
 
     }
 }

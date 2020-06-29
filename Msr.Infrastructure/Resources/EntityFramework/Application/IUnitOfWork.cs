@@ -30,9 +30,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get; }
         IRepository<UserApproval> UserApprovals { get; }
         IRepository<UserRoleApproval> UserRoleApprovals { get; }
+        IRepository<Workflow> Workflows { get; }
+        IRepository<WorkflowStageMap> WorkflowStagesMap { get; }
         IRepository<WorkflowGroup> WorkflowGroups { get; }
         IRepository<WorkflowStage> WorkflowStages { get; }
         IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get; }
+        IRepository<WorkflowActivityMap> WorkflowActivityMaps { get; }
+        IRepository<WorkflowActivity> WorkflowActivities { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();

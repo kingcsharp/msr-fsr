@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Models.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Profiles
@@ -9,11 +9,12 @@ namespace MSR.Infrastructure.Profiles
     {
         public WorkflowMapping()
         {
-            CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
-            CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
-            CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
+            CreateMap<CreateWorkflowModel, Workflow>();
+            CreateMap<UpdateWorkflowModel, Workflow>();
+            CreateMap<WorkflowActivityMapModel, WorkflowActivityMap>();
+            CreateMap<WorkflowStageMapModel, WorkflowStageMap>();
 
-            CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>()
+            CreateMap<Workflow, WorkflowModel>()
                 .ForMember(dest =>
             dest.CreatedByName,
             opt => opt.MapFrom(src => src.Created.GetFullName()))
@@ -21,10 +22,9 @@ namespace MSR.Infrastructure.Profiles
             dest.LastUpdatedByName,
             opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
 
-            CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>()
-                .ForMember(dest =>
-            dest.Name,
-            opt => opt.MapFrom(src => src.Role.Name));
+            CreateMap<WorkflowActivityMap, WorkflowActivityMapModel>();
+            CreateMap<WorkflowStageMap, WorkflowStageMapModel>();
+
         }
     }
 }

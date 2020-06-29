@@ -87,7 +87,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             return workFlowModel;
         }
 
-        public async Task DeactivateWorkFlowGroupAsync(DeactivateWorkflow command)
+        public async Task DeactivateWorkFlowGroupAsync(DeactivateWorkflowGroup command)
         {
             var workFlow = await _unitOfWork.WorkflowGroups.Query().Include(x => x.GroupRoles).FirstOrDefaultAsync(x => x.Id == command.Id);
             if (workFlow == null)
