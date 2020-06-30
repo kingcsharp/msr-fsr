@@ -57,6 +57,10 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         {
             var efWorkFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
+            if (efWorkFlow == null) {
+                return null;
+            }
+
             efWorkFlow.Name = command.Name;
             efWorkFlow.IsActive = command.IsActive;
 

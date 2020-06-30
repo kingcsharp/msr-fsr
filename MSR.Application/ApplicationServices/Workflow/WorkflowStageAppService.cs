@@ -3,6 +3,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Models.Workflow;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,16 @@ namespace MSR.Application.ApplicationServices.Workflow
         public async Task<ICommandResponse> HandleAsync(UpdateWorkflowStageModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowStageService.UpdateWorkFlowStageAsync(command);
-            return new CommandResponse<WorkflowStageModel>(ret);
+            if (ret == null) {
+                return new CommandResponse<WorkflowStageModel>(
+                    new DomainException(
+                        "WorkflowStage not found",
+                        Domain.Commanding.Enums.DomainError.NotFound
+                    )
+                );
+            } else {
+                return new CommandResponse<WorkflowStageModel>(ret);
+            }
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateWorkflowStage command, CancellationToken cancellationToken = default)
