@@ -33,6 +33,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<UserApproval> _userApproval;
         private IRepository<UserRoleApproval> _userRoleApproval;
         private IRepository<WorkflowGroup> _workflowGroup;
+        private IRepository<WorkflowStage> _workflowStage;
         private IRepository<WorkflowGroupRoleMap> _workflowGroupRoleMap;
 
         public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
@@ -57,6 +58,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<UserApproval> UserApprovals { get { return _userApproval ?? (_userApproval = new EFRepository<UserApproval>(Context)); } }
         public IRepository<UserRoleApproval> UserRoleApprovals { get { return _userRoleApproval ?? (_userRoleApproval = new EFRepository<UserRoleApproval>(Context)); } }
         public IRepository<WorkflowGroup> WorkflowGroups { get { return _workflowGroup ?? (_workflowGroup = new EFRepository<WorkflowGroup>(Context)); } }
+        public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ?? (_workflowStage = new EFRepository<WorkflowStage>(Context)); } }
+        
         public IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get { return _workflowGroupRoleMap ?? (_workflowGroupRoleMap = new EFRepository<WorkflowGroupRoleMap>(Context)); } }
         #endregion Repositories
 
@@ -66,6 +69,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         }
 
         public AnswerContext Context { get; }
+
+        
 
         public void Dispose()
         {

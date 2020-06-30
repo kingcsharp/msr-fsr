@@ -4,11 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(WorkflowStage))]
-    public partial class WorkflowStage:TrackableEntity
+    public partial class WorkflowStage : TrackableEntity
     {
         [StringLength(50)]
         public string Name { get; set; }
 
         public bool? IsActive { get; set; }
+
+        [ForeignKey("CreatedBy")]
+        public virtual User Created { get; set; }
+
+        [ForeignKey("LastUpdatedBy")]
+        public virtual User LastUpdated { get; set; }
     }
 }

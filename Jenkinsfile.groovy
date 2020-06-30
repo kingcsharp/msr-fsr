@@ -133,20 +133,21 @@ pipeline {
                 }
             }
         }
-        /*
+
         stage("Running API Tests") {
             agent { label 'master' }
             steps {
                 script {
                     sh label: '', script: '''curl -u Vi5GHlZj0Cb5sUlC: "https://assertible.com/deployments" -d\'{
-                        "service": "a1bdc090-7e6f-41a7-997f-c30f44b5c9f0",
+                        "service": "7c13748e-0e5d-43e5-9d74-6f4e7f09bb0a",
                         "environment": "dev",
-                        "version": "v1"
+                        "version": "v1",
+                        "ref": "'"$(git rev-parse HEAD)"'",
+                        "github": true
                     }\''''
                 }
             }
         }
-        */
     }
 }
 

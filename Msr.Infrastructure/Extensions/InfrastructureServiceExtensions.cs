@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Domain.Abstractions.Email;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
@@ -31,9 +32,11 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IWorkflowStageService, WorkflowStageService>();
+            services.AddScoped<IWorkflowGroupService, WorkflowGroupService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
-            services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
+            services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
             return services;
         }

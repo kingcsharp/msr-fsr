@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Profiles
@@ -22,14 +21,6 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Menus, opt => opt.Ignore());
 
             CreateMap<Location, Domain.Models.Location>();
-
-            /*Workflow*/
-            CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
-            CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
-            CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
-
-            CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>();
-            CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>();
         }
     }
 }

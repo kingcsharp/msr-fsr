@@ -14,28 +14,20 @@ using MSR.Answer.API.V1.Models.Workflow;
 using System.Collections.Generic;
 using MSR.Domain.Commands.Workflow;
 
-namespace MSR.Answer.API.V1.Controllers
+namespace MSR.Answer.API.V1.Controllers.Workflow
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     [AllowAnonymous]
-    public class WorkflowController : BaseApiController
+    public class WorkflowGroupController : BaseApiController
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
 
-        public WorkflowController(ILogger<WorkflowController> logger, ICommandDispatcher dispatcher)
+        public WorkflowGroupController(ILogger<WorkflowController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
-        }
-
-        [HttpGet("pending"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalNotification>))]
-        public async Task<IActionResult> GetPendingApprovals()
-        {
-            var ret = await _dispatcher.DispatchAsync(new GetPendingApprovals());
-
-            return ret.ToOkObjectResponse<PendingApprovalNotification>();
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowGroupModel>>))]
@@ -54,7 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToCreateWorkflowGroupCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<WorkflowGroupModel>();
+            return ret.ToOkObjectResponse<WorkflowGroupModel>("Workflow Group has been successfully created.");
         }
 
         [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowGroupModel>))]
@@ -63,7 +55,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUpdateWorkflowGroupCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<WorkflowGroupModel>();
+            return ret.ToOkObjectResponse<WorkflowGroupModel>("Workflow Group has been successfully updated.");
         }
 
         [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
@@ -76,16 +68,5 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToNoContentResponse();
         }
-
-        //[HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
-        //public async Task<IActionResult> Delete(int workflowId)
-        //{
-        //    var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflow()
-        //    {
-        //        Id = workflowId
-        //    });
-
-        //    return ret.ToNoContentResponse();
-        //}
     }
 }
