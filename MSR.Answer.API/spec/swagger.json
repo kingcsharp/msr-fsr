@@ -989,7 +989,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -2191,7 +2191,12 @@
               }
             }
           }
-        ]
+        ],
+        "example": {
+            "id": 2147483647,
+            "name": "5546379400b4c81a",
+            "isActive": false
+        }
       }
     },
     "securitySchemes": {
