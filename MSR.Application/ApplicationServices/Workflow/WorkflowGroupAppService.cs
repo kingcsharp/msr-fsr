@@ -1,4 +1,5 @@
-﻿using MSR.Domain.Abstractions.Services.Workflow;
+﻿using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -30,8 +31,17 @@ namespace MSR.Application.ApplicationServices.Workflow
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkflowGroupModel command, CancellationToken cancellationToken = default)
         {
-            var ret = await _workflowService.CreateWorkFlowGroupAsync(command);
-            return new CommandResponse<WorkflowGroupModel>(ret);
+            try {
+                var ret = await _workflowService.CreateWorkFlowGroupAsync(command);
+                return new CommandResponse<WorkflowGroupModel>(ret);
+            } catch (DbUpdateException e) {
+                return new CommandResponse<WorkflowGroupModel>(
+                    new DomainException(
+                        e.InnerException.Message,
+                        Domain.Commanding.Enums.DomainError.NotFound
+                    )
+                );
+            }
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateWorkflowGroupModel command, CancellationToken cancellationToken = default)
