@@ -36,7 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
                                                                                                                                                                                                                                                                                                                                                                                                                         
         [HttpPost("forgotpassword")]
-        [AllowAnonymous, SwaggerResponse(typeof(void))]
+        [AllowAnonymous, SwaggerResponse(204, typeof(void))]
         public async Task<IActionResult> ForgotPassword([FromBody, Required]ForgotPasswordRequest request)
         {
             var command = request.ToForgotPasswordCommand();
@@ -47,7 +47,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("forgotusername")]
-        [AllowAnonymous, SwaggerResponse(typeof(void))]
+        [AllowAnonymous, SwaggerResponse(204, typeof(void))]
         public async Task<IActionResult> ForgotUserName([FromBody, Required]ForgotUserNameRequest request)
         {
             var command = request.ToForgotUserNameCommand();
@@ -58,7 +58,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch("resetpassword")]
-        [AllowAnonymous, SwaggerResponse(typeof(void))]
+        [AllowAnonymous, SwaggerResponse(204, typeof(void))]
         public async Task<IActionResult> ResetPassword([FromBody, Required]ResetPasswordRequest request)
         {
             var command = request.ToResetPasswordCommand();
