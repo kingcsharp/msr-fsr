@@ -783,7 +783,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -1975,7 +1975,7 @@
             "name": "CreateWorkflowGroupRequest-8faf6491cf88817e",
             "isActive": true,
             "roles": [{
-                "roleId": 2147483648,
+                "roleId": 2147483647,
                 "name": "WorkflowGroupRoleMapModel-8faf6491cf88817e"
             }]
         }
