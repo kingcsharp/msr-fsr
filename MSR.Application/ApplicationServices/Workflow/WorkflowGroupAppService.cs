@@ -3,6 +3,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.Threading;
@@ -36,7 +37,16 @@ namespace MSR.Application.ApplicationServices.Workflow
         public async Task<ICommandResponse> HandleAsync(UpdateWorkflowGroupModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowService.UpdateWorkFlowGroupAsync(command);
-            return new CommandResponse<WorkflowGroupModel>(ret);
+            if (ret == null) {
+                return new CommandResponse<WorkflowGroupModel>(
+                    new DomainException(
+                        "Workflow Group Model not found",
+                        Domain.Commanding.Enums.DomainError.NotFound
+                    )
+                );
+            } else {
+                return new CommandResponse<WorkflowGroupModel>(ret);
+            }
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateWorkflow command, CancellationToken cancellationToken = default)

@@ -66,6 +66,10 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             var efWorkFlow = await _unitOfWork.WorkflowGroups.Query()
                 .Include(x => x.GroupRoles).FirstOrDefaultAsync(x => x.Id == command.Id);
 
+            if (efWorkFlow == null) {
+                return null;
+            }
+
             foreach (var role in efWorkFlow.GroupRoles)
             {
                 _unitOfWork.WorkflowGroupRoleMaps.Delete(false, role);
