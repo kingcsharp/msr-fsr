@@ -35,7 +35,12 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
 
             var rolesToAdd = new List<UserRole>();
-            var getRolesFromDb = _unitOfWork.Roles.Query().Where(x => command.Roles.Select(y => y.Id).Contains(x.Id)).ToList();
+            List<EntityFramework.Entities.Role> getRolesFromDb;
+            if (command.Roles != null && command.Roles.Count > 0) {
+                getRolesFromDb = _unitOfWork.Roles.Query().Where(x => command.Roles.Select(y => y.Id).Contains(x.Id)).ToList();
+            } else {
+                getRolesFromDb = new List<EntityFramework.Entities.Role>();
+            }
             command.Roles = null;
 
             var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
