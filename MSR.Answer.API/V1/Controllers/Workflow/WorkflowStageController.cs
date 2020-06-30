@@ -59,7 +59,8 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<WorkflowStageModel>("Workflow Stage has been successfully updated.");
         }
 
-        [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
+        [HttpDelete("{workflowId}")]
+        [ProducesResponseType(typeof(void), 204)]
         public async Task<IActionResult> Delete(int workflowId)
         {
             var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflow()
