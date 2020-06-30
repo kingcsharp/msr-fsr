@@ -659,7 +659,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -675,7 +676,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "401": {
             "description": ""
           }
         }
