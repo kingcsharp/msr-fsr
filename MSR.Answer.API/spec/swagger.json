@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://232aff63c708.ngrok.io"
+      "url": "https://73268cc5edeb.ngrok.io"
     }
   ],
   "paths": {
@@ -366,15 +366,8 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuditActionResult"
-                }
-              }
-            }
+          "204": {
+            "description": ""
           }
         }
       }
@@ -392,7 +385,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -407,13 +401,11 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "",
+          "400": {
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/AuditActionResult"
                 }
               }
             }
@@ -1180,6 +1172,15 @@
           "canApprove": {
             "type": "boolean"
           }
+        },
+        "example": {
+          "menuRoleId": 1,
+          "canRead": true,
+          "canCreate": true,
+          "canEdit": true,
+          "canDelete": true,
+          "canActivate": true,
+          "canApprove": true
         }
       },
       "AuditActionResultOfICollectionOfUser": {
