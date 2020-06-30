@@ -87,7 +87,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "204": {
             "description": ""
           }
         }
@@ -124,7 +124,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "404": {
             "description": ""
           }
         }
@@ -1141,6 +1141,9 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "example": {
+            "userName": "91b3e0455f51f25b"
         }
       },
       "ForgotUserNameRequest": {
@@ -1154,6 +1157,9 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "example": {
+            "email": "91b3e0455f51f25b@cmhworks.com"
         }
       },
       "ResetPasswordRequest": {
@@ -2171,6 +2177,10 @@
           "isActive": {
             "type": "boolean"
           }
+        },
+        "example": {
+            "name": "d8f75230c904a614",
+            "isActive": false
         }
       },
       "UpdateWorkflowStageRequest": {
