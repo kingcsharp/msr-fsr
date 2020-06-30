@@ -825,7 +825,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -1970,6 +1970,14 @@
               "$ref": "#/components/schemas/WorkflowGroupRoleMapModel"
             }
           }
+        },
+        "example": {
+            "name": "CreateWorkflowGroupRequest-8faf6491cf88817e",
+            "isActive": true,
+            "roles": [{
+                "roleId": 2147483648,
+                "name": "WorkflowGroupRoleMapModel-8faf6491cf88817e"
+            }]
         }
       },
       "UpdateWorkflowGroupRequest": {
@@ -1990,7 +1998,16 @@
               }
             }
           }
-        ]
+        ],
+        "example": {
+            "name": "CreateWorkflowGroupRequest-d416d136293debef",
+            "isActive": true,
+            "roles": [{
+                "roleId": 2147483647,
+                "name": "WorkflowGroupRoleMapModel-d416d136293debef"
+            }],
+            "id": 2147483647
+        }
       },
       "AuditActionResultOfICollectionOfWorkflowStageModel": {
         "allOf": [
