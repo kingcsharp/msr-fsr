@@ -559,7 +559,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "409": {
             "description": "",
             "content": {
               "application/json": {
@@ -1764,6 +1764,10 @@
               "$ref": "#/components/schemas/Role"
             }
           }
+        },
+        "example": {
+            "username": "95f27a6f8b3ffa55",
+            "isActive": false
         }
       },
       "UpdateUserRequest": {
