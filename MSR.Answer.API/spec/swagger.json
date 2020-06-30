@@ -601,7 +601,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -1784,7 +1784,11 @@
               }
             }
           }
-        ]
+        ],
+        "example": {
+            "id": 2147483647,
+            "isActive": false
+        }
       },
       "AuditActionResultOfPendingApprovalNotification": {
         "allOf": [
