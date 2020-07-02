@@ -9,6 +9,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Net;
 using MSR.Answer.API.Attributes;
+using MSR.Domain.Commanding.Enums;
+using MSR.Answer.API.Filters;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -23,7 +25,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.NoContent,typeof(AuditActionResult))]
         public async Task<IActionResult> GetCustomer(int id)
         {
@@ -33,7 +35,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> GetCustomers([FromQuery]GetMultipleCustomersRequest filters)
         {
@@ -42,7 +44,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<IEnumerable<Customer>>();
         }
 
-        [HttpPost]
+        [HttpPost, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> CreateCustomer([FromBody, Required]CreateCustomerRequest request)
         {
@@ -52,7 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToCreatedResponse<Customer>();
         }
 
-        [HttpPatch]
+        [HttpPatch, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> UpdateCustomer([FromBody, Required]UpdateCustomerRequest request)
         {
@@ -61,7 +63,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToNoContentResponse();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeactivateCustomer([FromRoute] int id)
         {

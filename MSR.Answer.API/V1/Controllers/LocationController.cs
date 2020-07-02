@@ -35,9 +35,9 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, SwaggerResponse(typeof(AuditActionResult<Location>))]
-        public async Task<IActionResult> CreateLocation([FromBody] CreateLocationRequest) 
+        public async Task<IActionResult> CreateLocation([FromBody] CreateLocationRequest request) 
         {
-        
+            return Ok();
         }
     }
 }
