@@ -1,8 +1,9 @@
-﻿namespace MSR.Domain.Models
+﻿using MSR.Domain.Models.BaseModels;
+
+namespace MSR.Domain.Models
 {
-    public class Customer
+    public class Customer: TrackableModel
     {
-        public int Id { get; set; }
         public int OldId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
