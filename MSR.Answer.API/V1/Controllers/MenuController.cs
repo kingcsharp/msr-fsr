@@ -33,7 +33,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var result = await _dispatcher.DispatchAsync(command);
 
-            return result.ToOkObjectResponse<bool>("placeholder");
+            return result.ToOkObjectResponse<bool>();
         }
     }
 }

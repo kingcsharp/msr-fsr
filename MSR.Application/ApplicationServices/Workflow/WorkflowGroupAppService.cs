@@ -31,32 +31,14 @@ namespace MSR.Application.ApplicationServices.Workflow
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkflowGroupModel command, CancellationToken cancellationToken = default)
         {
-            try {
-                var ret = await _workflowService.CreateWorkFlowGroupAsync(command);
-                return new CommandResponse<WorkflowGroupModel>(ret);
-            } catch (DbUpdateException e) {
-                return new CommandResponse<WorkflowGroupModel>(
-                    new DomainException(
-                        e.InnerException.Message,
-                        Domain.Commanding.Enums.DomainError.NotFound
-                    )
-                );
-            }
+            var ret = await _workflowService.CreateWorkFlowGroupAsync(command);
+            return new CommandResponse<WorkflowGroupModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateWorkflowGroupModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowService.UpdateWorkFlowGroupAsync(command);
-            if (ret == null) {
-                return new CommandResponse<WorkflowGroupModel>(
-                    new DomainException(
-                        "Workflow Group Model not found",
-                        Domain.Commanding.Enums.DomainError.NotFound
-                    )
-                );
-            } else {
-                return new CommandResponse<WorkflowGroupModel>(ret);
-            }
+            return new CommandResponse<WorkflowGroupModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateWorkflow command, CancellationToken cancellationToken = default)

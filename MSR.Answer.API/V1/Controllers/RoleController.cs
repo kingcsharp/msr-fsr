@@ -41,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers
 
 
         [HttpPatch]
-        [ProducesResponseType(typeof(void), 204)]
+        [SwaggerResponse(System.Net.HttpStatusCode.NoContent, typeof(void))]
         public async Task<IActionResult> AddPermissionsToMenuRoleMap([FromBody, Required]UpdateMenuRoleMapRequest request)
         {
             var command = request.ToUpdateMenuRoleMapCommand();

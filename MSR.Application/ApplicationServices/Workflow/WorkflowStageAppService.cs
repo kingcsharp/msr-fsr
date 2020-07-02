@@ -40,16 +40,7 @@ namespace MSR.Application.ApplicationServices.Workflow
         public async Task<ICommandResponse> HandleAsync(UpdateWorkflowStageModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowStageService.UpdateWorkFlowStageAsync(command);
-            if (ret == null) {
-                return new CommandResponse<WorkflowStageModel>(
-                    new DomainException(
-                        "WorkflowStage not found",
-                        Domain.Commanding.Enums.DomainError.NotFound
-                    )
-                );
-            } else {
-                return new CommandResponse<WorkflowStageModel>(ret);
-            }
+            return new CommandResponse<WorkflowStageModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateWorkflowStage command, CancellationToken cancellationToken = default)

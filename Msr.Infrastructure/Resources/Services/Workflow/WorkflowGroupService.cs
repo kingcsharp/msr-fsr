@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MSR.Domain.Abstractions.Services.Workflow;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -44,21 +46,28 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         {
             var efWorkflowGroup = _mapper.Map<WorkflowGroup>(command);
 
-            await _unitOfWork.WorkflowGroups.AddAndSaveChangesAsync(efWorkflowGroup);
-            efWorkflowGroup.GroupRoles = command.Roles.Select(
-                x => _unitOfWork.WorkflowGroupRoleMaps
-                .AttachAndInsert(_mapper.Map<WorkflowGroupRoleMap>(x)))
-                .ToList();
+            try {
+                await _unitOfWork.WorkflowGroups.AddAndSaveChangesAsync(efWorkflowGroup);
+                efWorkflowGroup.GroupRoles = command.Roles.Select(
+                    x => _unitOfWork.WorkflowGroupRoleMaps
+                    .AttachAndInsert(_mapper.Map<WorkflowGroupRoleMap>(x)))
+                    .ToList();
 
-            await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
 
-            var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkflowGroup);
+                var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkflowGroup);
 
-            workFlowModel.GroupRoles = efWorkflowGroup.GroupRoles.Select(
-                x => _mapper.Map<WorkflowGroupRoleMapModel>(x))
-                .ToList();
+                workFlowModel.GroupRoles = efWorkflowGroup.GroupRoles.Select(
+                    x => _mapper.Map<WorkflowGroupRoleMapModel>(x))
+                    .ToList();
 
-            return workFlowModel;
+                return workFlowModel;
+            } catch (DbUpdateException e) {
+                throw new DomainException(
+                    e.InnerException.Message,
+                    Domain.Commanding.Enums.DomainError.NotFound
+                );
+            }
         }
 
         public async Task<WorkflowGroupModel> UpdateWorkFlowGroupAsync(UpdateWorkflowGroupModel command)
@@ -67,7 +76,10 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 .Include(x => x.GroupRoles).FirstOrDefaultAsync(x => x.Id == command.Id);
 
             if (efWorkFlow == null) {
-                return null;
+                throw new DomainException(
+                    $"{nameof(_unitOfWork.WorkflowGroups)} {command.Id} not found",
+                    DomainError.NotFound
+                );
             }
 
             foreach (var role in efWorkFlow.GroupRoles)
