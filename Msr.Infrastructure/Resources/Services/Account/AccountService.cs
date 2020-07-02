@@ -58,12 +58,12 @@ namespace MSR.Infrastructure.Resources.Services.Account
             var user = await _unitOfWork.Users.FirstOrDefaultAsync(false,i => i.UserName == command.UserName,null);
             if (user == null)
             {
-                throw new DomainException("Username Or Password are invalid");
+                throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
             }
 
             if (!_authenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new DomainException("Username Or Password are invalid");
+                throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
             }
 
             return GetJWTToken(user);

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
@@ -16,7 +15,6 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    [ApiController]
     public class LocationController : BaseApiController
     {
         private readonly ILogger _logger;
@@ -28,12 +26,18 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet(""), SwaggerResponse(typeof(AuditActionResult<Location>))]
+        [HttpGet(), SwaggerResponse(typeof(AuditActionResult<Location>))]
         public async Task<IActionResult> Get([FromQuery, Required]GetLocations request)
         {
             var ret = await _dispatcher.DispatchAsync(request);
 
             return ret.ToOkObjectResponse<ICollection<Location>>();
+        }
+
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<Location>))]
+        public async Task<IActionResult> CreateLocation([FromBody] CreateLocationRequest) 
+        {
+        
         }
     }
 }

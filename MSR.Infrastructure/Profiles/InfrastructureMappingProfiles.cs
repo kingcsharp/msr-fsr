@@ -30,6 +30,9 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>();
             CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>();
+
+            CreateMap<Domain.Models.Customer, Customer>().ReverseMap();
+            CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();                          
         }
     }
 }

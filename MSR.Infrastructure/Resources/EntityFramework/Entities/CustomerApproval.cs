@@ -31,5 +31,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int StatusId { get; set; }
         public virtual Status Status { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

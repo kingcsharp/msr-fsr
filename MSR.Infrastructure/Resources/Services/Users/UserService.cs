@@ -38,7 +38,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             var getRolesFromDb = _unitOfWork.Roles.Query().Where(x => command.Roles.Select(y => y.Id).Contains(x.Id)).ToList();
             command.Roles = null;
 
-            var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
+            var efUser = _mapper.Map<User>(command);
 
             if (efUser.EmailAlreadyExists(_unitOfWork))
             {
@@ -226,7 +226,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return userList;
         }
 
-        private static void SetRolesToUser(EntityFramework.Entities.User user, Domain.Models.User userToAdd)
+        private static void SetRolesToUser(User user, Domain.Models.User userToAdd)
         {
             foreach (var role in user.Roles ?? new List<UserRole>())
             {

@@ -42,7 +42,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetRoles command, CancellationToken cancellationToken = default)
         {
             var ret = await _roleService.GetRolesMapAsync(command);
-            return new CommandResponse<ICollection<MSR.Domain.Models.Role>>(ret);
+            return new CommandResponse<ICollection<Domain.Models.Role>>(ret);
         }
     }
 }
