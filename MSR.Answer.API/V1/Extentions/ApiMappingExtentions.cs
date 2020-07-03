@@ -1,4 +1,4 @@
-﻿using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
@@ -177,7 +177,16 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static UpdateMenuRoleMap ToUpdateMenuRoleMapCommand(this UpdateMenuRoleMapRequest request)
         {
-            return AutoMapperHelper.Mapper.Map<UpdateMenuRoleMap>(request);
+            return new UpdateMenuRoleMap()
+            {
+                CanActivate = request.CanActivate,
+                CanApprove = request.CanApprove,
+                CanCreate = request.CanCreate,
+                CanDelete = request.CanDelete,
+                CanEdit = request.CanEdit,
+                CanRead = request.CanRead,
+                MenuRoleId = request.MenuRoleId
+            };
         }
     }
 }

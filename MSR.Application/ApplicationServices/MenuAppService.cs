@@ -11,7 +11,8 @@ namespace MSR.Application.ApplicationServices
     {
         public async Task<ICommandResponse> HandleAsync(GetMenu command, CancellationToken cancellationToken = default)
         {
-            return new CommandResponse();
+            var res = new CommandResponse<bool>(true);
+            return res;
         }
     }
 }

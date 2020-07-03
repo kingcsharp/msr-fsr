@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -56,6 +57,13 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         public async Task<WorkflowStageModel> UpdateWorkFlowStageAsync(UpdateWorkflowStageModel command)
         {
             var efWorkFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+
+            if (efWorkFlow == null) {
+                throw new DomainException(
+                    $"{nameof(_unitOfWork.WorkflowStages)} {command.Id} not found",
+                    Domain.Commanding.Enums.DomainError.NotFound
+                );
+            }
 
             efWorkFlow.Name = command.Name;
             efWorkFlow.IsActive = command.IsActive;
