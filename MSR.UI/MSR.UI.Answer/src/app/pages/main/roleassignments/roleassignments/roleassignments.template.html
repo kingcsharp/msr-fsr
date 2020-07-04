@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row">
+        <h1 class="page-title">
+            <i class="fas fa-key"></i>
+            Role Module Permissions
+        </h1>
+    </div>
+    <div class="row">
+        <div class="alert alert-success col-12" role="alert">
+            Permissions have been saved successfully
+        </div>
+        <div class="alert alert-danger col-12" role="alert">
+            There was an error saving permissions, please try again later
+        </div>
+        <div class="alert alert-warning col-12" role="alert">
+            You have permissions pending to be saved.
+        </div>
+    </div>
+    <div class="row d-flex justify-content-end">
+        <button pButton type="button" label="Save" class="ui-button-raised m-2"></button>
+        <button pButton type="button" label="Cancel" class="ui-button-raised ui-button-danger m-2"></button>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <h2>Modules</h2>
+            <p-listbox [options]="cities1" [(ngModel)]="selectedCity1"></p-listbox>
+        </div>
+        <div class="col-4">
+            <h2>Roles</h2>
+            <p-listbox [options]="cities1" [(ngModel)]="selectedCity1"></p-listbox>
+        </div>
+        <div class="col-4">
+            <h2>Permissions</h2>
+            <p-listbox [options]="cities" [(ngModel)]="selectedCities" [multiple]="true" [checkbox]="true" optionLabel="label">
+            </p-listbox>
+        </div>
+    </div>
+</div>
