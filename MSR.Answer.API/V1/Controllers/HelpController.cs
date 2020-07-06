@@ -15,6 +15,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using NSwag.Annotations;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -31,7 +32,8 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpPost("/Support"), AllowAnonymous]
+        [HttpPost("Support"), AllowAnonymous]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> SubmitSupportRequest([FromBody, Required]CreateSupportRequest request)
         {
             var command = request.ToSubmitSupportCommand();
@@ -40,6 +42,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, HasPrivilegeApi("HelpPages",EnumPrivilege.CanRead)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> GetHelpPages([FromQuery] GetHelpPageRequest request)
         {
             var command = request.ToGetHelpPageCommand();
@@ -48,6 +51,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, HasPrivilegeApi("HelpPages", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> CreateHelpPage([FromBody, Required]CreateHelpPageRequest request)
         {
             var command = request.ToCreateHelpPageCommand();
@@ -55,7 +59,8 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToNoContentResponse();
         }
 
-        [HttpPost("/Role"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
+        [HttpPost("Role"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> CreateHelpPageRole([FromBody, Required]CreateHelpPageRoleRequest request)
         {
             var command = request.ToCreateHelpPageRoleCommand();
@@ -64,6 +69,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch, HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> UpdateHelpPage([FromBody, Required]UpdateHelpPageRequest request)
         {
             var command = request.ToUpdateHelpPageCommand();
@@ -72,6 +78,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpDelete("{id}"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeleteHelpPage(int id)
         {
             var command = new DeleteHelpPage() { HelpPageId = id };
@@ -79,7 +86,8 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToNoContentResponse();
         }
 
-        [HttpDelete("/Role/{id}"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
+        [HttpDelete("Role/{id}"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeleteHelpPageRole(int id)
         {
             var command = new DeleteHelpPageRole() { HelpPageRoleId = id };

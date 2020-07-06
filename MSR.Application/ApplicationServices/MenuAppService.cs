@@ -44,23 +44,5 @@ namespace MSR.Application.ApplicationServices
             var ret = await _roleService.RemoveMenuRoleMap(command.Id);
             return new CommandResponse<bool>(ret);
         }
-
-        public async Task<ICommandResponse> HandleAsync(CreateMenuRoleMap command, CancellationToken cancellationToken = default)
-        {
-            var ret = await _roleService.CreateMenuRoleMapAsync(command);
-            return new CommandResponse<int>(ret);
-        }
-
-        public async Task<ICommandResponse> HandleAsync(UpdateMenuRoleMap command, CancellationToken cancellationToken = default)
-        {
-            var ret = await _roleService.UpdateMenuRoleMapAsync(command);
-            return new CommandResponse<bool>(ret);
-        }
-
-        public async Task<ICommandResponse> HandleAsync(RemoveMenuRoleMap command, CancellationToken cancellationToken = default)
-        {
-            var ret = await _roleService.RemoveMenuRoleMap(command.Id);
-            return new CommandResponse<bool>(ret);
-        }
     }
 }

@@ -41,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<Location>();
         }
 
-        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<Location>))]
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> UpdateLocation([FromBody, Required] UpdateLocationRequest request)
         {
             var command = request.ToUpdateLocationCommand();
@@ -49,7 +49,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToNoContentResponse();
         }
 
-        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult<Location>))]
+        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeactivateLocation(int id)
         {
             var command = new DeactivateLocation() { LocationId = id };

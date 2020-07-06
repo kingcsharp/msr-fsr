@@ -83,6 +83,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> AssignRoleToUser([FromBody, Required] CreateUserRoleRequest request)
         {
             var command = request.ToCreateUserRoleCommand();
@@ -91,6 +92,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> EditUserRole([FromBody, Required] UpdateUserRoleRequest request)
         {
             var command = request.ToUpdateUserRoleCommand();
@@ -99,6 +101,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpDelete("/Role/{id}"), HasPrivilegeApi("Users",EnumPrivilege.CanDelete)]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> RemoveUserRole(int id)
         {
             var command = new DeleteUserRole() { UserRoleId = id };

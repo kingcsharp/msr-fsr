@@ -22,15 +22,13 @@ namespace MSR.Infrastructure.Resources.Services.Help
     public class HelpService : IHelpService
     {
         IEmailService _emailService;
-        IEmailRenderEngine _emailRenderEngine;
         IMapper _mapper;
         EmailInformation _emailInformation;
         IUnitOfWork _unitOfWork;
 
-        public HelpService(IEmailService emailService, IEmailRenderEngine emailRenderEngine, IMapper mapper, EmailInformation emailInformation, IUnitOfWork unitOfWork)
+        public HelpService(IEmailService emailService, IMapper mapper, EmailInformation emailInformation, IUnitOfWork unitOfWork)
         {
             _emailService = emailService;
-            _emailRenderEngine = emailRenderEngine;
             _mapper = mapper;
             _emailInformation = emailInformation;
             _unitOfWork = unitOfWork;
@@ -137,7 +135,7 @@ namespace MSR.Infrastructure.Resources.Services.Help
             {
                 var page = _mapper.Map<Domain.Models.HelpPage>(helpPage);
 
-                page.Roles = helpPage.Roles.Select(i => _mapper.Map<Domain.Models.Role>(i)).ToList();
+                page.Roles = helpPage.Roles.Select(i => _mapper.Map<Domain.Models.Role>(i.Role)).ToList();
 
                 pageList.Add(page);
             }
@@ -148,7 +146,91 @@ namespace MSR.Infrastructure.Resources.Services.Help
         public async Task SendSupportRequest(CreateSupport command)
         {
             var dto = _mapper.Map<SupportRequestDTO>(command);
-            var emailBody = await _emailRenderEngine.RenderViewToStringAsync("SupportRequest", dto);
+            var emailBody = $@"
+                    <!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional //EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
+                    <html xmlns=""http://www.w3.org/1999/xhtml"" xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:o=""urn:schemas-microsoft-com:office:office"">
+                    <head>
+                        <style>
+                            .card {{
+                                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                                transition: 0.3s;
+                                border-radius: 5px;
+                            }}
+
+                                .card:hover {{
+                                    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+                                }}
+
+                            img {{
+                                border-radius: 5px 5px 0 0;
+                            }}
+
+                            .container {{
+                                padding: 2px 16px;
+                            }}
+
+                            .UserDetail {{
+                                width: 49%;
+                                float: left;
+                                height: 150px;
+                                background-color: #81DAF5;
+                                text-align: center;
+                                margin-bottom: 30px;
+                            }}
+
+                            .ResponseDetail {{
+                                width: 49%;
+                                float: right;
+                                height: 150px;
+                                background-color: #ACFA58;
+                                text-align: center;
+                                margin-bottom: 30px;
+                            }}
+
+                            .InquiryDetails {{
+                                clear: both;
+                                width: 100%;
+                                height: 250px;
+                                background-color: #F7BE81;
+                            }}
+
+                            .title {{
+                                text-align: center;
+                                border-bottom: 1px solid white;
+                            }}
+
+                            .InquiryData {{
+                                padding-top: 5px;
+                            }}
+                        </style>
+                    </head>
+                    <body style=""width: 100% !important;min-width: 100%;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100% !important;margin: 0;padding: 0;background-color: #FFFFFF"">
+                        <table cellpadding=""0"" cellspacing=""0"" width=""100%"" class=""body"" border=""0"" style=""border-spacing: 0;border-collapse: collapse;vertical-align: top;height: 100%;width: 100%;table-layout: fixed"">
+                            <p class=MsoNormal><span style='display:none;mso-hide:all'><o:p>&nbsp;</o:p></span></p>
+                            <tr style=""vertical-align: top"">
+                                <td class=""center"" align=""center"" valign=""top"" style=""width: 66%;text-align: center;vertical-align: top;padding: 0 5px 10px 5px;word-break: break-word;border-collapse: collapse !important;background-color: #FFFFFF"">
+                                    <div id=""UserData"" class=""card UserDetail"">
+                                        <div class=""title container""><p>User Details</p></div>
+                                        <div class=""container""><p>Name: {dto.FirstName} {dto.LastName}</p></div>
+                                        <div class=""container""><p>Email: {dto.Email} </p></div>
+                                        <div class=""container""><p>Phone: {dto.Phone} </p></div>
+                                    </div>
+                                    <div id=""ResponseRequested"" class=""card ResponseDetail"">
+                                        <div class=""title container""><p>Requested Response Method: {dto.ContactMethod}</p></div>
+                                    </div>
+                                    <div id=""InquiryIssue"" class=""card InquiryDetails"">
+                                        <div class=""title container"">
+                                            <p>Subject: {dto.Subject} </p>
+                                        </div>
+                                        <div class=""InquiryData"">
+                                            <p>Details: {dto.Details} </p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                    </html>";
 
             var attachmentEmails = new List<Attachment>();
 

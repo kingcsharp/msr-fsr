@@ -11,6 +11,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     {
         public string Title { get; set; }
         public string FriendlyUrl { get; set; }
+        [Column("HelpContent")]
         public string Content { get; set; }
         public virtual ICollection<HelpPageRoleMap> Roles { get; set; }
     }
