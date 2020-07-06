@@ -93,9 +93,9 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        public static CreateWorkflowGroupModel ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
+        public static CreateWorkflowGroup ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
         {
-            return new CreateWorkflowGroupModel()
+            return new CreateWorkflowGroup()
             {
                 IsActive = request.IsActive,
                 Name = request.Name,
@@ -187,11 +187,6 @@ namespace MSR.Answer.API.V1.Extentions
                 CanRead = request.CanRead,
                 MenuRoleId = request.MenuRoleId
             };
-        }
-
-        public static GetMultipleCustomers ToGetMultipleCustomersCommand(this GetMultipleCustomersRequest request)
-        {
-
         }
 
         public static GetMultipleCustomers ToGetMultipleCustomersCommand(this GetMultipleCustomersRequest request)

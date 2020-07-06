@@ -9,7 +9,7 @@ namespace MSR.Infrastructure.Profiles
     {
         public WorkflowMapping()
         {
-            CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
+            CreateMap<CreateWorkflowGroup, WorkflowGroup>();
             CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
 

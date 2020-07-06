@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices.Workflow
 {
     public class WorkflowGroupAppService: ICommandHandler<GetWorkflowGroupsModel>,
-        ICommandHandler<CreateWorkflowGroupModel>,
+        ICommandHandler<CreateWorkflowGroup>,
         ICommandHandler<UpdateWorkflowGroupModel>,
         ICommandHandler<DeactivateWorkflow>
     {
@@ -29,7 +29,7 @@ namespace MSR.Application.ApplicationServices.Workflow
             return new CommandResponse<ICollection<WorkflowGroupModel>>(ret);
         }
 
-        public async Task<ICommandResponse> HandleAsync(CreateWorkflowGroupModel command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(CreateWorkflowGroup command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowService.CreateWorkFlowGroupAsync(command);
             return new CommandResponse<WorkflowGroupModel>(ret);
