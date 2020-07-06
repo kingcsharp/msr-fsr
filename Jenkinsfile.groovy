@@ -22,6 +22,14 @@ pipeline {
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
+        stage("Running xUnit Tests") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh 'dotnet test MSR.Infrastructure.Tests/'
+                }
+            }
+        }
         stage('Build & Deploy') {
             parallel {
                 stage('Build and Deploy UI') {
