@@ -26,6 +26,7 @@ pipeline {
             agent { label 'master' }
             steps {
                 script {
+                    sh 'ls -la'
                     sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
                     sh 'dotnet test MSR.Infrastructure.Tests/'
                 }
