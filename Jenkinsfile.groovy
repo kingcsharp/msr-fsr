@@ -27,8 +27,9 @@ pipeline {
             steps {
                 script {
                     sh 'ls -la'
+                    sh 'rm -rf Msr.Infrastructure'
                     sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
-                    sh 'dotnet test MSR.Infrastructure.Tests/'
+                    sh 'dotnet test MSR.Infrastructure.Tests/MSR.Infrastructure.Tests.csproj --logger trx;LogFileName=unit_tests.xml --collect:"XPlat Code Coverage"'
                 }
             }
         }
