@@ -5,12 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(Role))]
-    public partial class Role: TrackableEntity
+    public partial class Role : TrackableEntity
     {
         public Role()
         {
             Users = new HashSet<UserRole>();
             Menus = new HashSet<MenuRole>();
+            HelpPages = new HashSet<HelpPageRoleMap>();
         }
 
         [Required]
@@ -25,5 +26,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<UserRole> Users { get; set; }
 
         public virtual ICollection<MenuRole> Menus { get; set; }
+
+        public virtual ICollection<HelpPageRoleMap> HelpPages { get; set; }
     }
 }

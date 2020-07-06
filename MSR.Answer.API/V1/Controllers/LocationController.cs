@@ -30,14 +30,31 @@ namespace MSR.Answer.API.V1.Controllers
         public async Task<IActionResult> Get([FromQuery, Required]GetLocations request)
         {
             var ret = await _dispatcher.DispatchAsync(request);
-
             return ret.ToOkObjectResponse<ICollection<Location>>();
         }
 
         [HttpPost, SwaggerResponse(typeof(AuditActionResult<Location>))]
-        public async Task<IActionResult> CreateLocation([FromBody] CreateLocationRequest request) 
+        public async Task<IActionResult> CreateLocation([FromBody, Required] CreateLocationRequest request)
         {
-            return Ok();
+            var command = request.ToCreateLocationCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Location>();
+        }
+
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<Location>))]
+        public async Task<IActionResult> UpdateLocation([FromBody, Required] UpdateLocationRequest request)
+        {
+            var command = request.ToUpdateLocationCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
+        }
+
+        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult<Location>))]
+        public async Task<IActionResult> DeactivateLocation(int id)
+        {
+            var command = new DeactivateLocation() { LocationId = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
         }
     }
 }

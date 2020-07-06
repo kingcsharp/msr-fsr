@@ -33,6 +33,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkflowGroup> WorkflowGroups { get; }
         IRepository<WorkflowStage> WorkflowStages { get; }
         IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get; }
+        IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get; }
+        IRepository<HelpPage> HelpPages { get; }
+        IRepository<HelpPageRoleMap> HelpPageRoles { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();

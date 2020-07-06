@@ -14,6 +14,7 @@ using MSR.Domain.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
+using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -43,7 +44,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
             command.Roles = null;
 
-            var efUser = _mapper.Map<User>(command);
+            var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
 
             if (efUser.EmailAlreadyExists(_unitOfWork))
             {
@@ -231,7 +232,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return userList;
         }
 
-        private static void SetRolesToUser(User user, Domain.Models.User userToAdd)
+        private static void SetRolesToUser(EntityFramework.Entities.User user, Domain.Models.User userToAdd)
         {
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
@@ -331,6 +332,119 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
 
             return domainUser;
+        }
+
+        public async Task<Domain.Models.User> CreateUserRoleAsync(CreateUserRole command)
+        {
+            var curUser = await _unitOfWork.GetLoggedInUserAsync();
+            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == command.UserId);
+            var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.RoleId);
+
+            if (user is null || role is null)
+            {
+                throw new DomainException($"{nameof(User)} OR {nameof(Role)} not found.", DomainError.NotFound);
+            }
+
+            var curUserRole = await _unitOfWork.UserRoles.FirstOrDefaultAsync(false, i => i.RoleId == command.RoleId && i.UserId == command.UserId);
+
+            if(curUserRole != null)
+            {
+                throw new DomainException($"{nameof(User)} already assigned to {nameof(Role)}", DomainError.Conflict);
+            }
+
+            if (curUser.CanApprove(EnumMenuItem.Users))
+            {
+                var userRole = new UserRole()
+                {
+                    CertificationFromDate = command.CertificationFromDate.HasValue ? command.CertificationFromDate.Value : (DateTime?)null,
+                    CertificationToDate = command.CertificationToDate.HasValue ? command.CertificationToDate.Value : (DateTime?)null,
+                    Role = role,
+                    RoleId = role.Id,
+                    User = user,
+                    UserId = user.Id
+                };
+
+                _unitOfWork.UserRoles.Add(userRole);
+                await _unitOfWork.SaveChangesAsync();
+
+                await _unitOfWork.LogApprovalTransaction(userRole, userRole.Id);
+
+                return _mapper.Map<Domain.Models.User>(user);
+            }
+
+            var userRoleApproval = new UserRoleApproval()
+            {
+                CertificationFromDate = command.CertificationFromDate.HasValue ? command.CertificationFromDate.Value : (DateTime?)null,
+                CertificationToDate = command.CertificationToDate.HasValue ? command.CertificationToDate.Value : (DateTime?)null,
+                Role = role,
+                RoleId = role.Id,
+                User = user,
+                UserId = user.Id
+            };
+
+            _unitOfWork.UserRoleApprovals.Add(userRoleApproval);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<Domain.Models.User>(user);
+        }
+
+        public async Task UpdateUserRoleAsync(UpdateUserRole command)
+        {
+            var curUser = await _unitOfWork.GetLoggedInUserAsync();
+            var curUserRole = await _unitOfWork.UserRoles.FirstOrDefaultAsync(false, i => i.RoleId == command.RoleId && i.UserId == command.UserId);
+
+            if (curUserRole is null)
+            {
+                throw new DomainException($"{nameof(User)} not assigned to {nameof(Role)}", DomainError.BadRequest);
+            }
+
+            if (curUser.CanApprove(EnumMenuItem.Users))
+            {
+                curUserRole.CertificationFromDate = command.CertificationFromDate.HasValue ? command.CertificationFromDate.Value : curUserRole.CertificationFromDate.HasValue ? curUserRole.CertificationFromDate.Value : (DateTime?)null;
+                curUserRole.CertificationToDate = command.CertificationToDate.HasValue ? command.CertificationToDate.Value : curUserRole.CertificationToDate.HasValue ? curUserRole.CertificationToDate.Value : (DateTime?)null;
+
+                _unitOfWork.UserRoles.Update(curUserRole);
+                await _unitOfWork.SaveChangesAsync();
+
+                await _unitOfWork.LogApprovalTransaction(curUserRole, curUserRole.Id);
+            }
+            else
+            {
+                var userApproval = _mapper.Map<UserApproval>(curUserRole.User);
+                _unitOfWork.UserApprovals.Add(userApproval);
+                await _unitOfWork.SaveChangesAsync();
+
+                var userRoleApproval = new UserRoleApproval()
+                {
+                    UserApproval = userApproval,
+                    UserApprovalId = userApproval.Id,
+                    CertificationFromDate = command.CertificationFromDate.HasValue ? command.CertificationFromDate.Value : (DateTime?)null,
+                    CertificationToDate = command.CertificationToDate.HasValue ? command.CertificationToDate.Value : (DateTime?)null,
+                    Role = curUserRole.Role,
+                    RoleId = curUserRole.RoleId,
+                    User = curUserRole.User,
+                    UserId = curUserRole.UserId
+                };
+
+                _unitOfWork.UserRoleApprovals.Add(userRoleApproval);
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+        }
+
+        public async Task DeleteUserRoleAsync(DeleteUserRole command)
+        {
+            var curUserRole = await _unitOfWork.UserRoles.FirstOrDefaultAsync(false, i => i.Id == command.UserRoleId);
+
+            if(curUserRole is null)
+            {
+                throw new DomainException($"No {nameof(UserRole)} with ID: {command.UserRoleId} found", DomainError.NotFound);
+            }
+
+
+            await _unitOfWork.LogApprovalTransaction(curUserRole, curUserRole.Id);
+            _unitOfWork.UserRoles.Delete(false,curUserRole);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

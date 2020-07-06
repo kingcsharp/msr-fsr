@@ -30,8 +30,8 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet,SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
+        public async Task<IActionResult> GetUsers([FromQuery, Required] GetUsersRequest request)
         {
             var command = request.ToGetUsersCommand();
 
@@ -57,16 +57,16 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<User>("User has been successfully created.");
+            return ret.ToCreatedResponse<User>();
         }
 
         [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<User>))]
-        public async Task<IActionResult> UpdateUser([FromBody, Required]UpdateUserRequest request)
+        public async Task<IActionResult> UpdateUser([FromBody, Required] UpdateUserRequest request)
         {
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<User>("User has been successfully updated.");
+            return ret.ToNoContentResponse();
         }
 
         [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete), SwaggerResponse(typeof(void))]
@@ -79,6 +79,30 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
+            return ret.ToNoContentResponse();
+        }
+
+        [HttpPost("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanCreate)]
+        public async Task<IActionResult> AssignRoleToUser([FromBody, Required] CreateUserRoleRequest request)
+        {
+            var command = request.ToCreateUserRoleCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToCreatedResponse<Location>();
+        }
+
+        [HttpPatch("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]
+        public async Task<IActionResult> EditUserRole([FromBody, Required] UpdateUserRoleRequest request)
+        {
+            var command = request.ToUpdateUserRoleCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
+        }
+
+        [HttpDelete("/Role/{id}"), HasPrivilegeApi("Users",EnumPrivilege.CanDelete)]
+        public async Task<IActionResult> RemoveUserRole(int id)
+        {
+            var command = new DeleteUserRole() { UserRoleId = id };
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToNoContentResponse();
         }
     }
