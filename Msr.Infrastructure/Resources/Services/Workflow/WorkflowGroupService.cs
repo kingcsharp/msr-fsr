@@ -72,12 +72,12 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             foreach (var role in efWorkFlow.GroupRoles)
             {
-                _unitOfWork.WorkflowGroupRoleMaps.Delete(false, role);
+                _unitOfWork.WorkflowGroupRoleMaps.Delete(false, role, true);
             }
 
             foreach (var role in efWorkFlow.GroupUsers)
             {
-                _unitOfWork.WorkflowGroupUserMaps.Delete(false, role);
+                _unitOfWork.WorkflowGroupUserMaps.Delete(false, role, true);
             }
 
             efWorkFlow.Name = command.Name;

@@ -41,14 +41,6 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             var efWorkflowStage = _mapper.Map<WorkflowStage>(command);
 
             await _unitOfWork.WorkflowStages.AddAndSaveChangesAsync(efWorkflowStage);
-
-            efWorkflowStage.Group = command.WorkflowGroupStageMapModel.Select(
-                x => _unitOfWork.WorkflowGroupStageMaps
-                .AttachAndInsert(_mapper.Map<WorkflowGroupStageMap>(x)))
-                .ToList();
-
-            await _unitOfWork.SaveChangesAsync();
-
             var workFlowModel = _mapper.Map<WorkflowStageModel>(efWorkflowStage);
 
             return workFlowModel;
@@ -63,7 +55,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             foreach (var item in efWorkFlow.Group)
             {
-                _unitOfWork.WorkflowGroupStageMaps.Delete(false, item);
+                _unitOfWork.WorkflowGroupStageMaps.Delete(false, item, true);
             }
 
             efWorkFlow.Group = command.WorkflowGroupStageMapModel.Select(
