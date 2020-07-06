@@ -41,6 +41,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             var efWorkflowGroup = _mapper.Map<WorkflowGroup>(command);
 
             await _unitOfWork.WorkflowGroups.AddAndSaveChangesAsync(efWorkflowGroup);
+
             efWorkflowGroup.GroupRoles = command.Roles.Select(
                 x => _unitOfWork.WorkflowGroupRoleMaps
                 .AttachAndInsert(_mapper.Map<WorkflowGroupRoleMap>(x)))

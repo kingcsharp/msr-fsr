@@ -11,6 +11,7 @@ namespace MSR.Infrastructure.Profiles
         {
             CreateMap<CreateWorkflowStageModel, WorkflowStage>();
             CreateMap<UpdateWorkflowStageModel, WorkflowStage>();
+            CreateMap<WorkflowGroupStageMapModel, WorkflowGroupStageMap>();
 
             CreateMap<WorkflowStage, WorkflowStageModel>()
                 .ForMember(dest =>
@@ -20,10 +21,10 @@ namespace MSR.Infrastructure.Profiles
             dest.LastUpdatedByName,
             opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
 
-            CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>()
-                .ForMember(dest =>
-            dest.Name,
-            opt => opt.MapFrom(src => src.Role.Name));
+
+            CreateMap<WorkflowGroupStageMap, WorkflowGroupStageMapModel>();
+
+
         }
     }
 }

@@ -41,6 +41,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkflowStage> WorkflowStage { get; set; }
         public DbSet<WorkflowGroup> WorkflowGroup { get; set; }
         public DbSet<WorkflowGroupRoleMap> WorkflowGroupRoleMap { get; set; }
+        public DbSet<WorkflowGroupStageMap> WorkflowGroupStageMap { get; set; }
 
         public AnswerContext() : base()
         {

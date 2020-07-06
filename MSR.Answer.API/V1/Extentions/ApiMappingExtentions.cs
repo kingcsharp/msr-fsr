@@ -156,7 +156,8 @@ namespace MSR.Answer.API.V1.Extentions
             return new CreateWorkflowStageModel()
             {
                 IsActive = request.IsActive,
-                Name = request.Name
+                Name = request.Name,
+                WorkflowGroupStageMapModel = request.WorkflowGroupStageMapModel
             };
         }
         public static UpdateWorkflowStageModel ToUpdateWorkflowStageCommand(this UpdateWorkflowStageRequest request)
@@ -165,7 +166,8 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 Id = request.Id,
                 IsActive = request.IsActive,
-                Name = request.Name
+                Name = request.Name,
+                WorkflowGroupStageMapModel = request.WorkflowGroupStageMapModel
             };
         }
 

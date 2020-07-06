@@ -40,6 +40,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkflowStageMap> _workflowStageMap;
         private IRepository<Workflow> _workflow;
         private IRepository<WorkflowGroupUserMap> _workflowGroupUserMap;
+        private IRepository<WorkflowGroupStageMap> _workflowGroupStageMaps;
 
         public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
         public IRepository<Customer> Customers { get { return _customers ?? (_customers = new EFRepository<Customer>(Context)); } }
@@ -70,7 +71,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowActivityMap> WorkflowActivityMaps { get { return _workflowActivityMap ?? (_workflowActivityMap = new EFRepository<WorkflowActivityMap>(Context)); } }
         public IRepository<WorkflowActivity> WorkflowActivities { get { return _workflowActivity ?? (_workflowActivity = new EFRepository<WorkflowActivity>(Context)); } }
         public IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get { return _workflowGroupUserMap ?? (_workflowGroupUserMap = new EFRepository<WorkflowGroupUserMap>(Context)); } }
-        
+        public IRepository<WorkflowGroupStageMap> WorkflowGroupStageMaps { get { return _workflowGroupStageMaps ?? (_workflowGroupStageMaps = new EFRepository<WorkflowGroupStageMap>(Context)); } }
+
         #endregion Repositories
 
         public UnitOfWork(AnswerContext context)

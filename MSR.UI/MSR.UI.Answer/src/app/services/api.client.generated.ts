@@ -3773,6 +3773,7 @@ export class WorkflowStageModel extends DeletableModel implements IWorkflowStage
     name?: string | undefined;
     lastUpdatedByName?: string | undefined;
     createdByName?: string | undefined;
+    groups?: WorkflowGroupStageMapModel[] | undefined;
 
     constructor(data?: IWorkflowStageModel) {
         super(data);
@@ -3784,6 +3785,11 @@ export class WorkflowStageModel extends DeletableModel implements IWorkflowStage
             this.name = _data["name"];
             this.lastUpdatedByName = _data["lastUpdatedByName"];
             this.createdByName = _data["createdByName"];
+            if (Array.isArray(_data["groups"])) {
+                this.groups = [] as any;
+                for (let item of _data["groups"])
+                    this.groups!.push(WorkflowGroupStageMapModel.fromJS(item));
+            }
         }
     }
 
@@ -3799,6 +3805,11 @@ export class WorkflowStageModel extends DeletableModel implements IWorkflowStage
         data["name"] = this.name;
         data["lastUpdatedByName"] = this.lastUpdatedByName;
         data["createdByName"] = this.createdByName;
+        if (Array.isArray(this.groups)) {
+            data["groups"] = [];
+            for (let item of this.groups)
+                data["groups"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
@@ -3808,6 +3819,47 @@ export interface IWorkflowStageModel extends IDeletableModel {
     name?: string | undefined;
     lastUpdatedByName?: string | undefined;
     createdByName?: string | undefined;
+    groups?: WorkflowGroupStageMapModel[] | undefined;
+}
+
+export class WorkflowGroupStageMapModel implements IWorkflowGroupStageMapModel {
+    workflowStageId?: number | undefined;
+    workflowGroupId?: number;
+
+    constructor(data?: IWorkflowGroupStageMapModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workflowStageId = _data["workflowStageId"];
+            this.workflowGroupId = _data["workflowGroupId"];
+        }
+    }
+
+    static fromJS(data: any): WorkflowGroupStageMapModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowGroupStageMapModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workflowStageId"] = this.workflowStageId;
+        data["workflowGroupId"] = this.workflowGroupId;
+        return data; 
+    }
+}
+
+export interface IWorkflowGroupStageMapModel {
+    workflowStageId?: number | undefined;
+    workflowGroupId?: number;
 }
 
 export class AuditActionResultOfWorkflowStageModel extends AuditActionResult implements IAuditActionResultOfWorkflowStageModel {
@@ -3850,6 +3902,7 @@ export interface IAuditActionResultOfWorkflowStageModel extends IAuditActionResu
 export class CreateWorkflowStageRequest implements ICreateWorkflowStageRequest {
     name!: string;
     isActive?: boolean;
+    workflowGroupStageMapModel?: WorkflowGroupStageMapModel[] | undefined;
 
     constructor(data?: ICreateWorkflowStageRequest) {
         if (data) {
@@ -3864,6 +3917,11 @@ export class CreateWorkflowStageRequest implements ICreateWorkflowStageRequest {
         if (_data) {
             this.name = _data["name"];
             this.isActive = _data["isActive"];
+            if (Array.isArray(_data["workflowGroupStageMapModel"])) {
+                this.workflowGroupStageMapModel = [] as any;
+                for (let item of _data["workflowGroupStageMapModel"])
+                    this.workflowGroupStageMapModel!.push(WorkflowGroupStageMapModel.fromJS(item));
+            }
         }
     }
 
@@ -3878,6 +3936,11 @@ export class CreateWorkflowStageRequest implements ICreateWorkflowStageRequest {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["isActive"] = this.isActive;
+        if (Array.isArray(this.workflowGroupStageMapModel)) {
+            data["workflowGroupStageMapModel"] = [];
+            for (let item of this.workflowGroupStageMapModel)
+                data["workflowGroupStageMapModel"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -3885,6 +3948,7 @@ export class CreateWorkflowStageRequest implements ICreateWorkflowStageRequest {
 export interface ICreateWorkflowStageRequest {
     name: string;
     isActive?: boolean;
+    workflowGroupStageMapModel?: WorkflowGroupStageMapModel[] | undefined;
 }
 
 export class UpdateWorkflowStageRequest extends CreateWorkflowStageRequest implements IUpdateWorkflowStageRequest {
