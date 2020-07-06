@@ -39,7 +39,8 @@ export const routes = [
   declarations: [
     PendingApprovalsComponent,
     ApprovalGroupsComponent,
-    ApprovalStagesComponent
+    ApprovalStagesComponent,
+    ApprovalWorkflowComponent
   ],
   imports: [
     CommonModule,

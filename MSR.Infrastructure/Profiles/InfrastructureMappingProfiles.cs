@@ -21,6 +21,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Menus, opt => opt.Ignore());
 
             CreateMap<Location, Domain.Models.Location>();
+
         }
     }
 }

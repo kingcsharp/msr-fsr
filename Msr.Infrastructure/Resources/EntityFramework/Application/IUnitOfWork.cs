@@ -32,6 +32,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<UserRoleApproval> UserRoleApprovals { get; }
         IRepository<Workflow> Workflows { get; }
         IRepository<WorkflowStageMap> WorkflowStagesMap { get; }
+        IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get; }
         IRepository<WorkflowGroup> WorkflowGroups { get; }
         IRepository<WorkflowStage> WorkflowStages { get; }
         IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get; }

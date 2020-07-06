@@ -21,7 +21,10 @@ import { CommonGrid } from './models/lib/CommonGrid';
 import { environment } from '../environments/environment';
 
 import * as $ from 'jquery';
-import { UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, WorkflowStageService, LocationService, RoleService } from './services/api.client.generated';
+import {
+  UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService,
+  WorkflowStageService, LocationService, RoleService
+} from './services/api.client.generated';
 
 const APP_PROVIDERS = [
   CheckAllService,

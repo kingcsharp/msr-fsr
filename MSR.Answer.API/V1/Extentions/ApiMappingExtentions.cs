@@ -1,9 +1,7 @@
 ﻿using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Helpers;
-using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -129,7 +127,8 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 IsActive = request.IsActive,
                 Name = request.Name,
-                Roles = request.Roles
+                Roles = request.Roles,
+                Users = request.Users
             };
         }
 
@@ -140,7 +139,8 @@ namespace MSR.Answer.API.V1.Extentions
                 Id = request.Id,
                 IsActive = request.IsActive,
                 Name = request.Name,
-                Roles = request.Roles
+                Roles = request.Roles,
+                Users = request.Users
             };
         }
 
@@ -151,7 +151,6 @@ namespace MSR.Answer.API.V1.Extentions
                 Id = request.Id
             };
         }
-
         public static CreateWorkflowStageModel ToCreateWorkflowStageCommand(this CreateWorkflowStageRequest request)
         {
             return new CreateWorkflowStageModel()
@@ -160,7 +159,6 @@ namespace MSR.Answer.API.V1.Extentions
                 Name = request.Name
             };
         }
-
         public static UpdateWorkflowStageModel ToUpdateWorkflowStageCommand(this UpdateWorkflowStageRequest request)
         {
             return new UpdateWorkflowStageModel()

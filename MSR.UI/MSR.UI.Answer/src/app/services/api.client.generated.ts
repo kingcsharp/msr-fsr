@@ -999,6 +999,219 @@ export class WorkflowService {
         }
         return _observableOf<AuditActionResultOfPendingApprovalNotification>(<any>null);
     }
+
+    workflowGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowModel> {
+        let url_ = this.baseUrl + "/v{version}/Workflow?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkflowModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkflowModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkflowModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkflowModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkflowModel>(<any>null);
+    }
+
+    workflowPost(version: string, request: CreateWorkflowRequest): Observable<AuditActionResultOfWorkflowModel> {
+        let url_ = this.baseUrl + "/v{version}/Workflow";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkflowModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkflowModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowPost(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkflowModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkflowModel>(<any>null);
+    }
+
+    workflowPatch(version: string, request: UpdateWorkflowRequest): Observable<AuditActionResultOfWorkflowModel> {
+        let url_ = this.baseUrl + "/v{version}/Workflow";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkflowModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkflowModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowPatch(response: HttpResponseBase): Observable<AuditActionResultOfWorkflowModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkflowModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkflowModel>(<any>null);
+    }
+
+    workflowDelete(workflowId: number, version: string): Observable<void> {
+        let url_ = this.baseUrl + "/v{version}/Workflow/{workflowId}";
+        if (workflowId === undefined || workflowId === null)
+            throw new Error("The parameter 'workflowId' must be defined.");
+        url_ = url_.replace("{workflowId}", encodeURIComponent("" + workflowId));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -2722,11 +2935,11 @@ export interface IPendingApprovalNotification {
     users?: number;
 }
 
-export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowGroupModel {
-    object?: WorkflowGroupModel[] | undefined;
+export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowModel {
+    object?: WorkflowModel[] | undefined;
     returnedObject?: any | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfWorkflowGroupModel) {
+    constructor(data?: IAuditActionResultOfICollectionOfWorkflowModel) {
         super(data);
     }
 
@@ -2736,15 +2949,15 @@ export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditAct
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(WorkflowGroupModel.fromJS(item));
+                    this.object!.push(WorkflowModel.fromJS(item));
             }
             this.returnedObject = _data["returnedObject"];
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowGroupModel {
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfWorkflowGroupModel();
+        let result = new AuditActionResultOfICollectionOfWorkflowModel();
         result.init(data);
         return result;
     }
@@ -2762,299 +2975,8 @@ export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditAct
     }
 }
 
-export interface IAuditActionResultOfICollectionOfWorkflowGroupModel extends IAuditActionResult {
-    object?: WorkflowGroupModel[] | undefined;
-    returnedObject?: any | undefined;
-}
-
-export class WorkflowGroupModel implements IWorkflowGroupModel {
-    name?: string | undefined;
-    lastUpdatedOn?: Date | undefined;
-    lastUpdatedBy?: number | undefined;
-    lastUpdatedByName?: string | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-    createdByName?: string | undefined;
-    id?: number;
-    isActive?: boolean;
-    groupRoles?: WorkflowGroupRoleMapModel[] | undefined;
-
-    constructor(data?: IWorkflowGroupModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
-            this.lastUpdatedBy = _data["lastUpdatedBy"];
-            this.lastUpdatedByName = _data["lastUpdatedByName"];
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.createdBy = _data["createdBy"];
-            this.createdByName = _data["createdByName"];
-            this.id = _data["id"];
-            this.isActive = _data["isActive"];
-            if (Array.isArray(_data["groupRoles"])) {
-                this.groupRoles = [] as any;
-                for (let item of _data["groupRoles"])
-                    this.groupRoles!.push(WorkflowGroupRoleMapModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): WorkflowGroupModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkflowGroupModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
-        data["lastUpdatedBy"] = this.lastUpdatedBy;
-        data["lastUpdatedByName"] = this.lastUpdatedByName;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["createdBy"] = this.createdBy;
-        data["createdByName"] = this.createdByName;
-        data["id"] = this.id;
-        data["isActive"] = this.isActive;
-        if (Array.isArray(this.groupRoles)) {
-            data["groupRoles"] = [];
-            for (let item of this.groupRoles)
-                data["groupRoles"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IWorkflowGroupModel {
-    name?: string | undefined;
-    lastUpdatedOn?: Date | undefined;
-    lastUpdatedBy?: number | undefined;
-    lastUpdatedByName?: string | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-    createdByName?: string | undefined;
-    id?: number;
-    isActive?: boolean;
-    groupRoles?: WorkflowGroupRoleMapModel[] | undefined;
-}
-
-export class WorkflowGroupRoleMapModel implements IWorkflowGroupRoleMapModel {
-    roleId?: number;
-    name?: string | undefined;
-    workflowGroupId?: number | undefined;
-
-    constructor(data?: IWorkflowGroupRoleMapModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.roleId = _data["roleId"];
-            this.name = _data["name"];
-            this.workflowGroupId = _data["workflowGroupId"];
-        }
-    }
-
-    static fromJS(data: any): WorkflowGroupRoleMapModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new WorkflowGroupRoleMapModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["roleId"] = this.roleId;
-        data["name"] = this.name;
-        data["workflowGroupId"] = this.workflowGroupId;
-        return data; 
-    }
-}
-
-export interface IWorkflowGroupRoleMapModel {
-    roleId?: number;
-    name?: string | undefined;
-    workflowGroupId?: number | undefined;
-}
-
-export class AuditActionResultOfWorkflowGroupModel extends AuditActionResult implements IAuditActionResultOfWorkflowGroupModel {
-    object?: WorkflowGroupModel | undefined;
-    returnedObject?: any | undefined;
-
-    constructor(data?: IAuditActionResultOfWorkflowGroupModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? WorkflowGroupModel.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfWorkflowGroupModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfWorkflowGroupModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfWorkflowGroupModel extends IAuditActionResult {
-    object?: WorkflowGroupModel | undefined;
-    returnedObject?: any | undefined;
-}
-
-export class CreateWorkflowGroupRequest implements ICreateWorkflowGroupRequest {
-    name!: string;
-    isActive?: boolean;
-    roles?: WorkflowGroupRoleMapModel[] | undefined;
-
-    constructor(data?: ICreateWorkflowGroupRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.isActive = _data["isActive"];
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(WorkflowGroupRoleMapModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): CreateWorkflowGroupRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateWorkflowGroupRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["isActive"] = this.isActive;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface ICreateWorkflowGroupRequest {
-    name: string;
-    isActive?: boolean;
-    roles?: WorkflowGroupRoleMapModel[] | undefined;
-}
-
-export class UpdateWorkflowGroupRequest extends CreateWorkflowGroupRequest implements IUpdateWorkflowGroupRequest {
-    id!: number;
-
-    constructor(data?: IUpdateWorkflowGroupRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): UpdateWorkflowGroupRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateWorkflowGroupRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IUpdateWorkflowGroupRequest extends ICreateWorkflowGroupRequest {
-    id: number;
-}
-
-export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowStageModel {
-    object?: WorkflowStageModel[] | undefined;
-    returnedObject?: any | undefined;
-
-    constructor(data?: IAuditActionResultOfICollectionOfWorkflowStageModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            if (Array.isArray(_data["object"])) {
-                this.object = [] as any;
-                for (let item of _data["object"])
-                    this.object!.push(WorkflowStageModel.fromJS(item));
-            }
-            this.returnedObject = _data["returnedObject"];
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowStageModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfWorkflowStageModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.object)) {
-            data["object"] = [];
-            for (let item of this.object)
-                data["object"].push(item.toJSON());
-        }
-        data["returnedObject"] = this.returnedObject;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfICollectionOfWorkflowStageModel extends IAuditActionResult {
-    object?: WorkflowStageModel[] | undefined;
+export interface IAuditActionResultOfICollectionOfWorkflowModel extends IAuditActionResult {
+    object?: WorkflowModel[] | undefined;
     returnedObject?: any | undefined;
 }
 
@@ -3166,6 +3088,685 @@ export class DeletableModel extends TrackableModel implements IDeletableModel {
 
 export interface IDeletableModel extends ITrackableModel {
     isActive?: boolean;
+}
+
+export class WorkflowModel extends DeletableModel implements IWorkflowModel {
+    name?: string | undefined;
+    lastUpdatedByName?: string | undefined;
+    createdByName?: string | undefined;
+    memberStages?: WorkflowStageMapModel[] | undefined;
+    activityMaps?: WorkflowActivityMapModel[] | undefined;
+
+    constructor(data?: IWorkflowModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.lastUpdatedByName = _data["lastUpdatedByName"];
+            this.createdByName = _data["createdByName"];
+            if (Array.isArray(_data["memberStages"])) {
+                this.memberStages = [] as any;
+                for (let item of _data["memberStages"])
+                    this.memberStages!.push(WorkflowStageMapModel.fromJS(item));
+            }
+            if (Array.isArray(_data["activityMaps"])) {
+                this.activityMaps = [] as any;
+                for (let item of _data["activityMaps"])
+                    this.activityMaps!.push(WorkflowActivityMapModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): WorkflowModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["lastUpdatedByName"] = this.lastUpdatedByName;
+        data["createdByName"] = this.createdByName;
+        if (Array.isArray(this.memberStages)) {
+            data["memberStages"] = [];
+            for (let item of this.memberStages)
+                data["memberStages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.activityMaps)) {
+            data["activityMaps"] = [];
+            for (let item of this.activityMaps)
+                data["activityMaps"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IWorkflowModel extends IDeletableModel {
+    name?: string | undefined;
+    lastUpdatedByName?: string | undefined;
+    createdByName?: string | undefined;
+    memberStages?: WorkflowStageMapModel[] | undefined;
+    activityMaps?: WorkflowActivityMapModel[] | undefined;
+}
+
+export class WorkflowStageMapModel implements IWorkflowStageMapModel {
+    workflowId?: number;
+    workflowStageId?: number;
+
+    constructor(data?: IWorkflowStageMapModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workflowId = _data["workflowId"];
+            this.workflowStageId = _data["workflowStageId"];
+        }
+    }
+
+    static fromJS(data: any): WorkflowStageMapModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowStageMapModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workflowId"] = this.workflowId;
+        data["workflowStageId"] = this.workflowStageId;
+        return data; 
+    }
+}
+
+export interface IWorkflowStageMapModel {
+    workflowId?: number;
+    workflowStageId?: number;
+}
+
+export class WorkflowActivityMapModel implements IWorkflowActivityMapModel {
+    workflowId?: number;
+    workflowActivityId?: number;
+
+    constructor(data?: IWorkflowActivityMapModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workflowId = _data["workflowId"];
+            this.workflowActivityId = _data["workflowActivityId"];
+        }
+    }
+
+    static fromJS(data: any): WorkflowActivityMapModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowActivityMapModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workflowId"] = this.workflowId;
+        data["workflowActivityId"] = this.workflowActivityId;
+        return data; 
+    }
+}
+
+export interface IWorkflowActivityMapModel {
+    workflowId?: number;
+    workflowActivityId?: number;
+}
+
+export class AuditActionResultOfWorkflowModel extends AuditActionResult implements IAuditActionResultOfWorkflowModel {
+    object?: WorkflowModel | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkflowModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkflowModel.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkflowModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkflowModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfWorkflowModel extends IAuditActionResult {
+    object?: WorkflowModel | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateWorkflowRequest implements ICreateWorkflowRequest {
+    name!: string;
+    isActive?: boolean;
+    memberStages?: WorkflowStageMapModel[] | undefined;
+    activityMaps?: WorkflowActivityMapModel[] | undefined;
+
+    constructor(data?: ICreateWorkflowRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+            if (Array.isArray(_data["memberStages"])) {
+                this.memberStages = [] as any;
+                for (let item of _data["memberStages"])
+                    this.memberStages!.push(WorkflowStageMapModel.fromJS(item));
+            }
+            if (Array.isArray(_data["activityMaps"])) {
+                this.activityMaps = [] as any;
+                for (let item of _data["activityMaps"])
+                    this.activityMaps!.push(WorkflowActivityMapModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateWorkflowRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateWorkflowRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        if (Array.isArray(this.memberStages)) {
+            data["memberStages"] = [];
+            for (let item of this.memberStages)
+                data["memberStages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.activityMaps)) {
+            data["activityMaps"] = [];
+            for (let item of this.activityMaps)
+                data["activityMaps"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICreateWorkflowRequest {
+    name: string;
+    isActive?: boolean;
+    memberStages?: WorkflowStageMapModel[] | undefined;
+    activityMaps?: WorkflowActivityMapModel[] | undefined;
+}
+
+export class UpdateWorkflowRequest extends CreateWorkflowRequest implements IUpdateWorkflowRequest {
+    id!: number;
+
+    constructor(data?: IUpdateWorkflowRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWorkflowRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWorkflowRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdateWorkflowRequest extends ICreateWorkflowRequest {
+    id: number;
+}
+
+export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowGroupModel {
+    object?: WorkflowGroupModel[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkflowGroupModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkflowGroupModel.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowGroupModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkflowGroupModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfWorkflowGroupModel extends IAuditActionResult {
+    object?: WorkflowGroupModel[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class WorkflowGroupModel implements IWorkflowGroupModel {
+    name?: string | undefined;
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    lastUpdatedByName?: string | undefined;
+    createdByName?: string | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+    id?: number;
+    isActive?: boolean;
+    groupRoles?: WorkflowGroupRoleMapModel[] | undefined;
+    groupUsers?: WorkflowGroupUserMapModel[] | undefined;
+
+    constructor(data?: IWorkflowGroupModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.lastUpdatedByName = _data["lastUpdatedByName"];
+            this.createdByName = _data["createdByName"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.id = _data["id"];
+            this.isActive = _data["isActive"];
+            if (Array.isArray(_data["groupRoles"])) {
+                this.groupRoles = [] as any;
+                for (let item of _data["groupRoles"])
+                    this.groupRoles!.push(WorkflowGroupRoleMapModel.fromJS(item));
+            }
+            if (Array.isArray(_data["groupUsers"])) {
+                this.groupUsers = [] as any;
+                for (let item of _data["groupUsers"])
+                    this.groupUsers!.push(WorkflowGroupUserMapModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): WorkflowGroupModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowGroupModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["lastUpdatedByName"] = this.lastUpdatedByName;
+        data["createdByName"] = this.createdByName;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["id"] = this.id;
+        data["isActive"] = this.isActive;
+        if (Array.isArray(this.groupRoles)) {
+            data["groupRoles"] = [];
+            for (let item of this.groupRoles)
+                data["groupRoles"].push(item.toJSON());
+        }
+        if (Array.isArray(this.groupUsers)) {
+            data["groupUsers"] = [];
+            for (let item of this.groupUsers)
+                data["groupUsers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IWorkflowGroupModel {
+    name?: string | undefined;
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    lastUpdatedByName?: string | undefined;
+    createdByName?: string | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+    id?: number;
+    isActive?: boolean;
+    groupRoles?: WorkflowGroupRoleMapModel[] | undefined;
+    groupUsers?: WorkflowGroupUserMapModel[] | undefined;
+}
+
+export class WorkflowGroupRoleMapModel implements IWorkflowGroupRoleMapModel {
+    roleId?: number;
+    name?: string | undefined;
+    workflowGroupId?: number | undefined;
+
+    constructor(data?: IWorkflowGroupRoleMapModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roleId = _data["roleId"];
+            this.name = _data["name"];
+            this.workflowGroupId = _data["workflowGroupId"];
+        }
+    }
+
+    static fromJS(data: any): WorkflowGroupRoleMapModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowGroupRoleMapModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roleId"] = this.roleId;
+        data["name"] = this.name;
+        data["workflowGroupId"] = this.workflowGroupId;
+        return data; 
+    }
+}
+
+export interface IWorkflowGroupRoleMapModel {
+    roleId?: number;
+    name?: string | undefined;
+    workflowGroupId?: number | undefined;
+}
+
+export class WorkflowGroupUserMapModel implements IWorkflowGroupUserMapModel {
+    userId?: number;
+    workflowGroupId?: number | undefined;
+
+    constructor(data?: IWorkflowGroupUserMapModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.workflowGroupId = _data["workflowGroupId"];
+        }
+    }
+
+    static fromJS(data: any): WorkflowGroupUserMapModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowGroupUserMapModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["workflowGroupId"] = this.workflowGroupId;
+        return data; 
+    }
+}
+
+export interface IWorkflowGroupUserMapModel {
+    userId?: number;
+    workflowGroupId?: number | undefined;
+}
+
+export class AuditActionResultOfWorkflowGroupModel extends AuditActionResult implements IAuditActionResultOfWorkflowGroupModel {
+    object?: WorkflowGroupModel | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkflowGroupModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkflowGroupModel.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkflowGroupModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkflowGroupModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfWorkflowGroupModel extends IAuditActionResult {
+    object?: WorkflowGroupModel | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateWorkflowGroupRequest implements ICreateWorkflowGroupRequest {
+    name!: string;
+    isActive?: boolean;
+    roles?: WorkflowGroupRoleMapModel[] | undefined;
+    users?: WorkflowGroupUserMapModel[] | undefined;
+
+    constructor(data?: ICreateWorkflowGroupRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(WorkflowGroupRoleMapModel.fromJS(item));
+            }
+            if (Array.isArray(_data["users"])) {
+                this.users = [] as any;
+                for (let item of _data["users"])
+                    this.users!.push(WorkflowGroupUserMapModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateWorkflowGroupRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateWorkflowGroupRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        if (Array.isArray(this.users)) {
+            data["users"] = [];
+            for (let item of this.users)
+                data["users"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICreateWorkflowGroupRequest {
+    name: string;
+    isActive?: boolean;
+    roles?: WorkflowGroupRoleMapModel[] | undefined;
+    users?: WorkflowGroupUserMapModel[] | undefined;
+}
+
+export class UpdateWorkflowGroupRequest extends CreateWorkflowGroupRequest implements IUpdateWorkflowGroupRequest {
+    id!: number;
+
+    constructor(data?: IUpdateWorkflowGroupRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWorkflowGroupRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWorkflowGroupRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdateWorkflowGroupRequest extends ICreateWorkflowGroupRequest {
+    id: number;
+}
+
+export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowStageModel {
+    object?: WorkflowStageModel[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkflowStageModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkflowStageModel.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowStageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkflowStageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfWorkflowStageModel extends IAuditActionResult {
+    object?: WorkflowStageModel[] | undefined;
+    returnedObject?: any | undefined;
 }
 
 export class WorkflowStageModel extends DeletableModel implements IWorkflowStageModel {

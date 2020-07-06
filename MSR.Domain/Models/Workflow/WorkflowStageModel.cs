@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSR.Domain.Models.Workflow
+namespace MSR.Domain.Models
 {
     public class WorkflowStageModel : DeletableModel
     {

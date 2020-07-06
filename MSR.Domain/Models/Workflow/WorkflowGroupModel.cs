@@ -10,6 +10,7 @@ namespace MSR.Domain.Models
         public WorkflowGroupModel()
         {
             GroupRoles = new HashSet<WorkflowGroupRoleMapModel>();
+            GroupUsers = new HashSet<WorkflowGroupUserMapModel>();
         }
 
         public string Name { get; set; }
@@ -25,5 +26,6 @@ namespace MSR.Domain.Models
         public bool IsActive { get; set; }
 
         public ICollection<WorkflowGroupRoleMapModel> GroupRoles { get; set; }
+        public ICollection<WorkflowGroupUserMapModel> GroupUsers { get; set; }
     }
 }

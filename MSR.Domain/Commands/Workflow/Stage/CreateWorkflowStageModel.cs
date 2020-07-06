@@ -2,7 +2,7 @@
 using MSR.Domain.Models;
 using System.Collections.Generic;
 
-namespace MSR.Domain.Commands.Workflow
+namespace MSR.Domain.Commands
 {
     public class CreateWorkflowStageModel : Command
     {

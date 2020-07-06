@@ -37,6 +37,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<UserRoleApproval> UserRoleApproval { get; set; }
         public DbSet<Workflow> Workflow { get; set; }
         public DbSet<WorkflowStageMap> WorkflowStageMap { get; set; }
+        public DbSet<WorkflowGroupUserMap> WorkflowGroupUserMap { get; set; }
         public DbSet<WorkflowStage> WorkflowStage { get; set; }
         public DbSet<WorkflowGroup> WorkflowGroup { get; set; }
         public DbSet<WorkflowGroupRoleMap> WorkflowGroupRoleMap { get; set; }

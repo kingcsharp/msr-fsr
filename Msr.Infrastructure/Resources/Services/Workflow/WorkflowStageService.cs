@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Models;
-using MSR.Domain.Models.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Collections.Generic;
@@ -34,8 +31,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 workflowStage = workflowStage.Where(i => i.Id == command.Id.Value);
             }
 
-            var result = await workflowStage.Include(x => x.Created)
-                .Include(x => x.LastUpdated).ToListAsync();
+            var result = await workflowStage.ToListAsync();
             var ret = result.Select(workflowGrou => _mapper.Map<WorkflowStageModel>(workflowGrou)).ToList();
             return ret;
         }
