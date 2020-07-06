@@ -2,7 +2,6 @@
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using MSR.Infrastructure.Resources.Services.Help;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -59,7 +58,6 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();                          
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
-            CreateMap<CreateSupport, SupportRequestDTO>().ReverseMap();
         }
     }
 }

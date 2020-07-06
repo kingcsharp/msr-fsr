@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using MSR.Domain.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 
 namespace MSR.Infrastructure.Resources.Services.Users

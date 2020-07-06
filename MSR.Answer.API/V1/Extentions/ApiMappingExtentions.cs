@@ -3,7 +3,6 @@ using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Helpers;
-using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -245,10 +244,6 @@ namespace MSR.Answer.API.V1.Extentions
         public static UpdateUserRole ToUpdateUserRoleCommand(this UpdateUserRoleRequest request)
         {
             return AutoMapperHelper.Mapper.Map<UpdateUserRole>(request);
-        }
-        public static CreateSupport ToSubmitSupportCommand(this CreateSupportRequest request)
-        {
-            return AutoMapperHelper.Mapper.Map<CreateSupport>(request);
         }
         public static CreateHelpPage ToCreateHelpPageCommand(this CreateHelpPageRequest request)
         {

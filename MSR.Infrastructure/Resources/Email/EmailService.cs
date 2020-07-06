@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using MSR.Domain.Abstractions.Email;
+﻿using MSR.Domain.Abstractions.Email;
 using MSR.Domain.Models.Config;
 using System;
 using System.Collections.Generic;

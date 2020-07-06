@@ -3,9 +3,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +15,6 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdateHelpPage>,
         ICommandHandler<DeleteHelpPage>,
         ICommandHandler<DeleteHelpPageRole>,
-        ICommandHandler<CreateSupport>,
         ICommandHandler<GetHelpPage>
     {
         IHelpService _helpService;
@@ -54,12 +51,6 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(DeleteHelpPageRole command, CancellationToken cancellationToken = default)
         {
             await _helpService.DeleteHelpPageRole(command);
-            return CommandResponse.SuccessCommand;
-        }
-
-        public async Task<ICommandResponse> HandleAsync(CreateSupport command, CancellationToken cancellationToken = default)
-        {
-            await _helpService.SendSupportRequest(command);
             return CommandResponse.SuccessCommand;
         }
 

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Exceptions;
-using MSR.Domain.Models;
 using MSR.Domain.Models.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;

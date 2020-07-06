@@ -1,8 +1,5 @@
-﻿using MSR.Infrastructure.Resources.Services.Role;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {

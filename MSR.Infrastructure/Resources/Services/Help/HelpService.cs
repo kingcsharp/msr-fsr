@@ -4,17 +4,11 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
-using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
-using MSR.Infrastructure.Resources.Email.Abstrations;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Help
@@ -141,109 +135,6 @@ namespace MSR.Infrastructure.Resources.Services.Help
             }
 
             return pageList;
-        }
-
-        public async Task SendSupportRequest(CreateSupport command)
-        {
-            var dto = _mapper.Map<SupportRequestDTO>(command);
-            var emailBody = $@"
-                    <!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional //EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
-                    <html xmlns=""http://www.w3.org/1999/xhtml"" xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:o=""urn:schemas-microsoft-com:office:office"">
-                    <head>
-                        <style>
-                            .card {{
-                                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-                                transition: 0.3s;
-                                border-radius: 5px;
-                            }}
-
-                                .card:hover {{
-                                    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-                                }}
-
-                            img {{
-                                border-radius: 5px 5px 0 0;
-                            }}
-
-                            .container {{
-                                padding: 2px 16px;
-                            }}
-
-                            .UserDetail {{
-                                width: 49%;
-                                float: left;
-                                height: 150px;
-                                background-color: #81DAF5;
-                                text-align: center;
-                                margin-bottom: 30px;
-                            }}
-
-                            .ResponseDetail {{
-                                width: 49%;
-                                float: right;
-                                height: 150px;
-                                background-color: #ACFA58;
-                                text-align: center;
-                                margin-bottom: 30px;
-                            }}
-
-                            .InquiryDetails {{
-                                clear: both;
-                                width: 100%;
-                                height: 250px;
-                                background-color: #F7BE81;
-                            }}
-
-                            .title {{
-                                text-align: center;
-                                border-bottom: 1px solid white;
-                            }}
-
-                            .InquiryData {{
-                                padding-top: 5px;
-                            }}
-                        </style>
-                    </head>
-                    <body style=""width: 100% !important;min-width: 100%;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100% !important;margin: 0;padding: 0;background-color: #FFFFFF"">
-                        <table cellpadding=""0"" cellspacing=""0"" width=""100%"" class=""body"" border=""0"" style=""border-spacing: 0;border-collapse: collapse;vertical-align: top;height: 100%;width: 100%;table-layout: fixed"">
-                            <p class=MsoNormal><span style='display:none;mso-hide:all'><o:p>&nbsp;</o:p></span></p>
-                            <tr style=""vertical-align: top"">
-                                <td class=""center"" align=""center"" valign=""top"" style=""width: 66%;text-align: center;vertical-align: top;padding: 0 5px 10px 5px;word-break: break-word;border-collapse: collapse !important;background-color: #FFFFFF"">
-                                    <div id=""UserData"" class=""card UserDetail"">
-                                        <div class=""title container""><p>User Details</p></div>
-                                        <div class=""container""><p>Name: {dto.FirstName} {dto.LastName}</p></div>
-                                        <div class=""container""><p>Email: {dto.Email} </p></div>
-                                        <div class=""container""><p>Phone: {dto.Phone} </p></div>
-                                    </div>
-                                    <div id=""ResponseRequested"" class=""card ResponseDetail"">
-                                        <div class=""title container""><p>Requested Response Method: {dto.ContactMethod}</p></div>
-                                    </div>
-                                    <div id=""InquiryIssue"" class=""card InquiryDetails"">
-                                        <div class=""title container"">
-                                            <p>Subject: {dto.Subject} </p>
-                                        </div>
-                                        <div class=""InquiryData"">
-                                            <p>Details: {dto.Details} </p>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </body>
-                    </html>";
-
-            var attachmentEmails = new List<Attachment>();
-
-            foreach (var file in command.Files ?? new List<SupportFile>())
-            {
-                var attachment = new Attachment(file.Base64String)
-                {
-                    TransferEncoding = TransferEncoding.Base64
-                };
-                attachmentEmails.Add(attachment);
-            }
-
-            await _emailService.SendEmailAsync(_emailInformation.From, _emailInformation.SupportEmail, command.Subject, emailBody, null, true, attachmentEmails);
         }
 
         public async Task UpdateHelpPage(UpdateHelpPage command)

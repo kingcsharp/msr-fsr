@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
@@ -30,15 +26,6 @@ namespace MSR.Answer.API.V1.Controllers
         {
             _logger = logger;
             _dispatcher = dispatcher;
-        }
-
-        [HttpPost("Support"), AllowAnonymous]
-        [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> SubmitSupportRequest([FromBody, Required]CreateSupportRequest request)
-        {
-            var command = request.ToSubmitSupportCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
         }
 
         [HttpGet, HasPrivilegeApi("HelpPages",EnumPrivilege.CanRead)]
