@@ -16,6 +16,8 @@ using MSR.Infrastructure.Resources.Services.Menu;
 using MSR.Infrastructure.Resources.Services.Role;
 using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
+using MSR.Infrastructure.Resources.Services.Help;
+using MSR.Infrastructure.Resources.Email.Abstrations;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -34,6 +36,9 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IHelpService, HelpService>();
+            services.AddScoped<IEmailRenderEngine, RazorRenderEngine>();
 
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 

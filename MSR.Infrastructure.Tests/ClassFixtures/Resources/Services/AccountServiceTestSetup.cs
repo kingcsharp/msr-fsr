@@ -47,7 +47,7 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
             mockUnitOfWork.SetupGet(m => m.Users)
                 .Returns(mockIRepositoryUser.Object);
 
-            mockEmailService.Setup(i => i.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<bool>(), It.IsAny<Attachment>()))
+            mockEmailService.Setup(i => i.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<bool>(), It.IsAny<List<Attachment>>()))
                 .Returns(Task.FromResult(true));
 
             mockAuthenticationHelper.Setup(i => i.VerifyPasswordHash(It.Is<string>(i => i == Constants.GoodPassword), It.IsAny<byte[]>(), It.IsAny<byte[]>()))

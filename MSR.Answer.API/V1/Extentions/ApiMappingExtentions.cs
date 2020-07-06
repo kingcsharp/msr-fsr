@@ -193,5 +193,42 @@ namespace MSR.Answer.API.V1.Extentions
                 SecondaryContactUserId = request.SecondaryContactUserId
             };
         }
+
+        public static CreateLocation ToCreateLocationCommand(this CreateLocationRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateLocation>(request);
+        }
+        public static UpdateLocation ToUpdateLocationCommand(this UpdateLocationRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateLocation>(request);
+        }
+        public static CreateUserRole ToCreateUserRoleCommand(this CreateUserRoleRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateUserRole>(request);
+        }
+        public static UpdateUserRole ToUpdateUserRoleCommand(this UpdateUserRoleRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateUserRole>(request);
+        }
+        public static CreateSupport ToSubmitSupportCommand(this CreateSupportRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateSupport>(request);
+        }
+        public static CreateHelpPage ToCreateHelpPageCommand(this CreateHelpPageRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateHelpPage>(request);
+        }
+        public static UpdateHelpPage ToUpdateHelpPageCommand(this UpdateHelpPageRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateHelpPage>(request);
+        }
+        public static CreateHelpPageRole ToCreateHelpPageRoleCommand(this CreateHelpPageRoleRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateHelpPageRole>(request);
+        }
+        public static GetHelpPage ToGetHelpPageCommand(this GetHelpPageRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetHelpPage>(request);
+        }
     }
 }

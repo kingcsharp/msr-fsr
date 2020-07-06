@@ -37,6 +37,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<UserRoleApproval> UserRoleApproval { get; set; }
         public DbSet<WorkflowGroup> WorkflowGroup { get; set; }
         public DbSet<WorkflowGroupRoleMap> WorkflowGroupRoleMap { get; set; }
+        public DbSet<HelpPage> HelpPage { get; set; }
+        public DbSet<HelpPageRoleMap> HelpPageRoleMap { get; set; }
 
         public AnswerContext() : base()
         {
@@ -46,14 +48,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public AnswerContext(DbContextOptions<AnswerContext> options)
         : base(options)
         { }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory)
-        //        .UseLazyLoadingProxies()
-        //        .UseSqlServer(ConnectionString_);
-        //    base.OnConfiguring(optionsBuilder);
-        //}
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -139,6 +133,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework
                 modelBuilder.ApplyConfiguration(configurationInstance);
             }
         }
-
     }
 }
