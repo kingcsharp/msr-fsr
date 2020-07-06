@@ -65,7 +65,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get { return _approvalTransactionLog ??= new EFRepository<ApprovalTransactionLog>(Context); } }
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
-        public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ?? (_workflowStage = new EFRepository<WorkflowStage>(Context)); } }
         
         #endregion Repositories
 
