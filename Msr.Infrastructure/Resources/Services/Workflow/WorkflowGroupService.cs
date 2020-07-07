@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -9,7 +8,6 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,7 +40,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             return ret;
         }
 
-        public async Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroupModel command)
+        public async Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroup command)
         {
             var efWorkflowGroup = _mapper.Map<WorkflowGroup>(command);
 

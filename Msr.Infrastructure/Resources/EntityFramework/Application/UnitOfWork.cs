@@ -35,32 +35,38 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkflowGroup> _workflowGroup;
         private IRepository<WorkflowStage> _workflowStage;
         private IRepository<WorkflowGroupRoleMap> _workflowGroupRoleMap;
+        private IRepository<ApprovalTransactionLog> _approvalTransactionLog;
+        private IRepository<HelpPage> _helpPage;
+        private IRepository<HelpPageRoleMap> _helpPageRoleMap;
 
-        public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
-        public IRepository<Customer> Customers { get { return _customers ?? (_customers = new EFRepository<Customer>(Context)); } }
-        public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ?? (_customerApprovals = new EFRepository<CustomerApproval>(Context)); } }
-        public IRepository<Location> Locations { get { return _locations ?? (_locations = new EFRepository<Location>(Context)); } }
-        public IRepository<LocationApproval> LocationApprovals { get { return _locationApprovals ?? (_locationApprovals = new EFRepository<LocationApproval>(Context)); } }
-        public IRepository<MenuGroup> MenuGroups { get { return _menuGroups ?? (_menuGroups = new EFRepository<MenuGroup>(Context)); } }
-        public IRepository<MenuItem> MenuItems { get { return _menuItems ?? (_menuItems = new EFRepository<MenuItem>(Context)); } }
-        public IRepository<MenuRole> MenuRoles { get { return _menuRoles ?? (_menuRoles = new EFRepository<MenuRole>(Context)); } }
-        public IRepository<MenuRolePermission> MenuRolePermissions { get { return _menuRolePermissions ?? (_menuRolePermissions = new EFRepository<MenuRolePermission>(Context)); } }
-        public IRepository<Role> Roles { get { return _roles ?? (_roles = new EFRepository<Role>(Context)); } }
-        public IRepository<Status> Status { get { return _status ?? (_status = new EFRepository<Status>(Context)); } }
-        public IRepository<UserRole> UserRoles { get { return _userRoles ?? (_userRoles = new EFRepository<UserRole>(Context)); } }
-        public IRepository<PartApproval> PartApprovals { get { return _partApproval ?? (_partApproval = new EFRepository<PartApproval>(Context)); } }
-        public IRepository<ProcedureApproval> ProcedureApprovals { get { return _procedureApproval ?? (_procedureApproval = new EFRepository<ProcedureApproval>(Context)); } }
-        public IRepository<ProcedureStepApproval> ProcedureStepApprovals { get { return _procedureStepApproval ?? (_procedureStepApproval = new EFRepository<ProcedureStepApproval>(Context)); } }
-        public IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get { return _procedureStepDocumentApproval ?? (_procedureStepDocumentApproval = new EFRepository<ProcedureStepDocumentApproval>(Context)); } }
-        public IRepository<ProcedureStepMonitorApproval> ProcedureStepMonitorApprovals { get { return _procedureStepMonitorApproval ?? (_procedureStepMonitorApproval = new EFRepository<ProcedureStepMonitorApproval>(Context)); } }
-        public IRepository<PurchaseOrderApproval> PurchaseOrderApprovals { get { return _purchaseOrderApproval ?? (_purchaseOrderApproval = new EFRepository<PurchaseOrderApproval>(Context)); } }
-        public IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get { return _purchaseOrderProductApproval ?? (_purchaseOrderProductApproval = new EFRepository<PurchaseOrderProductApproval>(Context)); } }
-        public IRepository<UserApproval> UserApprovals { get { return _userApproval ?? (_userApproval = new EFRepository<UserApproval>(Context)); } }
-        public IRepository<UserRoleApproval> UserRoleApprovals { get { return _userRoleApproval ?? (_userRoleApproval = new EFRepository<UserRoleApproval>(Context)); } }
-        public IRepository<WorkflowGroup> WorkflowGroups { get { return _workflowGroup ?? (_workflowGroup = new EFRepository<WorkflowGroup>(Context)); } }
-        public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ?? (_workflowStage = new EFRepository<WorkflowStage>(Context)); } }
+        public IRepository<User> Users { get { return _users ??= new EFRepository<User>(Context); } }
+        public IRepository<Customer> Customers { get { return _customers ??= new EFRepository<Customer>(Context); } }
+        public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ??= new EFRepository<CustomerApproval>(Context); } }
+        public IRepository<Location> Locations { get { return _locations ??= new EFRepository<Location>(Context); } }
+        public IRepository<LocationApproval> LocationApprovals { get { return _locationApprovals ??= new EFRepository<LocationApproval>(Context); } }
+        public IRepository<MenuGroup> MenuGroups { get { return _menuGroups ??= new EFRepository<MenuGroup>(Context); } }
+        public IRepository<MenuItem> MenuItems { get { return _menuItems ??= new EFRepository<MenuItem>(Context); } }
+        public IRepository<MenuRole> MenuRoles { get { return _menuRoles ??= new EFRepository<MenuRole>(Context); } }
+        public IRepository<MenuRolePermission> MenuRolePermissions { get { return _menuRolePermissions ??= new EFRepository<MenuRolePermission>(Context); } }
+        public IRepository<Role> Roles { get { return _roles ??= new EFRepository<Role>(Context); } }
+        public IRepository<Status> Status { get { return _status ??= new EFRepository<Status>(Context); } }
+        public IRepository<UserRole> UserRoles { get { return _userRoles ??= new EFRepository<UserRole>(Context); } }
+        public IRepository<PartApproval> PartApprovals { get { return _partApproval ??= new EFRepository<PartApproval>(Context); } }
+        public IRepository<ProcedureApproval> ProcedureApprovals { get { return _procedureApproval ??= new EFRepository<ProcedureApproval>(Context); } }
+        public IRepository<ProcedureStepApproval> ProcedureStepApprovals { get { return _procedureStepApproval ??= new EFRepository<ProcedureStepApproval>(Context); } }
+        public IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get { return _procedureStepDocumentApproval ??= new EFRepository<ProcedureStepDocumentApproval>(Context); } }
+        public IRepository<ProcedureStepMonitorApproval> ProcedureStepMonitorApprovals { get { return _procedureStepMonitorApproval ??= new EFRepository<ProcedureStepMonitorApproval>(Context); } }
+        public IRepository<PurchaseOrderApproval> PurchaseOrderApprovals { get { return _purchaseOrderApproval ??= new EFRepository<PurchaseOrderApproval>(Context); } }
+        public IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get { return _purchaseOrderProductApproval ??= new EFRepository<PurchaseOrderProductApproval>(Context); } }
+        public IRepository<UserApproval> UserApprovals { get { return _userApproval ??= new EFRepository<UserApproval>(Context); } }
+        public IRepository<UserRoleApproval> UserRoleApprovals { get { return _userRoleApproval ??= new EFRepository<UserRoleApproval>(Context); } }
+        public IRepository<WorkflowGroup> WorkflowGroups { get { return _workflowGroup ??= new EFRepository<WorkflowGroup>(Context); } }
+        public IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get { return _workflowGroupRoleMap ??= new EFRepository<WorkflowGroupRoleMap>(Context); } }
+        public IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get { return _approvalTransactionLog ??= new EFRepository<ApprovalTransactionLog>(Context); } }
+        public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
+        public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
+        public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ??= new EFRepository<WorkflowStage>(Context); } }
         
-        public IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get { return _workflowGroupRoleMap ?? (_workflowGroupRoleMap = new EFRepository<WorkflowGroupRoleMap>(Context)); } }
         #endregion Repositories
 
         public UnitOfWork(AnswerContext context)

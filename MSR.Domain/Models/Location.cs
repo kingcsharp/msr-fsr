@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace MSR.Domain.Models
 {
     public class Location
@@ -19,5 +16,6 @@ namespace MSR.Domain.Models
         public int? ParentId { get; set; }
         public string InternalAddress { get; set; }
         public string InvoiceClass { get; set; }
+        public TimeZone TimeZone { get; set; }
     }
 }

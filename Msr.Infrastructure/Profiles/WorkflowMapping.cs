@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MSR.Domain.Commands;
 using MSR.Domain.Commands.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
@@ -9,7 +8,7 @@ namespace MSR.Infrastructure.Profiles
     {
         public WorkflowMapping()
         {
-            CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
+            CreateMap<CreateWorkflowGroup, WorkflowGroup>();
             CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
 
