@@ -46,7 +46,7 @@
         <th [hidden]="!cg.isVisibleCol('memberStages',gridSettings)">
           <div class="position-relative">
             <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="memberStages" [filterId]="'memberStages'"
-              [defaultText]="'Member Stages'" [filterProp]="'name'" [multipleValues]="true" [defaultTextTooltip]="''"
+              [defaultText]="'Member Stages'" [filterProp]="'workflowStageId'" [multipleValues]="true" [defaultTextTooltip]="''"
               [datatable]="dt">
             </multiselect-wrapper>
           </div>
@@ -54,7 +54,7 @@
         <th [hidden]="!cg.isVisibleCol('activityMaps',gridSettings)">
           <div class="position-relative">
             <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="activityMaps" [filterId]="'activityMaps'"
-              [defaultText]="'Applicable Activities'" [filterProp]="'name'" [multipleValues]="true"
+              [defaultText]="'Applicable Activities'" [filterProp]="'workflowActivityId'" [multipleValues]="true"
               [defaultTextTooltip]="''" [datatable]="dt">
             </multiselect-wrapper>
           </div>
@@ -134,7 +134,7 @@
           {{workflow.lastUpdatedByName }}
         </td>
         <td>
-          <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Workflow " (click)="showDialog(workflow)"></i>
+          <i *ngIf="canEdit" class="fa fa-edit pointer" tooltip="Edit Workflow " (click)="showDialog(workflow)"></i>
 
           <i class="far fa-trash-alt pointer" tooltip="Delete Workflow " (click)="removeRow(workflow)"></i>
         </td>
@@ -179,7 +179,6 @@
               Member Stages
             </label>
             <div class="col-md-4 col-12">
-              {{currWorkflow.stagesSaved | json}}
               <p-multiSelect name="role" [options]="allStages" [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15"
                 appendTo="body">
                 <ng-template pTemplate="selectedItems">
@@ -191,16 +190,14 @@
               Applicable Activities
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allGroups" [(ngModel)]="currWorkflow.groupsSaved" [itemSize]="15"
-                appendTo="body">
+              <p-multiSelect name="role2" [options]="allActivities" [(ngModel)]="currWorkflow.activitiesSaved"
+                [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Activities</div>
                 </ng-template>
               </p-multiSelect>
             </div>
           </div>
-
-
           <div class="form-group row">
             <label class="col-md-2  col-form-label text-md-right">
               Is Active

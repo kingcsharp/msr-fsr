@@ -39,6 +39,14 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             };
         }
 
+        public async Task<ICollection<WorkflowActivityModel>> GetWorkFlowAsync(GetWorkflowActivities command)
+        {
+            var workflowActivities = await _unitOfWork.WorkflowActivities.Query().ToListAsync();
+
+            var ret = workflowActivities.Select(wActivities => _mapper.Map<WorkflowActivityModel>(wActivities)).ToList();
+            return ret;
+        }
+
         public async Task<ICollection<WorkflowModel>> GetWorkFlowAsync(GetWorkflowModel command)
         {
             var workflow = _unitOfWork.Workflows.Query();
@@ -48,8 +56,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 workflow = workflow.Where(i => i.Id == command.Id.Value);
             }
 
-            var result = await workflow.Include(x => x.Created)
-                .Include(x => x.LastUpdated).Include(x => x.ActivityMaps).Include(x => x.MemberStages).ToListAsync();
+            var result = await workflow.ToListAsync();
             var ret = result.Select(workflowGrou => _mapper.Map<WorkflowModel>(workflowGrou)).ToList();
             return ret;
         }
@@ -60,45 +67,22 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             await _unitOfWork.Workflows.AddAndSaveChangesAsync(efWorkflow);
 
-            efWorkflow.MemberStages = command.MemberStages.Select(
-                x => _unitOfWork.WorkflowStagesMap
-                .AttachAndInsert(_mapper.Map<WorkflowStageMap>(x)))
-                .ToList();
-
-            efWorkflow.ActivityMaps = command.ActivityMaps.Select(
-                x => _unitOfWork.WorkflowActivityMaps
-                .AttachAndInsert(_mapper.Map<WorkflowActivityMap>(x)))
-                .ToList();
-
-            await _unitOfWork.SaveChangesAsync();
-
             var workFlowModel = _mapper.Map<WorkflowModel>(efWorkflow);
-
-            workFlowModel.MemberStages = efWorkflow.MemberStages.Select(
-                x => _mapper.Map<WorkflowStageMapModel>(x))
-                .ToList();
-
-            workFlowModel.ActivityMaps = efWorkflow.ActivityMaps.Select(
-                x => _mapper.Map<WorkflowActivityMapModel>(x))
-                .ToList();
 
             return workFlowModel;
         }
 
         public async Task<WorkflowModel> UpdateWorkFlowAsync(UpdateWorkflowModel command)
         {
-            var efWorkFlow = await _unitOfWork.Workflows.Query()
-                .Include(x => x.ActivityMaps)
-                .Include(x => x.MemberStages).FirstOrDefaultAsync(x => x.Id == command.Id);
-
+            var efWorkFlow = await _unitOfWork.Workflows.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
             foreach (var role in efWorkFlow.MemberStages)
             {
-                _unitOfWork.WorkflowStagesMap.Delete(false, role);
+                _unitOfWork.WorkflowStagesMap.Delete(false, role, true);
             }
 
             foreach (var role in efWorkFlow.ActivityMaps)
             {
-                _unitOfWork.WorkflowActivityMaps.Delete(false, role);
+                _unitOfWork.WorkflowActivityMaps.Delete(false, role, true);
             }
 
             efWorkFlow.Name = command.Name;
@@ -124,7 +108,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task DeactivateWorkFlowAsync(DeactivateWorkflowModel command)
         {
-            var workFlow = await _unitOfWork.Workflows.Query().Include(x => x.ActivityMaps)
+            var workFlow = await _unitOfWork.Workflows.Query()
+                .Include(x => x.ActivityMaps)
                 .Include(x => x.MemberStages).FirstOrDefaultAsync(x => x.Id == command.Id);
             if (workFlow == null)
             {

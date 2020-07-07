@@ -14,9 +14,10 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetWorkflowModel>,
         ICommandHandler<CreateWorkflowModel>,
         ICommandHandler<UpdateWorkflowModel>,
-        ICommandHandler<DeactivateWorkflowModel>
+        ICommandHandler<DeactivateWorkflowModel>,
+        ICommandHandler<GetWorkflowActivities>
     {
-        private IWorkflowService _workflowService;
+        private readonly IWorkflowService _workflowService;
         public WorkflowAppService(IWorkflowService workflowService)
         {
             _workflowService = workflowService;
@@ -26,6 +27,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workflowService.GetApprovalNotificationsAsync(command);
             return new CommandResponse<PendingApprovalNotification>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkflowActivities command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workflowService.GetWorkFlowAsync(command);
+            return new CommandResponse<ICollection<WorkflowActivityModel>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(GetWorkflowModel command, CancellationToken cancellationToken = default)

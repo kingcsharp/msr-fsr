@@ -37,6 +37,14 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<PendingApprovalNotification>();
         }
 
+        [HttpGet("activity"), SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowActivityModel>>))]
+        public async Task<IActionResult> GetWorkflowActivities()
+        {
+            var ret = await _dispatcher.DispatchAsync(new GetWorkflowActivities());
+
+            return ret.ToOkObjectResponse<ICollection<WorkflowActivityModel>>();
+        }
+
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowModel>>))]
         public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowRequest request)
         {

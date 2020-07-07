@@ -1000,6 +1000,57 @@ export class WorkflowService {
         return _observableOf<AuditActionResultOfPendingApprovalNotification>(<any>null);
     }
 
+    activity(version: string): Observable<AuditActionResultOfICollectionOfWorkflowActivityModel> {
+        let url_ = this.baseUrl + "/v{version}/Workflow/activity";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processActivity(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processActivity(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkflowActivityModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkflowActivityModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processActivity(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkflowActivityModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkflowActivityModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkflowActivityModel>(<any>null);
+    }
+
     workflowGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkflowModel> {
         let url_ = this.baseUrl + "/v{version}/Workflow?";
         if (version === undefined || version === null)
@@ -2935,11 +2986,11 @@ export interface IPendingApprovalNotification {
     users?: number;
 }
 
-export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowModel {
-    object?: WorkflowModel[] | undefined;
+export class AuditActionResultOfICollectionOfWorkflowActivityModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowActivityModel {
+    object?: WorkflowActivityModel[] | undefined;
     returnedObject?: any | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfWorkflowModel) {
+    constructor(data?: IAuditActionResultOfICollectionOfWorkflowActivityModel) {
         super(data);
     }
 
@@ -2949,15 +3000,15 @@ export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionRe
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(WorkflowModel.fromJS(item));
+                    this.object!.push(WorkflowActivityModel.fromJS(item));
             }
             this.returnedObject = _data["returnedObject"];
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowModel {
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowActivityModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfWorkflowModel();
+        let result = new AuditActionResultOfICollectionOfWorkflowActivityModel();
         result.init(data);
         return result;
     }
@@ -2975,8 +3026,8 @@ export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionRe
     }
 }
 
-export interface IAuditActionResultOfICollectionOfWorkflowModel extends IAuditActionResult {
-    object?: WorkflowModel[] | undefined;
+export interface IAuditActionResultOfICollectionOfWorkflowActivityModel extends IAuditActionResult {
+    object?: WorkflowActivityModel[] | undefined;
     returnedObject?: any | undefined;
 }
 
@@ -3088,6 +3139,92 @@ export class DeletableModel extends TrackableModel implements IDeletableModel {
 
 export interface IDeletableModel extends ITrackableModel {
     isActive?: boolean;
+}
+
+export class WorkflowActivityModel extends DeletableModel implements IWorkflowActivityModel {
+    name?: string | undefined;
+    approvalTableName?: string | undefined;
+    createRevision?: boolean | undefined;
+
+    constructor(data?: IWorkflowActivityModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.approvalTableName = _data["approvalTableName"];
+            this.createRevision = _data["createRevision"];
+        }
+    }
+
+    static fromJS(data: any): WorkflowActivityModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkflowActivityModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["approvalTableName"] = this.approvalTableName;
+        data["createRevision"] = this.createRevision;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IWorkflowActivityModel extends IDeletableModel {
+    name?: string | undefined;
+    approvalTableName?: string | undefined;
+    createRevision?: boolean | undefined;
+}
+
+export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowModel {
+    object?: WorkflowModel[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkflowModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkflowModel.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkflowModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkflowModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfWorkflowModel extends IAuditActionResult {
+    object?: WorkflowModel[] | undefined;
+    returnedObject?: any | undefined;
 }
 
 export class WorkflowModel extends DeletableModel implements IWorkflowModel {
