@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(UserApproval))]
-    public partial class UserApproval: TrackableEntity
+    public partial class UserApproval: ApprovalEntity
     {
         public UserApproval()
         {
@@ -16,8 +16,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? OldId { get; set; }
 
         public int UserId { get; set; }
-
-        public int StatusId { get; set; }
 
         [StringLength(50)]
         public string UserRoleId { get; set; }
@@ -62,8 +60,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual Customer Customer { get; set; }
 
         public virtual Location Location { get; set; }
-
-        public virtual Status Status { get; set; }
 
         public virtual User User { get; set; }
 

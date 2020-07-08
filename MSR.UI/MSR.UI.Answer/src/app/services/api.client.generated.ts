@@ -1000,6 +1000,61 @@ export class WorkflowService {
         return _observableOf<AuditActionResultOfPendingApprovalNotification>(<any>null);
     }
 
+    pendingApproval(table: EnumApprovalTables | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
+        let url_ = this.baseUrl + "/v{version}/Workflow/pendingApproval?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (table === null)
+            throw new Error("The parameter 'table' cannot be null.");
+        else if (table !== undefined)
+            url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPendingApproval(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPendingApproval(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfPendingApprovalModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfPendingApprovalModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPendingApproval(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfPendingApprovalModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfPendingApprovalModel>(<any>null);
+    }
+
     activity(version: string): Observable<AuditActionResultOfICollectionOfWorkflowActivityModel> {
         let url_ = this.baseUrl + "/v{version}/Workflow/activity";
         if (version === undefined || version === null)
@@ -2984,6 +3039,142 @@ export interface IPendingApprovalNotification {
     procedures?: number;
     purchaseOrders?: number;
     users?: number;
+}
+
+export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfICollectionOfPendingApprovalModel {
+    object?: PendingApprovalModel[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfPendingApprovalModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(PendingApprovalModel.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfPendingApprovalModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfPendingApprovalModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfPendingApprovalModel extends IAuditActionResult {
+    object?: PendingApprovalModel[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class PendingApprovalModel implements IPendingApprovalModel {
+    id?: number;
+    name?: string | undefined;
+    workflowName?: string | undefined;
+    activityType?: string | undefined;
+    workflowId?: string | undefined;
+    workflowCreatedByName?: string | undefined;
+    workflowGroupName?: string | undefined;
+    workflowGroupId?: string | undefined;
+    status?: string | undefined;
+    statusId?: number;
+    createdByName?: string | undefined;
+    createdOn?: Date;
+
+    constructor(data?: IPendingApprovalModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.workflowName = _data["workflowName"];
+            this.activityType = _data["activityType"];
+            this.workflowId = _data["workflowId"];
+            this.workflowCreatedByName = _data["workflowCreatedByName"];
+            this.workflowGroupName = _data["workflowGroupName"];
+            this.workflowGroupId = _data["workflowGroupId"];
+            this.status = _data["status"];
+            this.statusId = _data["statusId"];
+            this.createdByName = _data["createdByName"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PendingApprovalModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PendingApprovalModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["workflowName"] = this.workflowName;
+        data["activityType"] = this.activityType;
+        data["workflowId"] = this.workflowId;
+        data["workflowCreatedByName"] = this.workflowCreatedByName;
+        data["workflowGroupName"] = this.workflowGroupName;
+        data["workflowGroupId"] = this.workflowGroupId;
+        data["status"] = this.status;
+        data["statusId"] = this.statusId;
+        data["createdByName"] = this.createdByName;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IPendingApprovalModel {
+    id?: number;
+    name?: string | undefined;
+    workflowName?: string | undefined;
+    activityType?: string | undefined;
+    workflowId?: string | undefined;
+    workflowCreatedByName?: string | undefined;
+    workflowGroupName?: string | undefined;
+    workflowGroupId?: string | undefined;
+    status?: string | undefined;
+    statusId?: number;
+    createdByName?: string | undefined;
+    createdOn?: Date;
+}
+
+export enum EnumApprovalTables {
+    CustomerApproval = 1,
+    DocumentApproval = 2,
+    LocationApproval = 3,
+    PartApproval = 4,
+    ProcedureApproval = 5,
+    ProductApproval = 6,
+    PurchaseOrderApproval = 7,
+    UserApproval = 8,
 }
 
 export class AuditActionResultOfICollectionOfWorkflowActivityModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowActivityModel {

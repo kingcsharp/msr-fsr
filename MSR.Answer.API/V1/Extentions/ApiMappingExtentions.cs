@@ -91,6 +91,14 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
+        public static GetPendingApproval ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
+        {
+            return new GetPendingApproval()
+            {
+                Table = request.Table
+            };
+        }
+
         public static CreateWorkflowModel ToCreateWorkflowGroupCommand(this CreateWorkflowRequest request)
         {
             return new CreateWorkflowModel()

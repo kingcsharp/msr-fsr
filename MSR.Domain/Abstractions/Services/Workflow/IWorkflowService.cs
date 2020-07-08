@@ -8,6 +8,7 @@ namespace MSR.Domain.Abstractions.Services.Workflow
     public interface IWorkflowService
     {
         Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovals command);
+        Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApproval command);
         Task<ICollection<WorkflowActivityModel>> GetWorkFlowAsync(GetWorkflowActivities command);
         Task<ICollection<WorkflowModel>> GetWorkFlowAsync(GetWorkflowModel command);
         Task<WorkflowModel> CreateWorkFlowAsync(CreateWorkflowModel command);

@@ -13,8 +13,11 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ActivityMaps, opt => opt.MapFrom(src => src.ActivityMaps))
                 .ForMember(dest => dest.MemberStages, opt => opt.MapFrom(src => src.MemberStages));
 
+            CreateMap<PendingApprovalModel, ApprovalEntity>();
 
-            CreateMap<UpdateWorkflowModel, Workflow>();
+
+
+        CreateMap<UpdateWorkflowModel, Workflow>();
             CreateMap<WorkflowActivityModel, WorkflowActivity>();
 
             CreateMap<WorkflowActivityMapModel, WorkflowActivityMap>();
@@ -29,6 +32,17 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkflowActivityMap, WorkflowActivityMapModel>();
             CreateMap<WorkflowStageMap, WorkflowStageMapModel>();
             CreateMap<WorkflowActivity, WorkflowActivityModel>();
+
+            CreateMap<ApprovalEntity, PendingApprovalModel>()
+                .ForMember(dest => dest.WorkflowCreatedByName, opt => opt.MapFrom(src => src.Workflow.Created.GetFullName()))
+                .ForMember(dest => dest.WorkflowGroupId, opt => opt.MapFrom(src => src.WorkflowGroupId))
+                .ForMember(dest => dest.WorkflowGroupName, opt => opt.MapFrom(src => src.WorkflowGroup.Name))
+                .ForMember(dest => dest.WorkflowId, opt => opt.MapFrom(src => src.WorkflowId))
+                .ForMember(dest => dest.WorkflowName, opt => opt.MapFrom(src => src.Workflow.Name))
+                .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Name))
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
+                .ForMember(dest => dest.ActivityType, opt => opt.MapFrom(src=>src.ActivityType));
         }
     }
 }

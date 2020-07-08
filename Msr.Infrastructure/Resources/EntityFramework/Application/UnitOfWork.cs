@@ -42,6 +42,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkflowGroupUserMap> _workflowGroupUserMap;
         private IRepository<WorkflowGroupStageMap> _workflowGroupStageMaps;
 
+        private IRepository<DocumentApproval> _documentApprovals;
+        private IRepository<ProductApproval> _productApprovals;
+        
+
         public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
         public IRepository<Customer> Customers { get { return _customers ?? (_customers = new EFRepository<Customer>(Context)); } }
         public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ?? (_customerApprovals = new EFRepository<CustomerApproval>(Context)); } }
@@ -55,6 +59,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Status> Status { get { return _status ?? (_status = new EFRepository<Status>(Context)); } }
         public IRepository<UserRole> UserRoles { get { return _userRoles ?? (_userRoles = new EFRepository<UserRole>(Context)); } }
         public IRepository<PartApproval> PartApprovals { get { return _partApproval ?? (_partApproval = new EFRepository<PartApproval>(Context)); } }
+        public IRepository<DocumentApproval> DocumentApprovals { get { return _documentApprovals ?? (_documentApprovals = new EFRepository<DocumentApproval>(Context)); } }
+        public IRepository<ProductApproval> ProductApprovals { get { return _productApprovals ?? (_productApprovals = new EFRepository<ProductApproval>(Context)); } }
         public IRepository<ProcedureApproval> ProcedureApprovals { get { return _procedureApproval ?? (_procedureApproval = new EFRepository<ProcedureApproval>(Context)); } }
         public IRepository<ProcedureStepApproval> ProcedureStepApprovals { get { return _procedureStepApproval ?? (_procedureStepApproval = new EFRepository<ProcedureStepApproval>(Context)); } }
         public IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get { return _procedureStepDocumentApproval ?? (_procedureStepDocumentApproval = new EFRepository<ProcedureStepDocumentApproval>(Context)); } }

@@ -4,14 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(CustomerApproval))]
-    public partial class CustomerApproval: TrackableEntity
+    public partial class CustomerApproval: ApprovalEntity
     {
         public int CustomerId { get; set; }
 
         public int OldId { get; set; }
-
-        [StringLength(100)]
-        public string Name { get; set; }
 
         [StringLength(100)]
         public string Address { get; set; }
@@ -28,8 +25,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual Customer Customer { get; set; }
 
         public virtual Location Location { get; set; }
-
-        public int StatusId { get; set; }
-        public virtual Status Status { get; set; }
     }
 }

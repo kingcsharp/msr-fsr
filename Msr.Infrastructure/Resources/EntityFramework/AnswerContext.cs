@@ -27,6 +27,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Role> Role { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<PartApproval> PartApproval { get; set; }
+        public DbSet<ProductApproval> ProductApproval { get; set; }
         public DbSet<ProcedureApproval> ProcedureApproval { get; set; }
         public DbSet<ProcedureStepApproval> ProcedureStepApproval { get; set; }
         public DbSet<ProcedureStepDocumentApproval> ProcedureStepDocumentApproval { get; set; }
@@ -42,6 +43,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkflowGroup> WorkflowGroup { get; set; }
         public DbSet<WorkflowGroupRoleMap> WorkflowGroupRoleMap { get; set; }
         public DbSet<WorkflowGroupStageMap> WorkflowGroupStageMap { get; set; }
+
+
 
         public AnswerContext() : base()
         {

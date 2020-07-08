@@ -8,6 +8,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Infrastructure.Resources.Services.Workflow
 {
@@ -20,6 +21,44 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApproval command)
+        {
+            IQueryable<ApprovalEntity> approvalEntity = null;
+            switch (command.Table)
+            {
+                case EnumApprovalTables.CustomerApproval:
+                    approvalEntity = _unitOfWork.CustomerApprovals.Query();
+                    break;
+                case EnumApprovalTables.DocumentApproval:
+                    approvalEntity = _unitOfWork.DocumentApprovals.Query();
+                    break;
+                case EnumApprovalTables.LocationApproval:
+                    approvalEntity = _unitOfWork.LocationApprovals.Query();
+                    break;
+                case EnumApprovalTables.PartApproval:
+                    approvalEntity = _unitOfWork.PartApprovals.Query();
+                    break;
+                case EnumApprovalTables.ProcedureApproval:
+                    approvalEntity = _unitOfWork.ProcedureApprovals.Query();
+                    break;
+                case EnumApprovalTables.ProductApproval:
+                    approvalEntity = _unitOfWork.ProductApprovals.Query();
+                    break;
+                case EnumApprovalTables.PurchaseOrderApproval:
+                    approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query();
+                    break;
+                case EnumApprovalTables.UserApproval:
+                    approvalEntity = _unitOfWork.UserApprovals.Query();
+                    break;
+                default:
+                    break;
+            }
+
+            var approvalEntityList = await approvalEntity.ToListAsync();
+            var ret = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
+            return ret;
         }
 
         public async Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovals command)
@@ -35,9 +74,10 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 Parts = _unitOfWork.PartApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
                 Procedures = _unitOfWork.ProcedureApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
                 PurchaseOrders = _unitOfWork.PurchaseOrderApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                Users = _unitOfWork.UserApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
+                Users = _unitOfWork.UserApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)
             };
         }
+
 
         public async Task<ICollection<WorkflowActivityModel>> GetWorkFlowAsync(GetWorkflowActivities command)
         {
