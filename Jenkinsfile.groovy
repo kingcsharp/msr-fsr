@@ -38,6 +38,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Build & Deploy') {
             parallel {
                 stage('Build and Deploy UI') {
@@ -149,9 +150,9 @@ pipeline {
                 }
             }
         }
-
+        */
         stage("Running API Tests") {
-            agent { label 'master' }
+            agent { label 'jenkins-ecs-slave' }
             steps {
                 script {
                     sh label: '', script: '''curl -u Vi5GHlZj0Cb5sUlC: "https://assertible.com/deployments" -d\'{
