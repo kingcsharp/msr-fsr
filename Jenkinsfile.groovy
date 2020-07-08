@@ -34,7 +34,7 @@ pipeline {
                     sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
                     sh 'ls -la MSR.Domain.Tests/TestResults'
                     //sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                    //step([$class: 'MSTestPublisher', testResultsFile:"**/unit_tests.xml", failOnError: true, keepLongStdio: true])
+                    step([$class: 'MSTestPublisher', testResultsFile:"**/*.trx", failOnError: true, keepLongStdio: true])
                 }
             }
         }
