@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { LoginService } from '../../pages/login/login.service';
 import { take } from 'rxjs/operators';
-import { WorkflowService, PendingApprovalNotification } from '../../services/api.client.generated';
+import { WorkflowService, PendingApprovalNotification, PendingNotificationItem } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Observable } from 'rxjs';
@@ -46,8 +46,11 @@ export class Navbar implements OnInit {
   }
 
   getNotificationCount(notificationData: PendingApprovalNotification) {
-    return notificationData.customers + notificationData.locations + notificationData.parts
-      + notificationData.procedures + notificationData.purchaseOrders + notificationData.users;
+    let total = 0;
+    notificationData.items.forEach(element => {
+      total += element.count;
+    });
+    return total;
   }
 
   sidebarPosition(position): void {

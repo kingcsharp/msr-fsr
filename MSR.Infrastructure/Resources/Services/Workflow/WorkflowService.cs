@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Commanding.Enums;
+using System;
 
 namespace MSR.Infrastructure.Resources.Services.Workflow
 {
@@ -25,8 +26,29 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApproval command)
         {
+            List<PendingApprovalModel> ret = new List<PendingApprovalModel>();
+            if (command.Table == EnumApprovalTables.All)
+            {
+                foreach (int enumVal in Enum.GetValues(typeof(EnumApprovalTables)))
+                {
+                    if (enumVal != (int)EnumApprovalTables.All)
+                    {
+                        ret.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
+                    }
+                }
+            }
+            else
+            {
+                ret.AddRange(await GetPendingApprovalByTable(command.Table));
+            }
+
+            return ret;
+        }
+
+        private async Task<List<PendingApprovalModel>> GetPendingApprovalByTable(EnumApprovalTables table)
+        {
             IQueryable<ApprovalEntity> approvalEntity = null;
-            switch (command.Table)
+            switch (table)
             {
                 case EnumApprovalTables.CustomerApproval:
                     approvalEntity = _unitOfWork.CustomerApprovals.Query();
@@ -67,17 +89,20 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             var inProcressStatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "In Progress").Id;
             var pendingStatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
 
-            return new PendingApprovalNotification()
+            var result = new PendingApprovalNotification()
             {
-                Customers = _unitOfWork.CustomerApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                Locations = _unitOfWork.LocationApprovals.Count(),
-                Parts = _unitOfWork.PartApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                Procedures = _unitOfWork.ProcedureApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                PurchaseOrders = _unitOfWork.PurchaseOrderApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                Users = _unitOfWork.UserApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)
+                Items = new List<PendingNotificationItem>()
+                {
+                    new PendingNotificationItem(){Name="Customers",Table=(int)EnumApprovalTables.CustomerApproval,Count=await _unitOfWork.CustomerApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
+                    new PendingNotificationItem(){Name="Locations",Table=(int)EnumApprovalTables.LocationApproval,Count=await _unitOfWork.LocationApprovals.CountAsync()},
+                    new PendingNotificationItem(){Name="Parts",Table=(int)EnumApprovalTables.PartApproval,Count=await _unitOfWork.PartApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
+                    new PendingNotificationItem(){Name="Procedures",Table=(int)EnumApprovalTables.ProcedureApproval,Count=await _unitOfWork.ProcedureApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
+                    new PendingNotificationItem(){Name="Purchase Orders",Table=(int)EnumApprovalTables.PurchaseOrderApproval,Count=await _unitOfWork.PurchaseOrderApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
+                    new PendingNotificationItem(){Name="Users",Table=(int)EnumApprovalTables.UserApproval,Count=await _unitOfWork.UserApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
+                }
             };
+            return result;
         }
-
 
         public async Task<ICollection<WorkflowActivityModel>> GetWorkFlowAsync(GetWorkflowActivities command)
         {

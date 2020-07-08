@@ -18,7 +18,9 @@ namespace MSR.Domain.Commanding.Enums
         [Description("Purchase Order")]
         PurchaseOrderApproval = 7,
         [Description("User Approval")]
-        UserApproval = 8
+        UserApproval = 8,
+        [Description("All")]
+        All = 9
 
         //[Description("Purchase Order Product Approval")]
         //PurchaseOrderProductApproval = 11,

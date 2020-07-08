@@ -29,8 +29,9 @@ import { ApprovalStagesComponent } from './approval-stages/approval-stages.compo
 
 export const routes = [
   { path: '', redirectTo: 'workflow', pathMatch: 'full' },
+  { path: 'pendingapproval', redirectTo: 'pendingapproval/9', pathMatch: 'full' },
   { path: 'approvalworkflows', component: ApprovalWorkflowComponent, pathMatch: 'full' },
-  { path: 'pendingapproval', component: PendingApprovalsComponent, pathMatch: 'full' },
+  { path: 'pendingapproval/:table', component: PendingApprovalsComponent, pathMatch: 'full' },
   { path: 'approvalgroups', component: ApprovalGroupsComponent, pathMatch: 'full' },
   { path: 'approvalstages', component: ApprovalStagesComponent, pathMatch: 'full' }
 ];

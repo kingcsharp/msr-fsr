@@ -2986,12 +2986,7 @@ export interface IAuditActionResultOfPendingApprovalNotification extends IAuditA
 }
 
 export class PendingApprovalNotification implements IPendingApprovalNotification {
-    customers?: number;
-    locations?: number;
-    parts?: number;
-    procedures?: number;
-    purchaseOrders?: number;
-    users?: number;
+    items?: PendingNotificationItem[] | undefined;
 
     constructor(data?: IPendingApprovalNotification) {
         if (data) {
@@ -3004,12 +2999,11 @@ export class PendingApprovalNotification implements IPendingApprovalNotification
 
     init(_data?: any) {
         if (_data) {
-            this.customers = _data["customers"];
-            this.locations = _data["locations"];
-            this.parts = _data["parts"];
-            this.procedures = _data["procedures"];
-            this.purchaseOrders = _data["purchaseOrders"];
-            this.users = _data["users"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(PendingNotificationItem.fromJS(item));
+            }
         }
     }
 
@@ -3022,23 +3016,61 @@ export class PendingApprovalNotification implements IPendingApprovalNotification
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["customers"] = this.customers;
-        data["locations"] = this.locations;
-        data["parts"] = this.parts;
-        data["procedures"] = this.procedures;
-        data["purchaseOrders"] = this.purchaseOrders;
-        data["users"] = this.users;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
         return data; 
     }
 }
 
 export interface IPendingApprovalNotification {
-    customers?: number;
-    locations?: number;
-    parts?: number;
-    procedures?: number;
-    purchaseOrders?: number;
-    users?: number;
+    items?: PendingNotificationItem[] | undefined;
+}
+
+export class PendingNotificationItem implements IPendingNotificationItem {
+    name?: string | undefined;
+    count?: number;
+    table?: number;
+
+    constructor(data?: IPendingNotificationItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.count = _data["count"];
+            this.table = _data["table"];
+        }
+    }
+
+    static fromJS(data: any): PendingNotificationItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new PendingNotificationItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["count"] = this.count;
+        data["table"] = this.table;
+        return data; 
+    }
+}
+
+export interface IPendingNotificationItem {
+    name?: string | undefined;
+    count?: number;
+    table?: number;
 }
 
 export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfICollectionOfPendingApprovalModel {
