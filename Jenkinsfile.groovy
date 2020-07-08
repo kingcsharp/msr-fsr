@@ -166,7 +166,7 @@ pipeline {
             }
         }
         stage("Run Cypress Test") {
-            agent { label 'jenkins-ecs-slave' }
+            agent { label 'master' }
             steps {
                 script {
                     sh 'docker-compose up'
