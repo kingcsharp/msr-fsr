@@ -30,9 +30,9 @@ pipeline {
                     sh 'rm -rf Msr.Infrastructure'
                     sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
                     sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                    sh 'ls -la MSR.Application.Tests/'
+                    sh 'ls -la MSR.Application.Tests/TestResults'
                     sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                    sh 'ls -la MSR.Domain.Tests/'
+                    sh 'ls -la MSR.Domain.Tests/TestResults'
                     //sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
                     //step([$class: 'MSTestPublisher', testResultsFile:"**/unit_tests.xml", failOnError: true, keepLongStdio: true])
                 }
