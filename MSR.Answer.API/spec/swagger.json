@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://73268cc5edeb.ngrok.io"
+      "url": "https://dev-api.answer.msr-fsr.com"
     }
   ],
   "paths": {
@@ -43,7 +43,7 @@
           "x-position": 1
         },
         "responses": {
-          "400": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
