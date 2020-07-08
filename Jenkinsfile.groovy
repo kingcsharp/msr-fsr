@@ -169,6 +169,7 @@ pipeline {
             agent { label 'master' }
             steps {
                 script {
+                    sh 'rm -rf Msr.Infrastructure'
                     sh 'docker-compose up'
                     sh 'cd MSR.UI/MSR.UI.Answer && yarn'
                     sh './node_modules/.bin/cypress run'
