@@ -1,8 +1,8 @@
 ﻿using MSR.Domain.Commanding;
 
-namespace MSR.Answer.API.V1.Models
+namespace MSR.Domain.Commands.Workflow
 {
-    public class RemoveMenuRoleMap: Command
+    public class DeactivateWorkflow : Command
     {
         public int Id { get; set; }
     }

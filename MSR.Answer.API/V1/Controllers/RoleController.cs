@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
-using MSR.Answer.API.V1.Extentions;
-using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using NSwag.Annotations;
@@ -9,6 +7,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MSR.Domain.Models;
+using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.V1.Extentions;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -41,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers
 
 
         [HttpPatch]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(System.Net.HttpStatusCode.NoContent, typeof(void))]
         public async Task<IActionResult> AddPermissionsToMenuRoleMap([FromBody, Required]UpdateMenuRoleMapRequest request)
         {
             var command = request.ToUpdateMenuRoleMapCommand();
@@ -50,9 +50,10 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpDelete("{id}")]
+        [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> RemoveMenuRoleMap(int id)
         {
-            var command = new MSR.Domain.Commands.RemoveMenuRoleMap() { Id = id };
+            var command = new RemoveMenuRoleMap() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToNoContentResponse();
         }

@@ -18,11 +18,10 @@ import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
 import { CommonGrid } from './models/lib/CommonGrid';
-import { EnumPrivilege } from './models/enums/privileges';
 import { environment } from '../environments/environment';
 
 import * as $ from 'jquery';
-import { UserService, AccountService, API_BASE_URL, WorkflowService, LocationService, RoleService } from './services/api.client.generated';
+import { UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, WorkflowStageService, LocationService, RoleService } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
   CheckAllService,
@@ -61,6 +60,8 @@ const APP_PROVIDERS = [
     Globals,
     AccountService,
     WorkflowService,
+    WorkflowGroupService,
+    WorkflowStageService,
     UserService,
     {
       provide: API_BASE_URL,

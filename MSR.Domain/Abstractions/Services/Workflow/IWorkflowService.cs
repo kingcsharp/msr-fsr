@@ -2,7 +2,7 @@
 using MSR.Domain.Models;
 using System.Threading.Tasks;
 
-namespace MSR.Domain.Abstractions.Services
+namespace MSR.Domain.Abstractions.Services.Workflow
 {
     public interface IWorkflowService
     {

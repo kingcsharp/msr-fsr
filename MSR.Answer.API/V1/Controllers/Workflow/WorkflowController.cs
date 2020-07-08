@@ -8,11 +8,13 @@ using MSR.Domain.Models;
 using System.Threading.Tasks;
 using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
+using Microsoft.AspNetCore.Authorization;
 
-namespace MSR.Answer.API.V1.Controllers
+namespace MSR.Answer.API.V1.Controllers.Workflow
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
+    [AllowAnonymous]
     public class WorkflowController : BaseApiController
     {
         private readonly ILogger _logger;
@@ -31,5 +33,6 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse<PendingApprovalNotification>();
         }
+
     }
 }

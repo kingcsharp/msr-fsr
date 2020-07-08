@@ -1,4 +1,4 @@
-﻿using MSR.Domain.Abstractions.Services;
+﻿using MSR.Domain.Abstractions.Services.Workflow;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -16,7 +16,6 @@ namespace MSR.Application.ApplicationServices
         {
             _workflowService = workflowService;
         }
-
 
         public async Task<ICommandResponse> HandleAsync(GetPendingApprovals command, CancellationToken cancellationToken = default)
         {

@@ -1,0 +1,189 @@
+<h1 class="page-title">
+    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+    {{globals.activeMenu.name}}
+  </h1>
+
+  <widget>
+    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+      currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
+      stateKey="{{gridStorageId}}">
+      <ng-template pTemplate="caption">
+        <div class="text-right">
+          <button *ngIf="canAddStages" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
+            data-cy="add-button">
+            + Add
+          </button>
+          <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+            [gridVersion]="gridVersion" data-cy="usergrid-options">
+          </grid-options>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+            data-cy="usertable-header">
+            {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+        <tr>
+          <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
+            <div class="position-relative">
+              <input id="id" pInputText type="text" tooltip="Search by Id"
+                (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+                [value]="dt.filters['id']?.value">
+              <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
+            </div>
+          </th>
+          <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
+              [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+            </multiselect-wrapper>
+          </th>
+          <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
+            <div class="position-relative">
+              <input pInputText type="text" tooltip="Search by Name"
+                (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
+                [value]="dt.filters['name']?.value">
+              <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+            </div>
+          </th>
+          <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+            <div class="position-relative" tooltip="Search by Created Date">
+              <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+              </pcalendar-wrapper>
+            </div>
+          </th>
+          <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+            <div class="position-relative">
+              <input id="createdByName" pInputText type="text" tooltip="Search by Name"
+                (input)="dt.filter($event.target.value, 'createdByName', 'contains')" class="ui-column-filter"
+                [value]="dt.filters['createdByName']?.value">
+              <i *ngIf="dt.filters['createdByName']?.value" class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'createdByName')"></i>
+            </div>
+          </th>
+  
+          <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+            <div class="position-relative" tooltip="Search by Last Updated On Date">
+              <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'" [datatable]="dt">
+              </pcalendar-wrapper>
+            </div>
+          </th>
+  
+          <th [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+            <div class="position-relative">
+              <input id="lastUpdatedByName" pInputText type="text" tooltip="Search by Name"
+                (input)="dt.filter($event.target.value, 'lastUpdatedByName', 'contains')" class="ui-column-filter"
+                [value]="dt.filters['lastUpdatedByName']?.value">
+              <i *ngIf="dt.filters['lastUpdatedByName']?.value" class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'lastUpdatedByName')"></i>
+            </div>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-workflowStage>
+        <tr class="ui-selectable-row">
+          <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
+            {{workflowStage.id}}
+          </td>
+          <td class="text-center" [hidden]="!cg.isVisibleCol('isActive', gridSettings)">
+            <ng-template [ngIf]="!canActivateStages">
+              <p-inputSwitch disabled="true" [(ngModel)]="workflowStage.isActive"
+                (ngModelChange)="workflowStageStatus(workflowStage)">
+              </p-inputSwitch>
+            </ng-template>
+            <ng-template [ngIf]="canActivateStages">
+              <p-inputSwitch [(ngModel)]="workflowStage.isActive" (ngModelChange)="workflowStageStatus(workflowStage)">
+              </p-inputSwitch>
+            </ng-template>
+          </td>
+          <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
+            {{workflowStage.name}}
+          </td>
+          <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+            {{workflowStage.createdOn | date :'short' }}
+          </td>
+          <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+            {{workflowStage.createdByName }}
+          </td>
+          <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+            {{workflowStage.lastUpdatedOn | date :'short' }}
+          </td>
+          <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+            {{workflowStage.lastUpdatedByName }}
+          </td>
+          <td>
+            <i *ngIf="canEditStages" class="fa fa-cog pointer" tooltip="Edit Workflow Stage"
+              (click)="showDialog(workflowStage)"></i>
+  
+            <i class="far fa-trash-alt pointer" tooltip="Delete Workflow Stage" (click)="removeRow(workflowStage)"></i>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" style="text-align:left">No workflow Stages found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </widget>
+  
+  <p-dialog header="{{ currWorkflowStage.id === undefined ?'Create Workflow Stage':'Edit Workflow Stage'}}"
+    [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+      data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
+      <section class="widget mrg-btm-sm" widget>
+        <header>
+          <h5>
+            <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+            </span>
+            Workflow Details
+          </h5>
+        </header>
+        <div class="widget-body">
+          <fieldset>
+            <legend>
+            </legend>
+            <div class="form-Stage row">
+              <label for="firstName" class="col-md-2 col-form-label text-md-right">
+                Approval Stage Name
+              </label>
+              <div class="col-md-4 ">
+                <input type="text" id="name" name="name" [(ngModel)]="currWorkflowStage.name" data-validate="parsley"
+                  data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                  class="form-control input-transparent" tooltip="Min length 3 characters"
+                  placeholder="Approval Stage Name" data-cy="name-input">
+              </div>
+            </div>
+            <div class="form-Stage row">
+              <label class="col-md-2  col-form-label text-md-right">
+                Is Active
+              </label>
+              <div class="col-md-4 ">
+                <div class="display-inline-block isActive">
+                  <label class="form-check-label" for="isActive" class="switch">
+                    <input class="form-check-input" [(ngModel)]="currWorkflowStage.isActive" name="isActive"
+                      type="checkbox" class="ios" checked id="isActive" />
+                    <i data-cy="isactive-checkbox"></i>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </section>
+      <p-footer>
+        <div class="pull-right">
+          <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+            Save
+          </button>
+          <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+            Cancel
+          </button>
+        </div>
+      </p-footer>
+    </form>
+  </p-dialog>

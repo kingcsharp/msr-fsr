@@ -1,4 +1,5 @@
-﻿using MSR.Domain.Commanding;
+﻿using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using System.Threading;
@@ -7,11 +8,41 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class MenuAppService :
-        ICommandHandler<GetMenu>
+        ICommandHandler<GetMenu>, 
+        ICommandHandler<CreateMenuRoleMap>,
+        ICommandHandler<UpdateMenuRoleMap>,
+        ICommandHandler<RemoveMenuRoleMap>
     {
+
+        private readonly IRoleService _roleService;
+
+        public MenuAppService(IRoleService roleService)
+        {
+            _roleService = roleService;
+        }
+
         public async Task<ICommandResponse> HandleAsync(GetMenu command, CancellationToken cancellationToken = default)
         {
-            return new CommandResponse();
+            var res = new CommandResponse<bool>(true);
+            return res;
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateMenuRoleMap command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _roleService.CreateMenuRoleMapAsync(command);
+            return new CommandResponse<int>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateMenuRoleMap command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _roleService.UpdateMenuRoleMapAsync(command);
+            return new CommandResponse<bool>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(RemoveMenuRoleMap command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _roleService.RemoveMenuRoleMap(command.Id);
+            return new CommandResponse<bool>(ret);
         }
     }
 }

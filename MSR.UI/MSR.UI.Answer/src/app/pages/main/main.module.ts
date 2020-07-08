@@ -1,13 +1,3 @@
-import 'jquery-flot/jquery.flot.js';
-import 'jquery.flot.animator/jquery.flot.animator';
-import 'jquery-flot/jquery.flot.pie.js';
-import 'jquery-flot/jquery.flot.selection.js';
-import 'jquery-flot/jquery.flot.resize.js';
-import 'flot.dashes/jquery.flot.dashes';
-import 'jquery.animate-number/jquery.animateNumber.js';
-import 'jQuery-Mapael/js/jquery.mapael.js';
-import 'jQuery-Mapael/js/maps/usa_states';
-import 'jQuery-Mapael/js/maps/world_countries.js';
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -50,9 +40,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
-import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
-import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -65,9 +52,6 @@ export const routes = [
 @NgModule({
   declarations: [
     // Components / Directives/ Pipes
-    GridOptionsComponent,
-    MultiselectWrapperComponent,
-    PcalendarWrapperComponent,
     AnalyticsComponent,
     MainChartComponent,
     BigStatComponent,
@@ -83,7 +67,6 @@ export const routes = [
     NasdaqSparklineWidgetComponent,
     RealtimeTrafficWidgetComponent,
     YearsMapWidgetComponent
-    // GridOptionsComponent
   ],
   imports: [
     CommonModule,

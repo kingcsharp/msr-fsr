@@ -14,15 +14,16 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<CreateUser>,
         ICommandHandler<DeactivateUser>,
         ICommandHandler<UpdateUser>,
-        ICommandHandler<GetLoggedInUserData>
+        ICommandHandler<GetLoggedInUserData>,
+        ICommandHandler<CreateUserRole>,
+        ICommandHandler<UpdateUserRole>,
+        ICommandHandler<DeleteUserRole>
     {
         private readonly IUserService _userService;
-        private readonly IWorkflowService _workflowService;
 
-        public UserAppService(IUserService userService, IWorkflowService workflowService)
+        public UserAppService(IUserService userService)
         {
             _userService = userService;
-            _workflowService = workflowService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetUsers command, CancellationToken cancellationToken = default)
@@ -53,6 +54,21 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _userService.GetLoggedInUserData(command.UserId);
             return new CommandResponse<User>(ret);
+        }
+
+        public Task<ICommandResponse> HandleAsync(UpdateUserRole command, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ICommandResponse> HandleAsync(CreateUserRole command, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ICommandResponse> HandleAsync(DeleteUserRole command, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
