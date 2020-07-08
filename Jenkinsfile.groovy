@@ -165,6 +165,17 @@ pipeline {
                 }
             }
         }
+        stage("Run Cypress Test") {
+            agent { label 'jenkins-ecs-slave' }
+            steps {
+                script {
+                    sh 'docker-compose up'
+                    sh 'cd MSR.UI/MSR.UI.Answer && yarn'
+                    sh './node_modules/.bin/cypress run'
+                    sh 'cd ../../ && docker-compose down'
+                }
+            }
+        }
     }
 }
 
