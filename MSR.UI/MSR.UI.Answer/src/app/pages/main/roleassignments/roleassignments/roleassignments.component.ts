@@ -1,77 +1,145 @@
 import { Component, OnInit } from '@angular/core';
-import { RoleService, Role, MenuService } from '../../../../services/api.client.generated';
 import { ListboxModule } from 'primeng/listbox';
 import { SelectItem } from 'primeng/api/selectitem';
-import {ButtonModule} from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-roleassignments',
   templateUrl: './roleassignments.template.html',
-  styleUrls: ['./roleassignments.style.scss'],
-  providers: [MenuService]
+  styleUrls: ['./roleassignments.style.scss']
 })
 export class RoleassignmentsComponent implements OnInit {
 
-  cities1: SelectItem[];
+  menuModules: MenuModule[];
 
-  cities2: City[];
+  selectedMenuModule:MenuModule;
 
-  selectedCity1: City;
+  selectedRoleModule:RoleModule;
 
-  selectedCity2: City;
+  updateSuccessful: boolean = false;
+  errorUpdatingPermissions:boolean = false;
+  pendingPermissionsUpdate:boolean = true;
 
-  cities: SelectItem[];
+  pendingPermissions:object[] = new Array();
+ 
+  constructor() {
 
-  selectedCities: string[];
-
-  constructor(private roleService:RoleService, private menuService:MenuService) {
-
-    this.roleService.roleGet("1").subscribe(response => {
-      console.log(response);
-
-      this.menuService.menu("1").subscribe(response => {
-        console.log(response);
-      });
-    });
-    //SelectItem API with label-value pairs
-    this.cities1 = [
-      { label: 'Select City', value: null },
-      { label: 'New York', value: { id: 1, name: 'New York', code: 'NY' } },
-      { label: 'Rome', value: { id: 2, name: 'Rome', code: 'RM' } },
-      { label: 'London', value: { id: 3, name: 'London', code: 'LDN' } },
-      { label: 'Istanbul', value: { id: 4, name: 'Istanbul', code: 'IST' } },
-      { label: 'Paris', value: { id: 5, name: 'Paris', code: 'PRS' } }
-    ];
-
-    //An array of cities
-    this.cities2 = [
-      { name: 'New York', code: 'NY' },
-      { name: 'Rome', code: 'RM' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Paris', code: 'PRS' }
-    ];
-
-    this.cities = [
-      { label: 'Select City', value: null },
-      { label: 'New York', value: { id: 1, name: 'New York', code: 'NY' } },
-      { label: 'Rome', value: { id: 2, name: 'Rome', code: 'RM' } },
-      { label: 'London', value: { id: 3, name: 'London', code: 'LDN' } },
-      { label: 'Istanbul', value: { id: 4, name: 'Istanbul', code: 'IST' } },
-      { label: 'Paris', value: { id: 5, name: 'Paris', code: 'PRS' } }
-    ];
-
+    this.menuModules = this.generateMockData();
+    
+    console.log(this.menuModules);
   }
 
   ngOnInit(): void {
   }
 
+  generateMockData(): MenuModule[] {
+
+    let permissionModules = new Array<PermissionModule>();
+    permissionModules.push({
+      id:1,
+      name: 'Read',
+      value:true,
+      inheritedPermission:false
+    } as PermissionModule)
+    permissionModules.push({
+      id:2,
+      name: 'Write',
+      value:true,
+      inheritedPermission:false
+    } as PermissionModule)
+    permissionModules.push({
+      id:3,
+      name: 'Approve',
+      value:true,
+      inheritedPermission:false
+    } as PermissionModule)
+
+    let inheritedPermissionModules = new Array<PermissionModule>();
+    inheritedPermissionModules.push({
+      id:1,
+      name: 'Read',
+      value:true,
+      inheritedPermission:true
+    } as PermissionModule)
+    inheritedPermissionModules.push({
+      id:2,
+      name: 'Write',
+      value:true,
+      inheritedPermission:true
+    } as PermissionModule)
+    inheritedPermissionModules.push({
+      id:3,
+      name: 'Approve',
+      value:false,
+      inheritedPermission:false
+    } as PermissionModule)
+
+    let roleModules = new Array<RoleModule>();
+    roleModules.push({
+      id:1,
+      name: "Admin",
+      value:true,
+      permissions:permissionModules
+    } as RoleModule);
+    roleModules.push({
+      id:2,
+      name: "CEO",
+      value:false,
+      permissions:inheritedPermissionModules
+    } as RoleModule);
+
+    let menuModules = new Array<MenuModule>();
+    menuModules.push({
+      id:1,
+      name:"People",
+      roles:roleModules,
+    } as MenuModule);
+    menuModules.push({
+      id:2,
+      name:"WIP Menu",
+      roles:roleModules,
+    } as MenuModule);
+
+
+    return menuModules;
+  }
+
+  selectMenuModule(menuModule:MenuModule){
+    this.selectedMenuModule = menuModule;
+  }
+
+  editRolePermissions(roleModule:RoleModule){
+    this.selectedRoleModule = roleModule;
+  }
+
+  roleChanged(event:Event, roleModule:RoleModule){
+    roleModule.value = !roleModule.value;
+    console.log(roleModule);
+  }
+
+  permissionChanged(event:Event, permissionModule:PermissionModule){
+    permissionModule.value = !permissionModule.value;
+    console.log(permissionModule);
+  }
 
 }
 
-export class City {
+export class MenuModule {
   id?: number;
   name: string;
-  code: string;
+  roles: RoleModule[] = new Array<RoleModule>();
+}
 
+export class RoleModule{
+  id?: number;
+  name: string;
+  value:boolean = false;
+  permissions: PermissionModule[] = new Array<PermissionModule>();
+}
+
+export class PermissionModule{
+  id?: number;
+  name: string;
+  value:boolean = false;
+  inheritedPermission: boolean = false;
 }
