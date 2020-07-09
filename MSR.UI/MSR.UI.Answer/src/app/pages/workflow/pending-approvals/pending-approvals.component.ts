@@ -7,7 +7,7 @@ import {
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumApprovalTables } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
@@ -25,6 +25,7 @@ declare let jQuery: any;
 export class PendingApprovalsComponent implements OnInit {
 
   privileges = EnumPrivilege;
+  approvalTables = EnumApprovalTables; //EnumApprovalTables.ProductApproval = 6 in the backend
   defaultView: ViewSaved;
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
@@ -88,7 +89,7 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
     ];
 
-    this.getApprovals(8, this.productData);
+    this.getApprovals(EnumApprovalTables.ProductApproval, this.productData);
     this.route.params.subscribe(routeParams => {
       this.getApprovals(routeParams.table, this.data);
     });

@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ColumnsSaved } from './ColumnsSaved';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
+import { EnumApprovalTables } from '../../models/enums/privileges';
 
 
 
@@ -60,6 +61,16 @@ export class Globals {
             return false;
         }
         const ret = menuItem[0].permissions.indexOf(privilege) > -1;
+        return ret;
+    }
+
+    hasActivityPrivilegeByTableName(tableName, privilege) {
+        var ret = this.user.ApprovalPrivileges[EnumApprovalTables[tableName]].indexOf(privilege) > -1;
+        return ret;
+    }
+
+    hasActivityPrivilege(activityEnumVal, privilege) {
+        var ret = this.user.ApprovalPrivileges[activityEnumVal].indexOf(privilege) > -1;
         return ret;
     }
 

@@ -3,34 +3,23 @@ namespace MSR.Domain.Commanding.Enums
 {
     public enum EnumApprovalTables
     {
-        [Description("Customer Approval")]
+        [Description("CustomerApproval")]
         CustomerApproval = 1,
-        [Description("Document Approval")]
+        [Description("DocumentApproval")]
         DocumentApproval = 2,
-        [Description("Location Approval")]
+        [Description("LocationApproval")]
         LocationApproval = 3,
-        [Description("Part Approval")]
+        [Description("PartApproval")]
         PartApproval = 4,
-        [Description("Procedure Approval")]
+        [Description("ProcedureApproval")]
         ProcedureApproval = 5,
-        [Description("Product Approval")]
+        [Description("ProductApproval")]
         ProductApproval = 6,
-        [Description("Purchase Order")]
+        [Description("PurchaseOrderApproval")]
         PurchaseOrderApproval = 7,
-        [Description("User Approval")]
+        [Description("UserApproval")]
         UserApproval = 8,
         [Description("All")]
         All = 9
-
-        //[Description("Purchase Order Product Approval")]
-        //PurchaseOrderProductApproval = 11,
-        //[Description("Procedure Step Approval")]
-        ////ProcedureStepApproval = 6,
-        //[Description("Procedure Step Document Approval")]
-        //ProcedureStepDocumentApproval = 7,
-        //[Description("Procedure Step Monitor Approval")]
-        //ProcedureStepMonitorApproval = 8,
-        //[Description("User Role Approval")]
-        //UserRoleApproval = 13
     }
 }

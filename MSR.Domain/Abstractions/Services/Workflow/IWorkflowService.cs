@@ -14,6 +14,6 @@ namespace MSR.Domain.Abstractions.Services.Workflow
         Task<WorkflowModel> CreateWorkFlowAsync(CreateWorkflowModel command);
         Task<WorkflowModel> UpdateWorkFlowAsync(UpdateWorkflowModel command);
         Task DeactivateWorkFlowAsync(DeactivateWorkflowModel command);
-        
+        Task<ICollection<WorkflowLinkModel>> GetAllMyActivitiesPrivileges(int? answerUserId);
     }
 }

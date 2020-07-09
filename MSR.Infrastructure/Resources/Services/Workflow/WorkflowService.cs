@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Commanding.Enums;
 using System;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.Workflow
 {
@@ -24,6 +25,68 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             _mapper = mapper;
         }
 
+        public async Task<ICollection<WorkflowLinkModel>> GetAllMyActivitiesPrivileges(int? answerUserId)
+        {
+            var workflowMenuRoles = new List<WorkflowLinkModel>();
+            if (answerUserId == null)
+            {
+                return workflowMenuRoles;
+            }
+
+            var workflowGroupIds = await _unitOfWork.WorkflowGroupUserMaps.Query()
+                 .Where(y => y.UserId == answerUserId.Value)
+                 .Select(x => x.WorkflowGroupId).Distinct()
+                 .ToListAsync();
+
+            var workflowGroups = await _unitOfWork.WorkflowGroups.Query()
+                 .Select(x => new { x.Id, Roles = x.GroupRoles })
+                 .Where(x => workflowGroupIds.Contains(x.Id))
+                 .ToListAsync();
+
+            var workflowStages = await _unitOfWork.WorkflowGroupStageMaps.Query()
+                .Where(x => workflowGroupIds.Contains(x.WorkflowGroupId))
+                .Select(x => new { x.WorkflowGroupId, x.WorkflowStageId }).ToListAsync();
+
+            var stagesIds = workflowStages.Select(m => m.WorkflowStageId).ToList();
+
+            var workflowStagesMap = await _unitOfWork.WorkflowStagesMap.Query()
+                .Where(x => stagesIds.Contains(x.WorkflowStageId))
+                .Select(x => new { x.WorkflowId, x.WorkflowStageId }).ToListAsync();
+
+            var workflowIds = workflowStagesMap.Select(x => x.WorkflowId).ToList();
+
+            var workflowActivities = await _unitOfWork.WorkflowActivityMaps.Query()
+                .Where(x => workflowIds.Contains(x.WorkflowId))
+                .Select(x => new { x.WorkflowActivityId, x.WorkflowActivity.ApprovalTableName, x.WorkflowActivity.MenuItemId, x.WorkflowId }).ToListAsync();
+
+
+            foreach (var activity in workflowActivities)
+            {
+                var wfLink = new WorkflowLinkModel()
+                {
+                    WorkflowActivity = activity.WorkflowActivityId,
+                    ApprovalTableName = activity.ApprovalTableName,
+                    WorkflowId = activity.WorkflowId,
+                    MenuItemId = activity.MenuItemId
+                };
+                foreach (var item in workflowStagesMap.Where(item => wfLink.WorkflowId == item.WorkflowId))
+                {
+                    wfLink.WorkflowStageId = item.WorkflowId;
+                    foreach (var wfStage in workflowStages.Where(wfStage => wfStage.WorkflowStageId == wfLink.WorkflowStageId))
+                    {
+                        wfLink.WorkflowGroupId = wfStage.WorkflowGroupId;
+                        foreach (var wfGroups in workflowGroups.Where(wfGroups => wfLink.WorkflowGroupId == wfGroups.Id))
+                        {
+                            wfLink.RoleIds = wfGroups.Roles.Select(x => x.RoleId).ToList();
+                        }
+                    }
+                }
+                workflowMenuRoles.Add(wfLink);
+            }
+
+            return workflowMenuRoles;
+        }
+
         public async Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApproval command)
         {
             List<PendingApprovalModel> ret = new List<PendingApprovalModel>();
@@ -31,13 +94,13 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             {
                 foreach (int enumVal in Enum.GetValues(typeof(EnumApprovalTables)))
                 {
-                    if (enumVal != (int)EnumApprovalTables.All)
+                    if (enumVal != (int)EnumApprovalTables.All && DelegateHandler.CanReadActivity((EnumApprovalTables)enumVal))
                     {
                         ret.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
                     }
                 }
             }
-            else
+            else if (DelegateHandler.CanReadActivity(command.Table))
             {
                 ret.AddRange(await GetPendingApprovalByTable(command.Table));
             }
@@ -47,6 +110,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         private async Task<List<PendingApprovalModel>> GetPendingApprovalByTable(EnumApprovalTables table)
         {
+
+
             IQueryable<ApprovalEntity> approvalEntity = null;
             switch (table)
             {
@@ -85,22 +150,42 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovals command)
         {
-            //TODO: Make this less brittle
-            var inProcressStatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "In Progress").Id;
-            var pendingStatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
+            var statuss = _unitOfWork.Status.Query().Where(i => i.Name == "In Progress" || i.Name == "Pending").ToList();
+            var inProcressStatusId = statuss.FirstOrDefault(i => i.Name == "In Progress").Id;
+            var pendingStatusId = statuss.FirstOrDefault(i => i.Name == "Pending").Id;
+
+            var pendingNotificationItems = new List<PendingNotificationItem>() { };
+
+            if (DelegateHandler.CanReadActivity(EnumApprovalTables.CustomerApproval))
+            {
+                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Customers", Table = (int)EnumApprovalTables.CustomerApproval, Count = await _unitOfWork.CustomerApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+            }
+            if (DelegateHandler.CanReadActivity(EnumApprovalTables.LocationApproval))
+            {
+                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Locations", Table = (int)EnumApprovalTables.LocationApproval, Count = await _unitOfWork.LocationApprovals.CountAsync() });
+            }
+            if (DelegateHandler.CanReadActivity(EnumApprovalTables.PartApproval))
+            {
+                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Parts", Table = (int)EnumApprovalTables.PartApproval, Count = await _unitOfWork.PartApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+            }
+            if (DelegateHandler.CanReadActivity(EnumApprovalTables.ProcedureApproval))
+            {
+                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Procedures", Table = (int)EnumApprovalTables.ProcedureApproval, Count = await _unitOfWork.ProcedureApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+            }
+            if (DelegateHandler.CanReadActivity(EnumApprovalTables.PurchaseOrderApproval))
+            {
+                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Purchase Orders", Table = (int)EnumApprovalTables.PurchaseOrderApproval, Count = await _unitOfWork.PurchaseOrderApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+            }
+            if (DelegateHandler.CanReadActivity(EnumApprovalTables.UserApproval))
+            {
+                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Users", Table = (int)EnumApprovalTables.UserApproval, Count = await _unitOfWork.UserApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+            }
 
             var result = new PendingApprovalNotification()
             {
-                Items = new List<PendingNotificationItem>()
-                {
-                    new PendingNotificationItem(){Name="Customers",Table=(int)EnumApprovalTables.CustomerApproval,Count=await _unitOfWork.CustomerApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
-                    new PendingNotificationItem(){Name="Locations",Table=(int)EnumApprovalTables.LocationApproval,Count=await _unitOfWork.LocationApprovals.CountAsync()},
-                    new PendingNotificationItem(){Name="Parts",Table=(int)EnumApprovalTables.PartApproval,Count=await _unitOfWork.PartApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
-                    new PendingNotificationItem(){Name="Procedures",Table=(int)EnumApprovalTables.ProcedureApproval,Count=await _unitOfWork.ProcedureApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
-                    new PendingNotificationItem(){Name="Purchase Orders",Table=(int)EnumApprovalTables.PurchaseOrderApproval,Count=await _unitOfWork.PurchaseOrderApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
-                    new PendingNotificationItem(){Name="Users",Table=(int)EnumApprovalTables.UserApproval,Count=await _unitOfWork.UserApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId)},
-                }
+                Items = pendingNotificationItems
             };
+
             return result;
         }
 
