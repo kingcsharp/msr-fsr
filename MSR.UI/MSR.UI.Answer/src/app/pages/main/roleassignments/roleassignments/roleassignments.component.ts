@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ListboxModule } from 'primeng/listbox';
-import { SelectItem } from 'primeng/api/selectitem';
-import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-roleassignments',
@@ -11,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 export class RoleassignmentsComponent implements OnInit {
 
   menuModules: MenuModule[];
+  originalMenuModules: MenuModule[];
 
   selectedMenuModule:MenuModule;
 
@@ -18,20 +16,20 @@ export class RoleassignmentsComponent implements OnInit {
 
   updateSuccessful: boolean = false;
   errorUpdatingPermissions:boolean = false;
-  pendingPermissionsUpdate:boolean = true;
+  pendingPermissionsUpdate:boolean = false;
 
-  pendingPermissions:object[] = new Array();
+  pendingPermissions:UpdatePermissionsEvent[] = new Array<UpdatePermissionsEvent>();
  
   constructor() {
 
-    this.menuModules = this.generateMockData();
-    
-    console.log(this.menuModules);
+    this.originalMenuModules = this.generateMockData();
+    this.menuModules = [...this.originalMenuModules];
   }
 
   ngOnInit(): void {
   }
 
+  //TODO: There are here just for development
   generateMockData(): MenuModule[] {
 
     let permissionModules = new Array<PermissionModule>();
@@ -112,16 +110,77 @@ export class RoleassignmentsComponent implements OnInit {
     this.selectedRoleModule = roleModule;
   }
 
-  roleChanged(event:Event, roleModule:RoleModule){
+  roleChanged(event:Event, menuModule:MenuModule, roleModule:RoleModule){
     roleModule.value = !roleModule.value;
-    console.log(roleModule);
+    this.pendingPermissionsUpdate = true;
+
+    if(roleModule.value){
+      this.pendingPermissions.push({
+        menuModule:menuModule,
+        roleModule:roleModule,
+        permissionModule:null,
+        event:'add'
+      } as UpdatePermissionsEvent);
+
+      this.selectedRoleModule = roleModule;
+    }else{
+      this.pendingPermissions.push({
+        menuModule:menuModule,
+        roleModule:roleModule,
+        permissionModule:null,
+        event:'remove'
+      } as UpdatePermissionsEvent);
+
+      this.selectedRoleModule = null;
+    }
   }
 
-  permissionChanged(event:Event, permissionModule:PermissionModule){
+  permissionChanged(event:Event, menuModule:MenuModule, roleModule:RoleModule, permissionModule:PermissionModule){
     permissionModule.value = !permissionModule.value;
-    console.log(permissionModule);
+    this.pendingPermissionsUpdate = true;
+
+    if(permissionModule.value){
+      this.pendingPermissions.push({
+        menuModule:menuModule,
+        roleModule:roleModule,
+        permissionModule:permissionModule,
+        event:'add'
+      } as UpdatePermissionsEvent);
+
+    }else{
+      this.pendingPermissions.push({
+        menuModule:menuModule,
+        roleModule:roleModule,
+        permissionModule:permissionModule,
+        event:'remove'
+      } as UpdatePermissionsEvent);
+    }
   }
 
+  clearPendingChanges(){
+
+    this.pendingPermissions.length = 0;
+    this.menuModules = this.originalMenuModules;
+    this.selectedMenuModule = null;
+    this.selectedRoleModule = null;
+    this.updateSuccessful = false;
+    this.errorUpdatingPermissions = false;
+    this.pendingPermissionsUpdate = false;
+
+  }
+
+  savePendingChanges(){
+
+    this.clearPendingChanges();
+    this.updateSuccessful = true;
+  }
+}
+//TODO: There are here just for development and can possibly be moved to the models folder or removed based on the web api
+export class UpdatePermissionsEvent{
+  menuModule: MenuModule;
+  roleModule: RoleModule;
+  permissionModule?: PermissionModule ;
+  event: string;
 }
 
 export class MenuModule {
