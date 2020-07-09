@@ -62,6 +62,10 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Resources.EntityFramework.Entities.Part, Domain.Models.Part> ();
             CreateMap<CreatePart, PartApproval>();
             CreateMap<CreatePart, Part>();
+            CreateMap<UpdatePart, PartApproval>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdatePart, Part>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         }
     }

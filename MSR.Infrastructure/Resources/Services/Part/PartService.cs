@@ -67,7 +67,39 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<Domain.Models.Part> UpdatePartAsync(UpdatePart command)
         {
-            throw new DomainException("unimplemented");
+            var current = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            _unitOfWork.Parts.Detach(current);
+
+            var user = await _unitOfWork.GetLoggedInUserAsync();
+            Domain.Models.Part ret;
+
+            if (user.CanApprove(EnumMenuItem.Parts))
+            {
+                var part = _mapper.Map(command, current);
+                await _unitOfWork.LogApprovalTransaction(part, part.Id);
+
+                _unitOfWork.Parts.Update(part);
+                await _unitOfWork.SaveChangesAsync();
+
+                ret = _mapper.Map<Domain.Models.Part>(part);
+            }
+            else
+            {
+                var approval = _mapper.Map<PartApproval>(command);
+                _unitOfWork.PartApprovals.Add(approval);
+                await _unitOfWork.SaveChangesAsync();
+
+                ret = _mapper.Map<Domain.Models.Part>(approval);
+            }
+
+            return ret;
+
         }
     }
 }
