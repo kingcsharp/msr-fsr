@@ -117,7 +117,7 @@ export class UserComponent implements OnInit {
     if (ctrl.getLocationsFlag) {
       return ctrl.locations;
     }
-    this.locationService.location(null, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.returnedObject.map((x) => {
           ctrl.locations.push({ label: x.name, value: x.id });
