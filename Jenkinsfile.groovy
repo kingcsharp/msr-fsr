@@ -174,6 +174,7 @@ pipeline {
                     sh 'docker-compose up --build -d'
                     sh './count_containers.sh running'
                     sh 'cd MSR.UI/MSR.UI.Answer && yarn'
+                    sh 'npm install cypress --save-dev'
                     sh './node_modules/.bin/cypress run'
                     sh 'cd ../../ && docker-compose down'
                 }
