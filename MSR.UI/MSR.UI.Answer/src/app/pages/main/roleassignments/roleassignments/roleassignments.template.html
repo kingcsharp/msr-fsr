@@ -13,16 +13,19 @@
             There was an error saving permissions, please try again later
         </div>
         <div class="alert alert-warning col-12 pendingupdates-alert" role="alert" *ngIf="pendingPermissionsUpdate == true">
-            You have permissions pending to be saved.
+            You have permissions pending to be saved
             <ol>
-                <li><i class="fas fa-plus-circle m-2"></i>Menu A Add CFO Role Add CanWrite Permission</li>
-                <li><i class="fas fa-minus-circle m-2"></i>Menu A Add CFO Role Add CanWrite Permission</li>
+                <li *ngFor="let pendingPermission of pendingPermissions">
+                    <i class="fas fa-minus-circle m-2" *ngIf="pendingPermission.event == 'remove'"></i>
+                    <i class="fas fa-plus-circle m-2" *ngIf="pendingPermission.event == 'add'"></i>
+                    {{pendingPermission.menuModule.name}} {{pendingPermission.permissionModule == null ?  pendingPermission.event : ''}} {{pendingPermission.roleModule.name}} {{pendingPermission.permissionModule != null ?  pendingPermission.event : ''}} {{pendingPermission.permissionModule != null ?  pendingPermission.permissionModule.name : ''}}
+                </li>
             </ol>
         </div>
     </div>
     <div class="row d-flex justify-content-end">
-        <button pButton type="button" label="Save" class="ui-button-raised m-2"></button>
-        <button pButton type="button" label="Cancel" class="ui-button-raised ui-button-danger m-2"></button>
+        <button type="button" class="btn btn-primary m-2" (click)="savePendingChanges()" [disabled]="pendingPermissions.length === 0">Save</button>
+        <button type="button"class="btn btn-danger ui-button-danger m-2" (click)="clearPendingChanges()" [disabled]="pendingPermissions.length === 0">Cancel</button>
     </div>
     <div class="row">
         <div class="col-4">
@@ -38,10 +41,11 @@
             <ul class="list-group" *ngIf="selectedMenuModule != null">
                 <li class="list-group-item d-flex justify-content-between" *ngFor="let roleModule of selectedMenuModule.roles">
                     <input type="checkbox" class="form-check-input" id="{{ roleModule.id }}" [checked]="roleModule.value" 
-                    (change)="roleChanged($event,roleModule)">
-                    <!--(change)="roleModule.value = !roleModule.value">-->
+                    (change)="roleChanged($event,selectedMenuModule,roleModule)">
                     <label class="form-check-label" for="{{ roleModule.id }}">{{ roleModule.name }} </label>
-                    <i class="fas fa-edit" (click)="editRolePermissions(roleModule)"></i>
+                    <button type="button" class="btn btn-warning" (click)="editRolePermissions(roleModule)" [disabled]="!roleModule.value">
+                        <i class="fas fa-edit editpermissions-icon"></i> Edit
+                    </button>
                 </li>
             </ul>
         </div>
@@ -50,9 +54,9 @@
             <ul class="list-group" *ngIf="selectedRoleModule != null">
                 <li class="list-group-item  d-flex justify-content-between" *ngFor="let permissionModule of selectedRoleModule.permissions">
                     <input type="checkbox" class="form-check-input" id="{{ permissionModule.id }}" [checked]="permissionModule.value"
-                     (change)="permissionChanged($event,permissionModule)" [disabled]="permissionModule.inheritedPermission">
+                     (change)="permissionChanged($event,selectedMenuModule,selectedRoleModule,permissionModule)" [disabled]="permissionModule.inheritedPermission">
                     <label class="form-check-label" for="{{ permissionModule.id }}">{{ permissionModule.name }} </label>
-                    <i class="fas fa-lock" *ngIf="permissionModule.inheritedPermission"></i>
+                    <i class="fas fa-lock fa-lg" *ngIf="permissionModule.inheritedPermission"></i>
                 </li>
             </ul>
         </div>
