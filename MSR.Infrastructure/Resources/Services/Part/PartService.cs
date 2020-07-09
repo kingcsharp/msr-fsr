@@ -4,7 +4,10 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +41,29 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<Domain.Models.Part> CreatePartAsync(CreatePart command)
         {
-            throw new DomainException("unimplemented");
+            var user = await _unitOfWork.GetLoggedInUserAsync();
+            Domain.Models.Part ret;
+
+            if (user.CanApprove(EnumMenuItem.Parts))
+            {
+                Part part = _mapper.Map<EntityFramework.Entities.Part>(command);
+                await _unitOfWork.LogApprovalTransaction(part, part.Id);
+
+                _unitOfWork.Parts.Add(part);
+                await _unitOfWork.SaveChangesAsync();
+
+                ret = _mapper.Map<Domain.Models.Part>(part);
+            }
+            else
+            {
+                var approval = _mapper.Map<PartApproval>(command);
+                _unitOfWork.PartApprovals.Add(approval);
+                await _unitOfWork.SaveChangesAsync();
+
+                ret = _mapper.Map<Domain.Models.Part>(approval);
+            }
+
+            return ret;
         }
         public async Task<Domain.Models.Part> UpdatePartAsync(UpdatePart command)
         {

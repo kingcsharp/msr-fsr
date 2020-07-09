@@ -60,6 +60,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
 
             CreateMap<Resources.EntityFramework.Entities.Part, Domain.Models.Part> ();
+            CreateMap<CreatePart, PartApproval>();
+            CreateMap<CreatePart, Part>();
 
         }
     }
