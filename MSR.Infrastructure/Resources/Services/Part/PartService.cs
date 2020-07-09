@@ -74,8 +74,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            _unitOfWork.Parts.Detach(current);
-
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Part ret;
 
