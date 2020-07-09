@@ -246,8 +246,19 @@
         "tags": [
           "Part"
         ],
-        "operationId": "Part_GetParts",
+        "operationId": "Part_GetPart",
         "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true,
+              "example": 2147483647
+            },
+            "x-position": 1
+          },
           {
             "name": "version",
             "in": "path",
@@ -256,16 +267,16 @@
               "type": "string",
               "example": "1"
             },
-            "x-position": 1
+            "x-position": 2
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfPart"
+                  "$ref": "#/components/schemas/AuditActionResultOfPart"
                 }
               }
             }
@@ -283,7 +294,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -324,7 +336,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -343,49 +356,6 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfPart"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v{version}/Part/{id}": {
-      "get": {
-        "tags": [
-          "Part"
-        ],
-        "operationId": "Part_GetPart",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "example": 2147483647
-            },
-            "x-position": 1
-          },
-          {
-            "name": "version",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1"
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -1430,6 +1400,215 @@
         "example": {
             "menuId": 2147483647,
             "roleId": 2147483647
+        }
+      },
+      "UpdateMenuRoleMapRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "menuRoleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "canRead": {
+            "type": "boolean"
+          },
+          "canCreate": {
+            "type": "boolean"
+          },
+          "canEdit": {
+            "type": "boolean"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "canActivate": {
+            "type": "boolean"
+          },
+          "canApprove": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AuditActionResultOfICollectionOfPart": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Part"
+                }
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "Part": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "partNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "oemPartNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumCycles": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfPart": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Part"
+                  }
+                ]
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "CreatePartRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "partNumber"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "partNumber": {
+            "type": "string",
+            "minLength": 1
+          },
+          "oemPartNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumCycles": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "example": {
+            "name": "TESTNAME1594327234",
+            "partNumber": "TESTPARTNUM1594327234",
+            "oemPartNumber": "TESTOEMPARTNUM1594327234"
+        }
+      },
+      "UpdatePartRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "partNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "oemPartNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumCycles": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "example": {
+            "id": 2,
+            "name": "TESTNAME1594327266",
+            "partNumber": "TESTPARTNUM1594327266",
+            "oemPartNumber": "TESTOEMPARTNUM1594327266"
         }
       },
       "AuditActionResultOfICollectionOfRole": {
