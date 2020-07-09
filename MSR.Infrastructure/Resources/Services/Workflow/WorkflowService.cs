@@ -87,67 +87,6 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             return workflowMenuRoles;
         }
 
-        public async Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApproval command)
-        {
-            List<PendingApprovalModel> ret = new List<PendingApprovalModel>();
-            if (command.Table == EnumApprovalTables.All)
-            {
-                foreach (int enumVal in Enum.GetValues(typeof(EnumApprovalTables)))
-                {
-                    if (enumVal != (int)EnumApprovalTables.All && DelegateHandler.CanReadActivity((EnumApprovalTables)enumVal))
-                    {
-                        ret.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
-                    }
-                }
-            }
-            else if (DelegateHandler.CanReadActivity(command.Table))
-            {
-                ret.AddRange(await GetPendingApprovalByTable(command.Table));
-            }
-
-            return ret;
-        }
-
-        private async Task<List<PendingApprovalModel>> GetPendingApprovalByTable(EnumApprovalTables table)
-        {
-
-
-            IQueryable<ApprovalEntity> approvalEntity = null;
-            switch (table)
-            {
-                case EnumApprovalTables.CustomerApproval:
-                    approvalEntity = _unitOfWork.CustomerApprovals.Query();
-                    break;
-                case EnumApprovalTables.DocumentApproval:
-                    approvalEntity = _unitOfWork.DocumentApprovals.Query();
-                    break;
-                case EnumApprovalTables.LocationApproval:
-                    approvalEntity = _unitOfWork.LocationApprovals.Query();
-                    break;
-                case EnumApprovalTables.PartApproval:
-                    approvalEntity = _unitOfWork.PartApprovals.Query();
-                    break;
-                case EnumApprovalTables.ProcedureApproval:
-                    approvalEntity = _unitOfWork.ProcedureApprovals.Query();
-                    break;
-                case EnumApprovalTables.ProductApproval:
-                    approvalEntity = _unitOfWork.ProductApprovals.Query();
-                    break;
-                case EnumApprovalTables.PurchaseOrderApproval:
-                    approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query();
-                    break;
-                case EnumApprovalTables.UserApproval:
-                    approvalEntity = _unitOfWork.UserApprovals.Query();
-                    break;
-                default:
-                    break;
-            }
-
-            var approvalEntityList = await approvalEntity.ToListAsync();
-            var ret = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
-            return ret;
-        }
-
         public async Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovals command)
         {
             var statuss = _unitOfWork.Status.Query().Where(i => i.Name == "In Progress" || i.Name == "Pending").ToList();

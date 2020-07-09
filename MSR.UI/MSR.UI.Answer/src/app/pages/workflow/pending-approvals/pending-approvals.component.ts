@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  WorkflowService, WorkflowModel, WorkflowStageMapModel, WorkflowActivityMapModel,
+  WorkflowService, WorkflowModel, WorkflowStageMapModel, WorkflowActivityMapModel, AuditActionResult,
   AuditActionResultOfWorkflowModel, CreateWorkflowRequest, UpdateWorkflowRequest, WorkflowActivityModel,
-  WorkflowGroupService, WorkflowStageService
+  WorkflowGroupService, WorkflowStageService, WorkflowPendingApprovalService
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -33,6 +33,7 @@ export class PendingApprovalsComponent implements OnInit {
   gridSettings2: ColumnsSaved[];
   productData: any = [];
   data: any = [];
+  currAction: any = {};
 
 
   roles: any[];
@@ -52,16 +53,21 @@ export class PendingApprovalsComponent implements OnInit {
   getAllActivities: boolean = false;
   tables: any[] = [];
   statuss: any[] = [];
+  approveAction: any;
+  cancelAction: any;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowService: WorkflowService, private route: ActivatedRoute,
-    private workflowGroupService: WorkflowGroupService, private workflowStageService: WorkflowStageService) {
+    private workflowGroupService: WorkflowGroupService, private workflowStageService: WorkflowStageService,
+    private workflowPendingApprovalService: WorkflowPendingApprovalService) {
 
   }
 
   ngOnInit(): void {
     this.currWorkflow = new WorkflowModel();
     this.gridStorageId = 'approvalGrid' + this.elem.nativeElement.tagName.toLowerCase();
+    this.approveAction = { 'Header': 'Pending Approval', 'Action': 'Approve' };
+    this.cancelAction = { 'Header': 'Pending Approval', 'Action': 'Cancel' };
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'activityType', label: 'Activity Type', visible: true }),
@@ -99,7 +105,7 @@ export class PendingApprovalsComponent implements OnInit {
     const dataArr = data;
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowService.pendingApproval(table, env.apiVersion).pipe(take(1))
+    this.workflowPendingApprovalService.workflowPendingApprovalGet(table, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.emptyArr(dataArr);
         dataArr.push(...response.object);
@@ -131,7 +137,46 @@ export class PendingApprovalsComponent implements OnInit {
     }
   }
 
+  showDialog(action, approval: any) {
+    if (this.globals.hasActivityPrivilegeByTableName(approval.activityType, this.privileges.CanApprove)) {
+      this.display = true;
+      this.currAction.action = action;
+      this.currAction.approval = approval;
+      this.currAction.id = approval.id;
+      this.currAction.activityType = approval.activityType;
+    } else {
+      this.display = false;
+    }
+  }
 
+  clseDialog() {
+    this.display = false;
+  }
+
+  onWorkflowSubmit() {
+    this.globals.showLoader(true);
+    const ctrl = this;
+    debugger;
+    if (this.currAction.action === this.approveAction) {
+      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, env.apiVersion)
+        .pipe(take(1)).subscribe(responseHandler((resp) => {
+          debugger;
+
+        }, () => {
+          // DO not update user
+        }))
+    }
+    else {
+      this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, env.apiVersion)
+        .pipe(take(1)).subscribe(responseHandler((resp) => {
+          this.currAction.approval.status = resp.object.status;
+          this.addToGridStatusDropdown(resp.object);
+          ctrl.clseDialog(); 
+        }, () => {
+          // DO not update user
+        }));
+    }
+  }
 
 
 }

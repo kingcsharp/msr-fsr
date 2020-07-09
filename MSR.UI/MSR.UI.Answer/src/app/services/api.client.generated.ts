@@ -939,6 +939,191 @@ export class UserService {
 }
 
 @Injectable()
+export class WorkflowPendingApprovalService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    workflowPendingApprovalGet(table: EnumApprovalTables | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (table === null)
+            throw new Error("The parameter 'table' cannot be null.");
+        else if (table !== undefined)
+            url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowPendingApprovalGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowPendingApprovalGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfPendingApprovalModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfPendingApprovalModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowPendingApprovalGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfPendingApprovalModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfPendingApprovalModel>(<any>null);
+    }
+
+    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (table === null)
+            throw new Error("The parameter 'table' cannot be null.");
+        else if (table !== undefined)
+            url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowPendingApprovalPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowPendingApprovalPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowPendingApprovalPost(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    workflowPendingApprovalDelete(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (table === null)
+            throw new Error("The parameter 'table' cannot be null.");
+        else if (table !== undefined)
+            url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkflowPendingApprovalDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkflowPendingApprovalDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPendingApprovalModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPendingApprovalModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkflowPendingApprovalDelete(response: HttpResponseBase): Observable<AuditActionResultOfPendingApprovalModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPendingApprovalModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPendingApprovalModel>(<any>null);
+    }
+}
+
+@Injectable()
 export class WorkflowService {
     private http: HttpClient;
     private baseUrl: string;
@@ -998,61 +1183,6 @@ export class WorkflowService {
             }));
         }
         return _observableOf<AuditActionResultOfPendingApprovalNotification>(<any>null);
-    }
-
-    pendingApproval(table: EnumApprovalTables | undefined, version: string): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
-        let url_ = this.baseUrl + "/v{version}/Workflow/pendingApproval?";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (table === null)
-            throw new Error("The parameter 'table' cannot be null.");
-        else if (table !== undefined)
-            url_ += "Table=" + encodeURIComponent("" + table) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingApproval(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPendingApproval(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfPendingApprovalModel>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResultOfICollectionOfPendingApprovalModel>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPendingApproval(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPendingApprovalModel> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfPendingApprovalModel.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResultOfICollectionOfPendingApprovalModel>(<any>null);
     }
 
     activity(version: string): Observable<AuditActionResultOfICollectionOfWorkflowActivityModel> {
@@ -2948,131 +3078,6 @@ export interface IUpdateUserRequest extends ICreateUserRequest {
     id: number;
 }
 
-export class AuditActionResultOfPendingApprovalNotification extends AuditActionResult implements IAuditActionResultOfPendingApprovalNotification {
-    object?: PendingApprovalNotification | undefined;
-    returnedObject?: any | undefined;
-
-    constructor(data?: IAuditActionResultOfPendingApprovalNotification) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? PendingApprovalNotification.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfPendingApprovalNotification {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfPendingApprovalNotification();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfPendingApprovalNotification extends IAuditActionResult {
-    object?: PendingApprovalNotification | undefined;
-    returnedObject?: any | undefined;
-}
-
-export class PendingApprovalNotification implements IPendingApprovalNotification {
-    items?: PendingNotificationItem[] | undefined;
-
-    constructor(data?: IPendingApprovalNotification) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(PendingNotificationItem.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): PendingApprovalNotification {
-        data = typeof data === 'object' ? data : {};
-        let result = new PendingApprovalNotification();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IPendingApprovalNotification {
-    items?: PendingNotificationItem[] | undefined;
-}
-
-export class PendingNotificationItem implements IPendingNotificationItem {
-    name?: string | undefined;
-    count?: number;
-    table?: number;
-
-    constructor(data?: IPendingNotificationItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.count = _data["count"];
-            this.table = _data["table"];
-        }
-    }
-
-    static fromJS(data: any): PendingNotificationItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new PendingNotificationItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["count"] = this.count;
-        data["table"] = this.table;
-        return data; 
-    }
-}
-
-export interface IPendingNotificationItem {
-    name?: string | undefined;
-    count?: number;
-    table?: number;
-}
-
 export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfICollectionOfPendingApprovalModel {
     object?: PendingApprovalModel[] | undefined;
     returnedObject?: any | undefined;
@@ -3207,6 +3212,169 @@ export enum EnumApprovalTables {
     ProductApproval = 6,
     PurchaseOrderApproval = 7,
     UserApproval = 8,
+    All = 9,
+}
+
+export class AuditActionResultOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalModel {
+    object?: PendingApprovalModel | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfPendingApprovalModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PendingApprovalModel.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPendingApprovalModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPendingApprovalModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfPendingApprovalModel extends IAuditActionResult {
+    object?: PendingApprovalModel | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class AuditActionResultOfPendingApprovalNotification extends AuditActionResult implements IAuditActionResultOfPendingApprovalNotification {
+    object?: PendingApprovalNotification | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfPendingApprovalNotification) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PendingApprovalNotification.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPendingApprovalNotification {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPendingApprovalNotification();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfPendingApprovalNotification extends IAuditActionResult {
+    object?: PendingApprovalNotification | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class PendingApprovalNotification implements IPendingApprovalNotification {
+    items?: PendingNotificationItem[] | undefined;
+
+    constructor(data?: IPendingApprovalNotification) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(PendingNotificationItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PendingApprovalNotification {
+        data = typeof data === 'object' ? data : {};
+        let result = new PendingApprovalNotification();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPendingApprovalNotification {
+    items?: PendingNotificationItem[] | undefined;
+}
+
+export class PendingNotificationItem implements IPendingNotificationItem {
+    name?: string | undefined;
+    count?: number;
+    table?: number;
+
+    constructor(data?: IPendingNotificationItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.count = _data["count"];
+            this.table = _data["table"];
+        }
+    }
+
+    static fromJS(data: any): PendingNotificationItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new PendingNotificationItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["count"] = this.count;
+        data["table"] = this.table;
+        return data; 
+    }
+}
+
+export interface IPendingNotificationItem {
+    name?: string | undefined;
+    count?: number;
+    table?: number;
 }
 
 export class AuditActionResultOfICollectionOfWorkflowActivityModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowActivityModel {

@@ -141,10 +141,10 @@
           {{approval.createdByName}}
         </td>
         <td>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)" class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
-            appendTo="body" (click)="removeRow(workflow)"></i>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)" class="far fa-arrow-alt-right pointer text-success" appendTo="body"
-            tooltip="Proceed to approval workflow for release" (click)="showDialog(workflow)"></i>
+          <i class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
+            appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
+          <i class="far fa-arrow-alt-right pointer text-success" appendTo="body"
+            tooltip="Proceed to approval workflow for release" (click)="showDialog(approveAction,approval)"></i>
         </td>
       </tr>
     </ng-template>
@@ -300,10 +300,10 @@
           {{approval.createdByName}}
         </td>
         <td>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)" class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
-            appendTo="body" (click)="removeRow(workflow)"></i>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)" class="far fa-arrow-alt-right pointer text-success" appendTo="body"
-            tooltip="Proceed to approval workflow for release" (click)="showDialog(workflow)"></i>
+          <i class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
+            appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
+          <i class="far fa-arrow-alt-right pointer text-success" appendTo="body"
+            tooltip="Proceed to approval workflow" (click)="showDialog(approveAction,approval)"></i>
         </td>
       </tr>
     </ng-template>
@@ -314,3 +314,84 @@
     </ng-template>
   </p-table>
 </widget>
+
+<p-dialog *ngIf="currAction.action != undefined" header="{{currAction.action.Header}}" [(visible)]="display" [style]="{width: '50vw'}"
+  data-cy="user-header">
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+          </span>
+          Are you sure you want to {{currAction.action.Action}}?
+        </h5>
+      </header>
+      <div class="widget-body">
+        <!-- <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <label for="firstName" class="col-md-2 col-form-label text-md-right">
+              Approval Name
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="name" name="name" [(ngModel)]="currWorkflow.name" data-validate="parsley"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Approval  Name"
+                data-cy="name-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Member Stages
+            </label>
+            <div class="col-md-4 col-12">
+              <p-multiSelect name="role" [options]="allStages" [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15"
+                appendTo="body">
+                <ng-template pTemplate="selectedItems">
+                  <div tooltip="Select Roles">Select Member Stages</div>
+                </ng-template>
+              </p-multiSelect>
+            </div>
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Applicable Activities
+            </label>
+            <div class="col-md-4 col-12">
+              <p-multiSelect name="role2" [options]="allActivities" [(ngModel)]="currWorkflow.activitiesSaved"
+                [itemSize]="15" appendTo="body">
+                <ng-template pTemplate="selectedItems">
+                  <div tooltip="Select Roles">Select Activities</div>
+                </ng-template>
+              </p-multiSelect>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2  col-form-label text-md-right">
+              Is Active
+            </label>
+            <div class="col-md-4 ">
+              <div class="display-inline-block isActive">
+                <label class="form-check-label" for="isActive" class="switch">
+                  <input class="form-check-input" [(ngModel)]="currWorkflow.isActive" name="isActive" type="checkbox"
+                    class="ios" checked id="isActive" />
+                  <i data-cy="isactive-checkbox"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset> -->
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+          Save
+        </button>
+        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>

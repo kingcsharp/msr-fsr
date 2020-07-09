@@ -92,9 +92,24 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         public static GetPendingApproval ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
-        {
+        { 
             return new GetPendingApproval()
             {
+                Table = request.Table
+            };
+        }
+
+        public static PostApprovalModel ToPostApprovalCommand(this PostPendingApprovalRequest request)
+        {
+            var result = AutoMapperHelper.Mapper.Map<PostApprovalModel>(request);
+            return result;
+        }
+
+        public static DeactivateApprovalModel ToDeleteApprovalCommand(this DeletePendingApprovalRequest request)
+        {
+            return new DeactivateApprovalModel()
+            {
+                Id=request.Id,
                 Table = request.Table
             };
         }
