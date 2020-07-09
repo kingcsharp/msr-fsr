@@ -22,6 +22,7 @@ pipeline {
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
+
         stage("Running xUnit Tests") {
             agent { label 'ubuntu-node' }
             steps {
@@ -173,10 +174,12 @@ pipeline {
                     sh "git mv Msr.Infrastructure MSR.Infrastructure"
                     sh 'docker-compose up --build -d'
                     sh './count_containers.sh running'
-                    sh 'cd MSR.UI/MSR.UI.Answer && yarn'
-                    sh 'npm install cypress --save-dev'
-                    sh './node_modules/.bin/cypress run'
-                    sh 'cd ../../ && docker-compose down'
+                    dir('MSR.UI/MSR.UI.Answer') {
+                        sh 'yarn'
+                        sh 'npm install cypress --save-dev'
+                        sh './node_modules/.bin/cypress run'
+                    }
+                    sh 'ocker-compose down'
                 }
             }
         }
