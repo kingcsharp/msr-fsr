@@ -3,5 +3,7 @@
 namespace MSR.Domain.Commands
 {
     public class GetParts : Command
-    { }
+    {
+        public int? partID;
+    }
 }

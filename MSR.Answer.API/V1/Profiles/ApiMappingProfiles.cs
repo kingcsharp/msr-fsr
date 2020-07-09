@@ -16,6 +16,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateHelpPageRoleRequest, CreateHelpPageRole>();
             CreateMap<UpdateHelpPageRequest, UpdateHelpPage>();
             CreateMap<GetHelpPageRequest, GetHelpPage>();
+            CreateMap<CreatePartRequest, CreatePart>();
+            CreateMap<UpdatePartRequest, UpdatePart>();
         }
     }
 }

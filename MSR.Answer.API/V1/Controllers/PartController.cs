@@ -31,14 +31,31 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("{id}")]
-        [SwaggerResponse(typeof(AuditActionResult<bool>))]
-        public IActionResult GetPart(int id)
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<Part>>))]
+        public async Task<IActionResult> GetPart(int id)
         {
-            return new OkObjectResult(new AuditActionResult<bool>()
-            {
-                Object = true,
-                SuccessMessage = "gets a part",
-            });;
+            var ret = await _dispatcher.DispatchAsync(new GetParts() {
+                partID = id
+            });
+            return ret.ToOkObjectResponse<ICollection<Part>>();
+        }
+
+        [HttpPost]
+        [SwaggerResponse(typeof(AuditActionResult<Part>))]
+        public async Task<IActionResult> AddPart(CreatePartRequest newpart)
+        {
+            var command = newpart.ToCreatePartCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Part>();
+        }
+
+        [HttpPatch]
+        [SwaggerResponse(typeof(AuditActionResult<Part>))]
+        public async Task<IActionResult> UpdatePart(UpdatePartRequest newpart)
+        {
+            var command = newpart.ToUpdatePartCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Part>();
         }
     }
 }
