@@ -169,7 +169,8 @@ pipeline {
             agent { label 'master' }
             steps {
                 script {
-                    sh 'rm -rf Msr.Infrastructure'
+                    sh "sudo chmod 777 /var/run/docker.sock"
+                    sh "git mv Msr.Infrastructure MSR.Infrastructure"
                     sh 'docker-compose up'
                     sh 'cd MSR.UI/MSR.UI.Answer && yarn'
                     sh './node_modules/.bin/cypress run'
