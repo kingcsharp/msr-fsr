@@ -172,6 +172,7 @@ pipeline {
                     sh "sudo chmod 777 /var/run/docker.sock"
                     sh "git mv Msr.Infrastructure MSR.Infrastructure"
                     sh 'docker-compose up -d'
+                    sh './count_containers.sh running'
                     sh 'cd MSR.UI/MSR.UI.Answer && yarn'
                     sh './node_modules/.bin/cypress run'
                     sh 'cd ../../ && docker-compose down'
