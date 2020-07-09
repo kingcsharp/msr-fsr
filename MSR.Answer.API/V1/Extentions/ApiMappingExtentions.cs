@@ -192,6 +192,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new GetMultipleCustomers()
             {
+                Id = request.Id,
                 Address = request.Address,
                 IsActive = request.IsActive,
                 LocationId = request.LocationId,
