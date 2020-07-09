@@ -171,7 +171,7 @@ pipeline {
                 script {
                     sh "sudo chmod 777 /var/run/docker.sock"
                     sh "git mv Msr.Infrastructure MSR.Infrastructure"
-                    sh 'docker-compose up -d'
+                    sh 'docker-compose up --build -d'
                     sh './count_containers.sh running'
                     sh 'cd MSR.UI/MSR.UI.Answer && yarn'
                     sh './node_modules/.bin/cypress run'
