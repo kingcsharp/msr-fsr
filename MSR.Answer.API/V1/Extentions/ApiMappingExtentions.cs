@@ -262,5 +262,14 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetHelpPage>(request);
         }
+
+        public static CreatePart ToCreatePartCommand(this CreatePartRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreatePart>(request);
+        }
+        public static UpdatePart ToUpdatePartCommand(this UpdatePartRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdatePart>(request);
+        }
     }
 }

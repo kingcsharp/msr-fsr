@@ -56,8 +56,17 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<HelpPage, Domain.Models.HelpPage>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());
 
-            CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();                          
+            CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
+
+            CreateMap<Resources.EntityFramework.Entities.Part, Domain.Models.Part> ();
+            CreateMap<CreatePart, PartApproval>();
+            CreateMap<CreatePart, Part>();
+            CreateMap<UpdatePart, PartApproval>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdatePart, Part>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
         }
     }
 }

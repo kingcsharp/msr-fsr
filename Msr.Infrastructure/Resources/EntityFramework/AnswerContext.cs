@@ -42,6 +42,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<HelpPage> HelpPage { get; set; }
         public DbSet<HelpPageRoleMap> HelpPageRoleMap { get; set; }
 
+        public DbSet<ApprovalTransactionLog> ApprovalTransactionLog { get; set; }
+
         public AnswerContext() : base()
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;

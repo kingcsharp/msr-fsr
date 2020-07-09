@@ -27,6 +27,10 @@ namespace MSR.Domain.Commanding
             {
                 var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
 
+                if (handler == null) {
+                    throw new Exception($"No service for {command}");
+                }
+
                 return await (handler as ICommandHandler<TCommand>).HandleAsync(command, cancellationToken);
             }
             catch(Exception ex)
