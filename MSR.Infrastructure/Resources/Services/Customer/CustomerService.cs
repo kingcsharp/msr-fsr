@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -153,6 +154,11 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             var customerList = new List<Domain.Models.Customer>();
             var customers = _unitOfWork.Customers.Query();
 
+
+            if (command.Id != null)
+            {
+                customers = customers.Where(i => i.Id == command.Id);
+            }
             if (!string.IsNullOrWhiteSpace(command.Name))
             {
                 customers = customers.Where(i => i.Name == command.Name);

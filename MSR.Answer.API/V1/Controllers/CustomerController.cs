@@ -24,16 +24,6 @@ namespace MSR.Answer.API.V1.Controllers
         {
             _dispatcher = dispatcher;
         }
-        /*
-        [HttpGet("{id}"), HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanRead)]
-        [SwaggerResponse(HttpStatusCode.NoContent,typeof(AuditActionResult))]
-        public async Task<IActionResult> GetCustomer(int id)
-        {
-            var getCustomer = new GetCustomer() { Id = id };
-            var ret = await _dispatcher.DispatchAsync(getCustomer);
-            return ret.ToOkObjectResponse<Customer>();
-        }
-        */
 
         [HttpGet, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult))]
