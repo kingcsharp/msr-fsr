@@ -27,13 +27,13 @@ pipeline {
             steps {
                 script {
                     sh 'ls -la'
-                    sh 'rm -rf Msr.Infrastructure'
+                    sh "git mv Msr.Infrastructure MSR.Infrastructure"
                     sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
                     sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
                     sh 'ls -la MSR.Application.Tests/TestResults'
                     sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
                     sh 'ls -la MSR.Domain.Tests/TestResults'
-                    //sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
+                    sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
                     step([$class: 'MSTestPublisher', testResultsFile:"**/*.trx", failOnError: true, keepLongStdio: true])
                 }
             }
@@ -171,7 +171,7 @@ pipeline {
                 script {
                     sh "sudo chmod 777 /var/run/docker.sock"
                     sh "git mv Msr.Infrastructure MSR.Infrastructure"
-                    sh 'docker-compose up'
+                    sh 'docker-compose up -d'
                     sh 'cd MSR.UI/MSR.UI.Answer && yarn'
                     sh './node_modules/.bin/cypress run'
                     sh 'cd ../../ && docker-compose down'
