@@ -176,8 +176,7 @@ pipeline {
                     sh './count_containers.sh running'
                     dir('MSR.UI/MSR.UI.Answer') {
                         sh 'yarn'
-                        sh 'npm install cypress --save-dev'
-                        sh './node_modules/.bin/cypress run'
+                        sh './node_modules/.bin/cypress run --record --key 48818e2d-4f0f-4541-8176-b9541ee0064d'
                     }
                     sh 'ocker-compose down'
                 }
