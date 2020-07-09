@@ -22,17 +22,9 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet]
+        [HttpGet()]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Part>>))]
-        public async Task<IActionResult> GetPartsAsync()
-        {
-            var ret = await _dispatcher.DispatchAsync(new GetParts());
-            return ret.ToOkObjectResponse<ICollection<Part>>();
-        }
-
-        [HttpGet("{id}")]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<Part>>))]
-        public async Task<IActionResult> GetPart(int id)
+        public async Task<IActionResult> GetPart(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetParts() {
                 partID = id
