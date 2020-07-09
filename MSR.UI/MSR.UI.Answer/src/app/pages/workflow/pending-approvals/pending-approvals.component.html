@@ -300,9 +300,9 @@
           {{approval.createdByName}}
         </td>
         <td>
-          <i class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)" class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="removeRow(workflow)"></i>
-          <i class="far fa-arrow-alt-right pointer text-success" appendTo="body"
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)" class="far fa-arrow-alt-right pointer text-success" appendTo="body"
             tooltip="Proceed to approval workflow for release" (click)="showDialog(workflow)"></i>
         </td>
       </tr>
