@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.6.0.0 (NJsonSchema v10.1.18.0 (Newtonsoft.Json v12.0.0.0))",
+  "x-generator": "NSwag v13.6.2.0 (NJsonSchema v10.1.23.0 (Newtonsoft.Json v12.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "MSR API",
@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://dev-api.answer.msr-fsr.com"
+      "url": "https://2b5b496e9541.ngrok.io"
     }
   ],
   "paths": {
@@ -265,7 +265,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfBoolean"
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfPart"
                 }
               }
             }
@@ -287,7 +287,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "example": 2
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -296,18 +296,19 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfBoolean"
+                  "$ref": "#/components/schemas/AuditActionResultOfPart"
                 }
               }
             }
