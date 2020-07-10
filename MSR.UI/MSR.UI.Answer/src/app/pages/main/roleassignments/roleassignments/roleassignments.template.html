@@ -48,6 +48,9 @@
                     </button>
                 </li>
             </ul>
+            <div class="text-center placeholder text-muted" *ngIf="selectedMenuModule == null">
+                <h3>Select a Menu Module to see roles assigned to it</h3>
+            </div>
         </div>
         <div class="col-4">
             <h2>Role Permissions</h2>
@@ -59,6 +62,9 @@
                     <i class="fas fa-lock fa-lg" *ngIf="permissionModule.inheritedPermission"></i>
                 </li>
             </ul>
+            <div class="text-center placeholder text-muted" *ngIf="selectedRoleModule == null">
+                <h3>Click the Edit button of a Role to set Permissions</h3>
+            </div>
         </div>
     </div>
 </div>
