@@ -80,10 +80,12 @@ namespace MSR.Infrastructure.Resources.Services.Role
             if (user.CanApprove(EnumMenuItem.Procedures))
             {
                 var procedure = _mapper.Map(command, current);
-                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
-
                 _unitOfWork.Procedures.Update(procedure);
-                await _unitOfWork.SaveChangesAsync();
+
+                var e = procedure.ProcedureTypeId;
+
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
                 ret = _mapper.Map<Domain.Models.Procedure>(procedure);
             }

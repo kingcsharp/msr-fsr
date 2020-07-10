@@ -75,7 +75,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateProcedure, ProcedureApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateProcedure, Procedure>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !srcMember.Equals(0)));
 
         }
     }
