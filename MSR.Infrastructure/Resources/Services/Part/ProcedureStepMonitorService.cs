@@ -28,10 +28,10 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.ProcedureStepMonitor>> GetProcedureStepMonitorAsync(GetProcedureStepMonitor command)
         {
             List<EntityFramework.Entities.ProcedureStepMonitor> procedures;
-            if (command.procedureID.HasValue) {
-                procedures = await _unitOfWork.ProcedureStepMonitors.Query().Where(x => x.Id == command.procedureID.Value).ToListAsync();
+            if (command.procedureStepMonitorId.HasValue) {
+                procedures = await _unitOfWork.ProcedureStepMonitors.Query().Where(x => x.Id == command.procedureStepMonitorId.Value).ToListAsync();
                 if (procedures.Count == 0) {
-                    throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
+                    throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
                 }
             } else {
                 procedures = await _unitOfWork.ProcedureStepMonitors.Query().ToListAsync();
@@ -44,7 +44,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepMonitor ret;
 
-            if (user.CanApprove(EnumMenuItem.ProcedureStepMonitors))
+            if (user.CanApprove(EnumMenuItem.Monitors))
             {
                 ProcedureStepMonitor procedure = _mapper.Map<EntityFramework.Entities.ProcedureStepMonitor>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
@@ -77,12 +77,10 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepMonitor ret;
 
-            if (user.CanApprove(EnumMenuItem.ProcedureStepMonitors))
+            if (user.CanApprove(EnumMenuItem.Monitors))
             {
                 var procedure = _mapper.Map(command, current);
                 _unitOfWork.ProcedureStepMonitors.Update(procedure);
-
-                var e = procedure.ProcedureStepMonitorTypeId;
 
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);

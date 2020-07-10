@@ -9,32 +9,32 @@ using System.Threading.Tasks;
 
 namespace MSR.Application.ApplicationServices
 {
-    public class ProcedureStepProcedureStepMonitorAppService :
-        ICommandHandler<GetProcedureStepProcedureStepMonitor>,
-        ICommandHandler<CreateProcedureStepProcedureStepMonitor>,
-        ICommandHandler<UpdateProcedureStepProcedureStepMonitor>
+    public class ProcedureStepMonitorAppService :
+        ICommandHandler<GetProcedureStepMonitor>,
+        ICommandHandler<CreateProcedureStepMonitor>,
+        ICommandHandler<UpdateProcedureStepMonitor>
     {
-        private readonly IProcedureStepProcedureStepMonitorService _procedureService;
+        private readonly IProcedureStepMonitorService _procedureService;
 
-        public ProcedureStepProcedureStepMonitorAppService(IProcedureStepProcedureStepMonitorService procedureService)
+        public ProcedureStepMonitorAppService(IProcedureStepMonitorService procedureService)
         {
             _procedureService = procedureService;
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetProcedureStepProcedureStepMonitor command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetProcedureStepMonitor command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.GetProcedureStepProcedureStepMonitorAsync(command);
-            return new CommandResponse<ICollection<ProcedureStepProcedureStepMonitor>>(ret);
+            var ret = await _procedureService.GetProcedureStepMonitorAsync(command);
+            return new CommandResponse<ICollection<ProcedureStepMonitor>>(ret);
         }
-        public async Task<ICommandResponse> HandleAsync(CreateProcedureStepProcedureStepMonitor command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(CreateProcedureStepMonitor command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.CreateProcedureStepProcedureStepMonitorAsync(command);
-            return new CommandResponse<ProcedureStepProcedureStepMonitor>(ret);
+            var ret = await _procedureService.CreateProcedureStepMonitorAsync(command);
+            return new CommandResponse<ProcedureStepMonitor>(ret);
         }
-        public async Task<ICommandResponse> HandleAsync(UpdateProcedureStepProcedureStepMonitor command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(UpdateProcedureStepMonitor command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.UpdateProcedureStepProcedureStepMonitorAsync(command);
-            return new CommandResponse<ProcedureStepProcedureStepMonitor>(ret);
+            var ret = await _procedureService.UpdateProcedureStepMonitorAsync(command);
+            return new CommandResponse<ProcedureStepMonitor>(ret);
         }
     }
 }

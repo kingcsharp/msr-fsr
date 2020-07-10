@@ -27,7 +27,7 @@ namespace MSR.Answer.API.V1.Controllers
         public async Task<IActionResult> GetProcedureStepMonitor(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureStepMonitor() {
-                procedureID = id
+                procedureStepMonitorId = id
             });
             return ret.ToOkObjectResponse<ICollection<ProcedureStepMonitor>>();
         }
