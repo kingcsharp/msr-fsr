@@ -22,6 +22,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<MenuRolePermission> _menuRolePermissions;
         private IRepository<Role> _roles;
         private IRepository<Part> _parts;
+        private IRepository<Procedure> _procedures;
         private IRepository<Status> _status;
         private IRepository<UserRole> _userRoles;
         private IRepository<PartApproval> _partApproval;
@@ -52,6 +53,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<MenuRolePermission> MenuRolePermissions { get { return _menuRolePermissions ??= new EFRepository<MenuRolePermission>(Context); } }
         public IRepository<Role> Roles { get { return _roles ??= new EFRepository<Role>(Context); } }
         public IRepository<Part> Parts { get { return _parts ??= new EFRepository<Part>(Context); } }
+        public IRepository<Procedure> Procedures { get { return _procedures ??= new EFRepository<Procedure>(Context); } }
         public IRepository<Status> Status { get { return _status ??= new EFRepository<Status>(Context); } }
         public IRepository<UserRole> UserRoles { get { return _userRoles ??= new EFRepository<UserRole>(Context); } }
         public IRepository<PartApproval> PartApprovals { get { return _partApproval ??= new EFRepository<PartApproval>(Context); } }

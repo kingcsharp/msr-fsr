@@ -3,7 +3,7 @@
 namespace MSR.Domain.Commands
 {
     public class UpdatePart : Command
-    { 
+    {
         public int Id { get; set; }
         public string Name { get; set; }
         public string PartNumber { get; set; }

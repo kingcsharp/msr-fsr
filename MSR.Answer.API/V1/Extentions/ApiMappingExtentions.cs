@@ -271,5 +271,14 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdatePart>(request);
         }
+
+        public static CreateProcedure ToCreateProcedureCommand(this CreateProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedure>(request);
+        }
+        public static UpdateProcedure ToUpdateProcedureCommand(this UpdateProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedure>(request);
+        }
     }
 }

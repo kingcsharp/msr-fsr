@@ -47,10 +47,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
             if (user.CanApprove(EnumMenuItem.Parts))
             {
                 Part part = _mapper.Map<EntityFramework.Entities.Part>(command);
-                await _unitOfWork.LogApprovalTransaction(part, part.Id);
 
                 _unitOfWork.Parts.Add(part);
-                await _unitOfWork.SaveChangesAsync();
+
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(part, part.Id);
 
                 ret = _mapper.Map<Domain.Models.Part>(part);
             }

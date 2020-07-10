@@ -35,6 +35,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IPartService, PartService>();
+            services.AddScoped<IProcedureService, ProcedureService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();

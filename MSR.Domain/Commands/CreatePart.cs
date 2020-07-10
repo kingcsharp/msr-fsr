@@ -3,7 +3,7 @@
 namespace MSR.Domain.Commands
 {
     public class CreatePart : Command
-    { 
+    {
         public string Name { get; set; }
         public string PartNumber { get; set; }
         public string OEMPartNumber { get; set; }
