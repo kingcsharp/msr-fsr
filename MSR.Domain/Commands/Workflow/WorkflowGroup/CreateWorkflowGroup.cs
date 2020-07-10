@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
-    public class CreateWorkflowGroupModel : Command
+    public class CreateWorkflowGroup : Command
     {
-        public CreateWorkflowGroupModel()
+        public CreateWorkflowGroup()
         {
             Roles = new List<WorkflowGroupRoleMapModel>() { };
             Users = new List<WorkflowGroupUserMapModel>() { };

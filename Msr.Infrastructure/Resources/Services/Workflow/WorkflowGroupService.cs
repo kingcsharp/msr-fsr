@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services.Workflow;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -36,7 +38,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             return ret;
         }
 
-        public async Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroupModel command)
+        public async Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroup command)
         {
             var efWorkflowGroup = _mapper.Map<WorkflowGroup>(command);
 
@@ -54,11 +56,11 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             await _unitOfWork.SaveChangesAsync();
 
-            var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkflowGroup);
+                var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkflowGroup);
 
-            workFlowModel.GroupRoles = efWorkflowGroup.GroupRoles.Select(
-                x => _mapper.Map<WorkflowGroupRoleMapModel>(x))
-                .ToList();
+                workFlowModel.GroupRoles = efWorkflowGroup.GroupRoles.Select(
+                    x => _mapper.Map<WorkflowGroupRoleMapModel>(x))
+                    .ToList();
 
             workFlowModel.GroupUsers = efWorkflowGroup.GroupUsers.Select(
                 x => _mapper.Map<WorkflowGroupUserMapModel>(x))
@@ -69,6 +71,13 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         public async Task<WorkflowGroupModel> UpdateWorkFlowGroupAsync(UpdateWorkflowGroupModel command)
         {
             var efWorkFlow = await _unitOfWork.WorkflowGroups.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+
+            if (efWorkFlow == null) {
+                throw new DomainException(
+                    $"{nameof(_unitOfWork.WorkflowGroups)} {command.Id} not found",
+                    DomainError.NotFound
+                );
+            }
 
             foreach (var role in efWorkFlow.GroupRoles)
             {

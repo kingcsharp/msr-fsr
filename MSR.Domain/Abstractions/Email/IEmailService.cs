@@ -7,6 +7,6 @@ namespace MSR.Domain.Abstractions.Email
     public interface IEmailService
     {
         Task<bool> SendEmailAsync(string fromEmail, string toEmail, string subject, string body, List<string> ccList,
-           bool isHtml, Attachment attachment = null);
+           bool isHtml, List<Attachment> attachments = null);
     }
 }

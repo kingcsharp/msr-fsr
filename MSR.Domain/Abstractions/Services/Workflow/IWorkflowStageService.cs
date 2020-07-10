@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MSR.Domain.Commands;
-using MSR.Domain.Models;
 using System.Threading.Tasks;
 
 namespace MSR.Domain.Abstractions.Services.Workflow

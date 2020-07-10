@@ -13,10 +13,12 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.Services;
 using MSR.Infrastructure.Resources.Services.Account;
 using MSR.Infrastructure.Resources.Services.Location;
+using MSR.Infrastructure.Resources.Services.Customers;
 using MSR.Infrastructure.Resources.Services.Menu;
 using MSR.Infrastructure.Resources.Services.Role;
 using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
+using MSR.Infrastructure.Resources.Services.Help;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -26,6 +28,8 @@ namespace MSR.Infrastructure.Extensions
         {
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
             services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dbConfig.ConnectionString));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IUserService, UserService>();
@@ -37,6 +41,9 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IWorkflowApprovalService, WorkflowApprovalService>();
             services.AddScoped<IWorkflowGroupService, WorkflowGroupService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IHelpService, HelpService>();
 
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 

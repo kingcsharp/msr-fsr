@@ -42,6 +42,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<WorkflowStage> WorkflowStage { get; set; }
         public DbSet<WorkflowGroup> WorkflowGroup { get; set; }
         public DbSet<WorkflowGroupRoleMap> WorkflowGroupRoleMap { get; set; }
+        public DbSet<HelpPage> HelpPage { get; set; }
+        public DbSet<HelpPageRoleMap> HelpPageRoleMap { get; set; }
         public DbSet<WorkflowGroupStageMap> WorkflowGroupStageMap { get; set; }
 
 
@@ -139,6 +141,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework
                 modelBuilder.ApplyConfiguration(configurationInstance);
             }
         }
-
     }
 }

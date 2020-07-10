@@ -50,6 +50,13 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         {
             var efWorkFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
+            if (efWorkFlow == null) {
+                throw new DomainException(
+                    $"{nameof(_unitOfWork.WorkflowStages)} {command.Id} not found",
+                    Domain.Commanding.Enums.DomainError.NotFound
+                );
+            }
+
             efWorkFlow.Name = command.Name;
             efWorkFlow.IsActive = command.IsActive;
 

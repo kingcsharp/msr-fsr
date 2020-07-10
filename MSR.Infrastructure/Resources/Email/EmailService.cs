@@ -19,7 +19,7 @@ namespace MSR.Infrastructure.Resources.Email
         }
 
         public async Task<bool> SendEmailAsync(string fromEmail, string toEmail, string subject, string body, List<string> ccList,
-           bool isHtml, Attachment attachment = null)
+           bool isHtml, List<Attachment> attachments = null)
         {
             try
             {
@@ -61,11 +61,11 @@ namespace MSR.Infrastructure.Resources.Email
                     message.Priority = MailPriority.High;
                     message.BodyEncoding = Encoding.GetEncoding("utf-8");
 
-                    if (attachment != null)
+                    foreach (var attachment in attachments ?? new List<Attachment>())
                     {
                         message.Attachments.Add(attachment);
                     }
-
+                    
                     using (var smtp = new SmtpClient())
                     {
                         smtp.Port = _emailInformation.Port;

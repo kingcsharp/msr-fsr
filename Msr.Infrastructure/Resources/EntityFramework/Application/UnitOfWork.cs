@@ -37,6 +37,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkflowActivityMap> _workflowActivityMap;
         private IRepository<WorkflowActivity> _workflowActivity;
         private IRepository<WorkflowGroupRoleMap> _workflowGroupRoleMap;
+        private IRepository<ApprovalTransactionLog> _approvalTransactionLog;
+        private IRepository<HelpPage> _helpPage;
+        private IRepository<HelpPageRoleMap> _helpPageRoleMap;
         private IRepository<WorkflowStageMap> _workflowStageMap;
         private IRepository<Workflow> _workflow;
         private IRepository<WorkflowGroupUserMap> _workflowGroupUserMap;

@@ -25,5 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual Customer Customer { get; set; }
 
         public virtual Location Location { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

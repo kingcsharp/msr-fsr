@@ -3,8 +3,6 @@ using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
-using MSR.Domain.Models;
 using System.Threading.Tasks;
 using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
@@ -57,7 +55,8 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<WorkflowStageModel>("Workflow Stage has been successfully updated.");
         }
 
-        [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
+        [HttpDelete("{workflowId}")]
+        [ProducesResponseType(typeof(void), 204)]
         public async Task<IActionResult> Delete(int workflowId)
         {
             var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowGroup()
