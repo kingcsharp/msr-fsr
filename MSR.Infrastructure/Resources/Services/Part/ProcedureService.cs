@@ -82,8 +82,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 var procedure = _mapper.Map(command, current);
                 _unitOfWork.Procedures.Update(procedure);
 
-                var e = procedure.ProcedureTypeId;
-
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
