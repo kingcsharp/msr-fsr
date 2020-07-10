@@ -22,6 +22,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();
             CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
             CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
+            CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>();
+            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>();
         }
     }
 }

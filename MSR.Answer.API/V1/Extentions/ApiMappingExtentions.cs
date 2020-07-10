@@ -280,6 +280,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProcedure>(request);
         }
+
         public static CreateProcedureStep ToCreateProcedureStepCommand(this CreateProcedureStepRequest request)
         {
             return AutoMapperHelper.Mapper.Map<CreateProcedureStep>(request);
@@ -287,6 +288,15 @@ namespace MSR.Answer.API.V1.Extentions
         public static UpdateProcedureStep ToUpdateProcedureStepCommand(this UpdateProcedureStepRequest request)
         {
             return AutoMapperHelper.Mapper.Map<UpdateProcedureStep>(request);
+        }
+
+        public static CreateProcedureStepMonitor ToCreateProcedureStepMonitorCommand(this CreateProcedureStepMonitorRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStepMonitor>(request);
+        }
+        public static UpdateProcedureStepMonitor ToUpdateProcedureStepMonitorCommand(this UpdateProcedureStepMonitorRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStepMonitor>(request);
         }
     }
 }

@@ -86,6 +86,13 @@ namespace MSR.Infrastructure.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
 
+            // Monitor
+            CreateMap<Resources.EntityFramework.Entities.ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor> ();
+            CreateMap<CreateProcedureStepMonitor, ProcedureStepMonitor>();
+            CreateMap<UpdateProcedureStepMonitor, ProcedureStepMonitor>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !srcMember.Equals(0)));
+
         }
     }
 }
