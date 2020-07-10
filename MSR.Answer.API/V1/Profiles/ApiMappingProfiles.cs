@@ -20,6 +20,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdatePartRequest, UpdatePart>();
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();
+            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
+            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
         }
     }
 }

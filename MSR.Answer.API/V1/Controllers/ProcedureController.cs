@@ -49,5 +49,36 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<Procedure>();
         }
+
+        [HttpGet("{id}/step")]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStep>>))]
+        public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
+        {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedureStep() {
+                procedureId = id,
+                stepId = stepid
+            });
+            return ret.ToOkObjectResponse<ICollection<ProcedureStep>>();
+        }
+
+        [HttpPost("{id}/step")]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
+        public async Task<IActionResult> AddProcedureStep(int id, CreateProcedureStepRequest newstep)
+        {
+            var command = newstep.ToCreateProcedureStepCommand();
+            command.procedureId = id;
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProcedureStep>();
+        }
+
+        [HttpPatch("{id}/step")]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
+        public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest newstep)
+        {
+            var command = newstep.ToUpdateProcedureStepCommand();
+            command.procedureId = id;
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProcedureStep>();
+        }
     }
 }

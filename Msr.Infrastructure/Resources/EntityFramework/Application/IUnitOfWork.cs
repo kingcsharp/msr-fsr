@@ -21,6 +21,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Role> Roles { get; }
         IRepository<Part> Parts { get; }
         IRepository<Procedure> Procedures { get; }
+        IRepository<ProcedureStep> ProcedureSteps { get; }
         IRepository<Status> Status { get; }
         IRepository<UserRole> UserRoles { get; }
         IRepository<PartApproval> PartApprovals { get; }

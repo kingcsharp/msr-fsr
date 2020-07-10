@@ -10,5 +10,8 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<Procedure>> GetProcedureAsync(GetProcedure command);
         Task<Procedure> CreateProcedureAsync(CreateProcedure command);
         Task<Procedure> UpdateProcedureAsync(UpdateProcedure command);
+        Task<ICollection<ProcedureStep>> GetProcedureStepAsync(GetProcedureStep command);
+        Task<ProcedureStep> CreateProcedureStepAsync(CreateProcedureStep command);
+        Task<ProcedureStep> UpdateProcedureStepAsync(UpdateProcedureStep command);
     }
 }
