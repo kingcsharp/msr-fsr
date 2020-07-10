@@ -12,6 +12,9 @@ namespace MSR.Application.ApplicationServices
     public class ProcedureAppService :
         ICommandHandler<GetProcedure>,
         ICommandHandler<CreateProcedure>,
+        ICommandHandler<CreateProcedureStep>,
+        ICommandHandler<GetProcedureStep>,
+        ICommandHandler<UpdateProcedureStep>,
         ICommandHandler<UpdateProcedure>
     {
         private readonly IProcedureService _procedureService;
@@ -35,6 +38,21 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _procedureService.UpdateProcedureAsync(command);
             return new CommandResponse<Procedure>(ret);
+        }
+        public async Task<ICommandResponse> HandleAsync(CreateProcedureStep command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.CreateProcedureStepAsync(command);
+            return new CommandResponse<ProcedureStep>(ret);
+        }
+        public async Task<ICommandResponse> HandleAsync(GetProcedureStep command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.GetProcedureStepAsync(command);
+            return new CommandResponse<ICollection<ProcedureStep>>(ret);
+        }
+        public async Task<ICommandResponse> HandleAsync(UpdateProcedureStep command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.UpdateProcedureStepAsync(command);
+            return new CommandResponse<ProcedureStep>(ret);
         }
     }
 }

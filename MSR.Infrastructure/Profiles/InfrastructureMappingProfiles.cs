@@ -70,11 +70,19 @@ namespace MSR.Infrastructure.Profiles
 
             // Procedure
             CreateMap<Resources.EntityFramework.Entities.Procedure, Domain.Models.Procedure> ();
+            CreateMap<Resources.EntityFramework.Entities.ProcedureStep, Domain.Models.ProcedureStep> ();
             CreateMap<CreateProcedure, ProcedureApproval>();
             CreateMap<CreateProcedure, Procedure>();
+            CreateMap<CreateProcedureStep, ProcedureStepApproval>();
+            CreateMap<CreateProcedureStep, ProcedureStep>();
             CreateMap<UpdateProcedure, ProcedureApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateProcedure, Procedure>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !srcMember.Equals(0)));
+            CreateMap<UpdateProcedureStep, ProcedureStepApproval>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateProcedureStep, ProcedureStep>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
 

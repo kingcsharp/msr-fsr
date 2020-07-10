@@ -99,5 +99,80 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return ret;
 
         }
+        public async Task<ICollection<Domain.Models.ProcedureStep>> GetProcedureStepAsync(GetProcedureStep command)
+        {
+            List<EntityFramework.Entities.ProcedureStep> steps;
+            if (command.stepId.HasValue) {
+                steps = await _unitOfWork.ProcedureSteps.Query().Where(x => x.Id == command.stepId.Value).ToListAsync();
+                if (steps.Count == 0) {
+                    throw new DomainException($"step ID {command.stepId.Value} not found", DomainError.NotFound);
+                }
+            } else {
+                steps = await _unitOfWork.ProcedureSteps.Query().Where(x => x.ProcedureId == command.procedureId).ToListAsync();
+            }
+            var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStep>(x)).OrderBy(x => x.PrintOrder).ToList();
+            return result;
+        }
+
+        public async Task<Domain.Models.ProcedureStep> CreateProcedureStepAsync(CreateProcedureStep command)
+        {
+            var user = await _unitOfWork.GetLoggedInUserAsync();
+            Domain.Models.ProcedureStep ret;
+
+            if (user.CanApprove(EnumMenuItem.Procedures))
+            {
+                var procstep = _mapper.Map<ProcedureStep>(command);
+                _unitOfWork.ProcedureSteps.Add(procstep);
+
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(procstep, procstep.Id);
+
+                ret = _mapper.Map<Domain.Models.ProcedureStep>(procstep);
+            }
+            else
+            {
+                var approval = _mapper.Map<ProcedureStepApproval>(command);
+                _unitOfWork.ProcedureStepApprovals.Add(approval);
+                await _unitOfWork.SaveChangesAsync();
+
+                ret = _mapper.Map<Domain.Models.ProcedureStep>(approval);
+            }
+
+            return ret;
+        }
+
+        public async Task<Domain.Models.ProcedureStep> UpdateProcedureStepAsync(UpdateProcedureStep command)
+        {
+            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i => i.Id == command.procedureStepId);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStep)} not found with ID: {command.procedureStepId}", DomainError.NotFound);
+            }
+
+            var user = await _unitOfWork.GetLoggedInUserAsync();
+            Domain.Models.ProcedureStep ret;
+
+            if (user.CanApprove(EnumMenuItem.Procedures))
+            {
+                var step = _mapper.Map(command, current);
+                _unitOfWork.ProcedureSteps.Update(step);
+
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(step, step.Id);
+
+                ret = _mapper.Map<Domain.Models.ProcedureStep>(step);
+            }
+            else
+            {
+                var approval = _mapper.Map<ProcedureStepApproval>(command);
+                _unitOfWork.ProcedureStepApprovals.Add(approval);
+                await _unitOfWork.SaveChangesAsync();
+
+                ret = _mapper.Map<Domain.Models.ProcedureStep>(approval);
+            }
+
+            return ret;
+        }
     }
 }
