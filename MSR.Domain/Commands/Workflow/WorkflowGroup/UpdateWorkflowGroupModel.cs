@@ -1,6 +1,6 @@
 ﻿namespace MSR.Domain.Commands
 {
-    public class UpdateWorkflowGroupModel : CreateWorkflowGroup
+    public class UpdateWorkflowGroupModel : CreateWorkflowGroupModel
     {
         public int Id { get; set; }
     }

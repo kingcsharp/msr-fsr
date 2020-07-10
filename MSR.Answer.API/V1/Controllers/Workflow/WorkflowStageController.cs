@@ -8,8 +8,9 @@ using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
-using MSR.Answer.API.V1.Models.Workflow;
 using System.Collections.Generic;
+using MSR.Domain.Models;
+using MSR.Domain.Commands;
 
 namespace MSR.Answer.API.V1.Controllers.Workflow
 {

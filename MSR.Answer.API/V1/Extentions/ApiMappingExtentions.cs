@@ -147,9 +147,9 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        public static CreateWorkflowGroup ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
+        public static CreateWorkflowGroupModel ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
         {
-            return new CreateWorkflowGroup()
+            return new CreateWorkflowGroupModel()
             {
                 IsActive = request.IsActive,
                 Name = request.Name,

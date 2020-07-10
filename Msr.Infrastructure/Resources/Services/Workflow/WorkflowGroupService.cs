@@ -38,7 +38,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             return ret;
         }
 
-        public async Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroup command)
+        public async Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroupModel command)
         {
             var efWorkflowGroup = _mapper.Map<WorkflowGroup>(command);
 
