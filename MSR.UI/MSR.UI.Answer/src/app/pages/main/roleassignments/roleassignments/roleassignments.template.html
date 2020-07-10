@@ -18,7 +18,7 @@
                 <li *ngFor="let pendingPermission of pendingPermissions">
                     <i class="fas fa-minus-circle m-2" *ngIf="pendingPermission.event == 'remove'"></i>
                     <i class="fas fa-plus-circle m-2" *ngIf="pendingPermission.event == 'add'"></i>
-                    {{pendingPermission.menuModule.name}} {{pendingPermission.permissionModule == null ?  pendingPermission.event : ''}} {{pendingPermission.roleModule.name}} {{pendingPermission.permissionModule != null ?  pendingPermission.event : ''}} {{pendingPermission.permissionModule != null ?  pendingPermission.permissionModule.name : ''}}
+                    {{pendingPermission.menuModule.name}} Menu Module {{pendingPermission.permissionModule == null ?  pendingPermission.event : ''}} {{pendingPermission.roleModule.name}} Role {{pendingPermission.permissionModule != null ?  pendingPermission.event : ''}} {{pendingPermission.permissionModule != null ?  pendingPermission.permissionModule.name : ''}}
                 </li>
             </ol>
         </div>
