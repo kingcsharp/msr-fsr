@@ -113,6 +113,7 @@ export class RoleassignmentsComponent implements OnInit {
   roleChanged(event:Event, menuModule:MenuModule, roleModule:RoleModule){
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
+    this.updateSuccessful = false;
 
     if(roleModule.value){
       this.pendingPermissions.push({
@@ -138,6 +139,7 @@ export class RoleassignmentsComponent implements OnInit {
   permissionChanged(event:Event, menuModule:MenuModule, roleModule:RoleModule, permissionModule:PermissionModule){
     permissionModule.value = !permissionModule.value;
     this.pendingPermissionsUpdate = true;
+    this.updateSuccessful = false;
 
     if(permissionModule.value){
       this.pendingPermissions.push({
