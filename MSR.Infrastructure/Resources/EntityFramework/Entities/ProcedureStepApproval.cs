@@ -23,15 +23,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(4000)]
         public string StepText { get; set; }
 
-        public int? SystemTaskId { get; set; }
-
         public int? GoToStepId { get; set; }
-
-        public double Duration { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        public string DurationType { get; set; }
 
         public int PrintOrder { get; set; }
 
@@ -47,12 +39,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Roles { get; set; }
 
         public virtual ProcedureApproval ProcedureApproval { get; set; }
-
-        public virtual User User { get; set; }
-
-        public virtual User User1 { get; set; }
-
-        public virtual SystemTask SystemTask { get; set; }
 
         public virtual ICollection<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get; set; }
 

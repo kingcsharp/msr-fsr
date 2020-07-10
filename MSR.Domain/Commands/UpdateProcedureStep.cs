@@ -8,7 +8,6 @@ namespace MSR.Domain.Commands
         public int procedureId { get; set; }
         public string Title { get; set; }
         public string StepText { get; set; }
-        public int? SystemTaskId { get; set; }
         public int? GoToStepId { get; set; }
         public double Duration { get; set; }
         public string DurationType { get; set; }
