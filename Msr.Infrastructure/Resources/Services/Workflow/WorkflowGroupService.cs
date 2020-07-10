@@ -56,11 +56,11 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             await _unitOfWork.SaveChangesAsync();
 
-                var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkflowGroup);
+            var workFlowModel = _mapper.Map<WorkflowGroupModel>(efWorkflowGroup);
 
-                workFlowModel.GroupRoles = efWorkflowGroup.GroupRoles.Select(
-                    x => _mapper.Map<WorkflowGroupRoleMapModel>(x))
-                    .ToList();
+            workFlowModel.GroupRoles = efWorkflowGroup.GroupRoles.Select(
+                x => _mapper.Map<WorkflowGroupRoleMapModel>(x))
+                .ToList();
 
             workFlowModel.GroupUsers = efWorkflowGroup.GroupUsers.Select(
                 x => _mapper.Map<WorkflowGroupUserMapModel>(x))
@@ -72,7 +72,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         {
             var efWorkFlow = await _unitOfWork.WorkflowGroups.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
-            if (efWorkFlow == null) {
+            if (efWorkFlow == null)
+            {
                 throw new DomainException(
                     $"{nameof(_unitOfWork.WorkflowGroups)} {command.Id} not found",
                     DomainError.NotFound
