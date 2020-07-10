@@ -3,6 +3,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace MSR.Application.ApplicationServices.Workflow
 
         public async Task<ICommandResponse> HandleAsync(PostApprovalModel command, CancellationToken cancellationToken = default)
         {
+            throw new NotImplementedException();
             await _workflowApprovalService.CreateApprovalAsync(command);
             return new CommandResponse();
         }

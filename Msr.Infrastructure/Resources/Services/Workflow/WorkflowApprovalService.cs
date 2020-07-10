@@ -25,10 +25,91 @@ namespace MSR.Infrastructure.Resources.Services
             _mapper = mapper;
         }
 
-        public Task CreateApprovalAsync(PostApprovalModel command)
+        public async Task CreateApprovalAsync(PostApprovalModel command)
         {
-            throw new NotImplementedException();
+            switch (command.Table)
+            {
+                case EnumApprovalTables.CustomerApproval:
+                    var e = _unitOfWork.CustomerApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                    break;
+                //case EnumApprovalTables.DocumentApproval:
+                //    approvalEntity = _unitOfWork.DocumentApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                //    break;
+                //case EnumApprovalTables.LocationApproval:
+                //    approvalEntity = _unitOfWork.LocationApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                //    break;
+                //case EnumApprovalTables.PartApproval:
+                //    approvalEntity = _unitOfWork.PartApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                //    break;
+                //case EnumApprovalTables.ProcedureApproval:
+                //    approvalEntity = _unitOfWork.ProcedureApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                //    break;
+                //case EnumApprovalTables.ProductApproval:
+                //    approvalEntity = _unitOfWork.ProductApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                //    break;
+                //case EnumApprovalTables.PurchaseOrderApproval:
+                //    approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                //    break;
+                case EnumApprovalTables.UserApproval:
+                    var userApproval = _unitOfWork.UserApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                    if (userApproval != null)
+                    {
+                        var currUser = _unitOfWork.Users.Query().FirstOrDefault(x => x.Id == userApproval.UserId);
+                        UpdateEntity(currUser, userApproval);
+                        _unitOfWork.SaveChanges();
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+
         }
+
+        void UpdateEntity<C, A>(C currentEntity, A approvalEntity)
+        {
+            try
+            {
+                var entityType = currentEntity.GetType();
+                foreach (System.Reflection.PropertyInfo property in typeof(A).GetProperties())
+                {
+                    if (property.Name != "Id")
+                    {
+                        var prop = entityType.GetProperty(property.Name);
+
+                        if (prop == null) { continue; }
+
+                        var val = property.GetValue(approvalEntity, null);
+                        if (val == null)
+                        {
+
+                        }
+                        else
+                        {
+                            prop.SetValue(currentEntity, val, null);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+        }
+
+        //void UpdateEntity(EntityFramework.Entities.User currUser, UserApproval approvalEntity)
+        //{
+        //    var userType = currUser.GetType();
+        //    foreach (System.Reflection.PropertyInfo property in typeof(UserApproval).GetProperties().Where(i => i.Name != nameof(approvalEntity.Id)))
+        //    {
+        //        var prop = userType.GetProperty(property.Name);
+
+        //        if (prop == null) { continue; }
+
+        //        prop.SetValue(currUser, property.GetValue(approvalEntity), null);
+        //    }
+        //}
 
 
 
@@ -39,34 +120,37 @@ namespace MSR.Infrastructure.Resources.Services
             switch (command.Table)
             {
                 case EnumApprovalTables.CustomerApproval:
-                    approvalEntity = _unitOfWork.CustomerApprovals.Query().Where(x => x.Id == command.Id);
+                    approvalEntity = _unitOfWork.CustomerApprovals.Query();
                     break;
                 case EnumApprovalTables.DocumentApproval:
-                    approvalEntity = _unitOfWork.DocumentApprovals.Query().Where(x => x.Id == command.Id);
+                    approvalEntity = _unitOfWork.DocumentApprovals.Query();
                     break;
                 case EnumApprovalTables.LocationApproval:
-                    approvalEntity = _unitOfWork.LocationApprovals.Query().Where(x => x.Id == command.Id);
+                    approvalEntity = _unitOfWork.LocationApprovals.Query();
                     break;
                 case EnumApprovalTables.PartApproval:
-                    approvalEntity = _unitOfWork.PartApprovals.Query().Where(x => x.Id == command.Id);
+                    approvalEntity = _unitOfWork.PartApprovals.Query();
                     break;
                 case EnumApprovalTables.ProcedureApproval:
-                    approvalEntity = _unitOfWork.ProcedureApprovals.Query().Where(x => x.Id == command.Id);
+                    approvalEntity = _unitOfWork.ProcedureApprovals.Query();
                     break;
                 case EnumApprovalTables.ProductApproval:
-                    approvalEntity = _unitOfWork.ProductApprovals.Query().Where(x => x.Id == command.Id);
+                    approvalEntity = _unitOfWork.ProductApprovals.Query();
                     break;
                 case EnumApprovalTables.PurchaseOrderApproval:
-                    approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query().Where(x => x.Id == command.Id);
+                    approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query();
                     break;
                 case EnumApprovalTables.UserApproval:
-                    approvalEntity = _unitOfWork.UserApprovals.Query().Where(x => x.Id == command.Id);
-                    break;
+                    var userApprovals = _unitOfWork.UserApprovals.Query().Where(x => x.Id == command.Id).FirstOrDefault();
+                    userApprovals.Status = status;
+                    _unitOfWork.SaveChanges();
+                    var result = _mapper.Map<PendingApprovalModel>(userApprovals);
+                    return result;
                 default:
                     break;
             }
 
-            var toCancel = approvalEntity.FirstOrDefault();
+            var toCancel = approvalEntity.Where(x => x.Id == command.Id).FirstOrDefault();
             toCancel.Status = status;
             _unitOfWork.SaveChanges();
             var ret = _mapper.Map<PendingApprovalModel>(toCancel);
@@ -121,8 +205,9 @@ namespace MSR.Infrastructure.Resources.Services
                     approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query();
                     break;
                 case EnumApprovalTables.UserApproval:
-                    approvalEntity = _unitOfWork.UserApprovals.Query();
-                    break;
+                    var userApprovals = await _unitOfWork.UserApprovals.Query().ToListAsync();
+                    var result = userApprovals.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
+                    return result;
                 default:
                     break;
             }

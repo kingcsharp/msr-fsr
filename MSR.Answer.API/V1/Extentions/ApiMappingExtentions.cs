@@ -101,8 +101,11 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static PostApprovalModel ToPostApprovalCommand(this PostPendingApprovalRequest request)
         {
-            var result = AutoMapperHelper.Mapper.Map<PostApprovalModel>(request);
-            return result;
+            return new PostApprovalModel()
+            {
+                Id = request.Id,
+                Table = request.Table
+            };
         }
 
         public static DeactivateApprovalModel ToDeleteApprovalCommand(this DeletePendingApprovalRequest request)

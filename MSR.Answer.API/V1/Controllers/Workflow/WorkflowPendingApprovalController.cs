@@ -52,21 +52,12 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpDelete, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>))]
         public async Task<IActionResult> Delete([FromQuery, Required] DeletePendingApprovalRequest request)
         {
-            try
-            {
-                var command = request.ToDeleteApprovalCommand();
+            var command = request.ToDeleteApprovalCommand();
 
-                var ret = await _dispatcher.DispatchAsync(command);
+            var ret = await _dispatcher.DispatchAsync(command);
 
-                var result = ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was cancelled successfully.");
-                return result;
-            }
-            catch (System.Exception e)
-            {
-
-                throw;
-            }
-            
+            var result = ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was cancelled successfully.");
+            return result;
         }
 
     }
