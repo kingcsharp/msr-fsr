@@ -59,12 +59,22 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
 
+            // Part
             CreateMap<Resources.EntityFramework.Entities.Part, Domain.Models.Part> ();
             CreateMap<CreatePart, PartApproval>();
             CreateMap<CreatePart, Part>();
             CreateMap<UpdatePart, PartApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdatePart, Part>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Procedure
+            CreateMap<Resources.EntityFramework.Entities.Procedure, Domain.Models.Procedure> ();
+            CreateMap<CreateProcedure, ProcedureApproval>();
+            CreateMap<CreateProcedure, Procedure>();
+            CreateMap<UpdateProcedure, ProcedureApproval>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateProcedure, Procedure>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         }

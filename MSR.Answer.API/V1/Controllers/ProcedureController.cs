@@ -1,0 +1,53 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using MSR.Answer.API.Attributes;
+using MSR.Answer.API.V1.Extentions;
+using MSR.Answer.API.V1.Models;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
+using MSR.Domain.Models;
+using NSwag.Annotations;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace MSR.Answer.API.V1.Controllers
+{
+    [ApiVersion("1.0")]
+    [VersionedRoute("[controller]")]
+    public class ProcedureController : BaseApiController
+    {
+        private ICommandDispatcher _dispatcher;
+
+        public ProcedureController(ICommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
+        [HttpGet()]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
+        public async Task<IActionResult> GetProcedure(int? id)
+        {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedure() {
+                procedureID = id
+            });
+            return ret.ToOkObjectResponse<ICollection<Procedure>>();
+        }
+
+        [HttpPost]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
+        public async Task<IActionResult> AddProcedure(CreateProcedureRequest newproc)
+        {
+            var command = newproc.ToCreateProcedureCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Procedure>();
+        }
+
+        [HttpPatch]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
+        public async Task<IActionResult> UpdateProcedure(UpdateProcedureRequest newproc)
+        {
+            var command = newproc.ToUpdateProcedureCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Procedure>();
+        }
+    }
+}

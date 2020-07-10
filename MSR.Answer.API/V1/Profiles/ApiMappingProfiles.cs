@@ -18,6 +18,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetHelpPageRequest, GetHelpPage>();
             CreateMap<CreatePartRequest, CreatePart>();
             CreateMap<UpdatePartRequest, UpdatePart>();
+            CreateMap<CreateProcedureRequest, CreateProcedure>();
+            CreateMap<UpdateProcedureRequest, UpdateProcedure>();
         }
     }
 }
