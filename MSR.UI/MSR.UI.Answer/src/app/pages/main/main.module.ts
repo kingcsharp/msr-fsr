@@ -40,7 +40,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { RoleassignmentsComponent } from './roleassignments/roleassignments/roleassignments.component';
+import { RoleassignmentsComponent } from './roleassignments/roleassignments.component'
 import {ListboxModule} from 'primeng/listbox';
 
 export const routes = [
