@@ -44,10 +44,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Workflow> _workflow;
         private IRepository<WorkflowGroupUserMap> _workflowGroupUserMap;
         private IRepository<WorkflowGroupStageMap> _workflowGroupStageMaps;
-
         private IRepository<DocumentApproval> _documentApprovals;
         private IRepository<ProductApproval> _productApprovals;
-        
 
         public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
         public IRepository<Customer> Customers { get { return _customers ?? (_customers = new EFRepository<Customer>(Context)); } }
