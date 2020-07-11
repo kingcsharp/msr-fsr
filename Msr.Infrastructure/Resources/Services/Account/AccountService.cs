@@ -19,6 +19,9 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using User = MSR.Domain.Models.User;
 using Newtonsoft.Json;
 using MSR.Infrastructure.Helpers.Abstractions;
+using MSR.Domain.Abstractions.Services.Workflow;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSR.Infrastructure.Resources.Services.Account
 {
@@ -32,6 +35,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private readonly EmailInformation _emailInformation;
         private readonly GeneralInformation _generalInformation;
         private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly IWorkflowService _workflowService;
 
         public AccountService(
             IUnitOfWork unitOfWork,
@@ -41,7 +45,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
             JwtData jwtData,
             EmailInformation emailInformation,
             GeneralInformation generalInformation,
-            IAuthenticationHelper authenticationHelper)
+            IAuthenticationHelper authenticationHelper,
+            IWorkflowService workflowService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -51,11 +56,12 @@ namespace MSR.Infrastructure.Resources.Services.Account
             _emailInformation = emailInformation;
             _generalInformation = generalInformation;
             _authenticationHelper = authenticationHelper;
+            _workflowService = workflowService;
         }
 
         public async Task<string> LoginAsync(SystemLogin command)
         {
-            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false,i => i.UserName == command.UserName,null);
+            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.UserName == command.UserName, null);
             if (user == null)
             {
                 throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
@@ -66,7 +72,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
             }
 
-            return GetJWTToken(user);
+            return await GetJWTToken(user);
         }
 
         public async Task ForgotPasswordAsync(ForgotPassword command)
@@ -161,23 +167,64 @@ namespace MSR.Infrastructure.Resources.Services.Account
             return _mapper.Map<User>(user);
         }
 
-        private string GetJWTToken(EntityFramework.Entities.User efUser)
+        private async Task<string> GetJWTToken(EntityFramework.Entities.User efUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtData.Secret);
             var userPrivileges = JsonConvert.SerializeObject(GetTokenUserRoles(efUser));
+            var approvalPrivileges = JsonConvert.SerializeObject(await GetTokenUserActivityRoles(efUser.Id));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, efUser.Id.ToString()),
                     new Claim("Privileges",userPrivileges),
+                    new Claim("ApprovalPrivileges",approvalPrivileges)
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        /// <summary>
+        /// Index 0 of the Array is for CanRead
+        /// Index 1 of the Array is for CanApprove Activities
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private async Task<Dictionary<int, int[]>> GetTokenUserActivityRoles(int userId)
+        {
+            var allMyActivitiesPrivileges = await _workflowService.GetAllMyActivitiesPrivileges(userId);
+            var canApproveMenuItemRoles = await _unitOfWork.MenuRoles.Query()
+                .Select(x => new { x.MenuItemId, x.RoleId, x.MenuRolePermission }).Distinct().ToListAsync();
+
+            var result = new Dictionary<int, int[]>();
+
+            foreach (var workflowLinkModel in allMyActivitiesPrivileges)
+            {
+                foreach (var item in canApproveMenuItemRoles)
+                {
+                    if (item.MenuItemId == workflowLinkModel.MenuItemId && workflowLinkModel.RoleIds.Contains(item.RoleId))
+                    {
+                        var key = (int)EnumUtils.GetValueFromDescription<EnumApprovalTables>(workflowLinkModel.ApprovalTableName);
+                        var privileges = GetListEnumPrivileges(item.MenuRolePermission);
+                        if (result.ContainsKey(key))
+                        {
+                            result.TryGetValue(key, out int[] arrVal);
+                            result[key] = privileges.Union(arrVal).ToArray();
+                        }
+                        else
+                        {
+                            result.Add(key, privileges);
+                        }
+
+                    }
+                }
+            }
+
+            return result;
         }
 
         private static int[][] GetTokenUserRoles(EntityFramework.Entities.User user)
@@ -194,38 +241,44 @@ namespace MSR.Infrastructure.Resources.Services.Account
                     var efMenuItem = menuItem.MenuItem;
 
                     var menuItemNum = (int)EnumUtils.ParseMenuType(efMenuItem.Name);
-                    var listEnumPrivilege = new List<int>();
-                    if (menuItem.MenuRolePermission != null)
-                    {
-                        if (menuItem.MenuRolePermission.CanActivate)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanActivate);
-                        }
-                        if (menuItem.MenuRolePermission.CanApprove)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanApprove);
-                        }
-                        if (menuItem.MenuRolePermission.CanCreate)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanCreate);
-                        }
-                        if (menuItem.MenuRolePermission.CanDelete)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanDelete);
-                        }
-                        if (menuItem.MenuRolePermission.CanEdit)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanEdit);
-                        }
-                        if (menuItem.MenuRolePermission.CanRead)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanRead);
-                        }
-                    }
-                    jaggedArray[menuItemNum] = listEnumPrivilege.ToArray();
+                    jaggedArray[menuItemNum] = GetListEnumPrivileges(menuItem.MenuRolePermission);
                 }
             }
             return jaggedArray;
+        }
+
+        private static int[] GetListEnumPrivileges(MenuRolePermission menuRolePermission)
+        {
+            var listEnumPrivilege = new List<int>();
+            if (menuRolePermission != null)
+            {
+                if (menuRolePermission.CanActivate)
+                {
+                    listEnumPrivilege.Add((int)EnumPrivilege.CanActivate);
+                }
+                if (menuRolePermission.CanApprove)
+                {
+                    listEnumPrivilege.Add((int)EnumPrivilege.CanApprove);
+                }
+                if (menuRolePermission.CanCreate)
+                {
+                    listEnumPrivilege.Add((int)EnumPrivilege.CanCreate);
+                }
+                if (menuRolePermission.CanDelete)
+                {
+                    listEnumPrivilege.Add((int)EnumPrivilege.CanDelete);
+                }
+                if (menuRolePermission.CanEdit)
+                {
+                    listEnumPrivilege.Add((int)EnumPrivilege.CanEdit);
+                }
+                if (menuRolePermission.CanRead)
+                {
+                    listEnumPrivilege.Add((int)EnumPrivilege.CanRead);
+                }
+            }
+
+            return listEnumPrivilege.ToArray();
         }
     }
 }

@@ -88,7 +88,7 @@ export class AppInterceptor implements HttpInterceptor {
         }
       }), map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          if (method === 'PATCH' || method === 'POST') {
+          if (method === 'PATCH' || method === 'POST' || method === 'DELETE') {
             this.nextSuccessHandler(event.body);
           }
           this.requests--;

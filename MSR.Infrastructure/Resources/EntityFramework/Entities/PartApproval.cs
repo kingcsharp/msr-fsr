@@ -4,15 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(PartApproval))]
-    public partial class PartApproval: TrackableEntity
+    public partial class PartApproval: ApprovalEntity
     {
         public int PartId { get; set; }
-
-        public int StatusId { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
 
         [Required]
         [StringLength(100)]

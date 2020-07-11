@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Profiles
@@ -27,7 +26,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Location, Domain.Models.Location>();
 
             /*Workflow*/
-            CreateMap<CreateWorkflowGroup, WorkflowGroup>();
+            CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
 

@@ -1,8 +1,8 @@
 ﻿using MSR.Domain.Commanding;
 
-namespace MSR.Domain.Commands.Workflow
+namespace MSR.Domain.Commands
 {
-    public class DeactivateWorkflow : Command
+    public class DeactivateWorkflowGroup : Command
     {
         public int Id { get; set; }
     }

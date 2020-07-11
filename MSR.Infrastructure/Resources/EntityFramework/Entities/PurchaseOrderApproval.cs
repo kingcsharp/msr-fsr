@@ -5,15 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(PurchaseOrderApproval))]
-    public partial class PurchaseOrderApproval: TrackableEntity
+    public partial class PurchaseOrderApproval: ApprovalEntity
     {
         public int PurchaseOrderId { get; set; }
-
-        public int StatusId { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
 
         [Required]
         [StringLength(50)]

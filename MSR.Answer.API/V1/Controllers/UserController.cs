@@ -49,7 +49,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse<User>();
         }
-
+                                           
         [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
