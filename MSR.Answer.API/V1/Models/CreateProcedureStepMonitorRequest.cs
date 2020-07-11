@@ -4,14 +4,23 @@ namespace MSR.Answer.API.V1.Models
 {
     public class CreateProcedureStepMonitorRequest
     {
+        public int ProcedureStepId { get; set; }
+        public int MonitorTypeId { get; set; }
+        public int InputTypeId { get; set; }
+
         [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
-        public int ProcedureStepMonitorTypeId { get; set; }
-        public int Revision { get; set; }
-        public double Duration { get; set; }
+        public string Description { get; set; }
+
+        public int? MonitorListId { get; set; }
+        public string ShouldBe { get; set; }
+        public double? HighTarget { get; set; }
+        public double? LowTarget { get; set; }
+        public double? Target { get; set; }
+
         [Required]
-        [StringLength(20)]
-        public string DurationType { get; set; }
+        public string FailAction { get; set; }
+
+        public int SensorMappingId { get; set; }
+        public bool? SendNCREmail { get; set; }
     }
 }

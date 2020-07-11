@@ -36,7 +36,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             } else {
                 procedures = await _unitOfWork.ProcedureStepMonitors.Query().ToListAsync();
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepMonitor>(x)).OrderBy(x => x.Name).ToList();
+            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepMonitor>(x)).OrderBy(x => x.Description).ToList();
             return result;
         }
         public async Task<Domain.Models.ProcedureStepMonitor> CreateProcedureStepMonitorAsync(CreateProcedureStepMonitor command)
