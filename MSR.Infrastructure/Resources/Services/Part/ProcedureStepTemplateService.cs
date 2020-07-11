@@ -29,15 +29,15 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.ProcedureStepTemplate>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command)
         {
             List<EntityFramework.Entities.ProcedureStepTemplate> procedures;
-            if (command.procedureStepMonitorId.HasValue) {
-                procedures = await _unitOfWork.ProcedureStepTemplates.Query().Where(x => x.Id == command.procedureStepMonitorId.Value).ToListAsync();
+            if (command.Id.HasValue) {
+                procedures = await _unitOfWork.ProcedureStepTemplates.Query().Where(x => x.Id == command.Id.Value).ToListAsync();
                 if (procedures.Count == 0) {
-                    throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
+                    throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
                 }
             } else {
                 procedures = await _unitOfWork.ProcedureStepTemplates.Query().ToListAsync();
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepTemplate>(x)).OrderBy(x => x.Description).ToList();
+            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepTemplate>(x)).OrderBy(x => x.Id).ToList();
             return result;
         }
         public async Task<Domain.Models.ProcedureStepTemplate> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command)
@@ -57,11 +57,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
-                var approval = _mapper.Map<ProcedureStepTemplateApproval>(command);
-                _unitOfWork.ProcedureStepTemplateApprovals.Add(approval);
-                await _unitOfWork.SaveChangesAsync();
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepTemplate>(approval);
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplate)} uid {user.Id}");
             }
 
             return ret;
@@ -90,11 +86,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
-                var approval = _mapper.Map<ProcedureStepTemplateApproval>(command);
-                _unitOfWork.ProcedureStepTemplateApprovals.Add(approval);
-                await _unitOfWork.SaveChangesAsync();
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepTemplate>(approval);
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplate)} uid {user.Id}");
             }
 
             return ret;

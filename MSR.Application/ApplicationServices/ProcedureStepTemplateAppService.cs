@@ -11,7 +11,6 @@ namespace MSR.Application.ApplicationServices
 {
     public class ProcedureStepTemplateAppService :
         ICommandHandler<GetProcedureStepTemplate>,
-        ICommandHandler<GetProcedureStepTemplateDefinition>,
         ICommandHandler<CreateProcedureStepTemplate>,
         ICommandHandler<UpdateProcedureStepTemplate>
     {

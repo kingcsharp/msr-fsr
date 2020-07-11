@@ -4,5 +4,6 @@ namespace MSR.Domain.Commands
 {
     public class UpdateProcedureStepTemplate : Command
     {
+        public int Id { get; set; }
     }
 }
