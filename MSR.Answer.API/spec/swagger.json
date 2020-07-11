@@ -1116,7 +1116,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -1145,7 +1146,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -1186,7 +1188,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -1230,7 +1233,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 3
             },
             "x-position": 1
           },
@@ -1240,7 +1244,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "example": 2147483647
             },
             "x-position": 2
           },
@@ -1249,13 +1253,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 3
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -1279,7 +1284,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 3
             },
             "x-position": 1
           },
@@ -1288,7 +1294,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 3
           }
@@ -1330,7 +1337,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 3
             },
             "x-position": 1
           },
@@ -1339,7 +1347,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 3
           }
@@ -1357,7 +1366,7 @@
           "x-position": 2
         },
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -1392,7 +1401,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -1421,7 +1431,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -1462,7 +1473,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -1505,7 +1517,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 1
           }
@@ -3277,6 +3290,13 @@
             "maxLength": 20,
             "minLength": 0
           }
+        },
+        "example": {
+            "name": "PROCNAME1594440933",
+            "procedureTypeId": 1,
+            "revision": 999,
+            "duration": 999,
+            "durationType": "DURTYPE"
         }
       },
       "UpdateProcedureRequest": {
@@ -3310,6 +3330,14 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+            "id": 3,
+            "name": "PROCNAME1594440933",
+            "procedureTypeId": 1,
+            "revision": 999,
+            "duration": 999,
+            "durationType": "DURTYPE"
         }
       },
       "AuditActionResultOfICollectionOfProcedureStep": {
@@ -3465,6 +3493,11 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+            "title": "TITLE1594442130",
+            "stepText": "TEXT1594442130",
+            "roles": "whatever"
         }
       },
       "UpdateProcedureStepRequest": {
@@ -3519,6 +3552,10 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+            "procedureStepId": 2147483647,
+            "title": "NEWTITLE1594442279"
         }
       },
       "AuditActionResultOfICollectionOfProcedureStepMonitor": {
@@ -3690,6 +3727,16 @@
             "type": "boolean",
             "nullable": true
           }
+        },
+        "example" : {
+            "procedureStepId": 3,
+            "title": "STEPTITLE1594442595",
+            "stepText": "STEPTEXT1594442595",
+            "description": "DESC1594442595",
+            "failAction": "REJECT",
+            "monitorTypeId": 1,
+            "inputTypeId": 1,
+            "sensorMappingId": 1
         }
       },
       "UpdateProcedureStepMonitorRequest": {
@@ -3756,6 +3803,11 @@
             "type": "boolean",
             "nullable": true
           }
+        },
+        "example" : {
+            "id": 3,
+            "title": "STEPTITLE1594442664",
+            "stepText": "STEPTEXT1594442664"
         }
       },
       "AuditActionResultOfProcedureStepMonitorDefinition": {
