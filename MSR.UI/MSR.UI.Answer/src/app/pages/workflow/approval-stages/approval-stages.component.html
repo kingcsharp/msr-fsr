@@ -116,7 +116,7 @@
             {{workflowStage.lastUpdatedByName }}
           </td>
           <td>
-            <i *ngIf="canEditStages" class="fa fa-cog pointer" tooltip="Edit Workflow Stage"
+            <i *ngIf="canEditStages" class="fa fa-edit pointer" tooltip="Edit Workflow Stage"
               (click)="showDialog(workflowStage)"></i>
   
             <i class="far fa-trash-alt pointer" tooltip="Delete Workflow Stage" (click)="removeRow(workflowStage)"></i>
@@ -156,6 +156,17 @@
                   data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                   class="form-control input-transparent" tooltip="Min length 3 characters"
                   placeholder="Approval Stage Name" data-cy="name-input">
+              </div>
+              <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                Stage Member Group
+              </label>
+              <div class="col-md-4 col-12">
+                <p-multiSelect name="workflowGroups" [options]="workflowGroups" [(ngModel)]="currWorkflowStage.groupsSaved" [itemSize]="15"
+                  appendTo="body">
+                  <ng-template pTemplate="selectedItems">
+                    <div tooltip="Select Users">Select Workflow Groups</div>
+                  </ng-template>
+                </p-multiSelect>
               </div>
             </div>
             <div class="form-Stage row">

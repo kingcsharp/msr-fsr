@@ -1,14 +1,19 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Models;
+using System.Collections.Generic;
 
-namespace MSR.Domain.Commands.Workflow
+namespace MSR.Domain.Commands
 {
     public class CreateWorkflowStageModel : Command
     {
         public CreateWorkflowStageModel()
         {
+            WorkflowGroupStageMapModel = new List<WorkflowGroupStageMapModel>() { };
         }
-        
+
         public string Name { get; set; }
         public bool IsActive { get; set; }
+
+        public ICollection<WorkflowGroupStageMapModel> WorkflowGroupStageMapModel { get; set; }
     }
 }

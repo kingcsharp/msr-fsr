@@ -1,4 +1,4 @@
-﻿namespace MSR.Domain.Commands.Workflow
+﻿namespace MSR.Domain.Commands
 {
     public class UpdateWorkflowStageModel : CreateWorkflowStageModel
     {

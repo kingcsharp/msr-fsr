@@ -1,7 +1,6 @@
 using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Helpers;
 
 namespace MSR.Answer.API.V1.Extentions
@@ -84,6 +83,62 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
+        public static GetWorkflowModel ToGetWorkflowCommand(this GetWorkflowRequest request)
+        {
+            return new GetWorkflowModel()
+            {
+                Id = request.Id
+            };
+        }
+
+        public static GetPendingApproval ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
+        { 
+            return new GetPendingApproval()
+            {
+                Table = request.Table
+            };
+        }
+
+        public static PostApprovalModel ToPostApprovalCommand(this PostPendingApprovalRequest request)
+        {
+            return new PostApprovalModel()
+            {
+                Id = request.Id,
+                Table = request.Table
+            };
+        }
+
+        public static DeactivateApprovalModel ToDeleteApprovalCommand(this DeletePendingApprovalRequest request)
+        {
+            return new DeactivateApprovalModel()
+            {
+                Id=request.Id,
+                Table = request.Table
+            };
+        }
+
+        public static CreateWorkflowModel ToCreateWorkflowGroupCommand(this CreateWorkflowRequest request)
+        {
+            return new CreateWorkflowModel()
+            {
+                IsActive = request.IsActive,
+                Name = request.Name,
+                MemberStages = request.MemberStages,
+                ActivityMaps = request.ActivityMaps
+            };
+        }
+
+        public static UpdateWorkflowModel ToUpdateWorkflowGroupCommand(this UpdateWorkflowRequest request)
+        {
+            return new UpdateWorkflowModel()
+            {
+                Id = request.Id,
+                IsActive = request.IsActive,
+                Name = request.Name,
+                MemberStages = request.MemberStages,
+                ActivityMaps = request.ActivityMaps
+            };
+        }
         public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
         {
             return new GetWorkflowGroupsModel()
@@ -92,13 +147,14 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        public static CreateWorkflowGroup ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
+        public static CreateWorkflowGroupModel ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
         {
-            return new CreateWorkflowGroup()
+            return new CreateWorkflowGroupModel()
             {
                 IsActive = request.IsActive,
                 Name = request.Name,
-                Roles = request.Roles
+                Roles = request.Roles,
+                Users = request.Users
             };
         }
 
@@ -109,7 +165,8 @@ namespace MSR.Answer.API.V1.Extentions
                 Id = request.Id,
                 IsActive = request.IsActive,
                 Name = request.Name,
-                Roles = request.Roles
+                Roles = request.Roles,
+                Users = request.Users
             };
         }
 
@@ -120,23 +177,23 @@ namespace MSR.Answer.API.V1.Extentions
                 Id = request.Id
             };
         }
-
         public static CreateWorkflowStageModel ToCreateWorkflowStageCommand(this CreateWorkflowStageRequest request)
         {
             return new CreateWorkflowStageModel()
             {
                 IsActive = request.IsActive,
-                Name = request.Name
+                Name = request.Name,
+                WorkflowGroupStageMapModel = request.WorkflowGroupStageMapModel
             };
         }
-
         public static UpdateWorkflowStageModel ToUpdateWorkflowStageCommand(this UpdateWorkflowStageRequest request)
         {
             return new UpdateWorkflowStageModel()
             {
                 Id = request.Id,
                 IsActive = request.IsActive,
-                Name = request.Name
+                Name = request.Name,
+                WorkflowGroupStageMapModel = request.WorkflowGroupStageMapModel
             };
         }
 

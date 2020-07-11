@@ -10,6 +10,7 @@ using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.Email;
 using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.Services;
 using MSR.Infrastructure.Resources.Services.Account;
 using MSR.Infrastructure.Resources.Services.Location;
 using MSR.Infrastructure.Resources.Services.Customers;
@@ -37,6 +38,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();
+            services.AddScoped<IWorkflowApprovalService, WorkflowApprovalService>();
             services.AddScoped<IWorkflowGroupService, WorkflowGroupService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<ICustomerService, CustomerService>();

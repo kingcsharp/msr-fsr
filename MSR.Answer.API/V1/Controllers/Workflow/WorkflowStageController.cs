@@ -8,10 +8,9 @@ using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
-using MSR.Answer.API.V1.Models.Workflow;
 using System.Collections.Generic;
-using MSR.Domain.Models.Workflow;
-using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Models;
+using MSR.Domain.Commands;
 
 namespace MSR.Answer.API.V1.Controllers.Workflow
 {
@@ -61,7 +60,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
         [ProducesResponseType(typeof(void), 204)]
         public async Task<IActionResult> Delete(int workflowId)
         {
-            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflow()
+            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowGroup()
             {
                 Id = workflowId
             });
