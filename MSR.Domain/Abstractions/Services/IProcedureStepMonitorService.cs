@@ -10,5 +10,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<ProcedureStepMonitor>> GetProcedureStepMonitorAsync(GetProcedureStepMonitor command);
         Task<ProcedureStepMonitor> CreateProcedureStepMonitorAsync(CreateProcedureStepMonitor command);
         Task<ProcedureStepMonitor> UpdateProcedureStepMonitorAsync(UpdateProcedureStepMonitor command);
+        Task<ProcedureStepMonitorDefinition> GetProcedureStepMonitorDefinitionAsync(GetProcedureStepMonitorDefinition command);
     }
 }

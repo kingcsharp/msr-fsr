@@ -36,7 +36,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<PurchaseOrderProductApproval> _purchaseOrderProductApproval;
         private IRepository<UserApproval> _userApproval;
         private IRepository<UserRoleApproval> _userRoleApproval;
-
+        private IRepository<MonitorInputType> _monitorInputTypes;
+        private IRepository<MonitorListItem> _monitorListItems;
         private IRepository<WorkflowGroup> _workflowGroup;
         private IRepository<WorkflowStage> _workflowStage;
         private IRepository<WorkflowGroupRoleMap> _workflowGroupRoleMap;
@@ -75,6 +76,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
         public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ??= new EFRepository<WorkflowStage>(Context); } }
+        public IRepository<MonitorInputType> MonitorInputTypes { get { return _monitorInputTypes ??= new EFRepository<MonitorInputType>(Context); } }
+        public IRepository<MonitorListItem> MonitorListItems { get { return _monitorListItems ??= new EFRepository<MonitorListItem>(Context); } }
         
         #endregion Repositories
 

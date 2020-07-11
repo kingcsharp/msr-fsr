@@ -49,5 +49,13 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureStepMonitor>();
         }
+
+        [HttpGet("definition")]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitorDefinition>))]
+        public async Task<IActionResult> GetProcedureStepMonitorDefinition()
+        {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedureStepMonitorDefinition());
+            return ret.ToOkObjectResponse<ProcedureStepMonitorDefinition>();
+        }
     }
 }

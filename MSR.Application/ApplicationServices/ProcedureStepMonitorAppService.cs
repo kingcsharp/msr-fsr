@@ -11,6 +11,7 @@ namespace MSR.Application.ApplicationServices
 {
     public class ProcedureStepMonitorAppService :
         ICommandHandler<GetProcedureStepMonitor>,
+        ICommandHandler<GetProcedureStepMonitorDefinition>,
         ICommandHandler<CreateProcedureStepMonitor>,
         ICommandHandler<UpdateProcedureStepMonitor>
     {
@@ -35,6 +36,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _procedureService.UpdateProcedureStepMonitorAsync(command);
             return new CommandResponse<ProcedureStepMonitor>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetProcedureStepMonitorDefinition command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.GetProcedureStepMonitorDefinitionAsync(command);
+            return new CommandResponse<ProcedureStepMonitorDefinition>(ret);
         }
     }
 }

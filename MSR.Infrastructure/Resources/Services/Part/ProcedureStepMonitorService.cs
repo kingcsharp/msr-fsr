@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -46,7 +47,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
-                ProcedureStepMonitor procedure = _mapper.Map<EntityFramework.Entities.ProcedureStepMonitor>(command);
+                EntityFramework.Entities.ProcedureStepMonitor procedure = _mapper.Map<EntityFramework.Entities.ProcedureStepMonitor>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
                 _unitOfWork.ProcedureStepMonitors.Add(procedure);
@@ -98,6 +99,21 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return ret;
 
+        }
+
+        // Note that the data set is small here.  This function returns two sets of data:
+        // 1. a join of MonitorInputType + MonitorType
+        // 2. a join of MonitorListItem + MonitorList
+        public async Task<ProcedureStepMonitorDefinition> GetProcedureStepMonitorDefinitionAsync(GetProcedureStepMonitorDefinition command)
+        {
+            List<MonitorInputType> mons = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
+            List<MonitorListItem> items = await _unitOfWork.MonitorListItems.Query().ToListAsync();
+            ProcedureStepMonitorDefinition ret = new ProcedureStepMonitorDefinition();
+
+            ret.Types = mons.Select(x => _mapper.Map<ProcedureStepMonitorInputType>(x)).ToList();
+            ret.ListItems = items.Select(x => _mapper.Map<ProcedureStepMonitorListItem>(x)).ToList();
+
+            return ret;
         }
     }
 }

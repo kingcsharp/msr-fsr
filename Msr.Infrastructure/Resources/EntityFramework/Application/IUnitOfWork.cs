@@ -40,6 +40,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get; }
         IRepository<HelpPage> HelpPages { get; }
         IRepository<HelpPageRoleMap> HelpPageRoles { get; }
+        IRepository<MonitorInputType> MonitorInputTypes { get; }
+        IRepository<MonitorListItem> MonitorListItems { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();
