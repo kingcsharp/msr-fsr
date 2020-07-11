@@ -5,6 +5,7 @@ namespace MSR.Domain.Models
     public class ProcedureStep
     {
         public ProcedureStep() { }
+        public int Id { get; set; }
         public int ProcedureId { get; set; }
         public string Title { get; set; }
         public string StepText { get; set; }

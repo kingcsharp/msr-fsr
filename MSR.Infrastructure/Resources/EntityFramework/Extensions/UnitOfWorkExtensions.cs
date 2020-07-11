@@ -21,10 +21,16 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
         public static async Task<bool> LogApprovalTransaction<T>(this IUnitOfWork unitOfWork, T entity, int entityId, string status = "Approved")
         {
             var user = await unitOfWork.GetLoggedInUserAsync();
+            string approvalEntity = entity.GetType().Name;
+
+            // DB field is limited to 20 characters
+            if (approvalEntity.Length > 20) {
+                approvalEntity = approvalEntity.Substring(0,20);
+            }
 
             var log = new ApprovalTransactionLog()
             {
-                ApprovalEntity = entity.GetType().Name,
+                ApprovalEntity = approvalEntity,
                 ApprovalEntityId = entityId,
                 ApprovalResult = status,
                 ProcessedBy = user,
