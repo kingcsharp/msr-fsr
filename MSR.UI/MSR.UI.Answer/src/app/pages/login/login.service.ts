@@ -83,6 +83,7 @@ export class LoginService {
     this.userService.loggedInUser(env.apiVersion).pipe(take(1))
       .subscribe((result) => {
         Object.assign(user, result.object);
+        user.approvalPrivileges = JSON.parse(jwt.decodeToken(token).ApprovalPrivileges);
         this.globals.updateUser(user);
         localStorage.setItem('user', JSON.stringify(user));
         if (user.roles.length === 0) {

@@ -10,6 +10,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual Role Role { get; set; }
 
         public int WorkflowGroupId { get; set; }
+        [ForeignKey("WorkflowGroupId")]
         public virtual WorkflowGroup WorkflowGroup { get; set; }
     }
 }

@@ -8,6 +8,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MSR.Domain.Helpers;
+using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Linq;
+using System.Collections.Generic;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.Extentions
 {
@@ -39,6 +44,28 @@ namespace MSR.Answer.API.Extentions
                         }
 
                         DelegateHandler.GetCurrentUserId = () => accountId;
+
+                        string claimVal = context.Principal.FindFirst(c => c.Type == "ApprovalPrivileges").Value;
+
+                        var approvalPrivilegesDic = JsonConvert.DeserializeObject<Dictionary<int, int[]>>(claimVal);
+
+                        DelegateHandler.CanApproveActivity = (EnumApprovalTables) =>
+                        {
+                            var activityToBeApproved = (int)EnumApprovalTables;
+
+                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
+                        };
+
+                        DelegateHandler.CanReadActivity = (EnumApprovalTables) =>
+                        {
+                            var activityToBeApproved = (int)EnumApprovalTables;
+
+                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanRead);
+                        };
 
                         return Task.CompletedTask;
                     }

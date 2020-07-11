@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public class User : DeletableEntity
@@ -27,6 +27,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual Location Location { get; set; }
         public bool? IsAnswerUser { get; set; }
         public int? CustomerId { get; set; }
+        [ForeignKey("CustomerId")]
         public virtual Customer Customer { get; set; }
         public DateTime? LockoutEndDateUtc { get; set; }
         public bool LockoutEnabled { get; set; }
