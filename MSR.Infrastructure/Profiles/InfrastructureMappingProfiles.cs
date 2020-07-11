@@ -71,6 +71,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Resources.EntityFramework.Entities.Procedure, Domain.Models.Procedure> ();
             CreateMap<Resources.EntityFramework.Entities.ProcedureStep, Domain.Models.ProcedureStep> ();
             CreateMap<Resources.EntityFramework.Entities.ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate> ();
+            CreateMap<Resources.EntityFramework.Entities.ProcedureType, Domain.Models.ProcedureType> ();
             CreateMap<CreateProcedure, ProcedureApproval>();
             CreateMap<CreateProcedure, Procedure>();
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();
@@ -87,6 +88,10 @@ namespace MSR.Infrastructure.Profiles
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>();
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !srcMember.Equals(0)));
+            CreateMap<CreateProcedureType, ProcedureType>();
+            CreateMap<UpdateProcedureType, ProcedureType>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
 
