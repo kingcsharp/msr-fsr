@@ -25,7 +25,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet()]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanRead)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepMonitor>>))]
         public async Task<IActionResult> GetProcedureStepMonitor(int? id)
         {
@@ -36,7 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanCreate)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
         public async Task<IActionResult> AddProcedureStepMonitor(CreateProcedureStepMonitorRequest newproc)
         {
@@ -46,7 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanEdit)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
         public async Task<IActionResult> UpdateProcedureStepMonitor(UpdateProcedureStepMonitorRequest newproc)
         {
@@ -56,7 +56,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("definition")]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanRead)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitorDefinition>))]
         public async Task<IActionResult> GetProcedureStepMonitorDefinition()
         {

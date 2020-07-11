@@ -25,7 +25,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet()]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanRead)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
         public async Task<IActionResult> GetProcedure(int? id)
         {
@@ -36,7 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanCreate)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
         public async Task<IActionResult> AddProcedure(CreateProcedureRequest newproc)
         {
@@ -46,7 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanEdit)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
         public async Task<IActionResult> UpdateProcedure(UpdateProcedureRequest newproc)
         {
@@ -56,7 +56,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("{id}/step")]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanRead)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStep>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
@@ -68,7 +68,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("{id}/step")]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanCreate)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
         public async Task<IActionResult> AddProcedureStep(int id, CreateProcedureStepRequest newstep)
         {
@@ -79,7 +79,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch("{id}/step")]
-        [HasPrivilegeApi("Procedures", EnumPrivilege.CanEdit)]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
         public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest newstep)
         {
