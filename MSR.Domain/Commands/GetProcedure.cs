@@ -2,8 +2,8 @@
 
 namespace MSR.Domain.Commands
 {
-    public class GetCustomer: Command
+    public class GetProcedure : Command
     {
-        public int Id { get; set; }
+        public int? procedureID;
     }
 }

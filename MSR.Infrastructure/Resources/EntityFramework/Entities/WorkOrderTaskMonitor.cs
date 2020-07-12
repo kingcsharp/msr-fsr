@@ -14,7 +14,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Result { get; set; }
 
         public string Comment { get; set; }
-        public virtual MonitorTemplate MonitorTemplate { get; set; }
         public virtual WorkOrderTask WorkOrderTask { get; set; }
     }
 }

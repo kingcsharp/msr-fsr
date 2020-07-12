@@ -21,6 +21,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<MenuRole> _menuRoles;
         private IRepository<MenuRolePermission> _menuRolePermissions;
         private IRepository<Role> _roles;
+        private IRepository<Part> _parts;
+        private IRepository<Procedure> _procedures;
+        private IRepository<ProcedureStep> _procedureSteps;
+        private IRepository<ProcedureStepMonitor> _monitors;
         private IRepository<Status> _status;
         private IRepository<UserRole> _userRoles;
         private IRepository<PartApproval> _partApproval;
@@ -32,6 +36,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<PurchaseOrderProductApproval> _purchaseOrderProductApproval;
         private IRepository<UserApproval> _userApproval;
         private IRepository<UserRoleApproval> _userRoleApproval;
+        private IRepository<MonitorInputType> _monitorInputTypes;
+        private IRepository<MonitorListItem> _monitorListItems;
         private IRepository<WorkflowGroup> _workflowGroup;
         private IRepository<WorkflowStage> _workflowStage;
         private IRepository<WorkflowActivityMap> _workflowActivityMap;
@@ -47,19 +53,19 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<DocumentApproval> _documentApprovals;
         private IRepository<ProductApproval> _productApprovals;
 
-        public IRepository<User> Users { get { return _users ?? (_users = new EFRepository<User>(Context)); } }
-        public IRepository<Customer> Customers { get { return _customers ?? (_customers = new EFRepository<Customer>(Context)); } }
-        public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ?? (_customerApprovals = new EFRepository<CustomerApproval>(Context)); } }
-        public IRepository<Location> Locations { get { return _locations ?? (_locations = new EFRepository<Location>(Context)); } }
-        public IRepository<LocationApproval> LocationApprovals { get { return _locationApprovals ?? (_locationApprovals = new EFRepository<LocationApproval>(Context)); } }
-        public IRepository<MenuGroup> MenuGroups { get { return _menuGroups ?? (_menuGroups = new EFRepository<MenuGroup>(Context)); } }
-        public IRepository<MenuItem> MenuItems { get { return _menuItems ?? (_menuItems = new EFRepository<MenuItem>(Context)); } }
-        public IRepository<MenuRole> MenuRoles { get { return _menuRoles ?? (_menuRoles = new EFRepository<MenuRole>(Context)); } }
-        public IRepository<MenuRolePermission> MenuRolePermissions { get { return _menuRolePermissions ?? (_menuRolePermissions = new EFRepository<MenuRolePermission>(Context)); } }
-        public IRepository<Role> Roles { get { return _roles ?? (_roles = new EFRepository<Role>(Context)); } }
-        public IRepository<Status> Status { get { return _status ?? (_status = new EFRepository<Status>(Context)); } }
-        public IRepository<UserRole> UserRoles { get { return _userRoles ?? (_userRoles = new EFRepository<UserRole>(Context)); } }
-        public IRepository<PartApproval> PartApprovals { get { return _partApproval ?? (_partApproval = new EFRepository<PartApproval>(Context)); } }
+        public IRepository<User> Users { get { return _users ??= new EFRepository<User>(Context); } }
+        public IRepository<Customer> Customers { get { return _customers ??= new EFRepository<Customer>(Context); } }
+        public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ??= new EFRepository<CustomerApproval>(Context); } }
+        public IRepository<Location> Locations { get { return _locations ??= new EFRepository<Location>(Context); } }
+        public IRepository<LocationApproval> LocationApprovals { get { return _locationApprovals ??= new EFRepository<LocationApproval>(Context); } }
+        public IRepository<MenuGroup> MenuGroups { get { return _menuGroups ??= new EFRepository<MenuGroup>(Context); } }
+        public IRepository<MenuItem> MenuItems { get { return _menuItems ??= new EFRepository<MenuItem>(Context); } }
+        public IRepository<MenuRole> MenuRoles { get { return _menuRoles ??= new EFRepository<MenuRole>(Context); } }
+        public IRepository<MenuRolePermission> MenuRolePermissions { get { return _menuRolePermissions ??= new EFRepository<MenuRolePermission>(Context); } }
+        public IRepository<Role> Roles { get { return _roles ??= new EFRepository<Role>(Context); } }
+        public IRepository<Status> Status { get { return _status ??= new EFRepository<Status>(Context); } }
+        public IRepository<UserRole> UserRoles { get { return _userRoles ??= new EFRepository<UserRole>(Context); } }
+        public IRepository<PartApproval> PartApprovals { get { return _partApproval ??= new EFRepository<PartApproval>(Context); } }
         public IRepository<DocumentApproval> DocumentApprovals { get { return _documentApprovals ?? (_documentApprovals = new EFRepository<DocumentApproval>(Context)); } }
         public IRepository<ProductApproval> ProductApprovals { get { return _productApprovals ?? (_productApprovals = new EFRepository<ProductApproval>(Context)); } }
         public IRepository<ProcedureApproval> ProcedureApprovals { get { return _procedureApproval ?? (_procedureApproval = new EFRepository<ProcedureApproval>(Context)); } }
@@ -79,6 +85,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowActivity> WorkflowActivities { get { return _workflowActivity ?? (_workflowActivity = new EFRepository<WorkflowActivity>(Context)); } }
         public IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get { return _workflowGroupUserMap ?? (_workflowGroupUserMap = new EFRepository<WorkflowGroupUserMap>(Context)); } }
         public IRepository<WorkflowGroupStageMap> WorkflowGroupStageMaps { get { return _workflowGroupStageMaps ?? (_workflowGroupStageMaps = new EFRepository<WorkflowGroupStageMap>(Context)); } }
+        public IRepository<Part> Parts { get { return _parts ??= new EFRepository<Part>(Context); } }
+        public IRepository<Procedure> Procedures { get { return _procedures ??= new EFRepository<Procedure>(Context); } }
+        public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
+        public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
+        public IRepository<MonitorInputType> MonitorInputTypes { get { return _monitorInputTypes ??= new EFRepository<MonitorInputType>(Context); } }
+        public IRepository<MonitorListItem> MonitorListItems { get { return _monitorListItems ??= new EFRepository<MonitorListItem>(Context); } }
         public IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get { return _approvalTransactionLog ??= new EFRepository<ApprovalTransactionLog>(Context); } }
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
@@ -91,8 +103,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         }
 
         public AnswerContext Context { get; }
-
-
 
         public void Dispose()
         {

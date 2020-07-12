@@ -23,15 +23,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(4000)]
         public string StepText { get; set; }
 
-        public int? SystemTaskId { get; set; }
-
         public int? GoToStepId { get; set; }
-
-        public double Duration { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        public string DurationType { get; set; }
 
         public int PrintOrder { get; set; }
 
@@ -42,15 +34,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public double? EquipmentTime { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string Roles { get; set; }
-
         public virtual Procedure Procedure { get; set; }
 
         public virtual ICollection<ProcedureStepMonitor> ProcedureStepMonitors { get; set; }
-
-        public virtual SystemTask SystemTask { get; set; }
 
         public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
     }

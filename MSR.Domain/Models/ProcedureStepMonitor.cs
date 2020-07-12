@@ -1,15 +1,14 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 
-namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+namespace MSR.Domain.Models
 {
-    [Table(nameof(ProcedureStepMonitor))]
-    public partial class ProcedureStepMonitor: TrackableEntity
+    public class ProcedureStepMonitor
     {
+        public ProcedureStepMonitor() { }
+        public int Id { get; set; }
         public int ProcedureStepId { get; set; }
-
         public int MonitorTypeId { get; set; }
         public int InputTypeId { get; set; }
-
         public string Description { get; set; }
         public int? MonitorListId { get; set; }
         public string ShouldBe { get; set; }
@@ -20,6 +19,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int SensorMappingId { get; set; }
         public bool? SendNCREmail { get; set; }
 
-        public virtual ProcedureStep ProcedureStep { get; set; }
     }
 }
