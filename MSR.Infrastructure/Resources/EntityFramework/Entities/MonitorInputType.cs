@@ -10,8 +10,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(20)]
         public string Name { get; set; }
 
-        public int MonitorTypeId { get; set; }
-
+        [ForeignKey("MonitorTypeId")]
         public virtual MonitorType Type { get; set; }
     }
 }

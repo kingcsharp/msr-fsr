@@ -9,8 +9,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(20)]
         public string Name { get; set; }
 
-        public int MonitorListId { get; set; }
-
+        [ForeignKey("MonitorListId")]
         public virtual MonitorList List { get; set; }
     }
 }

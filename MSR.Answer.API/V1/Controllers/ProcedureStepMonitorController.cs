@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using NSwag.Annotations;
@@ -23,6 +25,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet()]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepMonitor>>))]
         public async Task<IActionResult> GetProcedureStepMonitor(int? id)
         {
@@ -33,6 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
         public async Task<IActionResult> AddProcedureStepMonitor(CreateProcedureStepMonitorRequest newproc)
         {
@@ -42,6 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
         public async Task<IActionResult> UpdateProcedureStepMonitor(UpdateProcedureStepMonitorRequest newproc)
         {
@@ -51,6 +56,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("definition")]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitorDefinition>))]
         public async Task<IActionResult> GetProcedureStepMonitorDefinition()
         {
