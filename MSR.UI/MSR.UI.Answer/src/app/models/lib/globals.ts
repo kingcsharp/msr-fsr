@@ -65,12 +65,12 @@ export class Globals {
     }
 
     hasActivityPrivilegeByTableName(tableName, privilege) {
-        var ret = this.user.ApprovalPrivileges[EnumApprovalTables[tableName]].indexOf(privilege) > -1;
+        var ret = this.user.approvalPrivileges[EnumApprovalTables[tableName]].indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilege(activityEnumVal, privilege) {
-        var ret = this.user.ApprovalPrivileges[activityEnumVal].indexOf(privilege) > -1;
+        var ret = this.user.approvalPrivileges[activityEnumVal].indexOf(privilege) > -1;
         return ret;
     }
 

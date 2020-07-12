@@ -45,6 +45,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get; }
         IRepository<HelpPage> HelpPages { get; }
         IRepository<HelpPageRoleMap> HelpPageRoles { get; }
+        IRepository<Document> Documents { get; }
+        IRepository<Part> Parts { get; }
+        IRepository<Procedure> Procedures { get; }
+        IRepository<Product> Products { get; }
+        IRepository<PurchaseOrder> PurchaseOrders { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();

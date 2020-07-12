@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   WorkflowStageService, WorkflowStageModel, WorkflowGroupService, WorkflowGroupStageMapModel,

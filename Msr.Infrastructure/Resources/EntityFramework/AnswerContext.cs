@@ -45,8 +45,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<HelpPage> HelpPage { get; set; }
         public DbSet<HelpPageRoleMap> HelpPageRoleMap { get; set; }
         public DbSet<WorkflowGroupStageMap> WorkflowGroupStageMap { get; set; }
-
-
+        public DbSet<Document> Document { get; set; }
+        public DbSet<Part> Part { get; set; }
+        public DbSet<Procedure> Procedure { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
 
         public AnswerContext() : base()
         {

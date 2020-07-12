@@ -2,6 +2,11 @@
   <i class="fas fa-clock-o"></i>
   Pending Approvals
 </h1>
+<!-- <button type="button" class="btn btn-default btn-secondary"
+  popover="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+  popoverTitle="Popover on right" placement="left" container="body" triggers="mouseenter:mouseleave">
+  Popover on right
+</button> -->
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
@@ -141,10 +146,23 @@
           {{approval.createdByName}}
         </td>
         <td>
-          <i class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
+
+          <!-- <button type="button" class="btn btn-success" [popover]="popTemplate" popoverTitle="Dynamic html inside">
+            Show me popover with html
+          </button> -->
+          <!-- <button type="button" class="btn btn-default btn-secondary"
+            popover="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." popoverTitle="Popover on right"
+            placement="right">
+            Popover on right
+          </button> -->
+          <i class="fad fa-info-circle pointer" popover="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."
+            popoverTitle="Popover on right" placement="left" container="body" triggers="mouseenter:mouseleave"></i>
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+            class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
-          <i class="far fa-arrow-alt-right pointer text-success" appendTo="body"
-            tooltip="Proceed to approval workflow for release" (click)="showDialog(approveAction,approval)"></i>
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
+            class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
+            (click)="showDialog(approveAction,approval)"></i>
         </td>
       </tr>
     </ng-template>
@@ -182,7 +200,7 @@
       <tr>
         <th [hidden]="!cg.isVisibleCol('id',gridSettings2)">
           <div class="position-relative">
-            <input id="id" pInputText type="text" tooltip="Search by Id"
+            <input id="id2" pInputText type="text" tooltip="Search by Id"
               (input)="dt2.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['id']?.value">
             <i *ngIf="dt2.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt2,'id')"></i>
@@ -198,7 +216,7 @@
 
         <th [hidden]="!cg.isVisibleCol('name',gridSettings2)">
           <div class="position-relative">
-            <input id="name" pInputText type="text" tooltip="Search by Name"
+            <input id="name2" pInputText type="text" tooltip="Search by Name"
               (input)="dt2.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['name']?.value">
             <i *ngIf="dt2.filters['name']?.value" class="fclear pi pi-times pointer"
@@ -207,7 +225,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
           <div class="position-relative">
-            <input id="comments" pInputText type="text" tooltip="Search by Comments"
+            <input id="comments2" pInputText type="text" tooltip="Search by Comments"
               (input)="dt2.filter($event.target.value, 'comments', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['comments']?.value">
             <i *ngIf="dt2.filters['comments']?.value" class="fclear pi pi-times pointer"
@@ -216,7 +234,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('workflowName',gridSettings2)">
           <div class="position-relative">
-            <input id="workflowName" pInputText type="text" tooltip="Search by Workflow"
+            <input id="workflowName2" pInputText type="text" tooltip="Search by Workflow"
               (input)="dt2.filter($event.target.value, 'workflowName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['workflowName']?.value">
             <i *ngIf="dt2.filters['workflowName']?.value" class="fclear pi pi-times pointer"
@@ -225,7 +243,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('workflowGroupName',gridSettings2)">
           <div class="position-relative">
-            <input id="workflowGroupName" pInputText type="text" tooltip="Search by Workflow group"
+            <input id="workflowGroupName2" pInputText type="text" tooltip="Search by Workflow group"
               (input)="dt2.filter($event.target.value, 'workflowGroupName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['workflowGroupName']?.value">
             <i *ngIf="dt2.filters['workflowGroupName']?.value" class="fclear pi pi-times pointer"
@@ -234,7 +252,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings2)">
           <div class="position-relative">
-            <input id="workflowCreatedByName" pInputText type="text" tooltip="Search by Initiatior"
+            <input id="workflowCreatedByName2" pInputText type="text" tooltip="Search by Initiatior"
               (input)="dt2.filter($event.target.value, 'workflowCreatedByName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['workflowCreatedByName']?.value">
             <i *ngIf="dt2.filters['workflowCreatedByName']?.value" class="fclear pi pi-times pointer"
@@ -248,7 +266,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
           <div class="position-relative">
-            <input id="createdOn" pInputText type="text" tooltip="Search by Created On"
+            <input id="createdOn2" pInputText type="text" tooltip="Search by Created On"
               (input)="dt2.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['createdOn']?.value">
             <i *ngIf="dt2.filters['createdOn']?.value" class="fclear pi pi-times pointer"
@@ -257,7 +275,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
           <div class="position-relative">
-            <input id="createdByName" pInputText type="text" tooltip="Search by Created By"
+            <input id="createdByName2" pInputText type="text" tooltip="Search by Created By"
               (input)="dt2.filter($event.target.value, 'createdByName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['createdByName']?.value">
             <i *ngIf="dt2.filters['createdByName']?.value" class="fclear pi pi-times pointer"
@@ -300,10 +318,14 @@
           {{approval.createdByName}}
         </td>
         <td>
-          <i class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
+          {{globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)}}
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+            class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
-          <i class="far fa-arrow-alt-right pointer text-success" appendTo="body"
-            tooltip="Proceed to approval workflow" (click)="showDialog(approveAction,approval)"></i>
+
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
+            class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
+            (click)="showDialog(approveAction,approval)"></i>
         </td>
       </tr>
     </ng-template>
@@ -315,8 +337,8 @@
   </p-table>
 </widget>
 
-<p-dialog *ngIf="currAction.action != undefined" header="{{currAction.action.Header}}" [(visible)]="display" [style]="{width: '50vw'}"
-  data-cy="user-header">
+<p-dialog *ngIf="currAction.action != undefined" header="{{currAction.action.Header}}" [(visible)]="display"
+  [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>

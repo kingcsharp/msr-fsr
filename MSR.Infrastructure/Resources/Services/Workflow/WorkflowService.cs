@@ -87,7 +87,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             return workflowMenuRoles;
         }
 
-        public async Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovals command)
+        public async Task<PendingApprovalNotification> GetApprovalNotificationsAsync(GetPendingApprovalsModel command)
         {
             var statuss = _unitOfWork.Status.Query().Where(i => i.Name == "In Progress" || i.Name == "Pending").ToList();
             var inProcressStatusId = statuss.FirstOrDefault(i => i.Name == "In Progress").Id;

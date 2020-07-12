@@ -2,7 +2,7 @@
 {
     /*
      * Enum generated from:
-     * SELECT TOP [Id],REPLACE(REPLACE([Name], ' ', ''),'/','') FROM [Answer3_Dev].[dbo].[MenuItem] order by Name
+     * SELECT TOP 100 [Id],REPLACE(REPLACE([Name], ' ', ''),'/','') FROM [Answer3_Dev].[dbo].[MenuItem] order by Name
      */
     public enum EnumMenuItem
     {

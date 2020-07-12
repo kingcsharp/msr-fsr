@@ -13,10 +13,14 @@ namespace MSR.Infrastructure.Profiles
                 .ReverseMap();
             CreateMap<CreateUser, User>();
             CreateMap<UpdateUser, User>();
+
+            CreateMap<Customer, Customer>();
+
+
             CreateMap<Customer, Domain.Models.Customer>().ReverseMap();
             CreateMap<Location, Domain.Models.Location>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
-            CreateMap<GetLocations, Location>(); 
+            CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
             CreateMap<GetLocations, Location>();
@@ -55,8 +59,26 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<HelpPage, Domain.Models.HelpPage>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());
 
-            CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();                          
+            CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
+
+            #region EntityApprovalToEntity
+            CreateMap<UserApproval, User>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<CustomerApproval, Customer>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<DocumentApproval, Document>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<LocationApproval, Location>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<PartApproval, Part>().ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<ProcedureApproval, Procedure>().ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.ProcedureSteps, opt => opt.MapFrom(src => src.ProcedureStepApprovals));
+
+
+
+            CreateMap<ProcedureStepApproval, ProcedureStep>().ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<ProductApproval, Product>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<PurchaseOrderApproval, PurchaseOrder>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            #endregion
         }
     }
 }

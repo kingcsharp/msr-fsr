@@ -12,7 +12,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             ProcedureStepApprovals = new HashSet<ProcedureStepApproval>();
         }
 
-        public int ProcedureId { get; set; }
+        
 
         public int ProcedureTypeId { get; set; }
 
@@ -25,7 +25,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string DurationType { get; set; }
 
         public virtual Procedure Procedure { get; set; }
-
+        public int ProcedureId { get; set; }
+        [ForeignKey("ProcedureId")]
         public virtual ProcedureType ProcedureType { get; set; }
 
         public virtual ICollection<ProcedureStepApproval> ProcedureStepApprovals { get; set; }

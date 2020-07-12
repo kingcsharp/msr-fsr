@@ -10,8 +10,9 @@ using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
-using MSR.Answer.API.V1.Models.Workflow;
 using System.Collections.Generic;
+using MSR.Answer.API.Filters;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -22,14 +23,14 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
-
+        //PendingApprovals
         public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<PendingApprovalModel>>))]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<PendingApprovalModel>>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanRead)]
         public async Task<IActionResult> Get([FromQuery, Required] GetPendingApprovalRequest request)
         {
             var command = request.ToGetPendingApprovalCommand();
@@ -38,18 +39,28 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse<ICollection<PendingApprovalModel>>();
         }
+        //, HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanRead)
+        [HttpGet("Details"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalPopoverModel>))]
+        public async Task<IActionResult> GetApprovalDetails([FromQuery, Required] GetPendingApprovalDetailRequest request)
+        {
+            var command = request.ToGetPendingApprovalDetailsCommand();
 
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult))]
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse<PendingApprovalPopoverModel>();
+        }
+
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> Post([FromQuery, Required] PostPendingApprovalRequest request)
         {
             var command = request.ToPostApprovalCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<AuditActionResult>();
+            return ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was approved successfully.");
         }
 
-        [HttpDelete, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>))]
+        [HttpDelete, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> Delete([FromQuery, Required] DeletePendingApprovalRequest request)
         {
             var command = request.ToDeleteApprovalCommand();

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using MSR.Domain.Models;
 using MSR.Domain.Commands;
+using MSR.Answer.API.Filters;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Controllers.Workflow
 {
@@ -28,7 +30,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowStageModel>>))]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowStageModel>>)), HasPrivilegeApi("ApprovalStages", EnumPrivilege.CanRead)]
         public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowStageRequest request)
         {
             var command = request.ToGetWorkflowStageCommand();
@@ -38,7 +40,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return result;
         }
 
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowStageModel>))]
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowStageModel>)), HasPrivilegeApi("ApprovalStages", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> Post([FromBody, Required] CreateWorkflowStageRequest request)
         {
             var command = request.ToCreateWorkflowStageCommand();
@@ -47,7 +49,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<WorkflowStageModel>("Workflow Stage has been successfully created.");
         }
 
-        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowStageModel>))]
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowStageModel>)), HasPrivilegeApi("ApprovalStages", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> Update([FromBody, Required] UpdateWorkflowStageRequest request)
         {
             var command = request.ToUpdateWorkflowStageCommand();
@@ -57,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
         }
 
         [HttpDelete("{workflowId}")]
-        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(void), 204), HasPrivilegeApi("ApprovalStages", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> Delete(int workflowId)
         {
             var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowGroup()

@@ -2068,7 +2068,7 @@ export class WorkflowPendingApprovalService {
         return _observableOf<AuditActionResultOfICollectionOfPendingApprovalModel>(<any>null);
     }
 
-    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResult> {
+    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2098,14 +2098,14 @@ export class WorkflowPendingApprovalService {
                 try {
                     return this.processWorkflowPendingApprovalPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfPendingApprovalModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfPendingApprovalModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processWorkflowPendingApprovalPost(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processWorkflowPendingApprovalPost(response: HttpResponseBase): Observable<AuditActionResultOfPendingApprovalModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2116,7 +2116,7 @@ export class WorkflowPendingApprovalService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfPendingApprovalModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2124,7 +2124,7 @@ export class WorkflowPendingApprovalService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfPendingApprovalModel>(<any>null);
     }
 
     workflowPendingApprovalDelete(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {

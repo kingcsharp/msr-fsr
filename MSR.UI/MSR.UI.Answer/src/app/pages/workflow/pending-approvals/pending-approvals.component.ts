@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  WorkflowService, WorkflowModel, WorkflowStageMapModel, WorkflowActivityMapModel, AuditActionResult,
-  AuditActionResultOfWorkflowModel, CreateWorkflowRequest, UpdateWorkflowRequest, WorkflowActivityModel,
+  WorkflowService, WorkflowModel,
   WorkflowGroupService, WorkflowStageService, WorkflowPendingApprovalService
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
@@ -55,8 +54,9 @@ export class PendingApprovalsComponent implements OnInit {
   statuss: any[] = [];
   approveAction: any;
   cancelAction: any;
+  globals: Globals;
 
-  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
+  constructor(private _globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowService: WorkflowService, private route: ActivatedRoute,
     private workflowGroupService: WorkflowGroupService, private workflowStageService: WorkflowStageService,
     private workflowPendingApprovalService: WorkflowPendingApprovalService) {
@@ -64,6 +64,7 @@ export class PendingApprovalsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.globals = this._globals;
     this.currWorkflow = new WorkflowModel();
     this.gridStorageId = 'approvalGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.approveAction = { 'Header': 'Pending Approval', 'Action': 'Approve' };
@@ -138,15 +139,11 @@ export class PendingApprovalsComponent implements OnInit {
   }
 
   showDialog(action, approval: any) {
-    if (this.globals.hasActivityPrivilegeByTableName(approval.activityType, this.privileges.CanApprove)) {
-      this.display = true;
-      this.currAction.action = action;
-      this.currAction.approval = approval;
-      this.currAction.id = approval.id;
-      this.currAction.activityType = approval.activityType;
-    } else {
-      this.display = false;
-    }
+    this.display = true;
+    this.currAction.action = action;
+    this.currAction.approval = approval;
+    this.currAction.id = approval.id;
+    this.currAction.activityType = approval.activityType;
   }
 
   clseDialog() {
@@ -156,14 +153,14 @@ export class PendingApprovalsComponent implements OnInit {
   onWorkflowSubmit() {
     this.globals.showLoader(true);
     const ctrl = this;
-    debugger;
     if (this.currAction.action === this.approveAction) {
       this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          debugger;
-
+          this.currAction.approval.status = resp.object.status;
+          this.addToGridStatusDropdown(resp.object);
+          ctrl.clseDialog();
         }, () => {
-          // DO not update user
+          
         }))
     }
     else {
@@ -171,7 +168,7 @@ export class PendingApprovalsComponent implements OnInit {
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.currAction.approval.status = resp.object.status;
           this.addToGridStatusDropdown(resp.object);
-          ctrl.clseDialog(); 
+          ctrl.clseDialog();
         }, () => {
           // DO not update user
         }));
