@@ -22,7 +22,7 @@ namespace MSR.Domain.Models
                 {
                     newValue = "";
                 }
-                this.Rows.Add($"{name} From: {oldValue} To: {newValue} </br>");
+                this.Rows.Add($"{name}: {oldValue} To: {newValue}");
             }
         }
 
@@ -50,7 +50,7 @@ namespace MSR.Domain.Models
                     newVal = newValue.Value.ToString("MM/dd/yy H:mm:ss zzz") + " UTC";
                 }
 
-                this.Rows.Add($"{name} From: {oldVal} To: {newVal} </br>");
+                this.Rows.Add($"{name}: {oldVal} To: {newVal}");
             }
         }
 
@@ -58,7 +58,7 @@ namespace MSR.Domain.Models
         {
             if (oldValue != newValue)
             {
-                this.Rows.Add($"{name} From: {oldValue} To: {newValue} </br>");
+                this.Rows.Add($"{name}: {oldValue} To: {newValue}");
             }
         }
 
@@ -66,7 +66,7 @@ namespace MSR.Domain.Models
         {
             if (oldValue != newValue)
             {
-                this.Rows.Add($"{name} From: {oldValue} To: {newValue} </br>");
+                this.Rows.Add($"{name}: {oldValue} To: {newValue}");
             }
         }
 
@@ -76,7 +76,7 @@ namespace MSR.Domain.Models
             {
                 var from = oldValue.HasValue ? "" : oldValue.Value.ToString();
                 var to = newValue.HasValue ? "" : newValue.Value.ToString();
-                this.Rows.Add($"{name} From: {from} To: {to} </br>");
+                this.Rows.Add($"{name}: {from} To: {to}");
             }
         }
 
@@ -86,7 +86,7 @@ namespace MSR.Domain.Models
             {
                 var from = oldValue.HasValue ? "" : oldValue.Value.ToString();
                 var to = newValue.HasValue ? "" : newValue.Value.ToString();
-                this.Rows.Add($"{name} From: {from} To: {to} </br>");
+                this.Rows.Add($"{name}: {from} To: {to}");
             }
         }
 
@@ -96,7 +96,7 @@ namespace MSR.Domain.Models
             var newVal = newValue.HasValue ? SetBoolValue(propertyName, newValue.Value) : "";
             if (oldVal != newVal)
             {
-                this.Rows.Add($"{propertyName} From: {oldVal} To: {newVal} </br>");
+                this.Rows.Add($"{propertyName}: {oldVal} To: {newVal}");
             }
 
         }

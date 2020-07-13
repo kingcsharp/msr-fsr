@@ -2185,6 +2185,65 @@ export class WorkflowPendingApprovalService {
         }
         return _observableOf<AuditActionResultOfPendingApprovalModel>(<any>null);
     }
+
+    details(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalPopoverModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval/Details?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (table === null)
+            throw new Error("The parameter 'table' cannot be null.");
+        else if (table !== undefined)
+            url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPendingApprovalPopoverModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPendingApprovalPopoverModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDetails(response: HttpResponseBase): Observable<AuditActionResultOfPendingApprovalPopoverModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPendingApprovalPopoverModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPendingApprovalPopoverModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -4873,6 +4932,87 @@ export enum EnumApprovalTables {
     PurchaseOrderApproval = 7,
     UserApproval = 8,
     All = 9,
+}
+
+export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalPopoverModel {
+    object?: PendingApprovalPopoverModel | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfPendingApprovalPopoverModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PendingApprovalPopoverModel.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPendingApprovalPopoverModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPendingApprovalPopoverModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfPendingApprovalPopoverModel extends IAuditActionResult {
+    object?: PendingApprovalPopoverModel | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class PendingApprovalPopoverModel implements IPendingApprovalPopoverModel {
+    rows?: string[] | undefined;
+
+    constructor(data?: IPendingApprovalPopoverModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["rows"])) {
+                this.rows = [] as any;
+                for (let item of _data["rows"])
+                    this.rows!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): PendingApprovalPopoverModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PendingApprovalPopoverModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.rows)) {
+            data["rows"] = [];
+            for (let item of this.rows)
+                data["rows"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IPendingApprovalPopoverModel {
+    rows?: string[] | undefined;
 }
 
 export class AuditActionResultOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalModel {

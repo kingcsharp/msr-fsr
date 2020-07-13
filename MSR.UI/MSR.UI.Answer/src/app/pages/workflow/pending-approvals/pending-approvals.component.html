@@ -146,17 +146,19 @@
           {{approval.createdByName}}
         </td>
         <td>
-
-          <!-- <button type="button" class="btn btn-success" [popover]="popTemplate" popoverTitle="Dynamic html inside">
-            Show me popover with html
-          </button> -->
-          <!-- <button type="button" class="btn btn-default btn-secondary"
-            popover="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." popoverTitle="Popover on right"
-            placement="right">
-            Popover on right
-          </button> -->
-          <i class="fad fa-info-circle pointer" popover="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."
+          <ng-template #popTemplate let-object="approvalInfo">
+            <div *ngIf="loading2">Loading...</div>
+            <div *ngIf="!loading2">
+              <div *ngFor="let elem of approvalInfo.object.rows">
+                {{elem}}
+              </div>
+            </div>
+          </ng-template>
+          <i class="fad fa-info-circle pointer"
+            (onShown)="getApprovalInfo(approvalTables[approval.activityType],approval.id)"
+            (onHidden)="clearGetApprovalInfo()" [popover]="popTemplate" [popoverContext]="approvalInfo"
             popoverTitle="Popover on right" placement="left" container="body" triggers="mouseenter:mouseleave"></i>
+
           <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>

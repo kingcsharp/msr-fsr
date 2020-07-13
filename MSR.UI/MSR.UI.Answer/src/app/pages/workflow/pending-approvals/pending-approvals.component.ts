@@ -55,6 +55,8 @@ export class PendingApprovalsComponent implements OnInit {
   approveAction: any;
   cancelAction: any;
   globals: Globals;
+  approvalInfo: any;
+  loading2: boolean;
 
   constructor(private _globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowService: WorkflowService, private route: ActivatedRoute,
@@ -100,6 +102,21 @@ export class PendingApprovalsComponent implements OnInit {
     this.route.params.subscribe(routeParams => {
       this.getApprovals(routeParams.table, this.data);
     });
+  }
+
+  getApprovalInfo(table, id) {
+    const ctrl = this;
+    this.loading2 = true;
+    this.workflowPendingApprovalService.details(table, id, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.loading2= false;
+        ctrl.approvalInfo = response;
+      }));
+  }
+
+  clearGetApprovalInfo() {
+    this.loading2 = false;
+    this.approvalInfo = {};
   }
 
   getApprovals(table, data) {
@@ -160,7 +177,7 @@ export class PendingApprovalsComponent implements OnInit {
           this.addToGridStatusDropdown(resp.object);
           ctrl.clseDialog();
         }, () => {
-          
+
         }))
     }
     else {

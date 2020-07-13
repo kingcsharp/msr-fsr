@@ -172,8 +172,8 @@ namespace MSR.Infrastructure.Resources.Services
             switch (command.Table)
             {
                 case EnumApprovalTables.CustomerApproval:
-                    var customerApproval = await _unitOfWork.CustomerApprovals.Query().Include(x => x.SecondarContactUser).Include(x => x.PrimaryContactUser).Include(x => x.Location).FirstOrDefaultAsync(x => x.CustomerId == command.Id);
-                    var customer = await _unitOfWork.Customers.Query().Include(x => x.SecondaryContactUser).Include(x => x.PrimaryContactUser).Include(x => x.Location).FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var customerApproval = await _unitOfWork.CustomerApprovals.Query().Include(x => x.SecondarContactUser).Include(x => x.PrimaryContactUser).Include(x => x.Location).FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var customer = await _unitOfWork.Customers.Query().Include(x => x.SecondaryContactUser).Include(x => x.PrimaryContactUser).Include(x => x.Location).FirstOrDefaultAsync(x => x.Id == customerApproval.CustomerId);
                     var customerApprovalChanges = new PendingApprovalPopoverModel();
                     customerApprovalChanges.AddRow("Name", customer.Name, customerApproval.Name);
                     customerApprovalChanges.AddRow("Address", customer.Address, customerApproval.Address);
@@ -184,16 +184,16 @@ namespace MSR.Infrastructure.Resources.Services
                     customerApprovalChanges.AddRow("SecondaryContactUser", customer.SecondaryContactUser?.GetFullName(), customerApproval.SecondarContactUser?.GetFullName());
                     return customerApprovalChanges;
                 case EnumApprovalTables.DocumentApproval:
-                    var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.DocumentId == command.Id);
-                    var document = await _unitOfWork.Documents.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var document = await _unitOfWork.Documents.Query().FirstOrDefaultAsync(x => x.Id == documentApproval.DocumentId);
                     var documentApprovalChanges = new PendingApprovalPopoverModel();
                     documentApprovalChanges.AddRow("Name", document.Name, documentApproval.Name);
                     documentApprovalChanges.AddRow("Revision", document.Revision, documentApproval.Revision);
                     documentApprovalChanges.AddRow("Role", document.RoleId, documentApproval.RoleId);
                     return documentApprovalChanges;
                 case EnumApprovalTables.LocationApproval:
-                    var locationApproval = await _unitOfWork.LocationApprovals.Query().FirstOrDefaultAsync(x => x.LocationId == command.Id);
-                    var location = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var locationApproval = await _unitOfWork.LocationApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var location = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(x => x.Id == locationApproval.LocationId);
                     var locationApprovalChanges = new PendingApprovalPopoverModel();
                     locationApprovalChanges.AddRow("Name", location.Name, locationApproval.Name);
                     locationApprovalChanges.AddRow("Address1", location.Address1, locationApproval.Address1);
@@ -207,8 +207,8 @@ namespace MSR.Infrastructure.Resources.Services
                     locationApprovalChanges.AddRow("InvoiceClass", location.InvoiceClass, locationApproval.InvoiceClass);
                     return locationApprovalChanges;
                 case EnumApprovalTables.PartApproval:
-                    var partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.PartId == command.Id);
-                    var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == partApproval.PartId);
                     var partApprovalChanges = new PendingApprovalPopoverModel();
                     partApprovalChanges.AddRow("Name", part.Name, partApproval.Name);
                     partApprovalChanges.AddRow("PartNumber", part.PartNumber, partApproval.PartNumber);
@@ -219,9 +219,9 @@ namespace MSR.Infrastructure.Resources.Services
                     return partApprovalChanges;
                 case EnumApprovalTables.ProcedureApproval:
                     var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.ProcedureId == command.Id);
+                        .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
                     var procedure = await _unitOfWork.Procedures.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == command.Id);
+                        .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == procedureApproval.ProcedureId);
                     var procedureApprovalChanges = new PendingApprovalPopoverModel();
                     procedureApprovalChanges.AddRow("Name", procedure.Name, procedureApproval.Name);
                     procedureApprovalChanges.AddRow("Duration Type", procedure.DurationType, procedureApproval.DurationType);
@@ -231,8 +231,8 @@ namespace MSR.Infrastructure.Resources.Services
                     this.GetProcedureStepApprovals(procedureApprovalChanges, procedure.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
                     return procedureApprovalChanges;
                 case EnumApprovalTables.ProductApproval:
-                    var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.ProductId == command.Id);
-                    var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
                     var productApprovalChanges = new PendingApprovalPopoverModel();
                     productApprovalChanges.AddRow("Name", product.Name, productApproval.Name);
                     productApprovalChanges.AddRow("Revision", product.Revision, productApproval.Revision);
@@ -244,8 +244,8 @@ namespace MSR.Infrastructure.Resources.Services
                     productApprovalChanges.AddRow("Cycle Time", product.CycleTime, productApproval.CycleTime);
                     return productApprovalChanges;
                 case EnumApprovalTables.PurchaseOrderApproval:
-                    var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.PurchaseOrderId == command.Id);
-                    var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == purchaseOrderApproval.PurchaseOrderId);
                     var purchaseOrderApprovalChanges = new PendingApprovalPopoverModel();
                     purchaseOrderApprovalChanges.AddRow("Name", purchaseOrder.Name, purchaseOrderApproval.Name);
                     purchaseOrderApprovalChanges.AddRow("Reference PO", purchaseOrder.ReferencePO, purchaseOrderApproval.ReferencePO);
@@ -257,9 +257,9 @@ namespace MSR.Infrastructure.Resources.Services
                     return purchaseOrderApprovalChanges;
                 case EnumApprovalTables.UserApproval:
                     var userApproval = await _unitOfWork.UserApprovals.Query()
-                        .Include(x => x.Customer).Include(x => x.Location).Include(x => x.UserRoleApprovals).FirstOrDefaultAsync(x => x.UserId == command.Id);
+                        .Include(x => x.Customer).Include(x => x.Location).Include(x => x.UserRoleApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
                     var currUser = await _unitOfWork.Users.Query()
-                        .Include(x => x.Customer).Include(x => x.Location).Include(x => x.Roles).FirstOrDefaultAsync(x => x.Id == command.Id);
+                        .Include(x => x.Customer).Include(x => x.Location).Include(x => x.Roles).FirstOrDefaultAsync(x => x.Id == userApproval.UserId);
                     var userApprovalChanges = new PendingApprovalPopoverModel();
                     userApprovalChanges.AddRow("FirstName", currUser.FirstName, userApproval.FirstName);
                     userApprovalChanges.AddRow("LastName", currUser.LastName, userApproval.LastName);
