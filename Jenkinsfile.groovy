@@ -22,7 +22,6 @@ pipeline {
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
-
         stage("Running xUnit Tests") {
             agent { label 'ubuntu-node' }
             steps {
@@ -39,7 +38,6 @@ pipeline {
                 }
             }
         }
-        /*
         stage('Build & Deploy') {
             parallel {
                 stage('Build and Deploy UI') {
@@ -151,7 +149,6 @@ pipeline {
                 }
             }
         }
-        */
         stage("Running API Tests") {
             agent { label 'jenkins-ecs-slave' }
             steps {
