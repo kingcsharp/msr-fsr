@@ -26,12 +26,15 @@ pipeline {
             agent { label 'ubuntu-node' }
             steps {
                 script {
-                    sh "git mv Msr.Infrastructure MSR.Infrastructure"
-                    sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
-                    sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                    sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                    sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                    step([$class: 'MSTestPublisher', testResultsFile:"**/*.trx", failOnError: true, keepLongStdio: true])
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "git mv Msr.Infrastructure MSR.Infrastructure"
+                        sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
+                        sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
+                        sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
+                        sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
+                        step([$class: 'MSTestPublisher', testResultsFile: "**/*.trx", failOnError: true, keepLongStdio: true])
+                        sh "exit 1"
+                    }
                 }
             }
         }
