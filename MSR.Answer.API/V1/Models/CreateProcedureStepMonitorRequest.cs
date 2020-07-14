@@ -1,0 +1,26 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MSR.Answer.API.V1.Models
+{
+    public class CreateProcedureStepMonitorRequest
+    {
+        public int ProcedureStepId { get; set; }
+        public int MonitorTypeId { get; set; }
+        public int InputTypeId { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        public int? MonitorListId { get; set; }
+        public string ShouldBe { get; set; }
+        public double? HighTarget { get; set; }
+        public double? LowTarget { get; set; }
+        public double? Target { get; set; }
+
+        [Required]
+        public string FailAction { get; set; }
+
+        public int SensorMappingId { get; set; }
+        public bool? SendNCREmail { get; set; }
+    }
+}

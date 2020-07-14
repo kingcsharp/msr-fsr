@@ -9,9 +9,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
-
-        public int? ProcedureVerbTypeId { get; set; }
-
-        public virtual ProcedureVerbType ProcedureVerbType { get; set; }
     }
 }

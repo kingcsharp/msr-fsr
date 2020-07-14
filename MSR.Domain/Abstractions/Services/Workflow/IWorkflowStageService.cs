@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using MSR.Domain.Commands;
-using MSR.Domain.Models;
 using System.Threading.Tasks;
-using MSR.Domain.Commands.Workflow;
-using MSR.Domain.Models.Workflow;
+using MSR.Domain.Models;
 
-namespace MSR.Domain.Abstractions.Services.Workflow
+namespace MSR.Domain.Abstractions.Services
 {
     public interface IWorkflowStageService
     {

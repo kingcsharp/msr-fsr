@@ -10,6 +10,7 @@ import { FilterUtils } from 'primeng/utils';
 export class MultiselectWrapperComponent implements OnInit {
   selectedColumns: Array<any>;
   subscriptions: Subscription[] = [];
+  multiselectName: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
   @Input() gridStorageId: string;
   @Input() options: any;
@@ -21,12 +22,11 @@ export class MultiselectWrapperComponent implements OnInit {
   @Input() filterProp: string;
   @Input() multipleValues: boolean;
   constructor() {
-
   }
 
   ngOnInit(): void {
     const ctrl = this;
-    FilterUtils['multipleValuesFilter'] = (value, filter): boolean => {
+    FilterUtils['multipleValuesFilter' + this.multiselectName] = (value, filter): boolean => {
       let found = false;
       filter.forEach(fElement => {
         value.forEach(vElement => {
@@ -61,7 +61,7 @@ export class MultiselectWrapperComponent implements OnInit {
 
   filterGrid() {
     if (this.multipleValues) {
-      this.datatable.filter(this.selectedColumns, this.filterId, 'multipleValuesFilter');
+      this.datatable.filter(this.selectedColumns, this.filterId, 'multipleValuesFilter' + this.multiselectName);
     } else {
       this.datatable.filter(this.selectedColumns, this.filterId, 'in');
     }

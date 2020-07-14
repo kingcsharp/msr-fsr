@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MSR.Answer.API.V1.Models.Workflow
+namespace MSR.Answer.API.V1.Models
 {
     public class UpdateWorkflowStageRequest : CreateWorkflowStageRequest
     {

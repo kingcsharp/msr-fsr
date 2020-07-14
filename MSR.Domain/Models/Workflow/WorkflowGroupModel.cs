@@ -1,7 +1,5 @@
-﻿using MSR.Domain.Models.BaseModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MSR.Domain.Models
 {
@@ -10,6 +8,7 @@ namespace MSR.Domain.Models
         public WorkflowGroupModel()
         {
             GroupRoles = new HashSet<WorkflowGroupRoleMapModel>();
+            GroupUsers = new HashSet<WorkflowGroupUserMapModel>();
         }
 
         public string Name { get; set; }
@@ -17,12 +16,14 @@ namespace MSR.Domain.Models
         public DateTime? LastUpdatedOn { get; set; }
         public int? LastUpdatedBy { get; set; }
         public string LastUpdatedByName { get; set; }
+        public string CreatedByName { get; set; }
         public DateTime CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
-        public string CreatedByName { get; set; }
+        
         public int Id { get; set; }
         public bool IsActive { get; set; }
 
         public ICollection<WorkflowGroupRoleMapModel> GroupRoles { get; set; }
+        public ICollection<WorkflowGroupUserMapModel> GroupUsers { get; set; }
     }
 }

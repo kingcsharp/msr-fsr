@@ -2,7 +2,6 @@
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Threading.Tasks;
-using MSR.Domain.Commands.Workflow;
 
 namespace MSR.Domain.Abstractions.Services.Workflow
 {
@@ -11,6 +10,6 @@ namespace MSR.Domain.Abstractions.Services.Workflow
         Task<ICollection<WorkflowGroupModel>> GetWorkFlowGroupsAsync(GetWorkflowGroupsModel command);
         Task<WorkflowGroupModel> CreateWorkFlowGroupAsync(CreateWorkflowGroupModel command);
         Task<WorkflowGroupModel> UpdateWorkFlowGroupAsync(UpdateWorkflowGroupModel command);
-        Task DeactivateWorkFlowGroupAsync(DeactivateWorkflow command);
+        Task DeactivateWorkFlowGroupAsync(DeactivateWorkflowGroup command);
     }
 }

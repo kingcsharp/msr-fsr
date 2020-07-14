@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.6.0.0 (NJsonSchema v10.1.18.0 (Newtonsoft.Json v12.0.0.0))",
+  "x-generator": "NSwag v13.6.2.0 (NJsonSchema v10.1.23.0 (Newtonsoft.Json v12.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "MSR API",
@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://73268cc5edeb.ngrok.io"
+      "url": "https://9a713c301ddb.ngrok.io"
     }
   ],
   "paths": {
@@ -43,7 +43,7 @@
           "x-position": 1
         },
         "responses": {
-          "400": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -167,6 +167,484 @@
         }
       }
     },
+    "/v{version}/Customer": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "operationId": "Customer_GetCustomers",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Address",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Phone",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "PrimaryContactUserId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "SecondaryContactUserId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "LocationId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "IsActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 9
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "operationId": "Customer_CreateCustomer",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Customer"
+        ],
+        "operationId": "Customer_UpdateCustomer",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomerRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Customer/{id}": {
+      "delete": {
+        "tags": [
+          "Customer"
+        ],
+        "operationId": "Customer_DeactivateCustomer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Help": {
+      "get": {
+        "tags": [
+          "Help"
+        ],
+        "operationId": "Help_GetHelpPages",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Help"
+        ],
+        "operationId": "Help_CreateHelpPage",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHelpPageRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Help"
+        ],
+        "operationId": "Help_UpdateHelpPage",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHelpPageRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Help/Role": {
+      "post": {
+        "tags": [
+          "Help"
+        ],
+        "operationId": "Help_CreateHelpPageRole",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHelpPageRoleRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Help/{id}": {
+      "delete": {
+        "tags": [
+          "Help"
+        ],
+        "operationId": "Help_DeleteHelpPage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Help/Role/{id}": {
+      "delete": {
+        "tags": [
+          "Help"
+        ],
+        "operationId": "Help_DeleteHelpPageRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Location": {
       "get": {
         "tags": [
@@ -207,6 +685,129 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Location"
+        ],
+        "operationId": "Location_CreateLocation",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLocationRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfLocation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Location"
+        ],
+        "operationId": "Location_UpdateLocation",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLocationRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Location/{id}": {
+      "delete": {
+        "tags": [
+          "Location"
+        ],
+        "operationId": "Location_DeactivateLocation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v{version}/Menu": {
@@ -241,12 +842,675 @@
         }
       }
     },
+    "/v{version}/Menu/Role": {
+      "post": {
+        "tags": [
+          "Menu"
+        ],
+        "operationId": "Menu_CreateMenuRoleMap",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMenuRoleMapRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Menu"
+        ],
+        "operationId": "Menu_AddPermissionsToMenuRoleMap",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMenuRoleMapRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Menu/Role/{id}": {
+      "delete": {
+        "tags": [
+          "Menu"
+        ],
+        "operationId": "Menu_RemoveMenuRoleMap",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Part": {
       "get": {
         "tags": [
           "Part"
         ],
-        "operationId": "Part_GetParts",
+        "operationId": "Part_GetPart",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true,
+              "example": 2147483647
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfPart"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Part"
+        ],
+        "operationId": "Part_AddPart",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "newpart",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePartRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfPart"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Part"
+        ],
+        "operationId": "Part_UpdatePart",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "newpart",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePartRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfPart"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Procedure": {
+      "get": {
+        "tags": [
+          "Procedure"
+        ],
+        "operationId": "Procedure_GetProcedure",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedure"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Procedure"
+        ],
+        "operationId": "Procedure_AddProcedure",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "newproc",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProcedureRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedure"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Procedure"
+        ],
+        "operationId": "Procedure_UpdateProcedure",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "newproc",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProcedureRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedure"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Procedure/{id}/step": {
+      "get": {
+        "tags": [
+          "Procedure"
+        ],
+        "operationId": "Procedure_GetProcedureStep",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 3
+            },
+            "x-position": 1
+          },
+          {
+            "name": "stepid",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 2147483647
+            },
+            "x-position": 2
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureStep"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Procedure"
+        ],
+        "operationId": "Procedure_AddProcedureStep",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 3
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 3
+          }
+        ],
+        "requestBody": {
+          "x-name": "newstep",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProcedureStepRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStep"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Procedure"
+        ],
+        "operationId": "Procedure_UpdateProcedureStep",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 3
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 3
+          }
+        ],
+        "requestBody": {
+          "x-name": "newstep",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProcedureStepRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStep"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/ProcedureStepMonitor": {
+      "get": {
+        "tags": [
+          "ProcedureStepMonitor"
+        ],
+        "operationId": "ProcedureStepMonitor_GetProcedureStepMonitor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureStepMonitor"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ProcedureStepMonitor"
+        ],
+        "operationId": "ProcedureStepMonitor_AddProcedureStepMonitor",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "newproc",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProcedureStepMonitorRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepMonitor"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ProcedureStepMonitor"
+        ],
+        "operationId": "ProcedureStepMonitor_UpdateProcedureStepMonitor",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "newproc",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProcedureStepMonitorRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepMonitor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/ProcedureStepMonitor/definition": {
+      "get": {
+        "tags": [
+          "ProcedureStepMonitor"
+        ],
+        "operationId": "ProcedureStepMonitor_GetProcedureStepMonitorDefinition",
         "parameters": [
           {
             "name": "version",
@@ -265,7 +1529,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfBoolean"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepMonitorDefinition"
                 }
               }
             }
@@ -678,6 +1942,100 @@
         "responses": {
           "401": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/Role": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_AssignRoleToUser",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRoleRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_EditUserRole",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRoleRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Role/{id}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_RemoveUserRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1184,6 +2542,153 @@
             "newPassword": "dummy"
         }
       },
+      "CreateCustomerRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "primaryContactUserId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "secondaryContactUserId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateCustomerRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "customerId"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "primaryContactUserId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "secondaryContactUserId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "CreateHelpPageRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "friendlyURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "helpContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "roleIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "CreateHelpPageRoleRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "helpPageId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "roleId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateHelpPageRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "helpPageId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "friendlyURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "helpContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "roleIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "AuditActionResultOfLocation": {
         "allOf": [
           {
@@ -1263,6 +2768,159 @@
           "invoiceClass": {
             "type": "string",
             "nullable": true
+          },
+          "timeZone": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TimeZone"
+              }
+            ]
+          }
+        }
+      },
+      "TimeZone": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "offset": {
+            "type": "number",
+            "format": "float"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "useDalightSavings": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CreateLocationRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "internalAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "invoiceClass": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZoneId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateLocationRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "locationId"
+        ],
+        "properties": {
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "internalAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "invoiceClass": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZoneId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -1305,6 +2963,939 @@
         "example": {
             "menuId": 2147483647,
             "roleId": 2147483647
+        }
+      },
+      "UpdateMenuRoleMapRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "menuRoleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "canRead": {
+            "type": "boolean"
+          },
+          "canCreate": {
+            "type": "boolean"
+          },
+          "canEdit": {
+            "type": "boolean"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "canActivate": {
+            "type": "boolean"
+          },
+          "canApprove": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "menuRoleId": 1,
+          "canRead": true,
+          "canCreate": true,
+          "canEdit": true,
+          "canDelete": true,
+          "canActivate": true,
+          "canApprove": true
+        }
+      },
+      "AuditActionResultOfICollectionOfPart": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Part"
+                }
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "Part": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "partNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "oemPartNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumCycles": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfPart": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Part"
+                  }
+                ]
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "CreatePartRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "partNumber"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "partNumber": {
+            "type": "string",
+            "minLength": 1
+          },
+          "oemPartNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumCycles": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "example": {
+            "name": "TESTNAME1594327234",
+            "partNumber": "TESTPARTNUM1594327234",
+            "oemPartNumber": "TESTOEMPARTNUM1594327234"
+        }
+      },
+      "UpdatePartRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "partNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "oemPartNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nickName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumCycles": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "example": {
+            "id": 2,
+            "name": "TESTNAME1594327266",
+            "partNumber": "TESTPARTNUM1594327266",
+            "oemPartNumber": "TESTOEMPARTNUM1594327266"
+        }
+      },
+      "AuditActionResultOfICollectionOfProcedure": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Procedure"
+                }
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "Procedure": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedureTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "durationType": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfProcedure": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Procedure"
+                  }
+                ]
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "CreateProcedureRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "durationType"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "procedureTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "durationType": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 0
+          }
+        },
+        "example": {
+            "name": "PROCNAME1594440933",
+            "procedureTypeId": 1,
+            "revision": 999,
+            "duration": 999,
+            "durationType": "DURTYPE"
+        }
+      },
+      "UpdateProcedureRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedureTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "duration": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "durationType": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "example": {
+            "id": 3,
+            "name": "PROCNAME1594440933",
+            "procedureTypeId": 1,
+            "revision": 999,
+            "duration": 999,
+            "durationType": "DURTYPE"
+        }
+      },
+      "AuditActionResultOfICollectionOfProcedureStep": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ProcedureStep"
+                }
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "ProcedureStep": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "procedureId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "stepText": {
+            "type": "string",
+            "nullable": true
+          },
+          "goToStepId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "durationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "printOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "equipmentTime": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "roles": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfProcedureStep": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureStep"
+                  }
+                ]
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "CreateProcedureStepRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "stepText": {
+            "type": "string",
+            "nullable": true
+          },
+          "goToStepId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "durationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "printOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "equipmentTime": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "roles": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "example": {
+            "title": "TITLE1594442130",
+            "stepText": "TEXT1594442130",
+            "roles": "whatever"
+        }
+      },
+      "UpdateProcedureStepRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "procedureStepId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "stepText": {
+            "type": "string",
+            "nullable": true
+          },
+          "goToStepId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "duration": {
+            "type": "number",
+            "format": "double"
+          },
+          "durationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "printOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "equipmentTime": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "roles": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "example": {
+            "procedureStepId": 2147483647,
+            "title": "NEWTITLE1594442279"
+        }
+      },
+      "AuditActionResultOfICollectionOfProcedureStepMonitor": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ProcedureStepMonitor"
+                }
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "ProcedureStepMonitor": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inputTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "monitorListId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shouldBe": {
+            "type": "string",
+            "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "target": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "failAction": {
+            "type": "string",
+            "nullable": true
+          },
+          "sensorMappingId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sendNCREmail": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfProcedureStepMonitor": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureStepMonitor"
+                  }
+                ]
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "CreateProcedureStepMonitorRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "description",
+          "failAction"
+        ],
+        "properties": {
+          "procedureStepId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inputTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "monitorListId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shouldBe": {
+            "type": "string",
+            "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "target": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "failAction": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sensorMappingId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sendNCREmail": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "example" : {
+            "procedureStepId": 3,
+            "title": "STEPTITLE1594442595",
+            "stepText": "STEPTEXT1594442595",
+            "description": "DESC1594442595",
+            "failAction": "REJECT",
+            "monitorTypeId": 1,
+            "inputTypeId": 1,
+            "sensorMappingId": 1
+        }
+      },
+      "UpdateProcedureStepMonitorRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "inputTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "monitorListId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shouldBe": {
+            "type": "string",
+            "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "target": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "failAction": {
+            "type": "string",
+            "nullable": true
+          },
+          "sensorMappingId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sendNCREmail": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "example" : {
+            "id": 3,
+            "title": "STEPTITLE1594442664",
+            "stepText": "STEPTEXT1594442664"
+        }
+      },
+      "AuditActionResultOfProcedureStepMonitorDefinition": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureStepMonitorDefinition"
+                  }
+                ]
+              },
+              "returnedObject": {
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "ProcedureStepMonitorDefinition": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "types": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProcedureStepMonitorInputType"
+            }
+          },
+          "listItems": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProcedureStepMonitorListItem"
+            }
+          }
+        }
+      },
+      "ProcedureStepMonitorInputType": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "inputTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inputTypeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "monitorTypeName": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ProcedureStepMonitorListItem": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "listItemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monitorListId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "itemName": {
+            "type": "string",
+            "nullable": true
+          },
+          "listName": {
+            "type": "string",
+            "nullable": true
+          }
         }
       },
       "AuditActionResultOfICollectionOfRole": {
@@ -1445,6 +4036,7 @@
           "Monitors",
           "Operational",
           "Parts",
+          "Procedures",
           "PendingApprovals",
           "ProcedureTypes",
           "PurchaseOrders",
@@ -1495,45 +4087,9 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ]
-      },
-      "UpdateMenuRoleMapRequest": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "menuRoleId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "canRead": {
-            "type": "boolean"
-          },
-          "canCreate": {
-            "type": "boolean"
-          },
-          "canEdit": {
-            "type": "boolean"
-          },
-          "canDelete": {
-            "type": "boolean"
-          },
-          "canActivate": {
-            "type": "boolean"
-          },
-          "canApprove": {
-            "type": "boolean"
-          }
-        },
-        "example": {
-          "menuRoleId": 1,
-          "canRead": true,
-          "canCreate": true,
-          "canEdit": true,
-          "canDelete": true,
-          "canActivate": true,
-          "canApprove": true
-        }
       },
       "AuditActionResultOfICollectionOfUser": {
         "allOf": [
@@ -1798,6 +4354,67 @@
         "example": {
             "id": 2147483647,
             "isActive": false
+        }
+      },
+      "CreateUserRoleRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "userId",
+          "roleId"
+        ],
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "roleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "certificationFromDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificationToDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateUserRoleRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "userRoleId"
+        ],
+        "properties": {
+          "userRoleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "roleId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "certificationFromDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificationToDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
         }
       },
       "AuditActionResultOfPendingApprovalNotification": {

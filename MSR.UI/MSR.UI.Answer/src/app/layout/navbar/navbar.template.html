@@ -22,63 +22,22 @@
         <span class="count">{{notificationCount}}</span>
       </a>
       <ul id="support-menu" class="dropdown-menu dropdown-menu-right support" role="menu">
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket ">
+        <li *ngFor="let item of notificationData.items" role="presentation">
+          <a href="/#/app/workflow/pendingapproval/{{item.table}}" class="dropdown-item support-ticket ">
             <div class="picture">
-              <span class="badge badge-success">{{notificationData.customers}}</span>
+              <span class="badge badge-success">{{item.count}}</span>
             </div>
             <div class="details">
-              Customers
+              {{item.name}}
             </div>
           </a>
         </li>
         <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
+          <a href="/#/app/workflow/pendingapproval/9" class="dropdown-item support-ticket ">
             <div class="picture">
-              <span class="badge badge-success">{{notificationData.locations}}</span>
             </div>
-            <div class="details">
-              Locations
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.parts}}</span>
-            </div>
-            <div class="details">
-              Parts
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.procedures}}</span>
-            </div>
-            <div class="details">
-              Procedures
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.purchaseOrders}}</span>
-            </div>
-            <div class="details">
-              Purchase Orders
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.users}}</span>
-            </div>
-            <div class="details">
-              Users
+            <div class="details text-center">
+              <b>View All</b>
             </div>
           </a>
         </li>

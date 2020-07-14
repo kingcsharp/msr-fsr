@@ -1,6 +1,7 @@
+using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public partial class Customer: TrackableEntity
+    public partial class Customer: DeletableEntity
     {
         public int OldId { get; set; }
 
@@ -11,15 +12,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Phone { get; set; }
 
         public int? PrimaryContactUserId { get; set; }
-
+        [ForeignKey("PrimaryContactUserId")]
         public virtual User PrimaryContactUser { get; set; }
 
         public int? SecondaryContactUserId { get; set; }
-
+        [ForeignKey("SecondaryContactUserId")]
         public virtual User SecondaryContactUser { get; set; }
 
         public virtual Location Location { get; set; }
 
-
+        public int? LocationId { get; set; }
     }
 }

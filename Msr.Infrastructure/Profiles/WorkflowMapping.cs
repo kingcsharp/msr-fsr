@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Profiles
@@ -9,22 +9,47 @@ namespace MSR.Infrastructure.Profiles
     {
         public WorkflowMapping()
         {
-            CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
-            CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
-            CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
+            CreateMap<CreateWorkflowModel, Workflow>()
+                .ForMember(dest => dest.ActivityMaps, opt => opt.MapFrom(src => src.ActivityMaps))
+                .ForMember(dest => dest.MemberStages, opt => opt.MapFrom(src => src.MemberStages));
 
-            CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>()
-                .ForMember(dest =>
-            dest.CreatedByName,
-            opt => opt.MapFrom(src => src.Created.GetFullName()))
-                .ForMember(dest =>
-            dest.LastUpdatedByName,
-            opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
+            CreateMap<PendingApprovalModel, ApprovalEntity>();
+            CreateMap<PendingApprovalModel, UserApproval>();
 
-            CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>()
-                .ForMember(dest =>
-            dest.Name,
-            opt => opt.MapFrom(src => src.Role.Name));
+            CreateMap<UpdateWorkflowModel, Workflow>();
+            CreateMap<WorkflowActivityModel, WorkflowActivity>();
+
+            CreateMap<WorkflowActivityMapModel, WorkflowActivityMap>();
+            CreateMap<WorkflowStageMapModel, WorkflowStageMap>();
+
+            CreateMap<Workflow, WorkflowModel>()
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
+                .ForMember(dest => dest.LastUpdatedByName, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()))
+                .ForMember(dest => dest.ActivityMaps, opt => opt.MapFrom(src => src.ActivityMaps))
+                .ForMember(dest => dest.MemberStages, opt => opt.MapFrom(src => src.MemberStages));
+
+            CreateMap<WorkflowActivityMap, WorkflowActivityMapModel>();
+            CreateMap<WorkflowStageMap, WorkflowStageMapModel>();
+            CreateMap<WorkflowActivity, WorkflowActivityModel>();
+
+            CreateMap<ApprovalEntity, PendingApprovalModel>()
+                .ForMember(dest => dest.WorkflowCreatedByName, opt => opt.MapFrom(src => src.Workflow.Created.GetFullName()))
+                .ForMember(dest => dest.WorkflowGroupId, opt => opt.MapFrom(src => src.WorkflowGroupId))
+                .ForMember(dest => dest.WorkflowGroupName, opt => opt.MapFrom(src => src.WorkflowGroup.Name))
+                .ForMember(dest => dest.WorkflowId, opt => opt.MapFrom(src => src.WorkflowId))
+                .ForMember(dest => dest.WorkflowName, opt => opt.MapFrom(src => src.Workflow.Name))
+                .ForMember(dest => dest.StatusId, opt => opt.MapFrom(src => src.StatusId))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Name))
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
+                .ForMember(dest => dest.ActivityType, opt => opt.MapFrom(src=>src.ActivityType));
+
+            CreateMap<UserApproval, PendingApprovalModel>()
+                .ForMember(dest => dest.WorkflowCreatedByName, opt => opt.MapFrom(src => src.Workflow.Created.GetFullName()))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetFullName()))
+                .ForMember(dest => dest.WorkflowGroupName, opt => opt.MapFrom(src => src.WorkflowGroup.Name))
+                .ForMember(dest => dest.WorkflowName, opt => opt.MapFrom(src => src.Workflow.Name))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Name))
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()));
         }
     }
 }

@@ -1,4 +1,229 @@
 <h1 class="page-title">
-  <i class="{{'fas '+icon}}"></i>
-  {{globals.activeMenu.name}}
+  <i class="fas fa-clock-o"></i>
+  Pending Approvals
 </h1>
+<widget>
+  <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId}}">
+    <ng-template pTemplate="caption">
+      <div class="text-right">
+        <button *ngIf="canAdd" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
+          data-cy="add-button">
+          + Add
+        </button>
+        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+          [gridVersion]="gridVersion" data-cy="usergrid-options">
+        </grid-options>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+          data-cy="usertable-header">
+          {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+        </th>
+        <th></th>
+      </tr>
+      <tr>
+        <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
+          <div class="position-relative">
+            <input id="id" pInputText type="text" tooltip="Search by Id"
+              (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['id']?.value">
+            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['name']?.value">
+            <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('memberStages',gridSettings)">
+          <div class="position-relative">
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="memberStages" [filterId]="'memberStages'"
+              [defaultText]="'Member Stages'" [filterProp]="'workflowStageId'" [multipleValues]="true"
+              [defaultTextTooltip]="''" [datatable]="dt">
+            </multiselect-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('activityMaps',gridSettings)">
+          <div class="position-relative">
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="activityMaps" [filterId]="'activityMaps'"
+              [defaultText]="'Applicable Activities'" [filterProp]="'workflowActivityId'" [multipleValues]="true"
+              [defaultTextTooltip]="''" [datatable]="dt">
+            </multiselect-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
+            [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+          </multiselect-wrapper>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+          <div class="position-relative" tooltip="Search by Created Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            </pcalendar-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+          <div class="position-relative">
+            <input id="createdByName" pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'createdByName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['createdByName']?.value">
+            <i *ngIf="dt.filters['createdByName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'createdByName')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+          <div class="position-relative" tooltip="Search by Last Updated On Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'" [datatable]="dt">
+            </pcalendar-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+          <div class="position-relative">
+            <input id="lastUpdatedByName" pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'lastUpdatedByName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['lastUpdatedByName']?.value">
+            <i *ngIf="dt.filters['lastUpdatedByName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'lastUpdatedByName')"></i>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-workflow>
+      <tr class="ui-selectable-row">
+        <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
+          {{workflow.id}}
+        </td>
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
+          {{workflow.name}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('memberStages',gridSettings)">
+          <span *ngFor="let item of workflow.memberStages" class="badge mr-xs badge-secondary">{{item.name}}</span>
+        </td>
+        <td [hidden]="!cg.isVisibleCol('activityMaps',gridSettings)">
+          <span *ngFor="let item of workflow.activityMaps" class="badge mr-xs badge-secondary">{{item.name}}</span>
+        </td>
+        <td class="text-center" [hidden]="!cg.isVisibleCol('isActive', gridSettings)">
+          <ng-template [ngIf]="!canActivate">
+            <p-inputSwitch disabled="true" [(ngModel)]="workflow.isActive" (ngModelChange)="workflowStatus(workflow)">
+            </p-inputSwitch>
+          </ng-template>
+          <ng-template [ngIf]="canActivate">
+            <p-inputSwitch [(ngModel)]="workflow.isActive" (ngModelChange)="workflowStatus(workflow)">
+            </p-inputSwitch>
+          </ng-template>
+        </td>
+        <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+          {{workflow.createdOn | date :'short' }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+          {{workflow.createdByName }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+          {{workflow.lastUpdatedOn | date :'short' }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+          {{workflow.lastUpdatedByName }}
+        </td>
+        <td>
+          <i *ngIf="canEdit" class="fa fa-edit pointer" tooltip="Edit Workflow " (click)="showDialog(workflow)"></i>
+
+          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow " (click)="removeRow(workflow)"></i>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" style="text-align:left">No workflow's found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</widget>
+<p-dialog header="{{ currWorkflow.id === undefined ?'Create Workflow ':'Edit Workflow '}}" [(visible)]="display"
+  [style]="{width: '50vw'}" data-cy="user-header">
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+          </span>
+          Workflow Details
+        </h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <label for="firstName" class="col-md-2 col-form-label text-md-right">
+              Approval Name
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="name" name="name" [(ngModel)]="currWorkflow.name" data-validate="parsley"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Approval  Name"
+                data-cy="name-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Member Stages
+            </label>
+            <div class="col-md-4 col-12">
+              <p-multiSelect name="role" [options]="allStages" [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15"
+                appendTo="body">
+                <ng-template pTemplate="selectedItems">
+                  <div tooltip="Select Roles">Select Member Stages</div>
+                </ng-template>
+              </p-multiSelect>
+            </div>
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Applicable Activities
+            </label>
+            <div class="col-md-4 col-12">
+              <p-multiSelect name="role2" [options]="allActivities" [(ngModel)]="currWorkflow.activitiesSaved"
+                [itemSize]="15" appendTo="body">
+                <ng-template pTemplate="selectedItems">
+                  <div tooltip="Select Roles">Select Activities</div>
+                </ng-template>
+              </p-multiSelect>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2  col-form-label text-md-right">
+              Is Active
+            </label>
+            <div class="col-md-4 ">
+              <div class="display-inline-block isActive">
+                <label class="form-check-label" for="isActive" class="switch">
+                  <input class="form-check-input" [(ngModel)]="currWorkflow.isActive" name="isActive" type="checkbox"
+                    class="ios" checked id="isActive" />
+                  <i data-cy="isactive-checkbox"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+          Save
+        </button>
+        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>

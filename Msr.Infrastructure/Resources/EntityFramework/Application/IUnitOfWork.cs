@@ -19,20 +19,40 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<MenuRole> MenuRoles { get; }
         IRepository<MenuRolePermission> MenuRolePermissions { get; }
         IRepository<Role> Roles { get; }
+        IRepository<Part> Parts { get; }
+        IRepository<Procedure> Procedures { get; }
+        IRepository<ProcedureStep> ProcedureSteps { get; }
+        IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get; }
+        IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get; }
+        IRepository<ProcedureType> ProcedureTypes { get; }
         IRepository<Status> Status { get; }
         IRepository<UserRole> UserRoles { get; }
         IRepository<PartApproval> PartApprovals { get; }
         IRepository<ProcedureApproval> ProcedureApprovals { get; }
         IRepository<ProcedureStepApproval> ProcedureStepApprovals { get; }
         IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get; }
+        IRepository<DocumentApproval> DocumentApprovals { get; }
+        IRepository<ProductApproval> ProductApprovals { get; }
+
         IRepository<ProcedureStepMonitorApproval> ProcedureStepMonitorApprovals { get; }
         IRepository<PurchaseOrderApproval> PurchaseOrderApprovals { get; }
         IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get; }
         IRepository<UserApproval> UserApprovals { get; }
         IRepository<UserRoleApproval> UserRoleApprovals { get; }
+        IRepository<Workflow> Workflows { get; }
+        IRepository<WorkflowStageMap> WorkflowStagesMap { get; }
+        IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get; }
         IRepository<WorkflowGroup> WorkflowGroups { get; }
         IRepository<WorkflowStage> WorkflowStages { get; }
         IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get; }
+        IRepository<WorkflowGroupStageMap> WorkflowGroupStageMaps { get; }
+        IRepository<WorkflowActivityMap> WorkflowActivityMaps { get; }
+        IRepository<WorkflowActivity> WorkflowActivities { get; }
+        IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get; }
+        IRepository<HelpPage> HelpPages { get; }
+        IRepository<HelpPageRoleMap> HelpPageRoles { get; }
+        IRepository<MonitorInputType> MonitorInputTypes { get; }
+        IRepository<MonitorListItem> MonitorListItems { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();
