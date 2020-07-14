@@ -81,7 +81,6 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowActivityDropdown() {
     const ctrl = this;
-    this.globals.showLoader(true);
     return this.workflowService.activity(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.returnedObject.map((x) => {
@@ -93,7 +92,6 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowStageDropdown() {
     const ctrl = this;
-    this.globals.showLoader(true);
     return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.returnedObject.map((x) => {

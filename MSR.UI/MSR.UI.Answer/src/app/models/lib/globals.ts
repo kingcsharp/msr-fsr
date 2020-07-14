@@ -15,7 +15,7 @@ export class Globals {
     login = false;
     openMainMenu = false;
     userLogged = false;
-    loader = true;
+    loader: boolean;
     activeMenu: MenuItem = new MenuItem();
     user;
     views: Array<ViewSaved>;
@@ -23,6 +23,7 @@ export class Globals {
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
         this.setActiveMenuItem(router);
+        this.loader = true;
     }
 
     setActiveMenuItem(router) {
@@ -52,7 +53,9 @@ export class Globals {
     }
 
     showLoader(isOn) {
-        this.loader = isOn;
+        setTimeout(() => {
+            this.loader = isOn;
+        }, 200);
     }
 
     hasPrivilege(controllerName, privilege) {

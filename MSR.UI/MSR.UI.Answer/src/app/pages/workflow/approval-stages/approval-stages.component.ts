@@ -103,7 +103,6 @@ export class ApprovalStagesComponent implements OnInit {
 
   getWorkflowGroups() {
     const ctrl = this;
-    this.globals.showLoader(true);
     this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.forEach(element => {

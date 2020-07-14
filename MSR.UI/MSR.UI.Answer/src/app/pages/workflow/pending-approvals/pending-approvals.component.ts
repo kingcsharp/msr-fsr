@@ -99,7 +99,6 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
     ];
-
     this.getApprovals(EnumApprovalTables.ProductApproval, this.productData);
     this.route.params.subscribe(routeParams => {
       this.getApprovals(routeParams.table, this.data);
