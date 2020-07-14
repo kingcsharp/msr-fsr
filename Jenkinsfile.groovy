@@ -166,6 +166,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Run Cypress Test") {
             agent { label 'master' }
             steps {
@@ -182,6 +183,7 @@ pipeline {
                 }
             }
         }
+        */
     }
 }
 
