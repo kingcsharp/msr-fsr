@@ -75,6 +75,7 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'activityType', label: 'Activity Type', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+      new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
       new ColumnsSaved({ id: 'comments', label: 'Comments', visible: true }),
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
@@ -89,6 +90,7 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'activityType', label: 'Activity Type', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+      new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
       new ColumnsSaved({ id: 'comments', label: 'Comments', visible: true }),
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
@@ -109,7 +111,7 @@ export class PendingApprovalsComponent implements OnInit {
     this.loading2 = true;
     this.workflowPendingApprovalService.details(table, id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.loading2= false;
+        this.loading2 = false;
         ctrl.approvalInfo = response;
       }));
   }
@@ -128,8 +130,8 @@ export class PendingApprovalsComponent implements OnInit {
         ctrl.emptyArr(dataArr);
         dataArr.push(...response.object);
         dataArr.map((elem) => {
-          this.addToGridStatusDropdown(elem);
-          this.addToGridTableDropdown(elem);
+          ctrl.addToGridStatusDropdown(elem);
+          ctrl.addToGridTableDropdown(elem);
           return elem;
         });
       }));

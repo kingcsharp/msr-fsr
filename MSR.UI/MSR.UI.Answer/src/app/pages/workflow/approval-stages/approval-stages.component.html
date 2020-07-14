@@ -1,4 +1,4 @@
-<h1 class="page-title">
+<h1 class="page-title" data-cy="page-title">
     <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
     {{globals.activeMenu.name}}
   </h1>
@@ -161,7 +161,7 @@
                 Stage Member Group
               </label>
               <div class="col-md-4 col-12">
-                <p-multiSelect name="workflowGroups" [options]="workflowGroups" [(ngModel)]="currWorkflowStage.groupsSaved" [itemSize]="15"
+                <p-multiSelect name="workflowGroups"  data-cy="workflowgroups-multiselect" [options]="workflowGroups" [(ngModel)]="currWorkflowStage.groupsSaved" [itemSize]="15"
                   appendTo="body">
                   <ng-template pTemplate="selectedItems">
                     <div tooltip="Select Users">Select Workflow Groups</div>

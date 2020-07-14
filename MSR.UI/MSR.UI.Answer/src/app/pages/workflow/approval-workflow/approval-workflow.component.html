@@ -1,4 +1,4 @@
-<h1 class="page-title">
+<h1 class="page-title" data-cy="page-title">
   <i class="fas fa-clock-o"></i>
   Pending Approvals
 </h1>
@@ -179,7 +179,7 @@
               Member Stages
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allStages" [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15"
+              <p-multiSelect name="role" [options]="allStages"  data-cy="roles-multiselect" [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15"
                 appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Member Stages</div>
@@ -190,7 +190,7 @@
               Applicable Activities
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role2" [options]="allActivities" [(ngModel)]="currWorkflow.activitiesSaved"
+              <p-multiSelect name="role2" [options]="allActivities"  data-cy="allactivities-multiselect" [(ngModel)]="currWorkflow.activitiesSaved"
                 [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Activities</div>
