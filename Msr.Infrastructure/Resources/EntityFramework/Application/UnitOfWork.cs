@@ -25,6 +25,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Procedure> _procedures;
         private IRepository<ProcedureStep> _procedureSteps;
         private IRepository<ProcedureStepMonitor> _monitors;
+        private IRepository<ProcedureStepTemplate> _procedureStepTemplates;
+        private IRepository<ProcedureType> _procedureTypes;
         private IRepository<Status> _status;
         private IRepository<UserRole> _userRoles;
         private IRepository<PartApproval> _partApproval;
@@ -89,6 +91,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Procedure> Procedures { get { return _procedures ??= new EFRepository<Procedure>(Context); } }
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
+        public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
+        public IRepository<ProcedureType> ProcedureTypes { get { return _procedureTypes ??= new EFRepository<ProcedureType>(Context); } }
         public IRepository<MonitorInputType> MonitorInputTypes { get { return _monitorInputTypes ??= new EFRepository<MonitorInputType>(Context); } }
         public IRepository<MonitorListItem> MonitorListItems { get { return _monitorListItems ??= new EFRepository<MonitorListItem>(Context); } }
         public IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get { return _approvalTransactionLog ??= new EFRepository<ApprovalTransactionLog>(Context); } }

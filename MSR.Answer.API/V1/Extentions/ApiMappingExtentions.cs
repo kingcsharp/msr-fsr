@@ -355,5 +355,23 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProcedureStepMonitor>(request);
         }
+
+        public static CreateProcedureStepTemplate ToCreateProcedureStepTemplateCommand(this CreateProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStepTemplate>(request);
+        }
+        public static UpdateProcedureStepTemplate ToUpdateProcedureStepTemplateCommand(this UpdateProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStepTemplate>(request);
+        }
+
+        public static CreateProcedureType ToCreateProcedureTypeCommand(this CreateProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureType>(request);
+        }
+        public static UpdateProcedureType ToUpdateProcedureTypeCommand(this UpdateProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureType>(request);
+        }
     }
 }

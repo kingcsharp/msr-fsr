@@ -38,6 +38,8 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IPartService, PartService>();
             services.AddScoped<IProcedureService, ProcedureService>();
             services.AddScoped<IProcedureStepMonitorService, ProcedureStepMonitorService>();
+            services.AddScoped<IProcedureStepTemplateService, ProcedureStepTemplateService>();
+            services.AddScoped<IProcedureTypeService, ProcedureTypeService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();
