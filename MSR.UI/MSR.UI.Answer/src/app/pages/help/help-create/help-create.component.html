@@ -29,7 +29,7 @@
                 <label for="roles" class="col-form-label text-left">
                     Roles
                 </label>
-                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="roles" optionLabel="name"
+                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles" optionLabel="name"
                     [itemSize]="15" [baseZIndex]="100002" appendTo="body">
                     <ng-template let-value pTemplate="selectedItems">
                         <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">
