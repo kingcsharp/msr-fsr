@@ -38,8 +38,8 @@ describe('Workflow Group Functionality', () => {
         //create 
         cy.get('[data-cy=add-button]').click();
         cy.get('[data-cy=user-header]').contains('Create Workflow Stage');
-         var wfsageName = 'Workflow Stage Test';
-        cy.get('[data-cy=name-input]').type(wfsageName).should('have.value',wfsageName);
+        var wfsageName = 'Workflow Stage Test';
+        cy.get('[data-cy=name-input]').type(wfsageName).should('have.value', wfsageName);
 
         cy.get('[data-cy=workflowgroups-multiselect]').click();
         cy.get('.ui-multiselect-panel .ui-multiselect-items-wrapper li:first-child:first').click();
@@ -49,7 +49,7 @@ describe('Workflow Group Functionality', () => {
         //end creation
 
         //validate creation in workflow stage grid
-        cy.get('[data-cy=searchbyname-grid]').type(wfsageName).should('have.value',wfsageName);
+        cy.get('[data-cy=searchbyname-grid]').type(wfsageName).should('have.value', wfsageName);
         cy.get('tbody').find('tr:first-child td').contains(wfsageName);
 
         //validate creation in approval workflow
@@ -61,7 +61,7 @@ describe('Workflow Group Functionality', () => {
                 cy.wrap(elem.parent().parent()).click();
             }
         });
-       
+
         cy.get('#Workflow li a span', { timeout: 2300 }).each((elem) => {
             if (Cypress.$(elem).text().trim().indexOf(menuChildItemName2) > -1) {
                 cy.wrap(elem).click();
@@ -75,10 +75,10 @@ describe('Workflow Group Functionality', () => {
         cy.get('[data-cy=user-header]').contains('Create Workflow');
         cy.get('[data-cy=roles-multiselect]').click();
 
-        cy.get('.ui-multiselect-panel .ui-inputtext').type(wfsageName).should('have.value',wfsageName);
+        cy.get('.ui-multiselect-panel .ui-inputtext').type(wfsageName).should('have.value', wfsageName);
         cy.get('.ui-multiselect-panel .ui-multiselect-items-wrapper li:visible>span').contains(wfsageName);
 
-        
+
         cy.get('@warningMessage').should("not.called")
         cy.get('@errorMessage').should("not.called")
     })

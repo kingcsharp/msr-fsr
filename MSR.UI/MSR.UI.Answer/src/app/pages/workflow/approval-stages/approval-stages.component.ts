@@ -66,8 +66,8 @@ export class ApprovalStagesComponent implements OnInit {
     this.canAddStages = true;
     this.canActivateStages = true;
     this.canEditStages = true;
-    this.getWorkflowGroups();
     this.getWorkflowStages();
+    this.getWorkflowGroups();
   }
 
   getWorkflowStages() {
@@ -75,6 +75,7 @@ export class ApprovalStagesComponent implements OnInit {
     this.globals.showLoader(true);
     this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
         ctrl.data = response.object;
         this.setGroupsSaved();
       }));

@@ -106,6 +106,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     this.globals.showLoader(true);
     this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
         ctrl.data = response.object;
         ctrl.data.map((elem) => {
           this.updateStagesSavedForItem(elem);
