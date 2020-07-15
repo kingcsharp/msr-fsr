@@ -45,9 +45,8 @@ describe('Workflow Group Functionality', () => {
         cy.get('[data-cy=usertable-header]').contains('Created On').click();
         cy.get('[data-cy=usertable-header]').contains('Created By').click();
 
-        cy.get('[data-cy=usergrid-options]').find('.gridDropdown').click()
-
-        cy.get('[data-cy=usergrid-options]').find('.gridDropdown').find('.ui-multiselect-items-wrapper').scrollTo('bottom')
+        cy.get('[data-cy=usergrid-options]').find('.gridDropdown').click();
+        cy.get('[data-cy=usergrid-options]').find('.gridDropdown').find('.ui-multiselect-items-wrapper').scrollTo('bottom');
         cy.get('[data-cy=usergrid-options]').find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Updated On').click()
         cy.get('[data-cy=usergrid-options]').find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Updated By').click()
 

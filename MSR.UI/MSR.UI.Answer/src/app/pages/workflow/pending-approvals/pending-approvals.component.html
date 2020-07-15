@@ -39,7 +39,7 @@
 
         <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
           <div class="position-relative">
-            <input id="name" pInputText type="text" tooltip="Search by Name"
+            <input id="name" pInputText type="text" tooltip="Search by Name"  data-cy="searchbyname-grid"
               (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt.filters['name']?.value">
             <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
@@ -113,7 +113,7 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-approval>
+    <ng-template pTemplate="body" let-approval  data-cy="t-body2">
       <tr class="ui-selectable-row">
         <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
           {{approval.id}}
@@ -219,7 +219,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('name',gridSettings2)">
           <div class="position-relative">
-            <input id="name2" pInputText type="text" tooltip="Search by Name"
+            <input id="name2" pInputText type="text" tooltip="Search by Name"  data-cy="searchbyname2-grid"
               (input)="dt2.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['name']?.value">
             <i *ngIf="dt2.filters['name']?.value" class="fclear pi pi-times pointer"
@@ -293,7 +293,7 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-approval>
+    <ng-template pTemplate="body" let-approval  data-cy="t-body2">
       <tr class="ui-selectable-row">
         <td [hidden]="!cg.isVisibleCol('id', gridSettings2)">
           {{approval.id}}
