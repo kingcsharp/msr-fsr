@@ -203,7 +203,6 @@ export class ApprovalWorkflowComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflow.id);
         this.data.splice(index, 1);
-        ctrl.toastr.success(`Workflow has been successfully removed.`);
       }, () => {
         // DO not update user
       }));

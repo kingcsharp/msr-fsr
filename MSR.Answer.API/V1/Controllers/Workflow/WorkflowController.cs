@@ -75,7 +75,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<WorkflowModel>("Workflow has been successfully updated.");
         }
 
-        [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanDelete)]
+        [HttpDelete("{workflowId}"), SwaggerResponse(typeof(AuditActionResult)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> Delete(int workflowId)
         {
             var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowModel()
@@ -83,7 +83,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
                 Id = workflowId
             });
 
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Workflow was successfully removed.");
         }
 
 
