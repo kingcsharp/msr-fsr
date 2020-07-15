@@ -34,30 +34,15 @@ describe('Workflow Group Functionality', () => {
         });
 
         cy.get(".ui-blockui-document", { timeout: 8000 }).should("not.be.visible");
-        cy.get('[data-cy=page-title]').contains(menuChildItemName).click();
 
-        //edit 
-        var wfsageName = 'Workflow Stage Test';
-        cy.get('[data-cy=searchbyname-grid]').type(wfsageName).should('have.value', wfsageName);
-        cy.get('tbody').find('tr:first-child td').contains(wfsageName);
-        cy.get('tbody').find('tr:first-child td').get('[data-cy=editRow').click();
-
-        cy.get('[data-cy=user-header]').contains('Edit Workflow Stage');
-        cy.get('[data-cy=name-input]').clear();
+        //delete item
         var wfstageNewName = 'Workflow Stage Test2';
-        cy.get('[data-cy=name-input]').type(wfstageNewName).should('have.value', wfstageNewName);
-
-        cy.get('[data-cy=workflowgroups-multiselect]').click();
-        cy.get('.ui-multiselect-panel .ui-multiselect-items-wrapper li:first-child:first').click();
-        cy.get('.ui-multiselect-panel .ui-multiselect-close').click();
-        cy.get('[data-cy=save-button]').click();
-        cy.get(".ui-blockui-document", { timeout: 6000 }).should("not.be.visible");
-        //end edit
-
         cy.get(".ui-blockui-document", { timeout: 4000 }).should("not.be.visible");
         cy.get('[data-cy=searchbyname-grid]').clear();
         cy.get('[data-cy=searchbyname-grid]').type(wfstageNewName).should('have.value', wfstageNewName);
         cy.get('tbody').find('tr:first-child td').contains(wfstageNewName);
+        cy.get('tbody').find('tr:first-child td').get('[data-cy=deleteRow').click();
+        //delete item
         
         cy.get('@warningMessage').should("not.called")
         cy.get('@errorMessage').should("not.called")
