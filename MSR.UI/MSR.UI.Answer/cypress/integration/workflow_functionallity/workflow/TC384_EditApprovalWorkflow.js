@@ -40,6 +40,7 @@ describe('Workflow Group Functionality', () => {
         cy.get('[data-cy=searchbyname-grid]').type('ApprovalTest').should('have.value', 'ApprovalTest');
         cy.get('tbody').find('tr:first-child td').contains('ApprovalTest');
         cy.get('tbody').find('tr:first-child td').get('[data-cy=editRow').click();
+        
         cy.get('[data-cy=user-header]').contains('Edit Workflow');
         cy.get('[data-cy=name-input]').clear();
         cy.get('[data-cy=name-input]').type('ApprovalTest2').should('have.value', 'ApprovalTest2');

@@ -2751,7 +2751,7 @@ export class WorkflowGroupService {
         return _observableOf<AuditActionResultOfWorkflowGroupModel>(<any>null);
     }
 
-    workflowGroupDelete(workflowId: number, version: string): Observable<void> {
+    workflowGroupDelete(workflowId: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/WorkflowGroup/{workflowId}";
         if (workflowId === undefined || workflowId === null)
             throw new Error("The parameter 'workflowId' must be defined.");
@@ -2765,6 +2765,7 @@ export class WorkflowGroupService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -2775,14 +2776,14 @@ export class WorkflowGroupService {
                 try {
                     return this.processWorkflowGroupDelete(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
         }));
     }
 
-    protected processWorkflowGroupDelete(response: HttpResponseBase): Observable<void> {
+    protected processWorkflowGroupDelete(response: HttpResponseBase): Observable<AuditActionResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2791,14 +2792,17 @@ export class WorkflowGroupService {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 

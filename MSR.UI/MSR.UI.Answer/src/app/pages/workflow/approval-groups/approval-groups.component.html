@@ -125,9 +125,9 @@
           {{workflowGroup.lastUpdatedByName }}
         </td>
         <td>
-          <i *ngIf="canEditGroups" class="fa fa-edit pointer" tooltip="Edit Workflow Group"
+          <i *ngIf="canEditGroups" class="fa fa-edit pointer" tooltip="Edit Workflow Group" data-cy="editRow"
             (click)="showDialog(workflowGroup)"></i>
-          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow Group" (click)="removeRow(workflowGroup)"></i>
+          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow Group" data-cy="deleteRow" (click)="removeRow(workflowGroup)"></i>
         </td>
       </tr>
     </ng-template>
