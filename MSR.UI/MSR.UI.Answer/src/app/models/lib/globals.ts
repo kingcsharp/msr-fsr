@@ -55,7 +55,7 @@ export class Globals {
     showLoader(isOn) {
         setTimeout(() => {
             this.loader = isOn;
-        }, 200);
+        }, 100);
     }
 
     hasPrivilege(controllerName, privilege) {
