@@ -177,7 +177,7 @@
     </ng-template>
   </p-table>
 </widget>
-<p-dialog *ngIf="display" header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
+<p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
   [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
