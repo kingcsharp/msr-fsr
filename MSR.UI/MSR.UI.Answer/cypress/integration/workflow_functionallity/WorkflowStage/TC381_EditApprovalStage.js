@@ -1,5 +1,5 @@
 describe('Workflow Group Functionality', () => {
-    it('TC378_ApprovalWorkflowGrid', () => {
+    it('TC381_EditApprovalStage', () => {
 
         var adminUsername = Cypress.env('admin-username');
         var adminPassword = Cypress.env('admin-password');

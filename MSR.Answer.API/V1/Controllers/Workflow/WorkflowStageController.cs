@@ -62,7 +62,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
         [HasPrivilegeApi("ApprovalStages", EnumPrivilege.CanDelete), SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> Delete(int workflowId)
         {
-            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowGroup()
+            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowStage()
             {
                 Id = workflowId
             });

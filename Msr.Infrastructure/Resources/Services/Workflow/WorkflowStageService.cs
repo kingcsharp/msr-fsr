@@ -6,6 +6,7 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +52,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         {
             var efWorkFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
-            if (efWorkFlow == null) {
+            if (efWorkFlow == null)
+            {
                 throw new DomainException(
                     $"{nameof(_unitOfWork.WorkflowStages)} {command.Id} not found",
                     Domain.Commanding.Enums.DomainError.NotFound
@@ -82,12 +84,13 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         public async Task DeactivateWorkFlowStageAsync(DeactivateWorkflowStage command)
         {
             var workFlow = await _unitOfWork.WorkflowStages.Query().Include(x => x.Group)
-                .FirstOrDefaultAsync(x => x.Id == command.Id);
+           .FirstOrDefaultAsync(x => x.Id == command.Id);
             if (workFlow == null)
             {
                 return;
             }
             _unitOfWork.WorkflowStages.Delete(false, workFlow, true);
+
             await _unitOfWork.SaveChangesAsync();
         }
     }
