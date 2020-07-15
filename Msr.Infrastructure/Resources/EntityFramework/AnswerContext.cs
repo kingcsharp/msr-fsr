@@ -36,6 +36,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PurchaseOrderProductApproval> PurchaseOrderProductApproval { get; set; }
         public DbSet<UserApproval> UserApproval { get; set; }
         public DbSet<UserRoleApproval> UserRoleApproval { get; set; }
+        public DbSet<MonitorInputType> MonitorInputType { get; set; }
+        public DbSet<MonitorListItem> MonitorListItem { get; set; }
         public DbSet<Workflow> Workflow { get; set; }
         public DbSet<WorkflowStageMap> WorkflowStageMap { get; set; }
         public DbSet<WorkflowGroupUserMap> WorkflowGroupUserMap { get; set; }
@@ -45,6 +47,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<HelpPage> HelpPage { get; set; }
         public DbSet<HelpPageRoleMap> HelpPageRoleMap { get; set; }
         public DbSet<WorkflowGroupStageMap> WorkflowGroupStageMap { get; set; }
+        public DbSet<ApprovalTransactionLog> ApprovalTransactionLog { get; set; }
+        public DbSet<ProcedureStepTemplate> ProcedureStepTemplate { get; set; }
+        public DbSet<ProcedureType> ProcedureType { get; set; }
         public DbSet<Document> Document { get; set; }
         public DbSet<Part> Part { get; set; }
         public DbSet<Procedure> Procedure { get; set; }

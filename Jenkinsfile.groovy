@@ -22,6 +22,22 @@ pipeline {
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
+        stage("Running xUnit Tests") {
+            agent { label 'ubuntu-node' }
+            steps {
+                script {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh "git mv Msr.Infrastructure MSR.Infrastructure"
+                        sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
+                        sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
+                        sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
+                        sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
+                        step([$class: 'MSTestPublisher', testResultsFile: "**/*.trx", failOnError: true, keepLongStdio: true])
+                        sh "exit 1"
+                    }
+                }
+            }
+        }
         stage('Build & Deploy') {
             parallel {
                 stage('Build and Deploy UI') {
@@ -133,9 +149,8 @@ pipeline {
                 }
             }
         }
-
         stage("Running API Tests") {
-            agent { label 'master' }
+            agent { label 'jenkins-ecs-slave' }
             steps {
                 script {
                     sh label: '', script: '''curl -u Vi5GHlZj0Cb5sUlC: "https://assertible.com/deployments" -d\'{
@@ -148,6 +163,24 @@ pipeline {
                 }
             }
         }
+        /*
+        stage("Run Cypress Test") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "sudo chmod 777 /var/run/docker.sock"
+                    sh "git mv Msr.Infrastructure MSR.Infrastructure"
+                    sh 'docker-compose up --build -d'
+                    sh './count_containers.sh running'
+                    dir('MSR.UI/MSR.UI.Answer') {
+                        sh 'yarn'
+                        sh './node_modules/.bin/cypress run --record --key 48818e2d-4f0f-4541-8176-b9541ee0064d'
+                    }
+                    sh 'ocker-compose down'
+                }
+            }
+        }
+        */
     }
 }
 

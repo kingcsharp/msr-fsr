@@ -1,4 +1,5 @@
 {
-    "defaultCommandTimeout": 6000,
-    "requestTimeout":8000
+  "projectId": "dz8ew9"
+  "defaultCommandTimeout": 6000,
+  "requestTimeout": 8000
 }

@@ -328,5 +328,59 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<GetHelpPage>(request);
         }
+
+        public static CreatePart ToCreatePartCommand(this CreatePartRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreatePart>(request);
+        }
+        public static UpdatePart ToUpdatePartCommand(this UpdatePartRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdatePart>(request);
+        }
+
+        public static CreateProcedure ToCreateProcedureCommand(this CreateProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedure>(request);
+        }
+        public static UpdateProcedure ToUpdateProcedureCommand(this UpdateProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedure>(request);
+        }
+
+        public static CreateProcedureStep ToCreateProcedureStepCommand(this CreateProcedureStepRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStep>(request);
+        }
+        public static UpdateProcedureStep ToUpdateProcedureStepCommand(this UpdateProcedureStepRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStep>(request);
+        }
+
+        public static CreateProcedureStepMonitor ToCreateProcedureStepMonitorCommand(this CreateProcedureStepMonitorRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStepMonitor>(request);
+        }
+        public static UpdateProcedureStepMonitor ToUpdateProcedureStepMonitorCommand(this UpdateProcedureStepMonitorRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStepMonitor>(request);
+        }
+
+        public static CreateProcedureStepTemplate ToCreateProcedureStepTemplateCommand(this CreateProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStepTemplate>(request);
+        }
+        public static UpdateProcedureStepTemplate ToUpdateProcedureStepTemplateCommand(this UpdateProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStepTemplate>(request);
+        }
+
+        public static CreateProcedureType ToCreateProcedureTypeCommand(this CreateProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureType>(request);
+        }
+        public static UpdateProcedureType ToUpdateProcedureTypeCommand(this UpdateProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureType>(request);
+        }
     }
 }

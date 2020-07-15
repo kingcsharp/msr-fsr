@@ -18,8 +18,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int StatusId { get; set; }
 
-        public int SystemTaskId { get; set; }
-
         public int TaskStepOrder { get; set; }
 
         public int? AssignedTo { get; set; }
@@ -34,8 +32,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ProcedureStep ProcedureStep { get; set; }
 
         public virtual Status Status { get; set; }
-
-        public virtual SystemTask SystemTask { get; set; }
 
         public virtual WorkOrder WorkOrder { get; set; }
 

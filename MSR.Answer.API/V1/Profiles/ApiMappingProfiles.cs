@@ -16,6 +16,18 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateHelpPageRoleRequest, CreateHelpPageRole>();
             CreateMap<UpdateHelpPageRequest, UpdateHelpPage>();
             CreateMap<GetHelpPageRequest, GetHelpPage>();
+            CreateMap<CreatePartRequest, CreatePart>();
+            CreateMap<UpdatePartRequest, UpdatePart>();
+            CreateMap<CreateProcedureRequest, CreateProcedure>();
+            CreateMap<UpdateProcedureRequest, UpdateProcedure>();
+            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
+            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
+            CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>();
+            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>();
+            CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>();
+            CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>();
+            CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
+            CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();
         }
     }
 }

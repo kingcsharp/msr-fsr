@@ -21,6 +21,7 @@
         ,Monitors
         ,Operational
         ,Parts
+        ,Procedures
         ,PendingApprovals
         ,ProcedureTypes
         ,PurchaseOrders

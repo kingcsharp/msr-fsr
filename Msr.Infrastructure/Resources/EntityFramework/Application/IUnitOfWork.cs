@@ -19,6 +19,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<MenuRole> MenuRoles { get; }
         IRepository<MenuRolePermission> MenuRolePermissions { get; }
         IRepository<Role> Roles { get; }
+        IRepository<Part> Parts { get; }
+        IRepository<Procedure> Procedures { get; }
+        IRepository<ProcedureStep> ProcedureSteps { get; }
+        IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get; }
+        IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get; }
+        IRepository<ProcedureType> ProcedureTypes { get; }
         IRepository<Status> Status { get; }
         IRepository<UserRole> UserRoles { get; }
         IRepository<PartApproval> PartApprovals { get; }
@@ -45,6 +51,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get; }
         IRepository<HelpPage> HelpPages { get; }
         IRepository<HelpPageRoleMap> HelpPageRoles { get; }
+        IRepository<MonitorInputType> MonitorInputTypes { get; }
+        IRepository<MonitorListItem> MonitorListItems { get; }
         IRepository<Document> Documents { get; }
         IRepository<Part> Parts { get; }
         IRepository<Procedure> Procedures { get; }
