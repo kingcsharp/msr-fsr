@@ -249,7 +249,7 @@
               Roles
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15"
+              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15" [baseZIndex]="100002"
                 appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Roles</div>
@@ -260,7 +260,7 @@
               Location
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body"
+              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body" [baseZIndex]="100002"
                 [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
@@ -270,7 +270,7 @@
               Supervisor
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body"
+              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body" [baseZIndex]="100001"
                 [(ngModel)]="currUser.supervisorId">
               </p-dropdown>
             </div>
