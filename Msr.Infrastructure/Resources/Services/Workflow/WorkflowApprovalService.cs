@@ -312,7 +312,7 @@ namespace MSR.Infrastructure.Resources.Services
             }
         }
 
-        private void GetProcedureStepApprovals(PendingApprovalPopoverModel pendingApprovalModel, ICollection<ProcedureStep> procSteps, ICollection<ProcedureStepApproval> procStepApprovals)
+        private void GetProcedureStepApprovals(PendingApprovalPopoverModel pendingApprovalModel, ICollection<EntityFramework.Entities.ProcedureStep> procSteps, ICollection<ProcedureStepApproval> procStepApprovals)
         {
             var from = "";
             foreach (var procedure in procSteps)

@@ -55,8 +55,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<DocumentApproval> _documentApprovals;
         private IRepository<ProductApproval> _productApprovals;
         private IRepository<Document> _documents;
-        private IRepository<Part> _parts;
-        private IRepository<Procedure> _procedures;
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
@@ -98,8 +96,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowActivity> WorkflowActivities { get { return _workflowActivity ?? (_workflowActivity = new EFRepository<WorkflowActivity>(Context)); } }
         public IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get { return _workflowGroupUserMap ?? (_workflowGroupUserMap = new EFRepository<WorkflowGroupUserMap>(Context)); } }
         public IRepository<WorkflowGroupStageMap> WorkflowGroupStageMaps { get { return _workflowGroupStageMaps ?? (_workflowGroupStageMaps = new EFRepository<WorkflowGroupStageMap>(Context)); } }
-        public IRepository<Part> Parts { get { return _parts ??= new EFRepository<Part>(Context); } }
-        public IRepository<Procedure> Procedures { get { return _procedures ??= new EFRepository<Procedure>(Context); } }
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
         public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
