@@ -12,6 +12,7 @@ import { Layout } from './layout.component';
 import { Sidebar } from './sidebar/sidebar.component';
 import { Navbar } from './navbar/navbar.component';
 import { BlockUIModule } from 'primeng/blockui';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { BlockUIModule } from 'primeng/blockui';
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
     TooltipModule.forRoot(),
-    BlockUIModule
+    BlockUIModule,
+    DialogModule
   ],
   declarations: [Layout, Sidebar, Navbar]
 })
