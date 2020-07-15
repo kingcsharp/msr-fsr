@@ -1,16 +1,20 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 declare let jQuery: any;
 
 @Component({
   selector: '[sidebar]',
-  templateUrl: './sidebar.template.html'
+  templateUrl: './sidebar.template.html',
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class Sidebar {
+  @Output() displaySupportTicketModalDisplay = new EventEmitter();
   sidebarHeight: number = 0;
   sidebarMenu: any = 0;
   sidebarItems: any;
+  supportTicketModalDisplay:boolean = false;
+
 
   constructor(private renderer: Renderer2, private el: ElementRef, private globals: Globals) {
     this.sidebarItems = this.generateMenu(globals.user.roles[0].menus);
@@ -74,4 +78,9 @@ export class Sidebar {
     this.renderer.setStyle(document
       .querySelector('.content'), 'margin-top', this.sidebarHeight + 'px');
   }
+
+  toggleSupportTicketModal(){
+    this.displaySupportTicketModalDisplay.emit();
+  }
+
 }

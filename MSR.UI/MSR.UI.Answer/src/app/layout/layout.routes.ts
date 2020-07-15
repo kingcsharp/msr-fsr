@@ -20,7 +20,8 @@ const routes: Routes = [
       { path: 'extra', loadChildren: () => import('../pages/extra/extra.module').then(m => m.ExtraModule) },
       { path: 'tables', loadChildren: () => import('../pages/tables/tables.module').then(m => m.TablesModule) },
       { path: 'grid', loadChildren: () => import('../pages/grid/grid.module').then(m => m.GridModule) },
-      { path: 'package', loadChildren: () => import('../pages/package/package.module').then(m => m.PackageModule) }
+      { path: 'package', loadChildren: () => import('../pages/package/package.module').then(m => m.PackageModule) },
+      { path: 'help', loadChildren: () =>  import('../pages/help/help.module').then(m => m.HelpModule) }
     ]
   }
 ];
