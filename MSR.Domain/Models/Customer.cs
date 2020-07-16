@@ -10,7 +10,7 @@ namespace MSR.Domain.Models
         public string Phone { get; set; }
         public User PrimaryContactUser { get; set; }
         public User SecondaryContactUser { get; set; }
-        public Location Location { get; set; }
+        public LocationModel Location { get; set; }
         public bool IsActive { get; set; }
     }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, Location, UpdateUserRequest, RoleService, Role } from '../../../services/api.client.generated';
+import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, UpdateUserRequest, RoleService, Role } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -79,7 +79,7 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
     new ColumnsSaved({ id: 'locationName', label: 'Location', visible: false }),
     new ColumnsSaved({ id: 'supervisorName', label: 'Supervisor', visible: false })
-    ]; 
+    ];
 
     this.roles = [];
     this.allUsers = [];
@@ -105,10 +105,10 @@ export class UserComponent implements OnInit {
     const ctrl = this;
     this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allRoles.push({ label: x.name, value: x.id });
         });
-        ctrl.backendRoles = response.returnedObject;
+        ctrl.backendRoles = response.object;
       }));
   }
 
@@ -117,9 +117,10 @@ export class UserComponent implements OnInit {
     if (ctrl.getLocationsFlag) {
       return ctrl.locations;
     }
-    this.locationService.locationGet(null, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, env.apiVersion)
+      .pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.locations.push({ label: x.name, value: x.id });
         });
         ctrl.getLocationsFlag = true;
@@ -132,25 +133,30 @@ export class UserComponent implements OnInit {
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.data = response.object;
-        ctrl.data = ctrl.data.map((x) => {
-          ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
-          x.rolesSaved = x.roles.map(u => u.id);
-          const roles = [];
-          x.roles.forEach((role) => {
-            roles.push(role.name);
-            if (ctrl.roles.findIndex(z => z.value === role.name) === -1) {
-              ctrl.roles.push({ label: role.name, value: role.name });
-            }
-          });
-          x.rolesStr = roles.join(',');
-          return x;
-        });
-
-
-        ctrl.allUsers.sort((a, b) => (a.label > b.label) ? 1 : -1);
-
+        this.updateUsersData(ctrl.data);
         ctrl.loading = false;
       }));
+  }
+
+  updateUsersData(usersData) {
+    const ctrl = this;
+    ctrl.data = usersData.map((x) => {
+      var userIndex = ctrl.allUsers.findIndex(z => z.value === x.id);
+      if (userIndex < 0) {
+        ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
+      }
+      x.rolesSaved = x.roles.map(u => u.id);
+      const roles = [];
+      x.roles.forEach((role) => {
+        roles.push(role.name);
+        if (ctrl.roles.findIndex(z => z.value === role.name) === -1) {
+          ctrl.roles.push({ label: role.name, value: role.name });
+        }
+      });
+      x.rolesStr = roles.join(',');
+      return x;
+    });
+    ctrl.allUsers.sort((a, b) => (a.label > b.label) ? 1 : -1);
   }
 
   hasPrivilege(privName) {
@@ -218,13 +224,15 @@ export class UserComponent implements OnInit {
 
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
-          if (ctrl.currUser.id === undefined) {
-            ctrl.data.push(new User(resp.returnedObject));
+          if (ctrl.currUser.id !== undefined) {
+            var index = ctrl.data.findIndex(x => x.id == resp.object.id);
+            ctrl.data.splice(index, 1);
           }
+
+          ctrl.data.push(new User(resp.object));
+          this.updateUsersData(ctrl.data);
           ctrl.clseDialog();
         }
-      }, () => {
-        // DO not update user
       }));
     }
   }
@@ -237,7 +245,7 @@ export class UserComponent implements OnInit {
       ret.firstName = '';
       return ret;
     } else {
-      return user;
+      return new User(user);
     }
   }
 

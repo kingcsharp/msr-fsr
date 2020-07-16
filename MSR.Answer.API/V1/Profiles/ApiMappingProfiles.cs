@@ -8,6 +8,7 @@ namespace MSR.Answer.API.V1.Profiles
     {
         public ApiMappingProfiles()
         {
+            CreateMap<GetLocationRequest, GetLocations>();
             CreateMap<CreateLocationRequest, CreateLocation>();
             CreateMap<UpdateLocationRequest, UpdateLocation>();
             CreateMap<CreateUserRoleRequest, CreateUserRole>();

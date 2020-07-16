@@ -83,7 +83,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     const ctrl = this;
     return this.workflowService.activity(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allActivities.push({ label: x.name, value: x.id });
         });
         this.getAllActivities = true;
@@ -94,7 +94,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     const ctrl = this;
     return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allStages.push({ label: x.name, value: x.id });
         });
         this.getstagesDr = true;

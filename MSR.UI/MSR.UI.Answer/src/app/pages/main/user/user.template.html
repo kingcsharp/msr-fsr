@@ -238,7 +238,7 @@
               <span class="help-block">(123) 456-7890</span>
             </label>
             <div class="col-md-4 col-12">
-              <input id="mask-phone" name="mask-phone" class="form-control input-transparent"
+              <input id="mask-phone" name="mask-phone" required="required" class="form-control input-transparent"
                 data-parsley-required="true" [textMask]="phoneMask" [(ngModel)]="currUser.phone"
                 (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text"
                 data-cy="phone-input" />
