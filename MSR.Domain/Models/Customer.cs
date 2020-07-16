@@ -11,6 +11,7 @@ namespace MSR.Domain.Models
         public User PrimaryContactUser { get; set; }
         public User SecondaryContactUser { get; set; }
         public LocationModel Location { get; set; }
+        public string CustomerNumber { get; set; }
         public bool IsActive { get; set; }
     }
 }
