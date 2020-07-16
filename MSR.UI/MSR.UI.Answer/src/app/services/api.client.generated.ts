@@ -3103,7 +3103,7 @@ export class WorkflowPendingApprovalService {
         return _observableOf<AuditActionResultOfICollectionOfPendingApprovalModel>(<any>null);
     }
 
-    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
+    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, comments: string | null | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3116,6 +3116,8 @@ export class WorkflowPendingApprovalService {
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (comments !== undefined && comments !== null)
+            url_ += "Comments=" + encodeURIComponent("" + comments) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7702,6 +7704,7 @@ export interface IAuditActionResultOfICollectionOfPendingApprovalModel extends I
 export class PendingApprovalModel implements IPendingApprovalModel {
     id?: number;
     name?: string | undefined;
+    comments?: string | undefined;
     workflowName?: string | undefined;
     activityType?: string | undefined;
     workflowId?: string | undefined;
@@ -7726,6 +7729,7 @@ export class PendingApprovalModel implements IPendingApprovalModel {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.comments = _data["comments"];
             this.workflowName = _data["workflowName"];
             this.activityType = _data["activityType"];
             this.workflowId = _data["workflowId"];
@@ -7750,6 +7754,7 @@ export class PendingApprovalModel implements IPendingApprovalModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["comments"] = this.comments;
         data["workflowName"] = this.workflowName;
         data["activityType"] = this.activityType;
         data["workflowId"] = this.workflowId;
@@ -7767,6 +7772,7 @@ export class PendingApprovalModel implements IPendingApprovalModel {
 export interface IPendingApprovalModel {
     id?: number;
     name?: string | undefined;
+    comments?: string | undefined;
     workflowName?: string | undefined;
     activityType?: string | undefined;
     workflowId?: string | undefined;

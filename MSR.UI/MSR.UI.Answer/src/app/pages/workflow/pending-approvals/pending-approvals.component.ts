@@ -162,6 +162,7 @@ export class PendingApprovalsComponent implements OnInit {
     this.currAction.approval = approval;
     this.currAction.id = approval.id;
     this.currAction.activityType = approval.activityType;
+    this.currAction.comments = '';
   }
 
   clseDialog() {
@@ -172,14 +173,12 @@ export class PendingApprovalsComponent implements OnInit {
     this.globals.showLoader(true);
     const ctrl = this;
     if (this.currAction.action === this.approveAction) {
-      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, env.apiVersion)
+      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, this.currAction.comments,env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.currAction.approval.status = resp.object.status;
           this.addToGridStatusDropdown(resp.object);
           ctrl.clseDialog();
-        }, () => {
-
-        }))
+        }));
     }
     else {
       this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, env.apiVersion)
@@ -187,8 +186,6 @@ export class PendingApprovalsComponent implements OnInit {
           this.currAction.approval.status = resp.object.status;
           this.addToGridStatusDropdown(resp.object);
           ctrl.clseDialog();
-        }, () => {
-          // DO not update user
         }));
     }
   }

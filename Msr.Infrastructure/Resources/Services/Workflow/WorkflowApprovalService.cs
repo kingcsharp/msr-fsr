@@ -7,9 +7,11 @@ using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services
@@ -39,6 +41,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.Customers.Update(customer);
                     _unitOfWork.CustomerApprovals.Update(customerApproval);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(customerApproval, customerApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)customerApproval;
                     break;
                 case EnumApprovalTables.DocumentApproval:
@@ -49,6 +52,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.Documents.Update(document);
                     _unitOfWork.DocumentApprovals.Update(documentApproval);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(documentApproval, documentApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)documentApproval;
                     break;
                 case EnumApprovalTables.LocationApproval:
@@ -59,6 +63,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.LocationApprovals.Update(locationApproval);
                     _unitOfWork.Locations.Update(location);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(locationApproval, locationApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)locationApproval;
                     break;
                 case EnumApprovalTables.PartApproval:
@@ -69,6 +74,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.PartApprovals.Update(partApproval);
                     _unitOfWork.Parts.Update(part);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(partApproval, partApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)partApproval;
                     break;
                 case EnumApprovalTables.ProcedureApproval:
@@ -81,6 +87,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.ProcedureApprovals.Update(procedureApproval);
                     _unitOfWork.Procedures.Update(procedure);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(procedureApproval, procedureApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)procedureApproval;
                     break;
                 case EnumApprovalTables.ProductApproval:
@@ -91,6 +98,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.ProductApprovals.Update(productApproval);
                     _unitOfWork.Products.Update(product);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(productApproval, productApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)productApproval;
                     break;
                 case EnumApprovalTables.PurchaseOrderApproval:
@@ -101,6 +109,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _mapper.Map(purchaseOrderApproval, purchaseOrder);
                     _unitOfWork.PurchaseOrders.Update(purchaseOrder);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(purchaseOrderApproval, purchaseOrderApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)purchaseOrderApproval;
                     break;
                 case EnumApprovalTables.UserApproval:
@@ -111,7 +120,9 @@ namespace MSR.Infrastructure.Resources.Services
                     _mapper.Map(userApproval, currUser);
                     _unitOfWork.Users.Update(currUser);
                     _unitOfWork.SaveChanges();
+                    await _unitOfWork.LogApprovalTransaction(userApproval, userApproval.Id, status.Name, command.Comments);
                     var uerApprovalResult = _mapper.Map<PendingApprovalModel>(userApproval);
+                    uerApprovalResult.Comments = command.Comments;
                     return uerApprovalResult;
                 default:
                     break;
@@ -119,6 +130,7 @@ namespace MSR.Infrastructure.Resources.Services
 
 
             var ret = _mapper.Map<PendingApprovalModel>(result);
+            ret.Comments = command.Comments;
             return ret;
         }
 
@@ -363,6 +375,10 @@ namespace MSR.Infrastructure.Resources.Services
 
         private async Task<List<PendingApprovalModel>> GetPendingApprovalByTable(EnumApprovalTables table)
         {
+            var approvalComments = await _unitOfWork.ApprovalTransactionLogs.Query()
+                .Where(x => x.ApprovalEntity == EnumUtils.GetDescription(table) && x.Comments != null)
+                .Select(x => new { x.ApprovalEntityId, x.Comments }).ToListAsync();
+
             IQueryable<ApprovalEntity> approvalEntity = null;
             switch (table)
             {
@@ -390,14 +406,30 @@ namespace MSR.Infrastructure.Resources.Services
                 case EnumApprovalTables.UserApproval:
                     var userApprovals = await _unitOfWork.UserApprovals.Query().ToListAsync();
                     var result = userApprovals.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
+                    foreach (var approvalComment in approvalComments)
+                    {
+                        foreach (var approvalModel in result.Where(approvalModel => approvalModel.Id == approvalComment.ApprovalEntityId))
+                        {
+                            approvalModel.Comments = approvalComment.Comments;
+                        }
+                    }
                     return result;
                 default:
                     break;
             }
 
             var approvalEntityList = await approvalEntity.ToListAsync();
-            var ret = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
-            return ret;
+            var pendingApprovalModelResult = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
+
+            foreach (var approvalComment in approvalComments)
+            {
+                foreach (var approvalModel in pendingApprovalModelResult.Where(approvalModel => approvalModel.Id == approvalComment.ApprovalEntityId))
+                {
+                    approvalModel.Comments = approvalComment.Comments;
+                }
+            }
+
+            return pendingApprovalModelResult;
         }
     }
 }

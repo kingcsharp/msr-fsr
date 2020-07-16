@@ -2,7 +2,7 @@
   <i class="fas fa-clock-o"></i>
   Pending Approvals
 </h1>
-<widget> 
+<widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
@@ -39,7 +39,7 @@
 
         <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
           <div class="position-relative">
-            <input id="name" pInputText type="text" tooltip="Search by Name"  data-cy="searchbyname-grid"
+            <input id="name" pInputText type="text" tooltip="Search by Name" data-cy="searchbyname-grid"
               (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt.filters['name']?.value">
             <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
@@ -113,7 +113,7 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-approval  data-cy="t-body2">
+    <ng-template pTemplate="body" let-approval data-cy="t-body2">
       <tr class="ui-selectable-row">
         <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
           {{approval.id}}
@@ -165,7 +165,7 @@
           <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove) && approval.status !=='Approved'"
             class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
             (click)="showDialog(approveAction,approval)"></i>
         </td>
@@ -220,7 +220,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('name',gridSettings2)">
           <div class="position-relative">
-            <input id="name2" pInputText type="text" tooltip="Search by Name"  data-cy="searchbyname2-grid"
+            <input id="name2" pInputText type="text" tooltip="Search by Name" data-cy="searchbyname2-grid"
               (input)="dt2.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['name']?.value">
             <i *ngIf="dt2.filters['name']?.value" class="fclear pi pi-times pointer"
@@ -294,7 +294,7 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-approval  data-cy="t-body2">
+    <ng-template pTemplate="body" let-approval data-cy="t-body2">
       <tr class="ui-selectable-row">
         <td [hidden]="!cg.isVisibleCol('id', gridSettings2)">
           {{approval.id}}
@@ -340,7 +340,7 @@
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
           <i data-cy="approve-approval"
-            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
+            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove) && approval.status !=='Approved'"
             class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
             (click)="showDialog(approveAction,approval)"></i>
         </td>
@@ -366,6 +366,21 @@
         </h5>
       </header>
       <div class="widget-body">
+        <fieldset *ngIf="currAction.action === approveAction">
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <label for="firstName" class="col-md-2 col-form-label text-md-right">
+              Comments
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="comments" name="comments" [(ngModel)]="currAction.comments" data-validate="parsley"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Comments"
+                data-cy="name-input">
+            </div>
+          </div>
+        </fieldset>
       </div>
     </section>
     <p-footer>

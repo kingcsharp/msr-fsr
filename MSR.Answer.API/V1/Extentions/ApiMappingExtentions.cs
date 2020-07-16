@@ -113,7 +113,8 @@ namespace MSR.Answer.API.V1.Extentions
             return new PostApprovalModel()
             {
                 Id = request.Id,
-                Table = request.Table
+                Table = request.Table,
+                Comments = request.Comments
             };
         }
 
