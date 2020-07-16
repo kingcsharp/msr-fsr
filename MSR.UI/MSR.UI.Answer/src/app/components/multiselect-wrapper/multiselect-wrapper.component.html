@@ -1,8 +1,7 @@
 <p-multiSelect name="{{multiselectName}}" [options]="options" [(ngModel)]="selectedColumns"
     (onChange)="filterGrid()" [itemSize]="15">
     <ng-template pTemplate="selectedItems">
-        <div tooltip="{{defaultTextTooltip}}">{{defaultText}}</div>
-        <!-- <i class="fas fa-list" tooltip="Select User Types"></i> &nbsp; -->
+        <div>{{defaultText}}</div>
     </ng-template>
 </p-multiSelect>
 

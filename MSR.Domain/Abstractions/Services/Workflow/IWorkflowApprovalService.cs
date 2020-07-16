@@ -8,8 +8,9 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IWorkflowApprovalService
     {
-        Task CreateApprovalAsync(PostApprovalModel command);
+        Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command);
         Task<PendingApprovalModel> DeactivateApprovalAsync(DeactivateApprovalModel command);
-        Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApproval command);
+        Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApprovalModel command);
+        Task<PendingApprovalPopoverModel> GetApprovalChangesAsync(GetPendingApprovalDetailsModel command);
     }
 }

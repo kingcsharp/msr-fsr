@@ -181,7 +181,6 @@ export class ApprovalGroupsComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflowGroup.id);
         this.data.splice(index, 1);
-        ctrl.toastr.success(`Workflow Group has been successfully removed.`);
       }, () => {
         // DO not update user
       }));
@@ -194,6 +193,7 @@ export class ApprovalGroupsComponent implements OnInit {
       let method: Observable<AuditActionResultOfWorkflowGroupModel> = null;
       this.globals.showLoader(true);
       this.currWorkflowGroup.groupRoles = [];
+      this.currWorkflowGroup.groupUsers = [];
       this.currWorkflowGroup.rolesSaved.forEach(x => {
         const role = ctrl.backendRoles.find(r => r.id === x);
         this.currWorkflowGroup.groupRoles

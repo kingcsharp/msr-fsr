@@ -1282,8 +1282,693 @@ export class PartService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    part(version: string): Observable<AuditActionResultOfBoolean> {
+    partGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPart> {
+        let url_ = this.baseUrl + "/v{version}/Part?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPartGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPartGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfPart>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfPart>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPartGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPart> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfPart.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfPart>(<any>null);
+    }
+
+    partPost(version: string, newpart: CreatePartRequest): Observable<AuditActionResultOfPart> {
         let url_ = this.baseUrl + "/v{version}/Part";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newpart);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPartPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPartPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPart>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPart>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPartPost(response: HttpResponseBase): Observable<AuditActionResultOfPart> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPart.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPart>(<any>null);
+    }
+
+    partPatch(version: string, newpart: UpdatePartRequest): Observable<AuditActionResultOfPart> {
+        let url_ = this.baseUrl + "/v{version}/Part";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newpart);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPartPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPartPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPart>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPart>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPartPatch(response: HttpResponseBase): Observable<AuditActionResultOfPart> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPart.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPart>(<any>null);
+    }
+}
+
+@Injectable()
+export class ProcedureService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    procedureGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedure> {
+        let url_ = this.baseUrl + "/v{version}/Procedure?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfProcedure>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfProcedure>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedure> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfProcedure.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfProcedure>(<any>null);
+    }
+
+    procedurePost(version: string, newproc: CreateProcedureRequest): Observable<AuditActionResultOfProcedure> {
+        let url_ = this.baseUrl + "/v{version}/Procedure";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedurePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedurePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedure>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedure>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedurePost(response: HttpResponseBase): Observable<AuditActionResultOfProcedure> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedure.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedure>(<any>null);
+    }
+
+    procedurePatch(version: string, newproc: UpdateProcedureRequest): Observable<AuditActionResultOfProcedure> {
+        let url_ = this.baseUrl + "/v{version}/Procedure";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedurePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedurePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedure>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedure>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedurePatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedure> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedure.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedure>(<any>null);
+    }
+
+    stepGet(id: number, stepid: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStep> {
+        let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (stepid !== undefined && stepid !== null)
+            url_ += "stepid=" + encodeURIComponent("" + stepid) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processStepGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStepGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfProcedureStep>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfProcedureStep>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processStepGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStep> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfProcedureStep.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfProcedureStep>(<any>null);
+    }
+
+    stepPost(id: number, version: string, newstep: CreateProcedureStepRequest): Observable<AuditActionResultOfProcedureStep> {
+        let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newstep);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processStepPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStepPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processStepPost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStep> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureStep.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureStep>(<any>null);
+    }
+
+    stepPatch(id: number, version: string, newstep: UpdateProcedureStepRequest): Observable<AuditActionResultOfProcedureStep> {
+        let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newstep);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processStepPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStepPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processStepPatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStep> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureStep.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureStep>(<any>null);
+    }
+}
+
+@Injectable()
+export class ProcedureStepMonitorService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    procedureStepMonitorGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepMonitor> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureStepMonitorGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureStepMonitorGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfProcedureStepMonitor>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfProcedureStepMonitor>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureStepMonitorGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStepMonitor> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfProcedureStepMonitor.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfProcedureStepMonitor>(<any>null);
+    }
+
+    procedureStepMonitorPost(version: string, newproc: CreateProcedureStepMonitorRequest): Observable<AuditActionResultOfProcedureStepMonitor> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureStepMonitorPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureStepMonitorPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureStepMonitor>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureStepMonitor>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureStepMonitorPost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepMonitor> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureStepMonitor.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureStepMonitor>(<any>null);
+    }
+
+    procedureStepMonitorPatch(version: string, newproc: UpdateProcedureStepMonitorRequest): Observable<AuditActionResultOfProcedureStepMonitor> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureStepMonitorPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureStepMonitorPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureStepMonitor>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureStepMonitor>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureStepMonitorPatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepMonitor> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureStepMonitor.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureStepMonitor>(<any>null);
+    }
+
+    definition(version: string): Observable<AuditActionResultOfProcedureStepMonitorDefinition> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor/definition";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -1298,20 +1983,20 @@ export class PartService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPart(response_);
+            return this.processDefinition(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPart(<any>response_);
+                    return this.processDefinition(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfProcedureStepMonitorDefinition>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfProcedureStepMonitorDefinition>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPart(response: HttpResponseBase): Observable<AuditActionResultOfBoolean> {
+    protected processDefinition(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepMonitorDefinition> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1322,7 +2007,7 @@ export class PartService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfBoolean.fromJS(resultData200);
+            result200 = AuditActionResultOfProcedureStepMonitorDefinition.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1330,7 +2015,357 @@ export class PartService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfBoolean>(<any>null);
+        return _observableOf<AuditActionResultOfProcedureStepMonitorDefinition>(<any>null);
+    }
+}
+
+@Injectable()
+export class ProcedureStepTemplateService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    procedureStepTemplateGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplate> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureStepTemplateGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureStepTemplateGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfProcedureStepTemplate>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfProcedureStepTemplate>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureStepTemplateGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStepTemplate> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfProcedureStepTemplate.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfProcedureStepTemplate>(<any>null);
+    }
+
+    procedureStepTemplatePost(version: string, newproc: CreateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplate> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureStepTemplatePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureStepTemplatePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureStepTemplatePost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepTemplate> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureStepTemplate.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureStepTemplate>(<any>null);
+    }
+
+    procedureStepTemplatePatch(version: string, newproc: UpdateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplate> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureStepTemplatePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureStepTemplatePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureStepTemplatePatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepTemplate> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureStepTemplate.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureStepTemplate>(<any>null);
+    }
+}
+
+@Injectable()
+export class ProcedureTypeService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    procedureTypeGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureType> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureType?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureTypeGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureTypeGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfProcedureType>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfProcedureType>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureTypeGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureType> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfProcedureType.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfProcedureType>(<any>null);
+    }
+
+    procedureTypePost(version: string, newproc: CreateProcedureTypeRequest): Observable<AuditActionResultOfProcedureType> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureType";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureTypePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureTypePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureType>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureType>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureTypePost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureType> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureType.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureType>(<any>null);
+    }
+
+    procedureTypePatch(version: string, newproc: UpdateProcedureTypeRequest): Observable<AuditActionResultOfProcedureType> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureType";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newproc);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureTypePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureTypePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfProcedureType>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfProcedureType>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureTypePatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureType> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfProcedureType.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfProcedureType>(<any>null);
     }
 }
 
@@ -2068,7 +3103,7 @@ export class WorkflowPendingApprovalService {
         return _observableOf<AuditActionResultOfICollectionOfPendingApprovalModel>(<any>null);
     }
 
-    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResult> {
+    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, comments: string | null | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2081,6 +3116,8 @@ export class WorkflowPendingApprovalService {
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (comments !== undefined && comments !== null)
+            url_ += "Comments=" + encodeURIComponent("" + comments) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2098,14 +3135,14 @@ export class WorkflowPendingApprovalService {
                 try {
                     return this.processWorkflowPendingApprovalPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfPendingApprovalModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfPendingApprovalModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processWorkflowPendingApprovalPost(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processWorkflowPendingApprovalPost(response: HttpResponseBase): Observable<AuditActionResultOfPendingApprovalModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2116,7 +3153,7 @@ export class WorkflowPendingApprovalService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfPendingApprovalModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2124,7 +3161,7 @@ export class WorkflowPendingApprovalService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfPendingApprovalModel>(<any>null);
     }
 
     workflowPendingApprovalDelete(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
@@ -2184,6 +3221,65 @@ export class WorkflowPendingApprovalService {
             }));
         }
         return _observableOf<AuditActionResultOfPendingApprovalModel>(<any>null);
+    }
+
+    details(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalPopoverModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval/Details?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (table === null)
+            throw new Error("The parameter 'table' cannot be null.");
+        else if (table !== undefined)
+            url_ += "Table=" + encodeURIComponent("" + table) + "&";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPendingApprovalPopoverModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPendingApprovalPopoverModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDetails(response: HttpResponseBase): Observable<AuditActionResultOfPendingApprovalPopoverModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPendingApprovalPopoverModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPendingApprovalPopoverModel>(<any>null);
     }
 }
 
@@ -2463,7 +3559,7 @@ export class WorkflowService {
         return _observableOf<AuditActionResultOfWorkflowModel>(<any>null);
     }
 
-    workflowDelete(workflowId: number, version: string): Observable<void> {
+    workflowDelete(workflowId: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Workflow/{workflowId}";
         if (workflowId === undefined || workflowId === null)
             throw new Error("The parameter 'workflowId' must be defined.");
@@ -2477,6 +3573,7 @@ export class WorkflowService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -2487,14 +3584,14 @@ export class WorkflowService {
                 try {
                     return this.processWorkflowDelete(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
         }));
     }
 
-    protected processWorkflowDelete(response: HttpResponseBase): Observable<void> {
+    protected processWorkflowDelete(response: HttpResponseBase): Observable<AuditActionResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2503,14 +3600,17 @@ export class WorkflowService {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -2688,7 +3788,7 @@ export class WorkflowGroupService {
         return _observableOf<AuditActionResultOfWorkflowGroupModel>(<any>null);
     }
 
-    workflowGroupDelete(workflowId: number, version: string): Observable<void> {
+    workflowGroupDelete(workflowId: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/WorkflowGroup/{workflowId}";
         if (workflowId === undefined || workflowId === null)
             throw new Error("The parameter 'workflowId' must be defined.");
@@ -2702,6 +3802,7 @@ export class WorkflowGroupService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -2712,30 +3813,33 @@ export class WorkflowGroupService {
                 try {
                     return this.processWorkflowGroupDelete(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
         }));
     }
 
-    protected processWorkflowGroupDelete(response: HttpResponseBase): Observable<void> {
+    protected processWorkflowGroupDelete(response: HttpResponseBase): Observable<AuditActionResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
+        if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -2913,7 +4017,7 @@ export class WorkflowStageService {
         return _observableOf<AuditActionResultOfWorkflowStageModel>(<any>null);
     }
 
-    workflowStageDelete(workflowId: number, version: string): Observable<void> {
+    workflowStageDelete(workflowId: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/WorkflowStage/{workflowId}";
         if (workflowId === undefined || workflowId === null)
             throw new Error("The parameter 'workflowId' must be defined.");
@@ -2927,6 +4031,7 @@ export class WorkflowStageService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -2937,30 +4042,33 @@ export class WorkflowStageService {
                 try {
                     return this.processWorkflowStageDelete(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
         }));
     }
 
-    protected processWorkflowStageDelete(response: HttpResponseBase): Observable<void> {
+    protected processWorkflowStageDelete(response: HttpResponseBase): Observable<AuditActionResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
+        if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -4015,6 +5123,1815 @@ export interface IUpdateMenuRoleMapRequest {
     canApprove?: boolean;
 }
 
+export class AuditActionResultOfICollectionOfPart extends AuditActionResult implements IAuditActionResultOfICollectionOfPart {
+    object?: Part[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfPart) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(Part.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfPart {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfPart();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfPart extends IAuditActionResult {
+    object?: Part[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class Part implements IPart {
+    id?: number;
+    name?: string | undefined;
+    partNumber?: string | undefined;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+
+    constructor(data?: IPart) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.partNumber = _data["partNumber"];
+            this.oemPartNumber = _data["oemPartNumber"];
+            this.qty = _data["qty"];
+            this.nickName = _data["nickName"];
+            this.parentId = _data["parentId"];
+            this.maximumCycles = _data["maximumCycles"];
+        }
+    }
+
+    static fromJS(data: any): Part {
+        data = typeof data === 'object' ? data : {};
+        let result = new Part();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["partNumber"] = this.partNumber;
+        data["oemPartNumber"] = this.oemPartNumber;
+        data["qty"] = this.qty;
+        data["nickName"] = this.nickName;
+        data["parentId"] = this.parentId;
+        data["maximumCycles"] = this.maximumCycles;
+        return data; 
+    }
+}
+
+export interface IPart {
+    id?: number;
+    name?: string | undefined;
+    partNumber?: string | undefined;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+}
+
+export class AuditActionResultOfPart extends AuditActionResult implements IAuditActionResultOfPart {
+    object?: Part | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfPart) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? Part.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPart {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPart();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfPart extends IAuditActionResult {
+    object?: Part | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreatePartRequest implements ICreatePartRequest {
+    name!: string;
+    partNumber!: string;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+
+    constructor(data?: ICreatePartRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.partNumber = _data["partNumber"];
+            this.oemPartNumber = _data["oemPartNumber"];
+            this.qty = _data["qty"];
+            this.nickName = _data["nickName"];
+            this.parentId = _data["parentId"];
+            this.maximumCycles = _data["maximumCycles"];
+        }
+    }
+
+    static fromJS(data: any): CreatePartRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePartRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["partNumber"] = this.partNumber;
+        data["oemPartNumber"] = this.oemPartNumber;
+        data["qty"] = this.qty;
+        data["nickName"] = this.nickName;
+        data["parentId"] = this.parentId;
+        data["maximumCycles"] = this.maximumCycles;
+        return data; 
+    }
+}
+
+export interface ICreatePartRequest {
+    name: string;
+    partNumber: string;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+}
+
+export class UpdatePartRequest implements IUpdatePartRequest {
+    id!: number;
+    name?: string | undefined;
+    partNumber?: string | undefined;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+
+    constructor(data?: IUpdatePartRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.partNumber = _data["partNumber"];
+            this.oemPartNumber = _data["oemPartNumber"];
+            this.qty = _data["qty"];
+            this.nickName = _data["nickName"];
+            this.parentId = _data["parentId"];
+            this.maximumCycles = _data["maximumCycles"];
+        }
+    }
+
+    static fromJS(data: any): UpdatePartRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdatePartRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["partNumber"] = this.partNumber;
+        data["oemPartNumber"] = this.oemPartNumber;
+        data["qty"] = this.qty;
+        data["nickName"] = this.nickName;
+        data["parentId"] = this.parentId;
+        data["maximumCycles"] = this.maximumCycles;
+        return data; 
+    }
+}
+
+export interface IUpdatePartRequest {
+    id: number;
+    name?: string | undefined;
+    partNumber?: string | undefined;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+}
+
+export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedure {
+    object?: Procedure[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfProcedure) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(Procedure.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedure {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfProcedure();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfProcedure extends IAuditActionResult {
+    object?: Procedure[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class Procedure implements IProcedure {
+    id?: number;
+    name?: string | undefined;
+    procedureTypeId?: number;
+    revision?: number;
+    duration?: number;
+    durationType?: string | undefined;
+
+    constructor(data?: IProcedure) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.procedureTypeId = _data["procedureTypeId"];
+            this.revision = _data["revision"];
+            this.duration = _data["duration"];
+            this.durationType = _data["durationType"];
+        }
+    }
+
+    static fromJS(data: any): Procedure {
+        data = typeof data === 'object' ? data : {};
+        let result = new Procedure();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["procedureTypeId"] = this.procedureTypeId;
+        data["revision"] = this.revision;
+        data["duration"] = this.duration;
+        data["durationType"] = this.durationType;
+        return data; 
+    }
+}
+
+export interface IProcedure {
+    id?: number;
+    name?: string | undefined;
+    procedureTypeId?: number;
+    revision?: number;
+    duration?: number;
+    durationType?: string | undefined;
+}
+
+export class AuditActionResultOfProcedure extends AuditActionResult implements IAuditActionResultOfProcedure {
+    object?: Procedure | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfProcedure) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? Procedure.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfProcedure {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfProcedure();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfProcedure extends IAuditActionResult {
+    object?: Procedure | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateProcedureRequest implements ICreateProcedureRequest {
+    name!: string;
+    procedureTypeId?: number;
+    revision?: number;
+    duration?: number;
+    durationType!: string;
+
+    constructor(data?: ICreateProcedureRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.procedureTypeId = _data["procedureTypeId"];
+            this.revision = _data["revision"];
+            this.duration = _data["duration"];
+            this.durationType = _data["durationType"];
+        }
+    }
+
+    static fromJS(data: any): CreateProcedureRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProcedureRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["procedureTypeId"] = this.procedureTypeId;
+        data["revision"] = this.revision;
+        data["duration"] = this.duration;
+        data["durationType"] = this.durationType;
+        return data; 
+    }
+}
+
+export interface ICreateProcedureRequest {
+    name: string;
+    procedureTypeId?: number;
+    revision?: number;
+    duration?: number;
+    durationType: string;
+}
+
+export class UpdateProcedureRequest implements IUpdateProcedureRequest {
+    id?: number;
+    name?: string | undefined;
+    procedureTypeId?: number | undefined;
+    revision?: number | undefined;
+    duration?: number | undefined;
+    durationType?: string | undefined;
+
+    constructor(data?: IUpdateProcedureRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.procedureTypeId = _data["procedureTypeId"];
+            this.revision = _data["revision"];
+            this.duration = _data["duration"];
+            this.durationType = _data["durationType"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProcedureRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProcedureRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["procedureTypeId"] = this.procedureTypeId;
+        data["revision"] = this.revision;
+        data["duration"] = this.duration;
+        data["durationType"] = this.durationType;
+        return data; 
+    }
+}
+
+export interface IUpdateProcedureRequest {
+    id?: number;
+    name?: string | undefined;
+    procedureTypeId?: number | undefined;
+    revision?: number | undefined;
+    duration?: number | undefined;
+    durationType?: string | undefined;
+}
+
+export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStep {
+    object?: ProcedureStep[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfProcedureStep) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(ProcedureStep.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStep {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfProcedureStep();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfProcedureStep extends IAuditActionResult {
+    object?: ProcedureStep[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class ProcedureStep implements IProcedureStep {
+    id?: number;
+    procedureId?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    goToStepId?: number | undefined;
+    duration?: number;
+    durationType?: string | undefined;
+    printOrder?: number;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    equipmentTime?: number | undefined;
+    roles?: string | undefined;
+
+    constructor(data?: IProcedureStep) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.procedureId = _data["procedureId"];
+            this.title = _data["title"];
+            this.stepText = _data["stepText"];
+            this.goToStepId = _data["goToStepId"];
+            this.duration = _data["duration"];
+            this.durationType = _data["durationType"];
+            this.printOrder = _data["printOrder"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.equipmentTime = _data["equipmentTime"];
+            this.roles = _data["roles"];
+        }
+    }
+
+    static fromJS(data: any): ProcedureStep {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureStep();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["procedureId"] = this.procedureId;
+        data["title"] = this.title;
+        data["stepText"] = this.stepText;
+        data["goToStepId"] = this.goToStepId;
+        data["duration"] = this.duration;
+        data["durationType"] = this.durationType;
+        data["printOrder"] = this.printOrder;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["equipmentTime"] = this.equipmentTime;
+        data["roles"] = this.roles;
+        return data; 
+    }
+}
+
+export interface IProcedureStep {
+    id?: number;
+    procedureId?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    goToStepId?: number | undefined;
+    duration?: number;
+    durationType?: string | undefined;
+    printOrder?: number;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    equipmentTime?: number | undefined;
+    roles?: string | undefined;
+}
+
+export class AuditActionResultOfProcedureStep extends AuditActionResult implements IAuditActionResultOfProcedureStep {
+    object?: ProcedureStep | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfProcedureStep) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? ProcedureStep.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfProcedureStep {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfProcedureStep();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfProcedureStep extends IAuditActionResult {
+    object?: ProcedureStep | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
+    title?: string | undefined;
+    stepText?: string | undefined;
+    goToStepId?: number | undefined;
+    duration?: number;
+    durationType?: string | undefined;
+    printOrder?: number;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    equipmentTime?: number | undefined;
+    roles?: string | undefined;
+
+    constructor(data?: ICreateProcedureStepRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.stepText = _data["stepText"];
+            this.goToStepId = _data["goToStepId"];
+            this.duration = _data["duration"];
+            this.durationType = _data["durationType"];
+            this.printOrder = _data["printOrder"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.equipmentTime = _data["equipmentTime"];
+            this.roles = _data["roles"];
+        }
+    }
+
+    static fromJS(data: any): CreateProcedureStepRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProcedureStepRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["stepText"] = this.stepText;
+        data["goToStepId"] = this.goToStepId;
+        data["duration"] = this.duration;
+        data["durationType"] = this.durationType;
+        data["printOrder"] = this.printOrder;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["equipmentTime"] = this.equipmentTime;
+        data["roles"] = this.roles;
+        return data; 
+    }
+}
+
+export interface ICreateProcedureStepRequest {
+    title?: string | undefined;
+    stepText?: string | undefined;
+    goToStepId?: number | undefined;
+    duration?: number;
+    durationType?: string | undefined;
+    printOrder?: number;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    equipmentTime?: number | undefined;
+    roles?: string | undefined;
+}
+
+export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
+    procedureStepId?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    goToStepId?: number | undefined;
+    duration?: number;
+    durationType?: string | undefined;
+    printOrder?: number;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    equipmentTime?: number | undefined;
+    roles?: string | undefined;
+
+    constructor(data?: IUpdateProcedureStepRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.procedureStepId = _data["procedureStepId"];
+            this.title = _data["title"];
+            this.stepText = _data["stepText"];
+            this.goToStepId = _data["goToStepId"];
+            this.duration = _data["duration"];
+            this.durationType = _data["durationType"];
+            this.printOrder = _data["printOrder"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.equipmentTime = _data["equipmentTime"];
+            this.roles = _data["roles"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProcedureStepRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProcedureStepRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["procedureStepId"] = this.procedureStepId;
+        data["title"] = this.title;
+        data["stepText"] = this.stepText;
+        data["goToStepId"] = this.goToStepId;
+        data["duration"] = this.duration;
+        data["durationType"] = this.durationType;
+        data["printOrder"] = this.printOrder;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["equipmentTime"] = this.equipmentTime;
+        data["roles"] = this.roles;
+        return data; 
+    }
+}
+
+export interface IUpdateProcedureStepRequest {
+    procedureStepId?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    goToStepId?: number | undefined;
+    duration?: number;
+    durationType?: string | undefined;
+    printOrder?: number;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    equipmentTime?: number | undefined;
+    roles?: string | undefined;
+}
+
+export class AuditActionResultOfICollectionOfProcedureStepMonitor extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepMonitor {
+    object?: ProcedureStepMonitor[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfProcedureStepMonitor) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(ProcedureStepMonitor.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStepMonitor {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfProcedureStepMonitor();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfProcedureStepMonitor extends IAuditActionResult {
+    object?: ProcedureStepMonitor[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class ProcedureStepMonitor implements IProcedureStepMonitor {
+    id?: number;
+    procedureStepId?: number;
+    monitorTypeId?: number;
+    inputTypeId?: number;
+    description?: string | undefined;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
+    sensorMappingId?: number;
+    sendNCREmail?: boolean | undefined;
+
+    constructor(data?: IProcedureStepMonitor) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.monitorTypeId = _data["monitorTypeId"];
+            this.inputTypeId = _data["inputTypeId"];
+            this.description = _data["description"];
+            this.monitorListId = _data["monitorListId"];
+            this.shouldBe = _data["shouldBe"];
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
+            this.sensorMappingId = _data["sensorMappingId"];
+            this.sendNCREmail = _data["sendNCREmail"];
+        }
+    }
+
+    static fromJS(data: any): ProcedureStepMonitor {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureStepMonitor();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["procedureStepId"] = this.procedureStepId;
+        data["monitorTypeId"] = this.monitorTypeId;
+        data["inputTypeId"] = this.inputTypeId;
+        data["description"] = this.description;
+        data["monitorListId"] = this.monitorListId;
+        data["shouldBe"] = this.shouldBe;
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
+        data["sensorMappingId"] = this.sensorMappingId;
+        data["sendNCREmail"] = this.sendNCREmail;
+        return data; 
+    }
+}
+
+export interface IProcedureStepMonitor {
+    id?: number;
+    procedureStepId?: number;
+    monitorTypeId?: number;
+    inputTypeId?: number;
+    description?: string | undefined;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
+    sensorMappingId?: number;
+    sendNCREmail?: boolean | undefined;
+}
+
+export class AuditActionResultOfProcedureStepMonitor extends AuditActionResult implements IAuditActionResultOfProcedureStepMonitor {
+    object?: ProcedureStepMonitor | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfProcedureStepMonitor) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? ProcedureStepMonitor.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfProcedureStepMonitor {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfProcedureStepMonitor();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfProcedureStepMonitor extends IAuditActionResult {
+    object?: ProcedureStepMonitor | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMonitorRequest {
+    procedureStepId?: number;
+    monitorTypeId?: number;
+    inputTypeId?: number;
+    description!: string;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    target?: number | undefined;
+    failAction!: string;
+    sensorMappingId?: number;
+    sendNCREmail?: boolean | undefined;
+
+    constructor(data?: ICreateProcedureStepMonitorRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.procedureStepId = _data["procedureStepId"];
+            this.monitorTypeId = _data["monitorTypeId"];
+            this.inputTypeId = _data["inputTypeId"];
+            this.description = _data["description"];
+            this.monitorListId = _data["monitorListId"];
+            this.shouldBe = _data["shouldBe"];
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
+            this.sensorMappingId = _data["sensorMappingId"];
+            this.sendNCREmail = _data["sendNCREmail"];
+        }
+    }
+
+    static fromJS(data: any): CreateProcedureStepMonitorRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProcedureStepMonitorRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["procedureStepId"] = this.procedureStepId;
+        data["monitorTypeId"] = this.monitorTypeId;
+        data["inputTypeId"] = this.inputTypeId;
+        data["description"] = this.description;
+        data["monitorListId"] = this.monitorListId;
+        data["shouldBe"] = this.shouldBe;
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
+        data["sensorMappingId"] = this.sensorMappingId;
+        data["sendNCREmail"] = this.sendNCREmail;
+        return data; 
+    }
+}
+
+export interface ICreateProcedureStepMonitorRequest {
+    procedureStepId?: number;
+    monitorTypeId?: number;
+    inputTypeId?: number;
+    description: string;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    target?: number | undefined;
+    failAction: string;
+    sensorMappingId?: number;
+    sendNCREmail?: boolean | undefined;
+}
+
+export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMonitorRequest {
+    id?: number;
+    procedureStepId?: number | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
+    description?: string | undefined;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
+    sensorMappingId?: number | undefined;
+    sendNCREmail?: boolean | undefined;
+
+    constructor(data?: IUpdateProcedureStepMonitorRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.monitorTypeId = _data["monitorTypeId"];
+            this.inputTypeId = _data["inputTypeId"];
+            this.description = _data["description"];
+            this.monitorListId = _data["monitorListId"];
+            this.shouldBe = _data["shouldBe"];
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
+            this.sensorMappingId = _data["sensorMappingId"];
+            this.sendNCREmail = _data["sendNCREmail"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProcedureStepMonitorRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProcedureStepMonitorRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["procedureStepId"] = this.procedureStepId;
+        data["monitorTypeId"] = this.monitorTypeId;
+        data["inputTypeId"] = this.inputTypeId;
+        data["description"] = this.description;
+        data["monitorListId"] = this.monitorListId;
+        data["shouldBe"] = this.shouldBe;
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
+        data["sensorMappingId"] = this.sensorMappingId;
+        data["sendNCREmail"] = this.sendNCREmail;
+        return data; 
+    }
+}
+
+export interface IUpdateProcedureStepMonitorRequest {
+    id?: number;
+    procedureStepId?: number | undefined;
+    monitorTypeId?: number | undefined;
+    inputTypeId?: number | undefined;
+    description?: string | undefined;
+    monitorListId?: number | undefined;
+    shouldBe?: string | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
+    target?: number | undefined;
+    failAction?: string | undefined;
+    sensorMappingId?: number | undefined;
+    sendNCREmail?: boolean | undefined;
+}
+
+export class AuditActionResultOfProcedureStepMonitorDefinition extends AuditActionResult implements IAuditActionResultOfProcedureStepMonitorDefinition {
+    object?: ProcedureStepMonitorDefinition | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfProcedureStepMonitorDefinition) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? ProcedureStepMonitorDefinition.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfProcedureStepMonitorDefinition {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfProcedureStepMonitorDefinition();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfProcedureStepMonitorDefinition extends IAuditActionResult {
+    object?: ProcedureStepMonitorDefinition | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class ProcedureStepMonitorDefinition implements IProcedureStepMonitorDefinition {
+    types?: ProcedureStepMonitorInputType[] | undefined;
+    listItems?: ProcedureStepMonitorListItem[] | undefined;
+
+    constructor(data?: IProcedureStepMonitorDefinition) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["types"])) {
+                this.types = [] as any;
+                for (let item of _data["types"])
+                    this.types!.push(ProcedureStepMonitorInputType.fromJS(item));
+            }
+            if (Array.isArray(_data["listItems"])) {
+                this.listItems = [] as any;
+                for (let item of _data["listItems"])
+                    this.listItems!.push(ProcedureStepMonitorListItem.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ProcedureStepMonitorDefinition {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureStepMonitorDefinition();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.types)) {
+            data["types"] = [];
+            for (let item of this.types)
+                data["types"].push(item.toJSON());
+        }
+        if (Array.isArray(this.listItems)) {
+            data["listItems"] = [];
+            for (let item of this.listItems)
+                data["listItems"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IProcedureStepMonitorDefinition {
+    types?: ProcedureStepMonitorInputType[] | undefined;
+    listItems?: ProcedureStepMonitorListItem[] | undefined;
+}
+
+export class ProcedureStepMonitorInputType implements IProcedureStepMonitorInputType {
+    inputTypeId?: number;
+    monitorTypeId?: number;
+    inputTypeName?: string | undefined;
+    monitorTypeName?: string | undefined;
+
+    constructor(data?: IProcedureStepMonitorInputType) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.inputTypeId = _data["inputTypeId"];
+            this.monitorTypeId = _data["monitorTypeId"];
+            this.inputTypeName = _data["inputTypeName"];
+            this.monitorTypeName = _data["monitorTypeName"];
+        }
+    }
+
+    static fromJS(data: any): ProcedureStepMonitorInputType {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureStepMonitorInputType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["inputTypeId"] = this.inputTypeId;
+        data["monitorTypeId"] = this.monitorTypeId;
+        data["inputTypeName"] = this.inputTypeName;
+        data["monitorTypeName"] = this.monitorTypeName;
+        return data; 
+    }
+}
+
+export interface IProcedureStepMonitorInputType {
+    inputTypeId?: number;
+    monitorTypeId?: number;
+    inputTypeName?: string | undefined;
+    monitorTypeName?: string | undefined;
+}
+
+export class ProcedureStepMonitorListItem implements IProcedureStepMonitorListItem {
+    listItemId?: number;
+    monitorListId?: number;
+    itemName?: string | undefined;
+    listName?: string | undefined;
+
+    constructor(data?: IProcedureStepMonitorListItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.listItemId = _data["listItemId"];
+            this.monitorListId = _data["monitorListId"];
+            this.itemName = _data["itemName"];
+            this.listName = _data["listName"];
+        }
+    }
+
+    static fromJS(data: any): ProcedureStepMonitorListItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureStepMonitorListItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["listItemId"] = this.listItemId;
+        data["monitorListId"] = this.monitorListId;
+        data["itemName"] = this.itemName;
+        data["listName"] = this.listName;
+        return data; 
+    }
+}
+
+export interface IProcedureStepMonitorListItem {
+    listItemId?: number;
+    monitorListId?: number;
+    itemName?: string | undefined;
+    listName?: string | undefined;
+}
+
+export class AuditActionResultOfICollectionOfProcedureStepTemplate extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepTemplate {
+    object?: ProcedureStepTemplate[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfProcedureStepTemplate) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(ProcedureStepTemplate.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStepTemplate {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfProcedureStepTemplate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfProcedureStepTemplate extends IAuditActionResult {
+    object?: ProcedureStepTemplate[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class ProcedureStepTemplate implements IProcedureStepTemplate {
+    id?: number;
+
+    constructor(data?: IProcedureStepTemplate) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): ProcedureStepTemplate {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureStepTemplate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IProcedureStepTemplate {
+    id?: number;
+}
+
+export class AuditActionResultOfProcedureStepTemplate extends AuditActionResult implements IAuditActionResultOfProcedureStepTemplate {
+    object?: ProcedureStepTemplate | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfProcedureStepTemplate) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? ProcedureStepTemplate.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfProcedureStepTemplate {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfProcedureStepTemplate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfProcedureStepTemplate extends IAuditActionResult {
+    object?: ProcedureStepTemplate | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepTemplateRequest {
+    title?: string | undefined;
+    stepText?: string | undefined;
+    systemTaskId?: number | undefined;
+    laborTime?: number | undefined;
+    equipmentTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    roles?: string | undefined;
+    comments?: string | undefined;
+
+    constructor(data?: ICreateProcedureStepTemplateRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.stepText = _data["stepText"];
+            this.systemTaskId = _data["systemTaskId"];
+            this.laborTime = _data["laborTime"];
+            this.equipmentTime = _data["equipmentTime"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
+            this.roles = _data["roles"];
+            this.comments = _data["comments"];
+        }
+    }
+
+    static fromJS(data: any): CreateProcedureStepTemplateRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProcedureStepTemplateRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["stepText"] = this.stepText;
+        data["systemTaskId"] = this.systemTaskId;
+        data["laborTime"] = this.laborTime;
+        data["equipmentTime"] = this.equipmentTime;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
+        data["roles"] = this.roles;
+        data["comments"] = this.comments;
+        return data; 
+    }
+}
+
+export interface ICreateProcedureStepTemplateRequest {
+    title?: string | undefined;
+    stepText?: string | undefined;
+    systemTaskId?: number | undefined;
+    laborTime?: number | undefined;
+    equipmentTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    roles?: string | undefined;
+    comments?: string | undefined;
+}
+
+export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepTemplateRequest {
+    id?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    systemTaskId?: number | undefined;
+    laborTime?: number | undefined;
+    equipmentTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    roles?: string | undefined;
+    comments?: string | undefined;
+
+    constructor(data?: IUpdateProcedureStepTemplateRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.stepText = _data["stepText"];
+            this.systemTaskId = _data["systemTaskId"];
+            this.laborTime = _data["laborTime"];
+            this.equipmentTime = _data["equipmentTime"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
+            this.roles = _data["roles"];
+            this.comments = _data["comments"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProcedureStepTemplateRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProcedureStepTemplateRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["stepText"] = this.stepText;
+        data["systemTaskId"] = this.systemTaskId;
+        data["laborTime"] = this.laborTime;
+        data["equipmentTime"] = this.equipmentTime;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
+        data["roles"] = this.roles;
+        data["comments"] = this.comments;
+        return data; 
+    }
+}
+
+export interface IUpdateProcedureStepTemplateRequest {
+    id?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    systemTaskId?: number | undefined;
+    laborTime?: number | undefined;
+    equipmentTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    roles?: string | undefined;
+    comments?: string | undefined;
+}
+
+export class AuditActionResultOfICollectionOfProcedureType extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureType {
+    object?: ProcedureType[] | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfProcedureType) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(ProcedureType.fromJS(item));
+            }
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureType {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfProcedureType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfProcedureType extends IAuditActionResult {
+    object?: ProcedureType[] | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class ProcedureType implements IProcedureType {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IProcedureType) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): ProcedureType {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IProcedureType {
+    id?: number;
+    name?: string | undefined;
+}
+
+export class AuditActionResultOfProcedureType extends AuditActionResult implements IAuditActionResultOfProcedureType {
+    object?: ProcedureType | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfProcedureType) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? ProcedureType.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfProcedureType {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfProcedureType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfProcedureType extends IAuditActionResult {
+    object?: ProcedureType | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class CreateProcedureTypeRequest implements ICreateProcedureTypeRequest {
+    name?: string | undefined;
+
+    constructor(data?: ICreateProcedureTypeRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateProcedureTypeRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProcedureTypeRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface ICreateProcedureTypeRequest {
+    name?: string | undefined;
+}
+
+export class UpdateProcedureTypeRequest implements IUpdateProcedureTypeRequest {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IUpdateProcedureTypeRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProcedureTypeRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProcedureTypeRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IUpdateProcedureTypeRequest {
+    id?: number;
+    name?: string | undefined;
+}
+
 export class AuditActionResultOfICollectionOfRole extends AuditActionResult implements IAuditActionResultOfICollectionOfRole {
     object?: Role[] | undefined;
     returnedObject?: any | undefined;
@@ -4256,23 +7173,24 @@ export enum EnumMenuItem {
     Monitors = 12,
     Operational = 13,
     Parts = 14,
-    PendingApprovals = 15,
-    ProcedureTypes = 16,
-    PurchaseOrders = 17,
-    Purchases = 18,
-    QuotesProducts = 19,
-    Reports = 20,
-    RoleModulePermission = 21,
-    RunnableProcedures = 22,
-    SupportTicket = 23,
-    Templates = 24,
-    TrainingCertifications = 25,
-    UserRoles = 26,
-    Users = 27,
-    WIPHistory = 28,
-    WIPMenu = 29,
-    WipStatus = 30,
-    Roles = 31,
+    Procedures = 15,
+    PendingApprovals = 16,
+    ProcedureTypes = 17,
+    PurchaseOrders = 18,
+    Purchases = 19,
+    QuotesProducts = 20,
+    Reports = 21,
+    RoleModulePermission = 22,
+    RunnableProcedures = 23,
+    SupportTicket = 24,
+    Templates = 25,
+    TrainingCertifications = 26,
+    UserRoles = 27,
+    Users = 28,
+    WIPHistory = 29,
+    WIPMenu = 30,
+    WipStatus = 31,
+    Roles = 32,
 }
 
 export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
@@ -4786,6 +7704,7 @@ export interface IAuditActionResultOfICollectionOfPendingApprovalModel extends I
 export class PendingApprovalModel implements IPendingApprovalModel {
     id?: number;
     name?: string | undefined;
+    comments?: string | undefined;
     workflowName?: string | undefined;
     activityType?: string | undefined;
     workflowId?: string | undefined;
@@ -4810,6 +7729,7 @@ export class PendingApprovalModel implements IPendingApprovalModel {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.comments = _data["comments"];
             this.workflowName = _data["workflowName"];
             this.activityType = _data["activityType"];
             this.workflowId = _data["workflowId"];
@@ -4834,6 +7754,7 @@ export class PendingApprovalModel implements IPendingApprovalModel {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["comments"] = this.comments;
         data["workflowName"] = this.workflowName;
         data["activityType"] = this.activityType;
         data["workflowId"] = this.workflowId;
@@ -4851,6 +7772,7 @@ export class PendingApprovalModel implements IPendingApprovalModel {
 export interface IPendingApprovalModel {
     id?: number;
     name?: string | undefined;
+    comments?: string | undefined;
     workflowName?: string | undefined;
     activityType?: string | undefined;
     workflowId?: string | undefined;
@@ -4873,6 +7795,87 @@ export enum EnumApprovalTables {
     PurchaseOrderApproval = 7,
     UserApproval = 8,
     All = 9,
+}
+
+export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalPopoverModel {
+    object?: PendingApprovalPopoverModel | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfPendingApprovalPopoverModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PendingApprovalPopoverModel.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPendingApprovalPopoverModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPendingApprovalPopoverModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfPendingApprovalPopoverModel extends IAuditActionResult {
+    object?: PendingApprovalPopoverModel | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class PendingApprovalPopoverModel implements IPendingApprovalPopoverModel {
+    rows?: string[] | undefined;
+
+    constructor(data?: IPendingApprovalPopoverModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["rows"])) {
+                this.rows = [] as any;
+                for (let item of _data["rows"])
+                    this.rows!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): PendingApprovalPopoverModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PendingApprovalPopoverModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.rows)) {
+            data["rows"] = [];
+            for (let item of this.rows)
+                data["rows"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IPendingApprovalPopoverModel {
+    rows?: string[] | undefined;
 }
 
 export class AuditActionResultOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalModel {

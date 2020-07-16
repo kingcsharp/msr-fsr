@@ -91,11 +91,20 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        public static GetPendingApproval ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
-        { 
-            return new GetPendingApproval()
+        public static GetPendingApprovalModel ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
+        {
+            return new GetPendingApprovalModel()
             {
                 Table = request.Table
+            };
+        }
+
+        public static GetPendingApprovalDetailsModel ToGetPendingApprovalDetailsCommand(this GetPendingApprovalDetailRequest request)
+        {
+            return new GetPendingApprovalDetailsModel()
+            {
+                Table = request.Table,
+                Id = request.Id
             };
         }
 
@@ -104,7 +113,8 @@ namespace MSR.Answer.API.V1.Extentions
             return new PostApprovalModel()
             {
                 Id = request.Id,
-                Table = request.Table
+                Table = request.Table,
+                Comments = request.Comments
             };
         }
 
@@ -112,7 +122,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new DeactivateApprovalModel()
             {
-                Id=request.Id,
+                Id = request.Id,
                 Table = request.Table
             };
         }

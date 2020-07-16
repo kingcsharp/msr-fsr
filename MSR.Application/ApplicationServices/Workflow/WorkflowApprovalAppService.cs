@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices.Workflow
 {
     public class WorkflowApprovalAppService: 
-        ICommandHandler<GetPendingApproval>,
+        ICommandHandler<GetPendingApprovalModel>,
         ICommandHandler<PostApprovalModel>,
-        ICommandHandler<DeactivateApprovalModel>
+        ICommandHandler<DeactivateApprovalModel>,
+        ICommandHandler<GetPendingApprovalDetailsModel>
     {
         private readonly IWorkflowApprovalService _workflowApprovalService;
         public WorkflowApprovalAppService(IWorkflowApprovalService workflowApprovalService)
@@ -21,7 +22,13 @@ namespace MSR.Application.ApplicationServices.Workflow
             _workflowApprovalService = workflowApprovalService;
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetPendingApproval command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetPendingApprovalDetailsModel command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workflowApprovalService.GetApprovalChangesAsync(command);
+            return new CommandResponse<PendingApprovalPopoverModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetPendingApprovalModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowApprovalService.GetPendingApprovalAsync(command);
             return new CommandResponse<ICollection<PendingApprovalModel>>(ret);
@@ -29,9 +36,8 @@ namespace MSR.Application.ApplicationServices.Workflow
 
         public async Task<ICommandResponse> HandleAsync(PostApprovalModel command, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
-            await _workflowApprovalService.CreateApprovalAsync(command);
-            return new CommandResponse();
+            var ret = await _workflowApprovalService.CreateApprovalAsync(command);
+            return new CommandResponse<PendingApprovalModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateApprovalModel command, CancellationToken cancellationToken = default)

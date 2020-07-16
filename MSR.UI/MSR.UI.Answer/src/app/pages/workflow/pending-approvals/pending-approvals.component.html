@@ -1,12 +1,12 @@
-<h1 class="page-title">
+<h1 class="page-title" data-cy="page-title">
   <i class="fas fa-clock-o"></i>
   Pending Approvals
 </h1>
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
-    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
-    stateKey="{{gridStorageId}}">
+    currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId}}" data-cy="table-container">
     <ng-template pTemplate="caption">
       <div class="text-right">
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
@@ -17,7 +17,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-          data-cy="usertable-header">
+          data-cy="pendingapproval-header">
           {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
         </th>
         <th></th>
@@ -39,10 +39,15 @@
 
         <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
           <div class="position-relative">
-            <input id="name" pInputText type="text" tooltip="Search by Name"
+            <input id="name" pInputText type="text" tooltip="Search by Name" data-cy="searchbyname-grid"
               (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt.filters['name']?.value">
             <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('RequestedChanges',gridSettings)">
+          <div class="position-relative">
+
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('comments',gridSettings)">
@@ -108,7 +113,7 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-approval>
+    <ng-template pTemplate="body" let-approval data-cy="t-body2">
       <tr class="ui-selectable-row">
         <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
           {{approval.id}}
@@ -117,7 +122,15 @@
           {{approval.activityType}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
-          {{approval.name}}
+          Approving Changes to {{approval.activityType}} Called {{approval.name}}
+        </td>
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('RequestedChanges',gridSettings)">
+          <button class="btn btn-outline-inverse mb-xs"
+            (onShown)="getApprovalInfo(approvalTables[approval.activityType],approval.id)"
+            (onHidden)="clearGetApprovalInfo()" [popover]="popTemplate" [popoverContext]="approvalInfo"
+            popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
+            View Details
+          </button>
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings)">
           {{approval.comments}}
@@ -141,20 +154,31 @@
           {{approval.createdByName}}
         </td>
         <td>
-          <i class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
+          <ng-template #popTemplate let-object="approvalInfo">
+            <div *ngIf="loading2">Loading...</div>
+            <div *ngIf="!loading2">
+              <div *ngFor="let elem of approvalInfo.object.rows">
+                {{elem}}
+              </div>
+            </div>
+          </ng-template>
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+            class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
-          <i class="far fa-arrow-alt-right pointer text-success" appendTo="body"
-            tooltip="Proceed to approval workflow for release" (click)="showDialog(approveAction,approval)"></i>
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove) && approval.status !=='Approved'"
+            class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
+            (click)="showDialog(approveAction,approval)"></i>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="8" style="text-align:left">No approvals's found.</td>
+        <td colspan="12" style="text-align:left">No approvals's found.</td>
       </tr>
     </ng-template>
   </p-table>
 </widget>
+
 <h1 class="page-title">
   <i class="fas fa-cog"></i>
   Pending CRF Form submissions (Products)
@@ -162,19 +186,19 @@
 <widget>
   <p-table #dt2 [value]="productData" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
-    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
-    stateKey="{{gridStorageId2}}">
+    currentPageReportTemplate="Showing {first}-{last} of {{productData.length}}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId2}}" data-cy="table-container2">
     <ng-template pTemplate="caption">
       <div class="text-right">
         <grid-options [(defaultColumns)]="gridSettings2" [gridStorageId]="gridStorageId2" [ptable]="dt2"
-          [gridVersion]="gridVersion2" data-cy="usergrid-options">
+          [gridVersion]="gridVersion2" data-cy="usergrid-options2">
         </grid-options>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
         <th *ngFor="let col of gridSettings2" [hidden]="!col.visible" [pSortableColumn]="col.id"
-          data-cy="usertable-header">
+          data-cy="pendingapproval-header2">
           {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
         </th>
         <th></th>
@@ -182,7 +206,7 @@
       <tr>
         <th [hidden]="!cg.isVisibleCol('id',gridSettings2)">
           <div class="position-relative">
-            <input id="id" pInputText type="text" tooltip="Search by Id"
+            <input id="id2" pInputText type="text" tooltip="Search by Id"
               (input)="dt2.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['id']?.value">
             <i *ngIf="dt2.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt2,'id')"></i>
@@ -194,20 +218,23 @@
             [defaultText]="'Search by Activity type'" [defaultTextTooltip]="''" [datatable]="dt2">
           </multiselect-wrapper>
         </th>
-
-
         <th [hidden]="!cg.isVisibleCol('name',gridSettings2)">
           <div class="position-relative">
-            <input id="name" pInputText type="text" tooltip="Search by Name"
+            <input id="name2" pInputText type="text" tooltip="Search by Name" data-cy="searchbyname2-grid"
               (input)="dt2.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['name']?.value">
             <i *ngIf="dt2.filters['name']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt2,'name')"></i>
           </div>
         </th>
+        <th [hidden]="!cg.isVisibleCol('RequestedChanges',gridSettings2)">
+          <div class="position-relative">
+
+          </div>
+        </th>
         <th [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
           <div class="position-relative">
-            <input id="comments" pInputText type="text" tooltip="Search by Comments"
+            <input id="comments2" pInputText type="text" tooltip="Search by Comments"
               (input)="dt2.filter($event.target.value, 'comments', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['comments']?.value">
             <i *ngIf="dt2.filters['comments']?.value" class="fclear pi pi-times pointer"
@@ -216,7 +243,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('workflowName',gridSettings2)">
           <div class="position-relative">
-            <input id="workflowName" pInputText type="text" tooltip="Search by Workflow"
+            <input id="workflowName2" pInputText type="text" tooltip="Search by Workflow"
               (input)="dt2.filter($event.target.value, 'workflowName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['workflowName']?.value">
             <i *ngIf="dt2.filters['workflowName']?.value" class="fclear pi pi-times pointer"
@@ -225,7 +252,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('workflowGroupName',gridSettings2)">
           <div class="position-relative">
-            <input id="workflowGroupName" pInputText type="text" tooltip="Search by Workflow group"
+            <input id="workflowGroupName2" pInputText type="text" tooltip="Search by Workflow group"
               (input)="dt2.filter($event.target.value, 'workflowGroupName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['workflowGroupName']?.value">
             <i *ngIf="dt2.filters['workflowGroupName']?.value" class="fclear pi pi-times pointer"
@@ -234,7 +261,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings2)">
           <div class="position-relative">
-            <input id="workflowCreatedByName" pInputText type="text" tooltip="Search by Initiatior"
+            <input id="workflowCreatedByName2" pInputText type="text" tooltip="Search by Initiatior"
               (input)="dt2.filter($event.target.value, 'workflowCreatedByName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['workflowCreatedByName']?.value">
             <i *ngIf="dt2.filters['workflowCreatedByName']?.value" class="fclear pi pi-times pointer"
@@ -248,7 +275,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
           <div class="position-relative">
-            <input id="createdOn" pInputText type="text" tooltip="Search by Created On"
+            <input id="createdOn2" pInputText type="text" tooltip="Search by Created On"
               (input)="dt2.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['createdOn']?.value">
             <i *ngIf="dt2.filters['createdOn']?.value" class="fclear pi pi-times pointer"
@@ -257,7 +284,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
           <div class="position-relative">
-            <input id="createdByName" pInputText type="text" tooltip="Search by Created By"
+            <input id="createdByName2" pInputText type="text" tooltip="Search by Created By"
               (input)="dt2.filter($event.target.value, 'createdByName', 'contains')" class="ui-column-filter"
               [value]="dt2.filters['createdByName']?.value">
             <i *ngIf="dt2.filters['createdByName']?.value" class="fclear pi pi-times pointer"
@@ -267,7 +294,7 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-approval>
+    <ng-template pTemplate="body" let-approval data-cy="t-body2">
       <tr class="ui-selectable-row">
         <td [hidden]="!cg.isVisibleCol('id', gridSettings2)">
           {{approval.id}}
@@ -276,7 +303,15 @@
           {{approval.activityType}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings2)">
-          {{approval.name}}
+          Approving Changes to {{approval.activityType}} Called {{approval.name}}
+        </td>
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('RequestedChanges',gridSettings2)">
+          <button class="btn btn-outline-inverse mb-xs"
+            (onShown)="getApprovalInfo(approvalTables[approval.activityType],approval.id)"
+            (onHidden)="clearGetApprovalInfo()" [popover]="popTemplate" [popoverContext]="approvalInfo"
+            popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
+            View Details
+          </button>
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
           {{approval.comments}}
@@ -300,23 +335,26 @@
           {{approval.createdByName}}
         </td>
         <td>
-          <i class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
+          <i data-cy="cancel-approval"
+            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+            class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
-          <i class="far fa-arrow-alt-right pointer text-success" appendTo="body"
-            tooltip="Proceed to approval workflow" (click)="showDialog(approveAction,approval)"></i>
+          <i data-cy="approve-approval"
+            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove) && approval.status !=='Approved'"
+            class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
+            (click)="showDialog(approveAction,approval)"></i>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="8" style="text-align:left">No Product Approval's found.</td>
+        <td colspan="12" style="text-align:left">No Product Approval's found.</td>
       </tr>
     </ng-template>
   </p-table>
 </widget>
-
-<p-dialog *ngIf="currAction.action != undefined" header="{{currAction.action.Header}}" [(visible)]="display" [style]="{width: '50vw'}"
-  data-cy="user-header">
+<p-dialog *ngIf="currAction.action != undefined" header="{{currAction.action.Header}}" [(visible)]="display"
+  [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -328,64 +366,26 @@
         </h5>
       </header>
       <div class="widget-body">
-        <!-- <fieldset>
+        <fieldset *ngIf="currAction.action === approveAction">
           <legend>
           </legend>
           <div class="form-group row">
             <label for="firstName" class="col-md-2 col-form-label text-md-right">
-              Approval Name
+              Comments
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="name" name="name" [(ngModel)]="currWorkflow.name" data-validate="parsley"
+              <input type="text" id="comments" name="comments" [(ngModel)]="currAction.comments" data-validate="parsley"
                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Approval  Name"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Comments"
                 data-cy="name-input">
             </div>
           </div>
-          <div class="form-group row">
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
-              Member Stages
-            </label>
-            <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allStages" [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15"
-                appendTo="body">
-                <ng-template pTemplate="selectedItems">
-                  <div tooltip="Select Roles">Select Member Stages</div>
-                </ng-template>
-              </p-multiSelect>
-            </div>
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
-              Applicable Activities
-            </label>
-            <div class="col-md-4 col-12">
-              <p-multiSelect name="role2" [options]="allActivities" [(ngModel)]="currWorkflow.activitiesSaved"
-                [itemSize]="15" appendTo="body">
-                <ng-template pTemplate="selectedItems">
-                  <div tooltip="Select Roles">Select Activities</div>
-                </ng-template>
-              </p-multiSelect>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-md-2  col-form-label text-md-right">
-              Is Active
-            </label>
-            <div class="col-md-4 ">
-              <div class="display-inline-block isActive">
-                <label class="form-check-label" for="isActive" class="switch">
-                  <input class="form-check-input" [(ngModel)]="currWorkflow.isActive" name="isActive" type="checkbox"
-                    class="ios" checked id="isActive" />
-                  <i data-cy="isactive-checkbox"></i>
-                </label>
-              </div>
-            </div>
-          </div>
-        </fieldset> -->
+        </fieldset>
       </div>
     </section>
     <p-footer>
       <div class="pull-right">
-        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button2">
           Save
         </button>
         <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">

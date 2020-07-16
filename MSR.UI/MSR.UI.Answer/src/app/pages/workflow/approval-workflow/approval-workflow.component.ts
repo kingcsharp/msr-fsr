@@ -81,7 +81,6 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowActivityDropdown() {
     const ctrl = this;
-    this.globals.showLoader(true);
     return this.workflowService.activity(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.returnedObject.map((x) => {
@@ -93,7 +92,6 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowStageDropdown() {
     const ctrl = this;
-    this.globals.showLoader(true);
     return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.returnedObject.map((x) => {
@@ -108,6 +106,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     this.globals.showLoader(true);
     this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
         ctrl.data = response.object;
         ctrl.data.map((elem) => {
           this.updateStagesSavedForItem(elem);
@@ -205,7 +204,6 @@ export class ApprovalWorkflowComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflow.id);
         this.data.splice(index, 1);
-        ctrl.toastr.success(`Workflow has been successfully removed.`);
       }, () => {
         // DO not update user
       }));

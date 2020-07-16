@@ -19,6 +19,15 @@ namespace MSR.Answer.API.V1.Extentions
             });
         }
 
+        public static IActionResult ToOkObjectResponse(this ICommandResponse commandResponse, string message = null)
+        {
+            var result = ValidateCommandResponse(commandResponse);
+            return result ?? new OkObjectResult(new AuditActionResult()
+            {
+                SuccessMessage = message
+            });
+        }
+
         public static IActionResult ToNoContentResponse(this ICommandResponse commandResponse)
         {
             var result = ValidateCommandResponse(commandResponse);

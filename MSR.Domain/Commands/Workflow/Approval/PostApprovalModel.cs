@@ -7,5 +7,6 @@ namespace MSR.Domain.Commands
     {
         public EnumApprovalTables Table { get; set; }
         public int Id { get; set; }
+        public string Comments { get; set; }
     }
 }

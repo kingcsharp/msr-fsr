@@ -53,6 +53,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<HelpPageRoleMap> HelpPageRoles { get; }
         IRepository<MonitorInputType> MonitorInputTypes { get; }
         IRepository<MonitorListItem> MonitorListItems { get; }
+        IRepository<Document> Documents { get; }
+        IRepository<Product> Products { get; }
+        IRepository<PurchaseOrder> PurchaseOrders { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();

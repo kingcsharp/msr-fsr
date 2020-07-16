@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   WorkflowStageService, WorkflowStageModel, WorkflowGroupService, WorkflowGroupStageMapModel,
@@ -66,8 +66,8 @@ export class ApprovalStagesComponent implements OnInit {
     this.canAddStages = true;
     this.canActivateStages = true;
     this.canEditStages = true;
-    this.getWorkflowGroups();
     this.getWorkflowStages();
+    this.getWorkflowGroups();
   }
 
   getWorkflowStages() {
@@ -75,6 +75,7 @@ export class ApprovalStagesComponent implements OnInit {
     this.globals.showLoader(true);
     this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
         ctrl.data = response.object;
         this.setGroupsSaved();
       }));
@@ -103,7 +104,6 @@ export class ApprovalStagesComponent implements OnInit {
 
   getWorkflowGroups() {
     const ctrl = this;
-    this.globals.showLoader(true);
     this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.forEach(element => {
@@ -163,7 +163,6 @@ export class ApprovalStagesComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflowStage.id);
         this.data.splice(index, 1);
-        ctrl.toastr.success(`Workflow Stage has been successfully removed.`);
       }, () => {
         // DO not update user
       }));

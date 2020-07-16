@@ -2,6 +2,6 @@
 
 namespace MSR.Domain.Commands
 {
-    public class GetPendingApprovals: Command
+    public class GetPendingApprovalsModel: Command
     {}
 }

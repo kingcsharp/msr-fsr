@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class WorkflowAppService :
-            ICommandHandler<GetPendingApprovals>,
+            ICommandHandler<GetPendingApprovalsModel>,
         ICommandHandler<GetWorkflowModel>,
         ICommandHandler<CreateWorkflowModel>,
         ICommandHandler<UpdateWorkflowModel>,
@@ -23,7 +23,7 @@ namespace MSR.Application.ApplicationServices
             _workflowService = workflowService;
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetPendingApprovals command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetPendingApprovalsModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _workflowService.GetApprovalNotificationsAsync(command);
             return new CommandResponse<PendingApprovalNotification>(ret);

@@ -1180,7 +1180,7 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
 /* SIDEBAR */
 #sidebar.active {
   text-align: center;
-  z-index: 100000;
+  // z-index: 100000;
   position: fixed;
   width: $sidebar-width-active;
   height: 100%;
