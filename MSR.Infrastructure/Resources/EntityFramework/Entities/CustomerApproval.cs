@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(CustomerApproval))]
-    public partial class CustomerApproval: TrackableEntity
+    public partial class CustomerApproval: DeletableEntity
     {
         public int CustomerId { get; set; }
 
@@ -32,6 +32,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int StatusId { get; set; }
         public virtual Status Status { get; set; }
 
-        public bool IsActive { get; set; }
+        public string CustomerNumber { get; set; }
     }
 }
