@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
 using NSwag.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
@@ -25,17 +29,19 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<MenuItem>>))]
         public async Task<IActionResult> GetMenu()
         {
             if (UserId == 0) return BadRequest();
 
-            var command = new GetMenu() { UserId = UserId };
+            var command = new GetMenu();
 
             var result = await _dispatcher.DispatchAsync(command);
 
-            return result.ToOkObjectResponse<bool>();
+            return result.ToOkObjectResponse<IEnumerable<MenuItem>>();
         }
+
+
 
         [HttpPost("Role")]
         [SwaggerResponse(typeof(AuditActionResult))]

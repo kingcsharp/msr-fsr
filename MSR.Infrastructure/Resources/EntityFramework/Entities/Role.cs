@@ -12,6 +12,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             Users = new HashSet<UserRole>();
             Menus = new HashSet<MenuRole>();
             HelpPages = new HashSet<HelpPageRoleMap>();
+            ChildRoles = new HashSet<RoleChildRoleMap>();
+            ParentRoles = new HashSet<RoleChildRoleMap>();
         }
 
         [Required]
@@ -28,5 +30,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<MenuRole> Menus { get; set; }
 
         public virtual ICollection<HelpPageRoleMap> HelpPages { get; set; }
+
+        public virtual ICollection<RoleChildRoleMap> ChildRoles { get; set; }
+        public virtual ICollection<RoleChildRoleMap> ParentRoles { get; set; }
     }
 }
