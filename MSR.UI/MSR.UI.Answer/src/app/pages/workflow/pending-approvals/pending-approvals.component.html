@@ -2,11 +2,11 @@
   <i class="fas fa-clock-o"></i>
   Pending Approvals
 </h1>
-<widget>
+<widget> 
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
-    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
-    stateKey="{{gridStorageId}}">
+    currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId}}" data-cy="table-container">
     <ng-template pTemplate="caption">
       <div class="text-right">
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
@@ -178,6 +178,7 @@
     </ng-template>
   </p-table>
 </widget>
+
 <h1 class="page-title">
   <i class="fas fa-cog"></i>
   Pending CRF Form submissions (Products)
@@ -185,8 +186,8 @@
 <widget>
   <p-table #dt2 [value]="productData" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
-    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
-    stateKey="{{gridStorageId2}}">
+    currentPageReportTemplate="Showing {first}-{last} of {{productData.length}}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId2}}" data-cy="table-container2">
     <ng-template pTemplate="caption">
       <div class="text-right">
         <grid-options [(defaultColumns)]="gridSettings2" [gridStorageId]="gridStorageId2" [ptable]="dt2"

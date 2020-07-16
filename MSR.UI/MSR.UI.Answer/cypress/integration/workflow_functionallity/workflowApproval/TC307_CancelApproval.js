@@ -1,6 +1,6 @@
 describe('Workflow Group Functionality', () => {
     it('TC307_PendingApprovalGrid', () => {
-
+        //There is no use case for cancel approval atm
         var adminUsername = Cypress.env('admin-username');
         var adminPassword = Cypress.env('admin-password');
         var maxTimeout = parseInt(Cypress.env('admin-password'));

@@ -121,6 +121,15 @@ td i {
   margin-right: 5px;
 }
 
-p-footer button[type=submit]{
+p-footer button[type="submit"] {
   margin-right: 5px;
+}
+
+#support-menu {
+  padding-bottom: 0;
+
+  li:last-child {
+    border-top: 1px solid;
+    margin-top: 5px;
+  }
 }

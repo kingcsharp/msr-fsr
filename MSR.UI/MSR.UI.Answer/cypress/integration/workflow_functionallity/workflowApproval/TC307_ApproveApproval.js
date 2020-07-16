@@ -1,22 +1,22 @@
 describe('Workflow Group Functionality', () => {
     it('TC307_PendingApprovalGrid', () => {
-
+        //There is no use case for approve approval atm
         var adminUsername = Cypress.env('admin-username');
         var adminPassword = Cypress.env('admin-password');
         var maxTimeout = parseInt(Cypress.env('admin-password'));
 
         cy.visit('/')
 
-        cy.url().should('include', '/login')
+        cy.url().should('include', '/login');
 
         cy.window().then((win) => {
             cy.spy(win.console, 'error').as('errorMessage')
             cy.spy(win.console, 'warn').as('warningMessage')
         })
-        cy.get('[data-cy=username-input]').type(adminUsername).should('have.value', adminUsername)
-        cy.get('[data-cy=password-input]').type(adminPassword).should('have.value', adminPassword)
+        cy.get('[data-cy=username-input]').type(adminUsername).should('have.value', adminUsername);
+        cy.get('[data-cy=password-input]').type(adminPassword).should('have.value', adminPassword);
 
-        cy.get('[data-cy=submit-button]').click()
+        cy.get('[data-cy=submit-button]').click();
 
 
         var menuBaseItemName = "Workflow";

@@ -97,27 +97,53 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             if (DelegateHandler.CanReadActivity(EnumApprovalTables.CustomerApproval))
             {
-                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Customers", Table = (int)EnumApprovalTables.CustomerApproval, Count = await _unitOfWork.CustomerApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+                var pendingNotificationCount = await _unitOfWork.CustomerApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
+                if (pendingNotificationCount > 0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Customers", Table = (int)EnumApprovalTables.CustomerApproval, Count = pendingNotificationCount });
+                }
             }
             if (DelegateHandler.CanReadActivity(EnumApprovalTables.LocationApproval))
             {
-                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Locations", Table = (int)EnumApprovalTables.LocationApproval, Count = await _unitOfWork.LocationApprovals.CountAsync() });
+                var locationApprovalCount = await _unitOfWork.LocationApprovals.CountAsync();
+                if (locationApprovalCount>0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Locations", Table = (int)EnumApprovalTables.LocationApproval, Count = locationApprovalCount });
+                }
             }
             if (DelegateHandler.CanReadActivity(EnumApprovalTables.PartApproval))
             {
-                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Parts", Table = (int)EnumApprovalTables.PartApproval, Count = await _unitOfWork.PartApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+                var partsApprovalCount = await _unitOfWork.PartApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
+                if (partsApprovalCount > 0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Parts", Table = (int)EnumApprovalTables.PartApproval, Count = partsApprovalCount });
+                }
             }
             if (DelegateHandler.CanReadActivity(EnumApprovalTables.ProcedureApproval))
             {
-                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Procedures", Table = (int)EnumApprovalTables.ProcedureApproval, Count = await _unitOfWork.ProcedureApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+                var procedureApprovalCount = await _unitOfWork.ProcedureApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
+                if (procedureApprovalCount > 0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Procedures", Table = (int)EnumApprovalTables.ProcedureApproval, Count = procedureApprovalCount });
+                }
+                
             }
             if (DelegateHandler.CanReadActivity(EnumApprovalTables.PurchaseOrderApproval))
             {
-                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Purchase Orders", Table = (int)EnumApprovalTables.PurchaseOrderApproval, Count = await _unitOfWork.PurchaseOrderApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+                var purchaseOrderApprovalCount = await _unitOfWork.PurchaseOrderApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
+                if (purchaseOrderApprovalCount > 0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Purchase Orders", Table = (int)EnumApprovalTables.PurchaseOrderApproval, Count = purchaseOrderApprovalCount });
+                }
+                
             }
             if (DelegateHandler.CanReadActivity(EnumApprovalTables.UserApproval))
             {
-                pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Users", Table = (int)EnumApprovalTables.UserApproval, Count = await _unitOfWork.UserApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId) });
+                var userApprovalCount = await _unitOfWork.UserApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
+                if (userApprovalCount > 0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Users", Table = (int)EnumApprovalTables.UserApproval, Count = userApprovalCount });
+                }
             }
 
             var result = new PendingApprovalNotification()
