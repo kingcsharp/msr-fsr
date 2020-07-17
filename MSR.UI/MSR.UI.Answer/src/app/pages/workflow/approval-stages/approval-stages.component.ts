@@ -60,12 +60,9 @@ export class ApprovalStagesComponent implements OnInit {
     ];
     this.roles = [];
 
-    // this.canAddStages = this.hasPrivilege(this.privileges.CanCreate);
-    // this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
-    // this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
-    this.canAddStages = true;
-    this.canActivateStages = true;
-    this.canEditStages = true;
+    this.canAddStages = this.hasPrivilege(this.privileges.CanCreate);
+    this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
     this.getWorkflowStages();
     this.getWorkflowGroups();
   }
@@ -114,7 +111,7 @@ export class ApprovalStagesComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('workflow', privName);
+    return this.globals.hasPrivilege('ApprovalStages', privName);
   }
 
   showDialog(workflowStage: WorkflowStageModel) {

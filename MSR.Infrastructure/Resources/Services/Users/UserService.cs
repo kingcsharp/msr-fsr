@@ -157,16 +157,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             efUser.Roles = rolesToAdd;
 
-            try
-            {
-                _unitOfWork.Users.Update(efUser);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            _unitOfWork.Users.Update(efUser);
+            await _unitOfWork.SaveChangesAsync();
 
             var domainUser = _mapper.Map<Domain.Models.User>(efUser);
             SetRolesToUser(efUser, domainUser);

@@ -71,9 +71,10 @@ export class ApprovalWorkflowComponent implements OnInit {
       { label: 'InActive', value: false },
     ];
 
-    this.canAdd = true;
-    this.canActivate = true;
-    this.canEdit = true;
+    this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
+    this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
+
     this.getWorkflowStageDropdown();
     this.getWorkflowActivityDropdown();
     this.getWorkflows();
@@ -83,7 +84,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     const ctrl = this;
     return this.workflowService.activity(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allActivities.push({ label: x.name, value: x.id });
         });
         this.getAllActivities = true;
@@ -94,7 +95,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     const ctrl = this;
     return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allStages.push({ label: x.name, value: x.id });
         });
         this.getstagesDr = true;
@@ -173,7 +174,7 @@ export class ApprovalWorkflowComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('workflow', privName);
+    return this.globals.hasPrivilege('ApprovalWorkflows', privName);
   }
 
   showDialog(workflow: WorkflowModel) {

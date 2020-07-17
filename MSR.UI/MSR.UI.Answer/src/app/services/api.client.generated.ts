@@ -826,7 +826,7 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, version: string): Observable<AuditActionResultOfLocation> {
+    locationGet(parentId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -850,14 +850,14 @@ export class LocationService {
                 try {
                     return this.processLocationGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfLocation>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfLocationModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfLocation>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfLocationModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processLocationGet(response: HttpResponseBase): Observable<AuditActionResultOfLocation> {
+    protected processLocationGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfLocationModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -868,7 +868,7 @@ export class LocationService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfLocation.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfLocationModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -876,10 +876,10 @@ export class LocationService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfLocation>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfLocationModel>(<any>null);
     }
 
-    locationPost(version: string, request: CreateLocationRequest): Observable<AuditActionResultOfLocation> {
+    locationPost(version: string, request: CreateLocationRequest): Observable<AuditActionResultOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -905,14 +905,14 @@ export class LocationService {
                 try {
                     return this.processLocationPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfLocation>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfLocationModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfLocation>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfLocationModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processLocationPost(response: HttpResponseBase): Observable<AuditActionResultOfLocation> {
+    protected processLocationPost(response: HttpResponseBase): Observable<AuditActionResultOfLocationModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -923,7 +923,7 @@ export class LocationService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfLocation.fromJS(resultData200);
+            result200 = AuditActionResultOfLocationModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -931,7 +931,7 @@ export class LocationService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfLocation>(<any>null);
+        return _observableOf<AuditActionResultOfLocationModel>(<any>null);
     }
 
     locationPatch(version: string, request: UpdateLocationRequest): Observable<AuditActionResult> {
@@ -4075,7 +4075,6 @@ export class WorkflowStageService {
 export class AuditActionResult implements IAuditActionResult {
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
-    returnedObject?: any | undefined;
     id?: number;
     hasErrors?: boolean;
     hasValidationErrors?: boolean;
@@ -4097,7 +4096,6 @@ export class AuditActionResult implements IAuditActionResult {
                 for (let item of _data["errorMessages"])
                     this.errorMessages!.push(ErrorMessage.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
             this.id = _data["id"];
             this.hasErrors = _data["hasErrors"];
             this.hasValidationErrors = _data["hasValidationErrors"];
@@ -4119,7 +4117,6 @@ export class AuditActionResult implements IAuditActionResult {
             for (let item of this.errorMessages)
                 data["errorMessages"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         data["id"] = this.id;
         data["hasErrors"] = this.hasErrors;
         data["hasValidationErrors"] = this.hasValidationErrors;
@@ -4130,7 +4127,6 @@ export class AuditActionResult implements IAuditActionResult {
 export interface IAuditActionResult {
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
-    returnedObject?: any | undefined;
     id?: number;
     hasErrors?: boolean;
     hasValidationErrors?: boolean;
@@ -4138,7 +4134,6 @@ export interface IAuditActionResult {
 
 export class AuditActionResultOfString extends AuditActionResult implements IAuditActionResultOfString {
     object?: string | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfString) {
         super(data);
@@ -4148,7 +4143,6 @@ export class AuditActionResultOfString extends AuditActionResult implements IAud
         super.init(_data);
         if (_data) {
             this.object = _data["object"];
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -4162,7 +4156,6 @@ export class AuditActionResultOfString extends AuditActionResult implements IAud
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -4170,7 +4163,6 @@ export class AuditActionResultOfString extends AuditActionResult implements IAud
 
 export interface IAuditActionResultOfString extends IAuditActionResult {
     object?: string | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class ErrorMessage implements IErrorMessage {
@@ -4645,44 +4637,48 @@ export interface IUpdateHelpPageRequest {
     roleIds?: number[] | undefined;
 }
 
-export class AuditActionResultOfLocation extends AuditActionResult implements IAuditActionResultOfLocation {
-    object?: Location | undefined;
-    returnedObject?: any | undefined;
+export class AuditActionResultOfICollectionOfLocationModel extends AuditActionResult implements IAuditActionResultOfICollectionOfLocationModel {
+    object?: LocationModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfLocation) {
+    constructor(data?: IAuditActionResultOfICollectionOfLocationModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? Location.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(LocationModel.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfLocation {
+    static fromJS(data: any): AuditActionResultOfICollectionOfLocationModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfLocation();
+        let result = new AuditActionResultOfICollectionOfLocationModel();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface IAuditActionResultOfLocation extends IAuditActionResult {
-    object?: Location | undefined;
-    returnedObject?: any | undefined;
+export interface IAuditActionResultOfICollectionOfLocationModel extends IAuditActionResult {
+    object?: LocationModel[] | undefined;
 }
 
-export class Location implements ILocation {
+export class LocationModel implements ILocationModel {
     id?: number;
     oldId?: number;
     name?: string | undefined;
@@ -4698,7 +4694,7 @@ export class Location implements ILocation {
     invoiceClass?: string | undefined;
     timeZone?: TimeZone | undefined;
 
-    constructor(data?: ILocation) {
+    constructor(data?: ILocationModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4726,9 +4722,9 @@ export class Location implements ILocation {
         }
     }
 
-    static fromJS(data: any): Location {
+    static fromJS(data: any): LocationModel {
         data = typeof data === 'object' ? data : {};
-        let result = new Location();
+        let result = new LocationModel();
         result.init(data);
         return result;
     }
@@ -4753,7 +4749,7 @@ export class Location implements ILocation {
     }
 }
 
-export interface ILocation {
+export interface ILocationModel {
     id?: number;
     oldId?: number;
     name?: string | undefined;
@@ -4820,6 +4816,39 @@ export interface ITimeZone {
     offset?: number;
     number?: number;
     useDalightSavings?: number;
+}
+
+export class AuditActionResultOfLocationModel extends AuditActionResult implements IAuditActionResultOfLocationModel {
+    object?: LocationModel | undefined;
+
+    constructor(data?: IAuditActionResultOfLocationModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? LocationModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfLocationModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfLocationModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfLocationModel extends IAuditActionResult {
+    object?: LocationModel | undefined;
 }
 
 export class CreateLocationRequest implements ICreateLocationRequest {
@@ -4988,7 +5017,6 @@ export interface IUpdateLocationRequest {
 
 export class AuditActionResultOfBoolean extends AuditActionResult implements IAuditActionResultOfBoolean {
     object?: boolean;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfBoolean) {
         super(data);
@@ -4998,7 +5026,6 @@ export class AuditActionResultOfBoolean extends AuditActionResult implements IAu
         super.init(_data);
         if (_data) {
             this.object = _data["object"];
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5012,7 +5039,6 @@ export class AuditActionResultOfBoolean extends AuditActionResult implements IAu
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5020,7 +5046,6 @@ export class AuditActionResultOfBoolean extends AuditActionResult implements IAu
 
 export interface IAuditActionResultOfBoolean extends IAuditActionResult {
     object?: boolean;
-    returnedObject?: any | undefined;
 }
 
 export class CreateMenuRoleMapRequest implements ICreateMenuRoleMapRequest {
@@ -5125,7 +5150,6 @@ export interface IUpdateMenuRoleMapRequest {
 
 export class AuditActionResultOfICollectionOfPart extends AuditActionResult implements IAuditActionResultOfICollectionOfPart {
     object?: Part[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfPart) {
         super(data);
@@ -5139,7 +5163,6 @@ export class AuditActionResultOfICollectionOfPart extends AuditActionResult impl
                 for (let item of _data["object"])
                     this.object!.push(Part.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5157,7 +5180,6 @@ export class AuditActionResultOfICollectionOfPart extends AuditActionResult impl
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5165,7 +5187,6 @@ export class AuditActionResultOfICollectionOfPart extends AuditActionResult impl
 
 export interface IAuditActionResultOfICollectionOfPart extends IAuditActionResult {
     object?: Part[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class Part implements IPart {
@@ -5234,7 +5255,6 @@ export interface IPart {
 
 export class AuditActionResultOfPart extends AuditActionResult implements IAuditActionResultOfPart {
     object?: Part | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfPart) {
         super(data);
@@ -5244,7 +5264,6 @@ export class AuditActionResultOfPart extends AuditActionResult implements IAudit
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? Part.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5258,7 +5277,6 @@ export class AuditActionResultOfPart extends AuditActionResult implements IAudit
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5266,7 +5284,6 @@ export class AuditActionResultOfPart extends AuditActionResult implements IAudit
 
 export interface IAuditActionResultOfPart extends IAuditActionResult {
     object?: Part | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreatePartRequest implements ICreatePartRequest {
@@ -5395,7 +5412,6 @@ export interface IUpdatePartRequest {
 
 export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedure {
     object?: Procedure[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfProcedure) {
         super(data);
@@ -5409,7 +5425,6 @@ export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult
                 for (let item of _data["object"])
                     this.object!.push(Procedure.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5427,7 +5442,6 @@ export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5435,7 +5449,6 @@ export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult
 
 export interface IAuditActionResultOfICollectionOfProcedure extends IAuditActionResult {
     object?: Procedure[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class Procedure implements IProcedure {
@@ -5496,7 +5509,6 @@ export interface IProcedure {
 
 export class AuditActionResultOfProcedure extends AuditActionResult implements IAuditActionResultOfProcedure {
     object?: Procedure | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfProcedure) {
         super(data);
@@ -5506,7 +5518,6 @@ export class AuditActionResultOfProcedure extends AuditActionResult implements I
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? Procedure.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5520,7 +5531,6 @@ export class AuditActionResultOfProcedure extends AuditActionResult implements I
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5528,7 +5538,6 @@ export class AuditActionResultOfProcedure extends AuditActionResult implements I
 
 export interface IAuditActionResultOfProcedure extends IAuditActionResult {
     object?: Procedure | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateProcedureRequest implements ICreateProcedureRequest {
@@ -5641,7 +5650,6 @@ export interface IUpdateProcedureRequest {
 
 export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStep {
     object?: ProcedureStep[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfProcedureStep) {
         super(data);
@@ -5655,7 +5663,6 @@ export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionRe
                 for (let item of _data["object"])
                     this.object!.push(ProcedureStep.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5673,7 +5680,6 @@ export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionRe
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5681,7 +5687,6 @@ export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionRe
 
 export interface IAuditActionResultOfICollectionOfProcedureStep extends IAuditActionResult {
     object?: ProcedureStep[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class ProcedureStep implements IProcedureStep {
@@ -5766,7 +5771,6 @@ export interface IProcedureStep {
 
 export class AuditActionResultOfProcedureStep extends AuditActionResult implements IAuditActionResultOfProcedureStep {
     object?: ProcedureStep | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfProcedureStep) {
         super(data);
@@ -5776,7 +5780,6 @@ export class AuditActionResultOfProcedureStep extends AuditActionResult implemen
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? ProcedureStep.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5790,7 +5793,6 @@ export class AuditActionResultOfProcedureStep extends AuditActionResult implemen
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5798,7 +5800,6 @@ export class AuditActionResultOfProcedureStep extends AuditActionResult implemen
 
 export interface IAuditActionResultOfProcedureStep extends IAuditActionResult {
     object?: ProcedureStep | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
@@ -5951,7 +5952,6 @@ export interface IUpdateProcedureStepRequest {
 
 export class AuditActionResultOfICollectionOfProcedureStepMonitor extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepMonitor {
     object?: ProcedureStepMonitor[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfProcedureStepMonitor) {
         super(data);
@@ -5965,7 +5965,6 @@ export class AuditActionResultOfICollectionOfProcedureStepMonitor extends AuditA
                 for (let item of _data["object"])
                     this.object!.push(ProcedureStepMonitor.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -5983,7 +5982,6 @@ export class AuditActionResultOfICollectionOfProcedureStepMonitor extends AuditA
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -5991,7 +5989,6 @@ export class AuditActionResultOfICollectionOfProcedureStepMonitor extends AuditA
 
 export interface IAuditActionResultOfICollectionOfProcedureStepMonitor extends IAuditActionResult {
     object?: ProcedureStepMonitor[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class ProcedureStepMonitor implements IProcedureStepMonitor {
@@ -6080,7 +6077,6 @@ export interface IProcedureStepMonitor {
 
 export class AuditActionResultOfProcedureStepMonitor extends AuditActionResult implements IAuditActionResultOfProcedureStepMonitor {
     object?: ProcedureStepMonitor | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfProcedureStepMonitor) {
         super(data);
@@ -6090,7 +6086,6 @@ export class AuditActionResultOfProcedureStepMonitor extends AuditActionResult i
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? ProcedureStepMonitor.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -6104,7 +6099,6 @@ export class AuditActionResultOfProcedureStepMonitor extends AuditActionResult i
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -6112,7 +6106,6 @@ export class AuditActionResultOfProcedureStepMonitor extends AuditActionResult i
 
 export interface IAuditActionResultOfProcedureStepMonitor extends IAuditActionResult {
     object?: ProcedureStepMonitor | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMonitorRequest {
@@ -6281,7 +6274,6 @@ export interface IUpdateProcedureStepMonitorRequest {
 
 export class AuditActionResultOfProcedureStepMonitorDefinition extends AuditActionResult implements IAuditActionResultOfProcedureStepMonitorDefinition {
     object?: ProcedureStepMonitorDefinition | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfProcedureStepMonitorDefinition) {
         super(data);
@@ -6291,7 +6283,6 @@ export class AuditActionResultOfProcedureStepMonitorDefinition extends AuditActi
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? ProcedureStepMonitorDefinition.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -6305,7 +6296,6 @@ export class AuditActionResultOfProcedureStepMonitorDefinition extends AuditActi
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -6313,7 +6303,6 @@ export class AuditActionResultOfProcedureStepMonitorDefinition extends AuditActi
 
 export interface IAuditActionResultOfProcedureStepMonitorDefinition extends IAuditActionResult {
     object?: ProcedureStepMonitorDefinition | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class ProcedureStepMonitorDefinition implements IProcedureStepMonitorDefinition {
@@ -6470,7 +6459,6 @@ export interface IProcedureStepMonitorListItem {
 
 export class AuditActionResultOfICollectionOfProcedureStepTemplate extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepTemplate {
     object?: ProcedureStepTemplate[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfProcedureStepTemplate) {
         super(data);
@@ -6484,7 +6472,6 @@ export class AuditActionResultOfICollectionOfProcedureStepTemplate extends Audit
                 for (let item of _data["object"])
                     this.object!.push(ProcedureStepTemplate.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -6502,7 +6489,6 @@ export class AuditActionResultOfICollectionOfProcedureStepTemplate extends Audit
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -6510,7 +6496,6 @@ export class AuditActionResultOfICollectionOfProcedureStepTemplate extends Audit
 
 export interface IAuditActionResultOfICollectionOfProcedureStepTemplate extends IAuditActionResult {
     object?: ProcedureStepTemplate[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class ProcedureStepTemplate implements IProcedureStepTemplate {
@@ -6551,7 +6536,6 @@ export interface IProcedureStepTemplate {
 
 export class AuditActionResultOfProcedureStepTemplate extends AuditActionResult implements IAuditActionResultOfProcedureStepTemplate {
     object?: ProcedureStepTemplate | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfProcedureStepTemplate) {
         super(data);
@@ -6561,7 +6545,6 @@ export class AuditActionResultOfProcedureStepTemplate extends AuditActionResult 
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? ProcedureStepTemplate.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -6575,7 +6558,6 @@ export class AuditActionResultOfProcedureStepTemplate extends AuditActionResult 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -6583,7 +6565,6 @@ export class AuditActionResultOfProcedureStepTemplate extends AuditActionResult 
 
 export interface IAuditActionResultOfProcedureStepTemplate extends IAuditActionResult {
     object?: ProcedureStepTemplate | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepTemplateRequest {
@@ -6736,7 +6717,6 @@ export interface IUpdateProcedureStepTemplateRequest {
 
 export class AuditActionResultOfICollectionOfProcedureType extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureType {
     object?: ProcedureType[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfProcedureType) {
         super(data);
@@ -6750,7 +6730,6 @@ export class AuditActionResultOfICollectionOfProcedureType extends AuditActionRe
                 for (let item of _data["object"])
                     this.object!.push(ProcedureType.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -6768,7 +6747,6 @@ export class AuditActionResultOfICollectionOfProcedureType extends AuditActionRe
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -6776,7 +6754,6 @@ export class AuditActionResultOfICollectionOfProcedureType extends AuditActionRe
 
 export interface IAuditActionResultOfICollectionOfProcedureType extends IAuditActionResult {
     object?: ProcedureType[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class ProcedureType implements IProcedureType {
@@ -6821,7 +6798,6 @@ export interface IProcedureType {
 
 export class AuditActionResultOfProcedureType extends AuditActionResult implements IAuditActionResultOfProcedureType {
     object?: ProcedureType | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfProcedureType) {
         super(data);
@@ -6831,7 +6807,6 @@ export class AuditActionResultOfProcedureType extends AuditActionResult implemen
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? ProcedureType.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -6845,7 +6820,6 @@ export class AuditActionResultOfProcedureType extends AuditActionResult implemen
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -6853,7 +6827,6 @@ export class AuditActionResultOfProcedureType extends AuditActionResult implemen
 
 export interface IAuditActionResultOfProcedureType extends IAuditActionResult {
     object?: ProcedureType | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateProcedureTypeRequest implements ICreateProcedureTypeRequest {
@@ -6934,7 +6907,6 @@ export interface IUpdateProcedureTypeRequest {
 
 export class AuditActionResultOfICollectionOfRole extends AuditActionResult implements IAuditActionResultOfICollectionOfRole {
     object?: Role[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfRole) {
         super(data);
@@ -6948,7 +6920,6 @@ export class AuditActionResultOfICollectionOfRole extends AuditActionResult impl
                 for (let item of _data["object"])
                     this.object!.push(Role.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -6966,7 +6937,6 @@ export class AuditActionResultOfICollectionOfRole extends AuditActionResult impl
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -6974,7 +6944,6 @@ export class AuditActionResultOfICollectionOfRole extends AuditActionResult impl
 
 export interface IAuditActionResultOfICollectionOfRole extends IAuditActionResult {
     object?: Role[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class Role implements IRole {
@@ -7195,7 +7164,6 @@ export enum EnumMenuItem {
 
 export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
     object?: User[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfUser) {
         super(data);
@@ -7209,7 +7177,6 @@ export class AuditActionResultOfICollectionOfUser extends AuditActionResult impl
                 for (let item of _data["object"])
                     this.object!.push(User.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -7227,7 +7194,6 @@ export class AuditActionResultOfICollectionOfUser extends AuditActionResult impl
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -7235,7 +7201,6 @@ export class AuditActionResultOfICollectionOfUser extends AuditActionResult impl
 
 export interface IAuditActionResultOfICollectionOfUser extends IAuditActionResult {
     object?: User[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class User implements IUser {
@@ -7380,7 +7345,6 @@ export interface IUser {
 
 export class AuditActionResultOfUser extends AuditActionResult implements IAuditActionResultOfUser {
     object?: User | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfUser) {
         super(data);
@@ -7390,7 +7354,6 @@ export class AuditActionResultOfUser extends AuditActionResult implements IAudit
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? User.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -7404,7 +7367,6 @@ export class AuditActionResultOfUser extends AuditActionResult implements IAudit
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -7412,7 +7374,6 @@ export class AuditActionResultOfUser extends AuditActionResult implements IAudit
 
 export interface IAuditActionResultOfUser extends IAuditActionResult {
     object?: User | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateUserRequest implements ICreateUserRequest {
@@ -7658,7 +7619,6 @@ export interface IUpdateUserRoleRequest {
 
 export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfICollectionOfPendingApprovalModel {
     object?: PendingApprovalModel[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfPendingApprovalModel) {
         super(data);
@@ -7672,7 +7632,6 @@ export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditA
                 for (let item of _data["object"])
                     this.object!.push(PendingApprovalModel.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -7690,7 +7649,6 @@ export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditA
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -7698,7 +7656,6 @@ export class AuditActionResultOfICollectionOfPendingApprovalModel extends AuditA
 
 export interface IAuditActionResultOfICollectionOfPendingApprovalModel extends IAuditActionResult {
     object?: PendingApprovalModel[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class PendingApprovalModel implements IPendingApprovalModel {
@@ -7799,7 +7756,6 @@ export enum EnumApprovalTables {
 
 export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalPopoverModel {
     object?: PendingApprovalPopoverModel | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfPendingApprovalPopoverModel) {
         super(data);
@@ -7809,7 +7765,6 @@ export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionR
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? PendingApprovalPopoverModel.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -7823,7 +7778,6 @@ export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionR
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -7831,7 +7785,6 @@ export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionR
 
 export interface IAuditActionResultOfPendingApprovalPopoverModel extends IAuditActionResult {
     object?: PendingApprovalPopoverModel | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class PendingApprovalPopoverModel implements IPendingApprovalPopoverModel {
@@ -7880,7 +7833,6 @@ export interface IPendingApprovalPopoverModel {
 
 export class AuditActionResultOfPendingApprovalModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalModel {
     object?: PendingApprovalModel | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfPendingApprovalModel) {
         super(data);
@@ -7890,7 +7842,6 @@ export class AuditActionResultOfPendingApprovalModel extends AuditActionResult i
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? PendingApprovalModel.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -7904,7 +7855,6 @@ export class AuditActionResultOfPendingApprovalModel extends AuditActionResult i
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -7912,12 +7862,10 @@ export class AuditActionResultOfPendingApprovalModel extends AuditActionResult i
 
 export interface IAuditActionResultOfPendingApprovalModel extends IAuditActionResult {
     object?: PendingApprovalModel | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class AuditActionResultOfPendingApprovalNotification extends AuditActionResult implements IAuditActionResultOfPendingApprovalNotification {
     object?: PendingApprovalNotification | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfPendingApprovalNotification) {
         super(data);
@@ -7927,7 +7875,6 @@ export class AuditActionResultOfPendingApprovalNotification extends AuditActionR
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? PendingApprovalNotification.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -7941,7 +7888,6 @@ export class AuditActionResultOfPendingApprovalNotification extends AuditActionR
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -7949,7 +7895,6 @@ export class AuditActionResultOfPendingApprovalNotification extends AuditActionR
 
 export interface IAuditActionResultOfPendingApprovalNotification extends IAuditActionResult {
     object?: PendingApprovalNotification | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class PendingApprovalNotification implements IPendingApprovalNotification {
@@ -8042,7 +7987,6 @@ export interface IPendingNotificationItem {
 
 export class AuditActionResultOfICollectionOfWorkflowActivityModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowActivityModel {
     object?: WorkflowActivityModel[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfWorkflowActivityModel) {
         super(data);
@@ -8056,7 +8000,6 @@ export class AuditActionResultOfICollectionOfWorkflowActivityModel extends Audit
                 for (let item of _data["object"])
                     this.object!.push(WorkflowActivityModel.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -8074,7 +8017,6 @@ export class AuditActionResultOfICollectionOfWorkflowActivityModel extends Audit
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -8082,7 +8024,6 @@ export class AuditActionResultOfICollectionOfWorkflowActivityModel extends Audit
 
 export interface IAuditActionResultOfICollectionOfWorkflowActivityModel extends IAuditActionResult {
     object?: WorkflowActivityModel[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export abstract class EntityModel implements IEntityModel {
@@ -8238,7 +8179,6 @@ export interface IWorkflowActivityModel extends IDeletableModel {
 
 export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowModel {
     object?: WorkflowModel[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfWorkflowModel) {
         super(data);
@@ -8252,7 +8192,6 @@ export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionRe
                 for (let item of _data["object"])
                     this.object!.push(WorkflowModel.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -8270,7 +8209,6 @@ export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionRe
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -8278,7 +8216,6 @@ export class AuditActionResultOfICollectionOfWorkflowModel extends AuditActionRe
 
 export interface IAuditActionResultOfICollectionOfWorkflowModel extends IAuditActionResult {
     object?: WorkflowModel[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class WorkflowModel extends DeletableModel implements IWorkflowModel {
@@ -8428,7 +8365,6 @@ export interface IWorkflowActivityMapModel {
 
 export class AuditActionResultOfWorkflowModel extends AuditActionResult implements IAuditActionResultOfWorkflowModel {
     object?: WorkflowModel | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfWorkflowModel) {
         super(data);
@@ -8438,7 +8374,6 @@ export class AuditActionResultOfWorkflowModel extends AuditActionResult implemen
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? WorkflowModel.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -8452,7 +8387,6 @@ export class AuditActionResultOfWorkflowModel extends AuditActionResult implemen
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -8460,7 +8394,6 @@ export class AuditActionResultOfWorkflowModel extends AuditActionResult implemen
 
 export interface IAuditActionResultOfWorkflowModel extends IAuditActionResult {
     object?: WorkflowModel | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateWorkflowRequest implements ICreateWorkflowRequest {
@@ -8562,7 +8495,6 @@ export interface IUpdateWorkflowRequest extends ICreateWorkflowRequest {
 
 export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowGroupModel {
     object?: WorkflowGroupModel[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfWorkflowGroupModel) {
         super(data);
@@ -8576,7 +8508,6 @@ export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditAct
                 for (let item of _data["object"])
                     this.object!.push(WorkflowGroupModel.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -8594,7 +8525,6 @@ export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditAct
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -8602,7 +8532,6 @@ export class AuditActionResultOfICollectionOfWorkflowGroupModel extends AuditAct
 
 export interface IAuditActionResultOfICollectionOfWorkflowGroupModel extends IAuditActionResult {
     object?: WorkflowGroupModel[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class WorkflowGroupModel implements IWorkflowGroupModel {
@@ -8783,7 +8712,6 @@ export interface IWorkflowGroupUserMapModel {
 
 export class AuditActionResultOfWorkflowGroupModel extends AuditActionResult implements IAuditActionResultOfWorkflowGroupModel {
     object?: WorkflowGroupModel | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfWorkflowGroupModel) {
         super(data);
@@ -8793,7 +8721,6 @@ export class AuditActionResultOfWorkflowGroupModel extends AuditActionResult imp
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? WorkflowGroupModel.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -8807,7 +8734,6 @@ export class AuditActionResultOfWorkflowGroupModel extends AuditActionResult imp
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -8815,7 +8741,6 @@ export class AuditActionResultOfWorkflowGroupModel extends AuditActionResult imp
 
 export interface IAuditActionResultOfWorkflowGroupModel extends IAuditActionResult {
     object?: WorkflowGroupModel | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateWorkflowGroupRequest implements ICreateWorkflowGroupRequest {
@@ -8917,7 +8842,6 @@ export interface IUpdateWorkflowGroupRequest extends ICreateWorkflowGroupRequest
 
 export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkflowStageModel {
     object?: WorkflowStageModel[] | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfICollectionOfWorkflowStageModel) {
         super(data);
@@ -8931,7 +8855,6 @@ export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditAct
                 for (let item of _data["object"])
                     this.object!.push(WorkflowStageModel.fromJS(item));
             }
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -8949,7 +8872,6 @@ export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditAct
             for (let item of this.object)
                 data["object"].push(item.toJSON());
         }
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -8957,7 +8879,6 @@ export class AuditActionResultOfICollectionOfWorkflowStageModel extends AuditAct
 
 export interface IAuditActionResultOfICollectionOfWorkflowStageModel extends IAuditActionResult {
     object?: WorkflowStageModel[] | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class WorkflowStageModel extends DeletableModel implements IWorkflowStageModel {
@@ -9055,7 +8976,6 @@ export interface IWorkflowGroupStageMapModel {
 
 export class AuditActionResultOfWorkflowStageModel extends AuditActionResult implements IAuditActionResultOfWorkflowStageModel {
     object?: WorkflowStageModel | undefined;
-    returnedObject?: any | undefined;
 
     constructor(data?: IAuditActionResultOfWorkflowStageModel) {
         super(data);
@@ -9065,7 +8985,6 @@ export class AuditActionResultOfWorkflowStageModel extends AuditActionResult imp
         super.init(_data);
         if (_data) {
             this.object = _data["object"] ? WorkflowStageModel.fromJS(_data["object"]) : <any>undefined;
-            this.returnedObject = _data["returnedObject"];
         }
     }
 
@@ -9079,7 +8998,6 @@ export class AuditActionResultOfWorkflowStageModel extends AuditActionResult imp
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
@@ -9087,7 +9005,6 @@ export class AuditActionResultOfWorkflowStageModel extends AuditActionResult imp
 
 export interface IAuditActionResultOfWorkflowStageModel extends IAuditActionResult {
     object?: WorkflowStageModel | undefined;
-    returnedObject?: any | undefined;
 }
 
 export class CreateWorkflowStageRequest implements ICreateWorkflowStageRequest {

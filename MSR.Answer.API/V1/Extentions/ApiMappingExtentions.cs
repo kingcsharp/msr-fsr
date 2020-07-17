@@ -297,6 +297,11 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
+        public static GetLocations ToGetLocationCommand(this GetLocationRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetLocations>(request);
+        }
+
         public static CreateLocation ToCreateLocationCommand(this CreateLocationRequest request)
         {
             return AutoMapperHelper.Mapper.Map<CreateLocation>(request);

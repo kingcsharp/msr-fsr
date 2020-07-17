@@ -10,6 +10,7 @@ namespace MSR.Infrastructure.Profiles
         {
             CreateMap<User, Domain.Models.User>()
                 .ForMember(dest => dest.Roles, opts => opts.Ignore())
+                .ForMember(dest => dest.SupervisorName, opt => opt.MapFrom(src => src.Supervisor.GetFullName()))
                 .ReverseMap();
             CreateMap<CreateUser, User>();
             CreateMap<UpdateUser, User>();
@@ -18,7 +19,7 @@ namespace MSR.Infrastructure.Profiles
 
 
             CreateMap<Customer, Domain.Models.Customer>().ReverseMap();
-            CreateMap<Location, Domain.Models.Location>().ReverseMap();
+            CreateMap<Location, Domain.Models.LocationModel>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
@@ -27,7 +28,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Role, Domain.Models.Role>()
                 .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
-            CreateMap<Location, Domain.Models.Location>();
+            CreateMap<Location, Domain.Models.LocationModel>();
 
             /*Workflow*/
             CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
@@ -46,8 +47,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateCustomer, CustomerApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<Domain.Models.Location, Location>().ReverseMap();
-            CreateMap<Domain.Models.Location, LocationApproval>().ReverseMap();
+            CreateMap<Domain.Models.LocationModel, Location>().ReverseMap();
+            CreateMap<Domain.Models.LocationModel, LocationApproval>().ReverseMap();
             CreateMap<CreateLocation, LocationApproval>();
             CreateMap<CreateLocation, Location>();
 
