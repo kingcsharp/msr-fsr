@@ -71,9 +71,10 @@ export class ApprovalWorkflowComponent implements OnInit {
       { label: 'InActive', value: false },
     ];
 
-    this.canAdd = true;
-    this.canActivate = true;
-    this.canEdit = true;
+    this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
+    this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
+
     this.getWorkflowStageDropdown();
     this.getWorkflowActivityDropdown();
     this.getWorkflows();
@@ -173,7 +174,7 @@ export class ApprovalWorkflowComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('workflow', privName);
+    return this.globals.hasPrivilege('ApprovalWorkflows', privName);
   }
 
   showDialog(workflow: WorkflowModel) {

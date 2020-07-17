@@ -4,7 +4,7 @@
 </h1>
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
@@ -29,16 +29,19 @@
       <tr>
         <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
           <div class="position-relative">
-            <input id="id" pInputText type="text" tooltip="Search by Id" (input)="dt.filter($event.target.value, 'id', 'contains')"
-              class="ui-column-filter" [value]="dt.filters['id']?.value">
+            <input id="id" pInputText type="text" tooltip="Search by Id"
+              (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['id']?.value">
             <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
+
         <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
             [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
           </multiselect-wrapper>
         </th>
+
         <th [hidden]="!cg.isVisibleCol('isAnswerUser',gridSettings)">
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="userTypes" [filterId]="'isAnswerUser'"
             [defaultText]="'Select User Type'" [defaultTextTooltip]="''" [datatable]="dt">
@@ -46,32 +49,36 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('firstName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by First Name" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
-              class="ui-column-filter" [value]="dt.filters['firstName']?.value">
+            <input pInputText type="text" tooltip="Search by First Name"
+              (input)="dt.filter($event.target.value, 'firstName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['firstName']?.value">
             <i *ngIf="dt.filters['firstName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'firstName')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('lastName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Last Name" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
-              class="ui-column-filter" [value]="dt.filters['lastName']?.value">
+            <input pInputText type="text" tooltip="Search by Last Name"
+              (input)="dt.filter($event.target.value, 'lastName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['lastName']?.value">
             <i *ngIf="dt.filters['lastName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'lastName')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('userName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by User Name" (input)="dt.filter($event.target.value, 'userName', 'contains')"
-              class="ui-column-filter" [value]="dt.filters['userName']?.value">
+            <input pInputText type="text" tooltip="Search by User Name"
+              (input)="dt.filter($event.target.value, 'userName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['userName']?.value">
             <i *ngIf="dt.filters['userName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'userName')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('email',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Email" (input)="dt.filter($event.target.value, 'email', 'contains')"
-              class="ui-column-filter" [value]="dt.filters['email']?.value">
+            <input pInputText type="text" tooltip="Search by Email"
+              (input)="dt.filter($event.target.value, 'email', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['email']?.value">
             <i *ngIf="dt.filters['email']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'email')"></i>
           </div>
@@ -91,16 +98,18 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('locationName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Location" (input)="dt.filter($event.target.value, 'locationName', 'contains')"
-              class="ui-column-filter" [value]="dt.filters['locationName']?.value">
+            <input pInputText type="text" tooltip="Search by Location"
+              (input)="dt.filter($event.target.value, 'locationName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['locationName']?.value">
             <i *ngIf="dt.filters['locationName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'locationName')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('supervisorName', gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Supervisor Name" (input)="dt.filter($event.target.value, 'supervisorName', 'contains')"
-              class="ui-column-filter" [value]="dt.filters['supervisorName']?.value">
+            <input pInputText type="text" tooltip="Search by Supervisor Name"
+              (input)="dt.filter($event.target.value, 'supervisorName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['supervisorName']?.value">
             <i *ngIf="dt.filters['supervisorName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'supervisorName')"></i>
           </div>
@@ -168,7 +177,7 @@
     </ng-template>
   </p-table>
 </widget>
-<p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
+<p-dialog *ngIf="display" header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
   [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
@@ -249,12 +258,8 @@
               Roles
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allRoles" [(ngModel)]="currUser.rolesSaved" [itemSize]="15"
-                appendTo="body">
-                <ng-template pTemplate="selectedItems">
-                  <div tooltip="Select Roles">Select Roles</div>
-                </ng-template>
-              </p-multiSelect>
+              <multiselect-wrapper-form [options]="allRoles" [(model)]="currUser.rolesSaved" [defaultLabelProperty]="'name'" [defaultLabel]="'Select Roles'">
+              </multiselect-wrapper-form>
             </div>
             <label class="form-control-label col-md-2 col-12 text-md-right" for="locations">
               Location

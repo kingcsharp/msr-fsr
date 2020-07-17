@@ -2,7 +2,10 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { UserService, CreateUserRequest, User, IAuditActionResultOfUser, LocationService, UpdateUserRequest, RoleService, Role } from '../../../services/api.client.generated';
+import {
+  UserService, User, IAuditActionResultOfUser, LocationService
+  , UpdateUserRequest, RoleService, Role
+} from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -23,7 +26,6 @@ declare let jQuery: any;
 export class UserComponent implements OnInit {
   privileges = EnumPrivilege;
   data: any;
-  loading: boolean = true;
   display: boolean = false;
   currUser: any;
   phoneValue = '';
@@ -34,7 +36,6 @@ export class UserComponent implements OnInit {
   userTypes: any[];
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
-  elems: any;
   showSaveView: boolean = false;
   savedViewsOptions: any;
   phoneMask = {
@@ -74,7 +75,6 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'lastName', label: 'Last Name', visible: true }),
     new ColumnsSaved({ id: 'userName', label: 'Username', visible: true }),
     new ColumnsSaved({ id: 'email', label: 'Email', visible: true }),
-
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
     new ColumnsSaved({ id: 'locationName', label: 'Location', visible: false }),
@@ -105,9 +105,7 @@ export class UserComponent implements OnInit {
     const ctrl = this;
     this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.object.map((x) => {
-          ctrl.allRoles.push({ label: x.name, value: x.id });
-        });
+        ctrl.allRoles = response.object;
         ctrl.backendRoles = response.object;
       }));
   }
@@ -129,12 +127,12 @@ export class UserComponent implements OnInit {
 
   async getUsers() {
     const ctrl = this;
+    this.globals.showLoader(true);
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        ctrl.data = response.object;
-        this.updateUsersData(ctrl.data);
-        ctrl.loading = false;
+        this.data = response.object;
+        this.updateUsersData(this.data);
       }));
   }
 
@@ -160,7 +158,7 @@ export class UserComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('ApprovalWorkflows', privName);
+    return this.globals.hasPrivilege('Users', privName);
   }
 
   unmask(event) {

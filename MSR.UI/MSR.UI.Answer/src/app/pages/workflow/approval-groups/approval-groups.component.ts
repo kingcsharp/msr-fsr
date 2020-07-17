@@ -62,9 +62,9 @@ export class ApprovalGroupsComponent implements OnInit {
     ];
     this.roles = [];
 
-    this.canAddGroups = true;
-    this.canActivateGroups = true;
-    this.canEditGroups = true;
+    this.canAddGroups = this.hasPrivilege(this.privileges.CanCreate);
+    this.canActivateGroups = this.hasPrivilege(this.privileges.CanActivate);;
+    this.canEditGroups = this.hasPrivilege(this.privileges.CanEdit);;
     this.getWorkflowGroups();
     this.getUsers();
     this.getRoles()
@@ -134,7 +134,7 @@ export class ApprovalGroupsComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('workflow', privName);
+    return this.globals.hasPrivilege('ApprovalGroups', privName);
   }
 
   showDialog(workflowGroup: WorkflowGroupModel) {
