@@ -1,0 +1,15 @@
+{
+  "name": "MSR.Reporting",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "./node_modules/.bin/cubejs-dev-server"
+  },
+  "dependencies": {
+    "@cubejs-backend/athena-driver": "^0.19.52",
+    "@cubejs-backend/mssql-driver": "^0.19.52",
+    "@cubejs-backend/server": "^0.19.52",
+    "@cubejs-backend/serverless": "^0.19.52",
+    "@cubejs-backend/serverless-aws": "^0.19.52"
+  }
+}
