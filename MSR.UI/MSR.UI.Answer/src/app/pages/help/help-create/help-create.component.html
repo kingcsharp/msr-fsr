@@ -26,6 +26,12 @@
                     data-cy="friendlyurl-input">
             </div>
             <div class="form-group">
+                <label for="articlecontent" class="col-form-label text-left">
+                    Article Content
+                </label>
+                <ckeditor name="articlecontent" [editor]="Editor" [(ngModel)]="createHelpPageRequest.helpContent" data="<p>Hello, world!</p>"></ckeditor>
+            </div>
+            <div class="form-group">
                 <label for="roles" class="col-form-label text-left">
                     Roles
                 </label>
