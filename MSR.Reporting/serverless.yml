@@ -2,6 +2,8 @@ service: MSRReporting
 
 provider:
   name: aws
+  stage: dev
+  region: us-west-2
   runtime: nodejs12.x
   iamRoleStatements:
     - Effect: "Allow"
@@ -16,7 +18,7 @@ provider:
 # When you uncomment vpc please make sure lambda has access to internet: https://medium.com/@philippholly/aws-lambda-enable-outgoing-internet-access-within-vpc-8dd250e11e12
   vpc:
     securityGroupIds:
-#     - sg-385a655f
+     - sg-385a655f
      - sg-0fb3803144f799766 # Your DB and Redis security groups here
     subnetIds:
      - subnet-04fda441407cd0e2f # Put here subnet with access to your DB, Redis and internet. For internet access 0.0.0.0/0 should be routed through NAT only for this subnet!
