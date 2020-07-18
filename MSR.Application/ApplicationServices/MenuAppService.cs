@@ -2,6 +2,8 @@
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,16 +17,18 @@ namespace MSR.Application.ApplicationServices
     {
 
         private readonly IRoleService _roleService;
+        private readonly IMenuService _menuService;
 
-        public MenuAppService(IRoleService roleService)
+        public MenuAppService(IRoleService roleService, IMenuService menuService)
         {
             _roleService = roleService;
+            _menuService = menuService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetMenu command, CancellationToken cancellationToken = default)
         {
-            var res = new CommandResponse<bool>(true);
-            return res;
+            var ret = await _menuService.GetMenuAsync(command);
+            return new CommandResponse<IEnumerable<MenuItem>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateMenuRoleMap command, CancellationToken cancellationToken = default)

@@ -38,6 +38,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ApprovalTransactionLog> _approvalTransactionLog;
         private IRepository<HelpPage> _helpPage;
         private IRepository<HelpPageRoleMap> _helpPageRoleMap;
+        private IRepository<RoleChildRoleMap> _roleChildRoleMap;
 
         public IRepository<User> Users { get { return _users ??= new EFRepository<User>(Context); } }
         public IRepository<Customer> Customers { get { return _customers ??= new EFRepository<Customer>(Context); } }
@@ -66,6 +67,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
         public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ??= new EFRepository<WorkflowStage>(Context); } }
+        public IRepository<RoleChildRoleMap> RoleChildRoleMaps { get { return _roleChildRoleMap ??= new EFRepository<RoleChildRoleMap>(Context); } }
         
         #endregion Repositories
 

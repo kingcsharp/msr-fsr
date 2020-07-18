@@ -21,5 +21,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual Location Location { get; set; }
 
         public int? LocationId { get; set; }
+        public string CustomerNumber { get; set; }
     }
 }

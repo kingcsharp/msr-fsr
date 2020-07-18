@@ -32,8 +32,6 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.User> CreateUserAsync(CreateUser command)
         {
-
-
             var rolesToAdd = new List<UserRole>();
             List<EntityFramework.Entities.Role> getRolesFromDb;
             if (command.Roles != null && command.Roles.Count > 0) {
