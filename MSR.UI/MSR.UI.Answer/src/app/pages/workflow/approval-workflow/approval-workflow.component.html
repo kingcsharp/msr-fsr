@@ -1,6 +1,6 @@
-<h1 class="page-title">
-  <i class="fas fa-clock-o"></i>
-  Pending Approvals
+<h1 class="page-title" data-cy="page-title">
+  <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+  {{globals.activeMenu.name}}
 </h1>
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
@@ -37,7 +37,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Name"
+            <input pInputText type="text" tooltip="Search by Name" data-cy="searchbyname-grid"
               (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt.filters['name']?.value">
             <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
@@ -134,9 +134,11 @@
           {{workflow.lastUpdatedByName }}
         </td>
         <td>
-          <i *ngIf="canEdit" class="fa fa-edit pointer" tooltip="Edit Workflow " (click)="showDialog(workflow)"></i>
+          <i *ngIf="canEdit" class="fa fa-edit pointer" tooltip="Edit Workflow" data-cy="editRow"
+            (click)="showDialog(workflow)"></i>
 
-          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow " (click)="removeRow(workflow)"></i>
+          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow" data-cy="deleteRow"
+            (click)="removeRow(workflow)"></i>
         </td>
       </tr>
     </ng-template>
@@ -179,8 +181,8 @@
               Member Stages
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allStages" [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15"
-                appendTo="body">
+              <p-multiSelect name="role" [options]="allStages" data-cy="roles-multiselect"
+                [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Member Stages</div>
                 </ng-template>
@@ -190,8 +192,8 @@
               Applicable Activities
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role2" [options]="allActivities" [(ngModel)]="currWorkflow.activitiesSaved"
-                [itemSize]="15" appendTo="body">
+              <p-multiSelect name="role2" [options]="allActivities" data-cy="allactivities-multiselect"
+                [(ngModel)]="currWorkflow.activitiesSaved" [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Activities</div>
                 </ng-template>

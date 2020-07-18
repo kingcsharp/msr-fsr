@@ -62,9 +62,9 @@ export class ApprovalGroupsComponent implements OnInit {
     ];
     this.roles = [];
 
-    this.canAddGroups = true;
-    this.canActivateGroups = true;
-    this.canEditGroups = true;
+    this.canAddGroups = this.hasPrivilege(this.privileges.CanCreate);
+    this.canActivateGroups = this.hasPrivilege(this.privileges.CanActivate);;
+    this.canEditGroups = this.hasPrivilege(this.privileges.CanEdit);;
     this.getWorkflowGroups();
     this.getUsers();
     this.getRoles()
@@ -126,15 +126,15 @@ export class ApprovalGroupsComponent implements OnInit {
     const ctrl = this;
     this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allRoles.push({ label: x.name, value: x.id });
         });
-        ctrl.backendRoles = response.returnedObject;
+        ctrl.backendRoles = response.object;
       }));
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('workflow', privName);
+    return this.globals.hasPrivilege('ApprovalGroups', privName);
   }
 
   showDialog(workflowGroup: WorkflowGroupModel) {
@@ -181,7 +181,6 @@ export class ApprovalGroupsComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflowGroup.id);
         this.data.splice(index, 1);
-        ctrl.toastr.success(`Workflow Group has been successfully removed.`);
       }, () => {
         // DO not update user
       }));
@@ -194,6 +193,7 @@ export class ApprovalGroupsComponent implements OnInit {
       let method: Observable<AuditActionResultOfWorkflowGroupModel> = null;
       this.globals.showLoader(true);
       this.currWorkflowGroup.groupRoles = [];
+      this.currWorkflowGroup.groupUsers = [];
       this.currWorkflowGroup.rolesSaved.forEach(x => {
         const role = ctrl.backendRoles.find(r => r.id === x);
         this.currWorkflowGroup.groupRoles

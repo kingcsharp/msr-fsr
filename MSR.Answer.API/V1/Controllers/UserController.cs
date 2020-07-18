@@ -57,7 +57,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToCreatedResponse<User>();
+            return ret.ToOkObjectResponse<User>("User has been successfully created.");
         }
 
         [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<User>))]
@@ -66,7 +66,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse<User>("User has been successfully updated.");
         }
 
         [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete), SwaggerResponse(typeof(void))]
@@ -88,7 +88,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToCreateUserRoleCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToCreatedResponse<Location>();
+            return ret.ToCreatedResponse<LocationModel>();
         }
 
         [HttpPatch("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]

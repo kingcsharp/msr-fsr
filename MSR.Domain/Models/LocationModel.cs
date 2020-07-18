@@ -1,7 +1,7 @@
 ﻿
 namespace MSR.Domain.Models
 {
-    public class Location
+    public class LocationModel
     {
         public int Id { get; set; }
         public int OldId { get; set; }

@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using MSR.Answer.API.V1.Models.Workflow;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MSR.Answer.API.Filters;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Controllers.Workflow
 {
@@ -29,15 +31,15 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             _dispatcher = dispatcher;
         }
 
-        [HttpGet("pending"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalNotification>))]
+        [HttpGet("pending"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalNotification>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetPendingApprovals()
         {
-            var ret = await _dispatcher.DispatchAsync(new GetPendingApprovals());
+            var ret = await _dispatcher.DispatchAsync(new GetPendingApprovalsModel());
 
             return ret.ToOkObjectResponse<PendingApprovalNotification>();
         }
 
-        [HttpGet("activity"), SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowActivityModel>>))]
+        [HttpGet("activity"), SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowActivityModel>>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetWorkflowActivities()
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkflowActivities());
@@ -45,7 +47,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<ICollection<WorkflowActivityModel>>();
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowModel>>))]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowModel>>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanRead)]
         public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowRequest request)
         {
             var command = request.ToGetWorkflowCommand();
@@ -55,7 +57,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return result;
         }
 
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowModel>))]
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowModel>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> Post([FromBody, Required] CreateWorkflowRequest request)
         {
             var command = request.ToCreateWorkflowGroupCommand();
@@ -64,7 +66,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<WorkflowModel>("Workflow has been successfully created.");
         }
 
-        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowModel>))]
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowModel>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> Update([FromBody, Required] UpdateWorkflowRequest request)
         {
             var command = request.ToUpdateWorkflowGroupCommand();
@@ -73,7 +75,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<WorkflowModel>("Workflow has been successfully updated.");
         }
 
-        [HttpDelete("{workflowId}"), SwaggerResponse(typeof(void))]
+        [HttpDelete("{workflowId}"), SwaggerResponse(typeof(AuditActionResult)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> Delete(int workflowId)
         {
             var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowModel()
@@ -81,7 +83,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
                 Id = workflowId
             });
 
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Workflow was successfully removed.");
         }
 
 

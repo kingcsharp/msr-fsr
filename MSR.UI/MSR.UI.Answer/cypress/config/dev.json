@@ -4,6 +4,7 @@
       "admin-username": "admin",
       "admin-password": "cmhworks.2020",
       "admin-email": "admin-msrfsr@cmhworks.com",
-      "environment": "dev"
+      "environment": "dev",
+      "maxTimeout": "10000"
     }
   }

@@ -26,19 +26,20 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet(), SwaggerResponse(typeof(AuditActionResult<Location>))]
-        public async Task<IActionResult> Get([FromQuery, Required]GetLocations request)
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<LocationModel>>))]
+        public async Task<IActionResult> Get([FromQuery, Required]GetLocationRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(request);
-            return ret.ToOkObjectResponse<ICollection<Location>>();
+            var command = request.ToGetLocationCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<LocationModel>>();
         }
 
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult<Location>))]
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<LocationModel>))]
         public async Task<IActionResult> CreateLocation([FromBody, Required] CreateLocationRequest request)
         {
             var command = request.ToCreateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Location>();
+            return ret.ToOkObjectResponse<LocationModel>();
         }
 
         [HttpPatch, SwaggerResponse(typeof(AuditActionResult))]

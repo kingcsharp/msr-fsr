@@ -18,6 +18,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
+import { MultiselectWrapperFormComponent } from '../../../app/components/multiselect-wrapper-form/multiselect-wrapper-form.component';
+
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { FormsModule } from '@angular/forms';
@@ -27,6 +29,7 @@ import { FormsModule } from '@angular/forms';
     ProgressAnimateDirective,
     AnimateNumberDirective,
     MultiselectWrapperComponent,
+    MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
     GridOptionsComponent
   ],
@@ -34,6 +37,7 @@ import { FormsModule } from '@angular/forms';
     ProgressAnimateDirective,
     AnimateNumberDirective,
     MultiselectWrapperComponent,
+    MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
     GridOptionsComponent
   ],

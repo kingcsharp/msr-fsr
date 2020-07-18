@@ -5,6 +5,7 @@ namespace MSR.Domain.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Comments { get; set; }
         public string WorkflowName { get; set; }
         public string ActivityType { get; set; }
         public string WorkflowId { get; set; }

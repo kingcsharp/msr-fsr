@@ -3,6 +3,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public partial class Customer: DeletableEntity
     {
+        public Customer()
+        {
+
+        }
         public int OldId { get; set; }
 
         public string Name { get; set; }

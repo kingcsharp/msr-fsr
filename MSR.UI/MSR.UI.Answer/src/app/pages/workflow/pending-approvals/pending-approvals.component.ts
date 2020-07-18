@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  WorkflowService, WorkflowModel, WorkflowStageMapModel, WorkflowActivityMapModel, AuditActionResult,
-  AuditActionResultOfWorkflowModel, CreateWorkflowRequest, UpdateWorkflowRequest, WorkflowActivityModel,
+  WorkflowService, WorkflowModel,
   WorkflowGroupService, WorkflowStageService, WorkflowPendingApprovalService
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
@@ -55,8 +54,11 @@ export class PendingApprovalsComponent implements OnInit {
   statuss: any[] = [];
   approveAction: any;
   cancelAction: any;
+  globals: Globals;
+  approvalInfo: any;
+  loading2: boolean;
 
-  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
+  constructor(private _globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowService: WorkflowService, private route: ActivatedRoute,
     private workflowGroupService: WorkflowGroupService, private workflowStageService: WorkflowStageService,
     private workflowPendingApprovalService: WorkflowPendingApprovalService) {
@@ -64,6 +66,7 @@ export class PendingApprovalsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.globals = this._globals;
     this.currWorkflow = new WorkflowModel();
     this.gridStorageId = 'approvalGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.approveAction = { 'Header': 'Pending Approval', 'Action': 'Approve' };
@@ -72,6 +75,7 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'activityType', label: 'Activity Type', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+      new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
       new ColumnsSaved({ id: 'comments', label: 'Comments', visible: true }),
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
@@ -86,6 +90,7 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'activityType', label: 'Activity Type', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+      new ColumnsSaved({ id: 'RequestedChanges', label: 'Requested Changes', visible: true }),
       new ColumnsSaved({ id: 'comments', label: 'Comments', visible: true }),
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
@@ -94,11 +99,25 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
     ];
-
     this.getApprovals(EnumApprovalTables.ProductApproval, this.productData);
     this.route.params.subscribe(routeParams => {
       this.getApprovals(routeParams.table, this.data);
     });
+  }
+
+  getApprovalInfo(table, id) {
+    const ctrl = this;
+    this.loading2 = true;
+    this.workflowPendingApprovalService.details(table, id, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.loading2 = false;
+        ctrl.approvalInfo = response;
+      }));
+  }
+
+  clearGetApprovalInfo() {
+    this.loading2 = false;
+    this.approvalInfo = {};
   }
 
   getApprovals(table, data) {
@@ -110,8 +129,8 @@ export class PendingApprovalsComponent implements OnInit {
         ctrl.emptyArr(dataArr);
         dataArr.push(...response.object);
         dataArr.map((elem) => {
-          this.addToGridStatusDropdown(elem);
-          this.addToGridTableDropdown(elem);
+          ctrl.addToGridStatusDropdown(elem);
+          ctrl.addToGridTableDropdown(elem);
           return elem;
         });
       }));
@@ -138,15 +157,12 @@ export class PendingApprovalsComponent implements OnInit {
   }
 
   showDialog(action, approval: any) {
-    if (this.globals.hasActivityPrivilegeByTableName(approval.activityType, this.privileges.CanApprove)) {
-      this.display = true;
-      this.currAction.action = action;
-      this.currAction.approval = approval;
-      this.currAction.id = approval.id;
-      this.currAction.activityType = approval.activityType;
-    } else {
-      this.display = false;
-    }
+    this.display = true;
+    this.currAction.action = action;
+    this.currAction.approval = approval;
+    this.currAction.id = approval.id;
+    this.currAction.activityType = approval.activityType;
+    this.currAction.comments = '';
   }
 
   clseDialog() {
@@ -156,24 +172,20 @@ export class PendingApprovalsComponent implements OnInit {
   onWorkflowSubmit() {
     this.globals.showLoader(true);
     const ctrl = this;
-    debugger;
     if (this.currAction.action === this.approveAction) {
-      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, env.apiVersion)
+      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, this.currAction.comments,env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          debugger;
-
-        }, () => {
-          // DO not update user
-        }))
+          this.currAction.approval.status = resp.object.status;
+          this.addToGridStatusDropdown(resp.object);
+          ctrl.clseDialog();
+        }));
     }
     else {
       this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.currAction.approval.status = resp.object.status;
           this.addToGridStatusDropdown(resp.object);
-          ctrl.clseDialog(); 
-        }, () => {
-          // DO not update user
+          ctrl.clseDialog();
         }));
     }
   }

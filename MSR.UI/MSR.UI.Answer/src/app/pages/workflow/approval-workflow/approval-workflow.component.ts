@@ -71,9 +71,10 @@ export class ApprovalWorkflowComponent implements OnInit {
       { label: 'InActive', value: false },
     ];
 
-    this.canAdd = true;
-    this.canActivate = true;
-    this.canEdit = true;
+    this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
+    this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
+
     this.getWorkflowStageDropdown();
     this.getWorkflowActivityDropdown();
     this.getWorkflows();
@@ -81,10 +82,9 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowActivityDropdown() {
     const ctrl = this;
-    this.globals.showLoader(true);
     return this.workflowService.activity(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allActivities.push({ label: x.name, value: x.id });
         });
         this.getAllActivities = true;
@@ -93,10 +93,9 @@ export class ApprovalWorkflowComponent implements OnInit {
 
   getWorkflowStageDropdown() {
     const ctrl = this;
-    this.globals.showLoader(true);
     return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.returnedObject.map((x) => {
+        response.object.map((x) => {
           ctrl.allStages.push({ label: x.name, value: x.id });
         });
         this.getstagesDr = true;
@@ -108,6 +107,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     this.globals.showLoader(true);
     this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
         ctrl.data = response.object;
         ctrl.data.map((elem) => {
           this.updateStagesSavedForItem(elem);
@@ -174,7 +174,7 @@ export class ApprovalWorkflowComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('workflow', privName);
+    return this.globals.hasPrivilege('ApprovalWorkflows', privName);
   }
 
   showDialog(workflow: WorkflowModel) {
@@ -205,7 +205,6 @@ export class ApprovalWorkflowComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflow.id);
         this.data.splice(index, 1);
-        ctrl.toastr.success(`Workflow has been successfully removed.`);
       }, () => {
         // DO not update user
       }));

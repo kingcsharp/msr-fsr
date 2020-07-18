@@ -2,6 +2,7 @@
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
 using MSR.Domain.Exceptions;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSR.Infrastructure.Resources.Services.Location
 {
@@ -24,18 +26,18 @@ namespace MSR.Infrastructure.Resources.Services.Location
             _mapper = mapper;
         }
 
-        public async Task<ICollection<Domain.Models.Location>> GetLocationsAsync(GetLocations command)
+        public async Task<ICollection<LocationModel>> GetLocationsAsync(GetLocations command)
         {
-            var locations = _unitOfWork.Locations.Query().Where(x => x.ParentId == command.ParentId).ToList();
-            var ret = locations.Select(x => _mapper.Map<Domain.Models.Location>(x)).OrderBy(x=>x.Name).ToList();
+            var locations = await _unitOfWork.Locations.Query().Where(x => x.ParentId == command.ParentId).ToListAsync();
+            var ret = locations.Select(x => _mapper.Map<LocationModel>(x)).OrderBy(x=>x.Name).ToList();
 
             return ret;
         }
 
-        public async Task<Domain.Models.Location> CreateLocationAsync(CreateLocation command)
+        public async Task<LocationModel> CreateLocationAsync(CreateLocation command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Location retLocation;
+            LocationModel retLocation;
 
             if (user.CanApprove(EnumMenuItem.Locations))
             {
@@ -44,7 +46,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 await _unitOfWork.SaveChangesAsync();
 
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
-                retLocation = _mapper.Map<Domain.Models.Location>(location);
+                retLocation = _mapper.Map<LocationModel>(location);
             }
             else
             {
@@ -52,13 +54,13 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 _unitOfWork.LocationApprovals.Add(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
 
-                retLocation = _mapper.Map<Domain.Models.Location>(locationApproval);
+                retLocation = _mapper.Map<LocationModel>(locationApproval);
             }
 
             return retLocation;
         } 
 
-        public async Task<Domain.Models.Location> UpdateLocationAsync(UpdateLocation command)
+        public async Task<LocationModel> UpdateLocationAsync(UpdateLocation command)
         {
             var curLocation = await _unitOfWork.Locations.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
@@ -68,7 +70,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Location retLocation;
+            LocationModel retLocation;
 
 
             if (user.CanApprove(EnumMenuItem.Locations))
@@ -78,7 +80,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 await _unitOfWork.SaveChangesAsync();
 
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
-                retLocation = _mapper.Map<Domain.Models.Location>(location);
+                retLocation = _mapper.Map<LocationModel>(location);
             }
             else
             {
@@ -86,7 +88,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 _unitOfWork.LocationApprovals.Add(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
 
-                retLocation = _mapper.Map<Domain.Models.Location>(locationApproval);
+                retLocation = _mapper.Map<LocationModel>(locationApproval);
             }
 
             return retLocation;

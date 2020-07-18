@@ -50,6 +50,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<ApprovalTransactionLog> ApprovalTransactionLog { get; set; }
         public DbSet<ProcedureStepTemplate> ProcedureStepTemplate { get; set; }
         public DbSet<ProcedureType> ProcedureType { get; set; }
+        public DbSet<Document> Document { get; set; }
+        public DbSet<Part> Part { get; set; }
+        public DbSet<Procedure> Procedure { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
 
         public AnswerContext() : base()
         {
