@@ -7,6 +7,8 @@ import { RoleModule } from '../../main/roleassignments/roleassignments.component
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
+import { EnumPrivilege } from '../../../models/enums/privileges';
+import { Globals } from '../../../models/lib/globals';
 
 @Component({
   selector: 'app-help',
@@ -15,15 +17,19 @@ import { SelectItem } from 'primeng/api';
   providers: [HelpService]
 })
 export class HelpComponent implements OnInit {
-
+  privileges = EnumPrivilege;
   data: Array<HelpPageModule>;
-  roles: SelectItem[] = new Array<SelectItem>();
+  allRoles: Array<SelectItem>;
   roleFilter:string;
-  gridSettings: ColumnsSaved[] = new Array<ColumnsSaved>();
+  gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
+  canAddHelpPage: boolean = false;
+  canEditHelpPage: boolean = false;
+  canDeleteHelpPage: boolean = false;
 
-  constructor(private helpService: HelpService,private roleService: RoleService, private commonGrid: CommonGrid, private elementReference: ElementRef) { }
+  constructor(private helpService: HelpService,private roleService: RoleService, 
+    private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -36,6 +42,9 @@ export class HelpComponent implements OnInit {
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
     ];
 
+    this.canAddHelpPage = this.hasPrivilege(this.privileges.CanCreate);
+    this.canDeleteHelpPage = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEditHelpPage = this.hasPrivilege(this.privileges.CanEdit);
     this.getHelpPages();
   }
 
@@ -44,18 +53,24 @@ export class HelpComponent implements OnInit {
     this.helpService.helpGet(null, env.apiVersion).subscribe(response => {
       this.data = new Array<HelpPageModule>();
       let mockId = 1; //TODO Remove mock Id for real ones from API
-      response.returnedObject.forEach(element => {
-        element.id = mockId++;
-        this.data.push(element);
+      response.returnedObject.forEach(helpPage => {
+        helpPage.id = mockId++;
+        helpPage.rolesSaved = helpPage.roles.map(u => u.id);
+        helpPage.rolesStr = helpPage.roles.map(role => role.name).join(',');
+        this.data.push(helpPage);
       });
-      this.roles = this.roles.concat(response.returnedObject.map( s => s.roles).flat(1).map( m => { label: m.name; value: m.name; }).filter((value, index, self) => self.indexOf(value) === index));
+      console.log(this.data);
+      this.allRoles = new Array<SelectItem>();
+      let distinctRolesFromReturnedResults = response.returnedObject.map( s => s.roles).flat(1).map(role => ({ label: role.name, value: role.name }) ).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
+      this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
       this.loading = false;
     });
 
   }
 
-
-
+  hasPrivilege(privilegeName) {
+    return this.globals.hasPrivilege('HelpPages', privilegeName);
+  }
 }
 
 export class HelpPageModule {
