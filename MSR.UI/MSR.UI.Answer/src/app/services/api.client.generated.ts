@@ -1055,7 +1055,7 @@ export class MenuService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    menu(version: string): Observable<AuditActionResultOfBoolean> {
+    menu(version: string): Observable<AuditActionResultOfIEnumerableOfMenuItem> {
         let url_ = this.baseUrl + "/v{version}/Menu";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1077,14 +1077,14 @@ export class MenuService {
                 try {
                     return this.processMenu(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfMenuItem>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfBoolean>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfMenuItem>><any>_observableThrow(response_);
         }));
     }
 
-    protected processMenu(response: HttpResponseBase): Observable<AuditActionResultOfBoolean> {
+    protected processMenu(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfMenuItem> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1095,7 +1095,7 @@ export class MenuService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfBoolean.fromJS(resultData200);
+            result200 = AuditActionResultOfIEnumerableOfMenuItem.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1103,7 +1103,7 @@ export class MenuService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfBoolean>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfMenuItem>(<any>null);
     }
 
     rolePost(version: string, request: CreateMenuRoleMapRequest): Observable<AuditActionResult> {
@@ -3429,41 +3429,288 @@ export interface IUpdateLocationRequest {
     timeZoneId?: number | undefined;
 }
 
-export class AuditActionResultOfBoolean extends AuditActionResult implements IAuditActionResultOfBoolean {
-    object?: boolean;
+export class AuditActionResultOfIEnumerableOfMenuItem extends AuditActionResult implements IAuditActionResultOfIEnumerableOfMenuItem {
+    object?: MenuItem[] | undefined;
     returnedObject?: any | undefined;
 
-    constructor(data?: IAuditActionResultOfBoolean) {
+    constructor(data?: IAuditActionResultOfIEnumerableOfMenuItem) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"];
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(MenuItem.fromJS(item));
+            }
             this.returnedObject = _data["returnedObject"];
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfBoolean {
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfMenuItem {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfBoolean();
+        let result = new AuditActionResultOfIEnumerableOfMenuItem();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["object"] = this.object;
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
         data["returnedObject"] = this.returnedObject;
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface IAuditActionResultOfBoolean extends IAuditActionResult {
-    object?: boolean;
+export interface IAuditActionResultOfIEnumerableOfMenuItem extends IAuditActionResult {
+    object?: MenuItem[] | undefined;
     returnedObject?: any | undefined;
+}
+
+export class MenuItem implements IMenuItem {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+    menuGroup?: MenuGroup | undefined;
+    permissions?: number[] | undefined;
+    roles?: Role[] | undefined;
+    enumMenuItem?: EnumMenuItem;
+
+    constructor(data?: IMenuItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+            this.name = _data["name"];
+            this.info = _data["info"];
+            this.icon = _data["icon"];
+            this.orderNumber = _data["orderNumber"];
+            this.menuGroup = _data["menuGroup"] ? MenuGroup.fromJS(_data["menuGroup"]) : <any>undefined;
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions!.push(item);
+            }
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(Role.fromJS(item));
+            }
+            this.enumMenuItem = _data["enumMenuItem"];
+        }
+    }
+
+    static fromJS(data: any): MenuItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new MenuItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        data["name"] = this.name;
+        data["info"] = this.info;
+        data["icon"] = this.icon;
+        data["orderNumber"] = this.orderNumber;
+        data["menuGroup"] = this.menuGroup ? this.menuGroup.toJSON() : <any>undefined;
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
+        }
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        data["enumMenuItem"] = this.enumMenuItem;
+        return data; 
+    }
+}
+
+export interface IMenuItem {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+    menuGroup?: MenuGroup | undefined;
+    permissions?: number[] | undefined;
+    roles?: Role[] | undefined;
+    enumMenuItem?: EnumMenuItem;
+}
+
+export class MenuGroup implements IMenuGroup {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+
+    constructor(data?: IMenuGroup) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+            this.name = _data["name"];
+            this.info = _data["info"];
+            this.icon = _data["icon"];
+            this.orderNumber = _data["orderNumber"];
+        }
+    }
+
+    static fromJS(data: any): MenuGroup {
+        data = typeof data === 'object' ? data : {};
+        let result = new MenuGroup();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        data["name"] = this.name;
+        data["info"] = this.info;
+        data["icon"] = this.icon;
+        data["orderNumber"] = this.orderNumber;
+        return data; 
+    }
+}
+
+export interface IMenuGroup {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+}
+
+export class Role implements IRole {
+    id?: number;
+    name?: string | undefined;
+    isCertificationRole?: boolean | undefined;
+    menus?: MenuItem[] | undefined;
+    permissions?: number[] | undefined;
+
+    constructor(data?: IRole) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.isCertificationRole = _data["isCertificationRole"];
+            if (Array.isArray(_data["menus"])) {
+                this.menus = [] as any;
+                for (let item of _data["menus"])
+                    this.menus!.push(MenuItem.fromJS(item));
+            }
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): Role {
+        data = typeof data === 'object' ? data : {};
+        let result = new Role();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["isCertificationRole"] = this.isCertificationRole;
+        if (Array.isArray(this.menus)) {
+            data["menus"] = [];
+            for (let item of this.menus)
+                data["menus"].push(item.toJSON());
+        }
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IRole {
+    id?: number;
+    name?: string | undefined;
+    isCertificationRole?: boolean | undefined;
+    menus?: MenuItem[] | undefined;
+    permissions?: number[] | undefined;
+}
+
+export enum EnumMenuItem {
+    AdminCostSettings = 0,
+    ApprovalGroups = 1,
+    ApprovalStages = 2,
+    ApprovalWorkflows = 3,
+    CustomersDepartments = 4,
+    Documents = 5,
+    EquipmentMaintenance = 6,
+    Financial = 7,
+    FreeformQuote = 8,
+    HelpPages = 9,
+    Invoices = 10,
+    Locations = 11,
+    Monitors = 12,
+    Operational = 13,
+    Parts = 14,
+    PendingApprovals = 15,
+    ProcedureTypes = 16,
+    PurchaseOrders = 17,
+    Purchases = 18,
+    QuotesProducts = 19,
+    Reports = 20,
+    RoleModulePermission = 21,
+    RunnableProcedures = 22,
+    SupportTicket = 23,
+    Templates = 24,
+    TrainingCertifications = 25,
+    UserRoles = 26,
+    Users = 27,
+    WIPHistory = 28,
+    WIPMenu = 29,
+    WipStatus = 30,
+    Roles = 31,
 }
 
 export class CreateMenuRoleMapRequest implements ICreateMenuRoleMapRequest {
@@ -3566,6 +3813,43 @@ export interface IUpdateMenuRoleMapRequest {
     canApprove?: boolean;
 }
 
+export class AuditActionResultOfBoolean extends AuditActionResult implements IAuditActionResultOfBoolean {
+    object?: boolean;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfBoolean) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"];
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfBoolean {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfBoolean();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfBoolean extends IAuditActionResult {
+    object?: boolean;
+    returnedObject?: any | undefined;
+}
+
 export class AuditActionResultOfICollectionOfRole extends AuditActionResult implements IAuditActionResultOfICollectionOfRole {
     object?: Role[] | undefined;
     returnedObject?: any | undefined;
@@ -3609,221 +3893,6 @@ export class AuditActionResultOfICollectionOfRole extends AuditActionResult impl
 export interface IAuditActionResultOfICollectionOfRole extends IAuditActionResult {
     object?: Role[] | undefined;
     returnedObject?: any | undefined;
-}
-
-export class Role implements IRole {
-    id?: number;
-    name?: string | undefined;
-    isCertificationRole?: boolean | undefined;
-    menus?: MenuItem[] | undefined;
-
-    constructor(data?: IRole) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.isCertificationRole = _data["isCertificationRole"];
-            if (Array.isArray(_data["menus"])) {
-                this.menus = [] as any;
-                for (let item of _data["menus"])
-                    this.menus!.push(MenuItem.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Role {
-        data = typeof data === 'object' ? data : {};
-        let result = new Role();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["isCertificationRole"] = this.isCertificationRole;
-        if (Array.isArray(this.menus)) {
-            data["menus"] = [];
-            for (let item of this.menus)
-                data["menus"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IRole {
-    id?: number;
-    name?: string | undefined;
-    isCertificationRole?: boolean | undefined;
-    menus?: MenuItem[] | undefined;
-}
-
-export class MenuItem implements IMenuItem {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-    menuGroup?: MenuGroup | undefined;
-    permissions?: number[] | undefined;
-    enumMenuItem?: EnumMenuItem;
-
-    constructor(data?: IMenuItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.url = _data["url"];
-            this.name = _data["name"];
-            this.info = _data["info"];
-            this.icon = _data["icon"];
-            this.orderNumber = _data["orderNumber"];
-            this.menuGroup = _data["menuGroup"] ? MenuGroup.fromJS(_data["menuGroup"]) : <any>undefined;
-            if (Array.isArray(_data["permissions"])) {
-                this.permissions = [] as any;
-                for (let item of _data["permissions"])
-                    this.permissions!.push(item);
-            }
-            this.enumMenuItem = _data["enumMenuItem"];
-        }
-    }
-
-    static fromJS(data: any): MenuItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new MenuItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["url"] = this.url;
-        data["name"] = this.name;
-        data["info"] = this.info;
-        data["icon"] = this.icon;
-        data["orderNumber"] = this.orderNumber;
-        data["menuGroup"] = this.menuGroup ? this.menuGroup.toJSON() : <any>undefined;
-        if (Array.isArray(this.permissions)) {
-            data["permissions"] = [];
-            for (let item of this.permissions)
-                data["permissions"].push(item);
-        }
-        data["enumMenuItem"] = this.enumMenuItem;
-        return data; 
-    }
-}
-
-export interface IMenuItem {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-    menuGroup?: MenuGroup | undefined;
-    permissions?: number[] | undefined;
-    enumMenuItem?: EnumMenuItem;
-}
-
-export class MenuGroup implements IMenuGroup {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-
-    constructor(data?: IMenuGroup) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.url = _data["url"];
-            this.name = _data["name"];
-            this.info = _data["info"];
-            this.icon = _data["icon"];
-            this.orderNumber = _data["orderNumber"];
-        }
-    }
-
-    static fromJS(data: any): MenuGroup {
-        data = typeof data === 'object' ? data : {};
-        let result = new MenuGroup();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["url"] = this.url;
-        data["name"] = this.name;
-        data["info"] = this.info;
-        data["icon"] = this.icon;
-        data["orderNumber"] = this.orderNumber;
-        return data; 
-    }
-}
-
-export interface IMenuGroup {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-}
-
-export enum EnumMenuItem {
-    AdminCostSettings = 0,
-    ApprovalGroups = 1,
-    ApprovalStages = 2,
-    ApprovalWorkflows = 3,
-    CustomersDepartments = 4,
-    Documents = 5,
-    EquipmentMaintenance = 6,
-    Financial = 7,
-    FreeformQuote = 8,
-    HelpPages = 9,
-    Invoices = 10,
-    Locations = 11,
-    Monitors = 12,
-    Operational = 13,
-    Parts = 14,
-    PendingApprovals = 15,
-    ProcedureTypes = 16,
-    PurchaseOrders = 17,
-    Purchases = 18,
-    QuotesProducts = 19,
-    Reports = 20,
-    RoleModulePermission = 21,
-    RunnableProcedures = 22,
-    SupportTicket = 23,
-    Templates = 24,
-    TrainingCertifications = 25,
-    UserRoles = 26,
-    Users = 27,
-    WIPHistory = 28,
-    WIPMenu = 29,
-    WipStatus = 30,
-    Roles = 31,
 }
 
 export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
