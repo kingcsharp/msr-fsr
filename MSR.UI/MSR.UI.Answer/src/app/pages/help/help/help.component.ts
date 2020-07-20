@@ -27,6 +27,8 @@ export class HelpComponent implements OnInit {
   canAddHelpPage: boolean = false;
   canEditHelpPage: boolean = false;
   canDeleteHelpPage: boolean = false;
+  showConfirmDeleteDialog: boolean = false;
+  helpPageToDelete: HelpPageModule;
 
   constructor(private helpService: HelpService,private roleService: RoleService, 
     private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
@@ -55,11 +57,8 @@ export class HelpComponent implements OnInit {
       let mockId = 1; //TODO Remove mock Id for real ones from API
       response.returnedObject.forEach(helpPage => {
         helpPage.id = mockId++;
-        helpPage.rolesSaved = helpPage.roles.map(u => u.id);
-        helpPage.rolesStr = helpPage.roles.map(role => role.name).join(',');
         this.data.push(helpPage);
       });
-      console.log(this.data);
       this.allRoles = new Array<SelectItem>();
       let distinctRolesFromReturnedResults = response.returnedObject.map( s => s.roles).flat(1).map(role => ({ label: role.name, value: role.name }) ).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
       this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
@@ -71,7 +70,30 @@ export class HelpComponent implements OnInit {
   hasPrivilege(privilegeName) {
     return this.globals.hasPrivilege('HelpPages', privilegeName);
   }
+
+  openConfirmDeleteDialog(helpPage: HelpPageModule){
+
+    this.helpPageToDelete = helpPage;
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+  }
+
+  closeConfirmDeleteDialog(helpPage: HelpPageModule){
+    this.helpPageToDelete = null;
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+  }
+
+  deleteHelpPage(){
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    this.globals.showLoader(true);
+    this.helpService.helpDelete(this.helpPageToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+
+      console.log(response);
+
+    }));
+  }
+
 }
+
 
 export class HelpPageModule {
   id?: number;

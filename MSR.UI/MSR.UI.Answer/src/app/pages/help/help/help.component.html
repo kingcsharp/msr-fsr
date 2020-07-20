@@ -83,10 +83,8 @@
               <span *ngFor="let role of helpPage.roles" class="badge mr-xs badge-secondary">{{role.name}}</span>
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-              <i *ngIf="canEditHelpPage" class="fa fa-cog pointer" tooltip="Edit Help Page"
-                (click)="showDialog(user)"></i>
-              <i *ngIf="canDeleteHelpPage" class="fa fa-trash pointer" tooltip="Delete Help Page"
-                (click)="showDialog(user)"></i>
+              <i *ngIf="canEditHelpPage" class="fa fa-cog pointer" tooltip="Edit Help Page" [routerLink]="['../help-create']"  [queryParams]="{id: helpPage.id}"></i>
+              <i *ngIf="canDeleteHelpPage" class="fa fa-trash pointer" tooltip="Delete Help Page" (click)="openConfirmDeleteDialog(helpPage)"></i>
             </td>
           </tr>
         </ng-template>
@@ -99,3 +97,17 @@
     </widget>
   </div>
 </div>
+<p-dialog header="Confirm Delete Help Page" [(visible)]="showConfirmDeleteDialog" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
+  [style]="{width: '50vw'}" data-cy="user-header">
+  Are you sure you want to Delete this Help Page? This action cannot be undone.
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="deleteHelpPage()" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

@@ -13,6 +13,8 @@ import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { DropdownModule } from 'primeng/dropdown';
 import { GridOptionsComponent } from '../../components/grid-options/grid-options.component';
 import { MultiselectWrapperComponent } from '../../components/multiselect-wrapper/multiselect-wrapper.component';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
