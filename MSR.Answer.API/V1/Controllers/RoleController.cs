@@ -23,15 +23,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpPost]
-        [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> CreateMenuRoleMap([FromBody, Required]CreateMenuRoleMapRequest request)
-        {
-            var command = request.ToCreateMenuRoleMapCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToCreatedResponse<string>();
-        }
-
+        
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<Role>>))]
         public async Task<IActionResult> GetRoles()
         {
@@ -40,23 +32,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
 
-        [HttpPatch]
-        [SwaggerResponse(System.Net.HttpStatusCode.NoContent, typeof(void))]
-        public async Task<IActionResult> AddPermissionsToMenuRoleMap([FromBody, Required]UpdateMenuRoleMapRequest request)
-        {
-            var command = request.ToUpdateMenuRoleMapCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
-        }
-
-        [HttpDelete("{id}")]
-        [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> RemoveMenuRoleMap(int id)
-        {
-            var command = new RemoveMenuRoleMap() { Id = id };
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
-        }
+        
 
     }
 }

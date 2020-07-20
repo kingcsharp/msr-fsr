@@ -41,15 +41,13 @@ namespace MSR.Answer.API.V1.Controllers
             return result.ToOkObjectResponse<IEnumerable<MenuItem>>();
         }
 
-
-
         [HttpPost("Role")]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<string>))]
         public async Task<IActionResult> CreateMenuRoleMap([FromBody, Required] CreateMenuRoleMapRequest request)
         {
             var command = request.ToCreateMenuRoleMapCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToCreatedResponse<string>();
+            return ret.ToOkObjectResponse<string>();
         }
 
         [HttpPatch("Role")]
