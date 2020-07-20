@@ -58,6 +58,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<PurchaseOrder> PurchaseOrders { get; }
 
 
+        IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
+
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;
