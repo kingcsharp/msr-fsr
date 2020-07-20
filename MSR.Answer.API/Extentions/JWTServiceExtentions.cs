@@ -70,7 +70,7 @@ namespace MSR.Answer.API.Extentions
 
                         var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
 
-                        DelegateHandler.HasPrivilege = (EnumPrivilege, EnumMenuItem) =>
+                        DelegateHandler.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
                         {
                             var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
                             if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)

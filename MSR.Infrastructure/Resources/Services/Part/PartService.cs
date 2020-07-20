@@ -48,9 +48,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> CreatePartAsync(CreatePart command)
         {
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            user.CanApprove(EnumMenuItem.Parts);
-
             PartModel ret;
 
             if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
