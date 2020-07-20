@@ -29,7 +29,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
     {
         private IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
-        private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly JwtData _jwtData;
         private readonly EmailInformation _emailInformation;
@@ -50,7 +49,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _mapper = mapper;
             _emailService = emailService;
             _jwtData = jwtData;
             _emailInformation = emailInformation;
@@ -161,16 +159,16 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
         }
 
-        public User ValidateAccount(int accountId)
+        public bool ValidateAccount(int accountId)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == accountId);
+            var exists = _unitOfWork.Users.Exist(accountId);
 
-            if (user == null)
+            if (!exists)
             {
                 throw new DomainException($"No user with {nameof(accountId)} {accountId} found", DomainError.NotFound);
             }
 
-            return _mapper.Map<User>(user);
+            return exists;
         }
 
         private async Task<string> GetJWTToken(EntityFramework.Entities.User efUser)

@@ -63,20 +63,23 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
 
-            // Part
-            CreateMap<Part, Domain.Models.Part> ();
+            #region Part
+            CreateMap<Part, Domain.Models.PartModel>()
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
+                .ForMember(dest => dest.LastUpdatedByName, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
             CreateMap<CreatePart, PartApproval>();
             CreateMap<CreatePart, Part>();
             CreateMap<UpdatePart, PartApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdatePart, Part>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            #endregion
 
-            // Procedure
-            CreateMap<Procedure, Domain.Models.Procedure> ();
-            CreateMap<ProcedureStep, Domain.Models.ProcedureStep> ();
-            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate> ();
-            CreateMap<ProcedureType, Domain.Models.ProcedureType> ();
+            #region Procedure
+            CreateMap<Procedure, Domain.Models.Procedure>();
+            CreateMap<ProcedureStep, Domain.Models.ProcedureStep>();
+            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate>();
+            CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<CreateProcedure, ProcedureApproval>();
             CreateMap<CreateProcedure, Procedure>();
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();
@@ -99,9 +102,10 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateProcedureType, ProcedureType>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
+            #endregion
 
             // Monitor
-            CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor> ();
+            CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>();
             CreateMap<MonitorInputType, Domain.Models.ProcedureStepMonitorInputType>()
                 .ForMember(dest => dest.InputTypeId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.InputTypeName, opt => opt.MapFrom(src => src.Name))

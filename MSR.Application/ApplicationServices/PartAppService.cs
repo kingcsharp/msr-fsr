@@ -25,17 +25,17 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.GetPartsAsync(command);
-            return new CommandResponse<ICollection<Part>>(ret);
+            return new CommandResponse<ICollection<PartModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.CreatePartAsync(command);
-            return new CommandResponse<Part>(ret);
+            return new CommandResponse<PartModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.UpdatePartAsync(command);
-            return new CommandResponse<Part>(ret);
+            return new CommandResponse<PartModel>(ret);
         }
     }
 }

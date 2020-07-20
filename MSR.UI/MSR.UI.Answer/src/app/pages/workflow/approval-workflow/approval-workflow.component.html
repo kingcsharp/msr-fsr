@@ -184,7 +184,7 @@
               <p-multiSelect name="role" [options]="allStages" data-cy="roles-multiselect"
                 [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
-                  <div tooltip="Select Roles">Select Member Stages</div>
+                  <div>Select Member Stages</div>
                 </ng-template>
               </p-multiSelect>
             </div>
@@ -195,7 +195,7 @@
               <p-multiSelect name="role2" [options]="allActivities" data-cy="allactivities-multiselect"
                 [(ngModel)]="currWorkflow.activitiesSaved" [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
-                  <div tooltip="Select Roles">Select Activities</div>
+                  <div>Select Activities</div>
                 </ng-template>
               </p-multiSelect>
             </div>

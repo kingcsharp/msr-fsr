@@ -1282,7 +1282,7 @@ export class PartService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    partGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPart> {
+    partGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1306,14 +1306,14 @@ export class PartService {
                 try {
                     return this.processPartGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfPart>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfPart>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPartGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPart> {
+    protected processPartGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPartModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1324,7 +1324,7 @@ export class PartService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfPart.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfPartModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1332,10 +1332,10 @@ export class PartService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfPart>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfPartModel>(<any>null);
     }
 
-    partPost(version: string, newpart: CreatePartRequest): Observable<AuditActionResultOfPart> {
+    partPost(version: string, newpart: CreatePartRequest): Observable<AuditActionResultOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1361,14 +1361,14 @@ export class PartService {
                 try {
                     return this.processPartPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfPart>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfPartModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfPart>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfPartModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPartPost(response: HttpResponseBase): Observable<AuditActionResultOfPart> {
+    protected processPartPost(response: HttpResponseBase): Observable<AuditActionResultOfPartModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1379,7 +1379,7 @@ export class PartService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfPart.fromJS(resultData200);
+            result200 = AuditActionResultOfPartModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1387,10 +1387,10 @@ export class PartService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfPart>(<any>null);
+        return _observableOf<AuditActionResultOfPartModel>(<any>null);
     }
 
-    partPatch(version: string, newpart: UpdatePartRequest): Observable<AuditActionResultOfPart> {
+    partPatch(version: string, newpart: UpdatePartRequest): Observable<AuditActionResultOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1416,14 +1416,14 @@ export class PartService {
                 try {
                     return this.processPartPatch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfPart>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfPartModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfPart>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfPartModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPartPatch(response: HttpResponseBase): Observable<AuditActionResultOfPart> {
+    protected processPartPatch(response: HttpResponseBase): Observable<AuditActionResultOfPartModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1434,7 +1434,7 @@ export class PartService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfPart.fromJS(resultData200);
+            result200 = AuditActionResultOfPartModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1442,7 +1442,7 @@ export class PartService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfPart>(<any>null);
+        return _observableOf<AuditActionResultOfPartModel>(<any>null);
     }
 }
 
@@ -5148,10 +5148,10 @@ export interface IUpdateMenuRoleMapRequest {
     canApprove?: boolean;
 }
 
-export class AuditActionResultOfICollectionOfPart extends AuditActionResult implements IAuditActionResultOfICollectionOfPart {
-    object?: Part[] | undefined;
+export class AuditActionResultOfICollectionOfPartModel extends AuditActionResult implements IAuditActionResultOfICollectionOfPartModel {
+    object?: PartModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfPart) {
+    constructor(data?: IAuditActionResultOfICollectionOfPartModel) {
         super(data);
     }
 
@@ -5161,14 +5161,14 @@ export class AuditActionResultOfICollectionOfPart extends AuditActionResult impl
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(Part.fromJS(item));
+                    this.object!.push(PartModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfPart {
+    static fromJS(data: any): AuditActionResultOfICollectionOfPartModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfPart();
+        let result = new AuditActionResultOfICollectionOfPartModel();
         result.init(data);
         return result;
     }
@@ -5185,21 +5185,14 @@ export class AuditActionResultOfICollectionOfPart extends AuditActionResult impl
     }
 }
 
-export interface IAuditActionResultOfICollectionOfPart extends IAuditActionResult {
-    object?: Part[] | undefined;
+export interface IAuditActionResultOfICollectionOfPartModel extends IAuditActionResult {
+    object?: PartModel[] | undefined;
 }
 
-export class Part implements IPart {
+export abstract class EntityModel implements IEntityModel {
     id?: number;
-    name?: string | undefined;
-    partNumber?: string | undefined;
-    oemPartNumber?: string | undefined;
-    qty?: number;
-    nickName?: string | undefined;
-    parentId?: number | undefined;
-    maximumCycles?: number | undefined;
 
-    constructor(data?: IPart) {
+    constructor(data?: IEntityModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5211,65 +5204,154 @@ export class Part implements IPart {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
-            this.partNumber = _data["partNumber"];
-            this.oemPartNumber = _data["oemPartNumber"];
-            this.qty = _data["qty"];
-            this.nickName = _data["nickName"];
-            this.parentId = _data["parentId"];
-            this.maximumCycles = _data["maximumCycles"];
         }
     }
 
-    static fromJS(data: any): Part {
+    static fromJS(data: any): EntityModel {
         data = typeof data === 'object' ? data : {};
-        let result = new Part();
-        result.init(data);
-        return result;
+        throw new Error("The abstract class 'EntityModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
-        data["partNumber"] = this.partNumber;
-        data["oemPartNumber"] = this.oemPartNumber;
-        data["qty"] = this.qty;
-        data["nickName"] = this.nickName;
-        data["parentId"] = this.parentId;
-        data["maximumCycles"] = this.maximumCycles;
         return data; 
     }
 }
 
-export interface IPart {
+export interface IEntityModel {
     id?: number;
-    name?: string | undefined;
-    partNumber?: string | undefined;
-    oemPartNumber?: string | undefined;
-    qty?: number;
-    nickName?: string | undefined;
-    parentId?: number | undefined;
-    maximumCycles?: number | undefined;
 }
 
-export class AuditActionResultOfPart extends AuditActionResult implements IAuditActionResultOfPart {
-    object?: Part | undefined;
+export abstract class TrackableModel extends EntityModel implements ITrackableModel {
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
 
-    constructor(data?: IAuditActionResultOfPart) {
+    constructor(data?: ITrackableModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? Part.fromJS(_data["object"]) : <any>undefined;
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfPart {
+    static fromJS(data: any): TrackableModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfPart();
+        throw new Error("The abstract class 'TrackableModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ITrackableModel extends IEntityModel {
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+}
+
+export class PartModel extends TrackableModel implements IPartModel {
+    name?: string | undefined;
+    partNumber?: string | undefined;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    isKit?: boolean | undefined;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+    createdByName?: string | undefined;
+    lastUpdatedByName?: string | undefined;
+
+    constructor(data?: IPartModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.partNumber = _data["partNumber"];
+            this.oemPartNumber = _data["oemPartNumber"];
+            this.qty = _data["qty"];
+            this.isKit = _data["isKit"];
+            this.nickName = _data["nickName"];
+            this.parentId = _data["parentId"];
+            this.maximumCycles = _data["maximumCycles"];
+            this.createdByName = _data["createdByName"];
+            this.lastUpdatedByName = _data["lastUpdatedByName"];
+        }
+    }
+
+    static fromJS(data: any): PartModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PartModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["partNumber"] = this.partNumber;
+        data["oemPartNumber"] = this.oemPartNumber;
+        data["qty"] = this.qty;
+        data["isKit"] = this.isKit;
+        data["nickName"] = this.nickName;
+        data["parentId"] = this.parentId;
+        data["maximumCycles"] = this.maximumCycles;
+        data["createdByName"] = this.createdByName;
+        data["lastUpdatedByName"] = this.lastUpdatedByName;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPartModel extends ITrackableModel {
+    name?: string | undefined;
+    partNumber?: string | undefined;
+    oemPartNumber?: string | undefined;
+    qty?: number;
+    isKit?: boolean | undefined;
+    nickName?: string | undefined;
+    parentId?: number | undefined;
+    maximumCycles?: number | undefined;
+    createdByName?: string | undefined;
+    lastUpdatedByName?: string | undefined;
+}
+
+export class AuditActionResultOfPartModel extends AuditActionResult implements IAuditActionResultOfPartModel {
+    object?: PartModel | undefined;
+
+    constructor(data?: IAuditActionResultOfPartModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PartModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPartModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPartModel();
         result.init(data);
         return result;
     }
@@ -5282,8 +5364,8 @@ export class AuditActionResultOfPart extends AuditActionResult implements IAudit
     }
 }
 
-export interface IAuditActionResultOfPart extends IAuditActionResult {
-    object?: Part | undefined;
+export interface IAuditActionResultOfPartModel extends IAuditActionResult {
+    object?: PartModel | undefined;
 }
 
 export class CreatePartRequest implements ICreatePartRequest {
@@ -8024,83 +8106,6 @@ export class AuditActionResultOfICollectionOfWorkflowActivityModel extends Audit
 
 export interface IAuditActionResultOfICollectionOfWorkflowActivityModel extends IAuditActionResult {
     object?: WorkflowActivityModel[] | undefined;
-}
-
-export abstract class EntityModel implements IEntityModel {
-    id?: number;
-
-    constructor(data?: IEntityModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): EntityModel {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'EntityModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        return data; 
-    }
-}
-
-export interface IEntityModel {
-    id?: number;
-}
-
-export abstract class TrackableModel extends EntityModel implements ITrackableModel {
-    lastUpdatedOn?: Date | undefined;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-
-    constructor(data?: ITrackableModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
-            this.lastUpdatedBy = _data["lastUpdatedBy"];
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.createdBy = _data["createdBy"];
-        }
-    }
-
-    static fromJS(data: any): TrackableModel {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'TrackableModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
-        data["lastUpdatedBy"] = this.lastUpdatedBy;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["createdBy"] = this.createdBy;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface ITrackableModel extends IEntityModel {
-    lastUpdatedOn?: Date | undefined;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
 }
 
 export class DeletableModel extends TrackableModel implements IDeletableModel {
