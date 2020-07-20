@@ -4,13 +4,13 @@
             Create Help Page
         </h1>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="helpPageToEdit != null">
         <form class="col-12">
             <div class="form-group">
                 <label for="title" class="col-form-label text-left">
                     Title
                 </label>
-                <input type="text" id="title" name="title" [(ngModel)]="this.createHelpPageRequest.title"
+                <input type="text" id="title" name="title" [(ngModel)]="helpPageToEdit.title"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Title of Help Page"
                     placeholder="" data-cy="title-input">
@@ -19,7 +19,7 @@
                 <label for="friendlyurl" class="col-form-label text-left">
                     Friendly Url
                 </label>
-                <input type="text" id="friendlyurl" name="friendlyurl" [(ngModel)]="createHelpPageRequest.friendlyURL"
+                <input type="text" id="friendlyurl" name="friendlyurl" [(ngModel)]="helpPageToEdit.friendlyURL"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent"
                     tooltip="Friendly Url of Help Page" placeholder="Url of the page e.g. Parts/Update Or Parts"
@@ -29,7 +29,7 @@
                 <label for="articlecontent" class="col-form-label text-left">
                     Article Content
                 </label>
-                <ckeditor name="articlecontent" [editor]="Editor" [(ngModel)]="createHelpPageRequest.helpContent" data="<p>Hello, world!</p>"></ckeditor>
+                <ckeditor name="articlecontent" [editor]="Editor" [(ngModel)]="helpPageToEdit.helpContent" data="<p>Hello, world!</p>"></ckeditor>
             </div>
             <div class="form-group">
                 <label for="roles" class="col-form-label text-left">
