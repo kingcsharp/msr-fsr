@@ -100,12 +100,5 @@ export class HelpPageModule {
   friendlyUrl: string;
   helpContent: string;
   title: string;
-  roles: HelpRoleModule;
-}
-
-export class HelpRoleModule {
-  id?: number;
-  isCertificationRole?: boolean;
-  name: string;
-  menus?: any[];
+  roles: Role[];
 }
