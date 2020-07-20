@@ -48,7 +48,8 @@
         </form>
     </div>
     <div class="row">
-        <button type="button" class="btn btn-primary m-2" (click)="saveNewHelpPage()">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="saveHelpPage()" *ngIf="helpPageToEditId == 0">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateHelpPage()" *ngIf="helpPageToEditId != 0">Update</button>
         <button type="button" class="btn btn-warning m-2" [routerLink]="['../help']">Cancel</button>
     </div>
 </div>
