@@ -6,8 +6,6 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HelpPageModule } from '../help/help.component';
-import { take } from 'rxjs/operators';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-help-create',
@@ -60,7 +58,7 @@ export class HelpCreateComponent implements OnInit {
     
     //this.createHelpPageRequest.roleIds = this.selectedRoles.filter((selectedRole) => this.availableRoles.find(role => role.name === selectedRole.name)).map(s => s.id);
 
-    /* TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here
+    /* TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here and James gets you the IDs for HelpPages
     this.helpService.helpPost(env.apiVersion,this.createHelpPageRequest).subscribe(responseHandler((resp) => {
       if (!resp.hasErrors) {
         console.log(resp);
@@ -75,10 +73,10 @@ export class HelpCreateComponent implements OnInit {
 
   updateHelpPage() {
 
-    
+
     //this.createHelpPageRequest.roleIds = this.selectedRoles.filter((selectedRole) => this.availableRoles.find(role => role.name === selectedRole.name)).map(s => s.id);
 
-    /* TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here
+    /* TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here and James gets you the IDs for HelpPages
     this.helpService.helpPost(env.apiVersion,this.createHelpPageRequest).subscribe(responseHandler((resp) => {
       if (!resp.hasErrors) {
         console.log(resp);
