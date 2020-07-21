@@ -255,7 +255,7 @@
           </div>
           <!-- <div>{{currPart.createSubParts | json}}</div> -->
           <div class="form-group row partTbl">
-            <form>
+            <!-- <form> -->
               <widget>
                 <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
                   [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
@@ -275,7 +275,7 @@
                   <ng-template pTemplate="body" let-partmodel>
                     <tr class="ui-selectable-row">
                       <td>
-                        <p-dropdown [options]="allParts" [filter]="true" [virtualScroll]="true" appendTo="body"
+                        <p-dropdown name="allpartsDropdown" [options]="allParts" [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
                           itemSize="30"></p-dropdown>
                       </td>
                       <!-- [(ngModel)]="partmodel.partId" -->
@@ -297,7 +297,7 @@
                   </ng-template>
                 </p-table>
               </widget>
-            </form>
+            <!-- </form> -->
             <div class="gridBtn">
               <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
                 role="button" data-cy="addpart-button">

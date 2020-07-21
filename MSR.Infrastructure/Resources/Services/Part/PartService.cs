@@ -63,7 +63,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 }
                 _unitOfWork.Parts.Add(part);
 
-                // This will call SaveChangesAsync
+                await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.LogApprovalTransaction(part, part.Id);
 
                 if (children.Count > 0) {
