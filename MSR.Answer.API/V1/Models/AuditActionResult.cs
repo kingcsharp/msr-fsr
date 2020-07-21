@@ -25,15 +25,12 @@ namespace MSR.Answer.API.V1.Models
         }
 
         public T Object { get; set; }
-        public override object ReturnedObject { get { return Object; } }
     }
 
     public class AuditActionResult
     {
         public string SuccessMessage { get; set; }
         public List<ErrorMessage> ErrorMessages { get; private set; }
-
-        public virtual object ReturnedObject { get { return null; } }
 
         public int Id { get; set; }
 

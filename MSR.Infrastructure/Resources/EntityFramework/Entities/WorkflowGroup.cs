@@ -10,6 +10,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public WorkflowGroup()
         {
             GroupRoles = new HashSet<WorkflowGroupRoleMap>();
+            GroupUsers = new HashSet<WorkflowGroupUserMap>();
         }
 
         [StringLength(100)]
@@ -20,5 +21,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("LastUpdatedBy")]
         public virtual User LastUpdated { get; set; }
         public virtual ICollection<WorkflowGroupRoleMap> GroupRoles { get; set; }
+        public virtual ICollection<WorkflowGroupUserMap> GroupUsers { get; set; }
     }
 }

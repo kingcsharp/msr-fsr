@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using MSR.Domain.Abstractions.Services.Workflow;
+using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Exceptions;
-using MSR.Domain.Models.Workflow;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,8 +33,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 workflowStage = workflowStage.Where(i => i.Id == command.Id.Value);
             }
 
-            var result = await workflowStage.Include(x => x.Created)
-                .Include(x => x.LastUpdated).ToListAsync();
+            var result = await workflowStage.ToListAsync();
             var ret = result.Select(workflowGrou => _mapper.Map<WorkflowStageModel>(workflowGrou)).ToList();
             return ret;
         }
@@ -44,9 +43,6 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             var efWorkflowStage = _mapper.Map<WorkflowStage>(command);
 
             await _unitOfWork.WorkflowStages.AddAndSaveChangesAsync(efWorkflowStage);
-
-            await _unitOfWork.SaveChangesAsync();
-
             var workFlowModel = _mapper.Map<WorkflowStageModel>(efWorkflowStage);
 
             return workFlowModel;
@@ -56,7 +52,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         {
             var efWorkFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
-            if (efWorkFlow == null) {
+            if (efWorkFlow == null)
+            {
                 throw new DomainException(
                     $"{nameof(_unitOfWork.WorkflowStages)} {command.Id} not found",
                     Domain.Commanding.Enums.DomainError.NotFound
@@ -66,6 +63,15 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             efWorkFlow.Name = command.Name;
             efWorkFlow.IsActive = command.IsActive;
 
+            foreach (var item in efWorkFlow.Group)
+            {
+                _unitOfWork.WorkflowGroupStageMaps.Delete(false, item, true);
+            }
+
+            efWorkFlow.Group = command.WorkflowGroupStageMapModel.Select(
+                x => _unitOfWork.WorkflowGroupStageMaps
+                .AttachAndInsert(_mapper.Map<WorkflowGroupStageMap>(x)))
+                .ToList();
 
             _unitOfWork.WorkflowStages.Update(efWorkFlow);
             await _unitOfWork.SaveChangesAsync();
@@ -77,12 +83,14 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task DeactivateWorkFlowStageAsync(DeactivateWorkflowStage command)
         {
-            var workFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            var workFlow = await _unitOfWork.WorkflowStages.Query().Include(x => x.Group)
+           .FirstOrDefaultAsync(x => x.Id == command.Id);
             if (workFlow == null)
             {
                 return;
             }
             _unitOfWork.WorkflowStages.Delete(false, workFlow, true);
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

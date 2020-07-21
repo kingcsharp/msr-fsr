@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(WorkflowActivity))]
-    public partial class WorkflowActivity: TrackableEntity
+    public partial class WorkflowActivity : DeletableEntity
     {
         [Required]
         [StringLength(100)]
@@ -14,8 +14,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(100)]
         public string ApprovalTableName { get; set; }
 
-        public bool? IsActive { get; set; }
-
         public bool? CreateRevision { get; set; }
+        public int MenuItemId { get; set; }
     }
 }

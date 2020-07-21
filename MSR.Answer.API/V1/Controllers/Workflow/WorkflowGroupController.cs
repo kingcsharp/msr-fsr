@@ -11,7 +11,9 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using MSR.Answer.API.V1.Models.Workflow;
 using System.Collections.Generic;
-using MSR.Domain.Commands.Workflow;
+using MSR.Domain.Commands;
+using MSR.Answer.API.Filters;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Controllers.Workflow
 {
@@ -29,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowGroupModel>>))]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowGroupModel>>)), HasPrivilegeApi("ApprovalGroups", EnumPrivilege.CanRead)]
         public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowGroupRequest request)
         {
             var command = request.ToGetWorkflowGroupCommand();
@@ -39,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return result;
         }
 
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowGroupModel>))]
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<WorkflowGroupModel>)), HasPrivilegeApi("ApprovalGroups", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> Post([FromBody, Required] CreateWorkflowGroupRequest request)
         {
             var command = request.ToCreateWorkflowGroupCommand();
@@ -48,7 +50,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<WorkflowGroupModel>("Workflow Group has been successfully created.");
         }
 
-        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowGroupModel>))]
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<WorkflowGroupModel>)), HasPrivilegeApi("ApprovalGroups", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> Update([FromBody, Required] UpdateWorkflowGroupRequest request)
         {
             var command = request.ToUpdateWorkflowGroupCommand();
@@ -58,15 +60,15 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
         }
 
         [HttpDelete("{workflowId}")]
-        [ProducesResponseType(typeof(void), 204)]
+        [HasPrivilegeApi("ApprovalGroups", EnumPrivilege.CanDelete), SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> Delete(int workflowId)
         {
-            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflow()
+            var ret = await _dispatcher.DispatchAsync(new DeactivateWorkflowGroup()
             {
                 Id = workflowId
             });
 
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Workflow Group was successfully removed.");
         }
     }
 }

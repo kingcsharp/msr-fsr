@@ -26,6 +26,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Role> Role { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<PartApproval> PartApproval { get; set; }
+        public DbSet<ProductApproval> ProductApproval { get; set; }
         public DbSet<ProcedureApproval> ProcedureApproval { get; set; }
         public DbSet<ProcedureStepApproval> ProcedureStepApproval { get; set; }
         public DbSet<ProcedureStepDocumentApproval> ProcedureStepDocumentApproval { get; set; }
@@ -34,14 +35,26 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PurchaseOrderProductApproval> PurchaseOrderProductApproval { get; set; }
         public DbSet<UserApproval> UserApproval { get; set; }
         public DbSet<UserRoleApproval> UserRoleApproval { get; set; }
-
+        public DbSet<MonitorInputType> MonitorInputType { get; set; }
+        public DbSet<MonitorListItem> MonitorListItem { get; set; }
+        public DbSet<Workflow> Workflow { get; set; }
+        public DbSet<WorkflowStageMap> WorkflowStageMap { get; set; }
+        public DbSet<WorkflowGroupUserMap> WorkflowGroupUserMap { get; set; }
         public DbSet<WorkflowStage> WorkflowStage { get; set; }
         public DbSet<WorkflowGroup> WorkflowGroup { get; set; }
         public DbSet<WorkflowGroupRoleMap> WorkflowGroupRoleMap { get; set; }
         public DbSet<HelpPage> HelpPage { get; set; }
         public DbSet<HelpPageRoleMap> HelpPageRoleMap { get; set; }
+        public DbSet<WorkflowGroupStageMap> WorkflowGroupStageMap { get; set; }
+        public DbSet<ApprovalTransactionLog> ApprovalTransactionLog { get; set; }
+        public DbSet<ProcedureStepTemplate> ProcedureStepTemplate { get; set; }
+        public DbSet<ProcedureType> ProcedureType { get; set; }
+        public DbSet<Document> Document { get; set; }
+        public DbSet<Part> Part { get; set; }
+        public DbSet<Procedure> Procedure { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
 
-        public DbSet<RoleChildRoleMap> RoleChildRoleMap { get; set; }
 
         public AnswerContext() : base()
         {

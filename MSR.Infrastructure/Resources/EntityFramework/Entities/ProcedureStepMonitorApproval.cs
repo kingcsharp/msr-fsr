@@ -9,8 +9,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int MonitorTPLId { get; set; }
 
-        public virtual MonitorTemplate MonitorTemplate { get; set; }
-
         public virtual ProcedureStepApproval ProcedureStepApproval { get; set; }
     }
 }

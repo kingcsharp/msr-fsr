@@ -34,9 +34,12 @@ namespace MSR.Infrastructure.Resources.Services.Users
         {
             var rolesToAdd = new List<UserRole>();
             List<EntityFramework.Entities.Role> getRolesFromDb;
-            if (command.Roles != null && command.Roles.Count > 0) {
+            if (command.Roles != null && command.Roles.Count > 0)
+            {
                 getRolesFromDb = _unitOfWork.Roles.Query().Where(x => command.Roles.Select(y => y.Id).Contains(x.Id)).ToList();
-            } else {
+            }
+            else
+            {
                 getRolesFromDb = new List<EntityFramework.Entities.Role>();
             }
             command.Roles = null;
@@ -152,16 +155,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             efUser.Roles = rolesToAdd;
 
-            try
-            {
-                _unitOfWork.Users.Update(efUser);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            _unitOfWork.Users.Update(efUser);
+            await _unitOfWork.SaveChangesAsync();
 
             var domainUser = _mapper.Map<Domain.Models.User>(efUser);
             SetRolesToUser(efUser, domainUser);
@@ -247,7 +242,13 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.User> GetLoggedInUserData(int Id)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == Id);
+            var user = await _unitOfWork.Users.Query()
+                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
+                .ThenInclude(x => x.MenuRolePermission)
+                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
+                .ThenInclude(x => x.MenuItem)
+                .Where(x => x.Id == Id)
+                .FirstOrDefaultAsync();
 
             if (user == null)
                 throw new DomainException($"{nameof(Domain.Models.User)} not found", DomainError.NotFound);
@@ -320,7 +321,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             var curUserRole = await _unitOfWork.UserRoles.FirstOrDefaultAsync(false, i => i.RoleId == command.RoleId && i.UserId == command.UserId);
 
-            if(curUserRole != null)
+            if (curUserRole != null)
             {
                 throw new DomainException($"{nameof(User)} already assigned to {nameof(Role)}", DomainError.Conflict);
             }
@@ -409,14 +410,14 @@ namespace MSR.Infrastructure.Resources.Services.Users
         {
             var curUserRole = await _unitOfWork.UserRoles.FirstOrDefaultAsync(false, i => i.Id == command.UserRoleId);
 
-            if(curUserRole is null)
+            if (curUserRole is null)
             {
                 throw new DomainException($"No {nameof(UserRole)} with ID: {command.UserRoleId} found", DomainError.NotFound);
             }
 
 
             await _unitOfWork.LogApprovalTransaction(curUserRole, curUserRole.Id);
-            _unitOfWork.UserRoles.Delete(false,curUserRole);
+            _unitOfWork.UserRoles.Delete(false, curUserRole);
             await _unitOfWork.SaveChangesAsync();
         }
     }

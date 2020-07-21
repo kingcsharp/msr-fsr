@@ -26,11 +26,13 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { PendingApprovalsComponent } from './pending-approvals/pending-approvals.component';
 import { ApprovalGroupsComponent } from './approval-groups/approval-groups.component';
 import { ApprovalStagesComponent } from './approval-stages/approval-stages.component';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 
 export const routes = [
   { path: '', redirectTo: 'workflow', pathMatch: 'full' },
+  { path: 'pendingapproval', redirectTo: 'pendingapproval/9', pathMatch: 'full' },
   { path: 'approvalworkflows', component: ApprovalWorkflowComponent, pathMatch: 'full' },
-  { path: 'pendingapproval', component: PendingApprovalsComponent, pathMatch: 'full' },
+  { path: 'pendingapproval/:table', component: PendingApprovalsComponent, pathMatch: 'full' },
   { path: 'approvalgroups', component: ApprovalGroupsComponent, pathMatch: 'full' },
   { path: 'approvalstages', component: ApprovalStagesComponent, pathMatch: 'full' }
 ];
@@ -39,7 +41,8 @@ export const routes = [
   declarations: [
     PendingApprovalsComponent,
     ApprovalGroupsComponent,
-    ApprovalStagesComponent
+    ApprovalStagesComponent,
+    ApprovalWorkflowComponent
   ],
   imports: [
     CommonModule,
@@ -66,7 +69,8 @@ export const routes = [
     RickshawChartModule,
     JqSparklineModule,
     MapaelLayersMapModule,
-    NewWidgetModule
+    NewWidgetModule,
+    PopoverModule.forRoot()
   ]
 })
 export class WorkflowModule {

@@ -2,7 +2,7 @@
 {
     /*
      * Enum generated from:
-     * SELECT TOP (1000) [Id],REPLACE(REPLACE([Name], ' ', ''),'/','') FROM [Answer3_Dev].[dbo].[MenuItem] order by Name
+     * SELECT TOP 100 [Id],REPLACE(REPLACE([Name], ' ', ''),'/','') FROM [Answer3_Dev].[dbo].[MenuItem] order by Name
      */
     public enum EnumMenuItem
     {
@@ -21,6 +21,7 @@
         ,Monitors
         ,Operational
         ,Parts
+        ,Procedures
         ,PendingApprovals
         ,ProcedureTypes
         ,PurchaseOrders

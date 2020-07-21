@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ColumnsSaved } from './ColumnsSaved';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
+import { EnumApprovalTables } from '../../models/enums/privileges';
 
 
 
@@ -14,7 +15,7 @@ export class Globals {
     login = false;
     openMainMenu = false;
     userLogged = false;
-    loader = true;
+    loader: boolean;
     activeMenu: MenuItem = new MenuItem();
     user;
     views: Array<ViewSaved>;
@@ -22,6 +23,7 @@ export class Globals {
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
         this.setActiveMenuItem(router);
+        this.loader = true;
     }
 
     setActiveMenuItem(router) {
@@ -51,7 +53,9 @@ export class Globals {
     }
 
     showLoader(isOn) {
-        this.loader = isOn;
+        setTimeout(() => {
+            this.loader = isOn;
+        }, 100);
     }
 
     hasPrivilege(controllerName, privilege) {
@@ -60,6 +64,16 @@ export class Globals {
             return false;
         }
         const ret = menuItem[0].permissions.indexOf(privilege) > -1;
+        return ret;
+    }
+
+    hasActivityPrivilegeByTableName(tableName, privilege) {
+        var ret = this.user.approvalPrivileges[EnumApprovalTables[tableName]].indexOf(privilege) > -1;
+        return ret;
+    }
+
+    hasActivityPrivilege(activityEnumVal, privilege) {
+        var ret = this.user.approvalPrivileges[activityEnumVal].indexOf(privilege) > -1;
         return ret;
     }
 

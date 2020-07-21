@@ -29,10 +29,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual ICollection<ProcedureApproval> ProcedureApprovals { get; set; }
 
-        public virtual User User { get; set; }
-
-        public virtual User User1 { get; set; }
-
         public virtual ProcedureType ProcedureType { get; set; }
 
         public virtual ICollection<ProcedureStep> ProcedureSteps { get; set; }

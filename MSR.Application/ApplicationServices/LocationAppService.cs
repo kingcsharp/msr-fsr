@@ -25,7 +25,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetLocations command, CancellationToken cancellationToken = default)
         {
             var ret = await _locationService.GetLocationsAsync(command);
-            return new CommandResponse<ICollection<Location>>(ret);
+            return new CommandResponse<ICollection<LocationModel>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateLocation command, CancellationToken cancellationToken = default)
@@ -37,13 +37,13 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdateLocation command, CancellationToken cancellationToken = default)
         {
             var ret = await _locationService.UpdateLocationAsync(command);
-            return new CommandResponse<Location>(ret);
+            return new CommandResponse<LocationModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateLocation command, CancellationToken cancellationToken = default)
         {
             var ret = await _locationService.CreateLocationAsync(command);
-            return new CommandResponse<Location>(ret);
+            return new CommandResponse<LocationModel>(ret);
         }
     }
 }

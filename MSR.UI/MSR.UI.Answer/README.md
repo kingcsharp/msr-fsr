@@ -90,6 +90,10 @@ Setting that up in the view with `<button *ngIf="canAddUsers".../>` we'll know i
 ## Environments:
 Environments defined in the folder with .dev/.prod/stage or the localhost which is environment.ts
 
+## UtilsModule
+Has many of the repeated modules needed in all the pages
+
+
 ##  Services:
     imports needed:
     import { AccountService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';

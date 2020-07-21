@@ -18,6 +18,11 @@ namespace MSR.Application.Extentions
             services.AddScoped<UserAppService>();
             services.AddScoped<WorkflowAppService>();
             services.AddScoped<MenuAppService>();
+            services.AddScoped<PartAppService>();
+            services.AddScoped<ProcedureAppService>();
+            services.AddScoped<ProcedureStepMonitorAppService>();
+            services.AddScoped<ProcedureStepTemplateAppService>();
+            services.AddScoped<ProcedureTypeAppService>();
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 

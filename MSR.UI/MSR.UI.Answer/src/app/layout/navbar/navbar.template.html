@@ -19,66 +19,35 @@
       <a href tooltip="{{notificationCount+' new notifications'}}" class="nav-link dropdown-toggle"
         data-toggle="dropdown">
         <i class="fad fa-bell" [ngClass]="notificationCount>0?'btn-outline-danger':''"></i>
-        <span class="count">{{notificationCount}}</span>
+        <span class="count"  data-cy="page-notificationcount">{{notificationCount}}</span>
       </a>
       <ul id="support-menu" class="dropdown-menu dropdown-menu-right support" role="menu">
         <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket ">
+          <a href="javascript:;" class="dropdown-item support-ticket ">
             <div class="picture">
-              <span class="badge badge-success">{{notificationData.customers}}</span>
+              <span class="badge" [ngClass]="{'badge-success': notificationCount==0, 'badge-danger': notificationCount>0}">{{notificationCount}}</span>
             </div>
             <div class="details">
-              Customers
+              Notifications
+            </div>
+          </a>
+        </li>
+        <li *ngFor="let item of notificationData.items" role="presentation">
+          <a href="/#/app/workflow/pendingapproval/{{item.table}}" class="dropdown-item support-ticket ">
+            <div class="picture">
+              <span class="badge badge-success">{{item.count}}</span>
+            </div>
+            <div class="details">
+              {{item.name}}
             </div>
           </a>
         </li>
         <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
+          <a href="/#/app/workflow/pendingapproval/9" class="dropdown-item support-ticket ">
             <div class="picture">
-              <span class="badge badge-success">{{notificationData.locations}}</span>
             </div>
-            <div class="details">
-              Locations
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.parts}}</span>
-            </div>
-            <div class="details">
-              Parts
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.procedures}}</span>
-            </div>
-            <div class="details">
-              Procedures
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.purchaseOrders}}</span>
-            </div>
-            <div class="details">
-              Purchase Orders
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item support-ticket">
-            <div class="picture">
-              <span class="badge badge-success">{{notificationData.users}}</span>
-            </div>
-            <div class="details">
-              Users
+            <div class="text-center">
+              <b>View All</b>
             </div>
           </a>
         </li>

@@ -55,7 +55,8 @@ export class HelpComponent implements OnInit {
     this.helpService.helpGet(null, env.apiVersion).subscribe(response => {
       this.data = new Array<HelpPageModule>();
       let mockId = 1; //TODO Remove mock Id for real ones from API
-      response.returnedObject.forEach(helpPage => {
+      /*
+      response.toJSON.forEach(helpPage => {
         helpPage.id = mockId++;
         this.data.push(helpPage);
       });
@@ -63,6 +64,7 @@ export class HelpComponent implements OnInit {
       let distinctRolesFromReturnedResults = response.returnedObject.map( s => s.roles).flat(1).map(role => ({ label: role.name, value: role.name }) ).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
       this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
       this.loading = false;
+      */
     });
 
   }

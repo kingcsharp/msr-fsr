@@ -18,17 +18,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
             return user;
         }
 
-        public static async Task<bool> LogApprovalTransaction<T>(this IUnitOfWork unitOfWork, T entity, int entityId, string status = "Approved")
+        public static async Task<bool> LogApprovalTransaction<T>(this IUnitOfWork unitOfWork, T entity, int entityId, string status = "Approved", string comments = null)
         {
-            var user = await unitOfWork.GetLoggedInUserAsync();
-
             var log = new ApprovalTransactionLog()
             {
-                ApprovalEntity = entity.GetType().Name,
+                ApprovalEntity = entity.GetType().Name.Replace("Proxy", ""),
                 ApprovalEntityId = entityId,
                 ApprovalResult = status,
-                ProcessedBy = user,
-                ProcessedById = user.Id,
+                ProcessedById = DelegateHandler.GetCurrentUserId(),
+                Comments = comments,
                 ProcessedOn = DateTimeOffset.UtcNow
             };
 

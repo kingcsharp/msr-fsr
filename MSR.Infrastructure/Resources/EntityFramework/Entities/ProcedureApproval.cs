@@ -5,20 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(ProcedureApproval))]
-    public partial class ProcedureApproval: TrackableEntity
+    public partial class ProcedureApproval: ApprovalEntity
     {
         public ProcedureApproval()
         {
             ProcedureStepApprovals = new HashSet<ProcedureStepApproval>();
         }
 
-        public int ProcedureId { get; set; }
-
-        public int StatusId { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
+        
 
         public int ProcedureTypeId { get; set; }
 
@@ -31,14 +25,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string DurationType { get; set; }
 
         public virtual Procedure Procedure { get; set; }
-
-        public virtual User User { get; set; }
-
-        public virtual User User1 { get; set; }
-
+        public int ProcedureId { get; set; }
+        [ForeignKey("ProcedureId")]
         public virtual ProcedureType ProcedureType { get; set; }
-
-        public virtual Status Status { get; set; }
 
         public virtual ICollection<ProcedureStepApproval> ProcedureStepApprovals { get; set; }
     }

@@ -6,18 +6,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(UserApproval))]
-    public partial class UserApproval: TrackableEntity
+    public partial class UserApproval : TrackableEntity
     {
         public UserApproval()
         {
             UserRoleApprovals = new HashSet<UserRoleApproval>();
         }
 
-        public int? OldId { get; set; }
-
-        public int UserId { get; set; }
-
+        public int WorkflowId { get; set; }
+        [ForeignKey("WorkflowId")]
+        public virtual Workflow Workflow { get; set; }
+        public int WorkflowGroupId { get; set; }
+        [ForeignKey("WorkflowGroupId")]
+        public virtual WorkflowGroup WorkflowGroup { get; set; }
         public int StatusId { get; set; }
+        [ForeignKey("StatusId")]
+        public virtual Status Status { get; set; }
+        [ForeignKey("CreatedBy")]
+        public virtual User Created { get; set; }
+
+        public int? OldId { get; set; }
 
         [StringLength(50)]
         public string UserRoleId { get; set; }
@@ -35,7 +43,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(256)]
         public string Email { get; set; }
 
-        public string PasswordHash { get; set; }
+        public byte[] PasswordHash { get; set; }
 
         public string SecurityStamp { get; set; }
 
@@ -43,13 +51,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? SupervisorId { get; set; }
 
-        public int? LocationId { get; set; }
-
         public bool IsActive { get; set; }
 
         public bool? IsAnswerUser { get; set; }
-
-        public int? CustomerId { get; set; }
 
         public DateTime? LockoutEndDateUtc { get; set; }
 
@@ -58,15 +62,30 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int AccessFailedCount { get; set; }
 
         public int? TimeZoneId { get; set; }
-
+        public int? CustomerId { get; set; }
+        [ForeignKey("CustomerId")]
         public virtual Customer Customer { get; set; }
-
+        public int? LocationId { get; set; }
+        [ForeignKey("LocationId")]
         public virtual Location Location { get; set; }
-
-        public virtual Status Status { get; set; }
-
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
         public virtual User User { get; set; }
 
         public virtual ICollection<UserRoleApproval> UserRoleApprovals { get; set; }
+
+        [NotMapped]
+        public string ActivityType
+        {
+            get
+            {
+                return this.GetType().Name.Replace("Proxy", "");
+            }
+        }
+
+        public string GetFullName()
+        {
+            return this.FirstName + " " + this.LastName;
+        }
     }
 }

@@ -1,7 +1,6 @@
 using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
-using MSR.Domain.Commands.Workflow;
 using MSR.Domain.Helpers;
 
 namespace MSR.Answer.API.V1.Extentions
@@ -84,6 +83,72 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
+        public static GetWorkflowModel ToGetWorkflowCommand(this GetWorkflowRequest request)
+        {
+            return new GetWorkflowModel()
+            {
+                Id = request.Id
+            };
+        }
+
+        public static GetPendingApprovalModel ToGetPendingApprovalCommand(this GetPendingApprovalRequest request)
+        {
+            return new GetPendingApprovalModel()
+            {
+                Table = request.Table
+            };
+        }
+
+        public static GetPendingApprovalDetailsModel ToGetPendingApprovalDetailsCommand(this GetPendingApprovalDetailRequest request)
+        {
+            return new GetPendingApprovalDetailsModel()
+            {
+                Table = request.Table,
+                Id = request.Id
+            };
+        }
+
+        public static PostApprovalModel ToPostApprovalCommand(this PostPendingApprovalRequest request)
+        {
+            return new PostApprovalModel()
+            {
+                Id = request.Id,
+                Table = request.Table,
+                Comments = request.Comments
+            };
+        }
+
+        public static DeactivateApprovalModel ToDeleteApprovalCommand(this DeletePendingApprovalRequest request)
+        {
+            return new DeactivateApprovalModel()
+            {
+                Id = request.Id,
+                Table = request.Table
+            };
+        }
+
+        public static CreateWorkflowModel ToCreateWorkflowGroupCommand(this CreateWorkflowRequest request)
+        {
+            return new CreateWorkflowModel()
+            {
+                IsActive = request.IsActive,
+                Name = request.Name,
+                MemberStages = request.MemberStages,
+                ActivityMaps = request.ActivityMaps
+            };
+        }
+
+        public static UpdateWorkflowModel ToUpdateWorkflowGroupCommand(this UpdateWorkflowRequest request)
+        {
+            return new UpdateWorkflowModel()
+            {
+                Id = request.Id,
+                IsActive = request.IsActive,
+                Name = request.Name,
+                MemberStages = request.MemberStages,
+                ActivityMaps = request.ActivityMaps
+            };
+        }
         public static GetWorkflowGroupsModel ToGetWorkflowGroupCommand(this GetWorkflowGroupRequest request)
         {
             return new GetWorkflowGroupsModel()
@@ -92,13 +157,14 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        public static CreateWorkflowGroup ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
+        public static CreateWorkflowGroupModel ToCreateWorkflowGroupCommand(this CreateWorkflowGroupRequest request)
         {
-            return new CreateWorkflowGroup()
+            return new CreateWorkflowGroupModel()
             {
                 IsActive = request.IsActive,
                 Name = request.Name,
-                Roles = request.Roles
+                Roles = request.Roles,
+                Users = request.Users
             };
         }
 
@@ -109,7 +175,8 @@ namespace MSR.Answer.API.V1.Extentions
                 Id = request.Id,
                 IsActive = request.IsActive,
                 Name = request.Name,
-                Roles = request.Roles
+                Roles = request.Roles,
+                Users = request.Users
             };
         }
 
@@ -120,23 +187,23 @@ namespace MSR.Answer.API.V1.Extentions
                 Id = request.Id
             };
         }
-
         public static CreateWorkflowStageModel ToCreateWorkflowStageCommand(this CreateWorkflowStageRequest request)
         {
             return new CreateWorkflowStageModel()
             {
                 IsActive = request.IsActive,
-                Name = request.Name
+                Name = request.Name,
+                WorkflowGroupStageMapModel = request.WorkflowGroupStageMapModel
             };
         }
-
         public static UpdateWorkflowStageModel ToUpdateWorkflowStageCommand(this UpdateWorkflowStageRequest request)
         {
             return new UpdateWorkflowStageModel()
             {
                 Id = request.Id,
                 IsActive = request.IsActive,
-                Name = request.Name
+                Name = request.Name,
+                WorkflowGroupStageMapModel = request.WorkflowGroupStageMapModel
             };
         }
 
@@ -230,6 +297,11 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
+        public static GetLocations ToGetLocationCommand(this GetLocationRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetLocations>(request);
+        }
+
         public static CreateLocation ToCreateLocationCommand(this CreateLocationRequest request)
         {
             return AutoMapperHelper.Mapper.Map<CreateLocation>(request);
@@ -261,6 +333,60 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetHelpPage ToGetHelpPageCommand(this GetHelpPageRequest request)
         {
             return AutoMapperHelper.Mapper.Map<GetHelpPage>(request);
+        }
+
+        public static CreatePart ToCreatePartCommand(this CreatePartRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreatePart>(request);
+        }
+        public static UpdatePart ToUpdatePartCommand(this UpdatePartRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdatePart>(request);
+        }
+
+        public static CreateProcedure ToCreateProcedureCommand(this CreateProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedure>(request);
+        }
+        public static UpdateProcedure ToUpdateProcedureCommand(this UpdateProcedureRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedure>(request);
+        }
+
+        public static CreateProcedureStep ToCreateProcedureStepCommand(this CreateProcedureStepRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStep>(request);
+        }
+        public static UpdateProcedureStep ToUpdateProcedureStepCommand(this UpdateProcedureStepRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStep>(request);
+        }
+
+        public static CreateProcedureStepMonitor ToCreateProcedureStepMonitorCommand(this CreateProcedureStepMonitorRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStepMonitor>(request);
+        }
+        public static UpdateProcedureStepMonitor ToUpdateProcedureStepMonitorCommand(this UpdateProcedureStepMonitorRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStepMonitor>(request);
+        }
+
+        public static CreateProcedureStepTemplate ToCreateProcedureStepTemplateCommand(this CreateProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureStepTemplate>(request);
+        }
+        public static UpdateProcedureStepTemplate ToUpdateProcedureStepTemplateCommand(this UpdateProcedureStepTemplateRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureStepTemplate>(request);
+        }
+
+        public static CreateProcedureType ToCreateProcedureTypeCommand(this CreateProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProcedureType>(request);
+        }
+        public static UpdateProcedureType ToUpdateProcedureTypeCommand(this UpdateProcedureTypeRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProcedureType>(request);
         }
     }
 }
