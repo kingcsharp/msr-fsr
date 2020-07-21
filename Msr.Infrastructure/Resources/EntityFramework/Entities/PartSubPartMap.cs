@@ -1,11 +1,9 @@
-﻿using AutoMapper.Configuration.Annotations;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(PartSubPartMap))]
-    public partial class PartSubPartMap : TrackableEntity
+    public partial class PartSubPartMap : CreatableEntity
     {
         public int ParentPartId { get; set; }
         [ForeignKey("ParentPartId")]
@@ -14,11 +12,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("PartId")]
         public virtual Part Part { get; set; }
         public int Qty { get; set; }
-
-        // ignore non-existent fields
-        [NotMapped]
-        public override DateTime? LastUpdatedOn { get; set; }
-        [NotMapped]
-        public override int? LastUpdatedBy { get; set; }
     }
 }
