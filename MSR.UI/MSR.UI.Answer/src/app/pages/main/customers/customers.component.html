@@ -3,31 +3,31 @@
     {{globals.activeMenu.name}}
 </h1>
 <widget>
-    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-          [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-          [rowsPerPageOptions]="[10,25,50,100]"  [loading]="loading"  [paginator]="true"  [filterDelay]="0"
-          stateStorage="local"  stateKey="{{gridStorageId}}">
-          <ng-template pTemplate="caption">
-                <div class="text-right">
-                      <button *ngIf="canAddHelpPage"             class="btn btn-success width-100 mb-xs sm-mrg"
-                 role="button"  data-cy="add-button">
-                            + Add
-                          </button>
-                      <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
-                            [gridVersion]="gridVersion"  data-cy="usergrid-options"  [hidden]="false">
-                          </grid-options>
-                    </div>
-              </ng-template>
-          <ng-template pTemplate="header">
-                
-              </ng-template>
-          <ng-template pTemplate="body" let-location>
-                
-              </ng-template>
-          <ng-template pTemplate="emptymessage">
-                <tr>
-                      <td colspan="8" style="text-align:left">No Help Pages to Display</td>
-                    </tr>
-              </ng-template>
-        </p-table>
-  </widget>
+    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+      [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+      [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true" [filterDelay]="0"
+      stateStorage="local" stateKey="{{gridStorageId}}">
+      <ng-template pTemplate="caption">
+        <div class="text-right">
+          <button *ngIf="canAddLocation"
+            class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+            + Add
+          </button>
+          <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+            [gridVersion]="gridVersion" data-cy="usergrid-options" [hidden]="false">
+          </grid-options>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        
+      </ng-template>
+      <ng-template pTemplate="body" let-location>
+        
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" style="text-align:left">No Help Pages to Display</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </widget>
