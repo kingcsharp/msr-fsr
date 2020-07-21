@@ -21,7 +21,8 @@ const routes: Routes = [
       { path: 'tables', loadChildren: () => import('../pages/tables/tables.module').then(m => m.TablesModule) },
       { path: 'grid', loadChildren: () => import('../pages/grid/grid.module').then(m => m.GridModule) },
       { path: 'package', loadChildren: () => import('../pages/package/package.module').then(m => m.PackageModule) },
-      { path: 'help', loadChildren: () =>  import('../pages/help/help.module').then(m => m.HelpModule) }
+      { path: 'help', loadChildren: () =>  import('../pages/help/help.module').then(m => m.HelpModule) },
+      { path: 'locations', loadChildren: () =>  import('../pages/locations/locations.module').then(m => m.LocationsModule) }
     ]
   }
 ];

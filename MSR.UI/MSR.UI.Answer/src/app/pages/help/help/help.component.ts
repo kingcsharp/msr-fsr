@@ -55,6 +55,7 @@ export class HelpComponent implements OnInit {
     this.helpService.helpGet(null, env.apiVersion).subscribe(response => {
       this.data = new Array<HelpPageModule>();
       let mockId = 1; //TODO Remove mock Id for real ones from API
+      console.log(response)
       /*
       response.toJSON.forEach(helpPage => {
         helpPage.id = mockId++;

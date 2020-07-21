@@ -47,8 +47,8 @@ export class HelpCreateComponent implements OnInit {
 
     });
 
-    this.roleService.roleGet(env.apiVersion).subscribe(response => {
-      //this.availableRoles = this.availableRoles.concat(response.returnedObject);
+    this.roleService.role(env.apiVersion).subscribe(response => {
+      this.availableRoles = this.availableRoles.concat(response);
     });
 
   }
