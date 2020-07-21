@@ -42,6 +42,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RoleassignmentsComponent } from './roleassignments/roleassignments.component'
 import {ListboxModule} from 'primeng/listbox';
+import { CustomersComponent } from './customers/customers.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -49,7 +50,8 @@ export const routes = [
   { path: 'visits', component: VisitsComponent, pathMatch: 'full' },
   { path: 'people', component: UserComponent, pathMatch: 'full' },
   { path: 'widgets', component: WidgetsComponent, pathMatch: 'full' },
-  { path: 'roleassignments', component: RoleassignmentsComponent, pathMatch: 'full'}
+  { path: 'roleassignments', component: RoleassignmentsComponent, pathMatch: 'full'},
+  { path: 'customers', component: CustomersComponent, pathMatch: 'full'}
 ];
 
 @NgModule({
@@ -70,7 +72,8 @@ export const routes = [
     NasdaqSparklineWidgetComponent,
     RealtimeTrafficWidgetComponent,
     YearsMapWidgetComponent,
-    RoleassignmentsComponent
+    RoleassignmentsComponent,
+    CustomersComponent
   ],
   imports: [
     CommonModule,
