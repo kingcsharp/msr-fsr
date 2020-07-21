@@ -17,8 +17,10 @@ namespace MSR.Answer.API.Extentions
         {
             var emailConfig = config.GetSection(nameof(EmailInformation)).Get<EmailInformation>();
             var generalConfig = config.GetSection(nameof(GeneralInformation)).Get<GeneralInformation>();
+            var s3Config = config.GetSection(nameof(S3Information)).Get<S3Information>();
             services.AddSingleton(generalConfig);
             services.AddSingleton(emailConfig);
+            services.AddSingleton(s3Config);
 
             var mapperConfiguration = new MapperConfiguration(i =>
             {

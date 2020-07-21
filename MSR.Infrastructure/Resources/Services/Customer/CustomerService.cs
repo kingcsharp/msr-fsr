@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
