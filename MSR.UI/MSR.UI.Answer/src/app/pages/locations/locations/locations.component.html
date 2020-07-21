@@ -1,3 +1,7 @@
+<h1 class="page-title">
+  <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+  {{globals.activeMenu.name}}
+</h1>
 <widget>
     <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
       [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
