@@ -294,32 +294,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
                         var listEnumPrivilege = new List<int>();
                         if (menuItem.MenuRolePermission != null)
                         {
-                            if (menuItem.MenuRolePermission.CanActivate)
-                            {
-                                listEnumPrivilege.Add((int)EnumPrivilege.CanActivate);
-                            }
-                            if (menuItem.MenuRolePermission.CanApprove)
-                            {
-                                listEnumPrivilege.Add((int)EnumPrivilege.CanApprove);
-                            }
-                            if (menuItem.MenuRolePermission.CanCreate)
-                            {
-                                listEnumPrivilege.Add((int)EnumPrivilege.CanCreate);
-                            }
-                            if (menuItem.MenuRolePermission.CanDelete)
-                            {
-                                listEnumPrivilege.Add((int)EnumPrivilege.CanDelete);
-                            }
-                            if (menuItem.MenuRolePermission.CanEdit)
-                            {
-                                listEnumPrivilege.Add((int)EnumPrivilege.CanEdit);
-                            }
-                            if (menuItem.MenuRolePermission.CanRead)
-                            {
-                                listEnumPrivilege.Add((int)EnumPrivilege.CanRead);
-                            }
+                            domainMenuItem.Permissions = _mapper.Map<Domain.Models.Permission>(menuItem.MenuRolePermission);
                         }
-                        domainMenuItem.Permissions = listEnumPrivilege.ToArray();
                     }
 
                     domainRole.Menus.Add(domainMenuItem);

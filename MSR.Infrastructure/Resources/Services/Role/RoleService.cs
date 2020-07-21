@@ -23,69 +23,38 @@ namespace MSR.Infrastructure.Resources.Services.Role
             _mapper = mapper;
         }
 
-        public async Task<int> CreateMenuRoleMapAsync(CreateMenuRoleMap command)
-        {
-            var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false, i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId);
-
-            if (roleMenu != null) return roleMenu.Id;
-
-            var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.RoleId, null);
-            var menu = await _unitOfWork.MenuItems.FirstOrDefaultAsync(false, i => i.Id == command.MenuId, null);
-
-            if (role is null || menu is null)
-            {
-                throw new DomainException("Role or Menu not found", DomainError.BadRequest);
-            }
-
-            var menuRole = new MenuRole()
-            {
-                MenuItem = menu,
-                Role = role
-            };
-
-            await _unitOfWork.MenuRoles.AddAsync(menuRole);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            return menuRole.Id;
-        }
-
         public async Task<ICollection<Domain.Models.Role>> GetRolesMapAsync(GetRoles command)
         {
-            var roles = await _unitOfWork.Roles.Query().ToListAsync();
-            var result = roles.Select(x => _mapper.Map<Domain.Models.Role>(x)).OrderBy(x => x.Name).ToList();
+            var result = new List<Domain.Models.Role>();
+            var roles = await _unitOfWork.Roles.Query().Include(i => i.Menus).ThenInclude(i => i.MenuRolePermission)
+                                                       .Include(i => i.Menus).ThenInclude(i => i.MenuItem).ThenInclude(i => i.MenuGroup)
+                                                       .Include(i => i.ChildRoles).ThenInclude(i => i.ChildRole).ThenInclude(i => i.Menus).ThenInclude(i => i.MenuRolePermission).ToListAsync();
+            foreach (var role in roles)
+            {
+                var domRole = _mapper.Map<Domain.Models.Role>(role);
+
+                foreach (var menu in role.Menus)
+                {
+                    var domMenu = _mapper.Map<Domain.Models.MenuItem>(menu.MenuItem);
+                    var childRoles = role.ChildRoles.SelectMany(i => i.ChildRole.Menus).Select(i => i.MenuRolePermission);
+
+                    domMenu.InheritedPermissions = new Domain.Models.Permission
+                    {
+                        CanActivate = childRoles.Any(i => i.CanActivate),
+                        CanApprove = childRoles.Any(i => i.CanApprove),
+                        CanCreate = childRoles.Any(i => i.CanCreate),
+                        CanDelete = childRoles.Any(i => i.CanDelete),
+                        CanEdit = childRoles.Any(i => i.CanEdit),
+                        CanRead = childRoles.Any(i => i.CanRead)
+                    };
+                    domMenu.Permissions = _mapper.Map<Domain.Models.Permission>(menu.MenuRolePermission);
+                    domRole.Menus.Add(domMenu);
+                }
+                result.Add(domRole);
+            }
+            
             return result;
         }
 
-        public async Task<bool> RemoveMenuRoleMap(int id)
-        {
-            var roleMenuPermission = await _unitOfWork.MenuRolePermissions.FirstOrDefaultAsync(false, i => i.MenuRole.Id == id);
-
-            if (roleMenuPermission != null)
-            {
-                _unitOfWork.MenuRolePermissions.Delete(false, roleMenuPermission.Id);
-            }
-
-            _unitOfWork.MenuRoles.Delete(false, id);
-            await _unitOfWork.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> UpdateMenuRoleMapAsync(UpdateMenuRoleMap command)
-        {
-            var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false, i => i.Id == command.MenuRoleId);
-
-            if (roleMenu == null) { throw new DomainException("MenuRole does not exist", DomainError.BadRequest); }
-
-            var menuRolePermission = _mapper.Map<MenuRolePermission>(command);
-
-            menuRolePermission.MenuRole = roleMenu;
-            menuRolePermission.MenuRoleId = roleMenu.Id;
-
-            await _unitOfWork.MenuRolePermissions.AddAsync(menuRolePermission);
-            await _unitOfWork.SaveChangesAsync();
-
-            return true;
-        }
     }
 }

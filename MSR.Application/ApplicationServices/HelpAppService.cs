@@ -26,14 +26,14 @@ namespace MSR.Application.ApplicationServices
         }
         public async Task<ICommandResponse> HandleAsync(CreateHelpPage command, CancellationToken cancellationToken = default)
         {
-            await _helpService.CreateHelpPage(command);
-            return CommandResponse.SuccessCommand;
+            var ret = await _helpService.CreateHelpPage(command);
+            return new CommandResponse<HelpPage>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateHelpPageRole command, CancellationToken cancellationToken = default)
         {
-            await _helpService.CreateHelpPageRole(command);
-            return CommandResponse.SuccessCommand;
+            var ret = await _helpService.CreateHelpPageRole(command);
+            return new CommandResponse<HelpPage>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateHelpPage command, CancellationToken cancellationToken = default)

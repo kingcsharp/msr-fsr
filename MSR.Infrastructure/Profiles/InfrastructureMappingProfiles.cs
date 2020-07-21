@@ -58,6 +58,12 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();                          
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
+
+            CreateMap<MenuRolePermission, Domain.Models.Permission>().ReverseMap();
+
+            CreateMap<MenuItem, Domain.Models.MenuItem>()
+                .ForMember(dest => dest.Roles, opt => opt.Ignore()).ReverseMap();
+            CreateMap<MenuGroup, Domain.Models.MenuGroup>().ReverseMap();
         }
     }
 }

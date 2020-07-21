@@ -16,12 +16,10 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<RemoveMenuRoleMap>
     {
 
-        private readonly IRoleService _roleService;
         private readonly IMenuService _menuService;
 
         public MenuAppService(IRoleService roleService, IMenuService menuService)
         {
-            _roleService = roleService;
             _menuService = menuService;
         }
 
@@ -33,19 +31,19 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(CreateMenuRoleMap command, CancellationToken cancellationToken = default)
         {
-            var ret = await _roleService.CreateMenuRoleMapAsync(command);
+            var ret = await _menuService.CreateMenuRoleMapAsync(command);
             return new CommandResponse<int>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateMenuRoleMap command, CancellationToken cancellationToken = default)
         {
-            var ret = await _roleService.UpdateMenuRoleMapAsync(command);
+            var ret = await _menuService.UpdateMenuRoleMapAsync(command);
             return new CommandResponse<bool>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(RemoveMenuRoleMap command, CancellationToken cancellationToken = default)
         {
-            var ret = await _roleService.RemoveMenuRoleMap(command.Id);
+            var ret = await _menuService.RemoveMenuRoleMap(command.Id);
             return new CommandResponse<bool>(ret);
         }
     }

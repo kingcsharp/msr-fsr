@@ -15,6 +15,7 @@ namespace MSR.Domain.Models
 
         public ICollection<MenuItem> Menus { get; set; }
 
-        public int[] Permissions { get; set; }
+        public Permission Permissions { get; set; }
+        public Permission InheritedPermissions { get; set; }
     }
 }
