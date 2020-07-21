@@ -541,7 +541,7 @@ export class HelpService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    helpPost(version: string, request: CreateHelpPageRequest): Observable<AuditActionResult> {
+    helpPost(version: string, request: CreateHelpPageRequest): Observable<AuditActionResultOfHelpPage> {
         let url_ = this.baseUrl + "/v{version}/Help";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -567,14 +567,14 @@ export class HelpService {
                 try {
                     return this.processHelpPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfHelpPage>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfHelpPage>><any>_observableThrow(response_);
         }));
     }
 
-    protected processHelpPost(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processHelpPost(response: HttpResponseBase): Observable<AuditActionResultOfHelpPage> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -585,7 +585,7 @@ export class HelpService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfHelpPage.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -593,7 +593,7 @@ export class HelpService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfHelpPage>(<any>null);
     }
 
     helpPatch(version: string, request: UpdateHelpPageRequest): Observable<AuditActionResult> {
@@ -651,7 +651,7 @@ export class HelpService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    rolePost(version: string, request: CreateHelpPageRoleRequest): Observable<AuditActionResult> {
+    rolePost(version: string, request: CreateHelpPageRoleRequest): Observable<AuditActionResultOfHelpPage> {
         let url_ = this.baseUrl + "/v{version}/Help/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -677,14 +677,14 @@ export class HelpService {
                 try {
                     return this.processRolePost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfHelpPage>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfHelpPage>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResultOfHelpPage> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -695,7 +695,7 @@ export class HelpService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfHelpPage.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -703,7 +703,7 @@ export class HelpService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfHelpPage>(<any>null);
     }
 
     helpDelete(id: number, version: string): Observable<AuditActionResult> {
@@ -1106,7 +1106,7 @@ export class MenuService {
         return _observableOf<AuditActionResultOfIEnumerableOfMenuItem>(<any>null);
     }
 
-    rolePost(version: string, request: CreateMenuRoleMapRequest): Observable<AuditActionResult> {
+    rolePost(version: string, request: CreateMenuRoleMapRequest): Observable<AuditActionResultOfString> {
         let url_ = this.baseUrl + "/v{version}/Menu/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1132,14 +1132,14 @@ export class MenuService {
                 try {
                     return this.processRolePost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfString>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfString>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResultOfString> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1150,7 +1150,7 @@ export class MenuService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfString.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1158,7 +1158,7 @@ export class MenuService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfString>(<any>null);
     }
 
     rolePatch(version: string, request: UpdateMenuRoleMapRequest): Observable<AuditActionResult> {
@@ -2380,62 +2380,7 @@ export class RoleService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    rolePost(version: string, request: CreateMenuRoleMapRequest): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/Role";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRolePost(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRolePost(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResult> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResult>(<any>null);
-    }
-
-    roleGet(version: string): Observable<AuditActionResultOfICollectionOfRole> {
+    role(version: string): Observable<AuditActionResultOfICollectionOfRole> {
         let url_ = this.baseUrl + "/v{version}/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2451,11 +2396,11 @@ export class RoleService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRoleGet(response_);
+            return this.processRole(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRoleGet(<any>response_);
+                    return this.processRole(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfICollectionOfRole>><any>_observableThrow(e);
                 }
@@ -2464,7 +2409,7 @@ export class RoleService {
         }));
     }
 
-    protected processRoleGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRole> {
+    protected processRole(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRole> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2484,111 +2429,6 @@ export class RoleService {
             }));
         }
         return _observableOf<AuditActionResultOfICollectionOfRole>(<any>null);
-    }
-
-    rolePatch(version: string, request: UpdateMenuRoleMapRequest): Observable<void> {
-        let url_ = this.baseUrl + "/v{version}/Role";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRolePatch(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRolePatch(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRolePatch(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    roleDelete(id: number, version: string): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/Role/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRoleDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRoleDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRoleDelete(response: HttpResponseBase): Observable<AuditActionResult> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -4481,6 +4321,387 @@ export interface IUpdateCustomerRequest {
     isActive?: boolean | undefined;
 }
 
+export class AuditActionResultOfHelpPage extends AuditActionResult implements IAuditActionResultOfHelpPage {
+    object?: HelpPage | undefined;
+
+    constructor(data?: IAuditActionResultOfHelpPage) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? HelpPage.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfHelpPage {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfHelpPage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfHelpPage extends IAuditActionResult {
+    object?: HelpPage | undefined;
+}
+
+export class HelpPage implements IHelpPage {
+    id?: number;
+    title?: string | undefined;
+    friendlyURL?: string | undefined;
+    content?: string | undefined;
+    roles?: Role[] | undefined;
+
+    constructor(data?: IHelpPage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.friendlyURL = _data["friendlyURL"];
+            this.content = _data["content"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(Role.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): HelpPage {
+        data = typeof data === 'object' ? data : {};
+        let result = new HelpPage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["friendlyURL"] = this.friendlyURL;
+        data["content"] = this.content;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IHelpPage {
+    id?: number;
+    title?: string | undefined;
+    friendlyURL?: string | undefined;
+    content?: string | undefined;
+    roles?: Role[] | undefined;
+}
+
+export class Role implements IRole {
+    id?: number;
+    name?: string | undefined;
+    isCertificationRole?: boolean | undefined;
+    menus?: MenuItem[] | undefined;
+    permissions?: Permission | undefined;
+    inheritedPermissions?: Permission | undefined;
+
+    constructor(data?: IRole) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.isCertificationRole = _data["isCertificationRole"];
+            if (Array.isArray(_data["menus"])) {
+                this.menus = [] as any;
+                for (let item of _data["menus"])
+                    this.menus!.push(MenuItem.fromJS(item));
+            }
+            this.permissions = _data["permissions"] ? Permission.fromJS(_data["permissions"]) : <any>undefined;
+            this.inheritedPermissions = _data["inheritedPermissions"] ? Permission.fromJS(_data["inheritedPermissions"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Role {
+        data = typeof data === 'object' ? data : {};
+        let result = new Role();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["isCertificationRole"] = this.isCertificationRole;
+        if (Array.isArray(this.menus)) {
+            data["menus"] = [];
+            for (let item of this.menus)
+                data["menus"].push(item.toJSON());
+        }
+        data["permissions"] = this.permissions ? this.permissions.toJSON() : <any>undefined;
+        data["inheritedPermissions"] = this.inheritedPermissions ? this.inheritedPermissions.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IRole {
+    id?: number;
+    name?: string | undefined;
+    isCertificationRole?: boolean | undefined;
+    menus?: MenuItem[] | undefined;
+    permissions?: Permission | undefined;
+    inheritedPermissions?: Permission | undefined;
+}
+
+export class MenuItem implements IMenuItem {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+    menuGroup?: MenuGroup | undefined;
+    permissions?: Permission | undefined;
+    inheritedPermissions?: Permission | undefined;
+    roles?: Role[] | undefined;
+    enumMenuItem?: EnumMenuItem;
+
+    constructor(data?: IMenuItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+            this.name = _data["name"];
+            this.info = _data["info"];
+            this.icon = _data["icon"];
+            this.orderNumber = _data["orderNumber"];
+            this.menuGroup = _data["menuGroup"] ? MenuGroup.fromJS(_data["menuGroup"]) : <any>undefined;
+            this.permissions = _data["permissions"] ? Permission.fromJS(_data["permissions"]) : <any>undefined;
+            this.inheritedPermissions = _data["inheritedPermissions"] ? Permission.fromJS(_data["inheritedPermissions"]) : <any>undefined;
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(Role.fromJS(item));
+            }
+            this.enumMenuItem = _data["enumMenuItem"];
+        }
+    }
+
+    static fromJS(data: any): MenuItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new MenuItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        data["name"] = this.name;
+        data["info"] = this.info;
+        data["icon"] = this.icon;
+        data["orderNumber"] = this.orderNumber;
+        data["menuGroup"] = this.menuGroup ? this.menuGroup.toJSON() : <any>undefined;
+        data["permissions"] = this.permissions ? this.permissions.toJSON() : <any>undefined;
+        data["inheritedPermissions"] = this.inheritedPermissions ? this.inheritedPermissions.toJSON() : <any>undefined;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        data["enumMenuItem"] = this.enumMenuItem;
+        return data; 
+    }
+}
+
+export interface IMenuItem {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+    menuGroup?: MenuGroup | undefined;
+    permissions?: Permission | undefined;
+    inheritedPermissions?: Permission | undefined;
+    roles?: Role[] | undefined;
+    enumMenuItem?: EnumMenuItem;
+}
+
+export class MenuGroup implements IMenuGroup {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+
+    constructor(data?: IMenuGroup) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+            this.name = _data["name"];
+            this.info = _data["info"];
+            this.icon = _data["icon"];
+            this.orderNumber = _data["orderNumber"];
+        }
+    }
+
+    static fromJS(data: any): MenuGroup {
+        data = typeof data === 'object' ? data : {};
+        let result = new MenuGroup();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        data["name"] = this.name;
+        data["info"] = this.info;
+        data["icon"] = this.icon;
+        data["orderNumber"] = this.orderNumber;
+        return data; 
+    }
+}
+
+export interface IMenuGroup {
+    url?: string | undefined;
+    name?: string | undefined;
+    info?: string | undefined;
+    icon?: string | undefined;
+    orderNumber?: number;
+}
+
+export class Permission implements IPermission {
+    canRead?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canActivate?: boolean;
+    canApprove?: boolean;
+    canDelete?: boolean;
+
+    constructor(data?: IPermission) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.canRead = _data["canRead"];
+            this.canCreate = _data["canCreate"];
+            this.canEdit = _data["canEdit"];
+            this.canActivate = _data["canActivate"];
+            this.canApprove = _data["canApprove"];
+            this.canDelete = _data["canDelete"];
+        }
+    }
+
+    static fromJS(data: any): Permission {
+        data = typeof data === 'object' ? data : {};
+        let result = new Permission();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["canRead"] = this.canRead;
+        data["canCreate"] = this.canCreate;
+        data["canEdit"] = this.canEdit;
+        data["canActivate"] = this.canActivate;
+        data["canApprove"] = this.canApprove;
+        data["canDelete"] = this.canDelete;
+        return data; 
+    }
+}
+
+export interface IPermission {
+    canRead?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canActivate?: boolean;
+    canApprove?: boolean;
+    canDelete?: boolean;
+}
+
+export enum EnumMenuItem {
+    AdminCostSettings = 0,
+    ApprovalGroups = 1,
+    ApprovalStages = 2,
+    ApprovalWorkflows = 3,
+    CustomersDepartments = 4,
+    Documents = 5,
+    EquipmentMaintenance = 6,
+    Financial = 7,
+    FreeformQuote = 8,
+    HelpPages = 9,
+    Invoices = 10,
+    Locations = 11,
+    Monitors = 12,
+    Operational = 13,
+    Parts = 14,
+    Procedures = 15,
+    PendingApprovals = 16,
+    ProcedureTypes = 17,
+    PurchaseOrders = 18,
+    Purchases = 19,
+    QuotesProducts = 20,
+    Reports = 21,
+    RoleModulePermission = 22,
+    RunnableProcedures = 23,
+    SupportTicket = 24,
+    Templates = 25,
+    TrainingCertifications = 26,
+    UserRoles = 27,
+    Users = 28,
+    WIPHistory = 29,
+    WIPMenu = 30,
+    WipStatus = 31,
+    Roles = 32,
+}
+
 export class CreateHelpPageRequest implements ICreateHelpPageRequest {
     title?: string | undefined;
     friendlyURL?: string | undefined;
@@ -5054,246 +5275,6 @@ export class AuditActionResultOfIEnumerableOfMenuItem extends AuditActionResult 
 
 export interface IAuditActionResultOfIEnumerableOfMenuItem extends IAuditActionResult {
     object?: MenuItem[] | undefined;
-}
-
-export class MenuItem implements IMenuItem {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-    menuGroup?: MenuGroup | undefined;
-    permissions?: number[] | undefined;
-    roles?: Role[] | undefined;
-    enumMenuItem?: EnumMenuItem;
-
-    constructor(data?: IMenuItem) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.url = _data["url"];
-            this.name = _data["name"];
-            this.info = _data["info"];
-            this.icon = _data["icon"];
-            this.orderNumber = _data["orderNumber"];
-            this.menuGroup = _data["menuGroup"] ? MenuGroup.fromJS(_data["menuGroup"]) : <any>undefined;
-            if (Array.isArray(_data["permissions"])) {
-                this.permissions = [] as any;
-                for (let item of _data["permissions"])
-                    this.permissions!.push(item);
-            }
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(Role.fromJS(item));
-            }
-            this.enumMenuItem = _data["enumMenuItem"];
-        }
-    }
-
-    static fromJS(data: any): MenuItem {
-        data = typeof data === 'object' ? data : {};
-        let result = new MenuItem();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["url"] = this.url;
-        data["name"] = this.name;
-        data["info"] = this.info;
-        data["icon"] = this.icon;
-        data["orderNumber"] = this.orderNumber;
-        data["menuGroup"] = this.menuGroup ? this.menuGroup.toJSON() : <any>undefined;
-        if (Array.isArray(this.permissions)) {
-            data["permissions"] = [];
-            for (let item of this.permissions)
-                data["permissions"].push(item);
-        }
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
-        data["enumMenuItem"] = this.enumMenuItem;
-        return data; 
-    }
-}
-
-export interface IMenuItem {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-    menuGroup?: MenuGroup | undefined;
-    permissions?: number[] | undefined;
-    roles?: Role[] | undefined;
-    enumMenuItem?: EnumMenuItem;
-}
-
-export class MenuGroup implements IMenuGroup {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-
-    constructor(data?: IMenuGroup) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.url = _data["url"];
-            this.name = _data["name"];
-            this.info = _data["info"];
-            this.icon = _data["icon"];
-            this.orderNumber = _data["orderNumber"];
-        }
-    }
-
-    static fromJS(data: any): MenuGroup {
-        data = typeof data === 'object' ? data : {};
-        let result = new MenuGroup();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["url"] = this.url;
-        data["name"] = this.name;
-        data["info"] = this.info;
-        data["icon"] = this.icon;
-        data["orderNumber"] = this.orderNumber;
-        return data; 
-    }
-}
-
-export interface IMenuGroup {
-    url?: string | undefined;
-    name?: string | undefined;
-    info?: string | undefined;
-    icon?: string | undefined;
-    orderNumber?: number;
-}
-
-export class Role implements IRole {
-    id?: number;
-    name?: string | undefined;
-    isCertificationRole?: boolean | undefined;
-    menus?: MenuItem[] | undefined;
-    permissions?: number[] | undefined;
-
-    constructor(data?: IRole) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.isCertificationRole = _data["isCertificationRole"];
-            if (Array.isArray(_data["menus"])) {
-                this.menus = [] as any;
-                for (let item of _data["menus"])
-                    this.menus!.push(MenuItem.fromJS(item));
-            }
-            if (Array.isArray(_data["permissions"])) {
-                this.permissions = [] as any;
-                for (let item of _data["permissions"])
-                    this.permissions!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): Role {
-        data = typeof data === 'object' ? data : {};
-        let result = new Role();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["isCertificationRole"] = this.isCertificationRole;
-        if (Array.isArray(this.menus)) {
-            data["menus"] = [];
-            for (let item of this.menus)
-                data["menus"].push(item.toJSON());
-        }
-        if (Array.isArray(this.permissions)) {
-            data["permissions"] = [];
-            for (let item of this.permissions)
-                data["permissions"].push(item);
-        }
-        return data; 
-    }
-}
-
-export interface IRole {
-    id?: number;
-    name?: string | undefined;
-    isCertificationRole?: boolean | undefined;
-    menus?: MenuItem[] | undefined;
-    permissions?: number[] | undefined;
-}
-
-export enum EnumMenuItem {
-    AdminCostSettings = 0,
-    ApprovalGroups = 1,
-    ApprovalStages = 2,
-    ApprovalWorkflows = 3,
-    CustomersDepartments = 4,
-    Documents = 5,
-    EquipmentMaintenance = 6,
-    Financial = 7,
-    FreeformQuote = 8,
-    HelpPages = 9,
-    Invoices = 10,
-    Locations = 11,
-    Monitors = 12,
-    Operational = 13,
-    Parts = 14,
-    Procedures = 15,
-    PendingApprovals = 16,
-    ProcedureTypes = 17,
-    PurchaseOrders = 18,
-    Purchases = 19,
-    QuotesProducts = 20,
-    Reports = 21,
-    RoleModulePermission = 22,
-    RunnableProcedures = 23,
-    SupportTicket = 24,
-    Templates = 25,
-    TrainingCertifications = 26,
-    UserRoles = 27,
-    Users = 28,
-    WIPHistory = 29,
-    WIPMenu = 30,
-    WipStatus = 31,
-    Roles = 32,
 }
 
 export class CreateMenuRoleMapRequest implements ICreateMenuRoleMapRequest {
