@@ -20,7 +20,8 @@ namespace MSR.Answer.API.V1.Profiles
 
             CreateMap<CreatePartRequest, CreatePart>()
                 .ForMember("SubParts", opts => opts.MapFrom("CreateSubParts"));
-            CreateMap<UpdatePartRequest, UpdatePart>();
+            CreateMap<UpdatePartRequest, UpdatePart>()
+                .ForMember("SubParts", opts => opts.MapFrom("CreateSubParts"));
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();

@@ -8,7 +8,7 @@ namespace MSR.Answer.API.V1.Models
     {
         public CreatePartRequest()
         {
-            CreateSubParts = new List<SubPartModel>();
+            CreateSubParts = null;
         }
 
         [Required]
