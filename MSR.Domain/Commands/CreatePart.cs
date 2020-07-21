@@ -16,5 +16,6 @@ namespace MSR.Domain.Commands
         public string NickName { get; set; }
         public int? MaximumCycles { get; set; }
         public ICollection<SubPartModel> SubParts { get; set; }
+        public string Comment { get; set; }
     }
 }

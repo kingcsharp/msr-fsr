@@ -67,7 +67,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.Parts.Add(part);
 
                 // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(part, part.Id);
+                await _unitOfWork.LogApprovalTransaction(part, part.Id, "Approved", command.Comment);
 
                 if (children.Count > 0) {
                     foreach (var child in children) {
@@ -127,7 +127,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.Parts.Update(part);
 
                 // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(part, part.Id);
+                await _unitOfWork.LogApprovalTransaction(part, part.Id, "Approved", command.Comment);
 
                 ret = _mapper.Map<PartModel>(part);
             }
