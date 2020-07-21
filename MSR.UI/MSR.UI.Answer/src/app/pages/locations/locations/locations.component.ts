@@ -30,11 +30,19 @@ export class LocationsComponent implements OnInit {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-      new ColumnsSaved({ id: 'title', label: 'Title', visible: true }),
-      new ColumnsSaved({ id: 'friendlyURL', label: 'Friendly URL', visible: true }),
-      new ColumnsSaved({ id: 'roles', label: 'Roles', visible: true }),
-      new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
+      new ColumnsSaved({ id: 'name', label: 'name', visible: true }),
+      new ColumnsSaved({ id: 'address1', label: 'address1', visible: true }),
+      new ColumnsSaved({ id: 'city', label: 'city', visible: true }),
+      new ColumnsSaved({ id: 'state', label: 'state', visible: true }),
+      new ColumnsSaved({ id: 'postalcode', label: 'postalcode', visible: true }),
+      new ColumnsSaved({ id: 'country', label: 'country', visible: true }),
+      new ColumnsSaved({ id: 'phone', label: 'phone', visible: true }),
+      new ColumnsSaved({ id: 'parentId', label: 'parentid', visible: true }),
+      new ColumnsSaved({ id: 'internaladdress', label: 'internaladdress', visible: true }),
+      new ColumnsSaved({ id: 'createdon', label: 'createdon', visible: true }),
+      new ColumnsSaved({ id: 'createdby', label: 'createdby', visible: true }),
+      new ColumnsSaved({ id: 'timezone', label: 'timezone', visible: false }),
+      new ColumnsSaved({ id: 'address2', label: 'address1', visible: false }),
     ];
 
     this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
@@ -53,7 +61,7 @@ export class LocationsComponent implements OnInit {
   getLocations(){
     this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
-      console.log(this.data);
+      //console.log(this.data);
     }));
   }
 

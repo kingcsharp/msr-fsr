@@ -7,6 +7,7 @@ import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { GridOptionsComponent } from '../../components/grid-options/grid-options.component';
 import { DialogModule } from 'primeng/dialog';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { FormsModule } from '@angular/forms';
 
 export const routes = [
   { path: '', redirectTo: 'locations', pathMatch: 'full' },
@@ -22,7 +23,8 @@ export const routes = [
     TableModule,
     NewWidgetModule,
     DialogModule,
-    MultiSelectModule
+    MultiSelectModule,
+    FormsModule
   ]
 })
 export class LocationsModule {
