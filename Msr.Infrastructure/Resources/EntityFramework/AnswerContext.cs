@@ -56,9 +56,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<PartSubPartMap> PartSubPartMap { get; set; }
 
-        public DbSet<RoleChildRoleMap> RoleChildRoleMap { get; set; }
-
-        public DbSet<RoleChildRoleMap> RoleChildRoleMap { get; set; }
 
         public AnswerContext() : base()
         {
