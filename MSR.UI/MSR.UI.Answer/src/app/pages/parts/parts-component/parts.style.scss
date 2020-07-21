@@ -16,7 +16,17 @@
 }
 
 .partTbl{
+    margin-bottom: 0;
+
     .ui-paginator .ui-dropdown {
         float: left;
     }
+
+    widget{
+        border-radius: 0;
+    }
+    .gridBtn{
+        margin-left: 5px;
+    }
+    
 }

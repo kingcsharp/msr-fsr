@@ -253,7 +253,7 @@
                 data-parsley-trigger="change" placeholder="Maximum Cycles" data-cy="maximumCycles-input">
             </div>
           </div>
-          <div>{{currPart.createSubParts | json}}</div>
+          <!-- <div>{{currPart.createSubParts | json}}</div> -->
           <div class="form-group row partTbl">
             <form>
               <widget>
@@ -275,13 +275,14 @@
                   <ng-template pTemplate="body" let-partmodel>
                     <tr class="ui-selectable-row">
                       <td>
-                        <p-dropdown [options]="allParts" [filter]="true" [virtualScroll]="true" appendTo="body" itemSize="30"></p-dropdown>
+                        <p-dropdown [options]="allParts" [filter]="true" [virtualScroll]="true" appendTo="body"
+                          itemSize="30"></p-dropdown>
                       </td>
+                      <!-- [(ngModel)]="partmodel.partId" -->
                       <td class="text-capitalize">
                         <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
                           data-parsley-trigger="change" data-parsley-min="0" data-parsley-required="true"
-                          class="form-control input-transparent" tooltip="Min 3 characters" placeholder="Name"
-                          data-cy="subpartqty-input">
+                          class="form-control input-transparent" placeholder="Qty" data-cy="subpartqty-input">
                       </td>
                       <td>
                         <i class="far fa-trash-alt pointer" tooltip="Remove Part" data-cy="removeSubPart"
@@ -297,14 +298,12 @@
                 </p-table>
               </widget>
             </form>
-           
-
-          </div>
-          <div class="form-group row">
-            <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
-              role="button" data-cy="save-button">
-              Add Sub Part
-            </button>
+            <div class="gridBtn">
+              <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="addpart-button">
+                Add Sub Part
+              </button>
+            </div>
           </div>
         </fieldset>
       </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel
+  PartService, PartModel, SubPartModel, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -66,7 +66,6 @@ export class PartsComponent implements OnInit {
   }
 
   getParts() {
-    // const ctrl = this;
     this.globals.showLoader(true);
     this.partsService.partGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
@@ -81,13 +80,9 @@ export class PartsComponent implements OnInit {
     const allPartsObjects = this.getAllPartsAndUsedIn();
     Object.keys(allPartsObjects).forEach(function (key) {
       var item = allPartsObjects[key];
-      var usedIn = '';
-      if (item.usedIn.length > 1) {
-        usedIn = item.usedIn.Join(',');
-      } else if (item.usedIn.length > 0) {
-        usedIn = item.usedIn[0];
-      }
-      ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}] Used In [${usedIn}]`, value: item.element.id });
+      var usedIn = item.usedIn.join(',');
+      var usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
+      ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
     });
   }
 
@@ -196,34 +191,46 @@ export class PartsComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      // let method: Observable<AuditActionResultOfWorkflowStageModel> = null;
-      // this.globals.showLoader(true);
 
-      // this.currWorkflowStage.groups = [];
-      // this.currWorkflowStage.groupsSaved.forEach(x => {
-      //   this.currWorkflowStage.groups
-      //     .push(new WorkflowGroupStageMapModel({ workflowGroupId: x, workflowStageId: this.currWorkflowStage.id }));
-      // });
+      let method: Observable<AuditActionResultOfPartModel> = null;
+      this.globals.showLoader(true);
 
-      // if (this.currWorkflowStage.id === undefined) {
-      //   const createWorkflow = new CreateWorkflowStageRequest({ name: this.currWorkflowStage.name, isActive: this.currWorkflowStage.isActive, workflowGroupStageMapModel: this.currWorkflowStage.groups });
-      //   method = this.workflowStageService.workflowStagePost(env.apiVersion, createWorkflow);
-      // } else {
-      //   const updateWorkflow = new UpdateWorkflowStageRequest({ id: this.currWorkflowStage.id, name: this.currWorkflowStage.name, isActive: this.currWorkflowStage.isActive, workflowGroupStageMapModel: this.currWorkflowStage.groups });
-      //   method = this.workflowStageService.workflowStagePatch(env.apiVersion, updateWorkflow);
-      // }
-      // this.globals.showLoader(true);
-      // method.pipe(take(1)).subscribe(responseHandler((resp) => {
-      //   if (!resp.hasErrors) {
-      //     if (ctrl.currWorkflowStage.id === undefined) {
-      //       ctrl.data.push(resp.object);
-      //     }
-      //     ctrl.clseDialog();
-      //   }
-      // }, () => {
-      //   // DO not update user
-      // }));
+      if (this.currPart.id === undefined) {
+        method = this.partsService.partPost(env.apiVersion, this.getCreatePartRequest(this.currPart));
+      } else {
+        method = this.partsService.partPatch(env.apiVersion, this.getUpdatePartRequest(this.currPart));
+      }
+      this.globals.showLoader(true);
+      method.pipe(take(1)).subscribe(responseHandler((resp) => {
+        if (!resp.hasErrors) {
+          if (ctrl.currPart.id === undefined) {
+            ctrl.data.push(resp.object);
+          }
+          ctrl.clseDialog();
+        }
+      }, () => {
+        // DO not update user
+      }));
     }
+  }
+
+  getCreatePartRequest(currentPart: PartModel): CreatePartRequest {
+    var ret = new CreatePartRequest({
+      name: currentPart.name,
+      partNumber: currentPart.partNumber,
+      createSubParts: currentPart.createSubParts,
+      maximumCycles: currentPart.maximumCycles,
+      nickName: currentPart.nickName,
+      oemPartNumber: currentPart.oemPartNumber
+    });
+    return ret;
+  }
+
+  getUpdatePartRequest(currentPart: PartModel): UpdatePartRequest {
+    var partUpdate: UpdatePartRequest = new UpdatePartRequest();
+    partUpdate.id = currentPart.id;
+    Object.assign(partUpdate, this.getCreatePartRequest(currentPart));
+    return partUpdate;
   }
 
 }
