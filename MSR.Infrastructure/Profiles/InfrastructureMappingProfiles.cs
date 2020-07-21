@@ -65,8 +65,17 @@ namespace MSR.Infrastructure.Profiles
 
             #region Part
             CreateMap<Part, Domain.Models.PartModel>()
+                .ForMember(dest => dest.CreateSubParts, opt => opt.MapFrom(src => src.Subparts))
                 .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
                 .ForMember(dest => dest.LastUpdatedByName, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
+
+
+            CreateMap<PartSubPartMap, Domain.Models.SubPartModel>()
+                .ForMember(dest => dest.ParentId, opt => opt.MapFrom(src => src.ParentPartId))
+                .ForMember(dest => dest.PartId, opt => opt.MapFrom(src => src.PartId))
+                .ForMember(dest => dest.Qty, opt => opt.MapFrom(src => src.Qty));
+
+
             CreateMap<CreatePart, PartApproval>();
             CreateMap<CreatePart, Part>().ForMember("Subparts", opts => opts.Ignore());
             CreateMap<Domain.Models.SubPartModel, PartSubPartMap>();

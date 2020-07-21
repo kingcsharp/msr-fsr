@@ -5484,35 +5484,17 @@ export interface ICreatePartRequest {
     createSubParts?: SubPartModel[] | undefined;
 }
 
-export class UpdatePartRequest implements IUpdatePartRequest {
+export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartRequest {
     id!: number;
-    name?: string | undefined;
-    partNumber?: string | undefined;
-    oemPartNumber?: string | undefined;
-    qty?: number;
-    nickName?: string | undefined;
-    parentId?: number | undefined;
-    maximumCycles?: number | undefined;
 
     constructor(data?: IUpdatePartRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
-            this.partNumber = _data["partNumber"];
-            this.oemPartNumber = _data["oemPartNumber"];
-            this.qty = _data["qty"];
-            this.nickName = _data["nickName"];
-            this.parentId = _data["parentId"];
-            this.maximumCycles = _data["maximumCycles"];
         }
     }
 
@@ -5526,26 +5508,13 @@ export class UpdatePartRequest implements IUpdatePartRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
-        data["partNumber"] = this.partNumber;
-        data["oemPartNumber"] = this.oemPartNumber;
-        data["qty"] = this.qty;
-        data["nickName"] = this.nickName;
-        data["parentId"] = this.parentId;
-        data["maximumCycles"] = this.maximumCycles;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IUpdatePartRequest {
+export interface IUpdatePartRequest extends ICreatePartRequest {
     id: number;
-    name?: string | undefined;
-    partNumber?: string | undefined;
-    oemPartNumber?: string | undefined;
-    qty?: number;
-    nickName?: string | undefined;
-    parentId?: number | undefined;
-    maximumCycles?: number | undefined;
 }
 
 export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedure {

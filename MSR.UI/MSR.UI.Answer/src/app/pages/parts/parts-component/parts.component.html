@@ -275,7 +275,7 @@
                   <ng-template pTemplate="body" let-partmodel>
                     <tr class="ui-selectable-row">
                       <td>
-                        <p-dropdown [options]="allParts" [virtualScroll]="true" appendTo="body" itemSize="30"></p-dropdown>
+                        <p-dropdown [options]="allParts" [filter]="true" [virtualScroll]="true" appendTo="body" itemSize="30"></p-dropdown>
                       </td>
                       <td class="text-capitalize">
                         <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
