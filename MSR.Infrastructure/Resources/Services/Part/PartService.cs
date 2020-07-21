@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -52,10 +53,28 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
+                List<PartSubPartMap> children = command.SubParts.Select(x =>
+                    _mapper.Map<PartSubPartMap>(x)
+                ).ToList();
+
                 Part part = _mapper.Map<Part>(command);
+                if (children.Count > 0) {
+                    part.IsKit = true;
+                }
                 _unitOfWork.Parts.Add(part);
+
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(part, part.Id);
+
+                if (children.Count > 0) {
+                    foreach (var child in children) {
+                        child.ParentPartId = part.Id;
+                        child.CreatedBy = part.CreatedBy;
+                        child.CreatedOn = part.CreatedOn;
+                        _unitOfWork.PartSubPartMaps.Add(child);
+                    }
+                    await _unitOfWork.SaveChangesAsync();
+                }
 
                 ret = _mapper.Map<PartModel>(part);
             }
