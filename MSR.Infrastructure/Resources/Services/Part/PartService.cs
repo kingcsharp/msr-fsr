@@ -142,5 +142,24 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return ret;
 
         }
+        public async Task<PartModel> DeletePartAsync(DeletePart command)
+        {
+            Part current = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            if (current is null)
+            {
+                throw new DomainException($"{nameof(Part)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanDelete))
+            {
+                _unitOfWork.Parts.Delete(false, current);
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(current, current.Id);
+            } else {
+                throw new DomainException($"Permission denied for DELETE on {nameof(Part)} ID: {command.Id}", DomainError.BadRequest);
+            }
+
+            var ret = _mapper.Map<PartModel>(current);
+            return ret;
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<PartModel>> GetPartsAsync(GetParts command);
         Task<PartModel> CreatePartAsync(CreatePart command);
         Task<PartModel> UpdatePartAsync(UpdatePart command);
+        Task<PartModel> DeletePartAsync(DeletePart command);
     }
 }
