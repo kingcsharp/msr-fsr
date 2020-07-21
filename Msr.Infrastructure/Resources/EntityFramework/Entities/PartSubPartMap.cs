@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(PartSubPartMap))]
-    public class PartSubPartMap:Entity
+    public partial class PartSubPartMap:Entity
     {
         public int ParentPartId { get; set; }
         [ForeignKey("ParentPartId")]
