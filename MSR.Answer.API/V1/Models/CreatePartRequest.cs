@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -13,5 +14,6 @@ namespace MSR.Answer.API.V1.Models
         public string NickName { get; set; }
         public int? ParentId { get; set; }
         public int? MaximumCycles { get; set; }
+        public List<File> Files { get; set; }
     }
 }

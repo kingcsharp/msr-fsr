@@ -11,7 +11,6 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services
