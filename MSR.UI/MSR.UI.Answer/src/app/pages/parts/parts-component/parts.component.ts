@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel
+  PartService, PartModel, SubPartModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -16,6 +16,7 @@ declare let jQuery: any;
 
 @Component({
   selector: 'app-parts',
+  styleUrls: ['./parts.style.scss'],
   templateUrl: './parts.component.html'
 })
 
@@ -49,8 +50,6 @@ export class PartsComponent implements OnInit {
     new ColumnsSaved({ id: 'partNumber', label: 'Part Number', visible: true }),
     new ColumnsSaved({ id: 'oemPartNumber', label: 'OEM Part Number', visible: true }),
     new ColumnsSaved({ id: 'isKit', label: 'Is Kit', visible: true }),
-    new ColumnsSaved({ id: 'qty', label: 'QTY', visible: true }),
-    new ColumnsSaved({ id: 'parentId', label: 'Parent Id', visible: true }),
     new ColumnsSaved({ id: 'maximumCycles', label: 'Maximun Cycles', visible: true }),
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
@@ -73,18 +72,45 @@ export class PartsComponent implements OnInit {
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object;
-        this.updatePartsDropdown();
       }));
   }
 
-  updatePartsDropdown() {
+  getPartsDropdown() {
     const ctrl = this;
-    this.data.forEach(element => {
-      var userIndex = ctrl.allParts.findIndex(z => z.value === element.id && element.isKit);
-      if (userIndex < 0) {
-        ctrl.allParts.push({ label:`${element.name} [${element.partNumber}] Used In`, value: element.id });
+    this.emptyArr(ctrl.allParts); 
+    const allPartsObjects = this.getAllPartsAndUsedIn();
+    Object.keys(allPartsObjects).forEach(function (key) {
+      var item = allPartsObjects[key];
+      var usedIn = item.usedIn.length>0?item.usedIn.Join(','):'';
+      ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}] Used In [${usedIn}]`, value: item.element.id });
+    });
+  }
+
+  getAllPartsAndUsedIn() {
+    var partsDictionary = {};
+    this.data.forEach((element: PartModel) => {
+      if (partsDictionary[element.id] === undefined) {
+        partsDictionary[element.id] = { element: element, usedIn: [] };
+        if (element.isKit) {
+          element.createSubParts.forEach((subpart: SubPartModel) => {
+            if (partsDictionary[subpart.parentId] === undefined) {
+              partsDictionary[subpart.parentId] = { element: undefined, usedIn: [element.partNumber] };
+            } else {
+              partsDictionary[subpart.parentId].usedIn.push(element.partNumber);
+            }
+          })
+        }
       }
     });
+    return partsDictionary;
+  }
+
+  getPartIdFromSubparts(subparts: SubPartModel[], partId: number) {
+    if (subparts === undefined) {
+      return -1;
+    }
+    const index = subparts.findIndex(x => x.parentId === partId)
+    return subparts[index].partId;
   }
 
   hasPrivilege(privName) {
@@ -92,8 +118,11 @@ export class PartsComponent implements OnInit {
   }
 
   showDialog(part: PartModel) {
-    this.display = true;
+    this.globals.showLoader(true);
+    this.getPartsDropdown();
     this.currPart = this.getPart(part);
+    this.globals.showLoader(false);
+    this.display = true;
   }
 
   clseDialog() {
@@ -101,16 +130,48 @@ export class PartsComponent implements OnInit {
     jQuery('.parsleyjs').parsley().reset();
   }
 
+  emptyArr(arr) {
+    while (arr.length > 0) {
+      arr.pop();
+    }
+  }
+
   getPart(part: PartModel) {
     if (part === undefined) {
       let ret = new PartModel();
       ret.isKit = false;
       ret.name = '';
+      ret.createSubParts = [];
       return ret;
     } else {
-      part.isKit = (part.isKit === null || part.isKit === undefined) ? false : part.isKit;
+      if (part.createSubParts === null || part.createSubParts === undefined) {
+        part.createSubParts = [];
+      }
+      part.isKit = part.createSubParts.length > 0;
       return part;
     }
+  }
+
+  addSubPart(part: PartModel) {
+    this.currPart.createSubParts.push(this.getSubPart());
+    part.isKit = part.createSubParts.length > 0;
+  }
+
+  removeSubPart(subpart: SubPartModel) {
+    var length = this.currPart.createSubParts.length;
+    while (length--) {
+      if (this.currPart.createSubParts[length] === subpart) {
+        this.currPart.createSubParts.splice(length, 1);
+        this.currPart.isKit = this.currPart.createSubParts.length > 0;
+        return;
+      }
+    }
+  }
+
+  getSubPart() {
+    let ret = new SubPartModel();
+    ret.qty = 0;
+    return ret;
   }
 
   removeRow(part) {

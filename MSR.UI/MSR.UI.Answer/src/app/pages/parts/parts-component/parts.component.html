@@ -61,21 +61,20 @@
               (click)="cg.filter(dt,'oemPartNumber')"></i>
           </div>
         </th>
-
         <th [hidden]="!cg.isVisibleCol('isKit',gridSettings)">
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isKitStatus" [filterId]="'isKit'"
             [defaultText]="'Select Is Kit'" [defaultTextTooltip]="''" [datatable]="dt">
           </multiselect-wrapper>
         </th>
-        <th [hidden]="!cg.isVisibleCol('qty',gridSettings)">
+        <!-- <th [hidden]="!cg.isVisibleCol('qty',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" tooltip="Search by QTY" data-cy="searchbypartnr-grid"
               (input)="dt.filter($event.target.value, 'qty', 'contains')" class="ui-column-filter"
               [value]="dt.filters['qty']?.value">
             <i *ngIf="dt.filters['qty']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'qty')"></i>
           </div>
-        </th>
-        <th [hidden]="!cg.isVisibleCol('parentId',gridSettings)">
+        </th> -->
+        <!-- <th [hidden]="!cg.isVisibleCol('parentId',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" tooltip="Search by ParentId" data-cy="searchbypartnr-grid"
               (input)="dt.filter($event.target.value, 'parentId', 'contains')" class="ui-column-filter"
@@ -83,7 +82,7 @@
             <i *ngIf="dt.filters['parentId']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'parentId')"></i>
           </div>
-        </th>
+        </th> -->
         <th [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" tooltip="Search by maximumCycles" data-cy="searchbypartnr-grid"
@@ -143,12 +142,9 @@
         <td [hidden]="!cg.isVisibleCol('isKit',gridSettings)">
           {{partmodel?.isKit?'Yes':'No' }}
         </td>
-        <td [hidden]="!cg.isVisibleCol('qty',gridSettings)">
+        <!-- <td [hidden]="!cg.isVisibleCol('qty',gridSettings)">
           {{partmodel.qty}}
-        </td>
-        <td [hidden]="!cg.isVisibleCol('parentId',gridSettings)">
-          {{partmodel.parentId }}
-        </td>
+        </td> -->
         <td [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
           {{partmodel.maximumCycles }}
         </td>
@@ -202,16 +198,16 @@
             <div class="col-md-4 ">
               <input type="text" id="name" name="name" [(ngModel)]="currPart.name" data-validate="parsley"
                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters"
-                placeholder="Name" data-cy="name-input">
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Name"
+                data-cy="name-input">
             </div>
             <label for="partNumber" class="col-md-2 col-form-label text-md-right">
               Part Number
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="partNumber" name="partNumber" [(ngModel)]="currPart.partNumber" data-validate="parsley"
-                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters"
+              <input type="text" id="partNumber" name="partNumber" [(ngModel)]="currPart.partNumber"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
                 placeholder="Part Number" data-cy="partNr-input">
             </div>
           </div>
@@ -220,19 +216,19 @@
               OEM Part Number
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="oEMPartNumber" name="oEMPartNumber" [(ngModel)]="currPart.oEMPartNumber" data-validate="parsley"
-                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters"
+              <input type="text" id="oEMPartNumber" name="oEMPartNumber" [(ngModel)]="currPart.oEMPartNumber"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
                 placeholder="OEM Part Number" data-cy="oEMPartNumber-input">
             </div>
-            <label for="qty" class="col-md-2 col-form-label text-md-right">
-              Qty
+            <label for="nickName" class="col-md-2 col-form-label text-md-right">
+              NickName
             </label>
             <div class="col-md-4 ">
-              <input type="number" id="qty" name="qty" [(ngModel)]="currPart.qty" data-validate="parsley"
-                data-parsley-trigger="change" data-parsley-min="0" data-parsley-required="true"
-                class="form-control input-transparent"
-                placeholder="Qty" data-cy="qty-input">
+              <input type="text" id="nickName" name="nickName" [(ngModel)]="currPart.nickName" data-validate="parsley"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="nickName"
+                data-cy="nickName-input">
             </div>
           </div>
           <div class="form-group row">
@@ -242,39 +238,73 @@
             <div class="col-md-4 ">
               <div class="display-inline-block isActive">
                 <label class="form-check-label" for="isKit" class="switch">
-                  <input class="form-check-input" [(ngModel)]="currPart.isKit" min="0" name="isKit"
-                    type="checkbox" class="ios" checked id="isKit" />
+                  <input class="form-check-input" [(ngModel)]="currPart.isKit" name="isKit" type="checkbox" class="ios"
+                    checked id="isKit" disabled="disabled" />
                   <i data-cy="isKit-checkbox"></i>
                 </label>
               </div>
             </div>
-            <label for="nickName" class="col-md-2 col-form-label text-md-right">
-              NickName
-            </label>
-            <div class="col-md-4 ">
-              <input type="text" id="nickName" name="nickName" [(ngModel)]="currPart.nickName" data-validate="parsley"
-                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters"
-                placeholder="nickName" data-cy="nickName-input">
-            </div>
-          </div>
-          <div class="form-group row">
             <label for="maximumCycles" class="col-md-2 col-form-label text-md-right">
               Maximum Cycles
             </label>
             <div class="col-md-4 ">
               <input type="number" id="maximumCycles" name="maximumCycles" [(ngModel)]="currPart.maximumCycles"
-                class="form-control input-transparent" data-parsley-min="0" data-validate="parsley" data-parsley-trigger="change"
-                placeholder="Maximum Cycles" data-cy="maximumCycles-input">
+                class="form-control input-transparent" data-parsley-min="0" data-validate="parsley"
+                data-parsley-trigger="change" placeholder="Maximum Cycles" data-cy="maximumCycles-input">
             </div>
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="parentId">
-              Parent
-            </label>
-            <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Parent Part" name="parentId" [options]="allParts" appendTo="body"
-                [(ngModel)]="currPart.parentId">
-              </p-dropdown>
-            </div>
+          </div>
+          <div>{{currPart.createSubParts | json}}</div>
+          <div class="form-group row partTbl">
+            <form>
+              <widget>
+                <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
+                  [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
+                  [loading]="loading" [paginator]="true"
+                  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th data-cy="subpart-header" class="aaa">
+                        Part
+                      </th>
+                      <th data-cy="subpart-header">
+                        Qty
+                      </th>
+                      <th></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-partmodel>
+                    <tr class="ui-selectable-row">
+                      <td>
+                        <p-dropdown [options]="allParts" [virtualScroll]="true" appendTo="body" itemSize="30"></p-dropdown>
+                      </td>
+                      <td class="text-capitalize">
+                        <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
+                          data-parsley-trigger="change" data-parsley-min="0" data-parsley-required="true"
+                          class="form-control input-transparent" tooltip="Min 3 characters" placeholder="Name"
+                          data-cy="subpartqty-input">
+                      </td>
+                      <td>
+                        <i class="far fa-trash-alt pointer" tooltip="Remove Part" data-cy="removeSubPart"
+                          (click)="removeSubPart(partmodel)"></i>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="8" style="text-align:left">No sub parts added.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </widget>
+            </form>
+           
+
+          </div>
+          <div class="form-group row">
+            <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
+              role="button" data-cy="save-button">
+              Add Sub Part
+            </button>
           </div>
         </fieldset>
       </div>

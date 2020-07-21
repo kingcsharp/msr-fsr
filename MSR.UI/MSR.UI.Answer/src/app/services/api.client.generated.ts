@@ -5270,13 +5270,12 @@ export class PartModel extends TrackableModel implements IPartModel {
     name?: string | undefined;
     partNumber?: string | undefined;
     oemPartNumber?: string | undefined;
-    qty?: number;
-    isKit?: boolean | undefined;
+    isKit?: boolean;
     nickName?: string | undefined;
-    parentId?: number | undefined;
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
+    createSubParts?: SubPartModel[] | undefined;
 
     constructor(data?: IPartModel) {
         super(data);
@@ -5288,13 +5287,16 @@ export class PartModel extends TrackableModel implements IPartModel {
             this.name = _data["name"];
             this.partNumber = _data["partNumber"];
             this.oemPartNumber = _data["oemPartNumber"];
-            this.qty = _data["qty"];
             this.isKit = _data["isKit"];
             this.nickName = _data["nickName"];
-            this.parentId = _data["parentId"];
             this.maximumCycles = _data["maximumCycles"];
             this.createdByName = _data["createdByName"];
             this.lastUpdatedByName = _data["lastUpdatedByName"];
+            if (Array.isArray(_data["createSubParts"])) {
+                this.createSubParts = [] as any;
+                for (let item of _data["createSubParts"])
+                    this.createSubParts!.push(SubPartModel.fromJS(item));
+            }
         }
     }
 
@@ -5310,13 +5312,16 @@ export class PartModel extends TrackableModel implements IPartModel {
         data["name"] = this.name;
         data["partNumber"] = this.partNumber;
         data["oemPartNumber"] = this.oemPartNumber;
-        data["qty"] = this.qty;
         data["isKit"] = this.isKit;
         data["nickName"] = this.nickName;
-        data["parentId"] = this.parentId;
         data["maximumCycles"] = this.maximumCycles;
         data["createdByName"] = this.createdByName;
         data["lastUpdatedByName"] = this.lastUpdatedByName;
+        if (Array.isArray(this.createSubParts)) {
+            data["createSubParts"] = [];
+            for (let item of this.createSubParts)
+                data["createSubParts"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
@@ -5326,13 +5331,60 @@ export interface IPartModel extends ITrackableModel {
     name?: string | undefined;
     partNumber?: string | undefined;
     oemPartNumber?: string | undefined;
-    qty?: number;
-    isKit?: boolean | undefined;
+    isKit?: boolean;
     nickName?: string | undefined;
-    parentId?: number | undefined;
     maximumCycles?: number | undefined;
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
+    createSubParts?: SubPartModel[] | undefined;
+}
+
+export class SubPartModel implements ISubPartModel {
+    id?: number | undefined;
+    parentId?: number;
+    partId?: number;
+    qty?: number;
+
+    constructor(data?: ISubPartModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.parentId = _data["parentId"];
+            this.partId = _data["partId"];
+            this.qty = _data["qty"];
+        }
+    }
+
+    static fromJS(data: any): SubPartModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubPartModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["parentId"] = this.parentId;
+        data["partId"] = this.partId;
+        data["qty"] = this.qty;
+        return data; 
+    }
+}
+
+export interface ISubPartModel {
+    id?: number | undefined;
+    parentId?: number;
+    partId?: number;
+    qty?: number;
 }
 
 export class AuditActionResultOfPartModel extends AuditActionResult implements IAuditActionResultOfPartModel {
@@ -5372,10 +5424,9 @@ export class CreatePartRequest implements ICreatePartRequest {
     name!: string;
     partNumber!: string;
     oemPartNumber?: string | undefined;
-    qty?: number;
     nickName?: string | undefined;
-    parentId?: number | undefined;
     maximumCycles?: number | undefined;
+    createSubParts?: SubPartModel[] | undefined;
 
     constructor(data?: ICreatePartRequest) {
         if (data) {
@@ -5391,10 +5442,13 @@ export class CreatePartRequest implements ICreatePartRequest {
             this.name = _data["name"];
             this.partNumber = _data["partNumber"];
             this.oemPartNumber = _data["oemPartNumber"];
-            this.qty = _data["qty"];
             this.nickName = _data["nickName"];
-            this.parentId = _data["parentId"];
             this.maximumCycles = _data["maximumCycles"];
+            if (Array.isArray(_data["createSubParts"])) {
+                this.createSubParts = [] as any;
+                for (let item of _data["createSubParts"])
+                    this.createSubParts!.push(SubPartModel.fromJS(item));
+            }
         }
     }
 
@@ -5410,10 +5464,13 @@ export class CreatePartRequest implements ICreatePartRequest {
         data["name"] = this.name;
         data["partNumber"] = this.partNumber;
         data["oemPartNumber"] = this.oemPartNumber;
-        data["qty"] = this.qty;
         data["nickName"] = this.nickName;
-        data["parentId"] = this.parentId;
         data["maximumCycles"] = this.maximumCycles;
+        if (Array.isArray(this.createSubParts)) {
+            data["createSubParts"] = [];
+            for (let item of this.createSubParts)
+                data["createSubParts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -5422,10 +5479,9 @@ export interface ICreatePartRequest {
     name: string;
     partNumber: string;
     oemPartNumber?: string | undefined;
-    qty?: number;
     nickName?: string | undefined;
-    parentId?: number | undefined;
     maximumCycles?: number | undefined;
+    createSubParts?: SubPartModel[] | undefined;
 }
 
 export class UpdatePartRequest implements IUpdatePartRequest {

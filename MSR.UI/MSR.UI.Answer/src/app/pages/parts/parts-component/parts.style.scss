@@ -1,0 +1,22 @@
+.partTbl th {
+    &:first-child {
+        width: 40em;
+        text-align: left;
+    }
+}
+
+.partTbl td {
+    &:first-child {
+        width: 40em;
+        text-align: center;
+    }
+    .ui-dropdown-label-container{
+        width: 100%;
+    }
+}
+
+.partTbl{
+    .ui-paginator .ui-dropdown {
+        float: left;
+    }
+}
