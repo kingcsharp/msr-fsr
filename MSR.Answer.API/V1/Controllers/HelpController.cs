@@ -28,9 +28,9 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, HasPrivilegeApi("HelpPages",EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> GetHelpPages([FromQuery] GetHelpPageRequest request)
+        [HttpGet("{id?}"), HasPrivilegeApi("HelpPages",EnumPrivilege.CanRead)]
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<HelpPage>>))]
+        public async Task<IActionResult> GetHelpPages([FromRoute] GetHelpPageRequest request)
         {
             var command = request.ToGetHelpPageCommand();
             var ret = await _dispatcher.DispatchAsync(command);
@@ -38,21 +38,21 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, HasPrivilegeApi("HelpPages", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<HelpPage>))]
         public async Task<IActionResult> CreateHelpPage([FromBody, Required]CreateHelpPageRequest request)
         {
             var command = request.ToCreateHelpPageCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse<HelpPage>();
         }
 
         [HttpPost("Role"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<HelpPage>))]
         public async Task<IActionResult> CreateHelpPageRole([FromBody, Required]CreateHelpPageRoleRequest request)
         {
             var command = request.ToCreateHelpPageRoleCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse<HelpPage>();
         }
 
         [HttpPatch, HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]

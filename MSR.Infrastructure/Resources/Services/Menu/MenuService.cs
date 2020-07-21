@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,14 +24,14 @@ namespace MSR.Infrastructure.Resources.Services.Menu
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<MenuItem>> GetMenuAsync(GetMenu command)
+        public async Task<IEnumerable<Domain.Models.MenuItem>> GetMenuAsync(GetMenu command)
         {
             var menuItems = _unitOfWork.MenuItems.Query().Include(i => i.Roles).ThenInclude(i => i.MenuRolePermission);
-            var retMenuItems = new List<MenuItem>();
+            var retMenuItems = new List<Domain.Models.MenuItem>();
 
             foreach (var efMenuItem in menuItems)
             {
-                var domainMenuItem = new MenuItem()
+                var domainMenuItem = new Domain.Models.MenuItem()
                 {
                     Icon = efMenuItem.Icon,
                     Info = efMenuItem.Info,
@@ -41,7 +43,7 @@ namespace MSR.Infrastructure.Resources.Services.Menu
 
                 if (efMenuItem.MenuGroup != null)
                 {
-                    domainMenuItem.MenuGroup = new MenuGroup()
+                    domainMenuItem.MenuGroup = new Domain.Models.MenuGroup()
                     {
                         Icon = efMenuItem.MenuGroup.Icon,
                         Info = efMenuItem.MenuGroup.Info,
@@ -65,38 +67,84 @@ namespace MSR.Infrastructure.Resources.Services.Menu
                     var listEnumPrivilege = new List<int>();
                     if (menuRole.MenuRolePermission != null)
                     {
-                        if (menuRole.MenuRolePermission.CanActivate)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanActivate);
-                        }
-                        if (menuRole.MenuRolePermission.CanApprove)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanApprove);
-                        }
-                        if (menuRole.MenuRolePermission.CanCreate)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanCreate);
-                        }
-                        if (menuRole.MenuRolePermission.CanDelete)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanDelete);
-                        }
-                        if (menuRole.MenuRolePermission.CanEdit)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanEdit);
-                        }
-                        if (menuRole.MenuRolePermission.CanRead)
-                        {
-                            listEnumPrivilege.Add((int)EnumPrivilege.CanRead);
-                        }
+                        domainRole.Permissions = _mapper.Map<Permission>(menuRole.MenuRolePermission);
                     }
-                    domainRole.Permissions = listEnumPrivilege.ToArray();
+
+                    var childRoles = role.ChildRoles.SelectMany(i => i.ChildRole.Menus).Select(i => i.MenuRolePermission);
+
+                    domainRole.InheritedPermissions = new Permission
+                    {
+                        CanActivate = childRoles.Any(i => i.CanActivate),
+                        CanApprove = childRoles.Any(i => i.CanApprove),
+                        CanCreate = childRoles.Any(i => i.CanCreate),
+                        CanDelete = childRoles.Any(i => i.CanDelete),
+                        CanEdit = childRoles.Any(i => i.CanEdit),
+                        CanRead = childRoles.Any(i => i.CanRead)
+                    };
                     domainMenuItem.Roles.Add(domainRole);
                 }
                 retMenuItems.Add(domainMenuItem);
             }
 
             return retMenuItems;
+        }
+
+        public async Task<bool> RemoveMenuRoleMap(int id)
+        {
+            var roleMenuPermission = await _unitOfWork.MenuRolePermissions.FirstOrDefaultAsync(false, i => i.MenuRole.Id == id);
+
+            if (roleMenuPermission != null)
+            {
+                _unitOfWork.MenuRolePermissions.Delete(false, roleMenuPermission.Id);
+            }
+
+            _unitOfWork.MenuRoles.Delete(false, id);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateMenuRoleMapAsync(UpdateMenuRoleMap command)
+        {
+            var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false, i => i.Id == command.MenuRoleId);
+
+            if (roleMenu == null) { throw new DomainException("MenuRole does not exist", DomainError.BadRequest); }
+
+            var menuRolePermission = _mapper.Map<MenuRolePermission>(command);
+
+            menuRolePermission.MenuRole = roleMenu;
+            menuRolePermission.MenuRoleId = roleMenu.Id;
+
+            await _unitOfWork.MenuRolePermissions.AddAsync(menuRolePermission);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<int> CreateMenuRoleMapAsync(CreateMenuRoleMap command)
+        {
+            var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false, i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId);
+
+            if (roleMenu != null) return roleMenu.Id;
+
+            var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.RoleId, null);
+            var menu = await _unitOfWork.MenuItems.FirstOrDefaultAsync(false, i => i.Id == command.MenuId, null);
+
+            if (role is null || menu is null)
+            {
+                throw new DomainException("Role or Menu not found", DomainError.BadRequest);
+            }
+
+            var menuRole = new MenuRole()
+            {
+                MenuItem = menu,
+                Role = role
+            };
+
+            await _unitOfWork.MenuRoles.AddAsync(menuRole);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return menuRole.Id;
         }
     }
 }

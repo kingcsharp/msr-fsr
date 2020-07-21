@@ -8,5 +8,8 @@ namespace MSR.Domain.Abstractions.Services
     public interface IMenuService
     {
         Task<IEnumerable<MenuItem>> GetMenuAsync(GetMenu command);
+        Task<int> CreateMenuRoleMapAsync(CreateMenuRoleMap command);
+        Task<bool> UpdateMenuRoleMapAsync(UpdateMenuRoleMap command);
+        Task<bool> RemoveMenuRoleMap(int id);
     }
 }

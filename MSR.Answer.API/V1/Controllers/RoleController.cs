@@ -30,9 +30,5 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(new GetRoles());
             return ret.ToOkObjectResponse<ICollection<Role>>();
         }
-
-
-        
-
     }
 }
