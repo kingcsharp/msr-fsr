@@ -61,7 +61,7 @@ export class LocationsComponent implements OnInit {
   getLocations(){
     this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
-      //console.log(this.data);
+      console.log(this.data);
     }));
   }
 
