@@ -3,7 +3,8 @@
     /*
      * Enum generated from:
      * SELECT TOP 100 [Id],REPLACE(REPLACE([Name], ' ', ''),'/','') FROM [Answer3_Dev].[dbo].[MenuItem] order by Name
-     * 
+     * This ENUM is also in the ui in the file privileges.ts and it a copy of this one
+     * If you DO A CHANGE HERE COPY PASTE THE CLASS TO THE Ui
      */
     public enum EnumMenuItem
     {

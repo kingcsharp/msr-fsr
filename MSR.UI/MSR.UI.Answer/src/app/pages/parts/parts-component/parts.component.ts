@@ -43,7 +43,7 @@ export class PartsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currPart = new PartModel();
+    this.currPart = this.getPart(undefined);
     this.gridStorageId = 'partsGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
@@ -118,10 +118,8 @@ export class PartsComponent implements OnInit {
   }
 
   showDialog(part: PartModel) {
-    this.globals.showLoader(true);
     this.getPartsDropdown();
     this.currPart = this.getPart(part);
-    this.globals.showLoader(false);
     this.display = true;
   }
 
@@ -144,11 +142,13 @@ export class PartsComponent implements OnInit {
       ret.createSubParts = [];
       return ret;
     } else {
-      if (part.createSubParts === null || part.createSubParts === undefined) {
-        part.createSubParts = [];
+      let copyPart: PartModel = new PartModel();
+      Object.assign(copyPart, part)
+      if (copyPart.createSubParts === null || copyPart.createSubParts === undefined) {
+        copyPart.createSubParts = [];
       }
-      part.isKit = part.createSubParts.length > 0;
-      return part;
+      copyPart.isKit = copyPart.createSubParts.length > 0;
+      return copyPart;
     }
   }
 

@@ -54,14 +54,16 @@ namespace MSR.Infrastructure.Resources.Services.Role
             if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 List<PartSubPartMap> children = new List<PartSubPartMap>();
-                if (command.SubParts != null) {
+                if (command.SubParts != null)
+                {
                     children = command.SubParts.Select(x =>
                         _mapper.Map<PartSubPartMap>(x)
                     ).ToList();
                 }
 
                 Part part = _mapper.Map<Part>(command);
-                if (children.Count > 0) {
+                if (children.Count > 0)
+                {
                     part.IsKit = true;
                 }
                 _unitOfWork.Parts.Add(part);
@@ -69,8 +71,10 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.LogApprovalTransaction(part, part.Id, "Approved", command.Comment);
 
-                if (children.Count > 0) {
-                    foreach (var child in children) {
+                if (children.Count > 0)
+                {
+                    foreach (var child in children)
+                    {
                         child.ParentPartId = part.Id;
                         _unitOfWork.PartSubPartMaps.Add(child);
                     }
@@ -92,7 +96,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> UpdatePartAsync(UpdatePart command)
         {
-            Part current = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+                .FirstOrDefaultAsync();
 
             if (current is null)
             {
@@ -104,32 +109,35 @@ namespace MSR.Infrastructure.Resources.Services.Role
             if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 List<PartSubPartMap> children = null;
-                if (command.SubParts != null) {
+                if (command.SubParts != null)
+                {
                     children = command.SubParts.Select(x =>
                         _mapper.Map<PartSubPartMap>(x)
                     ).ToList();
                 }
-                var part = _mapper.Map(command, current);
 
-                if (children != null) {
-                    // remove all children, and add new list
-                    foreach (var child in current.Subparts) {
-                        _unitOfWork.PartSubPartMaps.Delete(false, child);
-                    }
-                    part.Subparts.Clear();
-                    foreach (var child in children) {
-                        child.ParentPartId = part.Id;
-                        part.Subparts.Add(child);
-                        _unitOfWork.PartSubPartMaps.Add(child);
-                    }
+                foreach (var child in current.Subparts)
+                {
+                    _unitOfWork.PartSubPartMaps.Delete(false, child, true);
                 }
 
-                _unitOfWork.Parts.Update(part);
+                await _unitOfWork.SaveChangesAsync();
+                current.Subparts.Clear();
 
+                _mapper.Map(command, current);
+
+                if (children != null)
+                {
+                    foreach (var child in children)
+                    {
+                        child.ParentPartId = current.Id;
+                        _unitOfWork.PartSubPartMaps.AttachAndInsert(child);
+                    }
+                }
+                _unitOfWork.Parts.Update(current);
                 // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(part, part.Id, "Approved", command.Comment);
-
-                ret = _mapper.Map<PartModel>(part);
+                await _unitOfWork.LogApprovalTransaction(current, current.Id, "Approved", command.Comment);
+                ret = _mapper.Map<PartModel>(current);
             }
             else
             {
@@ -154,7 +162,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.Parts.Delete(false, current);
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id);
-            } else {
+            }
+            else
+            {
                 throw new DomainException($"Permission denied for DELETE on {nameof(Part)} ID: {command.Id}", DomainError.BadRequest);
             }
 
