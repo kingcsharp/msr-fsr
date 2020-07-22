@@ -7,6 +7,7 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IFileService
     {
-        public Task<bool> CreateFileAsync<T>(T entity, int entityId) where T: class;
+        Task<bool> CreateFileAsync<T>(T entity, int entityId, string fileContent, string fileContentType, string fileName, string fileLocation) where T : class;
+        Task<bool> CreateDocumentAsync<T>(T entity, int entityId, string fileContent, string fileContentType, string fileName, string fileLocation) where T : class;
     }
 }

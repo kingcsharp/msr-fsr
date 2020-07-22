@@ -55,6 +55,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Procedure> Procedure { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
+        public DbSet<File> File { get; set; }
 
         public AnswerContext() : base()
         {

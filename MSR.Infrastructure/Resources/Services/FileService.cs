@@ -3,9 +3,8 @@ using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services
@@ -20,11 +19,22 @@ namespace MSR.Infrastructure.Resources.Services
             _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
         }
 
+        public Task<bool> CreateDocumentAsync<T>(T entity, int entityId, string fileContent, string fileContentType, string fileName, string fileLocation) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<bool> CreateFileAsync<T>(T entity, int entityId, string fileContent, string fileContentType, string fileName, string fileLocation) where T : class
         {
-            var s3File = await _fileUploader.UploadFile(fileContent, fileContentType, fileName, fileLocation);
+            await _fileUploader.UploadFile(fileContent, fileContentType, fileName, fileLocation);
 
+            var tableName = entity.GetType().Name.Replace("Model", "");
 
+            var file = new File()
+            {
+                 ContentType = fileContentType,
+                  FileURL = 
+            }
         }
     }
 }

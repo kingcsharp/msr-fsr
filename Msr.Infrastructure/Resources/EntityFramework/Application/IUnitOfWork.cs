@@ -56,6 +56,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Document> Documents { get; }
         IRepository<Product> Products { get; }
         IRepository<PurchaseOrder> PurchaseOrders { get; }
+        IRepository<File> Files { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();
