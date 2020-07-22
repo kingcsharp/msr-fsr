@@ -65,4 +65,6 @@ export class LocationsComponent implements OnInit {
     }));
   }
 
+  
+
 }
