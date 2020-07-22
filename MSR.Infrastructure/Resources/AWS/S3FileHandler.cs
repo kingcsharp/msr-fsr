@@ -31,14 +31,15 @@ namespace MSR.Infrastructure.Resources.AWS
             return response.ResponseStream;
         }
 
-        public async Task<string> UploadFile(Domain.Models.File file)
+        public async Task<string> UploadFile(Domain.Models.File file, string entityName, int entityId)
         {
+            string uniqueName = $"{entityName}-{entityId}-{file.Name}";
             var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
             {
                 ContentBody = file.Base64String,
                 ContentType = file.ContentType,
                 BucketName = _s3Information.FileBucketName,
-                Key = file.Name
+                Key = uniqueName
             });
 
             if((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
@@ -46,7 +47,7 @@ namespace MSR.Infrastructure.Resources.AWS
                 throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
             }
 
-            return $"{_s3Information.AWSURL}{file.Name}";
+            return $"{_s3Information.AWSURL}{uniqueName}";
         }
     }
 }
