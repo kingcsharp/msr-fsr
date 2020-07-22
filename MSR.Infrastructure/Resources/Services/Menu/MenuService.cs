@@ -33,6 +33,7 @@ namespace MSR.Infrastructure.Resources.Services.Menu
             {
                 var domainMenuItem = new Domain.Models.MenuItem()
                 {
+                    Id = efMenuItem.Id
                     Icon = efMenuItem.Icon,
                     Info = efMenuItem.Info,
                     Name = efMenuItem.Name,
