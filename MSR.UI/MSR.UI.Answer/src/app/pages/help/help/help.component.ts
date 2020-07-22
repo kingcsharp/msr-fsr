@@ -3,7 +3,6 @@ import { HelpService, RoleService, Role } from '../../../services/api.client.gen
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { RoleModule } from '../../main/roleassignments/roleassignments.component';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';

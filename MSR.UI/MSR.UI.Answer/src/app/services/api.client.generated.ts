@@ -245,7 +245,7 @@ export class CustomerService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, version: string): Observable<AuditActionResult> {
+    customerGet(id: number | null | undefined, name: string | null | undefined, address: string | null | undefined, phone: string | null | undefined, primaryContactUserId: number | null | undefined, secondaryContactUserId: number | null | undefined, locationId: number | null | undefined, isActive: boolean | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfCustomer> {
         let url_ = this.baseUrl + "/v{version}/Customer?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -283,14 +283,14 @@ export class CustomerService {
                 try {
                     return this.processCustomerGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfCustomer>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfCustomer>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCustomerGet(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processCustomerGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfCustomer> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -301,7 +301,7 @@ export class CustomerService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfIEnumerableOfCustomer.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -309,10 +309,10 @@ export class CustomerService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfCustomer>(<any>null);
     }
 
-    customerPost(version: string, request: CreateCustomerRequest): Observable<AuditActionResult> {
+    customerPost(version: string, request: CreateCustomerRequest): Observable<AuditActionResultOfCustomer> {
         let url_ = this.baseUrl + "/v{version}/Customer";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -338,14 +338,14 @@ export class CustomerService {
                 try {
                     return this.processCustomerPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfCustomer>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfCustomer>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCustomerPost(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processCustomerPost(response: HttpResponseBase): Observable<AuditActionResultOfCustomer> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -356,7 +356,7 @@ export class CustomerService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfCustomer.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -364,7 +364,7 @@ export class CustomerService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfCustomer>(<any>null);
     }
 
     customerPatch(version: string, request: UpdateCustomerRequest): Observable<AuditActionResult> {
@@ -488,7 +488,7 @@ export class HelpService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    helpGet(id: number | null | undefined, version: string): Observable<AuditActionResult> {
+    helpGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
         let url_ = this.baseUrl + "/v{version}/Help?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -512,14 +512,14 @@ export class HelpService {
                 try {
                     return this.processHelpGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfHelpPage>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfHelpPage>><any>_observableThrow(response_);
         }));
     }
 
-    protected processHelpGet(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processHelpGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -530,7 +530,7 @@ export class HelpService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfIEnumerableOfHelpPage.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -538,7 +538,7 @@ export class HelpService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfHelpPage>(<any>null);
     }
 
     helpPost(version: string, request: CreateHelpPageRequest): Observable<AuditActionResultOfHelpPage> {
@@ -4201,167 +4201,51 @@ export interface IResetPasswordRequest {
     newPassword: string;
 }
 
-export class CreateCustomerRequest implements ICreateCustomerRequest {
-    name?: string | undefined;
-    address?: string | undefined;
-    phone?: string | undefined;
-    locationId?: number | undefined;
-    primaryContactUserId?: number | undefined;
-    secondaryContactUserId?: number | undefined;
+export class AuditActionResultOfIEnumerableOfCustomer extends AuditActionResult implements IAuditActionResultOfIEnumerableOfCustomer {
+    object?: Customer[] | undefined;
 
-    constructor(data?: ICreateCustomerRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.address = _data["address"];
-            this.phone = _data["phone"];
-            this.locationId = _data["locationId"];
-            this.primaryContactUserId = _data["primaryContactUserId"];
-            this.secondaryContactUserId = _data["secondaryContactUserId"];
-        }
-    }
-
-    static fromJS(data: any): CreateCustomerRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateCustomerRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["address"] = this.address;
-        data["phone"] = this.phone;
-        data["locationId"] = this.locationId;
-        data["primaryContactUserId"] = this.primaryContactUserId;
-        data["secondaryContactUserId"] = this.secondaryContactUserId;
-        return data; 
-    }
-}
-
-export interface ICreateCustomerRequest {
-    name?: string | undefined;
-    address?: string | undefined;
-    phone?: string | undefined;
-    locationId?: number | undefined;
-    primaryContactUserId?: number | undefined;
-    secondaryContactUserId?: number | undefined;
-}
-
-export class UpdateCustomerRequest implements IUpdateCustomerRequest {
-    name?: string | undefined;
-    address?: string | undefined;
-    phone?: string | undefined;
-    locationId?: number | undefined;
-    primaryContactUserId?: number | undefined;
-    secondaryContactUserId?: number | undefined;
-    customerId!: number;
-    isActive?: boolean | undefined;
-
-    constructor(data?: IUpdateCustomerRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.address = _data["address"];
-            this.phone = _data["phone"];
-            this.locationId = _data["locationId"];
-            this.primaryContactUserId = _data["primaryContactUserId"];
-            this.secondaryContactUserId = _data["secondaryContactUserId"];
-            this.customerId = _data["customerId"];
-            this.isActive = _data["isActive"];
-        }
-    }
-
-    static fromJS(data: any): UpdateCustomerRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateCustomerRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["address"] = this.address;
-        data["phone"] = this.phone;
-        data["locationId"] = this.locationId;
-        data["primaryContactUserId"] = this.primaryContactUserId;
-        data["secondaryContactUserId"] = this.secondaryContactUserId;
-        data["customerId"] = this.customerId;
-        data["isActive"] = this.isActive;
-        return data; 
-    }
-}
-
-export interface IUpdateCustomerRequest {
-    name?: string | undefined;
-    address?: string | undefined;
-    phone?: string | undefined;
-    locationId?: number | undefined;
-    primaryContactUserId?: number | undefined;
-    secondaryContactUserId?: number | undefined;
-    customerId: number;
-    isActive?: boolean | undefined;
-}
-
-export class AuditActionResultOfHelpPage extends AuditActionResult implements IAuditActionResultOfHelpPage {
-    object?: HelpPage | undefined;
-
-    constructor(data?: IAuditActionResultOfHelpPage) {
+    constructor(data?: IAuditActionResultOfIEnumerableOfCustomer) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? HelpPage.fromJS(_data["object"]) : <any>undefined;
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(Customer.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfHelpPage {
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfCustomer {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfHelpPage();
+        let result = new AuditActionResultOfIEnumerableOfCustomer();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface IAuditActionResultOfHelpPage extends IAuditActionResult {
-    object?: HelpPage | undefined;
+export interface IAuditActionResultOfIEnumerableOfCustomer extends IAuditActionResult {
+    object?: Customer[] | undefined;
 }
 
-export class HelpPage implements IHelpPage {
+export abstract class EntityModel implements IEntityModel {
     id?: number;
-    title?: string | undefined;
-    friendlyURL?: string | undefined;
-    content?: string | undefined;
-    roles?: Role[] | undefined;
 
-    constructor(data?: IHelpPage) {
+    constructor(data?: IEntityModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4373,9 +4257,199 @@ export class HelpPage implements IHelpPage {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): EntityModel {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'EntityModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IEntityModel {
+    id?: number;
+}
+
+export abstract class TrackableModel extends EntityModel implements ITrackableModel {
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+
+    constructor(data?: ITrackableModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+        }
+    }
+
+    static fromJS(data: any): TrackableModel {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'TrackableModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ITrackableModel extends IEntityModel {
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+}
+
+export class Customer extends TrackableModel implements ICustomer {
+    oldId?: number;
+    name?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    primaryContactUser?: User | undefined;
+    secondaryContactUser?: User | undefined;
+    location?: LocationModel | undefined;
+    status?: string | undefined;
+    isActive?: boolean;
+    customerNumber?: string | undefined;
+
+    constructor(data?: ICustomer) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.oldId = _data["oldId"];
+            this.name = _data["name"];
+            this.address = _data["address"];
+            this.phone = _data["phone"];
+            this.primaryContactUser = _data["primaryContactUser"] ? User.fromJS(_data["primaryContactUser"]) : <any>undefined;
+            this.secondaryContactUser = _data["secondaryContactUser"] ? User.fromJS(_data["secondaryContactUser"]) : <any>undefined;
+            this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
+            this.status = _data["status"];
+            this.isActive = _data["isActive"];
+            this.customerNumber = _data["customerNumber"];
+        }
+    }
+
+    static fromJS(data: any): Customer {
+        data = typeof data === 'object' ? data : {};
+        let result = new Customer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["oldId"] = this.oldId;
+        data["name"] = this.name;
+        data["address"] = this.address;
+        data["phone"] = this.phone;
+        data["primaryContactUser"] = this.primaryContactUser ? this.primaryContactUser.toJSON() : <any>undefined;
+        data["secondaryContactUser"] = this.secondaryContactUser ? this.secondaryContactUser.toJSON() : <any>undefined;
+        data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        data["status"] = this.status;
+        data["isActive"] = this.isActive;
+        data["customerNumber"] = this.customerNumber;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ICustomer extends ITrackableModel {
+    oldId?: number;
+    name?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    primaryContactUser?: User | undefined;
+    secondaryContactUser?: User | undefined;
+    location?: LocationModel | undefined;
+    status?: string | undefined;
+    isActive?: boolean;
+    customerNumber?: string | undefined;
+}
+
+export class User implements IUser {
+    id?: number;
+    isActive?: boolean;
+    userRoleId?: string | undefined;
+    userName?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    title?: string | undefined;
+    email?: string | undefined;
+    securityStamp?: string | undefined;
+    phone?: string | undefined;
+    supervisorId?: number | undefined;
+    supervisorName?: string | undefined;
+    locationId?: number;
+    locationName?: string | undefined;
+    isAnswerUser?: boolean;
+    customerId?: number;
+    lockoutEndDateUtc?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    timeZoneId?: number;
+    lastUpdatedOn?: Date;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
+    roles?: Role[] | undefined;
+
+    constructor(data?: IUser) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isActive = _data["isActive"];
+            this.userRoleId = _data["userRoleId"];
+            this.userName = _data["userName"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
             this.title = _data["title"];
-            this.friendlyURL = _data["friendlyURL"];
-            this.content = _data["content"];
+            this.email = _data["email"];
+            this.securityStamp = _data["securityStamp"];
+            this.phone = _data["phone"];
+            this.supervisorId = _data["supervisorId"];
+            this.supervisorName = _data["supervisorName"];
+            this.locationId = _data["locationId"];
+            this.locationName = _data["locationName"];
+            this.isAnswerUser = _data["isAnswerUser"];
+            this.customerId = _data["customerId"];
+            this.lockoutEndDateUtc = _data["lockoutEndDateUtc"] ? new Date(_data["lockoutEndDateUtc"].toString()) : <any>undefined;
+            this.lockoutEnabled = _data["lockoutEnabled"];
+            this.accessFailedCount = _data["accessFailedCount"];
+            this.timeZoneId = _data["timeZoneId"];
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
+            this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
@@ -4384,9 +4458,9 @@ export class HelpPage implements IHelpPage {
         }
     }
 
-    static fromJS(data: any): HelpPage {
+    static fromJS(data: any): User {
         data = typeof data === 'object' ? data : {};
-        let result = new HelpPage();
+        let result = new User();
         result.init(data);
         return result;
     }
@@ -4394,9 +4468,29 @@ export class HelpPage implements IHelpPage {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["isActive"] = this.isActive;
+        data["userRoleId"] = this.userRoleId;
+        data["userName"] = this.userName;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
         data["title"] = this.title;
-        data["friendlyURL"] = this.friendlyURL;
-        data["content"] = this.content;
+        data["email"] = this.email;
+        data["securityStamp"] = this.securityStamp;
+        data["phone"] = this.phone;
+        data["supervisorId"] = this.supervisorId;
+        data["supervisorName"] = this.supervisorName;
+        data["locationId"] = this.locationId;
+        data["locationName"] = this.locationName;
+        data["isAnswerUser"] = this.isAnswerUser;
+        data["customerId"] = this.customerId;
+        data["lockoutEndDateUtc"] = this.lockoutEndDateUtc ? this.lockoutEndDateUtc.toISOString() : <any>undefined;
+        data["lockoutEnabled"] = this.lockoutEnabled;
+        data["accessFailedCount"] = this.accessFailedCount;
+        data["timeZoneId"] = this.timeZoneId;
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
+        data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
@@ -4406,11 +4500,31 @@ export class HelpPage implements IHelpPage {
     }
 }
 
-export interface IHelpPage {
+export interface IUser {
     id?: number;
+    isActive?: boolean;
+    userRoleId?: string | undefined;
+    userName?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
     title?: string | undefined;
-    friendlyURL?: string | undefined;
-    content?: string | undefined;
+    email?: string | undefined;
+    securityStamp?: string | undefined;
+    phone?: string | undefined;
+    supervisorId?: number | undefined;
+    supervisorName?: string | undefined;
+    locationId?: number;
+    locationName?: string | undefined;
+    isAnswerUser?: boolean;
+    customerId?: number;
+    lockoutEndDateUtc?: Date | undefined;
+    lockoutEnabled?: boolean;
+    accessFailedCount?: number;
+    timeZoneId?: number;
+    lastUpdatedOn?: Date;
+    lastUpdatedBy?: number | undefined;
+    createdOn?: Date;
+    createdBy?: number | undefined;
     roles?: Role[] | undefined;
 }
 
@@ -4479,6 +4593,7 @@ export interface IRole {
 }
 
 export class MenuItem implements IMenuItem {
+    id?: number;
     url?: string | undefined;
     name?: string | undefined;
     info?: string | undefined;
@@ -4501,6 +4616,7 @@ export class MenuItem implements IMenuItem {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.url = _data["url"];
             this.name = _data["name"];
             this.info = _data["info"];
@@ -4527,6 +4643,7 @@ export class MenuItem implements IMenuItem {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["url"] = this.url;
         data["name"] = this.name;
         data["info"] = this.info;
@@ -4546,6 +4663,7 @@ export class MenuItem implements IMenuItem {
 }
 
 export interface IMenuItem {
+    id?: number;
     url?: string | undefined;
     name?: string | undefined;
     info?: string | undefined;
@@ -4700,6 +4818,430 @@ export enum EnumMenuItem {
     WIPMenu = 30,
     WipStatus = 31,
     Roles = 32,
+}
+
+export class LocationModel extends TrackableModel implements ILocationModel {
+    oldId?: number;
+    name?: string | undefined;
+    address1?: string | undefined;
+    address2?: string | undefined;
+    city?: string | undefined;
+    state?: string | undefined;
+    postalCode?: string | undefined;
+    country?: string | undefined;
+    phone?: string | undefined;
+    parentId?: number | undefined;
+    internalAddress?: string | undefined;
+    invoiceClass?: string | undefined;
+    timeZone?: TimeZone | undefined;
+    status?: string | undefined;
+
+    constructor(data?: ILocationModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.oldId = _data["oldId"];
+            this.name = _data["name"];
+            this.address1 = _data["address1"];
+            this.address2 = _data["address2"];
+            this.city = _data["city"];
+            this.state = _data["state"];
+            this.postalCode = _data["postalCode"];
+            this.country = _data["country"];
+            this.phone = _data["phone"];
+            this.parentId = _data["parentId"];
+            this.internalAddress = _data["internalAddress"];
+            this.invoiceClass = _data["invoiceClass"];
+            this.timeZone = _data["timeZone"] ? TimeZone.fromJS(_data["timeZone"]) : <any>undefined;
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): LocationModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["oldId"] = this.oldId;
+        data["name"] = this.name;
+        data["address1"] = this.address1;
+        data["address2"] = this.address2;
+        data["city"] = this.city;
+        data["state"] = this.state;
+        data["postalCode"] = this.postalCode;
+        data["country"] = this.country;
+        data["phone"] = this.phone;
+        data["parentId"] = this.parentId;
+        data["internalAddress"] = this.internalAddress;
+        data["invoiceClass"] = this.invoiceClass;
+        data["timeZone"] = this.timeZone ? this.timeZone.toJSON() : <any>undefined;
+        data["status"] = this.status;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ILocationModel extends ITrackableModel {
+    oldId?: number;
+    name?: string | undefined;
+    address1?: string | undefined;
+    address2?: string | undefined;
+    city?: string | undefined;
+    state?: string | undefined;
+    postalCode?: string | undefined;
+    country?: string | undefined;
+    phone?: string | undefined;
+    parentId?: number | undefined;
+    internalAddress?: string | undefined;
+    invoiceClass?: string | undefined;
+    timeZone?: TimeZone | undefined;
+    status?: string | undefined;
+}
+
+export class TimeZone implements ITimeZone {
+    id?: number;
+    description?: string | undefined;
+    offset?: number;
+    number?: number;
+    useDalightSavings?: number;
+
+    constructor(data?: ITimeZone) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.offset = _data["offset"];
+            this.number = _data["number"];
+            this.useDalightSavings = _data["useDalightSavings"];
+        }
+    }
+
+    static fromJS(data: any): TimeZone {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimeZone();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["offset"] = this.offset;
+        data["number"] = this.number;
+        data["useDalightSavings"] = this.useDalightSavings;
+        return data; 
+    }
+}
+
+export interface ITimeZone {
+    id?: number;
+    description?: string | undefined;
+    offset?: number;
+    number?: number;
+    useDalightSavings?: number;
+}
+
+export class AuditActionResultOfCustomer extends AuditActionResult implements IAuditActionResultOfCustomer {
+    object?: Customer | undefined;
+
+    constructor(data?: IAuditActionResultOfCustomer) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? Customer.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfCustomer {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfCustomer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfCustomer extends IAuditActionResult {
+    object?: Customer | undefined;
+}
+
+export class CreateCustomerRequest implements ICreateCustomerRequest {
+    name?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    locationId?: number | undefined;
+    primaryContactUserId?: number | undefined;
+    secondaryContactUserId?: number | undefined;
+
+    constructor(data?: ICreateCustomerRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.address = _data["address"];
+            this.phone = _data["phone"];
+            this.locationId = _data["locationId"];
+            this.primaryContactUserId = _data["primaryContactUserId"];
+            this.secondaryContactUserId = _data["secondaryContactUserId"];
+        }
+    }
+
+    static fromJS(data: any): CreateCustomerRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCustomerRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["address"] = this.address;
+        data["phone"] = this.phone;
+        data["locationId"] = this.locationId;
+        data["primaryContactUserId"] = this.primaryContactUserId;
+        data["secondaryContactUserId"] = this.secondaryContactUserId;
+        return data; 
+    }
+}
+
+export interface ICreateCustomerRequest {
+    name?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    locationId?: number | undefined;
+    primaryContactUserId?: number | undefined;
+    secondaryContactUserId?: number | undefined;
+}
+
+export class UpdateCustomerRequest implements IUpdateCustomerRequest {
+    name?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    locationId?: number | undefined;
+    primaryContactUserId?: number | undefined;
+    secondaryContactUserId?: number | undefined;
+    customerId!: number;
+    isActive?: boolean | undefined;
+
+    constructor(data?: IUpdateCustomerRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.address = _data["address"];
+            this.phone = _data["phone"];
+            this.locationId = _data["locationId"];
+            this.primaryContactUserId = _data["primaryContactUserId"];
+            this.secondaryContactUserId = _data["secondaryContactUserId"];
+            this.customerId = _data["customerId"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCustomerRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCustomerRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["address"] = this.address;
+        data["phone"] = this.phone;
+        data["locationId"] = this.locationId;
+        data["primaryContactUserId"] = this.primaryContactUserId;
+        data["secondaryContactUserId"] = this.secondaryContactUserId;
+        data["customerId"] = this.customerId;
+        data["isActive"] = this.isActive;
+        return data; 
+    }
+}
+
+export interface IUpdateCustomerRequest {
+    name?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    locationId?: number | undefined;
+    primaryContactUserId?: number | undefined;
+    secondaryContactUserId?: number | undefined;
+    customerId: number;
+    isActive?: boolean | undefined;
+}
+
+export class AuditActionResultOfIEnumerableOfHelpPage extends AuditActionResult implements IAuditActionResultOfIEnumerableOfHelpPage {
+    object?: HelpPage[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfHelpPage) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(HelpPage.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfHelpPage {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfHelpPage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfIEnumerableOfHelpPage extends IAuditActionResult {
+    object?: HelpPage[] | undefined;
+}
+
+export class HelpPage implements IHelpPage {
+    id?: number;
+    title?: string | undefined;
+    friendlyURL?: string | undefined;
+    content?: string | undefined;
+    roles?: Role[] | undefined;
+
+    constructor(data?: IHelpPage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.friendlyURL = _data["friendlyURL"];
+            this.content = _data["content"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(Role.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): HelpPage {
+        data = typeof data === 'object' ? data : {};
+        let result = new HelpPage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["friendlyURL"] = this.friendlyURL;
+        data["content"] = this.content;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IHelpPage {
+    id?: number;
+    title?: string | undefined;
+    friendlyURL?: string | undefined;
+    content?: string | undefined;
+    roles?: Role[] | undefined;
+}
+
+export class AuditActionResultOfHelpPage extends AuditActionResult implements IAuditActionResultOfHelpPage {
+    object?: HelpPage | undefined;
+
+    constructor(data?: IAuditActionResultOfHelpPage) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? HelpPage.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfHelpPage {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfHelpPage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfHelpPage extends IAuditActionResult {
+    object?: HelpPage | undefined;
 }
 
 export class CreateHelpPageRequest implements ICreateHelpPageRequest {
@@ -4897,146 +5439,6 @@ export class AuditActionResultOfICollectionOfLocationModel extends AuditActionRe
 
 export interface IAuditActionResultOfICollectionOfLocationModel extends IAuditActionResult {
     object?: LocationModel[] | undefined;
-}
-
-export class LocationModel implements ILocationModel {
-    id?: number;
-    oldId?: number;
-    name?: string | undefined;
-    address1?: string | undefined;
-    address2?: string | undefined;
-    city?: string | undefined;
-    state?: string | undefined;
-    postalCode?: string | undefined;
-    country?: string | undefined;
-    phone?: string | undefined;
-    parentId?: number | undefined;
-    internalAddress?: string | undefined;
-    invoiceClass?: string | undefined;
-    timeZone?: TimeZone | undefined;
-
-    constructor(data?: ILocationModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.oldId = _data["oldId"];
-            this.name = _data["name"];
-            this.address1 = _data["address1"];
-            this.address2 = _data["address2"];
-            this.city = _data["city"];
-            this.state = _data["state"];
-            this.postalCode = _data["postalCode"];
-            this.country = _data["country"];
-            this.phone = _data["phone"];
-            this.parentId = _data["parentId"];
-            this.internalAddress = _data["internalAddress"];
-            this.invoiceClass = _data["invoiceClass"];
-            this.timeZone = _data["timeZone"] ? TimeZone.fromJS(_data["timeZone"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): LocationModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new LocationModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["oldId"] = this.oldId;
-        data["name"] = this.name;
-        data["address1"] = this.address1;
-        data["address2"] = this.address2;
-        data["city"] = this.city;
-        data["state"] = this.state;
-        data["postalCode"] = this.postalCode;
-        data["country"] = this.country;
-        data["phone"] = this.phone;
-        data["parentId"] = this.parentId;
-        data["internalAddress"] = this.internalAddress;
-        data["invoiceClass"] = this.invoiceClass;
-        data["timeZone"] = this.timeZone ? this.timeZone.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ILocationModel {
-    id?: number;
-    oldId?: number;
-    name?: string | undefined;
-    address1?: string | undefined;
-    address2?: string | undefined;
-    city?: string | undefined;
-    state?: string | undefined;
-    postalCode?: string | undefined;
-    country?: string | undefined;
-    phone?: string | undefined;
-    parentId?: number | undefined;
-    internalAddress?: string | undefined;
-    invoiceClass?: string | undefined;
-    timeZone?: TimeZone | undefined;
-}
-
-export class TimeZone implements ITimeZone {
-    id?: number;
-    description?: string | undefined;
-    offset?: number;
-    number?: number;
-    useDalightSavings?: number;
-
-    constructor(data?: ITimeZone) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.description = _data["description"];
-            this.offset = _data["offset"];
-            this.number = _data["number"];
-            this.useDalightSavings = _data["useDalightSavings"];
-        }
-    }
-
-    static fromJS(data: any): TimeZone {
-        data = typeof data === 'object' ? data : {};
-        let result = new TimeZone();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["description"] = this.description;
-        data["offset"] = this.offset;
-        data["number"] = this.number;
-        data["useDalightSavings"] = this.useDalightSavings;
-        return data; 
-    }
-}
-
-export interface ITimeZone {
-    id?: number;
-    description?: string | undefined;
-    offset?: number;
-    number?: number;
-    useDalightSavings?: number;
 }
 
 export class AuditActionResultOfLocationModel extends AuditActionResult implements IAuditActionResultOfLocationModel {
@@ -7216,146 +7618,6 @@ export interface IAuditActionResultOfICollectionOfUser extends IAuditActionResul
     object?: User[] | undefined;
 }
 
-export class User implements IUser {
-    id?: number;
-    isActive?: boolean;
-    userRoleId?: string | undefined;
-    userName?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    title?: string | undefined;
-    email?: string | undefined;
-    securityStamp?: string | undefined;
-    phone?: string | undefined;
-    supervisorId?: number | undefined;
-    supervisorName?: string | undefined;
-    locationId?: number;
-    locationName?: string | undefined;
-    isAnswerUser?: boolean;
-    customerId?: number;
-    lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    timeZoneId?: number;
-    lastUpdatedOn?: Date;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-    roles?: Role[] | undefined;
-
-    constructor(data?: IUser) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.isActive = _data["isActive"];
-            this.userRoleId = _data["userRoleId"];
-            this.userName = _data["userName"];
-            this.firstName = _data["firstName"];
-            this.lastName = _data["lastName"];
-            this.title = _data["title"];
-            this.email = _data["email"];
-            this.securityStamp = _data["securityStamp"];
-            this.phone = _data["phone"];
-            this.supervisorId = _data["supervisorId"];
-            this.supervisorName = _data["supervisorName"];
-            this.locationId = _data["locationId"];
-            this.locationName = _data["locationName"];
-            this.isAnswerUser = _data["isAnswerUser"];
-            this.customerId = _data["customerId"];
-            this.lockoutEndDateUtc = _data["lockoutEndDateUtc"] ? new Date(_data["lockoutEndDateUtc"].toString()) : <any>undefined;
-            this.lockoutEnabled = _data["lockoutEnabled"];
-            this.accessFailedCount = _data["accessFailedCount"];
-            this.timeZoneId = _data["timeZoneId"];
-            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
-            this.lastUpdatedBy = _data["lastUpdatedBy"];
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.createdBy = _data["createdBy"];
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(Role.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): User {
-        data = typeof data === 'object' ? data : {};
-        let result = new User();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["isActive"] = this.isActive;
-        data["userRoleId"] = this.userRoleId;
-        data["userName"] = this.userName;
-        data["firstName"] = this.firstName;
-        data["lastName"] = this.lastName;
-        data["title"] = this.title;
-        data["email"] = this.email;
-        data["securityStamp"] = this.securityStamp;
-        data["phone"] = this.phone;
-        data["supervisorId"] = this.supervisorId;
-        data["supervisorName"] = this.supervisorName;
-        data["locationId"] = this.locationId;
-        data["locationName"] = this.locationName;
-        data["isAnswerUser"] = this.isAnswerUser;
-        data["customerId"] = this.customerId;
-        data["lockoutEndDateUtc"] = this.lockoutEndDateUtc ? this.lockoutEndDateUtc.toISOString() : <any>undefined;
-        data["lockoutEnabled"] = this.lockoutEnabled;
-        data["accessFailedCount"] = this.accessFailedCount;
-        data["timeZoneId"] = this.timeZoneId;
-        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
-        data["lastUpdatedBy"] = this.lastUpdatedBy;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["createdBy"] = this.createdBy;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IUser {
-    id?: number;
-    isActive?: boolean;
-    userRoleId?: string | undefined;
-    userName?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    title?: string | undefined;
-    email?: string | undefined;
-    securityStamp?: string | undefined;
-    phone?: string | undefined;
-    supervisorId?: number | undefined;
-    supervisorName?: string | undefined;
-    locationId?: number;
-    locationName?: string | undefined;
-    isAnswerUser?: boolean;
-    customerId?: number;
-    lockoutEndDateUtc?: Date | undefined;
-    lockoutEnabled?: boolean;
-    accessFailedCount?: number;
-    timeZoneId?: number;
-    lastUpdatedOn?: Date;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-    roles?: Role[] | undefined;
-}
-
 export class AuditActionResultOfUser extends AuditActionResult implements IAuditActionResultOfUser {
     object?: User | undefined;
 
@@ -8037,83 +8299,6 @@ export class AuditActionResultOfICollectionOfWorkflowActivityModel extends Audit
 
 export interface IAuditActionResultOfICollectionOfWorkflowActivityModel extends IAuditActionResult {
     object?: WorkflowActivityModel[] | undefined;
-}
-
-export abstract class EntityModel implements IEntityModel {
-    id?: number;
-
-    constructor(data?: IEntityModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): EntityModel {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'EntityModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        return data; 
-    }
-}
-
-export interface IEntityModel {
-    id?: number;
-}
-
-export abstract class TrackableModel extends EntityModel implements ITrackableModel {
-    lastUpdatedOn?: Date | undefined;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-
-    constructor(data?: ITrackableModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
-            this.lastUpdatedBy = _data["lastUpdatedBy"];
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.createdBy = _data["createdBy"];
-        }
-    }
-
-    static fromJS(data: any): TrackableModel {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'TrackableModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
-        data["lastUpdatedBy"] = this.lastUpdatedBy;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["createdBy"] = this.createdBy;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface ITrackableModel extends IEntityModel {
-    lastUpdatedOn?: Date | undefined;
-    lastUpdatedBy?: number | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
 }
 
 export class DeletableModel extends TrackableModel implements IDeletableModel {
