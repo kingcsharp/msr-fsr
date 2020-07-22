@@ -31,6 +31,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public string CustomerNumber { get; set; }
         public bool IsActive { get; set; }
-        public string CustomerNumber { get; set; }
     }
 }
