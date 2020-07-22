@@ -1,116 +1,177 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuModel } from '../../../models/menu-model';
+import { RoleModel } from '../../../models/role-model';
+import { UpdatePermissionsEventModel } from '../../../models/update-permission-event-model';
+import { PermissionModel } from '../../../models/permission-model';
+import { MenuService,MenuItem, RoleService, Role, Permission } from '../../../services/api.client.generated';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
+import { Globals } from '../../../models/lib/globals';
 
 @Component({
   selector: 'app-roleassignments',
   templateUrl: './roleassignments.template.html',
-  styleUrls: ['./roleassignments.style.scss']
+  styleUrls: ['./roleassignments.style.scss'],
+  providers: [MenuService, RoleService]
 })
 export class RoleassignmentsComponent implements OnInit {
 
-  menuModules: MenuModule[];
-  originalMenuModules: MenuModule[];
+  menuModules: MenuModel[];
+  originalMenuModules: MenuModel[];
 
-  selectedMenuModule:MenuModule;
+  selectedMenuModule:MenuModel;
 
-  selectedRoleModule:RoleModule;
+  selectedRoleModule:RoleModel;
 
   updateSuccessful: boolean = false;
   errorUpdatingPermissions:boolean = false;
   pendingPermissionsUpdate:boolean = false;
 
-  pendingPermissions:UpdatePermissionsEvent[] = new Array<UpdatePermissionsEvent>();
+  pendingPermissions:UpdatePermissionsEventModel[] = new Array<UpdatePermissionsEventModel>();
  
-  constructor() {
-
-    this.originalMenuModules = this.generateMockData();
-    this.menuModules = [...this.originalMenuModules];
+  constructor(private menuService: MenuService, private roleService: RoleService, public globals: Globals) {
   }
 
   ngOnInit(): void {
+
+    this.getMenuItems();
+
   }
 
-  //TODO: There are here just for development
-  generateMockData(): MenuModule[] {
+  getMenuItems(){
 
-    let permissionModules = new Array<PermissionModule>();
-    permissionModules.push({
-      id:1,
-      name: 'Read',
-      value:true,
-      inheritedPermission:false
-    } as PermissionModule)
-    permissionModules.push({
-      id:2,
-      name: 'Write',
-      value:true,
-      inheritedPermission:false
-    } as PermissionModule)
-    permissionModules.push({
-      id:3,
-      name: 'Approve',
-      value:true,
-      inheritedPermission:false
-    } as PermissionModule)
+    this.menuService.menu(env.apiVersion).subscribe(responseHandler((response) => {
 
-    let inheritedPermissionModules = new Array<PermissionModule>();
-    inheritedPermissionModules.push({
-      id:1,
-      name: 'Read',
-      value:true,
-      inheritedPermission:true
-    } as PermissionModule)
-    inheritedPermissionModules.push({
-      id:2,
-      name: 'Write',
-      value:true,
-      inheritedPermission:true
-    } as PermissionModule)
-    inheritedPermissionModules.push({
-      id:3,
-      name: 'Approve',
-      value:false,
-      inheritedPermission:false
-    } as PermissionModule)
+        let menuItems = response.object;
+        this.globals.showLoader(true);
+        this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {
 
-    let roleModules = new Array<RoleModule>();
-    roleModules.push({
-      id:1,
-      name: "Admin",
-      value:true,
-      permissions:permissionModules
-    } as RoleModule);
-    roleModules.push({
-      id:2,
-      name: "CEO",
-      value:false,
-      permissions:inheritedPermissionModules
-    } as RoleModule);
+            let roles = response.object;
 
-    let menuModules = new Array<MenuModule>();
-    menuModules.push({
-      id:1,
-      name:"People",
-      roles:roleModules,
-    } as MenuModule);
-    menuModules.push({
-      id:2,
-      name:"WIP Menu",
-      roles:roleModules,
-    } as MenuModule);
+            this.adaptMenuItemsAndRolesToMenuModels(menuItems, roles);
+            this.menuModules = [...this.originalMenuModules];
+        }));
 
+    }));
 
-    return menuModules;
   }
 
-  selectMenuModule(menuModule:MenuModule){
+  adaptMenuItemsAndRolesToMenuModels(menuItems: Array<MenuItem>, roles:Array<Role>){
+
+    this.originalMenuModules = new Array<MenuModel>()
+
+    menuItems.forEach(menuItem => {
+      let menuModel = new MenuModel();
+      menuModel.id = menuItem.id;
+      menuModel.name = menuItem.name;
+
+      roles.forEach(role => {
+
+        let roleModel = new RoleModel();
+        roleModel.id = role.id;
+        roleModel.name = role.name;
+        roleModel.value = menuItem.roles.find(s => s.id === role.id) != null ? true : false;
+
+        if(roleModel.value){
+          
+          let inheritedPermissions = menuItem.roles.find(s => s.id === role.id).inheritedPermissions;
+          let permissions = menuItem.roles.find(s => s.id === role.id).permissions;
+
+          let canActivatePermissionModel = new PermissionModel();
+          canActivatePermissionModel.inheritedPermission = inheritedPermissions.canActivate;
+          canActivatePermissionModel.value = permissions.canActivate;
+          canActivatePermissionModel.name = "Activate";
+          roleModel.permissions.push(canActivatePermissionModel);
+
+          let canApprovePermissionModel = new PermissionModel();
+          canApprovePermissionModel.inheritedPermission = inheritedPermissions.canApprove;
+          canApprovePermissionModel.value = permissions.canApprove;
+          canApprovePermissionModel.name = "Approve";
+          roleModel.permissions.push(canApprovePermissionModel);
+
+          let canCreatePermissionModel = new PermissionModel();
+          canCreatePermissionModel.inheritedPermission = inheritedPermissions.canCreate;
+          canCreatePermissionModel.value = permissions.canCreate;
+          canCreatePermissionModel.name = "Create";
+          roleModel.permissions.push(canCreatePermissionModel);
+
+          let canDeletePermissionModel = new PermissionModel();
+          canDeletePermissionModel.inheritedPermission = inheritedPermissions.canDelete;
+          canDeletePermissionModel.value = permissions.canDelete;
+          canDeletePermissionModel.name = "Delete";
+          roleModel.permissions.push(canDeletePermissionModel);
+
+          let canEditPermissionModel = new PermissionModel();
+          canEditPermissionModel.inheritedPermission = inheritedPermissions.canEdit;
+          canEditPermissionModel.value = permissions.canEdit;
+          canEditPermissionModel.name = "Edit";
+          roleModel.permissions.push(canEditPermissionModel);
+
+          let canReadPermissionModel = new PermissionModel();
+          canReadPermissionModel.inheritedPermission = inheritedPermissions.canRead;
+          canReadPermissionModel.value = permissions.canRead;
+          canReadPermissionModel.name = "Read";
+          roleModel.permissions.push(canReadPermissionModel);
+
+        }else{
+
+          let canActivatePermissionModel = new PermissionModel();
+          canActivatePermissionModel.inheritedPermission = false;
+          canActivatePermissionModel.value = false;
+          canActivatePermissionModel.name = "Activate";
+          roleModel.permissions.push(canActivatePermissionModel);
+
+          let canApprovePermissionModel = new PermissionModel();
+          canApprovePermissionModel.inheritedPermission = false;
+          canApprovePermissionModel.value = false;
+          canApprovePermissionModel.name = "Approve";
+          roleModel.permissions.push(canApprovePermissionModel);
+
+          let canCreatePermissionModel = new PermissionModel();
+          canCreatePermissionModel.inheritedPermission = false;
+          canCreatePermissionModel.value = false;
+          canCreatePermissionModel.name = "Create";
+          roleModel.permissions.push(canCreatePermissionModel);
+
+          let canDeletePermissionModel = new PermissionModel();
+          canDeletePermissionModel.inheritedPermission = false;
+          canDeletePermissionModel.value = false;
+          canDeletePermissionModel.name = "Delete";
+          roleModel.permissions.push(canDeletePermissionModel);
+
+          let canEditPermissionModel = new PermissionModel();
+          canEditPermissionModel.inheritedPermission = false;
+          canEditPermissionModel.value = false;
+          canEditPermissionModel.name = "Edit";
+          roleModel.permissions.push(canEditPermissionModel);
+
+          let canReadPermissionModel = new PermissionModel();
+          canReadPermissionModel.inheritedPermission = false;
+          canReadPermissionModel.value = false;
+          canReadPermissionModel.name = "Read";
+          roleModel.permissions.push(canReadPermissionModel);
+
+        }
+        
+
+        menuModel.roles.push(roleModel);
+      });
+
+      
+      this.originalMenuModules.push(menuModel);
+    });
+
+  }
+
+  selectMenuModule(menuModule:MenuModel){
     this.selectedMenuModule = menuModule;
   }
 
-  editRolePermissions(roleModule:RoleModule){
+  editRolePermissions(roleModule:RoleModel){
     this.selectedRoleModule = roleModule;
   }
 
-  roleChanged(event:Event, menuModule:MenuModule, roleModule:RoleModule){
+  roleChanged(event:Event, menuModule:MenuModel, roleModule:RoleModel){
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
     this.updateSuccessful = false;
@@ -121,7 +182,7 @@ export class RoleassignmentsComponent implements OnInit {
         roleModule:roleModule,
         permissionModule:null,
         event:'add'
-      } as UpdatePermissionsEvent);
+      } as UpdatePermissionsEventModel);
 
       this.selectedRoleModule = roleModule;
     }else{
@@ -130,13 +191,13 @@ export class RoleassignmentsComponent implements OnInit {
         roleModule:roleModule,
         permissionModule:null,
         event:'remove'
-      } as UpdatePermissionsEvent);
+      } as UpdatePermissionsEventModel);
 
       this.selectedRoleModule = null;
     }
   }
 
-  permissionChanged(event:Event, menuModule:MenuModule, roleModule:RoleModule, permissionModule:PermissionModule){
+  permissionChanged(event:Event, menuModule:MenuModel, roleModule:RoleModel, permissionModule:PermissionModel){
     permissionModule.value = !permissionModule.value;
     this.pendingPermissionsUpdate = true;
     this.updateSuccessful = false;
@@ -147,7 +208,7 @@ export class RoleassignmentsComponent implements OnInit {
         roleModule:roleModule,
         permissionModule:permissionModule,
         event:'add'
-      } as UpdatePermissionsEvent);
+      } as UpdatePermissionsEventModel);
 
     }else{
       this.pendingPermissions.push({
@@ -155,7 +216,7 @@ export class RoleassignmentsComponent implements OnInit {
         roleModule:roleModule,
         permissionModule:permissionModule,
         event:'remove'
-      } as UpdatePermissionsEvent);
+      } as UpdatePermissionsEventModel);
     }
   }
 
@@ -176,31 +237,4 @@ export class RoleassignmentsComponent implements OnInit {
     this.clearPendingChanges();
     this.updateSuccessful = true;
   }
-}
-//TODO: There are here just for development and can possibly be moved to the models folder or removed based on the web api
-export class UpdatePermissionsEvent{
-  menuModule: MenuModule;
-  roleModule: RoleModule;
-  permissionModule?: PermissionModule ;
-  event: string;
-}
-
-export class MenuModule {
-  id?: number;
-  name: string;
-  roles: RoleModule[] = new Array<RoleModule>();
-}
-
-export class RoleModule{
-  id?: number;
-  name: string;
-  value:boolean = false;
-  permissions: PermissionModule[] = new Array<PermissionModule>();
-}
-
-export class PermissionModule{
-  id?: number;
-  name: string;
-  value:boolean = false;
-  inheritedPermission: boolean = false;
 }
