@@ -58,7 +58,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateMenuRoleMapCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse();
         }
 
         [HttpDelete("Role/{id}")]
@@ -67,7 +67,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new RemoveMenuRoleMap() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse();
         }
     }
 }
