@@ -26,33 +26,45 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet()]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<Part>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
         public async Task<IActionResult> GetPart(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetParts() {
                 partID = id
             });
-            return ret.ToOkObjectResponse<ICollection<Part>>();
+            return ret.ToOkObjectResponse<ICollection<PartModel>>();
         }
 
         [HttpPost]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<Part>))]
+        [SwaggerResponse(typeof(AuditActionResult<PartModel>))]
         public async Task<IActionResult> AddPart(CreatePartRequest newpart)
         {
             var command = newpart.ToCreatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Part>();
+            return ret.ToOkObjectResponse<PartModel>();
         }
 
         [HttpPatch]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<Part>))]
+        [SwaggerResponse(typeof(AuditActionResult<PartModel>))]
         public async Task<IActionResult> UpdatePart(UpdatePartRequest newpart)
         {
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Part>();
+            return ret.ToOkObjectResponse<PartModel>();
+        }
+
+        [HttpDelete("{id}")]
+        [HasPrivilegeApi("Parts", EnumPrivilege.CanDelete)]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> DeletePart(int id)
+        {
+            var command = new DeletePart() {
+                Id = id
+            };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<PartModel>();
         }
     }
 }

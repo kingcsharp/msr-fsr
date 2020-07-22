@@ -58,12 +58,17 @@ export class Globals {
         }, 100);
     }
 
-    hasPrivilege(controllerName, privilege) {
-        const menuItem = this.user.roles[0].menus.filter(x => x.name.replace(' ', '').replace('/', '').toLowerCase() === controllerName.toLowerCase());
-        if (menuItem.length === 0 || menuItem[0] === undefined) {
-            return false;
-        }
-        const ret = menuItem[0].permissions.indexOf(privilege) > -1;
+    // hasPrivilege(controllerName, privilege) {
+    //     const menuItem = this.user.roles[0].menus.filter(x => x.name.replace(' ', '').replace('/', '').toLowerCase() === controllerName.toLowerCase());
+    //     if (menuItem.length === 0 || menuItem[0] === undefined) {
+    //         return false;
+    //     }
+    //     const ret = menuItem[0].permissions.indexOf(privilege) > -1;
+    //     return ret;
+    // }
+
+    hasPrivilege(controllerEnum, privilege) {
+        var ret = this.user.privileges[controllerEnum].indexOf(privilege) > -1;
         return ret;
     }
 

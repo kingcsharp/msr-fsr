@@ -33,7 +33,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 workflowStage = workflowStage.Where(i => i.Id == command.Id.Value);
             }
 
-            var result = await workflowStage.ToListAsync();
+            var result = await workflowStage.Include(x=>x.Group).ToListAsync();
             var ret = result.Select(workflowGrou => _mapper.Map<WorkflowStageModel>(workflowGrou)).ToList();
             return ret;
         }

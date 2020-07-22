@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -11,6 +14,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
@@ -25,35 +29,59 @@ namespace MSR.Infrastructure.Resources.Services.Role
             _mapper = mapper;
         }
 
-        public async Task<ICollection<Domain.Models.Part>> GetPartsAsync(GetParts command)
+        public async Task<ICollection<PartModel>> GetPartsAsync(GetParts command)
         {
-            List<EntityFramework.Entities.Part> parts;
-            if (command.partID.HasValue) {
+            List<Part> parts;
+            if (command.partID.HasValue)
+            {
                 parts = await _unitOfWork.Parts.Query().Where(x => x.Id == command.partID.Value).ToListAsync();
-                if (parts.Count == 0) {
+                if (parts.Count == 0)
+                {
                     throw new DomainException($"part ID {command.partID.Value} not found", DomainError.NotFound);
                 }
-            } else {
-                parts = await _unitOfWork.Parts.Query().ToListAsync();
             }
-            var result = parts.Select(x => _mapper.Map<Domain.Models.Part>(x)).OrderBy(x => x.Name).ToList();
+            else
+            {
+                parts = await _unitOfWork.Parts.Query().Include(x => x.Subparts).ToListAsync();
+            }
+            var result = parts.Select(x => _mapper.Map<PartModel>(x)).OrderBy(x => x.Name).ToList();
             return result;
         }
-        public async Task<Domain.Models.Part> CreatePartAsync(CreatePart command)
+        public async Task<PartModel> CreatePartAsync(CreatePart command)
         {
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Part ret;
+            PartModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Parts))
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
-                Part part = _mapper.Map<EntityFramework.Entities.Part>(command);
+                List<PartSubPartMap> children = new List<PartSubPartMap>();
+                if (command.SubParts != null)
+                {
+                    children = command.SubParts.Select(x =>
+                        _mapper.Map<PartSubPartMap>(x)
+                    ).ToList();
+                }
 
+                Part part = _mapper.Map<Part>(command);
+                if (children.Count > 0)
+                {
+                    part.IsKit = true;
+                }
                 _unitOfWork.Parts.Add(part);
 
-                // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(part, part.Id);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(part, part.Id, "Approved", command.Comment);
 
-                ret = _mapper.Map<Domain.Models.Part>(part);
+                if (children.Count > 0)
+                {
+                    foreach (var child in children)
+                    {
+                        child.ParentPartId = part.Id;
+                        _unitOfWork.PartSubPartMaps.Add(child);
+                    }
+                    await _unitOfWork.SaveChangesAsync();
+                }
+
+                ret = _mapper.Map<PartModel>(part);
             }
             else
             {
@@ -61,44 +89,80 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.Part>(approval);
+                ret = _mapper.Map<PartModel>(approval);
             }
 
             return ret;
         }
-        public async Task<Domain.Models.Part> UpdatePartAsync(UpdatePart command)
+        public async Task<PartModel> UpdatePartAsync(UpdatePart command)
         {
-            var current = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+                .FirstOrDefaultAsync();
 
-            if(current is null)
+            if (current is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.Id}", DomainError.NotFound);
+                throw new DomainException($"{nameof(Part)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.Part ret;
+            PartModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Parts))
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
-                var part = _mapper.Map(command, current);
-                await _unitOfWork.LogApprovalTransaction(part, part.Id);
+                foreach (var child in current.Subparts)
+                {
+                    _unitOfWork.PartSubPartMaps.Delete(false, child, true);
+                }
 
-                _unitOfWork.Parts.Update(part);
                 await _unitOfWork.SaveChangesAsync();
+                current.Subparts.Clear();
 
-                ret = _mapper.Map<Domain.Models.Part>(part);
+                _mapper.Map(command, current);
+
+                current.Subparts = command.SubParts.Select(x =>
+                {
+                    x.ParentId = current.Id;
+                    x.Id = null;
+                    var subpart = _mapper.Map<PartSubPartMap>(x);
+                    _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
+                    return subpart;
+                }).ToList();
+
+                _unitOfWork.Parts.Update(current);
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(current, current.Id, "Approved", command.Comment);
+                ret = _mapper.Map<PartModel>(current);
             }
             else
             {
                 var approval = _mapper.Map<PartApproval>(command);
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
-
-                ret = _mapper.Map<Domain.Models.Part>(approval);
+                ret = _mapper.Map<PartModel>(approval);
             }
 
             return ret;
 
+        }
+        public async Task<PartModel> DeletePartAsync(DeletePart command)
+        {
+            Part current = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            if (current is null)
+            {
+                throw new DomainException($"{nameof(Part)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanDelete))
+            {
+                _unitOfWork.Parts.Delete(false, current);
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(current, current.Id);
+            }
+            else
+            {
+                throw new DomainException($"Permission denied for DELETE on {nameof(Part)} ID: {command.Id}", DomainError.BadRequest);
+            }
+
+            var ret = _mapper.Map<PartModel>(current);
+            return ret;
         }
     }
 }

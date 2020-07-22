@@ -74,9 +74,9 @@ eg. `npm run buildstage` this will build the solution with the environment file 
 The `hashasPrivilege` method handles the privileges of the user. Every view will need to handle the specific privileges in the following way:
 
 This method will tell globals what views can be accessed based on the user's privileges
-
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
     hasPrivilege(privName) {
-        return this.globals.hasPrivilege('users', privName);
+        return this.globals.hasPrivilege(EnumPrivilege.Users, privName);
     }
 
 Then in the initialization of the component we need to set the privilege as follows:

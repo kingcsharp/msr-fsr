@@ -8,8 +8,8 @@ namespace MSR.Answer.API.V1.Models.Workflow
     {
         public CreateWorkflowGroupRequest()
         {
-            Roles = new List<WorkflowGroupRoleMapModel>() { };
-            Users = new List<WorkflowGroupUserMapModel>() { };
+            Roles = new HashSet<WorkflowGroupRoleMapModel>() { };
+            Users = new HashSet<WorkflowGroupUserMapModel>() { };
         }
 
         [Required]

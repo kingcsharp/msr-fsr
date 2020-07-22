@@ -10,7 +10,6 @@ namespace MSR.Domain.Abstractions.Services
         Task ForgotPasswordAsync(ForgotPassword command);
         Task ForgotUserNameAsync(ForgotUserName command);
         Task ResetPasswordAsync(ResetPassword command);
-        User ValidateAccount(int accountId);
-
+        bool ValidateAccount(int accountId);
     }
 }

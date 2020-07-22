@@ -3,41 +3,43 @@
     /*
      * Enum generated from:
      * SELECT TOP 100 [Id],REPLACE(REPLACE([Name], ' ', ''),'/','') FROM [Answer3_Dev].[dbo].[MenuItem] order by Name
+     * This ENUM is also in the ui in the file privileges.ts and it a copy of this one
+     * If you DO A CHANGE HERE COPY PASTE THE CLASS TO THE Ui
      */
     public enum EnumMenuItem
     {
-        AdminCostSettings
-        ,ApprovalGroups
-        ,ApprovalStages
-        ,ApprovalWorkflows
-        ,CustomersDepartments
-        ,Documents
-        ,EquipmentMaintenance
-        ,Financial
-        ,FreeformQuote
-        ,HelpPages
-        ,Invoices
-        ,Locations
-        ,Monitors
-        ,Operational
-        ,Parts
-        ,Procedures
-        ,PendingApprovals
-        ,ProcedureTypes
-        ,PurchaseOrders
-        ,Purchases
-        ,QuotesProducts
-        ,Reports
-        ,RoleModulePermission
-        ,RunnableProcedures
-        ,SupportTicket
-        ,Templates
-        ,TrainingCertifications
-        ,UserRoles
-        ,Users
-        ,WIPHistory
-        ,WIPMenu
-        ,WipStatus
-        ,Roles
+        AdminCostSettings = 0
+        , ApprovalGroups = 1
+        , ApprovalStages = 2
+        , ApprovalWorkflows = 3
+        , CustomersDepartments = 4
+        , Documents = 5
+        , EquipmentMaintenance = 6
+        , Financial = 7
+        , FreeformQuote = 8
+        , HelpPages = 9
+        , Invoices = 10
+        , Locations = 11
+        , Monitors = 12
+        , Operational = 13
+        , Parts = 14
+        , Procedures = 15
+        , PendingApprovals = 16
+        , ProcedureTypes = 17
+        , PurchaseOrders = 18
+        , Purchases = 19
+        , QuotesProducts = 20
+        , Reports = 21
+        , RoleModulePermission = 22
+        , RunnableProcedures = 23
+        , SupportTicket = 24
+        , Templates = 25
+        , TrainingCertifications = 26
+        , UserRoles = 27
+        , Users = 28
+        , WIPHistory = 29
+        , WIPMenu = 30
+        , WipStatus = 31
+        , Roles = 32
     }
 }

@@ -8,7 +8,7 @@ namespace MSR.Answer.API.V1.Models
     {
         public CreateWorkflowStageRequest()
         {
-            WorkflowGroupStageMapModel = new List<WorkflowGroupStageMapModel>();
+            WorkflowGroupStageMapModel = new HashSet<WorkflowGroupStageMapModel>();
         }
 
         [Required]

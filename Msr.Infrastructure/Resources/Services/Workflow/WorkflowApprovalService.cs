@@ -225,7 +225,6 @@ namespace MSR.Infrastructure.Resources.Services
                     partApprovalChanges.AddRow("Name", part.Name, partApproval.Name);
                     partApprovalChanges.AddRow("PartNumber", part.PartNumber, partApproval.PartNumber);
                     partApprovalChanges.AddRow("OEMPartNumber", part.OEMPartNumber, partApproval.OEMPartNumber);
-                    partApprovalChanges.AddRow("Qty", part.Qty, partApproval.Qty);
                     partApprovalChanges.AddRow("NickName", part.NickName, partApproval.NickName);
                     partApprovalChanges.AddRow("MaximumCycles", part.MaximumCycles, partApproval.MaximumCycles);
                     return partApprovalChanges;
