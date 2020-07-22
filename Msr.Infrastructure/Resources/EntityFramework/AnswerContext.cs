@@ -57,6 +57,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PartSubPartMap> PartSubPartMap { get; set; }
 
 
+
         public AnswerContext() : base()
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
