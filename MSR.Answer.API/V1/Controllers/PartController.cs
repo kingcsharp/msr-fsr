@@ -42,7 +42,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToCreatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>();
+            return ret.ToOkObjectResponse<PartModel>("Part was successfully added.");
         }
 
         [HttpPatch]
@@ -52,7 +52,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>();
+            return ret.ToOkObjectResponse<PartModel>("Part was successfully updated.");
         }
 
         [HttpDelete("{id}")]
@@ -64,7 +64,7 @@ namespace MSR.Answer.API.V1.Controllers
                 Id = id
             };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>();
+            return ret.ToOkObjectResponse<PartModel>("Part was successfully removed.");
         }
     }
 }

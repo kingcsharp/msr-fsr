@@ -145,14 +145,15 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> DeletePartAsync(DeletePart command)
         {
-            Part current = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+                .FirstOrDefaultAsync();
             if (current is null)
             {
                 throw new DomainException($"{nameof(Part)} not found with ID: {command.Id}", DomainError.NotFound);
             }
             if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanDelete))
             {
-                _unitOfWork.Parts.Delete(false, current);
+                _unitOfWork.Parts.Delete(false, current, true);
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id);
             }
