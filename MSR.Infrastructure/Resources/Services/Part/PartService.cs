@@ -108,14 +108,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
-                List<PartSubPartMap> children = null;
-                if (command.SubParts != null)
-                {
-                    children = command.SubParts.Select(x =>
-                        _mapper.Map<PartSubPartMap>(x)
-                    ).ToList();
-                }
-
                 foreach (var child in current.Subparts)
                 {
                     _unitOfWork.PartSubPartMaps.Delete(false, child, true);
@@ -126,15 +118,25 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
                 _mapper.Map(command, current);
 
-                if (children != null)
+                current.Subparts = command.SubParts.Select(x =>
                 {
-                    foreach (var child in children)
-                    {
-                        child.ParentPartId = current.Id;
-                        _unitOfWork.PartSubPartMaps.AttachAndInsert(child);
-                    }
-                }
+                    x.ParentId = current.Id;
+                    var subpart = _mapper.Map<PartSubPartMap>(x);
+                    _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
+                    return subpart;
+                }).ToList();
+
                 _unitOfWork.Parts.Update(current);
+                try
+                {
+                    await _unitOfWork.SaveChangesAsync();
+                }
+                catch (System.Exception e)
+                {
+
+                    throw;
+                }
+                
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id, "Approved", command.Comment);
                 ret = _mapper.Map<PartModel>(current);
