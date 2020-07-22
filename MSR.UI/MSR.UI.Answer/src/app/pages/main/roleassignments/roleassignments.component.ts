@@ -256,15 +256,17 @@ export class RoleassignmentsComponent implements OnInit {
           let createMenuRoleMapRequest = new CreateMenuRoleMapRequest();
           createMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
           createMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
-          this.menuService.rolePost(env.apiVersion,createMenuRoleMapRequest).subscribe(responseHandler((response) => {
-              console.log(response);
-          }));
+          //TODO: Replace when fixed
+          //this.menuService.rolePost(env.apiVersion,createMenuRoleMapRequest).subscribe(responseHandler((response) => {
+          //    console.log(response);
+          //}));
 
         }else{
 
           let createMenuRoleMapRequest = new CreateMenuRoleMapRequest();
           createMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
           createMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
+          //TODO: Replace when fixed
           //this.menuService.roleDelete(createMenuRoleMapRequest.roleId,env.apiVersion).subscribe(responseHandler((response) => {
           //    console.log(response);
           //}));
