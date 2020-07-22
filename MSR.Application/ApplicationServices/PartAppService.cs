@@ -26,7 +26,11 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
         {
-            var ret = await _partService.GetPartsAsync(command);
+            ICollection<PartModel> ret = await _partService.GetPartsAsync(command);
+            foreach (var m in ret) {
+                m.Files = _fileService.ListFiles(m, m.Id);
+
+            }
             return new CommandResponse<ICollection<PartModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
@@ -44,8 +48,17 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.UpdatePartAsync(command);
+            var part = ret;
+            if (command.Files != null) {
+                await _fileService.DeleteFilesAsync(part, part.Id);
+                foreach(var file in command.Files)
+                {
+                    await _fileService.CreateFileAsync(part, part.Id, file);
+                }
+            }
             return new CommandResponse<PartModel>(ret);
         }
+
         public async Task<ICommandResponse> HandleAsync(DeletePart command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.DeletePartAsync(command);

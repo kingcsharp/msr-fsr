@@ -9,6 +9,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int FileId { get; set; }
 
+        [ForeignKey("FileId")]
+        public virtual File FileObject { get; set; }
+
         [Required]
         [StringLength(50)]
         public string EntityTableName { get; set; }

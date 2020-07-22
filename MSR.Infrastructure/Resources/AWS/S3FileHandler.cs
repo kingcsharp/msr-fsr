@@ -31,7 +31,7 @@ namespace MSR.Infrastructure.Resources.AWS
             return response.ResponseStream;
         }
 
-        public async Task<string> UploadFile(Domain.Models.File file, string entityName, int entityId)
+        public async Task<string> UploadFile(FileModel file, string entityName, int entityId)
         {
             string uniqueName = $"{entityName}-{entityId}-{file.Name}";
             var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
@@ -47,7 +47,12 @@ namespace MSR.Infrastructure.Resources.AWS
                 throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
             }
 
-            return $"{_s3Information.AWSURL}{uniqueName}";
+            return $"{uniqueName}";
+        }
+
+        public string GetURL(string key, int expiresIn)
+        {
+            return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest());
         }
     }
 }
