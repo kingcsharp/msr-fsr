@@ -54,5 +54,17 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<PartModel>();
         }
+
+        [HttpDelete("{id}")]
+        [HasPrivilegeApi("Parts", EnumPrivilege.CanDelete)]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> DeletePart(int id)
+        {
+            var command = new DeletePart() {
+                Id = id
+            };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<PartModel>();
+        }
     }
 }

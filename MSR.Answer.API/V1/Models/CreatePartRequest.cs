@@ -8,7 +8,7 @@ namespace MSR.Answer.API.V1.Models
     {
         public CreatePartRequest()
         {
-            CreateSubParts = new List<SubPartModel>();
+            CreateSubParts = null;
         }
 
         [Required]
@@ -19,5 +19,6 @@ namespace MSR.Answer.API.V1.Models
         public string NickName { get; set; }
         public int? MaximumCycles { get; set; }
         public virtual ICollection<SubPartModel> CreateSubParts { get; set; }
+        public string Comment { get; set; }
     }
 }

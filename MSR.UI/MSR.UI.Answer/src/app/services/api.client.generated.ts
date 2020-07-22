@@ -1444,6 +1444,60 @@ export class PartService {
         }
         return _observableOf<AuditActionResultOfPartModel>(<any>null);
     }
+
+    partDelete(id: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Part/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPartDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPartDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPartDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
 }
 
 @Injectable()
@@ -5427,6 +5481,7 @@ export class CreatePartRequest implements ICreatePartRequest {
     nickName?: string | undefined;
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
+    comment?: string | undefined;
 
     constructor(data?: ICreatePartRequest) {
         if (data) {
@@ -5449,6 +5504,7 @@ export class CreatePartRequest implements ICreatePartRequest {
                 for (let item of _data["createSubParts"])
                     this.createSubParts!.push(SubPartModel.fromJS(item));
             }
+            this.comment = _data["comment"];
         }
     }
 
@@ -5471,6 +5527,7 @@ export class CreatePartRequest implements ICreatePartRequest {
             for (let item of this.createSubParts)
                 data["createSubParts"].push(item.toJSON());
         }
+        data["comment"] = this.comment;
         return data; 
     }
 }
@@ -5482,6 +5539,7 @@ export interface ICreatePartRequest {
     nickName?: string | undefined;
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
+    comment?: string | undefined;
 }
 
 export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartRequest {

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import {
   UserService, User, IAuditActionResultOfUser, LocationService
   , UpdateUserRequest, RoleService, Role
@@ -158,7 +158,7 @@ export class UserComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('Users', privName);
+    return this.globals.hasPrivilege(EnumMenuItem.Users, privName);
   }
 
   unmask(event) {
