@@ -31,7 +31,7 @@
         <div class="col-4">
             <h2>Menu Modules</h2>
             <ul class="list-group">
-                <li class="list-group-item" *ngFor="let menuModule of menuModules" (click)="selectMenuModule(menuModule)">
+                <li class="list-group-item" *ngFor="let menuModule of menuModules" (click)="selectMenuModule(menuModule)" [ngClass]="{'item-selected' : selectedMenuModule != null && menuModule.name == selectedMenuModule.name}">
                     {{ menuModule.name }}
                 </li>
             </ul>
@@ -39,7 +39,7 @@
         <div class="col-4">
             <h2>Roles Available</h2>
             <ul class="list-group" *ngIf="selectedMenuModule != null">
-                <li class="list-group-item d-flex justify-content-between" *ngFor="let roleModule of selectedMenuModule.roles">
+                <li class="list-group-item d-flex justify-content-between" *ngFor="let roleModule of selectedMenuModule.roles" [ngClass]="{'item-selected' : roleModule != null && selectedRoleModule != null && roleModule.name == selectedRoleModule.name}">
                     <input type="checkbox" class="form-check-input" id="{{ roleModule.id }}" [checked]="roleModule.value" 
                     (change)="roleChanged($event,selectedMenuModule,roleModule)">
                     <label class="form-check-label" for="{{ roleModule.id }}">{{ roleModule.name }} </label>

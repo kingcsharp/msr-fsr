@@ -1,9 +1,8 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { HelpService, RoleService, Role } from '../../../services/api.client.generated';
+import { HelpService, RoleService, Role, HelpPage } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { RoleModule } from '../../main/roleassignments/roleassignments.component';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
@@ -18,17 +17,17 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class HelpComponent implements OnInit {
   privileges = EnumPrivilege;
-  data: Array<HelpPageModule>;
+  data: Array<HelpPage>;
   allRoles: Array<SelectItem>;
   roleFilter:string;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
-  canAddHelpPage: boolean = false;
-  canEditHelpPage: boolean = false;
-  canDeleteHelpPage: boolean = false;
+  canAddHelpPage: boolean = true;
+  canEditHelpPage: boolean = true;
+  canDeleteHelpPage: boolean = true;
   showConfirmDeleteDialog: boolean = false;
-  helpPageToDelete: HelpPageModule;
+  helpPageToDelete: HelpPage;
 
   constructor(private helpService: HelpService,private roleService: RoleService, 
     private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
@@ -44,29 +43,28 @@ export class HelpComponent implements OnInit {
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
     ];
 
-    this.canAddHelpPage = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDeleteHelpPage = this.hasPrivilege(this.privileges.CanActivate);
-    this.canEditHelpPage = this.hasPrivilege(this.privileges.CanEdit);
+    //this.canAddHelpPage = this.hasPrivilege(this.privileges.CanCreate);
+    //this.canDeleteHelpPage = this.hasPrivilege(this.privileges.CanActivate);
+    //this.canEditHelpPage = this.hasPrivilege(this.privileges.CanEdit);
     this.getHelpPages();
   }
 
   getHelpPages(){
 
-    this.helpService.helpGet(null, env.apiVersion).subscribe(response => {
-      this.data = new Array<HelpPageModule>();
-      let mockId = 1; //TODO Remove mock Id for real ones from API
+    this.globals.showLoader(true);
+    this.helpService.helpGet(null, env.apiVersion).subscribe(responseHandler(response => {
+      this.data = new Array<HelpPage>();
       console.log(response)
-      /*
-      response.toJSON.forEach(helpPage => {
-        helpPage.id = mockId++;
+      
+      response.object.forEach(helpPage => {
         this.data.push(helpPage);
       });
       this.allRoles = new Array<SelectItem>();
-      let distinctRolesFromReturnedResults = response.returnedObject.map( s => s.roles).flat(1).map(role => ({ label: role.name, value: role.name }) ).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
+      let distinctRolesFromReturnedResults = response.object.map(s => s.roles).flat().map(role => ({ label: role.name, value: role.name }) ).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
       this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
       this.loading = false;
-      */
-    });
+      
+    }));
 
   }
 
@@ -74,13 +72,13 @@ export class HelpComponent implements OnInit {
     return this.globals.hasPrivilege('HelpPages', privilegeName);
   }
 
-  openConfirmDeleteDialog(helpPage: HelpPageModule){
+  openConfirmDeleteDialog(helpPage: HelpPage){
 
     this.helpPageToDelete = helpPage;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(helpPage: HelpPageModule){
+  closeConfirmDeleteDialog(helpPage: HelpPage){
     this.helpPageToDelete = null;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
@@ -95,13 +93,4 @@ export class HelpComponent implements OnInit {
     }));
   }
 
-}
-
-
-export class HelpPageModule {
-  id?: number;
-  friendlyUrl: string;
-  helpContent: string;
-  title: string;
-  roles: Role[];
 }
