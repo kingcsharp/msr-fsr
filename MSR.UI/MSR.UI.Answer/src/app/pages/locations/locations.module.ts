@@ -8,15 +8,17 @@ import { GridOptionsComponent } from '../../components/grid-options/grid-options
 import { DialogModule } from 'primeng/dialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
+import { LocationCreateComponent } from './location-create/location-create.component';
 
 export const routes = [
   { path: '', redirectTo: 'locations', pathMatch: 'full' },
-  { path: 'locations', component: LocationsComponent, pathMatch: 'full' }
+  { path: 'locations', component: LocationsComponent, pathMatch: 'full' },
+  { path: 'location-create', component: LocationCreateComponent, pathMatch: 'full'}
 ];
 
 
 @NgModule({
-  declarations: [LocationsComponent, GridOptionsComponent],
+  declarations: [LocationsComponent, GridOptionsComponent, LocationCreateComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵCompiler_compileModuleSync__POST_R3__ } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HelpService, CreateHelpPageRequest, RoleService, Role } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
