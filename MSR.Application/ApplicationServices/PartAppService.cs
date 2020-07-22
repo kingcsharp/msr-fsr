@@ -1,7 +1,4 @@
-﻿
-using MSR.Domain.Abstractions;
-using MSR.Domain.Abstractions.AWS;
-using MSR.Domain.Abstractions.Services;
+﻿using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -30,9 +27,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.GetPartsAsync(command);
-            
-
-            return new CommandResponse<ICollection<Part>>(ret);
+            return new CommandResponse<ICollection<PartModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
         {
@@ -42,7 +37,7 @@ namespace MSR.Application.ApplicationServices
             {
                 await _fileService.CreateFileAsync(part, part.Id, file);
             }
-            return new CommandResponse<Part>(ret);
+            return new CommandResponse<PartModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
