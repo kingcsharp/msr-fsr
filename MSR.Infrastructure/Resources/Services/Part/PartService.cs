@@ -121,22 +121,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 current.Subparts = command.SubParts.Select(x =>
                 {
                     x.ParentId = current.Id;
+                    x.Id = null;
                     var subpart = _mapper.Map<PartSubPartMap>(x);
                     _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
                     return subpart;
                 }).ToList();
 
                 _unitOfWork.Parts.Update(current);
-                try
-                {
-                    await _unitOfWork.SaveChangesAsync();
-                }
-                catch (System.Exception e)
-                {
-
-                    throw;
-                }
-                
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id, "Approved", command.Comment);
                 ret = _mapper.Map<PartModel>(current);
