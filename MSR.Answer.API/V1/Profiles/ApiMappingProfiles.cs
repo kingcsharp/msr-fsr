@@ -29,6 +29,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>();
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();
+            CreateMap<File, Domain.Models.File>().ReverseMap();
         }
     }
 }

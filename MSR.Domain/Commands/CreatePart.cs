@@ -1,4 +1,6 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Models;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
@@ -11,5 +13,6 @@ namespace MSR.Domain.Commands
         public string NickName { get; set; }
         public int? ParentId { get; set; }
         public int? MaximumCycles { get; set; }
+        public List<File> Files { get; set; }
     }
 }

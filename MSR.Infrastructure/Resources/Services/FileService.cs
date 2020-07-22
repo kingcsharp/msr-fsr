@@ -2,10 +2,12 @@
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Threading.Tasks;
+using File = MSR.Infrastructure.Resources.EntityFramework.Entities.File;
 
 namespace MSR.Infrastructure.Resources.Services
 {
@@ -19,22 +21,38 @@ namespace MSR.Infrastructure.Resources.Services
             _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
         }
 
-        public Task<bool> CreateDocumentAsync<T>(T entity, int entityId, string fileContent, string fileContentType, string fileName, string fileLocation) where T : class
+        public Task<bool> CreateDocumentAsync<T>(T entity, int entityId, Domain.Models.File file) where T : class
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> CreateFileAsync<T>(T entity, int entityId, string fileContent, string fileContentType, string fileName, string fileLocation) where T : class
+        public async Task<bool> CreateFileAsync<T>(T entity, int entityId, Domain.Models.File file) where T : class
         {
-            await _fileUploader.UploadFile(fileContent, fileContentType, fileName, fileLocation);
+            var url = await _fileUploader.UploadFile(file);
 
             var tableName = entity.GetType().Name.Replace("Model", "");
 
-            var file = new File()
+            var efFile = new File()
             {
-                 ContentType = fileContentType,
-                  FileURL = 
-            }
+                ContentType = file.ContentType,
+                FileURL = url,
+                Name = file.Name
+            };
+
+            _unitOfWork.Files.Add(efFile);
+            await _unitOfWork.SaveChangesAsync();
+
+            var fileEntityMap = new FileEntityMap()
+            {
+                EntityId = entityId,
+                EntityTableName = tableName,
+                FileId = efFile.Id
+            };
+
+            _unitOfWork.FileEntityMap.Add(fileEntityMap);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
         }
     }
 }

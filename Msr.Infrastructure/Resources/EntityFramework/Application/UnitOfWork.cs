@@ -58,6 +58,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
         private IRepository<File> _files;
+        private IRepository<FileEntityMap> _fileEntityMap;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
@@ -106,6 +107,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
+        public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
 
         #endregion Repositories
 
