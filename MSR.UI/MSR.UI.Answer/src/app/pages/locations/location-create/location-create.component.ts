@@ -12,10 +12,17 @@ import { responseHandler } from '../../../utils/responseHandler';
 export class LocationCreateComponent implements OnInit {
 
   locationToEdit: LocationModel = new LocationModel();
+  parentLocationOptions: Array<LocationModel>;
 
   constructor(private locationService: LocationService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
+    this.locationService.locationGet(null,env.apiVersion).subscribe(responseHandler((response) => {
+
+      this.parentLocationOptions = response.object;
+
+    }));
 
     this.route.queryParams.subscribe(params => {
       this.locationToEdit.id = params['id'] == null ? 0 : params['id'];

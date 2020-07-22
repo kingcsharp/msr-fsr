@@ -20,9 +20,9 @@ export class LocationsComponent implements OnInit {
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
-  canAddLocation: boolean = false;
-  canEditLocation: boolean = false;
-  canDeleteLocation: boolean = false;
+  canAddLocation: boolean = true;//TODO: Set to false by deafult. Only here for development waiting for a fix
+  canEditLocation: boolean = true;//TODO: Set to false by deafult. Only here for development waiting for a fix
+  canDeleteLocation: boolean = true;//TODO: Set to false by deafult. Only here for development waiting for a fix
 
   constructor(private locationService: LocationService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -45,9 +45,9 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'address2', label: 'address1', visible: false }),
     ];
 
-    this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
-    this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
+    //this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);//TODO: Set to false by deafult. Only here for development waiting for a fix
+    //this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);//TODO: Set to false by deafult. Only here for development waiting for a fix
+    //this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);//TODO: Set to false by deafult. Only here for development waiting for a fix
     this.getLocations();
 
     
