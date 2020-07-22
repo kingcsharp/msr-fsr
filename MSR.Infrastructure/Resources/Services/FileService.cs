@@ -20,9 +20,11 @@ namespace MSR.Infrastructure.Resources.Services
             _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
         }
 
-        public Task<bool> CreateFileAsync<T>(T entity, int entityId) where T : class
+        public async Task<bool> CreateFileAsync<T>(T entity, int entityId, string fileContent, string fileContentType, string fileName, string fileLocation) where T : class
         {
-            var 
+            var s3File = await _fileUploader.UploadFile(fileContent, fileContentType, fileName, fileLocation);
+
+
         }
     }
 }

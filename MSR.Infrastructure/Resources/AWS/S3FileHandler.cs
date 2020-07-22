@@ -32,7 +32,7 @@ namespace MSR.Infrastructure.Resources.AWS
 
         public async Task<bool> UploadFile(string content, string contentType, string fileName, string location)
         {
-            var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
+            PutObjectResponse response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
             {
                 ContentBody = content,
                 ContentType = contentType,
