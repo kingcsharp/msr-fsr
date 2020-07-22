@@ -1,9 +1,10 @@
 ﻿
+using MSR.Domain.Models.BaseModels;
+
 namespace MSR.Domain.Models
 {
-    public class LocationModel
+    public class LocationModel: TrackableModel
     {
-        public int Id { get; set; }
         public int OldId { get; set; }
         public string Name { get; set; }
         public string Address1 { get; set; }
@@ -17,5 +18,6 @@ namespace MSR.Domain.Models
         public string InternalAddress { get; set; }
         public string InvoiceClass { get; set; }
         public TimeZone TimeZone { get; set; }
+        public string Status { get; set; }
     }
 }

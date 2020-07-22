@@ -11,6 +11,7 @@ using System.Net;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -26,7 +27,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<Customer>>))]
         public async Task<IActionResult> GetCustomers([FromQuery]GetMultipleCustomersRequest filters)
         {
             var getCustomers = filters.ToGetMultipleCustomersCommand();
@@ -35,7 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<Customer>))]
         public async Task<IActionResult> CreateCustomer([FromBody, Required]CreateCustomerRequest request)
         {
             var createCustomer = request.ToCreateCustomerCommand();
