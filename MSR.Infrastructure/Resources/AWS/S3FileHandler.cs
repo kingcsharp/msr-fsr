@@ -1,8 +1,9 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using MSR.Domain.Abstractions.AWS;
+using MSR.Domain.Exceptions;
+using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -30,17 +31,22 @@ namespace MSR.Infrastructure.Resources.AWS
             return response.ResponseStream;
         }
 
-        public async Task<bool> UploadFile(string content, string contentType, string fileName, string location)
+        public async Task<string> UploadFile(Domain.Models.File file)
         {
             var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
             {
-                ContentBody = content,
-                ContentType = contentType,
+                ContentBody = file.Base64String,
+                ContentType = file.ContentType,
                 BucketName = _s3Information.FileBucketName,
-                Key = fileName
+                Key = file.Name
             });
 
-            return response.HttpStatusCode == System.Net.HttpStatusCode.OK || response.HttpStatusCode == System.Net.HttpStatusCode.Created; 
+            if((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
+            {
+                throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
+            }
+
+            return $"{_s3Information.AWSURL}{file.Name}";
         }
     }
 }
