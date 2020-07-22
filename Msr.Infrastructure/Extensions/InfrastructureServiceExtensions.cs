@@ -54,6 +54,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IHelpService, HelpService>();
             services.AddScoped<IAmazonS3>(i => new AmazonS3Client(Amazon.RegionEndpoint.USEast1));
             services.AddSingleton<IFileHandlerFactory, FileHandlerFactory>();
+            services.AddScoped<IFileService, FileService>();
 
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
