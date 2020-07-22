@@ -10,6 +10,7 @@ namespace MSR.Domain.Commanding
         public CommandResponse(T data)
         {
             Data = data;
+            Success = true;
         }
 
         public CommandResponse(Exception ex)
@@ -25,6 +26,7 @@ namespace MSR.Domain.Commanding
         public CommandResponse(Exception ex)
         {
             ResponseError = new Error() { Exception = ex, Message = ex.Message };
+            Success = false;
         }
 
         public Error ResponseError { get; }
