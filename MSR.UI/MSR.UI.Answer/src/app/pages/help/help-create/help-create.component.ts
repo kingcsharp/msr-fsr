@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HelpService, CreateHelpPageRequest, RoleService, Role } from '../../../services/api.client.generated';
+import { HelpService, CreateHelpPageRequest, RoleService, Role, HelpPage } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { HelpPageModule } from '../help/help.component';
 
 @Component({
   selector: 'app-help-create',
@@ -19,7 +18,7 @@ export class HelpCreateComponent implements OnInit {
   selectedRoles: Role[] = new Array<Role>();
   public Editor = ClassicEditor;
   helpPageToEditId: number = 0;
-  helpPageToEdit: HelpPageModule;
+  helpPageToEdit: HelpPage;
 
   constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, private route: ActivatedRoute) { }
 
@@ -32,7 +31,7 @@ export class HelpCreateComponent implements OnInit {
 
           this.helpService.helpGet(this.helpPageToEditId,env.apiVersion).subscribe(responseHandler((response) => {
             
-            this.helpPageToEdit = response.returnedObject[0] as HelpPageModule;
+            this.helpPageToEdit = response.object[0] as HelpPage;
             this.helpPageToEdit.roles.forEach(role => {
               this.selectedRoles.push(role);
 
@@ -41,7 +40,7 @@ export class HelpCreateComponent implements OnInit {
 
       }else{
 
-        this.helpPageToEdit = new HelpPageModule();
+        this.helpPageToEdit = new HelpPage();
 
       }
 

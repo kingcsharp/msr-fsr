@@ -74,8 +74,20 @@ export class RoleassignmentsComponent implements OnInit {
 
         if(roleModel.value){
           
+          let permissions;
+          if(menuItem.roles.find(s => s.id === role.id).permissions != null){
+            permissions = menuItem.roles.find(s => s.id === role.id).permissions;
+          }else{
+            permissions = new Permission();
+            permissions.canRead = false;
+            permissions.canCreate = false;
+            permissions.canEdit = false;
+            permissions.canActivate = false;
+            permissions.canApprove = false;
+            permissions.canDelete = false;
+          }
           let inheritedPermissions = menuItem.roles.find(s => s.id === role.id).inheritedPermissions;
-          let permissions = menuItem.roles.find(s => s.id === role.id).permissions;
+          
 
           let canActivatePermissionModel = new PermissionModel();
           canActivatePermissionModel.inheritedPermission = inheritedPermissions.canActivate;
