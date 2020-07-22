@@ -177,15 +177,14 @@ export class PartsComponent implements OnInit {
   removeRow(part) {
     const ctrl = this;
     this.globals.showLoader(true);
-    // this.workflowStageService.workflowStageDelete(part.id, env.apiVersion)
-    //   .pipe(take(1)).subscribe(responseHandler((resp) => {
-    //     const index = this.data.findIndex(x => x.id === workflowStage.id);
-    //     this.data.splice(index, 1);
-    //   }, () => {
-    //     // DO not update user
-    //   }));
+    this.partsService.partDelete(part.id, env.apiVersion)
+      .pipe(take(1)).subscribe(responseHandler((resp) => {
+        const index = this.data.findIndex(x => x.id === part.id);
+        this.data.splice(index, 1);
+      }, () => {
+        // DO not update user
+      }));
   }
-
   //onWorkflowSubmit
   onpartSubmit() {
     jQuery('.parsleyjs').parsley().validate();
@@ -205,6 +204,10 @@ export class PartsComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currPart.id === undefined) {
             ctrl.data.push(resp.object);
+          }
+          else {
+            const index = this.data.findIndex(x => x.id === this.currPart.id);
+            this.data.splice(index, 0, resp.object);
           }
           ctrl.clseDialog();
         }
