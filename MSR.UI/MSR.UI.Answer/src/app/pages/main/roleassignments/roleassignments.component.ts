@@ -247,8 +247,8 @@ export class RoleassignmentsComponent implements OnInit {
   savePendingChanges(){
 
     this.pendingPermissions.forEach(pendingPermission =>{
-
-      this.globals.showLoader(true);
+      //TODO: Add back when Role stuff is fixed with Web API
+      //this.globals.showLoader(true);
       if(pendingPermission.permissionModule == null){
         
         if(pendingPermission.event === 'add'){

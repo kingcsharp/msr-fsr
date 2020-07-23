@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HelpService, CreateHelpPageRequest, RoleService, Role, HelpPage } from '../../../services/api.client.generated';
+import { HelpService, CreateHelpPageRequest, RoleService, Role, HelpPage, UpdateHelpPageRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Globals } from '../../../models/lib/globals';
 
 @Component({
   selector: 'app-help-create',
@@ -20,12 +21,13 @@ export class HelpCreateComponent implements OnInit {
   helpPageToEditId: number = 0;
   helpPageToEdit: HelpPage;
 
-  constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, private route: ActivatedRoute) { }
+  constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, 
+    private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
 
     this.route.queryParams.subscribe(params => {
-      this.helpPageToEditId = params['id'] == null ? 0 : params['id'];
+      this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);
 
       if (this.helpPageToEditId !== 0) {
 
@@ -47,45 +49,73 @@ export class HelpCreateComponent implements OnInit {
     });
 
     this.roleService.role(env.apiVersion).subscribe(response => {
-      this.availableRoles = this.availableRoles.concat(response);
+      this.availableRoles = this.availableRoles.concat(response.object);
     });
 
   }
 
   saveHelpPage() {
 
-    
-    //this.createHelpPageRequest.roleIds = this.selectedRoles.filter((selectedRole) => this.availableRoles.find(role => role.name === selectedRole.name)).map(s => s.id);
+    let createHelpPageRequest = new CreateHelpPageRequest();
+    createHelpPageRequest.title = this.helpPageToEdit.title;
+    createHelpPageRequest.friendlyURL = this.helpPageToEdit.friendlyURL;
+    createHelpPageRequest.helpContent = this.helpPageToEdit.content;
 
-    /* TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here and James gets you the IDs for HelpPages
-    this.helpService.helpPost(env.apiVersion,this.createHelpPageRequest).subscribe(responseHandler((resp) => {
-      if (!resp.hasErrors) {
-        console.log(resp);
+    if(this.selectedRoles.length === 0){
+
+      createHelpPageRequest.roleIds = new Array<number>();
+
+    }else{
+
+      createHelpPageRequest.roleIds = this.selectedRoles.filter((selectedRole) => this.availableRoles.find(role => role.name === selectedRole.name)).map(s => s.id);
+
+    }
+
+    this.globals.showLoader(true);
+    this.helpService.helpPost(env.apiVersion,createHelpPageRequest).subscribe(responseHandler((response) => {
+      if (!response.hasErrors) {
+        console.log(response);
+        this.helpPageToEditId = response.object.id;
+        //this.router.navigateByUrl('app/help/help');
       }
     }, (error) => {
       console.log(error);
     }));
-    */
+    
 
-    this.location.go('help/help');
+    
   }
 
   updateHelpPage() {
 
+    let updateHelpPageRequest = new UpdateHelpPageRequest();
+    updateHelpPageRequest.helpPageId = this.helpPageToEditId;
+    updateHelpPageRequest.title = this.helpPageToEdit.title;
+    updateHelpPageRequest.friendlyURL = this.helpPageToEdit.friendlyURL;
+    updateHelpPageRequest.helpContent = this.helpPageToEdit.content;
+    
+    if(this.selectedRoles.length === 0){
 
-    //this.createHelpPageRequest.roleIds = this.selectedRoles.filter((selectedRole) => this.availableRoles.find(role => role.name === selectedRole.name)).map(s => s.id);
+      updateHelpPageRequest.roleIds = new Array<number>();
 
-    /* TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here and James gets you the IDs for HelpPages
-    this.helpService.helpPost(env.apiVersion,this.createHelpPageRequest).subscribe(responseHandler((resp) => {
-      if (!resp.hasErrors) {
-        console.log(resp);
+    }else{
+
+      updateHelpPageRequest.roleIds = this.selectedRoles.filter((selectedRole) => this.availableRoles.find(role => role.name === selectedRole.name)).map(s => s.id);
+
+    }
+
+    // TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here and James gets you the IDs for HelpPages
+    this.helpService.helpPatch(env.apiVersion,updateHelpPageRequest).subscribe(responseHandler((response) => {
+      if (!response.hasErrors) {
+        console.log(response);
+        this.router.navigateByUrl('app/help/help');
       }
     }, (error) => {
       console.log(error);
     }));
-    */
+    
 
-    this.location.go('help/help');
+    
   }
 
 }
