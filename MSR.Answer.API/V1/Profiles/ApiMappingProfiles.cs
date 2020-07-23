@@ -19,9 +19,9 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetHelpPageRequest, GetHelpPage>();
 
             CreateMap<CreatePartRequest, CreatePart>()
-                .ForMember("SubParts", opts => opts.MapFrom("CreateSubParts"));
+            .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
             CreateMap<UpdatePartRequest, UpdatePart>()
-                .ForMember("SubParts", opts => opts.MapFrom("CreateSubParts"));
+                .ForMember(dest=>dest.SubParts, opts => opts.MapFrom(src=>src.CreateSubParts));
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();

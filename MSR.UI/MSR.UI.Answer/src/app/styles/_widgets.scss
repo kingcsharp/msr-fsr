@@ -1472,6 +1472,7 @@ body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker
 .switch i {
   display: inline-block;
   cursor: pointer;
+  background: #cccccc;
   padding-right: 20px;
   transition: all ease 0.2s;
   -webkit-transition: all ease 0.2s;
@@ -1886,5 +1887,11 @@ input.parsley-error{
     .description + .progress {
       margin-bottom: 0;
     }
+  }
+}
+
+.partTbl{
+  p-paginator p-dropdown{
+      float: left;
   }
 }

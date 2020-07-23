@@ -8,7 +8,7 @@ namespace MSR.Domain.Commands
     {
         public CreatePart()
         {
-            SubParts = null;
+            SubParts = new HashSet<SubPartModel>();
         }
         public string Name { get; set; }
         public string PartNumber { get; set; }

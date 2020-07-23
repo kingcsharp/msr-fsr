@@ -7,7 +7,7 @@ import {
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
@@ -174,7 +174,7 @@ export class ApprovalWorkflowComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege('ApprovalWorkflows', privName);
+    return this.globals.hasPrivilege(EnumMenuItem.ApprovalWorkflows, privName);
   }
 
   showDialog(workflow: WorkflowModel) {

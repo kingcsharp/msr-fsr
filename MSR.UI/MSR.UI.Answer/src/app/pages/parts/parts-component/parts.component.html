@@ -175,7 +175,8 @@
     </ng-template>
   </p-table>
 </widget>
-<p-dialog *ngIf="display" header="{{ currPart.id === undefined ?'Create Part':'Edit Part'}}" [(visible)]="display"
+<!-- *ngIf="display" -->
+<p-dialog header="{{ currPart.id === undefined ?'Create Part':'Edit Part'}}" [(visible)]="display"
   [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onpartSubmit()" novalidate="novalidate">
@@ -216,10 +217,10 @@
               OEM Part Number
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="oEMPartNumber" name="oEMPartNumber" [(ngModel)]="currPart.oEMPartNumber"
+              <input type="text" id="oemPartNumber" name="oemPartNumber" [(ngModel)]="currPart.oemPartNumber"
                 data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                 data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
-                placeholder="OEM Part Number" data-cy="oEMPartNumber-input">
+                placeholder="OEM Part Number" data-cy="oemPartNumber-input">
             </div>
             <label for="nickName" class="col-md-2 col-form-label text-md-right">
               NickName
@@ -253,17 +254,15 @@
                 data-parsley-trigger="change" placeholder="Maximum Cycles" data-cy="maximumCycles-input">
             </div>
           </div>
-          <div>{{currPart.createSubParts | json}}</div>
           <div class="form-group row partTbl">
-            <form>
               <widget>
                 <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
                   [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
                   [loading]="loading" [paginator]="true"
-                  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0">
+                  currentPageReportTemplate="Showing {first}-{last} of {{currPart.createSubParts.length}}" [filterDelay]="0">
                   <ng-template pTemplate="header">
                     <tr>
-                      <th data-cy="subpart-header" class="aaa">
+                      <th data-cy="subpart-header">
                         Part
                       </th>
                       <th data-cy="subpart-header">
@@ -275,13 +274,14 @@
                   <ng-template pTemplate="body" let-partmodel>
                     <tr class="ui-selectable-row">
                       <td>
-                        <p-dropdown [options]="allParts" [filter]="true" [virtualScroll]="true" appendTo="body" itemSize="30"></p-dropdown>
+                        <p-dropdown placeholder="Select Sub Part" name="allpartsDropdown" [options]="allParts" [filter]="true" 
+                        [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
+                          itemSize="30" [ngModelOptions]="{standalone: true}"></p-dropdown>
                       </td>
                       <td class="text-capitalize">
                         <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
                           data-parsley-trigger="change" data-parsley-min="0" data-parsley-required="true"
-                          class="form-control input-transparent" tooltip="Min 3 characters" placeholder="Name"
-                          data-cy="subpartqty-input">
+                          class="form-control input-transparent" placeholder="Qty" data-cy="subpartqty-input" [ngModelOptions]="{standalone: true}">
                       </td>
                       <td>
                         <i class="far fa-trash-alt pointer" tooltip="Remove Part" data-cy="removeSubPart"
@@ -296,15 +296,12 @@
                   </ng-template>
                 </p-table>
               </widget>
-            </form>
-           
-
-          </div>
-          <div class="form-group row">
-            <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
-              role="button" data-cy="save-button">
-              Add Sub Part
-            </button>
+            <div class="gridBtn">
+              <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="addpart-button">
+                Add Sub Part
+              </button>
+            </div>
           </div>
         </fieldset>
       </div>
