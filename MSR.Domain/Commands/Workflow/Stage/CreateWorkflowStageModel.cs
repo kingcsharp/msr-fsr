@@ -8,7 +8,7 @@ namespace MSR.Domain.Commands
     {
         public CreateWorkflowStageModel()
         {
-            WorkflowGroupStageMapModel = new List<WorkflowGroupStageMapModel>() { };
+            WorkflowGroupStageMapModel = new HashSet<WorkflowGroupStageMapModel>() { };
         }
 
         public string Name { get; set; }

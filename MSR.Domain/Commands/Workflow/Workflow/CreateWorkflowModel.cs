@@ -8,8 +8,8 @@ namespace MSR.Domain.Commands
     {
         public CreateWorkflowModel()
         {
-            MemberStages = new List<WorkflowStageMapModel>() { };
-            ActivityMaps = new List<WorkflowActivityMapModel>() { };
+            MemberStages = new HashSet<WorkflowStageMapModel>() { };
+            ActivityMaps = new HashSet<WorkflowActivityMapModel>() { };
         }
 
         public string Name { get; set; }

@@ -8,8 +8,8 @@ namespace MSR.Domain.Commands
     {
         public CreateWorkflowGroupModel()
         {
-            Roles = new List<WorkflowGroupRoleMapModel>() { };
-            Users = new List<WorkflowGroupUserMapModel>() { };
+            Roles = new HashSet<WorkflowGroupRoleMapModel>() { };
+            Users = new HashSet<WorkflowGroupUserMapModel>() { };
         }
         
         public string Name { get; set; }

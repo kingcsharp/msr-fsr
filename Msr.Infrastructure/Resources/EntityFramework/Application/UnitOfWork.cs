@@ -57,6 +57,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Document> _documents;
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
+        private IRepository<PartSubPartMap> _partSubPartMap;
         private IRepository<File> _files;
         private IRepository<FileEntityMap> _fileEntityMap;
 
@@ -106,6 +107,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get { return _approvalTransactionLog ??= new EFRepository<ApprovalTransactionLog>(Context); } }
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
+        public IRepository<PartSubPartMap> PartSubPartMaps { get { return _partSubPartMap ?? (_partSubPartMap = new EFRepository<PartSubPartMap>(Context)); } }
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
 

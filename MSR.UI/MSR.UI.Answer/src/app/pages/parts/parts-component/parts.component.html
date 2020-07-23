@@ -1,0 +1,320 @@
+<h1 class="page-title" data-cy="page-title">
+  <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+  {{globals.activeMenu.name}}
+</h1>
+<widget>
+  <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId}}">
+    <ng-template pTemplate="caption">
+      <div class="text-right">
+        <button *ngIf="canAddStages" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
+          data-cy="add-button">
+          + Add
+        </button>
+        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+          [gridVersion]="gridVersion" data-cy="usergrid-options">
+        </grid-options>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+          data-cy="usertable-header">
+          {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+        </th>
+        <th></th>
+      </tr>
+      <tr>
+        <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
+          <div class="position-relative">
+            <input id="id" pInputText type="text" tooltip="Search by Id"
+              (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['id']?.value">
+            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Name" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['name']?.value">
+            <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('partNumber',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Part Number" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'partNumber', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['partNumber']?.value">
+            <i *ngIf="dt.filters['partNumber']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'partNumber')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('oemPartNumber',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by OEM Part Number" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'oemPartNumber', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['oemPartNumber']?.value">
+            <i *ngIf="dt.filters['oemPartNumber']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'oemPartNumber')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('isKit',gridSettings)">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isKitStatus" [filterId]="'isKit'"
+            [defaultText]="'Select Is Kit'" [defaultTextTooltip]="''" [datatable]="dt">
+          </multiselect-wrapper>
+        </th>
+        <!-- <th [hidden]="!cg.isVisibleCol('qty',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by QTY" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'qty', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['qty']?.value">
+            <i *ngIf="dt.filters['qty']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'qty')"></i>
+          </div>
+        </th> -->
+        <!-- <th [hidden]="!cg.isVisibleCol('parentId',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by ParentId" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'parentId', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['parentId']?.value">
+            <i *ngIf="dt.filters['parentId']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'parentId')"></i>
+          </div>
+        </th> -->
+        <th [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by maximumCycles" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'maximumCycles', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['maximumCycles']?.value">
+            <i *ngIf="dt.filters['maximumCycles']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'maximumCycles')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+          <div class="position-relative" tooltip="Search by Created Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            </pcalendar-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+          <div class="position-relative">
+            <input id="createdByName" pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'createdByName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['createdByName']?.value">
+            <i *ngIf="dt.filters['createdByName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'createdByName')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+          <div class="position-relative" tooltip="Search by Last Updated On Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'" [datatable]="dt">
+            </pcalendar-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+          <div class="position-relative">
+            <input id="lastUpdatedByName" pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'lastUpdatedByName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['lastUpdatedByName']?.value">
+            <i *ngIf="dt.filters['lastUpdatedByName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'lastUpdatedByName')"></i>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-partmodel>
+      <tr class="ui-selectable-row">
+        <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
+          {{partmodel.id}}
+        </td>
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
+          {{partmodel.name}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('partNumber',gridSettings)">
+          {{partmodel.partNumber}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('oemPartNumber',gridSettings)">
+          {{partmodel.oemPartNumber }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('isKit',gridSettings)">
+          {{partmodel?.isKit?'Yes':'No' }}
+        </td>
+        <!-- <td [hidden]="!cg.isVisibleCol('qty',gridSettings)">
+          {{partmodel.qty}}
+        </td> -->
+        <td [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
+          {{partmodel.maximumCycles }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+          {{partmodel.createdOn | date :'short' }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+          {{partmodel.createdByName }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+          {{partmodel.lastUpdatedOn | date :'short' }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+          {{partmodel.lastUpdatedByName }}
+        </td>
+        <td>
+          <i *ngIf="canEditStages" class="fa fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
+            (click)="showDialog(partmodel)"></i>
+          <i class="far fa-trash-alt pointer" tooltip="Delete Part" data-cy="deleteRow"
+            (click)="removeRow(partmodel)"></i>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" style="text-align:left">No parts found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</widget>
+<!-- *ngIf="display" -->
+<p-dialog header="{{ currPart.id === undefined ?'Create Part':'Edit Part'}}" [(visible)]="display"
+  [style]="{width: '50vw'}" data-cy="user-header">
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" (ngSubmit)="onpartSubmit()" novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+          </span>
+          Part Details
+        </h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <label for="name" class="col-md-2 col-form-label text-md-right">
+              Name
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="name" name="name" [(ngModel)]="currPart.name" data-validate="parsley"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Name"
+                data-cy="name-input">
+            </div>
+            <label for="partNumber" class="col-md-2 col-form-label text-md-right">
+              Part Number
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="partNumber" name="partNumber" [(ngModel)]="currPart.partNumber"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
+                placeholder="Part Number" data-cy="partNr-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="oEMPartNumber" class="col-md-2 col-form-label text-md-right">
+              OEM Part Number
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="oemPartNumber" name="oemPartNumber" [(ngModel)]="currPart.oemPartNumber"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
+                placeholder="OEM Part Number" data-cy="oemPartNumber-input">
+            </div>
+            <label for="nickName" class="col-md-2 col-form-label text-md-right">
+              NickName
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="nickName" name="nickName" [(ngModel)]="currPart.nickName" data-validate="parsley"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="nickName"
+                data-cy="nickName-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2  col-form-label text-md-right">
+              Is Kit
+            </label>
+            <div class="col-md-4 ">
+              <div class="display-inline-block isActive">
+                <label class="form-check-label" for="isKit" class="switch">
+                  <input class="form-check-input" [(ngModel)]="currPart.isKit" name="isKit" type="checkbox" class="ios"
+                    checked id="isKit" disabled="disabled" />
+                  <i data-cy="isKit-checkbox"></i>
+                </label>
+              </div>
+            </div>
+            <label for="maximumCycles" class="col-md-2 col-form-label text-md-right">
+              Maximum Cycles
+            </label>
+            <div class="col-md-4 ">
+              <input type="number" id="maximumCycles" name="maximumCycles" [(ngModel)]="currPart.maximumCycles"
+                class="form-control input-transparent" data-parsley-min="0" data-validate="parsley"
+                data-parsley-trigger="change" placeholder="Maximum Cycles" data-cy="maximumCycles-input">
+            </div>
+          </div>
+          <div class="form-group row partTbl">
+              <widget>
+                <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
+                  [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
+                  [loading]="loading" [paginator]="true"
+                  currentPageReportTemplate="Showing {first}-{last} of {{currPart.createSubParts.length}}" [filterDelay]="0">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th data-cy="subpart-header">
+                        Part
+                      </th>
+                      <th data-cy="subpart-header">
+                        Qty
+                      </th>
+                      <th></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-partmodel>
+                    <tr class="ui-selectable-row">
+                      <td>
+                        <p-dropdown placeholder="Select Sub Part" name="allpartsDropdown" [options]="allParts" [filter]="true" 
+                        [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
+                          itemSize="30" [ngModelOptions]="{standalone: true}"></p-dropdown>
+                      </td>
+                      <td class="text-capitalize">
+                        <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
+                          data-parsley-trigger="change" data-parsley-min="0" data-parsley-required="true"
+                          class="form-control input-transparent" placeholder="Qty" data-cy="subpartqty-input" [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td>
+                        <i class="far fa-trash-alt pointer" tooltip="Remove Part" data-cy="removeSubPart"
+                          (click)="removeSubPart(partmodel)"></i>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="8" style="text-align:left">No sub parts added.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </widget>
+            <div class="gridBtn">
+              <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="addpart-button">
+                Add Sub Part
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+          Save
+        </button>
+        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>

@@ -13,7 +13,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 {
     public class AnswerContext : DbContext
     {
-        private const string ConnectionString_ = "server=bang.msr-fsr.com;Initial Catalog=Answer3_Dev;User Id=msrfsr;Password=snRvf2rFVG7rGAVE;";
+        private const string ConnectionString_ = "server=bang.msr-fsr.com;Initial Catalog=Answer3_Dev;User Id=msrfsr;Password=snRvf2rFVG7rGAVE;MultipleActiveResultSets=true";
         public DbSet<User> User { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<Customer> Customer { get; set; }
@@ -55,6 +55,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Procedure> Procedure { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
+        public DbSet<PartSubPartMap> PartSubPartMap { get; set; }
         public DbSet<File> File { get; set; }
         public DbSet<FileEntityMap> FileEntityMap { get; set; }
 
@@ -119,17 +120,21 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         private void HandleTrackableEntity(EntityEntry entry, DateTime now)
         {
-            TrackableEntity trackable;
-            if ((trackable = entry.Entity as TrackableEntity) != null)
+            CreatableEntity creatable;
+            if ((creatable = entry.Entity as CreatableEntity) != null)
             {
                 int? answerUserId = DelegateHandler.GetCurrentUserId();
                 if (entry.State == EntityState.Added)
                 {
-                    trackable.CreatedOn = now;
-                    trackable.CreatedBy = answerUserId;
+                    creatable.CreatedOn = now;
+                    creatable.CreatedBy = answerUserId;
                 }
-                trackable.LastUpdatedOn = now;
-                trackable.LastUpdatedBy = answerUserId;
+                TrackableEntity trackable;
+                if ((trackable = entry.Entity as TrackableEntity) != null)
+                {
+                    trackable.LastUpdatedOn = now;
+                    trackable.LastUpdatedBy = answerUserId;
+                }
             }
         }
 

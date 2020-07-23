@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Collections.Generic;
 using MSR.Domain.Commanding.Enums;
+using System;
 
 namespace MSR.Answer.API.Extentions
 {
@@ -35,10 +36,8 @@ namespace MSR.Answer.API.Extentions
                     {
                         var accountService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
                         if (!int.TryParse(context.Principal.FindFirst(ClaimTypes.Name)?.Value, out var accountId)) context.Fail("Unauthorized");
-                        var user = accountService.ValidateAccount(accountId);
-                        if (user == null)
-                        {
-                            // return unauthorized if user no longer exists
+                        if (!accountService.ValidateAccount(accountId))
+                        {// return unauthorized if user no longer exists
                             context.Fail("Unauthorized");
                         }
 
@@ -64,6 +63,21 @@ namespace MSR.Answer.API.Extentions
                             approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
 
                             return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanRead);
+                        };
+
+                        string userPrivileges = context.Principal.FindFirst(c => c.Type == "Privileges").Value;
+
+                        var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
+
+                        DelegateHandler.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
+                        {
+                            var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
+                            if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
+                            {
+                                return false;
+                            }
+
+                            return true;
                         };
 
                         return Task.CompletedTask;

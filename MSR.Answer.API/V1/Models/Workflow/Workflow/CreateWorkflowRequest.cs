@@ -8,8 +8,8 @@ namespace MSR.Answer.API.V1.Models
     {
         public CreateWorkflowRequest()
         {
-            MemberStages = new List<WorkflowStageMapModel>() { };
-            ActivityMaps = new List<WorkflowActivityMapModel>() { };
+            MemberStages = new HashSet<WorkflowStageMapModel>() { };
+            ActivityMaps = new HashSet<WorkflowActivityMapModel>() { };
         }
 
         [Required]
