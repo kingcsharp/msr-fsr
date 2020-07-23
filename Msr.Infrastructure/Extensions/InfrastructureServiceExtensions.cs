@@ -19,6 +19,11 @@ using MSR.Infrastructure.Resources.Services.Role;
 using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
 using MSR.Infrastructure.Resources.Services.Help;
+using Amazon.S3;
+using MSR.Domain.Abstractions;
+using MSR.Infrastructure.Factories;
+using MSR.Infrastructure.Resources.AWS;
+using Amazon.Runtime;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -28,6 +33,8 @@ namespace MSR.Infrastructure.Extensions
         {
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
             services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dbConfig.ConnectionString));
+            var s3Config = config.GetSection(nameof(S3Information)).Get<S3Information>();
+            services.AddSingleton(s3Config);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAccountService, AccountService>();
@@ -49,6 +56,10 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IHelpService, HelpService>();
+            services.AddScoped<IAmazonS3>(i => new AmazonS3Client(new BasicAWSCredentials(s3Config.AWSAccessKey, s3Config.AWSSecretKey),Amazon.RegionEndpoint.USEast1));
+            services.AddSingleton<IFileHandlerFactory, FileHandlerFactory>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<S3FileHandler>();
 
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
