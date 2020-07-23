@@ -42,7 +42,11 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToCreatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>("Part was successfully added.");
+            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault()) {
+                return ret.ToOkObjectResponse<PartModel>("Part was successfully added.");
+            } else {
+                return ret.ToAcceptedObjectResponse<PartModel>("Part was successfully submitted to workflow for approval.");
+            }
         }
 
         [HttpPatch]

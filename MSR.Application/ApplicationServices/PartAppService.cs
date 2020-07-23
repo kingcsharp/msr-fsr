@@ -37,10 +37,15 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _partService.CreatePartAsync(command);
             var part = ret;
-            await _fileService.DeleteFilesAsync(part, part.Id);
-            foreach(var file in command.Files)
-            {
-                await _fileService.CreateFileAsync(part, part.Id, file);
+
+            // If the part is not active, that means it's pending approval.  Do not
+            // upload the files yet.
+            if (part.IsActive.GetValueOrDefault()) {
+                await _fileService.DeleteFilesAsync(part, part.Id);
+                foreach(var file in command.Files)
+                {
+                    await _fileService.CreateFileAsync(part, part.Id, file);
+                }
             }
             return new CommandResponse<PartModel>(ret);
         }

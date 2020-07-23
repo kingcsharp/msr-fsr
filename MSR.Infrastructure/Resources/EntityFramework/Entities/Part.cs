@@ -31,5 +31,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual User Created { get; set; }
         [ForeignKey("LastUpdatedBy")]
         public virtual User LastUpdated { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

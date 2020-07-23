@@ -21,5 +21,6 @@ namespace MSR.Domain.Models
         public string LastUpdatedByName { get; set; }
         public virtual ICollection<SubPartModel> CreateSubParts { get; set; }
         public virtual ICollection<FileModel> Files { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
