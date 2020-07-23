@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.Internal;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -7,14 +6,13 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
-using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
@@ -47,6 +45,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var result = parts.Select(x => _mapper.Map<PartModel>(x)).OrderBy(x => x.Name).ToList();
             return result;
         }
+
         public async Task<PartModel> CreatePartAsync(CreatePart command)
         {
             PartModel ret;
@@ -85,16 +84,29 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
+                // Create a blank part because we need a foreign key ID
+                Part part = _mapper.Map<Part>(command);
+                part.IsActive = false;
+                _unitOfWork.Parts.Add(part);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Submit the approval
                 var approval = _mapper.Map<PartApproval>(command);
+                approval.Comments = JsonConvert.SerializeObject(command);
+                approval.PartId = part.Id;
+                approval.WorkflowId =
+                    _unitOfWork.Workflows.Query().First().Id; // TODO: where does this come from?
+                approval.WorkflowGroupId=
+                    _unitOfWork.WorkflowGroups.Query().First().Id; // TODO: where does this come from?
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<PartModel>(approval);
+                ret = _mapper.Map<PartModel>(part);
             }
 
             return ret;
         }
-        public async Task<PartModel> UpdatePartAsync(UpdatePart command)
+        public async Task<PartModel> UpdatePartAsync(UpdatePart command, bool executeNow = false)
         {
             Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
@@ -106,7 +118,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             PartModel ret;
 
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            if (executeNow || DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 foreach (var child in current.Subparts)
                 {
@@ -135,9 +147,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
             else
             {
                 var approval = _mapper.Map<PartApproval>(command);
+                approval.Comments = JsonConvert.SerializeObject(command);
+                approval.WorkflowId =
+                    _unitOfWork.Workflows.Query().First().Id; // TODO: where does this come from?
+                approval.WorkflowGroupId=
+                    _unitOfWork.WorkflowGroups.Query().First().Id; // TODO: where does this come from?
+
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
-                ret = _mapper.Map<PartModel>(approval);
+
+                ret = _mapper.Map<PartModel>(current);
+                ret.IsActive = false;
             }
 
             return ret;

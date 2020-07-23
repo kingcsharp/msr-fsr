@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Threading.Tasks;
 using MSR.Answer.API.V1.Models;
@@ -18,7 +17,6 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    [AllowAnonymous]
     public class WorkflowPendingApprovalController : BaseApiController
     {
         private readonly ILogger _logger;

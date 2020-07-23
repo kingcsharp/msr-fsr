@@ -20,6 +20,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
 
         public static async Task<bool> LogApprovalTransaction<T>(this IUnitOfWork unitOfWork, T entity, int entityId, string status = "Approved", string comments = null)
         {
+            if (DelegateHandler.GetCurrentUserId == null)
+            {
+                throw new MSR.Domain.Exceptions.DomainException("User not logged in", Domain.Commanding.Enums.DomainError.BadRequest);
+            }
             var log = new ApprovalTransactionLog()
             {
                 ApprovalEntity = entity.GetType().Name.Replace("Proxy", ""),

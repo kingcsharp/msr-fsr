@@ -8,10 +8,10 @@ using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services
@@ -20,11 +20,13 @@ namespace MSR.Infrastructure.Resources.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IPartService _partService;
 
-        public WorkflowApprovalService(IUnitOfWork unitOfWork, IMapper mapper)
+        public WorkflowApprovalService(IUnitOfWork unitOfWork, IMapper mapper, IPartService partService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _partService = partService;
         }
 
         public async Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command)
@@ -67,12 +69,17 @@ namespace MSR.Infrastructure.Resources.Services
                     result = (ApprovalEntity)locationApproval;
                     break;
                 case EnumApprovalTables.PartApproval:
-                    var partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                    PartApproval partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+
+                    string data = partApproval.Comments;
+                    var dataObj = JsonConvert.DeserializeObject<UpdatePart>(data);
+                    dataObj.Id = partApproval.PartId;
+                    await _partService.UpdatePartAsync(dataObj, true);
+
+                    var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == partApproval.PartId);
                     partApproval.Status = status;
                     _mapper.Map(partApproval, part);
                     _unitOfWork.PartApprovals.Update(partApproval);
-                    _unitOfWork.Parts.Update(part);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(partApproval, partApproval.Id, status.Name, command.Comments);
                     result = (ApprovalEntity)partApproval;

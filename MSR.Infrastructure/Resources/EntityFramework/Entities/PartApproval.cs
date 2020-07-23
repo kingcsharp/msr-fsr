@@ -15,13 +15,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(100)]
         public string OEMPartNumber { get; set; }
 
-        public int Qty { get; set; }
-
         [StringLength(100)]
         public string NickName { get; set; }
 
-        public int? ParentId { get; set; }
-
         public int? MaximumCycles { get; set; }
+
+        public string Comments { get; set; }
     }
 }

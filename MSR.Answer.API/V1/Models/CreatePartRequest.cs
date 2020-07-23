@@ -1,4 +1,4 @@
-﻿using MSR.Domain.Models;
+using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,5 +20,6 @@ namespace MSR.Answer.API.V1.Models
         public int? MaximumCycles { get; set; }
         public virtual ICollection<SubPartModel> CreateSubParts { get; set; }
         public string Comment { get; set; }
+        public List<File> Files { get; set; }
     }
 }
