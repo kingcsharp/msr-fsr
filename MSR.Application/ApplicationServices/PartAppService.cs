@@ -54,7 +54,7 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _partService.UpdatePartAsync(command);
             var part = ret;
-            if (command.Files != null) {
+            if (part.IsActive.GetValueOrDefault() && command.Files != null) {
                 await _fileService.DeleteFilesAsync(part, part.Id);
                 foreach(var file in command.Files)
                 {

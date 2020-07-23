@@ -56,7 +56,11 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>("Part was successfully updated.");
+            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault()) {
+                return ret.ToOkObjectResponse<PartModel>("Part was successfully updated.");
+            } else {
+                return ret.ToAcceptedObjectResponse<PartModel>("Part update was successfully submitted to workflow for approval.");
+            }
         }
 
         [HttpDelete("{id}")]

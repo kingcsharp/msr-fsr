@@ -118,7 +118,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             PartModel ret;
 
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            if (false && DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 foreach (var child in current.Subparts)
                 {
@@ -148,9 +148,16 @@ namespace MSR.Infrastructure.Resources.Services.Role
             {
                 var approval = _mapper.Map<PartApproval>(command);
                 approval.Comments = JsonConvert.SerializeObject(command);
+                approval.WorkflowId =
+                    _unitOfWork.Workflows.Query().First().Id; // TODO: where does this come from?
+                approval.WorkflowGroupId=
+                    _unitOfWork.WorkflowGroups.Query().First().Id; // TODO: where does this come from?
+
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
-                ret = _mapper.Map<PartModel>(approval);
+
+                ret = _mapper.Map<PartModel>(current);
+                ret.IsActive = false;
             }
 
             return ret;
