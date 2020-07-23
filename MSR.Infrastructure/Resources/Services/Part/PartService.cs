@@ -50,7 +50,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             PartModel ret;
 
-            if (false && DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 List<PartSubPartMap> children = new List<PartSubPartMap>();
                 if (command.SubParts != null)
