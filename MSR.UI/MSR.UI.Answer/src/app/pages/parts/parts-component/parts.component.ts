@@ -12,6 +12,9 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { debug } from 'console';
+
+
 declare let jQuery: any;
 
 @Component({
@@ -37,6 +40,7 @@ export class PartsComponent implements OnInit {
   workflowGroups: any[] = [];
   getWorkflowGroupsDone: boolean = false;
   allParts: any[] = [];
+  uploadedFiles: any[] = [];
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -63,6 +67,21 @@ export class PartsComponent implements OnInit {
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
     this.getParts();
+    this.data = [];
+  }
+
+  myUploader(event) {
+    const ctrl = this;
+    for (let file of event.files) {
+      let fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = function () {
+          // Will print the base64 here.
+          debugger;
+          console.log(fileReader.result);
+          ctrl.uploadedFiles.push(fileReader.result);
+      };
+    }
   }
 
   getParts() {

@@ -23,6 +23,7 @@ import { MultiselectWrapperFormComponent } from '../../../app/components/multise
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { FormsModule } from '@angular/forms';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -39,14 +40,16 @@ import { FormsModule } from '@angular/forms';
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    GridOptionsComponent
+    GridOptionsComponent,
+    FileUploadModule
   ],
   imports: [
     CommonModule,
     CalendarModule,
     FormsModule,
     MultiSelectModule,
-    DialogModule
+    DialogModule,
+    FileUploadModule
   ]
 })
 export class UtilsModule {
