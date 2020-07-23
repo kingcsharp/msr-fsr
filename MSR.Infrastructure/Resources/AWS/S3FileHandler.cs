@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -50,9 +51,13 @@ namespace MSR.Infrastructure.Resources.AWS
             return $"{uniqueName}";
         }
 
-        public string GetURL(string key, int expiresIn)
+        public string GetURL(string key, int expiresInSeconds)
         {
-            return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest());
+            return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest() {
+                    BucketName = _s3Information.FileBucketName,
+                    Key = key,
+                    Expires = DateTime.Now.AddSeconds(expiresInSeconds)
+                });
         }
     }
 }
