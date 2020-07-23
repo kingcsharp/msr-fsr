@@ -106,7 +106,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return ret;
         }
-        public async Task<PartModel> UpdatePartAsync(UpdatePart command)
+        public async Task<PartModel> UpdatePartAsync(UpdatePart command, bool executeNow = false)
         {
             Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
@@ -118,7 +118,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             PartModel ret;
 
-            if (false && DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            if (executeNow || DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 foreach (var child in current.Subparts)
                 {
