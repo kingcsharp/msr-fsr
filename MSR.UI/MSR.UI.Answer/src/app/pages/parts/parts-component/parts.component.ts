@@ -230,6 +230,7 @@ export class PartsComponent implements OnInit {
           }
           else {
             const index = this.data.findIndex(x => x.id === this.currPart.id);
+            this.data.splice(index, 1);
             this.data.splice(index, 0, resp.object);
           }
           ctrl.clseDialog();
@@ -239,15 +240,19 @@ export class PartsComponent implements OnInit {
     }
   }
 
+  removeFile(file) {
+    var currIndex = this.currPart.files.findIndex(x => x.id === file.id);
+    this.currPart.files.splice(currIndex, 1);
+  }
+
   myUploader(event) {
     const ctrl = this;
     var currItem = 0;
     var fileLength = event.files.length;
     ctrl.uploadedFiles = [];
-    
+
     if (fileLength === 0) {
       ctrl.uploadedFinished = true;
-      ctrl.currPart.files = [];
       ctrl.onpartSubmit();
     }
     for (let file of event.files) {
@@ -264,10 +269,20 @@ export class PartsComponent implements OnInit {
         }
         if (currItem === fileLength) {
           ctrl.uploadedFinished = true;
-          ctrl.currPart.files = ctrl.uploadedFiles;
+          ctrl.removeAllFilesWithNoId(ctrl.currPart.files);
+          ctrl.currPart.files.push(...ctrl.uploadedFiles);
           ctrl.onpartSubmit();
         }
       };
+    }
+  }
+
+  removeAllFilesWithNoId(files: FileModel[]) {
+    var length = files.length;
+    while (length--) {
+      if (files[length].fileId === undefined || files[length].fileId === null) {
+        files.splice(length, 1);
+      }
     }
   }
 

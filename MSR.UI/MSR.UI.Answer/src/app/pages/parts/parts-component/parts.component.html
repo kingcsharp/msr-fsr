@@ -144,7 +144,8 @@
         <td [hidden]="!cg.isVisibleCol('files',gridSettings)">
           <span class="pointer" *ngFor="let file of partmodel.files" tooltip="{{file.name}}">
             <i *ngIf="file.contentType == 'application/msword'" class="far fa-file-word"></i>
-            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'" class="far fa-file-word"></i>
+            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
+              class="far fa-file-word"></i>
             <i *ngIf="file.contentType == 'text/plain'" class="far fa-file-word"></i>
             <i *ngIf="file.contentType == 'text/html'" class="fas fa-file-code"></i>
             <i *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
@@ -154,7 +155,8 @@
             <i *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
             <i *ngIf="file.contentType == '	application/pdf'" class="far fa-file-pdf"></i>
             <i *ngIf="file.contentType == 'application/vnd.ms-excel'" class="fa-file-excel"></i>
-            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" class="fa-file-excel"></i>
+            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+              class="fa-file-excel"></i>
           </span>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
@@ -259,8 +261,8 @@
             <div class="col-md-4 ">
               <div class="display-inline-block isActive">
                 <label class="form-check-label" for="isActive" class="switch">
-                  <input class="form-check-input" [(ngModel)]="currPart.isActive" name="isActive" type="checkbox" class="ios"
-                    checked id="isActive"/>
+                  <input class="form-check-input" [(ngModel)]="currPart.isActive" name="isActive" type="checkbox"
+                    class="ios" checked id="isActive" />
                   <i data-cy="isActive-checkbox"></i>
                 </label>
               </div>
@@ -274,6 +276,31 @@
               <input type="number" id="maximumCycles" name="maximumCycles" [(ngModel)]="currPart.maximumCycles"
                 class="form-control input-transparent" data-parsley-min="0" data-validate="parsley"
                 data-parsley-trigger="change" placeholder="Maximum Cycles" data-cy="maximumCycles-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="demo[]" class="col-md-2 col-form-label text-md-right">
+              Current Files
+            </label>
+            <div class="col-md-8">
+              <div>
+                <span class="pointer currFiles" *ngFor="let file of currPart.files">
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'" class="far fa-file-word"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'" class="far fa-file-word"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="far fa-file-word"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fas fa-file-code"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/tiff'" class="fas fa-images"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/webp'" class="fas fa-images"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == '	application/pdf'" class="far fa-file-pdf"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.ms-excel'" class="fa-file-excel"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" class="fa-file-excel"></i>
+                  <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
+                    (click)="removeFile(file)"></i>
+                </span>
+              </div>
             </div>
           </div>
           <div class="form-group row">

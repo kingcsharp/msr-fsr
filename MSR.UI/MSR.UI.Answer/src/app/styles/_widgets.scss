@@ -1907,23 +1907,30 @@ p-fileUpload p-button {
   position: absolute;
 }
 
-.ui-fileupload.ui-widget{
+.ui-fileupload.ui-widget {
   min-width: 300px;
 }
 
 .ui-fileupload.ui-widget .ui-button,
-.ui-fileupload-choose.ui-button,body .ui-fileupload .ui-fileupload-buttonbar,
+.ui-fileupload-choose.ui-button,
+body .ui-fileupload .ui-fileupload-buttonbar,
 body .ui-fileupload .ui-fileupload-content {
   background-color: #262e37;
   border: 1px solid #c8c8c8;
-  color: #FFF;
+  color: #fff;
 }
 
 p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
 .ui-fileupload.ui-widget .ui-button:not(.ui-state-disabled):hover,
-.ui-fileupload-choose.ui-button:not(.ui-state-disabled):hover
-{
+.ui-fileupload-choose.ui-button:not(.ui-state-disabled):hover {
   background-color: #f8f8f8;
   border-color: #f8f8f8;
   color: #262e37;
+}
+
+.currFiles {
+  margin-right: 5px;
+  i {
+    margin-right: 2px;
+  }
 }
