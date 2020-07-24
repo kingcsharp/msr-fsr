@@ -271,6 +271,7 @@ export class PartsComponent implements OnInit {
           ctrl.uploadedFinished = true;
           ctrl.removeAllFilesWithNoId(ctrl.currPart.files);
           ctrl.currPart.files.push(...ctrl.uploadedFiles);
+          ctrl.uploadedFiles = [];
           ctrl.onpartSubmit();
         }
       };
