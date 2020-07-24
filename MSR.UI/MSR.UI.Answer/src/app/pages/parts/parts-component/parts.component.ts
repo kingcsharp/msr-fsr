@@ -13,6 +13,7 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { debug } from 'console';
+import { HtmlAstPath } from '@angular/compiler';
 
 
 declare let jQuery: any;
@@ -41,6 +42,7 @@ export class PartsComponent implements OnInit {
   getWorkflowGroupsDone: boolean = false;
   allParts: any[] = [];
   uploadedFiles: any[] = [];
+  isActive: any[];
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -54,14 +56,18 @@ export class PartsComponent implements OnInit {
     new ColumnsSaved({ id: 'partNumber', label: 'Part Number', visible: true }),
     new ColumnsSaved({ id: 'oemPartNumber', label: 'OEM Part Number', visible: true }),
     new ColumnsSaved({ id: 'isKit', label: 'Is Kit', visible: true }),
+    new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
     new ColumnsSaved({ id: 'maximumCycles', label: 'Maximun Cycles', visible: true }),
+    new ColumnsSaved({ id: 'files', label: 'Reference Files', visible: true }),
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
-    this.isKitStatus = [{ label: 'Is Kit', value: true },
-    { label: 'Is Not Kit', value: false }];
+    this.isKitStatus = [{ label: 'Yes', value: true },
+    { label: 'No', value: false }];
+    this.isActive = [{ label: 'Yes', value: true },
+    { label: 'No', value: false }];
 
     this.canAddStages = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
@@ -76,10 +82,10 @@ export class PartsComponent implements OnInit {
       let fileReader = new FileReader();
       fileReader.readAsDataURL(file);
       fileReader.onload = function () {
-          // Will print the base64 here.
-          debugger;
-          console.log(fileReader.result);
-          ctrl.uploadedFiles.push(fileReader.result);
+        // Will print the base64 here.
+        debugger;
+        console.log(fileReader.result);
+        ctrl.uploadedFiles.push(fileReader.result);
       };
     }
   }
@@ -209,29 +215,35 @@ export class PartsComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      let method: Observable<AuditActionResultOfPartModel> = null;
-      this.globals.showLoader(true);
+      
+      let element: HTMLElement = document.getElementsByTagName('p-fileUpload')[0]
+      .getElementsByTagName('p-button')[0]
+      .getElementsByClassName('ui-clickable')[0] as HTMLElement;
+      element.click();
+      
 
-      if (this.currPart.id === undefined) {
-        method = this.partsService.partPost(env.apiVersion, this.getCreatePartRequest(this.currPart));
-      } else {
-        method = this.partsService.partPatch(env.apiVersion, this.getUpdatePartRequest(this.currPart));
-      }
-      this.globals.showLoader(true);
-      method.pipe(take(1)).subscribe(responseHandler((resp) => {
-        if (!resp.hasErrors) {
-          if (ctrl.currPart.id === undefined) {
-            ctrl.data.push(resp.object);
-          }
-          else {
-            const index = this.data.findIndex(x => x.id === this.currPart.id);
-            this.data.splice(index, 0, resp.object);
-          }
-          ctrl.clseDialog();
-        }
-      }, () => {
-        // DO not update user
-      }));
+      // let method: Observable<AuditActionResultOfPartModel> = null;
+      // this.globals.showLoader(true);
+
+      // if (this.currPart.id === undefined) {
+      //   method = this.partsService.partPost(env.apiVersion, this.getCreatePartRequest(this.currPart));
+      // } else {
+      //   method = this.partsService.partPatch(env.apiVersion, this.getUpdatePartRequest(this.currPart));
+      // }
+      // this.globals.showLoader(true);
+      // method.pipe(take(1)).subscribe(responseHandler((resp) => {
+      //   if (!resp.hasErrors) {
+      //     if (ctrl.currPart.id === undefined) {
+      //       ctrl.data.push(resp.object);
+      //     }
+      //     else {
+      //       const index = this.data.findIndex(x => x.id === this.currPart.id);
+      //       this.data.splice(index, 0, resp.object);
+      //     }
+      //     ctrl.clseDialog();
+      //   }
+      // }, () => {
+      // }));
     }
   }
 

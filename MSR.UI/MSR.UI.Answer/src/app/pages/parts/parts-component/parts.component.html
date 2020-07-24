@@ -67,23 +67,11 @@
             [defaultText]="'Select Is Kit'" [defaultTextTooltip]="''" [datatable]="dt">
           </multiselect-wrapper>
         </th>
-        <!-- <th [hidden]="!cg.isVisibleCol('qty',gridSettings)">
-          <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by QTY" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'qty', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['qty']?.value">
-            <i *ngIf="dt.filters['qty']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'qty')"></i>
-          </div>
-        </th> -->
-        <!-- <th [hidden]="!cg.isVisibleCol('parentId',gridSettings)">
-          <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by ParentId" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'parentId', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['parentId']?.value">
-            <i *ngIf="dt.filters['parentId']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'parentId')"></i>
-          </div>
-        </th> -->
+        <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isActive" [filterId]="'isActive'"
+            [defaultText]="'Select Is Active'" [defaultTextTooltip]="''" [datatable]="dt">
+          </multiselect-wrapper>
+        </th>
         <th [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" tooltip="Search by maximumCycles" data-cy="searchbypartnr-grid"
@@ -91,6 +79,10 @@
               [value]="dt.filters['maximumCycles']?.value">
             <i *ngIf="dt.filters['maximumCycles']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'maximumCycles')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('files',gridSettings)">
+          <div class="position-relative">
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
@@ -143,11 +135,27 @@
         <td [hidden]="!cg.isVisibleCol('isKit',gridSettings)">
           {{partmodel?.isKit?'Yes':'No' }}
         </td>
-        <!-- <td [hidden]="!cg.isVisibleCol('qty',gridSettings)">
-          {{partmodel.qty}}
-        </td> -->
+        <td [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
+          {{partmodel?.isActive?'Yes':'No' }}
+        </td>
         <td [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
           {{partmodel.maximumCycles }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('files',gridSettings)">
+          <span class="pointer" *ngFor="let file of partmodel.files" tooltip="{{file.name}}">
+            <i *ngIf="file.contentType == 'application/msword'" class="far fa-file-word"></i>
+            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'" class="far fa-file-word"></i>
+            <i *ngIf="file.contentType == 'text/plain'" class="far fa-file-word"></i>
+            <i *ngIf="file.contentType == 'text/html'" class="fas fa-file-code"></i>
+            <i *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
+            <i *ngIf="file.contentType == 'image/tiff'" class="fas fa-images"></i>
+            <i *ngIf="file.contentType == 'image/webp'" class="fas fa-images"></i>
+            <i *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
+            <i *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
+            <i *ngIf="file.contentType == '	application/pdf'" class="far fa-file-pdf"></i>
+            <i *ngIf="file.contentType == 'application/vnd.ms-excel'" class="fa-file-excel"></i>
+            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" class="fa-file-excel"></i>
+          </span>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           {{partmodel.createdOn | date :'short' }}
@@ -176,7 +184,6 @@
     </ng-template>
   </p-table>
 </widget>
-<!-- *ngIf="display" -->
 <p-dialog header="{{ currPart.id === undefined ?'Create Part':'Edit Part'}}" [(visible)]="display"
   [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
@@ -259,12 +266,13 @@
             <label for="demo[]" class="col-md-2 col-form-label text-md-right">
               Files
             </label>
-            <p-fileUpload name="demo[]" url="./upload.php" customUpload="true" (uploadHandler)="myUploader($event)" multiple="multiple"
-              accept="" maxFileSize="1000000000">
+            <p-fileUpload name="demo[]" url="./upload.php" customUpload="true" (uploadHandler)="myUploader($event)"
+              multiple="multiple" accept="" maxFileSize="1000000000">
               <ng-template pTemplate="content">
-                <ul *ngIf="uploadedFiles.length">
+                <!-- <h3 *ngIf="uploadedFiles.length">Drop Files Here</h3> -->
+                <!-- <ul *ngIf="uploadedFiles.length">
                   <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-                </ul>
+                </ul> -->
               </ng-template>
             </p-fileUpload>
           </div>
