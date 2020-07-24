@@ -5458,6 +5458,7 @@ export interface ISubPartModel {
 }
 
 export class FileModel implements IFileModel {
+    fileId?: number | undefined;
     entityId?: number | undefined;
     name?: string | undefined;
     base64String?: string | undefined;
@@ -5475,6 +5476,7 @@ export class FileModel implements IFileModel {
 
     init(_data?: any) {
         if (_data) {
+            this.fileId = _data["fileId"];
             this.entityId = _data["entityId"];
             this.name = _data["name"];
             this.base64String = _data["base64String"];
@@ -5492,6 +5494,7 @@ export class FileModel implements IFileModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["fileId"] = this.fileId;
         data["entityId"] = this.entityId;
         data["name"] = this.name;
         data["base64String"] = this.base64String;
@@ -5502,6 +5505,7 @@ export class FileModel implements IFileModel {
 }
 
 export interface IFileModel {
+    fileId?: number | undefined;
     entityId?: number | undefined;
     name?: string | undefined;
     base64String?: string | undefined;
@@ -5547,6 +5551,7 @@ export class CreatePartRequest implements ICreatePartRequest {
     partNumber!: string;
     oemPartNumber?: string | undefined;
     nickName?: string | undefined;
+    isActive?: boolean;
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
@@ -5567,6 +5572,7 @@ export class CreatePartRequest implements ICreatePartRequest {
             this.partNumber = _data["partNumber"];
             this.oemPartNumber = _data["oemPartNumber"];
             this.nickName = _data["nickName"];
+            this.isActive = _data["isActive"];
             this.maximumCycles = _data["maximumCycles"];
             if (Array.isArray(_data["createSubParts"])) {
                 this.createSubParts = [] as any;
@@ -5595,6 +5601,7 @@ export class CreatePartRequest implements ICreatePartRequest {
         data["partNumber"] = this.partNumber;
         data["oemPartNumber"] = this.oemPartNumber;
         data["nickName"] = this.nickName;
+        data["isActive"] = this.isActive;
         data["maximumCycles"] = this.maximumCycles;
         if (Array.isArray(this.createSubParts)) {
             data["createSubParts"] = [];
@@ -5616,6 +5623,7 @@ export interface ICreatePartRequest {
     partNumber: string;
     oemPartNumber?: string | undefined;
     nickName?: string | undefined;
+    isActive?: boolean;
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;

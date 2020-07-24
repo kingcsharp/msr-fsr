@@ -1901,11 +1901,11 @@ input.parsley-error {
   }
 }
 
-// p-fileUpload p-button {
-//   z-index: -100;
-//   opacity: 0;
-//   position: absolute;
-// }
+p-fileUpload p-button {
+  z-index: -100;
+  opacity: 0;
+  position: absolute;
+}
 
 .ui-fileupload.ui-widget{
   min-width: 300px;

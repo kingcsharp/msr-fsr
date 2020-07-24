@@ -253,6 +253,20 @@
                 </label>
               </div>
             </div>
+            <label class="col-md-2  col-form-label text-md-right">
+              Is Active
+            </label>
+            <div class="col-md-4 ">
+              <div class="display-inline-block isActive">
+                <label class="form-check-label" for="isActive" class="switch">
+                  <input class="form-check-input" [(ngModel)]="currPart.isActive" name="isActive" type="checkbox" class="ios"
+                    checked id="isActive"/>
+                  <i data-cy="isActive-checkbox"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
             <label for="maximumCycles" class="col-md-2 col-form-label text-md-right">
               Maximum Cycles
             </label>

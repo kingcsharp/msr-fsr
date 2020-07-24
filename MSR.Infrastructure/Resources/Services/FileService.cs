@@ -63,6 +63,7 @@ namespace MSR.Infrastructure.Resources.Services
                 .Where(x => x.EntityTableName == tableName && entityIds.Contains(x.EntityId))
                 .Select(x => new FileModel()
                 {
+                    FileId=x.Id,
                     Name = x.FileObject.Name,
                     FileURL = x.FileObject.FileURL,
                     EntityId = x.EntityId,
