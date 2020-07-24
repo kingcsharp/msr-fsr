@@ -209,7 +209,6 @@ export class PartsComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-
       let method: Observable<AuditActionResultOfPartModel> = null;
       this.globals.showLoader(true);
 
