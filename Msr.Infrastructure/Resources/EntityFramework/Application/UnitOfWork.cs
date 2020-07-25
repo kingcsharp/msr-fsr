@@ -92,7 +92,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowGroup> WorkflowGroups { get { return _workflowGroup ?? (_workflowGroup = new EFRepository<WorkflowGroup>(Context)); } }
         public IRepository<WorkflowStage> WorkflowStages { get { return _workflowStage ?? (_workflowStage = new EFRepository<WorkflowStage>(Context)); } }
         public IRepository<Workflow> Workflows { get { return _workflow ?? (_workflow = new EFRepository<Workflow>(Context)); } }
-        public IRepository<WorkflowStageMap> WorkflowStagesMap { get { return _workflowStageMap ?? (_workflowStageMap = new EFRepository<WorkflowStageMap>(Context)); } }
+        public IRepository<WorkflowStageMap> WorkflowStageMaps { get { return _workflowStageMap ?? (_workflowStageMap = new EFRepository<WorkflowStageMap>(Context)); } }
         public IRepository<WorkflowGroupRoleMap> WorkflowGroupRoleMaps { get { return _workflowGroupRoleMap ?? (_workflowGroupRoleMap = new EFRepository<WorkflowGroupRoleMap>(Context)); } }
         public IRepository<WorkflowActivityMap> WorkflowActivityMaps { get { return _workflowActivityMap ?? (_workflowActivityMap = new EFRepository<WorkflowActivityMap>(Context)); } }
         public IRepository<WorkflowActivity> WorkflowActivities { get { return _workflowActivity ?? (_workflowActivity = new EFRepository<WorkflowActivity>(Context)); } }

@@ -94,10 +94,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 var approval = _mapper.Map<PartApproval>(command);
                 approval.Comments = JsonConvert.SerializeObject(command);
                 approval.PartId = part.Id;
-                approval.WorkflowId =
-                    _unitOfWork.Workflows.Query().First().Id; // TODO: where does this come from?
-                approval.WorkflowGroupId=
-                    _unitOfWork.WorkflowGroups.Query().First().Id; // TODO: where does this come from?
+                approval.WorkflowId = GetWorkflowID();
+                approval.WorkflowGroupId = GetWorkflowGroupID(approval.WorkflowId);
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -148,10 +146,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
             {
                 var approval = _mapper.Map<PartApproval>(command);
                 approval.Comments = JsonConvert.SerializeObject(command);
-                approval.WorkflowId =
-                    _unitOfWork.Workflows.Query().First().Id; // TODO: where does this come from?
-                approval.WorkflowGroupId=
-                    _unitOfWork.WorkflowGroups.Query().First().Id; // TODO: where does this come from?
+                approval.WorkflowId = GetWorkflowID();
+                approval.WorkflowGroupId = GetWorkflowGroupID(approval.WorkflowId);
 
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
@@ -183,6 +179,43 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var ret = _mapper.Map<PartModel>(current);
             return ret;
+        }
+
+        private int GetWorkflowID()
+        {
+            var wfid = _unitOfWork.WorkflowActivityMaps
+                .Query()
+                .Where(x =>
+                    x.WorkflowActivity.ApprovalTableName.Equals("PartApproval"))
+                .Select(x => x.Workflow.Id);
+
+            if (wfid.Any()) {
+                return wfid.First();
+            }
+
+            return -1;
+        }
+
+        private int GetWorkflowGroupID(int workflowID)
+        {
+            var wfsid = _unitOfWork.WorkflowStageMaps
+                .Query()
+                .Where(x => x.Workflow.Id == workflowID);
+
+            if (!wfsid.Any()) {
+                return -1;
+            }
+
+            var wfgid = _unitOfWork.WorkflowGroupStageMaps
+                .Query()
+                .Where(x => x.WorkflowStageId == wfsid.First().WorkflowStageId);
+
+            if (wfgid.Any()) {
+                return wfgid.First().WorkflowGroupId;
+            }
+
+            return -1;
+
         }
     }
 }
