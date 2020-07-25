@@ -27,10 +27,11 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet()]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
-        public async Task<IActionResult> GetPart(int? id)
+        public async Task<IActionResult> GetPart(int? id, bool attachFiles = false)
         {
             var ret = await _dispatcher.DispatchAsync(new GetParts() {
-                partID = id
+                partID = id,
+                attachFiles = attachFiles
             });
             return ret.ToOkObjectResponse<ICollection<PartModel>>();
         }
