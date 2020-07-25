@@ -9,7 +9,7 @@ namespace MSR.Domain.Models
         public PartModel()
         {
             CreateSubParts = new HashSet<SubPartModel>();
-            Files = new List<FileModel>();
+            Files = new HashSet<FileModel>();
         }
         public string Name { get; set; }
         public string PartNumber { get; set; }

@@ -1,4 +1,4 @@
-﻿
+﻿using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -22,7 +22,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
         {
             if (DelegateHandler.GetCurrentUserId == null)
             {
-                throw new MSR.Domain.Exceptions.DomainException("User not logged in", Domain.Commanding.Enums.DomainError.BadRequest);
+                throw new MSR.Domain.Exceptions.DomainException("User not logged in", DomainError.BadRequest);
             }
             var log = new ApprovalTransactionLog()
             {

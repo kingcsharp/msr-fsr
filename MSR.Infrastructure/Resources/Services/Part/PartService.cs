@@ -161,7 +161,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
 
             return ret;
-
         }
         public async Task<PartModel> DeletePartAsync(DeletePart command)
         {

@@ -43,11 +43,11 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToCreatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+            var message = "Part was successfully submitted to workflow for approval.";
             if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault()) {
-                return ret.ToOkObjectResponse<PartModel>("Part was successfully added.");
-            } else {
-                return ret.ToAcceptedObjectResponse<PartModel>("Part was successfully submitted to workflow for approval.");
+                message = "Part was successfully added.";
             }
+            return ret.ToOkObjectResponse<PartModel>(message);
         }
 
         [HttpPatch]
@@ -57,11 +57,12 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+            var message = "Part update was successfully submitted to workflow for approval.";
             if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault()) {
-                return ret.ToOkObjectResponse<PartModel>("Part was successfully updated.");
+                message = "Part was successfully updated.";
             } else {
-                return ret.ToAcceptedObjectResponse<PartModel>("Part update was successfully submitted to workflow for approval.");
             }
+            return ret.ToOkObjectResponse<PartModel>(message);
         }
 
         [HttpDelete("{id}")]
