@@ -30,10 +30,18 @@ namespace MSR.Application.ApplicationServices
         {
             ICollection<PartModel> ret = await _partService.GetPartsAsync(command);
 
-            var files = _fileService.ListFiles2(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
+            ICollection<FileModel> files = new List<FileModel>();
+
+            if (!command.attachFiles)
+            {
+                files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
+            }
 
             foreach (var part in ret)
             {
+                if (command.attachFiles) {
+                    files = _fileService.ListFiles(part, part.Id);
+                }
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
             }
 

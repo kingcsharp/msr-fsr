@@ -32,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<FileModel> ListFiles<T>(T entity, int entityId) where T : class
+        public ICollection<FileModel> ListFiles<T>(T entity, int entityId) where T: class
         {
             var tableName = mapEntityToTable(entity.GetType().Name);
             var files = _unitOfWork.FileEntityMap.Query().Where(x =>
@@ -43,8 +43,7 @@ namespace MSR.Infrastructure.Resources.Services
                 ).ToList();
 
             List<FileModel> ret = new List<FileModel>();
-            foreach (var x in files)
-            {
+            foreach (var x in files) {
                 var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
@@ -56,18 +55,18 @@ namespace MSR.Infrastructure.Resources.Services
             return ret;
         }
 
-        public ICollection<FileModel> ListFiles2(string tableName, ICollection<int> entityIds)
+        public ICollection<FileModel> ListFilesForEntitySet(string tableName, ICollection<int> entityIds)
         {
             var files = _unitOfWork.FileEntityMap.Query()
                 .Include(x => x.FileObject)
                 .Where(x => x.EntityTableName == tableName && entityIds.Contains(x.EntityId))
                 .Select(x => new FileModel()
                 {
-                    FileId=x.Id,
+                    FileId = x.Id,
                     Name = x.FileObject.Name,
-                    FileURL = x.FileObject.FileURL,
+                    FileURL = "", // Not available here because it requires a call to AWS
                     EntityId = x.EntityId,
-                    ContentType=x.FileObject.ContentType
+                    ContentType = x.FileObject.ContentType
                 }).ToList();
 
             return files;

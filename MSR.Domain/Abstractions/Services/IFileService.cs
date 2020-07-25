@@ -8,7 +8,7 @@ namespace MSR.Domain.Abstractions.Services
     {
         Task<bool> CreateFileAsync<T>(T entity, int entityId, FileModel file) where T : class;
         ICollection<FileModel> ListFiles<T>(T entity, int entityId) where T : class;
-        ICollection<FileModel> ListFiles2(string tableName, ICollection<int> entityIds);
+        ICollection<FileModel> ListFilesForEntitySet(string tableName, ICollection<int> entityIds);
         Task<bool> DeleteFilesAsync<T>(T entity, int entityId) where T : class;
         Task<bool> CreateDocumentAsync<T>(T entity, int entityId, FileModel file) where T : class;
     }
