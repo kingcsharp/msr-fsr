@@ -5330,6 +5330,8 @@ export class PartModel extends TrackableModel implements IPartModel {
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
     createSubParts?: SubPartModel[] | undefined;
+    files?: FileModel[] | undefined;
+    isActive?: boolean | undefined;
 
     constructor(data?: IPartModel) {
         super(data);
@@ -5351,6 +5353,12 @@ export class PartModel extends TrackableModel implements IPartModel {
                 for (let item of _data["createSubParts"])
                     this.createSubParts!.push(SubPartModel.fromJS(item));
             }
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(FileModel.fromJS(item));
+            }
+            this.isActive = _data["isActive"];
         }
     }
 
@@ -5376,6 +5384,12 @@ export class PartModel extends TrackableModel implements IPartModel {
             for (let item of this.createSubParts)
                 data["createSubParts"].push(item.toJSON());
         }
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item.toJSON());
+        }
+        data["isActive"] = this.isActive;
         super.toJSON(data);
         return data; 
     }
@@ -5391,6 +5405,8 @@ export interface IPartModel extends ITrackableModel {
     createdByName?: string | undefined;
     lastUpdatedByName?: string | undefined;
     createSubParts?: SubPartModel[] | undefined;
+    files?: FileModel[] | undefined;
+    isActive?: boolean | undefined;
 }
 
 export class SubPartModel implements ISubPartModel {
@@ -5441,6 +5457,62 @@ export interface ISubPartModel {
     qty?: number;
 }
 
+export class FileModel implements IFileModel {
+    fileId?: number | undefined;
+    entityId?: number | undefined;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+    fileURL?: string | undefined;
+
+    constructor(data?: IFileModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileId = _data["fileId"];
+            this.entityId = _data["entityId"];
+            this.name = _data["name"];
+            this.base64String = _data["base64String"];
+            this.contentType = _data["contentType"];
+            this.fileURL = _data["fileURL"];
+        }
+    }
+
+    static fromJS(data: any): FileModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileId"] = this.fileId;
+        data["entityId"] = this.entityId;
+        data["name"] = this.name;
+        data["base64String"] = this.base64String;
+        data["contentType"] = this.contentType;
+        data["fileURL"] = this.fileURL;
+        return data; 
+    }
+}
+
+export interface IFileModel {
+    fileId?: number | undefined;
+    entityId?: number | undefined;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+    fileURL?: string | undefined;
+}
+
 export class AuditActionResultOfPartModel extends AuditActionResult implements IAuditActionResultOfPartModel {
     object?: PartModel | undefined;
 
@@ -5479,9 +5551,11 @@ export class CreatePartRequest implements ICreatePartRequest {
     partNumber!: string;
     oemPartNumber?: string | undefined;
     nickName?: string | undefined;
+    isActive?: boolean;
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
+    files?: File[] | undefined;
 
     constructor(data?: ICreatePartRequest) {
         if (data) {
@@ -5498,6 +5572,7 @@ export class CreatePartRequest implements ICreatePartRequest {
             this.partNumber = _data["partNumber"];
             this.oemPartNumber = _data["oemPartNumber"];
             this.nickName = _data["nickName"];
+            this.isActive = _data["isActive"];
             this.maximumCycles = _data["maximumCycles"];
             if (Array.isArray(_data["createSubParts"])) {
                 this.createSubParts = [] as any;
@@ -5505,6 +5580,11 @@ export class CreatePartRequest implements ICreatePartRequest {
                     this.createSubParts!.push(SubPartModel.fromJS(item));
             }
             this.comment = _data["comment"];
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(File.fromJS(item));
+            }
         }
     }
 
@@ -5521,6 +5601,7 @@ export class CreatePartRequest implements ICreatePartRequest {
         data["partNumber"] = this.partNumber;
         data["oemPartNumber"] = this.oemPartNumber;
         data["nickName"] = this.nickName;
+        data["isActive"] = this.isActive;
         data["maximumCycles"] = this.maximumCycles;
         if (Array.isArray(this.createSubParts)) {
             data["createSubParts"] = [];
@@ -5528,6 +5609,11 @@ export class CreatePartRequest implements ICreatePartRequest {
                 data["createSubParts"].push(item.toJSON());
         }
         data["comment"] = this.comment;
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -5537,9 +5623,55 @@ export interface ICreatePartRequest {
     partNumber: string;
     oemPartNumber?: string | undefined;
     nickName?: string | undefined;
+    isActive?: boolean;
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
+    files?: File[] | undefined;
+}
+
+export class File implements IFile {
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+
+    constructor(data?: IFile) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.base64String = _data["base64String"];
+            this.contentType = _data["contentType"];
+        }
+    }
+
+    static fromJS(data: any): File {
+        data = typeof data === 'object' ? data : {};
+        let result = new File();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["base64String"] = this.base64String;
+        data["contentType"] = this.contentType;
+        return data; 
+    }
+}
+
+export interface IFile {
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
 }
 
 export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartRequest {

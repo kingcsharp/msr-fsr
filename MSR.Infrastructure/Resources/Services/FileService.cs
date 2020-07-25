@@ -1,4 +1,5 @@
-﻿using MSR.Domain.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Abstractions;
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Models;
@@ -7,6 +8,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using File = MSR.Infrastructure.Resources.EntityFramework.Entities.File;
 
@@ -30,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<FileModel> ListFiles<T>(T entity, int entityId) where T: class
+        public ICollection<FileModel> ListFiles<T>(T entity, int entityId) where T : class
         {
             var tableName = mapEntityToTable(entity.GetType().Name);
             var files = _unitOfWork.FileEntityMap.Query().Where(x =>
@@ -41,7 +43,8 @@ namespace MSR.Infrastructure.Resources.Services
                 ).ToList();
 
             List<FileModel> ret = new List<FileModel>();
-            foreach (var x in files) {
+            foreach (var x in files)
+            {
                 var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
@@ -51,6 +54,23 @@ namespace MSR.Infrastructure.Resources.Services
             }
 
             return ret;
+        }
+
+        public ICollection<FileModel> ListFiles2(string tableName, ICollection<int> entityIds)
+        {
+            var files = _unitOfWork.FileEntityMap.Query()
+                .Include(x => x.FileObject)
+                .Where(x => x.EntityTableName == tableName && entityIds.Contains(x.EntityId))
+                .Select(x => new FileModel()
+                {
+                    FileId=x.Id,
+                    Name = x.FileObject.Name,
+                    FileURL = x.FileObject.FileURL,
+                    EntityId = x.EntityId,
+                    ContentType=x.FileObject.ContentType
+                }).ToList();
+
+            return files;
         }
 
         public async Task<bool> CreateFileAsync<T>(T entity, int entityId, FileModel file) where T : class

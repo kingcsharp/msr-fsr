@@ -3,7 +3,9 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,10 +29,14 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
         {
             ICollection<PartModel> ret = await _partService.GetPartsAsync(command);
-            foreach (var m in ret) {
-                m.Files = _fileService.ListFiles(m, m.Id);
 
+            var files = _fileService.ListFiles2(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
+
+            foreach (var part in ret)
+            {
+                part.Files = files.Where(x => x.EntityId == part.Id).ToList();
             }
+
             return new CommandResponse<ICollection<PartModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
@@ -40,9 +46,10 @@ namespace MSR.Application.ApplicationServices
 
             // If the part is not active, that means it's pending approval.  Do not
             // upload the files yet.
-            if (part.IsActive.GetValueOrDefault()) {
+            if (part.IsActive.GetValueOrDefault())
+            {
                 await _fileService.DeleteFilesAsync(part, part.Id);
-                foreach(var file in command.Files)
+                foreach (var file in command.Files)
                 {
                     await _fileService.CreateFileAsync(part, part.Id, file);
                 }
@@ -54,9 +61,10 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _partService.UpdatePartAsync(command);
             var part = ret;
-            if (part.IsActive.GetValueOrDefault() && command.Files != null) {
+            if (part.IsActive.GetValueOrDefault() && command.Files != null)
+            {
                 await _fileService.DeleteFilesAsync(part, part.Id);
-                foreach(var file in command.Files)
+                foreach (var file in command.Files)
                 {
                     await _fileService.CreateFileAsync(part, part.Id, file);
                 }
