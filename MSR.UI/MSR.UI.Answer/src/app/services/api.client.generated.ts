@@ -1282,13 +1282,17 @@ export class PartService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    partGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
+    partGet(id: number | null | undefined, attachFiles: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (attachFiles === null)
+            throw new Error("The parameter 'attachFiles' cannot be null.");
+        else if (attachFiles !== undefined)
+            url_ += "attachFiles=" + encodeURIComponent("" + attachFiles) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

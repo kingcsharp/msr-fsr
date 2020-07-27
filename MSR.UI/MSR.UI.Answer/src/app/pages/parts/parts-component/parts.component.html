@@ -285,8 +285,11 @@
             <div class="col-md-8">
               <div>
                 <span class="pointer currFiles" *ngFor="let file of currPart.files">
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'" class="far fa-file-word"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'" class="far fa-file-word"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'"
+                    class="far fa-file-word"></i>
+                  <i tooltip="{{file.name}}"
+                    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
+                    class="far fa-file-word"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="far fa-file-word"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fas fa-file-code"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
@@ -295,8 +298,11 @@
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == '	application/pdf'" class="far fa-file-pdf"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.ms-excel'" class="fa-file-excel"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" class="fa-file-excel"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.ms-excel'"
+                    class="fa-file-excel"></i>
+                  <i tooltip="{{file.name}}"
+                    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+                    class="fa-file-excel"></i>
                   <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
                     (click)="removeFile(file)"></i>
                 </span>
@@ -317,6 +323,72 @@
               </ng-template>
             </p-fileUpload>
           </div>
+          <!-- <div class="form-group row partTbl">
+            <widget>
+              <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
+                [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
+                [loading]="loading" [paginator]="true"
+                currentPageReportTemplate="Showing {first}-{last} of {{currPart.createSubParts.length}}"
+                [filterDelay]="0">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th data-cy="subpart-header">
+                      Part
+                    </th>
+                    <th data-cy="subpart-header">
+                      Qty
+                    </th>
+                    <th></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-partmodel>
+                  <tr class="ui-selectable-row">
+                    <td>
+                      <p-dropdown placeholder="Select Sub Part" name="allpartsDropdown" [options]="allParts"
+                        [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
+                        itemSize="30" [ngModelOptions]="{standalone: true}"></p-dropdown>
+                    </td>
+                    <td class="text-capitalize">
+                      <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
+                        data-parsley-trigger="change" data-parsley-min="0" data-parsley-required="true"
+                        class="form-control input-transparent" placeholder="Qty" data-cy="subpartqty-input"
+                        [ngModelOptions]="{standalone: true}">
+                    </td>
+                    <td>
+                      <i class="far fa-trash-alt pointer" tooltip="Remove Part" data-cy="removeSubPart"
+                        (click)="removeSubPart(partmodel)"></i>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="8" style="text-align:left">No sub parts added.</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </widget>
+            <div class="gridBtn">
+              <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="addpart-button">
+                Add Sub Part
+              </button>
+            </div>
+          </div> -->
+        </fieldset>
+      </div>
+    </section>
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+          </span>
+          Subparts
+        </h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
           <div class="form-group row partTbl">
             <widget>
               <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"

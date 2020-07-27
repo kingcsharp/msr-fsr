@@ -80,7 +80,7 @@ export class PartsComponent implements OnInit {
 
   getParts() {
     this.globals.showLoader(true);
-    this.partsService.partGet(null, env.apiVersion).pipe(take(1))
+    this.partsService.partGet(null,false,env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object;
