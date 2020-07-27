@@ -6041,6 +6041,7 @@ export class CreatePartRequest implements ICreatePartRequest {
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
+    files?: File[] | undefined;
 
     constructor(data?: ICreatePartRequest) {
         if (data) {
@@ -6064,6 +6065,11 @@ export class CreatePartRequest implements ICreatePartRequest {
                     this.createSubParts!.push(SubPartModel.fromJS(item));
             }
             this.comment = _data["comment"];
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(File.fromJS(item));
+            }
         }
     }
 
@@ -6087,6 +6093,11 @@ export class CreatePartRequest implements ICreatePartRequest {
                 data["createSubParts"].push(item.toJSON());
         }
         data["comment"] = this.comment;
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -6099,6 +6110,51 @@ export interface ICreatePartRequest {
     maximumCycles?: number | undefined;
     createSubParts?: SubPartModel[] | undefined;
     comment?: string | undefined;
+    files?: File[] | undefined;
+}
+
+export class File implements IFile {
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+
+    constructor(data?: IFile) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.base64String = _data["base64String"];
+            this.contentType = _data["contentType"];
+        }
+    }
+
+    static fromJS(data: any): File {
+        data = typeof data === 'object' ? data : {};
+        let result = new File();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["base64String"] = this.base64String;
+        data["contentType"] = this.contentType;
+        return data; 
+    }
+}
+
+export interface IFile {
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
 }
 
 export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartRequest {
