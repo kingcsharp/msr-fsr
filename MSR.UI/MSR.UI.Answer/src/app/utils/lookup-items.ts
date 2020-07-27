@@ -1,6 +1,6 @@
 export class LookUpItems {
 
-    Countries() {
+     public Countries() {
         return [
             { label: 'Afganistan', value: 'Afganistan' },
             { label: 'Albania', value: 'Albania' },

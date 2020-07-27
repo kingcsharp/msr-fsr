@@ -5395,7 +5395,7 @@ export interface ICreateHelpPageRoleRequest {
 }
 
 export class UpdateHelpPageRequest implements IUpdateHelpPageRequest {
-    helpPageId!: number;
+    helpPageId?: number;
     title?: string | undefined;
     friendlyURL?: string | undefined;
     helpContent?: string | undefined;
@@ -5447,7 +5447,7 @@ export class UpdateHelpPageRequest implements IUpdateHelpPageRequest {
 }
 
 export interface IUpdateHelpPageRequest {
-    helpPageId: number;
+    helpPageId?: number;
     title?: string | undefined;
     friendlyURL?: string | undefined;
     helpContent?: string | undefined;

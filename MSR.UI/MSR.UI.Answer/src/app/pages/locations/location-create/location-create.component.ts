@@ -3,6 +3,8 @@ import { LocationService, LocationModel } from '../../../services/api.client.gen
 import { ActivatedRoute } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
+import { LookUpItems } from '../../../utils/lookup-items';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-location-create',
@@ -13,10 +15,12 @@ export class LocationCreateComponent implements OnInit {
 
   locationToEdit: LocationModel = new LocationModel();
   parentLocationOptions: Array<LocationModel>;
-
+  countryOptions: SelectItem[];
   constructor(private locationService: LocationService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
+    this.countryOptions = new LookUpItems().Countries();
 
     this.locationService.locationGet(null,env.apiVersion).subscribe(responseHandler((response) => {
 
