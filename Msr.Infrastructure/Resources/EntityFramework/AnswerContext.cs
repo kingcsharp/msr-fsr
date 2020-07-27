@@ -13,7 +13,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 {
     public class AnswerContext : DbContext
     {
-        private const string ConnectionString_ = "server=bang.msr-fsr.com;Initial Catalog=Answer3_Dev;User Id=msrfsr;Password=snRvf2rFVG7rGAVE;MultipleActiveResultSets=true";
         public DbSet<User> User { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<Customer> Customer { get; set; }
@@ -58,6 +57,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PartSubPartMap> PartSubPartMap { get; set; }
         public DbSet<File> File { get; set; }
         public DbSet<FileEntityMap> FileEntityMap { get; set; }
+
+
 
         public AnswerContext() : base()
         {

@@ -60,6 +60,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<File> Files { get; }
         IRepository<FileEntityMap> FileEntityMap { get; }
 
+        IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
+
+
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

@@ -28,7 +28,7 @@ namespace MSR.Infrastructure.Resources.Services.Help
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CreateHelpPage(CreateHelpPage command)
+        public async Task<Domain.Models.HelpPage> CreateHelpPage(CreateHelpPage command)
         {
             var helpPage = new EntityFramework.Entities.HelpPage()
             {
@@ -56,9 +56,13 @@ namespace MSR.Infrastructure.Resources.Services.Help
             }
 
             await _unitOfWork.SaveChangesAsync();
+
+            var domHelpPage = _mapper.Map<Domain.Models.HelpPage>(helpPage);
+            domHelpPage.Roles = helpPage.Roles.Select(i => _mapper.Map<Domain.Models.Role>(i.Role)).ToList();
+            return domHelpPage;
         }
 
-        public async Task CreateHelpPageRole(CreateHelpPageRole command)
+        public async Task<Domain.Models.HelpPage> CreateHelpPageRole(CreateHelpPageRole command)
         {
             var helpPage = await _unitOfWork.HelpPages.FirstOrDefaultAsync(false, i => i.Id == command.HelpPageId);
             var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.RoleId);
@@ -79,6 +83,10 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
             await _unitOfWork.HelpPageRoles.AddAsync(helpPageRole);
             await _unitOfWork.SaveChangesAsync();
+
+            var domHelpPage = _mapper.Map<Domain.Models.HelpPage>(helpPage);
+            domHelpPage.Roles = helpPage.Roles.Select(i => _mapper.Map<Domain.Models.Role>(i.Role)).ToList();
+            return domHelpPage;
         }
 
         public async Task DeleteHelpPage(DeleteHelpPage command)
