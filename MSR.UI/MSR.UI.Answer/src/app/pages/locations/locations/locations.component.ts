@@ -4,7 +4,7 @@ import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -20,9 +20,9 @@ export class LocationsComponent implements OnInit {
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
-  canAddLocation: boolean = true;//TODO: Set to false by deafult. Only here for development waiting for a fix
-  canEditLocation: boolean = true;//TODO: Set to false by deafult. Only here for development waiting for a fix
-  canDeleteLocation: boolean = true;//TODO: Set to false by deafult. Only here for development waiting for a fix
+  canAddLocation: boolean = false;
+  canEditLocation: boolean = false;
+  canDeleteLocation: boolean = false;
 
   constructor(private locationService: LocationService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -30,33 +30,33 @@ export class LocationsComponent implements OnInit {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'id', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'name', visible: true }),
-      //new ColumnsSaved({ id: 'address1', label: 'address1', visible: false }),
-      //new ColumnsSaved({ id: 'city', label: 'city', visible: false }),
-      //new ColumnsSaved({ id: 'state', label: 'state', visible: false }),
-      //new ColumnsSaved({ id: 'postalcode', label: 'postalcode', visible: false }),
-      //new ColumnsSaved({ id: 'country', label: 'country', visible: false }),
-      //new ColumnsSaved({ id: 'phone', label: 'phone', visible: false }),
-      //new ColumnsSaved({ id: 'parentId', label: 'parentid', visible: true }),
-      new ColumnsSaved({ id: 'internalAddress', label: 'internaladdress', visible: true }),
-      new ColumnsSaved({ id: 'createdOn', label: 'createdon', visible: true }),
-      new ColumnsSaved({ id: 'createdBy', label: 'createdby', visible: true }),
-      //new ColumnsSaved({ id: 'timezone', label: 'timezone', visible: false }),
-      //new ColumnsSaved({ id: 'address2', label: 'address1', visible: false }),
+      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
+      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
+      new ColumnsSaved({ id: 'internalAddress', label: 'Internal Address', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
+      new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
+      new ColumnsSaved({ id: 'address1', label: 'Address 1', visible: false }),
+      new ColumnsSaved({ id: 'city', label: 'City', visible: false }),
+      new ColumnsSaved({ id: 'state', label: 'State/Province', visible: false }),
+      new ColumnsSaved({ id: 'postalcode', label: 'Postalcode', visible: false }),
+      new ColumnsSaved({ id: 'country', label: 'Country', visible: false }),
+      new ColumnsSaved({ id: 'phone', label: 'Phone', visible: false }),
+      new ColumnsSaved({ id: 'parentId', label: 'Parent', visible: false }),
+      new ColumnsSaved({ id: 'timezone', label: 'Timezone', visible: false }),
+      new ColumnsSaved({ id: 'address2', label: 'Address 2', visible: false }),
     ];
 
-    //this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);//TODO: Set to false by deafult. Only here for development waiting for a fix
-    //this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);//TODO: Set to false by deafult. Only here for development waiting for a fix
-    //this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);//TODO: Set to false by deafult. Only here for development waiting for a fix
+    this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
+    this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
     this.getLocations();
 
     
 
   }
 
-  hasPrivilege(privilegeName) {
-    return this.globals.hasPrivilege('HelpPages', privilegeName);
+  hasPrivilege(privName) {
+    return this.globals.hasPrivilege(EnumMenuItem.Users, privName);
   }
 
   getLocations(){
@@ -65,6 +65,12 @@ export class LocationsComponent implements OnInit {
       this.data = response.object;
       this.loading = false;
     }));
+  }
+
+  getParentName(parentId):string{
+
+    return this.data.filter(s => s.id == parentId)[0].name;
+
   }
 
   
