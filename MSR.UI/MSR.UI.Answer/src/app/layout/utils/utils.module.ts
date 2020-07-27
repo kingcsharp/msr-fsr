@@ -17,11 +17,13 @@ import { AnimateNumberDirective } from './directives/animate-number.directive';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
 import { MultiselectWrapperFormComponent } from '../../../app/components/multiselect-wrapper-form/multiselect-wrapper-form.component';
 
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
+import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 
@@ -32,7 +34,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    GridOptionsComponent
+    GridOptionsComponent,
+    GridFileViewerComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -41,7 +44,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
     GridOptionsComponent,
-    FileUploadModule
+    FileUploadModule,
+    GridFileViewerComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +53,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     FormsModule,
     MultiSelectModule,
     DialogModule,
-    FileUploadModule
+    FileUploadModule,
+    TooltipModule
   ]
 })
 export class UtilsModule {

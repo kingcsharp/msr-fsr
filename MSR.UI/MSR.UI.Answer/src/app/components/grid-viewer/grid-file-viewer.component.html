@@ -1,0 +1,18 @@
+<span class="pointer" *ngFor="let file of files">
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'" class="fad fa-file-word"></i>
+  <i tooltip="{{file.name}}"
+    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
+    class="fad fa-file-word"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="fad fa-file-alt"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fad fa-file-alt"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/csv'" class="fad fa-file-csv"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/pdf'" class="fad fa-file-pdf"></i>
+  <i tooltip="{{file.name}}"
+    *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+    class="fad fa-file-excel"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/tiff'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/webp'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
+</span>
