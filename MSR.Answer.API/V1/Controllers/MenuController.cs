@@ -41,15 +41,13 @@ namespace MSR.Answer.API.V1.Controllers
             return result.ToOkObjectResponse<IEnumerable<MenuItem>>();
         }
 
-
-
         [HttpPost("Role")]
         [SwaggerResponse(typeof(AuditActionResult<string>))]
         public async Task<IActionResult> CreateMenuRoleMap([FromBody, Required] CreateMenuRoleMapRequest request)
         {
             var command = request.ToCreateMenuRoleMapCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<string>();
+            return ret.ToOkObjectResponse<int>("Menu and Role successfully Mapped");
         }
 
         [HttpPatch("Role")]
@@ -58,16 +56,16 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateMenuRoleMapCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse();
+            return ret.ToOkObjectResponse("Permissions added to Menu for Role");
         }
 
-        [HttpDelete("Role/{id}")]
+        [HttpDelete("Role")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> RemoveMenuRoleMap(int id)
+        public async Task<IActionResult> RemoveMenuRoleMap([FromQuery]DeleteMenuRoleMapRequest request)
         {
-            var command = new RemoveMenuRoleMap() { Id = id };
+            var command = request.ToRemoveMenuRoleMapCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse();
+            return ret.ToOkObjectResponse("Role removed from Menu");
         }
     }
 }

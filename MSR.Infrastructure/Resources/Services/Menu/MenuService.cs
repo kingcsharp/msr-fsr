@@ -90,17 +90,24 @@ namespace MSR.Infrastructure.Resources.Services.Menu
             return retMenuItems;
         }
 
-        public async Task<bool> RemoveMenuRoleMap(int id)
+        public async Task<bool> RemoveMenuRoleMap(RemoveMenuRoleMap command)
         {
-            var roleMenuPermission = await _unitOfWork.MenuRolePermissions.FirstOrDefaultAsync(false, i => i.MenuRole.Id == id);
+            var menuRole = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuItem).Include(i => i.Role).Include(i => i.MenuRolePermission).Where(i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId).FirstOrDefaultAsync();
 
-            if (roleMenuPermission != null)
+            if(menuRole is null)
             {
-                _unitOfWork.MenuRolePermissions.Delete(false, roleMenuPermission.Id);
+                throw new DomainException($"{nameof(MenuRole)} not found", DomainError.NotFound);
             }
 
-            _unitOfWork.MenuRoles.Delete(false, id);
+            if (menuRole.MenuRolePermission != null)
+            {
+                _unitOfWork.MenuRolePermissions.Delete(false, menuRole.MenuRolePermission.Id);
+            }
+
+            _unitOfWork.MenuRoles.Delete(false, menuRole.Id);
+
             await _unitOfWork.SaveChangesAsync();
+
             return true;
         }
 

@@ -10,6 +10,8 @@ using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MSR.Domain.Commanding.Enums;
+using MSR.Answer.API.Filters;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -27,6 +29,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<LocationModel>>))]
+        [HasPrivilegeApi("Locations", EnumPrivilege.CanRead)]
         public async Task<IActionResult> Get([FromQuery, Required]GetLocationRequest request)
         {
             var command = request.ToGetLocationCommand();
@@ -35,27 +38,30 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, SwaggerResponse(typeof(AuditActionResult<LocationModel>))]
+        [HasPrivilegeApi("Locations", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> CreateLocation([FromBody, Required] CreateLocationRequest request)
         {
             var command = request.ToCreateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<LocationModel>();
+            return ret.ToOkObjectResponse<LocationModel>($"Location Created Successfully");
         }
 
         [HttpPatch, SwaggerResponse(typeof(AuditActionResult))]
+        [HasPrivilegeApi("Locations", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> UpdateLocation([FromBody, Required] UpdateLocationRequest request)
         {
             var command = request.ToUpdateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Location Updated Successfully");
         }
 
         [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult))]
+        [HasPrivilegeApi("Locations", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> DeactivateLocation(int id)
         {
             var command = new DeactivateLocation() { LocationId = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Location Deactivated Successfully");
         }
     }
 }

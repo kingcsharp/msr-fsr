@@ -7,7 +7,6 @@ using NSwag.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using System.Net;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
@@ -42,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers
             var createCustomer = request.ToCreateCustomerCommand();
 
             var ret = await _dispatcher.DispatchAsync(createCustomer);
-            return ret.ToCreatedResponse<Customer>();
+            return ret.ToOkObjectResponse<Customer>("Customer Created Successuflly");
         }
 
         [HttpPatch, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanEdit)]
@@ -51,7 +50,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var updateCustomer = request.ToUpdateCustomerCommand();
             var ret = await _dispatcher.DispatchAsync(updateCustomer);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Customer Updated Successfully");
         }
 
         [HttpDelete("{id}"), HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanDelete)]
@@ -60,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var disableCustomer = new DeactivateCustomer() { CustomerId = id };
             var ret = await _dispatcher.DispatchAsync(disableCustomer);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Customer Deactivated");
         }
     }
 }

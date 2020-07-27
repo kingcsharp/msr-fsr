@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MSR.Domain.Models
+﻿namespace MSR.Domain.Models
 {
     public class Status
     {
