@@ -1934,3 +1934,39 @@ p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
     margin-right: 2px;
   }
 }
+
+// <div class="col"><i class="fad fa-file-pdf fa-6x"
+//      style="--fa-primary-color: red;></i>
+//     </div>
+//     <!-- Word -->
+//     <div class="col"><i class="fad fa-file-word fa-6x"
+//      style="--fa-primary-color: blue;"></i>
+//     </div>
+//     <!-- Excel -->
+//     <div class="col"><i class="fad fa-file-excel fa-6x"
+//      style="--fa-primary-color: green;></i>
+//     </div>
+
+.fa-file-csv,
+.fa-file-pdf,
+.fa-file-word,
+.fa-file-excel,
+.fa-file-alt {
+  --fa-secondary-color: white;
+  --fa-secondary-opacity: 1.0;
+}
+
+.fa-file-csv,.fa-file-excel {
+  --fa-primary-color: green;
+}
+
+.fa-file-pdf {
+  --fa-primary-color: red;
+}
+
+.fa-file-word {
+  --fa-primary-color: blue;
+}
+.fa-file-alt {
+  --fa-primary-color: gray;;
+}
