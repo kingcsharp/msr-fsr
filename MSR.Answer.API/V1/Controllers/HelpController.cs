@@ -43,7 +43,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToCreateHelpPageCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<HelpPage>();
+            return ret.ToOkObjectResponse<HelpPage>("HelpPage created successfully");
         }
 
         [HttpPost("Role"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
@@ -52,7 +52,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToCreateHelpPageRoleCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<HelpPage>();
+            return ret.ToOkObjectResponse<HelpPage>("Role assigned to HelpPage successfully");
         }
 
         [HttpPatch, HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
@@ -61,7 +61,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateHelpPageCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("HelpPage Updated successfully");
         }
 
         [HttpDelete("{id}"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
@@ -70,7 +70,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteHelpPage() { HelpPageId = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("HelpPage Deleted successfully");
         }
 
         [HttpDelete("Role/{id}"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
@@ -79,7 +79,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteHelpPageRole() { HelpPageRoleId = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Role removed HelpPage successfully");
         }
         
     }

@@ -10,6 +10,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<IEnumerable<MenuItem>> GetMenuAsync(GetMenu command);
         Task<int> CreateMenuRoleMapAsync(CreateMenuRoleMap command);
         Task<bool> UpdateMenuRoleMapAsync(UpdateMenuRoleMap command);
-        Task<bool> RemoveMenuRoleMap(int id);
+        Task<bool> RemoveMenuRoleMap(RemoveMenuRoleMap command);
     }
 }

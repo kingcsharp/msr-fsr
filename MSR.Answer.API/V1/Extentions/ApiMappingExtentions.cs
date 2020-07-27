@@ -388,5 +388,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProcedureType>(request);
         }
+
+        public static RemoveMenuRoleMap ToRemoveMenuRoleMapCommand(this DeleteMenuRoleMapRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<RemoveMenuRoleMap>(request);
+        }
     }
 }

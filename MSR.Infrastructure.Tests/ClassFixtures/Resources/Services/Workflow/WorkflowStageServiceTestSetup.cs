@@ -1,22 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MSR.Infrastructure.Resources.Services.Account;
-using Moq;
-using MSR.Domain.Abstractions.Services;
-using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using MSR.Infrastructure.Resources.EntityFramework.Application;
-using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
-using System.Linq.Expressions;
-using System;
-using MSR.Infrastructure.Tests.TestFixtures;
-using AutoMapper;
-using MSR.Infrastructure.Profiles;
-using MSR.Domain.Abstractions.Email;
-using System.Collections.Generic;
-using System.Net.Mail;
-using System.Threading.Tasks;
-using MSR.Domain.Models.Config;
-using System.Linq;
-using MSR.Infrastructure.Helpers.Abstractions;
 
 namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 {

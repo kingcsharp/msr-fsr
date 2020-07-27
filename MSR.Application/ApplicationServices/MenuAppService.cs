@@ -43,7 +43,7 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(RemoveMenuRoleMap command, CancellationToken cancellationToken = default)
         {
-            var ret = await _menuService.RemoveMenuRoleMap(command.Id);
+            var ret = await _menuService.RemoveMenuRoleMap(command);
             return new CommandResponse<bool>(ret);
         }
     }

@@ -43,7 +43,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var result = await _dispatcher.DispatchAsync(command);
 
-            return result.ToNoContentResponse();
+            return result.ToOkObjectResponse("Forgot Password email sent");
         }
 
         [HttpPost("forgotusername")]
@@ -54,7 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var result = await _dispatcher.DispatchAsync(command);
 
-            return result.ToNoContentResponse();
+            return result.ToOkObjectResponse("Forgot UserName email sent");
         }
 
         [HttpPatch("resetpassword")]
@@ -65,7 +65,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var result = await _dispatcher.DispatchAsync(command);
 
-            return result.ToNoContentResponse();
+            return result.ToOkObjectResponse("Password reset email sent");
         }
 
     }
