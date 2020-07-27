@@ -9,8 +9,7 @@
     stateStorage="local" stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="canAddLocation"
-          class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+        <button *ngIf="true" [routerLink]="['../location-create']" class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
           + Add
         </button>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
@@ -19,10 +18,78 @@
       </div>
     </ng-template>
     <ng-template pTemplate="header">
-      
+      <tr>
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+          data-cy="usertable-header">
+          {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label != 'Actions'"></p-sortIcon>
+        </th>
+      </tr>
+      <tr>
+        <th [hidden]="!commonGrid.isVisibleCol('id',gridSettings)">
+          <div class="position-relative">
+            <input id="id" pInputText type="text" tooltip="Search by Id"
+              (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['id']?.value">
+            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
+              (click)="commonGrid.filter(dt,'id')"></i>
+          </div>
+        </th>
+        <th [hidden]="!commonGrid.isVisibleCol('name',gridSettings)">
+          <div class="position-relative">
+            <input id="name" pInputText type="text" tooltip="Search by Name"
+              (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['name']?.value">
+            <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer"
+              (click)="commonGrid.filter(dt,'name')"></i>
+          </div>
+        </th>
+        <th [hidden]="!commonGrid.isVisibleCol('internalAddress',gridSettings)">
+          <div class="position-relative">
+            <input id="internalAddress" pInputText type="text" tooltip="Search by Title"
+              (input)="dt.filter($event.target.value, 'internalAddress', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['internalAddress']?.value">
+            <i *ngIf="dt.filters['internalAddress']?.value" class="fclear pi pi-times pointer"
+              (click)="commonGrid.filter(dt,'internalAddress')"></i>
+          </div>
+        </th>
+        <th [hidden]="!commonGrid.isVisibleCol('createdBy',gridSettings)">
+          <div class="position-relative">
+            <input id="createdBy" pInputText type="text" tooltip="Search by Title"
+              (input)="dt.filter($event.target.value, 'createdBy', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['createdBy']?.value">
+            <i *ngIf="dt.filters['createdBy']?.value" class="fclear pi pi-times pointer"
+              (click)="commonGrid.filter(dt,'createdBy')"></i>
+          </div>
+        </th>
+        <th [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)">
+          <div class="position-relative">
+            <input id="createdOn" pInputText type="text" tooltip="Search by Title"
+              (input)="dt.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['createdOn']?.value">
+            <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
+              (click)="commonGrid.filter(dt,'createdOn')"></i>
+          </div>
+        </th>
+      </tr>
     </ng-template>
     <ng-template pTemplate="body" let-location>
-      
+      <tr class="ui-selectable-row">
+        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
+          {{location.id}}
+        </td>
+        <td [hidden]="!commonGrid.isVisibleCol('name', gridSettings)">
+          {{location.name}}
+        </td>
+        <td [hidden]="!commonGrid.isVisibleCol('internalAddress', gridSettings)">
+          {{location.internalAddress}}
+        </td>
+        <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)">
+          {{location.createdBy}}
+        </td>
+        <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
+          {{location.createdOn}}
+        </td>
+      </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
@@ -31,6 +98,3 @@
     </ng-template>
   </p-table>
 </widget>
-<button *ngIf="true" [routerLink]="['../location-create']" class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
-  + Add
-</button>

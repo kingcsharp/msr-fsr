@@ -1216,14 +1216,19 @@ export class MenuService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    roleDelete(id: number, version: string): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/Menu/Role/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    roleDelete(menuId: number | undefined, roleId: number | undefined, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Menu/Role?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (menuId === null)
+            throw new Error("The parameter 'menuId' cannot be null.");
+        else if (menuId !== undefined)
+            url_ += "MenuId=" + encodeURIComponent("" + menuId) + "&";
+        if (roleId === null)
+            throw new Error("The parameter 'roleId' cannot be null.");
+        else if (roleId !== undefined)
+            url_ += "RoleId=" + encodeURIComponent("" + roleId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
