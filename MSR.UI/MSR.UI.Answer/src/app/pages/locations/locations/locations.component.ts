@@ -56,7 +56,7 @@ export class LocationsComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Users, privName);
+    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
   getLocations(){
