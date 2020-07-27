@@ -55,6 +55,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateLocation, LocationApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateLocation, Location>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<HelpPage, Domain.Models.HelpPage>()

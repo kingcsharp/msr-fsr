@@ -87,7 +87,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
             if (user.CanApprove(EnumMenuItem.Locations))
             {
-                var location = _mapper.Map<EntityFramework.Entities.Location>(command);
+                var location = _mapper.Map(command,curLocation);
                 _unitOfWork.Locations.Update(location);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -97,6 +97,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             else
             {
                 var locationApproval = _mapper.Map<LocationApproval>(command);
+                locationApproval.LocationId = curLocation.Id;
                 _unitOfWork.LocationApprovals.Add(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
 
