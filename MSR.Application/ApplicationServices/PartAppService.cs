@@ -1,4 +1,6 @@
 ﻿
+using MSR.Domain.Abstractions;
+using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
@@ -17,15 +19,17 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdatePart>
     {
         private readonly IPartService _partService;
+        private readonly IFileService _fileService;
 
-        public PartAppService(IPartService partService)
+        public PartAppService(IPartService partService, IFileService fileService)
         {
             _partService = partService;
+            _fileService = fileService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetParts command, CancellationToken cancellationToken = default)
         {
-            var ret = await _partService.GetPartsAsync(command);
+            ICollection<PartModel> ret = await _partService.GetPartsAsync(command);
             return new CommandResponse<ICollection<PartModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
@@ -33,6 +37,7 @@ namespace MSR.Application.ApplicationServices
             var ret = await _partService.CreatePartAsync(command);
             return new CommandResponse<PartModel>(ret);
         }
+
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.UpdatePartAsync(command);

@@ -55,6 +55,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Product> Product { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
         public DbSet<PartSubPartMap> PartSubPartMap { get; set; }
+        public DbSet<File> File { get; set; }
+        public DbSet<FileEntityMap> FileEntityMap { get; set; }
 
 
 
