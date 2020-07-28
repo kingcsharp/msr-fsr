@@ -18,7 +18,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Customer, Customer>();
 
 
-            CreateMap<Customer, Domain.Models.Customer>().ReverseMap();
+            CreateMap<Customer, Domain.Models.Customer>().ReverseMap()
+                .ForMember(dest => dest.Location, opts => opts.AllowNull())
+                .ForMember(dest => dest.PrimaryContactUser, opts => opts.AllowNull())
+                .ForMember(dest => dest.SecondaryContactUser, opts => opts.AllowNull())
+                .AfterMap((src, dest) => dest.Location = src.Location == null ? null : dest.Location)
+                .AfterMap((src, dest) => dest.PrimaryContactUser = src.PrimaryContactUser == null ? null : dest.PrimaryContactUser)
+                .AfterMap((src, dest) => dest.SecondaryContactUser = src.SecondaryContactUser == null ? null : dest.SecondaryContactUser);
+          
             CreateMap<Location, Domain.Models.LocationModel>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
             CreateMap<GetLocations, Location>();

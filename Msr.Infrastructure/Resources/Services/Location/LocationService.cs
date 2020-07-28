@@ -28,7 +28,18 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         public async Task<ICollection<LocationModel>> GetLocationsAsync(GetLocations command)
         {
-            var locations = await _unitOfWork.Locations.Query().Where(x => x.ParentId == command.ParentId).ToListAsync();
+            var locationQuery = _unitOfWork.Locations.Query();
+            if(command.Id.HasValue && command.Id.Value != 0)
+            {
+                locationQuery = locationQuery.Where(i => i.Id == command.Id);
+            }
+            
+            if (command.ParentId.HasValue && command.ParentId.Value != 0)
+            {
+                locationQuery = locationQuery.Where(i => i.ParentId == command.ParentId);
+            }
+
+            var locations = await locationQuery.ToListAsync();
             var locationIds = locations.Select(i => i.Id);
             var locationApprovals = await _unitOfWork.LocationApprovals.Query().Where(i => locationIds.Contains(i.LocationId)).ToListAsync();
             var ret = new List<LocationModel>();

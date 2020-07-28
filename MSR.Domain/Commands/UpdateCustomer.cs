@@ -13,5 +13,6 @@ namespace MSR.Domain.Commands
         public int CustomerId { get; set; }
 
         public bool? IsActive { get; set; }
+        public string CustomerNumber { get; set; }
     }
 }

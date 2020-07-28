@@ -34,23 +34,53 @@ namespace MSR.Infrastructure.Resources.Services.Customers
 
             if (user.CanApprove(EnumMenuItem.CustomersDepartments))
             {
-                var customer = _mapper.Map<EntityFramework.Entities.Customer>(command);
+                var customer = _mapper.Map<Customer>(command);
+                //Because automapper is stupid.
+                if(customer.LocationId == 0)
+                {
+                    customer.LocationId = null;
+                }
+                if(customer.PrimaryContactUserId == 0)
+                {
+                    customer.PrimaryContactUserId = null;
+                }
+                if(customer.SecondaryContactUserId == 0)
+                {
+                    customer.SecondaryContactUserId = null;
+                }
+
                 await _unitOfWork.Customers.AddAsync(customer);
-                retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
                 await _unitOfWork.SaveChangesAsync();
+                retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+                //We are doing this because Automapper won't let us have nulls for some reason. 
+                if(retCustomer.Location.Id == 0)
+                {
+                    retCustomer.Location = null;
+                }             
+                if(retCustomer.PrimaryContactUser.Id == 0)
+                {
+                    retCustomer.PrimaryContactUser = null;
+                }             
+                if(retCustomer.SecondaryContactUser.Id == 0)
+                {
+                    retCustomer.SecondaryContactUser = null;
+                }
+                
 
                 await _unitOfWork.LogApprovalTransaction(customer, customer.Id);
             }
             else
             {
                 var customerApproval = _mapper.Map<CustomerApproval>(command);
-                var ret = await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
-                retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
+                if (customerApproval.LocationId == 0)
+                {
+                    customerApproval.LocationId = null;
+                }
+
+                await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
                 await _unitOfWork.SaveChangesAsync();
-
+                retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
             }
-
-
 
             return retCustomer;
         }
