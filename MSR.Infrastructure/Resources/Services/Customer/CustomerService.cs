@@ -10,6 +10,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSR.Infrastructure.Resources.Services.Customers
 {
@@ -145,14 +146,22 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 throw new DomainException($"{nameof(Domain.Models.Customer)} does not exist with {nameof(id)}: {id}");
             }
 
-            return _mapper.Map<Domain.Models.Customer>(customer);
+            var customerApproval = await _unitOfWork.CustomerApprovals.FirstOrDefaultAsync(false, i => i.CustomerId == id);
+
+            var retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+            if (customerApproval != null)
+            {
+                _mapper.Map(customerApproval, retCustomer);
+                retCustomer.Status = customerApproval.Status.Name;
+            }
+
+            return retCustomer;
         }
 
         public async Task<IEnumerable<Domain.Models.Customer>> GetCustomersAsync(GetMultipleCustomers command)
         {
             var customerList = new List<Domain.Models.Customer>();
-            var customers = _unitOfWork.Customers.Query();
-
+            var customers = _unitOfWork.Customers.Query().Include(i => i.Location).Include(i => i.PrimaryContactUser).Include(i => i.SecondaryContactUser).AsQueryable();
 
             if (command.Id != null)
             {
@@ -189,12 +198,20 @@ namespace MSR.Infrastructure.Resources.Services.Customers
 
             foreach (var customer in customers.ToList())
             {
-                customerList.Add(_mapper.Map<Domain.Models.Customer>(customer));
+                var customerApproval = await _unitOfWork.CustomerApprovals.FirstOrDefaultAsync(false, i => i.CustomerId == customer.Id);
+
+                var retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+                if (customerApproval != null)
+                {
+                    _mapper.Map(customerApproval, retCustomer);
+                    retCustomer.Status = customerApproval.Status.Name;
+                }
+                customerList.Add(retCustomer);
             }
 
             return customerList.AsEnumerable();
         }
-        private void UpdateCustomerRecord(EntityFramework.Entities.Customer curCustomer, UpdateCustomer command)
+        private void UpdateCustomerRecord(Customer curCustomer, UpdateCustomer command)
         {
             curCustomer.Address = command.Address ?? curCustomer.Address;
             curCustomer.Name = command.Name ?? curCustomer.Name;

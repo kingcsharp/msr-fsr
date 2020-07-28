@@ -24,14 +24,14 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet()]
+        [HttpGet]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
-        public async Task<IActionResult> GetPart(int? id, bool attachFiles = false)
+        public async Task<IActionResult> GetPart([FromQuery] GetPartRequest req)
         {
             var ret = await _dispatcher.DispatchAsync(new GetParts() {
-                partID = id,
-                attachFiles = attachFiles
+                partID = req.Id,
+                attachFiles = req.AttachFiles
             });
             return ret.ToOkObjectResponse<ICollection<PartModel>>();
         }

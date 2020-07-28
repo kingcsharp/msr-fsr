@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -25,7 +26,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<Customer>>))]
         public async Task<IActionResult> GetCustomers([FromQuery]GetMultipleCustomersRequest filters)
         {
             var getCustomers = filters.ToGetMultipleCustomersCommand();
@@ -34,13 +35,13 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<Customer>))]
         public async Task<IActionResult> CreateCustomer([FromBody, Required]CreateCustomerRequest request)
         {
             var createCustomer = request.ToCreateCustomerCommand();
 
             var ret = await _dispatcher.DispatchAsync(createCustomer);
-            return ret.ToCreatedResponse<Customer>();
+            return ret.ToOkObjectResponse<Customer>("Customer Created Successuflly");
         }
 
         [HttpPatch, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanEdit)]
@@ -49,7 +50,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var updateCustomer = request.ToUpdateCustomerCommand();
             var ret = await _dispatcher.DispatchAsync(updateCustomer);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Customer Updated Successfully");
         }
 
         [HttpDelete("{id}"), HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanDelete)]
@@ -58,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var disableCustomer = new DeactivateCustomer() { CustomerId = id };
             var ret = await _dispatcher.DispatchAsync(disableCustomer);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Customer Deactivated");
         }
     }
 }

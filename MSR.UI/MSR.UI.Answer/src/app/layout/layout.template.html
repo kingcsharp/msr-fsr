@@ -3,7 +3,7 @@
     style="position:absolute;top:35%;left:50%;font-size: 60px;font-weight: bold"></i>
 </p-blockUI>
 <nav sidebar id="sidebar" [ngClass]="open?'active':''" (mouseenter)="open=false" (mouseleave)="open=true"
-  class="sidebar nav-collapse collapse">
+  class="sidebar nav-collapse collapse" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
 </nav>
 
 <div class="wrap">
@@ -29,6 +29,16 @@
     <div class="router-component" #routerComponent>
       <router-outlet></router-outlet>
     </div>
+    <p-dialog header="Support Ticket" styleClass="supportticket-modal" [(visible)]="supportTicketModalDisplayed" [dismissableMask]="true" [appendTo]="body" [baseZIndex]="100001" [modal]='true'>
+      <iframe src="https://forms.raleyapps.com/form/render/a2c61d66-33a1-4627-8b61-e355e6bbe69b/q1ka1ap45z" frameborder="0" style="width: 850px; height: 555px;" scrolling="auto"></iframe>
+      <p-footer>
+        <div class="pull-right">
+          <button type="button" (click)="supportTicketModalDisplayed = !supportTicketModalDisplayed" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+            Close
+          </button>
+        </div>
+      </p-footer>
+    </p-dialog>
     <footer class="content-footer">
       © 2016-{{ currDate |  date:'yyyy' }} MSR-FSR. All Rights Reserved.
     </footer>

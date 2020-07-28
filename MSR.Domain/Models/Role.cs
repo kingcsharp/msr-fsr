@@ -14,5 +14,8 @@ namespace MSR.Domain.Models
         public bool? IsCertificationRole { get; set; }
 
         public ICollection<MenuItem> Menus { get; set; }
+
+        public Permission Permissions { get; set; }
+        public Permission InheritedPermissions { get; set; }
     }
 }

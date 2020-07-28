@@ -7,13 +7,13 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IHelpService
     {
-        Task CreateHelpPage(CreateHelpPage command);
+        Task<HelpPage> CreateHelpPage(CreateHelpPage command);
 
         Task UpdateHelpPage(UpdateHelpPage command);
 
         Task DeleteHelpPage(DeleteHelpPage command);
 
-        Task CreateHelpPageRole(CreateHelpPageRole command);
+        Task<HelpPage> CreateHelpPageRole(CreateHelpPageRole command);
 
         Task DeleteHelpPageRole(DeleteHelpPageRole command);
 

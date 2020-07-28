@@ -16,7 +16,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using User = MSR.Domain.Models.User;
 using Newtonsoft.Json;
 using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Domain.Abstractions.Services.Workflow;

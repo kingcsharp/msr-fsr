@@ -8,7 +8,6 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using File = MSR.Infrastructure.Resources.EntityFramework.Entities.File;
 
@@ -75,6 +74,7 @@ namespace MSR.Infrastructure.Resources.Services
         public async Task<bool> CreateFileAsync<T>(T entity, int entityId, FileModel file) where T : class
         {
             var tableName = mapEntityToTable(entity.GetType().Name);
+
             var url = await _fileUploader.UploadFile(file, tableName, entityId);
 
             var efFile = new File()

@@ -79,7 +79,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("User has been Deactivated");
         }
 
         [HttpPost("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanCreate)]
@@ -88,7 +88,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToCreateUserRoleCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToCreatedResponse<LocationModel>();
+            return ret.ToOkObjectResponse<User>("Role assigned to user successfully");
         }
 
         [HttpPatch("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]
@@ -97,7 +97,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateUserRoleCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("User Roles Updated");
         }
 
         [HttpDelete("/Role/{id}"), HasPrivilegeApi("Users",EnumPrivilege.CanDelete)]
@@ -106,7 +106,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteUserRole() { UserRoleId = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToNoContentResponse();
+            return ret.ToOkObjectResponse("Role removed from User");
         }
     }
 }

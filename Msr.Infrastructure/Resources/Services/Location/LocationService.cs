@@ -29,7 +29,19 @@ namespace MSR.Infrastructure.Resources.Services.Location
         public async Task<ICollection<LocationModel>> GetLocationsAsync(GetLocations command)
         {
             var locations = await _unitOfWork.Locations.Query().Where(x => x.ParentId == command.ParentId).ToListAsync();
-            var ret = locations.Select(x => _mapper.Map<LocationModel>(x)).OrderBy(x=>x.Name).ToList();
+            var locationIds = locations.Select(i => i.Id);
+            var locationApprovals = await _unitOfWork.LocationApprovals.Query().Where(i => locationIds.Contains(i.LocationId)).ToListAsync();
+            var ret = new List<LocationModel>();
+            foreach(var location in locations)
+            {
+                var domlocation = _mapper.Map<LocationModel>(location);
+                var locationApproval = locationApprovals.FirstOrDefault(i => i.LocationId == location.Id);
+                if (locationApproval != null)
+                {
+                    domlocation.Status = locationApproval.Status.Name;
+                }
+                ret.Add(domlocation);
+            }
 
             return ret;
         }
@@ -75,7 +87,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
             if (user.CanApprove(EnumMenuItem.Locations))
             {
-                var location = _mapper.Map<EntityFramework.Entities.Location>(command);
+                var location = _mapper.Map(command,curLocation);
                 _unitOfWork.Locations.Update(location);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -85,6 +97,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             else
             {
                 var locationApproval = _mapper.Map<LocationApproval>(command);
+                locationApproval.LocationId = curLocation.Id;
                 _unitOfWork.LocationApprovals.Add(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
 
