@@ -76,7 +76,6 @@ export class HelpCreateComponent implements OnInit {
       if (!response.hasErrors) {
         console.log(response);
         this.helpPageToEditId = response.object.id;
-        //this.router.navigateByUrl('app/help/help');
       }
     }, (error) => {
       console.log(error);
@@ -104,11 +103,11 @@ export class HelpCreateComponent implements OnInit {
 
     }
 
-    // TODO fix when you merge with Alec's Workflow branch to fix the bug coming up here and James gets you the IDs for HelpPages
+
     this.helpService.helpPatch(env.apiVersion,updateHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
         console.log(response);
-        this.router.navigateByUrl('app/help/help');
+        this.helpPageToEditId = response.object.id;
       }
     }, (error) => {
       console.log(error);
