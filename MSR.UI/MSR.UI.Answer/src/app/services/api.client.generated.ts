@@ -826,13 +826,15 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (parentId !== undefined && parentId !== null)
             url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5056,6 +5058,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
     locationId?: number | undefined;
     primaryContactUserId?: number | undefined;
     secondaryContactUserId?: number | undefined;
+    customerNumber?: string | undefined;
 
     constructor(data?: ICreateCustomerRequest) {
         if (data) {
@@ -5074,6 +5077,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
             this.locationId = _data["locationId"];
             this.primaryContactUserId = _data["primaryContactUserId"];
             this.secondaryContactUserId = _data["secondaryContactUserId"];
+            this.customerNumber = _data["customerNumber"];
         }
     }
 
@@ -5092,6 +5096,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
         data["locationId"] = this.locationId;
         data["primaryContactUserId"] = this.primaryContactUserId;
         data["secondaryContactUserId"] = this.secondaryContactUserId;
+        data["customerNumber"] = this.customerNumber;
         return data; 
     }
 }
@@ -5103,6 +5108,7 @@ export interface ICreateCustomerRequest {
     locationId?: number | undefined;
     primaryContactUserId?: number | undefined;
     secondaryContactUserId?: number | undefined;
+    customerNumber?: string | undefined;
 }
 
 export class UpdateCustomerRequest implements IUpdateCustomerRequest {
@@ -5114,6 +5120,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
     secondaryContactUserId?: number | undefined;
     customerId!: number;
     isActive?: boolean | undefined;
+    customerNumber?: string | undefined;
 
     constructor(data?: IUpdateCustomerRequest) {
         if (data) {
@@ -5134,6 +5141,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
             this.secondaryContactUserId = _data["secondaryContactUserId"];
             this.customerId = _data["customerId"];
             this.isActive = _data["isActive"];
+            this.customerNumber = _data["customerNumber"];
         }
     }
 
@@ -5154,6 +5162,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
         data["secondaryContactUserId"] = this.secondaryContactUserId;
         data["customerId"] = this.customerId;
         data["isActive"] = this.isActive;
+        data["customerNumber"] = this.customerNumber;
         return data; 
     }
 }
@@ -5167,6 +5176,7 @@ export interface IUpdateCustomerRequest {
     secondaryContactUserId?: number | undefined;
     customerId: number;
     isActive?: boolean | undefined;
+    customerNumber?: string | undefined;
 }
 
 export class AuditActionResultOfIEnumerableOfHelpPage extends AuditActionResult implements IAuditActionResultOfIEnumerableOfHelpPage {

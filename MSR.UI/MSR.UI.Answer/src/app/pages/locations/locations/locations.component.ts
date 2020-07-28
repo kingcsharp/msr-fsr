@@ -61,7 +61,7 @@ export class LocationsComponent implements OnInit {
 
   getLocations(){
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null,null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
       this.loading = false;
     }));
