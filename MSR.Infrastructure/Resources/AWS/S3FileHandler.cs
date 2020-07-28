@@ -35,17 +35,23 @@ namespace MSR.Infrastructure.Resources.AWS
         public async Task<string> UploadFile(FileModel file, string entityName, int entityId)
         {
             string uniqueName = $"{entityName}-{entityId}-{file.Name}";
-            var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
-            {
-                ContentBody = file.Base64String,
-                ContentType = file.ContentType,
-                BucketName = _s3Information.FileBucketName,
-                Key = uniqueName
-            });
 
-            if((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
+            // If there is no data to upload, then we are simply updating the
+            // pointers, and not uploading the data.
+            if (file.Base64String != null && !String.IsNullOrEmpty(file.Base64String))
             {
-                throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
+                var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
+                {
+                    ContentBody = file.Base64String,
+                    ContentType = file.ContentType,
+                    BucketName = _s3Information.FileBucketName,
+                    Key = uniqueName
+                });
+
+                if((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
+                {
+                    throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
+                }
             }
 
             return $"{uniqueName}";
