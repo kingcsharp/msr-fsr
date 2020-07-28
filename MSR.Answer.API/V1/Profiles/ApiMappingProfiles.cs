@@ -10,7 +10,8 @@ namespace MSR.Answer.API.V1.Profiles
         {
             CreateMap<GetLocationRequest, GetLocations>();
             CreateMap<CreateLocationRequest, CreateLocation>();
-            CreateMap<UpdateLocationRequest, UpdateLocation>();
+            CreateMap<UpdateLocationRequest, UpdateLocation>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.LocationId));
             CreateMap<CreateUserRoleRequest, CreateUserRole>();
             CreateMap<UpdateUserRoleRequest, UpdateUserRole>();
             CreateMap<CreateHelpPageRequest, CreateHelpPage>();
@@ -34,6 +35,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();
             CreateMap<File, Domain.Models.FileModel>().ReverseMap();
+            CreateMap<DeleteMenuRoleMapRequest, RemoveMenuRoleMap>();
+            CreateMap<File, Domain.Models.File>().ReverseMap();
         }
     }
 }

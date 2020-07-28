@@ -177,7 +177,7 @@
     </ng-template>
   </p-table>
 </widget>
-<p-dialog *ngIf="display" header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
+<p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
   [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
@@ -265,7 +265,7 @@
               Location
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body"
+              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body" [baseZIndex]="100002"
                 [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
@@ -275,7 +275,7 @@
               Supervisor
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body"
+              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body" [baseZIndex]="100001"
                 [(ngModel)]="currUser.supervisorId">
               </p-dropdown>
             </div>

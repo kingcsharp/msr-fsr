@@ -23,6 +23,7 @@ export class Layout {
   globals: Globals;
   currDate: Date = new Date();
   body: string = 'body';
+  supportTicketModalDisplayed: boolean = false;
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
 
@@ -90,6 +91,9 @@ export class Layout {
   }
 
   sidebarDisplay(display): void {
+    if(this.supportTicketModalDisplayed){
+      return;
+    }
     let _display = display === 'Hide' ? true : false;
     _display ? this.renderer.addClass(this.el.nativeElement, 'sidebar-hidden') : this.renderer.removeClass(this.el.nativeElement, 'sidebar-hidden');
   }
@@ -109,5 +113,9 @@ export class Layout {
     }
 
     this.sidebarState = !this.sidebarState;
+  }
+
+  displaySupportTicketModalDisplay():void{
+    this.supportTicketModalDisplayed = true;
   }
 }

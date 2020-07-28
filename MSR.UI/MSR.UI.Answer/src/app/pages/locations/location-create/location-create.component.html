@@ -1,0 +1,116 @@
+<div class="container">
+    <div class="row">
+        <h1 class="page-title">
+            Create Location
+        </h1>
+    </div>
+    <div class="row" *ngIf="locationToEdit != null">
+        <form class="col-12">
+            <div class="form-group">
+                <label for="title" class="col-form-label text-left">
+                    Name
+                </label>
+                <input type="text" id="name" name="name" [(ngModel)]="locationToEdit.name" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="Name of Location" placeholder=""
+                    data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="parentLocationOptions != null && parentLocationOptions.length != 0">
+                <label class="col-form-label text-left" for="parentlocation">
+                    Parent Location
+                </label>
+                <div class="col-12">
+                    <p-dropdown placeholder="Select Parent Location" name="country" [options]="parentLocationOptions" showClear="true" optionLabel="name" appendTo="body"
+                        [baseZIndex]="100001" [(ngModel)]="selectedParentLocation">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label for="address1" class="col-form-label text-left">
+                    Address 1
+                </label>
+                <input type="text" id="address1" name="address1" [(ngModel)]="locationToEdit.address1"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Address 1"
+                    placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label for="address2" class="col-form-label text-left">
+                    Address 2
+                </label>
+                <input type="text" id="address2" name="address2" [(ngModel)]="locationToEdit.address2"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Address 2"
+                    placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label for="city" class="col-form-label text-left">
+                    City
+                </label>
+                <input type="text" id="city" name="city" [(ngModel)]="locationToEdit.city" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="City" placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label for="state" class="col-form-label text-left">
+                    State/Province
+                </label>
+                <input type="text" id="state" name="state" [(ngModel)]="locationToEdit.state" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="State" placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label for="postalcode" class="col-form-label text-left">
+                    Postal Code
+                </label>
+                <input type="text" id="postalcode" name="postalcode" [(ngModel)]="locationToEdit.postalcode"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Postal Code"
+                    placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label class="col-form-label text-left" for="country">
+                    Country
+                </label>
+                <div class="col-12">
+                    <p-dropdown placeholder="Select Country" name="country" [options]="countryOptions" appendTo="body"
+                        [baseZIndex]="100001" [(ngModel)]="locationToEdit.country">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label for="phone" class="col-form-label text-left">
+                    Phone
+                </label>
+                <input type="text" id="phone" name="phone" [(ngModel)]="locationToEdit.phone" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="Phone" placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label for="invoiceclass" class="col-form-label text-left">
+                    Invoice Class
+                </label>
+                <input type="text" id="invoiceclass" name="invoiceclass" [(ngModel)]="locationToEdit.invoiceclass"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Invoice Class"
+                    placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group">
+                <label for="internaladdress" class="col-form-label text-left">
+                    Internal Address
+                </label>
+                <input type="text" id="internaladdress" name="internaladdress"
+                    [(ngModel)]="locationToEdit.internaladdress" data-validate="parsley" data-parsley-trigger="change"
+                    data-parsley-minlength="3" data-parsley-required="true" class="form-control input-transparent"
+                    tooltip="Internal Address" placeholder="" data-cy="title-input">
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-primary m-2" (click)="saveLocation()"
+            *ngIf="locationToEdit.id == 0">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateLocation()"
+            *ngIf="locationToEdit.id != 0">Update</button>
+        <button type="button" class="btn btn-warning m-2" [routerLink]="['../locations']">Cancel</button>
+    </div>
+</div>

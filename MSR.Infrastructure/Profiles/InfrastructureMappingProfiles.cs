@@ -56,6 +56,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateLocation, LocationApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateLocation, Location>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<HelpPage, Domain.Models.HelpPage>()
@@ -146,6 +147,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PurchaseOrderApproval, PurchaseOrder>().ForMember(dest => dest.Id, opt => opt.Ignore());
             #endregion
 
+
+            CreateMap<MenuRolePermission, Domain.Models.Permission>().ReverseMap();
+
+            CreateMap<MenuItem, Domain.Models.MenuItem>()
+                .ForMember(dest => dest.Roles, opt => opt.Ignore()).ReverseMap();
+            CreateMap<MenuGroup, Domain.Models.MenuGroup>().ReverseMap();
+
+            CreateMap<Status, Domain.Models.Status>().ReverseMap();
         }
     }
 }
