@@ -9,10 +9,10 @@ using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
@@ -45,6 +45,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var result = parts.Select(x => _mapper.Map<PartModel>(x)).OrderBy(x => x.Name).ToList();
             return result;
         }
+
         public async Task<PartModel> CreatePartAsync(CreatePart command)
         {
             PartModel ret;
@@ -83,11 +84,19 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
+                // The row in the Part table is not created until approval,
+                // so submit all the data to the approval.
                 var approval = _mapper.Map<PartApproval>(command);
+                approval.ApprovalJSON = JsonConvert.SerializeObject(command);
+                approval.PartId = null;
+                approval.WorkflowId = GetWorkflowID();
+                approval.WorkflowGroupId = GetWorkflowGroupID(approval.WorkflowId);
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<PartModel>(approval);
+                ret = new PartModel() {
+                    IsPending = true
+                };
             }
 
             return ret;
@@ -133,24 +142,30 @@ namespace MSR.Infrastructure.Resources.Services.Role
             else
             {
                 var approval = _mapper.Map<PartApproval>(command);
+                approval.ApprovalJSON = JsonConvert.SerializeObject(command);
+                approval.WorkflowId = GetWorkflowID();
+                approval.WorkflowGroupId = GetWorkflowGroupID(approval.WorkflowId);
+
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
-                ret = _mapper.Map<PartModel>(approval);
+
+                ret = _mapper.Map<PartModel>(current);
+                ret.IsPending = true;
             }
 
             return ret;
-
         }
         public async Task<PartModel> DeletePartAsync(DeletePart command)
         {
-            Part current = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+                .FirstOrDefaultAsync();
             if (current is null)
             {
                 throw new DomainException($"{nameof(Part)} not found with ID: {command.Id}", DomainError.NotFound);
             }
             if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanDelete))
             {
-                _unitOfWork.Parts.Delete(false, current);
+                _unitOfWork.Parts.Delete(false, current, true);
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id);
             }
@@ -161,6 +176,43 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var ret = _mapper.Map<PartModel>(current);
             return ret;
+        }
+
+        private int GetWorkflowID()
+        {
+            var wfid = _unitOfWork.WorkflowActivityMaps
+                .Query()
+                .Where(x =>
+                    x.WorkflowActivity.ApprovalTableName.Equals("PartApproval"))
+                .Select(x => x.Workflow.Id);
+
+            if (wfid.Any()) {
+                return wfid.First();
+            }
+
+            return -1;
+        }
+
+        private int GetWorkflowGroupID(int workflowID)
+        {
+            var wfsid = _unitOfWork.WorkflowStageMaps
+                .Query()
+                .Where(x => x.Workflow.Id == workflowID);
+
+            if (!wfsid.Any()) {
+                return -1;
+            }
+
+            var wfgid = _unitOfWork.WorkflowGroupStageMaps
+                .Query()
+                .Where(x => x.WorkflowStageId == wfsid.First().WorkflowStageId);
+
+            if (wfgid.Any()) {
+                return wfgid.First().WorkflowGroupId;
+            }
+
+            return -1;
+
         }
     }
 }

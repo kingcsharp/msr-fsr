@@ -48,7 +48,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             var stagesIds = workflowStages.Select(m => m.WorkflowStageId).ToList();
 
-            var workflowStagesMap = await _unitOfWork.WorkflowStagesMap.Query()
+            var workflowStagesMap = await _unitOfWork.WorkflowStageMaps.Query()
                 .Where(x => stagesIds.Contains(x.WorkflowStageId))
                 .Select(x => new { x.WorkflowId, x.WorkflowStageId }).ToListAsync();
 
@@ -191,7 +191,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             var efWorkFlow = await _unitOfWork.Workflows.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
             foreach (var role in efWorkFlow.MemberStages)
             {
-                _unitOfWork.WorkflowStagesMap.Delete(false, role, true);
+                _unitOfWork.WorkflowStageMaps.Delete(false, role, true);
             }
 
             foreach (var role in efWorkFlow.ActivityMaps)
@@ -203,7 +203,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             efWorkFlow.IsActive = command.IsActive;
 
             efWorkFlow.MemberStages = command.MemberStages.Select(
-                x => _unitOfWork.WorkflowStagesMap
+                x => _unitOfWork.WorkflowStageMaps
                 .AttachAndInsert(_mapper.Map<WorkflowStageMap>(x)))
                 .ToList();
 

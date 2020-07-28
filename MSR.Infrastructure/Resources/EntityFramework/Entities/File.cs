@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(File))]
-    public partial class File: TrackableEntity
+    public partial class File: CreatableEntity
     {
         [Required]
         [StringLength(100)]

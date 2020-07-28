@@ -24,13 +24,14 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet()]
+        [HttpGet]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
-        public async Task<IActionResult> GetPart(int? id)
+        public async Task<IActionResult> GetPart([FromQuery] GetPartRequest req)
         {
             var ret = await _dispatcher.DispatchAsync(new GetParts() {
-                partID = id
+                partID = req.Id,
+                attachFiles = req.AttachFiles
             });
             return ret.ToOkObjectResponse<ICollection<PartModel>>();
         }
@@ -42,7 +43,12 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToCreatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>();
+            var message = "Part was successfully submitted to workflow for approval.";
+            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault())
+            {
+                message = "Part was successfully added.";
+            }
+            return ret.ToOkObjectResponse<PartModel>(message);
         }
 
         [HttpPatch]
@@ -52,7 +58,12 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>();
+            var message = "Part update was successfully submitted to workflow for approval.";
+            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault())
+            {
+                message = "Part was successfully updated.";
+            }
+            return ret.ToOkObjectResponse<PartModel>(message);
         }
 
         [HttpDelete("{id}")]
@@ -64,7 +75,7 @@ namespace MSR.Answer.API.V1.Controllers
                 Id = id
             };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PartModel>();
+            return ret.ToOkObjectResponse<PartModel>("Part was successfully removed.");
         }
     }
 }

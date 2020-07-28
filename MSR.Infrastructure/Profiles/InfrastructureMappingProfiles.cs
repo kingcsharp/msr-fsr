@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.VisualBasic.CompilerServices;
 using MSR.Domain.Commands;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
@@ -89,7 +90,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreatePart, Part>().ForMember("Subparts", opts => opts.Ignore());
             CreateMap<Domain.Models.SubPartModel, PartSubPartMap>();
             CreateMap<UpdatePart, PartApproval>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.Id));
             CreateMap<UpdatePart, Part>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             #endregion

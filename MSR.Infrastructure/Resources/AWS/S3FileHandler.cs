@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -31,22 +32,38 @@ namespace MSR.Infrastructure.Resources.AWS
             return response.ResponseStream;
         }
 
-        public async Task<string> UploadFile(Domain.Models.File file)
+        public async Task<string> UploadFile(FileModel file, string entityName, int entityId)
         {
-            var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
-            {
-                ContentBody = file.Base64String,
-                ContentType = file.ContentType,
-                BucketName = _s3Information.FileBucketName,
-                Key = file.Name
-            });
+            string uniqueName = $"{entityName}-{entityId}-{file.Name}";
 
-            if((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
+            // If there is no data to upload, then we are simply updating the
+            // pointers, and not uploading the data.
+            if (!String.IsNullOrWhiteSpace(file.Base64String))
             {
-                throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
+                var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
+                {
+                    ContentBody = file.Base64String,
+                    ContentType = file.ContentType,
+                    BucketName = _s3Information.FileBucketName,
+                    Key = uniqueName
+                });
+
+                if((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
+                {
+                    throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
+                }
             }
 
-            return $"{_s3Information.AWSURL}{file.Name}";
+            return $"{uniqueName}";
+        }
+
+        public string GetURL(string key, int expiresInSeconds)
+        {
+            return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest() {
+                    BucketName = _s3Information.FileBucketName,
+                    Key = key,
+                    Expires = DateTime.Now.AddSeconds(expiresInSeconds)
+                });
         }
     }
 }

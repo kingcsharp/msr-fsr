@@ -5,6 +5,6 @@ namespace MSR.Domain.Abstractions.AWS
 {
     public interface IUploadFiles
     {
-        public Task<string> UploadFile(File file);
+        public Task<string> UploadFile(FileModel file, string entityName, int entityId);
     }
 }
