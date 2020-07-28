@@ -6,7 +6,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(PartApproval))]
     public partial class PartApproval: ApprovalEntity
     {
-        public int PartId { get; set; }
+        public int? PartId { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -21,5 +21,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? MaximumCycles { get; set; }
 
         public string Comments { get; set; }
+
+        public string ApprovalJSON { get; set; }
     }
 }
