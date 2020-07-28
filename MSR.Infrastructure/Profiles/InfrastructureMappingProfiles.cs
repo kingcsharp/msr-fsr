@@ -90,6 +90,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStep, Domain.Models.ProcedureStep>();
             CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate>();
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
+            CreateMap<WorkOrder, Domain.Models.WorkOrder>();
             CreateMap<CreateProcedure, ProcedureApproval>();
             CreateMap<CreateProcedure, Procedure>();
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();

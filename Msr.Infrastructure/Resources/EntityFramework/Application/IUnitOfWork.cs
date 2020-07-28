@@ -59,6 +59,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<PartSubPartMap> PartSubPartMaps { get ; }
         IRepository<File> Files { get; }
         IRepository<FileEntityMap> FileEntityMap { get; }
+        IRepository<WorkOrder> WorkOrders { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();

@@ -47,6 +47,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IProcedureStepMonitorService, ProcedureStepMonitorService>();
             services.AddScoped<IProcedureStepTemplateService, ProcedureStepTemplateService>();
             services.AddScoped<IProcedureTypeService, ProcedureTypeService>();
+            services.AddScoped<IWorkOrderService, WorkOrderService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();

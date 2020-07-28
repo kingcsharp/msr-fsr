@@ -388,5 +388,14 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProcedureType>(request);
         }
+
+        public static CreateWorkOrder ToCreateWorkOrderCommand(this CreateWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateWorkOrder>(request);
+        }
+        public static UpdateWorkOrder ToUpdateWorkOrderCommand(this UpdateWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateWorkOrder>(request);
+        }
     }
 }
