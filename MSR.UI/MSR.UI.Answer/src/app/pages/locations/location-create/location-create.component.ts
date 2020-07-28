@@ -24,7 +24,7 @@ export class LocationCreateComponent implements OnInit {
 
     this.countryOptions = new LookUpItems().Countries();
 
-    this.locationService.locationGet(null,env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null,null,env.apiVersion).subscribe(responseHandler((response) => {
 
       this.parentLocationOptions = response.object;
 
@@ -35,7 +35,7 @@ export class LocationCreateComponent implements OnInit {
 
       if (this.locationToEdit.id !== 0) {
 
-          this.locationService.locationGet(this.locationToEdit.id,env.apiVersion).subscribe(responseHandler((response) => {
+          this.locationService.locationGet(null,this.locationToEdit.id,env.apiVersion).subscribe(responseHandler((response) => {
             
             console.log(response);
 

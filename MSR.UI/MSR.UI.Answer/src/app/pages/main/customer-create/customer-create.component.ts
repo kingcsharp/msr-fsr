@@ -33,7 +33,7 @@ export class CustomerCreateComponent implements OnInit {
 
     }));
 
-    this.locationService.locationGet(null,env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null,null,env.apiVersion).subscribe(responseHandler((response) => {
 
       this.locationOptions = response.object;
 
