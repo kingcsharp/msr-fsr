@@ -7,8 +7,8 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IWorkOrderService
     {
-        Task<ICollection<WorkOrder>> GetWorkOrderAsync(GetWorkOrder command);
-        Task<WorkOrder> CreateWorkOrderAsync(CreateWorkOrder command);
-        Task<WorkOrder> UpdateWorkOrderAsync(UpdateWorkOrder command);
+        Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command);
+        Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command);
+        Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command);
     }
 }

@@ -24,7 +24,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             _mapper = mapper;
         }
 
-        public async Task<ICollection<Domain.Models.WorkOrder>> GetWorkOrderAsync(GetWorkOrder command)
+        public async Task<ICollection<Domain.Models.WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
             List<EntityFramework.Entities.WorkOrder> procedures;
             if (command.Id.HasValue) {
@@ -35,13 +35,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
             } else {
                 procedures = await _unitOfWork.WorkOrders.Query().ToListAsync();
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.WorkOrder>(x)).OrderBy(x => x.Id).ToList();
+            var result = procedures.Select(x => _mapper.Map<Domain.Models.WorkOrderModel>(x)).OrderBy(x => x.Id).ToList();
             return result;
         }
-        public async Task<Domain.Models.WorkOrder> CreateWorkOrderAsync(CreateWorkOrder command)
+        public async Task<Domain.Models.WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.WorkOrder ret;
+            Domain.Models.WorkOrderModel ret;
 
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
@@ -51,16 +51,16 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.WorkOrders.Add(procedure);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.WorkOrder>(procedure);
+                ret = _mapper.Map<Domain.Models.WorkOrderModel>(procedure);
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrder)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {user.Id}");
             }
 
             return ret;
         }
-        public async Task<Domain.Models.WorkOrder> UpdateWorkOrderAsync(UpdateWorkOrder command)
+        public async Task<Domain.Models.WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {
             var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
@@ -70,7 +70,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.WorkOrder ret;
+            Domain.Models.WorkOrderModel ret;
 
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
@@ -80,11 +80,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                ret = _mapper.Map<Domain.Models.WorkOrder>(procedure);
+                ret = _mapper.Map<Domain.Models.WorkOrderModel>(procedure);
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrder)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {user.Id}");
             }
 
             return ret;

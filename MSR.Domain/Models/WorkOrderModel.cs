@@ -1,47 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
 
-namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+namespace MSR.Domain.Models
 {
-    [Table(nameof(WorkOrder))]
-    public partial class WorkOrder: TrackableEntity
+    public class WorkOrderModel
     {
-        public WorkOrder()
-        {
-            WorkOrderParts = new HashSet<WorkOrderPart>();
-            WorkOrderTasks = new HashSet<WorkOrderTask>();
-        }
-
         public int Id { get; set; }
-
         public int PurchaseId { get; set; }
-
         public int ProductId { get; set; }
-
-        [Column(TypeName = "money")]
         public decimal Price { get; set; }
-
         public DateTime ScheduledStartDate { get; set; }
-
         public DateTime ScheduledEndDate { get; set; }
-
         public DateTime? ActualStartDate { get; set; }
-
         public DateTime? ActualEndDate { get; set; }
-
         public bool HasNCR { get; set; }
-
         public int? LocationId { get; set; }
-
+        /*
         public virtual Location Location { get; set; }
-
         public virtual Product Product { get; set; }
-
         public virtual Purchase Purchase { get; set; }
-
         public virtual ICollection<WorkOrderPart> WorkOrderParts { get; set; }
-
         public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
+        */
     }
 }

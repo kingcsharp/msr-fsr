@@ -26,33 +26,33 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet()]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrder>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
         public async Task<IActionResult> GetWorkOrder(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrder() {
                 Id = id
             });
-            return ret.ToOkObjectResponse<ICollection<WorkOrder>>();
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
         }
 
         [HttpPost]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<WorkOrder>))]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
         public async Task<IActionResult> AddWorkOrder(CreateWorkOrderRequest newobj)
         {
             var command = newobj.ToCreateWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrder>();
+            return ret.ToOkObjectResponse<WorkOrderModel>();
         }
 
         [HttpPatch]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<WorkOrder>))]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
         public async Task<IActionResult> UpdateWorkOrder(UpdateWorkOrderRequest newobj)
         {
             var command = newobj.ToUpdateWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrder>();
+            return ret.ToOkObjectResponse<WorkOrderModel>();
         }
     }
 }

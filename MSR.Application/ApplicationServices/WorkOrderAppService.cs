@@ -24,17 +24,17 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetWorkOrderAsync(command);
-            return new CommandResponse<ICollection<WorkOrder>>(ret);
+            return new CommandResponse<ICollection<WorkOrderModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.CreateWorkOrderAsync(command);
-            return new CommandResponse<WorkOrder>(ret);
+            return new CommandResponse<WorkOrderModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrder command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.UpdateWorkOrderAsync(command);
-            return new CommandResponse<WorkOrder>(ret);
+            return new CommandResponse<WorkOrderModel>(ret);
         }
     }
 }
