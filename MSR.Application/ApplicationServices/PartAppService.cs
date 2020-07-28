@@ -52,9 +52,8 @@ namespace MSR.Application.ApplicationServices
             var ret = await _partService.CreatePartAsync(command);
             var part = ret;
 
-            // If the part is not active, that means it's pending approval.  Do not
-            // upload the files yet.
-            if (part.IsActive.GetValueOrDefault())
+            // If the part is pending approval, do not upload the files yet.
+            if (!part.IsPending)
             {
                 await _fileService.DeleteFilesAsync(part, part.Id);
                 foreach (var file in command.Files)
@@ -69,7 +68,7 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _partService.UpdatePartAsync(command);
             var part = ret;
-            if (part.IsActive.GetValueOrDefault() && command.Files != null)
+            if (!part.IsPending && command.Files != null)
             {
                 await _fileService.DeleteFilesAsync(part, part.Id);
                 foreach (var file in command.Files)

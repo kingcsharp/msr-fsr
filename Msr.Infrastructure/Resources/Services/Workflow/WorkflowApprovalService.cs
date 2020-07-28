@@ -73,8 +73,16 @@ namespace MSR.Infrastructure.Resources.Services
 
                     string data = partApproval.Comments;
                     var dataObj = JsonConvert.DeserializeObject<UpdatePart>(data);
-                    dataObj.Id = partApproval.PartId;
-                    await _partService.UpdatePartAsync(dataObj);
+                    if (partApproval.PartId.HasValue) {
+                        // approval for update
+                        dataObj.Id = partApproval.PartId.Value;
+                        await _partService.UpdatePartAsync(dataObj);
+                    } else {
+                        // approval for create
+                        CreatePart createObj = JsonConvert.DeserializeObject<CreatePart>(data);
+                        PartModel createResult = await _partService.CreatePartAsync(createObj);
+                        partApproval.PartId = createResult.Id;
+                    }
 
                     var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == partApproval.PartId);
                     partApproval.Status = status;

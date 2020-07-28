@@ -84,22 +84,19 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
-                // Create a blank part because we need a foreign key ID
-                Part part = _mapper.Map<Part>(command);
-                part.IsActive = false;
-                _unitOfWork.Parts.Add(part);
-                await _unitOfWork.SaveChangesAsync();
-
-                // Submit the approval
+                // The row in the Part table is not created until approval,
+                // so submit all the data to the approval.
                 var approval = _mapper.Map<PartApproval>(command);
                 approval.Comments = JsonConvert.SerializeObject(command);
-                approval.PartId = part.Id;
+                approval.PartId = null;
                 approval.WorkflowId = GetWorkflowID();
                 approval.WorkflowGroupId = GetWorkflowGroupID(approval.WorkflowId);
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<PartModel>(part);
+                ret = new PartModel() {
+                    IsPending = true
+                };
             }
 
             return ret;
@@ -153,7 +150,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 await _unitOfWork.SaveChangesAsync();
 
                 ret = _mapper.Map<PartModel>(current);
-                ret.IsActive = false;
+                ret.IsPending = true;
             }
 
             return ret;
