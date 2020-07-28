@@ -20,11 +20,16 @@ export class HelpCreateComponent implements OnInit {
   public Editor = ClassicEditor;
   helpPageToEditId: number = 0;
   helpPageToEdit: HelpPage;
+  editorConfig:any;
 
   constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, 
     private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
+
+    this.editorConfig = { toolbar: [ 'bold', 'italic', 'link',
+    '|', 'undo', 'redo' , 
+    '|',  'insertTable', 'heading', 'bulletedList', 'numberedList' ] };
 
     this.route.queryParams.subscribe(params => {
       this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);
@@ -43,7 +48,7 @@ export class HelpCreateComponent implements OnInit {
       }else{
 
         this.helpPageToEdit = new HelpPage();
-
+        this.helpPageToEdit.content = '';
       }
 
     });
