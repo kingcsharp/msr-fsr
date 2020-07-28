@@ -29,10 +29,8 @@
                 <label for="articlecontent" class="col-form-label text-left">
                     Article Content
                 </label>
-                <ckeditor name="articlecontent" [editor]="Editor" 
-                [config]="{ toolbar: [ 'bold', 'italic', 'link','alignment',
-                '|', 'undo', 'redo' , 
-                '|',  'insertTable', 'heading', 'bulletedList', 'numberedList' ] }"
+                <ckeditor name="articlecontent" [editor]="Editor" id="editor"
+                [config]="editorConfig"
                 [(ngModel)]="helpPageToEdit.helpContent">
                 </ckeditor>
             </div>
