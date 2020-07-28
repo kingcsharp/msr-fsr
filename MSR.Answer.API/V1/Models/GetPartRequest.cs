@@ -2,10 +2,6 @@
 {
     public class GetPartRequest
     {
-        public GetPartRequest()
-        {
-            AttachFiles = false;
-        }
         public int? Id { get; set; }
         public bool AttachFiles { get; set; }
     }
