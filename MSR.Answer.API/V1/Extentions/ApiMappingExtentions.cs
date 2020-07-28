@@ -275,29 +275,12 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static CreateCustomer ToCreateCustomerCommand(this CreateCustomerRequest request)
         {
-            return new CreateCustomer()
-            {
-                Address = request.Address,
-                LocationId = request.LocationId.GetValueOrDefault(0),
-                Name = request.Name,
-                Phone = request.Phone,
-                PrimaryContactUserId = request.PrimaryContactUserId.GetValueOrDefault(0),
-                SecondaryContactUserId = request.SecondaryContactUserId.GetValueOrDefault(0)
-            };
+            return AutoMapperHelper.Mapper.Map<CreateCustomer>(request);
         }
 
         public static UpdateCustomer ToUpdateCustomerCommand(this UpdateCustomerRequest request)
         {
-            return new UpdateCustomer()
-            {
-                Address = request.Address,
-                IsActive = request.IsActive,
-                LocationId = request.LocationId,
-                Name = request.Name,
-                Phone = request.Phone,
-                PrimaryContactUserId = request.PrimaryContactUserId,
-                SecondaryContactUserId = request.SecondaryContactUserId
-            };
+            return AutoMapperHelper.Mapper.Map<UpdateCustomer>(request);
         }
 
         public static GetLocations ToGetLocationCommand(this GetLocationRequest request)
