@@ -13,78 +13,78 @@ using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
-    public class ProcedureTypeService : IProcedureTypeService
+    public class WorkOrderService : IWorkOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProcedureTypeService(IUnitOfWork unitOfWork, IMapper mapper)
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<ICollection<Domain.Models.ProcedureType>> GetProcedureTypeAsync(GetProcedureType command)
+        public async Task<ICollection<Domain.Models.WorkOrder>> GetWorkOrderAsync(GetWorkOrder command)
         {
-            List<EntityFramework.Entities.ProcedureType> procedures;
+            List<EntityFramework.Entities.WorkOrder> procedures;
             if (command.Id.HasValue) {
-                procedures = await _unitOfWork.ProcedureTypes.Query().Where(x => x.Id == command.Id.Value).ToListAsync();
+                procedures = await _unitOfWork.WorkOrders.Query().Where(x => x.Id == command.Id.Value).ToListAsync();
                 if (procedures.Count == 0) {
-                    throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
+                    throw new DomainException($"Work Order ID {command.Id.Value} not found", DomainError.NotFound);
                 }
             } else {
-                procedures = await _unitOfWork.ProcedureTypes.Query().ToListAsync();
+                procedures = await _unitOfWork.WorkOrders.Query().ToListAsync();
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureType>(x)).OrderBy(x => x.Id).ToList();
+            var result = procedures.Select(x => _mapper.Map<Domain.Models.WorkOrder>(x)).OrderBy(x => x.Id).ToList();
             return result;
         }
-        public async Task<Domain.Models.ProcedureType> CreateProcedureTypeAsync(CreateProcedureType command)
+        public async Task<Domain.Models.WorkOrder> CreateWorkOrderAsync(CreateWorkOrder command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureType ret;
+            Domain.Models.WorkOrder ret;
 
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
-                EntityFramework.Entities.ProcedureType procedure = _mapper.Map<EntityFramework.Entities.ProcedureType>(command);
+                EntityFramework.Entities.WorkOrder procedure = _mapper.Map<EntityFramework.Entities.WorkOrder>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                _unitOfWork.ProcedureTypes.Add(procedure);
+                _unitOfWork.WorkOrders.Add(procedure);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.ProcedureType>(procedure);
+                ret = _mapper.Map<Domain.Models.WorkOrder>(procedure);
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureType)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrder)} uid {user.Id}");
             }
 
             return ret;
         }
-        public async Task<Domain.Models.ProcedureType> UpdateProcedureTypeAsync(UpdateProcedureType command)
+        public async Task<Domain.Models.WorkOrder> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {
-            var current = await _unitOfWork.ProcedureTypes.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
             if(current is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureType)} not found with ID: {command.Id}", DomainError.NotFound);
+                throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureType ret;
+            Domain.Models.WorkOrder ret;
 
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
                 var procedure = _mapper.Map(command, current);
-                _unitOfWork.ProcedureTypes.Update(procedure);
+                _unitOfWork.WorkOrders.Update(procedure);
 
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                ret = _mapper.Map<Domain.Models.ProcedureType>(procedure);
+                ret = _mapper.Map<Domain.Models.WorkOrder>(procedure);
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureType)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrder)} uid {user.Id}");
             }
 
             return ret;

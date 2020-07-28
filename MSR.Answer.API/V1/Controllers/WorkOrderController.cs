@@ -15,44 +15,44 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class ProcedureTypeController : BaseApiController
+    public class WorkOrderController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
 
-        public ProcedureTypeController(ICommandDispatcher dispatcher)
+        public WorkOrderController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
 
         [HttpGet()]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureType>>))]
-        public async Task<IActionResult> GetProcedureType(int? id)
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrder>>))]
+        public async Task<IActionResult> GetWorkOrder(int? id)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedureType() {
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrder() {
                 Id = id
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureType>>();
+            return ret.ToOkObjectResponse<ICollection<WorkOrder>>();
         }
 
         [HttpPost]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureType>))]
-        public async Task<IActionResult> AddProcedureType(CreateProcedureTypeRequest newproc)
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrder>))]
+        public async Task<IActionResult> AddWorkOrder(CreateWorkOrderRequest newobj)
         {
-            var command = newproc.ToCreateProcedureTypeCommand();
+            var command = newobj.ToCreateWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureType>();
+            return ret.ToOkObjectResponse<WorkOrder>();
         }
 
         [HttpPatch]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureType>))]
-        public async Task<IActionResult> UpdateProcedureType(UpdateProcedureTypeRequest newproc)
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanEdit)]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrder>))]
+        public async Task<IActionResult> UpdateWorkOrder(UpdateWorkOrderRequest newobj)
         {
-            var command = newproc.ToUpdateProcedureTypeCommand();
+            var command = newobj.ToUpdateWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureType>();
+            return ret.ToOkObjectResponse<WorkOrder>();
         }
     }
 }

@@ -9,32 +9,32 @@ using System.Threading.Tasks;
 
 namespace MSR.Application.ApplicationServices
 {
-    public class ProcedureTypeAppService :
-        ICommandHandler<GetProcedureType>,
-        ICommandHandler<CreateProcedureType>,
-        ICommandHandler<UpdateProcedureType>
+    public class WorkOrderAppService :
+        ICommandHandler<GetWorkOrder>,
+        ICommandHandler<CreateWorkOrder>,
+        ICommandHandler<UpdateWorkOrder>
     {
-        private readonly IProcedureTypeService _procedureService;
+        private readonly IWorkOrderService _procedureService;
 
-        public ProcedureTypeAppService(IProcedureTypeService procedureService)
+        public WorkOrderAppService(IWorkOrderService procedureService)
         {
             _procedureService = procedureService;
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetProcedureType command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.GetProcedureTypeAsync(command);
-            return new CommandResponse<ICollection<ProcedureType>>(ret);
+            var ret = await _procedureService.GetWorkOrderAsync(command);
+            return new CommandResponse<ICollection<WorkOrder>>(ret);
         }
-        public async Task<ICommandResponse> HandleAsync(CreateProcedureType command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.CreateProcedureTypeAsync(command);
-            return new CommandResponse<ProcedureType>(ret);
+            var ret = await _procedureService.CreateWorkOrderAsync(command);
+            return new CommandResponse<WorkOrder>(ret);
         }
-        public async Task<ICommandResponse> HandleAsync(UpdateProcedureType command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(UpdateWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.UpdateProcedureTypeAsync(command);
-            return new CommandResponse<ProcedureType>(ret);
+            var ret = await _procedureService.UpdateWorkOrderAsync(command);
+            return new CommandResponse<WorkOrder>(ret);
         }
     }
 }

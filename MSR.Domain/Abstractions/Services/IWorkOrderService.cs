@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace MSR.Domain.Abstractions.Services
 {
-    public interface IProcedureTypeService
+    public interface IWorkOrderService
     {
-        Task<ICollection<ProcedureType>> GetProcedureTypeAsync(GetProcedureType command);
-        Task<ProcedureType> CreateProcedureTypeAsync(CreateProcedureType command);
-        Task<ProcedureType> UpdateProcedureTypeAsync(UpdateProcedureType command);
+        Task<ICollection<WorkOrder>> GetWorkOrderAsync(GetWorkOrder command);
+        Task<WorkOrder> CreateWorkOrderAsync(CreateWorkOrder command);
+        Task<WorkOrder> UpdateWorkOrderAsync(UpdateWorkOrder command);
     }
 }

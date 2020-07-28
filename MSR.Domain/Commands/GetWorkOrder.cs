@@ -2,7 +2,7 @@
 
 namespace MSR.Domain.Commands
 {
-    public class GetProcedureType : Command
+    public class GetWorkOrder : Command
     {
         public int? Id { get; set; }
     }
