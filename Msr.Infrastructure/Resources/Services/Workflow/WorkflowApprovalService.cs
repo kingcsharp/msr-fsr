@@ -71,7 +71,7 @@ namespace MSR.Infrastructure.Resources.Services
                 case EnumApprovalTables.PartApproval:
                     PartApproval partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
-                    string data = partApproval.Comments;
+                    string data = partApproval.ApprovalJSON;
                     var dataObj = JsonConvert.DeserializeObject<UpdatePart>(data);
                     if (partApproval.PartId.HasValue) {
                         // approval for update

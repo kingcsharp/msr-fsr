@@ -87,7 +87,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 // The row in the Part table is not created until approval,
                 // so submit all the data to the approval.
                 var approval = _mapper.Map<PartApproval>(command);
-                approval.Comments = JsonConvert.SerializeObject(command);
+                approval.ApprovalJSON = JsonConvert.SerializeObject(command);
                 approval.PartId = null;
                 approval.WorkflowId = GetWorkflowID();
                 approval.WorkflowGroupId = GetWorkflowGroupID(approval.WorkflowId);
@@ -142,7 +142,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             else
             {
                 var approval = _mapper.Map<PartApproval>(command);
-                approval.Comments = JsonConvert.SerializeObject(command);
+                approval.ApprovalJSON = JsonConvert.SerializeObject(command);
                 approval.WorkflowId = GetWorkflowID();
                 approval.WorkflowGroupId = GetWorkflowGroupID(approval.WorkflowId);
 

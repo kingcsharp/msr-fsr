@@ -21,5 +21,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? MaximumCycles { get; set; }
 
         public string Comments { get; set; }
+
+        public string ApprovalJSON { get; set; }
     }
 }
