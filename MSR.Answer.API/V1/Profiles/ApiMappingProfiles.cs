@@ -35,7 +35,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();
             CreateMap<DeleteMenuRoleMapRequest, RemoveMenuRoleMap>();
-
+            CreateMap<File, Domain.Models.File>().ReverseMap();
             CreateMap<CreateCustomerRequest, CreateCustomer>();
         }
     }

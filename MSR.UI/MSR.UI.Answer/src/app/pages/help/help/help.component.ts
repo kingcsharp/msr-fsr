@@ -6,7 +6,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -23,9 +23,9 @@ export class HelpComponent implements OnInit {
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
-  canAddHelpPage: boolean = true;
-  canEditHelpPage: boolean = true;
-  canDeleteHelpPage: boolean = true;
+  canAddHelpPage: boolean = false;
+  canEditHelpPage: boolean = false;
+  canDeleteHelpPage: boolean = false;
   showConfirmDeleteDialog: boolean = false;
   helpPageToDelete: HelpPage;
 
@@ -43,9 +43,9 @@ export class HelpComponent implements OnInit {
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
     ];
 
-    //this.canAddHelpPage = this.hasPrivilege(this.privileges.CanCreate);
-    //this.canDeleteHelpPage = this.hasPrivilege(this.privileges.CanActivate);
-    //this.canEditHelpPage = this.hasPrivilege(this.privileges.CanEdit);
+    this.canAddHelpPage = this.hasPrivilege(this.privileges.CanCreate);
+    this.canDeleteHelpPage = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEditHelpPage = this.hasPrivilege(this.privileges.CanEdit);
     this.getHelpPages();
   }
 
@@ -68,8 +68,8 @@ export class HelpComponent implements OnInit {
 
   }
 
-  hasPrivilege(privilegeName) {
-    return this.globals.hasPrivilege('HelpPages', privilegeName);
+  hasPrivilege(privName) {
+    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
   openConfirmDeleteDialog(helpPage: HelpPage){

@@ -58,14 +58,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
         private IRepository<PartSubPartMap> _partSubPartMap;
+        private IRepository<File> _files;
+        private IRepository<FileEntityMap> _fileEntityMap;
+        private IRepository<RoleChildRoleMap> _roleChildRoleMap;
+
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }
         public IRepository<PurchaseOrder> PurchaseOrders { get { return _purchaseOrders ?? (_purchaseOrders = new EFRepository<PurchaseOrder>(Context)); } }
-        private IRepository<RoleChildRoleMap> _roleChildRoleMap;
-
-
         public IRepository<User> Users { get { return _users ??= new EFRepository<User>(Context); } }
         public IRepository<Customer> Customers { get { return _customers ??= new EFRepository<Customer>(Context); } }
         public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ??= new EFRepository<CustomerApproval>(Context); } }
@@ -109,6 +110,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
         public IRepository<RoleChildRoleMap> RoleChildRoleMaps { get { return _roleChildRoleMap ??= new EFRepository<RoleChildRoleMap>(Context); } }
         public IRepository<PartSubPartMap> PartSubPartMaps { get { return _partSubPartMap ?? (_partSubPartMap = new EFRepository<PartSubPartMap>(Context)); } }
+        public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
+        public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
+
         #endregion Repositories
 
         public UnitOfWork(AnswerContext context)

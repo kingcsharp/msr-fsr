@@ -1,10 +1,10 @@
 import { Component, OnInit,  ElementRef  } from '@angular/core';
-import { CustomerService } from '../../../services/api.client.generated';
+import { CustomerService, Customer } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
   providers: [CustomerService]
 })
 export class CustomersComponent implements OnInit {
-
+  data: Array<Customer>;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
@@ -29,18 +29,17 @@ export class CustomersComponent implements OnInit {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'id', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'name', visible: true }),
-      new ColumnsSaved({ id: 'customernumber', label: 'customernumber', visible: true }),
-      new ColumnsSaved({ id: 'address', label: 'address', visible: true }),
-      new ColumnsSaved({ id: 'phone', label: 'phone', visible: true }),
-      new ColumnsSaved({ id: 'location', label: 'location', visible: true }),
-      new ColumnsSaved({ id: 'primarycontact', label: 'primarycontact', visible: true }),
-      new ColumnsSaved({ id: 'secondarycontact', label: 'secondarycontact', visible: true }),
-      new ColumnsSaved({ id: 'internaladdress', label: 'internaladdress', visible: true }),
-      new ColumnsSaved({ id: 'isactive', label: 'isactive', visible: true }),
-      new ColumnsSaved({ id: 'createdby', label: 'createdby', visible: true }),
-      new ColumnsSaved({ id: 'createdon', label: 'createdon', visible: true })
+      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
+      new ColumnsSaved({ id: 'name', label: 'Name', visible: false }),
+      new ColumnsSaved({ id: 'customerNumber', label: 'Customer Number', visible: true }),
+      new ColumnsSaved({ id: 'address', label: 'Address', visible: true }),
+      new ColumnsSaved({ id: 'phone', label: 'Phone', visible: true }),
+      new ColumnsSaved({ id: 'location', label: 'Location', visible: true }),
+      new ColumnsSaved({ id: 'primaryContact', label: 'Primary Contact', visible: true }),
+      new ColumnsSaved({ id: 'secondaryContact', label: 'Secondary Contact', visible: true }),
+      new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
+      new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true })
     ];
 
     this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
@@ -51,13 +50,15 @@ export class CustomersComponent implements OnInit {
 
   }
 
-  hasPrivilege(privilegeName) {
-    return this.globals.hasPrivilege('HelpPages', privilegeName);
+  hasPrivilege(privName) {
+    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
   getCustomers(){
     this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       console.log(response);
+      this.data = response.object;
+      this.loading = false;
     }));
   }
 

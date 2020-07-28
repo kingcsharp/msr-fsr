@@ -9,6 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { LocationCreateComponent } from './location-create/location-create.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 export const routes = [
   { path: '', redirectTo: 'locations', pathMatch: 'full' },
@@ -26,7 +27,8 @@ export const routes = [
     NewWidgetModule,
     DialogModule,
     MultiSelectModule,
-    FormsModule
+    FormsModule,
+    DropdownModule
   ]
 })
 export class LocationsModule {

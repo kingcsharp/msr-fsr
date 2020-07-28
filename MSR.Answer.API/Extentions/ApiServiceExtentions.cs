@@ -29,7 +29,10 @@ namespace MSR.Answer.API.Extentions
                     "MSR.Domain",
                     "MSR.Infrastructure"
                 });
+                i.AllowNullCollections = true;
+                i.AllowNullDestinationValues = true;
             });
+
 
             //The CreateMapper will create the DI Mapper.  AutoMapperHelper Gives us a Static Mapper.  We need this 
             //When using AutoMapper in Static or other places where using Instance isn't required or feesable like the 
