@@ -125,6 +125,8 @@
                 (click)="commonGrid.filter(dt,'createdOn')"></i>
             </div>
           </th>
+          <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-customer>
@@ -148,10 +150,12 @@
             {{customer.location.name}}
           </td>
           <td [hidden]="!commonGrid.isVisibleCol('primaryContact', gridSettings)">
-            {{customer.primaryContact}}
+            {{ customer.primaryContactUser?.firstName}}
+            {{ customer.primaryContactUser?.lastName}}
           </td>
           <td [hidden]="!commonGrid.isVisibleCol('secondaryContact', gridSettings)">
-            {{customer.secondaryContact}}
+            {{customer.secondaryContactUser.firstName}}
+            {{customer.secondaryContactUser.lastName}}
           </td>
           <td [hidden]="!commonGrid.isVisibleCol('isActive', gridSettings)">
             {{customer.isActive}}
@@ -160,7 +164,10 @@
             {{customer.createdBy}}
           </td>
           <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
-            {{customer.createdOn}}
+            {{customer.createdOn | date :'short'}}
+          </td>
+          <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
+            
           </td>
         </tr>
       </ng-template>
