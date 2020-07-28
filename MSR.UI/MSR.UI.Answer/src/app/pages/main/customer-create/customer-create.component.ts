@@ -46,7 +46,7 @@ export class CustomerCreateComponent implements OnInit {
 
           this.customerService.customerGet(this.customerToEditId,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
             
-            this.customer = response.object;
+            this.customer = response.object[0];
             if(this.customer.location != null){
               this.selectedLocation = this.locationOptions.find(s => s.id == this.customer.location.id);
             }
@@ -83,11 +83,9 @@ export class CustomerCreateComponent implements OnInit {
     createCustomerRequest.secondaryContactUserId = this.selectedSecondaryContactId;
 
     this.globals.showLoader(true);
-    console.log(createCustomerRequest);
-    console.log(this.selectedPrimaryContactId);
-    console.log(this.selectedSecondaryContactId);
     this.customerService.customerPost(env.apiVersion, createCustomerRequest).subscribe(responseHandler((response) => {
         console.log(response);
+        this.customer.id = response.object.id;
     }));
 
   }
@@ -104,7 +102,7 @@ export class CustomerCreateComponent implements OnInit {
     updateCustomerRequest.secondaryContactUserId = this.selectedSecondaryContactId;
 
     this.globals.showLoader(true);
-    this.customerService.customerPost(env.apiVersion, updateCustomerRequest).subscribe(responseHandler((response) => {
+    this.customerService.customerPatch(env.apiVersion, updateCustomerRequest).subscribe(responseHandler((response) => {
       console.log(response);
     }));
 
