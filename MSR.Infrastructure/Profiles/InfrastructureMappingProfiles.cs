@@ -21,6 +21,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Customer, Domain.Models.Customer>().ReverseMap();
             CreateMap<Location, Domain.Models.LocationModel>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
+            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
+            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
@@ -46,6 +48,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateCustomer, CustomerApproval>();
             CreateMap<UpdateCustomer, CustomerApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Domain.Models.InvoiceModel, Invoice>().ReverseMap();
+            CreateMap<CreateOneInvoice, Invoice>();
+            CreateMap<CreateUpdateInvoiceItem, InvoiceItem>();
+            CreateMap<UpdateInvoice, Invoice>();
+            CreateMap<DownloadAsIIFInvoices, GetInvoices>();
 
             CreateMap<Domain.Models.LocationModel, Location>().ReverseMap();
             CreateMap<Domain.Models.LocationModel, LocationApproval>().ReverseMap();

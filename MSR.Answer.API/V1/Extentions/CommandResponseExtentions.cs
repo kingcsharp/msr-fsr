@@ -3,6 +3,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Exceptions;
+using System.IO;
 using System.Net;
 
 namespace MSR.Answer.API.V1.Extentions
@@ -26,6 +27,13 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 SuccessMessage = message
             });
+        }
+
+        public static IActionResult ToFileResponse<TResult>(this ICommandResponse commandResponse, ControllerBase controller, string fileName)
+        {
+            var result = ValidateCommandResponse(commandResponse);
+
+            return result ?? controller.File(((ICommandResponse<TResult>)commandResponse).Data as MemoryStream, "application/octet-stream", fileName);
         }
 
         public static IActionResult ToNoContentResponse(this ICommandResponse commandResponse)

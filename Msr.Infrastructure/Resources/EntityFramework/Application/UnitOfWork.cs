@@ -58,6 +58,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
         private IRepository<PartSubPartMap> _partSubPartMap;
+        private IRepository<Invoice> _invoices;
+        private IRepository<InvoiceItem> _invoiceItems;
+        private IRepository<WorkOrder> _workOrders;
+
         private IRepository<File> _files;
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
@@ -110,6 +114,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<HelpPageRoleMap> HelpPageRoles { get { return _helpPageRoleMap ??= new EFRepository<HelpPageRoleMap>(Context); } }
         public IRepository<RoleChildRoleMap> RoleChildRoleMaps { get { return _roleChildRoleMap ??= new EFRepository<RoleChildRoleMap>(Context); } }
         public IRepository<PartSubPartMap> PartSubPartMaps { get { return _partSubPartMap ?? (_partSubPartMap = new EFRepository<PartSubPartMap>(Context)); } }
+        public IRepository<Invoice> Invoices { get { return _invoices ??= new EFRepository<Invoice>(Context); } }
+        public IRepository<InvoiceItem> InvoiceItems { get { return _invoiceItems ??= new EFRepository<InvoiceItem>(Context); } }
+        public IRepository<WorkOrder> WorkOrders { get { return _workOrders ??= new EFRepository<WorkOrder>(Context); } }
+
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
 

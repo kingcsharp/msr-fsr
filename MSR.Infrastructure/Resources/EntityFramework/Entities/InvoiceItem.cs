@@ -12,5 +12,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int WorkOrderId { get; set; }
 
         public virtual Invoice Invoice { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
     }
 }

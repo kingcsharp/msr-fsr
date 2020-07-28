@@ -13,25 +13,34 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             InvoiceItems = new HashSet<InvoiceItem>();
         }
 
+        [Required]
+        [StringLength(20)]
+        public string InvoiceNumber { get; set; }
+
+        [Required]
         public int StatusId { get; set; }
 
+        [Required]
         public int CustomerId { get; set; }
 
         [Required]
         [StringLength(100)]
         public string Description { get; set; }
 
+        [Required]
         public DateTime InvoiceDate { get; set; }
 
         [Required]
         [StringLength(10)]
         public string InvoiceClass { get; set; }
 
+        [Required]
         [Column(TypeName = "money")]
         public decimal Subtotal { get; set; }
 
         public decimal? TaxPercentage { get; set; }
 
+        [Required]
         [Column(TypeName = "money")]
         public decimal Total { get; set; }
 

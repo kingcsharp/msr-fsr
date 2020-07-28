@@ -12,6 +12,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<User> UpdateUserAsync(UpdateUser command);
         Task DeactivateUserAsync(DeactivateUser command);
         Task<User> GetLoggedInUserData(int Id);
+        Task<User> GetUserAsync(int Id);
         Task<User> CreateUserRoleAsync(CreateUserRole command);
         Task UpdateUserRoleAsync(UpdateUserRole command);
         Task DeleteUserRoleAsync(DeleteUserRole command);

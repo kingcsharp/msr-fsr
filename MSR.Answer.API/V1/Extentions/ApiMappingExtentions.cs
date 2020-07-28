@@ -2,6 +2,9 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -388,6 +391,96 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProcedureType>(request);
         }
+
+
+        public static CreateIndividualInvoices ToCreateIndividualInvoicesCommand(this CreateInvoiceRequest request)
+        {
+            var createIndividualInvoices = new CreateIndividualInvoices()
+            {
+                Invoices = new List<CreateOneInvoice>()
+            };
+
+            foreach (var item in request.InvoiceItems ?? new List<CreateInvoiceItemRequest>())
+            {
+                var inv = new CreateOneInvoice()
+                {
+                    CustomerId = request.CustomerId,
+                    Description = request.Description,
+                    InvoiceClass = request.InvoiceClass,
+                    InvoiceDate = request.InvoiceDate,
+                    TaxPercentage = request.TaxPercentage,
+                    InvoiceItems = new List<CreateUpdateInvoiceItem>() {
+                            new CreateUpdateInvoiceItem() {
+                                PurchaseOrderId = item.PurchaseOrderId,
+                                WorkOrderId  = item.WorkOrderId
+                            }
+                        }
+                };
+
+                createIndividualInvoices.Invoices.Add(inv);
+            }
+
+            return createIndividualInvoices;
+        }
+
+        public static CreateOneInvoice ToCreateOneInvoiceCommand(this CreateInvoiceRequest request)
+        {
+            return new CreateOneInvoice()
+            {
+                CustomerId = request.CustomerId,
+                Description = request.Description,
+                InvoiceClass = request.InvoiceClass,
+                InvoiceDate = request.InvoiceDate,
+                TaxPercentage = request.TaxPercentage,
+                InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
+                {
+                    PurchaseOrderId = x.PurchaseOrderId,
+                    WorkOrderId = x.WorkOrderId
+                }).ToList()
+            };
+        }
+
+        public static GetInvoices ToGetInvoicesCommand(this GetInvoicesRequest request)
+        {
+            return new GetInvoices()
+            {
+                CustomerId = request.CustomerId.GetValueOrDefault(0),
+                InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
+                Total = request.Total,
+                Description = request.Description,
+                StatusId = request.StatusId
+            };
+        }
+
+        public static UpdateInvoice ToUpdateInvoiceCommand(this UpdateInvoiceRequest request)
+        {
+            return new UpdateInvoice()
+            {
+                Id = request.Id,
+                Description = request.Description,
+                InvoiceDate = request.InvoiceDate,
+                TaxPercentage = request.TaxPercentage,
+                InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
+                {
+                    PurchaseOrderId = x.PurchaseOrderId,
+                    WorkOrderId = x.WorkOrderId
+                }).ToList()
+            };
+        }
+
+        public static DownloadAsIIFInvoices ToDownloadCommand(this DownloadInvoicesRequest request)
+        {
+            return new DownloadAsIIFInvoices()
+            {
+                CustomerId = request.CustomerId,
+                InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
+                Total = request.Total,
+                Description = request.Description,
+                StatusId = request.StatusId
+            };
+        }
+
+
 
         public static RemoveMenuRoleMap ToRemoveMenuRoleMapCommand(this DeleteMenuRoleMapRequest request)
         {
