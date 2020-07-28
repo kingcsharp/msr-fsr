@@ -298,67 +298,13 @@
             <label for="demo[]" class="col-md-2 col-form-label text-md-right">
               Files
             </label>
-            <p-fileUpload name="demo[]" url="./upload.php" customUpload="true" (uploadHandler)="myUploader($event)"
+            <p-fileUpload name="demo[]" url="./upload.php" customUpload="true" (onSelect)="myUploader($event)"
+             (onRemove)="removeuploadFile($event)" [showUploadButton]="false" [showCancelButton]="false"
               multiple="multiple" accept="" maxFileSize="1000000000">
               <ng-template pTemplate="content">
-                <!-- <h3 *ngIf="uploadedFiles.length">Drop Files Here</h3> -->
-                <!-- <ul *ngIf="uploadedFiles.length">
-                  <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-                </ul> -->
               </ng-template>
             </p-fileUpload>
           </div>
-          <!-- <div class="form-group row partTbl">
-            <widget>
-              <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
-                [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
-                [loading]="loading" [paginator]="true"
-                currentPageReportTemplate="Showing {first}-{last} of {{currPart.createSubParts.length}}"
-                [filterDelay]="0">
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th data-cy="subpart-header">
-                      Part
-                    </th>
-                    <th data-cy="subpart-header">
-                      Qty
-                    </th>
-                    <th></th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-partmodel>
-                  <tr class="ui-selectable-row">
-                    <td>
-                      <p-dropdown placeholder="Select Sub Part" name="allpartsDropdown" [options]="allParts"
-                        [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
-                        itemSize="30" [ngModelOptions]="{standalone: true}"></p-dropdown>
-                    </td>
-                    <td class="text-capitalize">
-                      <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
-                        data-parsley-trigger="change" data-parsley-min="0" data-parsley-required="true"
-                        class="form-control input-transparent" placeholder="Qty" data-cy="subpartqty-input"
-                        [ngModelOptions]="{standalone: true}">
-                    </td>
-                    <td>
-                      <i class="far fa-trash-alt pointer" tooltip="Remove Part" data-cy="removeSubPart"
-                        (click)="removeSubPart(partmodel)"></i>
-                    </td>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                  <tr>
-                    <td colspan="8" style="text-align:left">No sub parts added.</td>
-                  </tr>
-                </ng-template>
-              </p-table>
-            </widget>
-            <div class="gridBtn">
-              <button type="button" (click)="addSubPart(currPart)" class="btn btn-outline-inverse width-100 mb-xs"
-                role="button" data-cy="addpart-button">
-                Add Sub Part
-              </button>
-            </div>
-          </div> -->
         </fieldset>
       </div>
     </section>

@@ -77,7 +77,7 @@ export class PartsComponent implements OnInit {
 
   getParts() {
     this.globals.showLoader(true);
-    this.partsService.partGet(null,false,env.apiVersion).pipe(take(1))
+    this.partsService.partGet(null, false, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object;
@@ -129,6 +129,7 @@ export class PartsComponent implements OnInit {
 
   showDialog(part: PartModel) {
     this.getPartsDropdown();
+    this.uploadedFiles = [];
     this.currPart = this.getPart(part);
     this.display = true;
   }
@@ -200,19 +201,10 @@ export class PartsComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-
-      if (!this.uploadedFinished) {
-        let element: HTMLElement = document.getElementsByTagName('p-fileUpload')[0]
-          .getElementsByTagName('p-button')[0]
-          .getElementsByClassName('ui-clickable')[0] as HTMLElement;
-        element.click();
-        return;
-      } else {
-        this.uploadedFinished = false;
-      }
-
       let method: Observable<AuditActionResultOfPartModel> = null;
       this.globals.showLoader(true);
+
+      this.currPart.files.push(...this.uploadedFiles);
 
       if (this.currPart.id === undefined) {
         method = this.partsService.partPost(env.apiVersion, this.getCreatePartRequest(this.currPart));
@@ -242,36 +234,25 @@ export class PartsComponent implements OnInit {
     this.currPart.files.splice(currIndex, 1);
   }
 
+  removeuploadFile(event){
+    var index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
+    this.uploadedFiles.splice(index, 1);
+  } 
+
   myUploader(event) {
     const ctrl = this;
-    var currItem = 0;
-    var fileLength = event.files.length;
-    ctrl.uploadedFiles = [];
-
-    if (fileLength === 0) {
-      ctrl.uploadedFinished = true;
-      ctrl.onpartSubmit();
-    }
     for (let file of event.files) {
-      let fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = function () {
-        currItem++;
-        var fileModel = new FileModel();
-        fileModel.name = file.name;
-        fileModel.base64String = fileReader.result.toString();
-        fileModel.contentType = file.type;
-        if (ctrl.uploadedFiles.findIndex(x => x.name === fileModel.name) === -1) {
+      if (ctrl.uploadedFiles.findIndex(x => x.name === file.name) === -1) {
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = function () {
+          var fileModel = new FileModel();
+          fileModel.name = file.name;
+          fileModel.base64String = fileReader.result.toString();
+          fileModel.contentType = file.type;
           ctrl.uploadedFiles.push(fileModel);
-        }
-        if (currItem === fileLength) {
-          ctrl.uploadedFinished = true;
-          ctrl.removeAllFilesWithNoId(ctrl.currPart.files);
-          ctrl.currPart.files.push(...ctrl.uploadedFiles);
-          ctrl.uploadedFiles = [];
-          ctrl.onpartSubmit();
-        }
-      };
+        };
+      }
     }
   }
 

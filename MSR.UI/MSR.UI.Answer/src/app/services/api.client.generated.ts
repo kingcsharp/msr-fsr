@@ -1293,11 +1293,11 @@ export class PartService {
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (attachFiles === null)
             throw new Error("The parameter 'attachFiles' cannot be null.");
         else if (attachFiles !== undefined)
-            url_ += "attachFiles=" + encodeURIComponent("" + attachFiles) + "&";
+            url_ += "AttachFiles=" + encodeURIComponent("" + attachFiles) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5884,6 +5884,7 @@ export interface IAuditActionResultOfICollectionOfPartModel extends IAuditAction
 }
 
 export class PartModel extends TrackableModel implements IPartModel {
+    isPending?: boolean;
     name?: string | undefined;
     partNumber?: string | undefined;
     oemPartNumber?: string | undefined;
@@ -5903,6 +5904,7 @@ export class PartModel extends TrackableModel implements IPartModel {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
+            this.isPending = _data["isPending"];
             this.name = _data["name"];
             this.partNumber = _data["partNumber"];
             this.oemPartNumber = _data["oemPartNumber"];
@@ -5934,6 +5936,7 @@ export class PartModel extends TrackableModel implements IPartModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["isPending"] = this.isPending;
         data["name"] = this.name;
         data["partNumber"] = this.partNumber;
         data["oemPartNumber"] = this.oemPartNumber;
@@ -5959,6 +5962,7 @@ export class PartModel extends TrackableModel implements IPartModel {
 }
 
 export interface IPartModel extends ITrackableModel {
+    isPending?: boolean;
     name?: string | undefined;
     partNumber?: string | undefined;
     oemPartNumber?: string | undefined;
