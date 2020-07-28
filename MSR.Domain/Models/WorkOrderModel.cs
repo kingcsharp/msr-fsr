@@ -14,8 +14,8 @@ namespace MSR.Domain.Models
         public DateTime? ActualEndDate { get; set; }
         public bool HasNCR { get; set; }
         public int? LocationId { get; set; }
+        public virtual LocationModel Location { get; set; }
         /*
-        public virtual Location Location { get; set; }
         public virtual Product Product { get; set; }
         public virtual Purchase Purchase { get; set; }
         public virtual ICollection<WorkOrderPart> WorkOrderParts { get; set; }
