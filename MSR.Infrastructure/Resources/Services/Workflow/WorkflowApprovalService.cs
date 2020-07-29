@@ -371,13 +371,14 @@ namespace MSR.Infrastructure.Resources.Services
             List<PendingApprovalModel> ret = new List<PendingApprovalModel>();
             if (command.Table == EnumApprovalTables.All)
             {
-                foreach (int enumVal in Enum.GetValues(typeof(EnumApprovalTables)))
-                {
-                    if (enumVal != (int)EnumApprovalTables.All && DelegateHandler.CanReadActivity((EnumApprovalTables)enumVal))
-                    {
-                        ret.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
-                    }
-                }
+                //foreach (int enumVal in Enum.GetValues(typeof(EnumApprovalTables)))
+                //{
+                //    //if (enumVal != (int)EnumApprovalTables.All && DelegateHandler.CanReadActivity((EnumApprovalTables)enumVal))
+                //    //{
+                //        ret.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
+                //    //}
+                //}
+                ret.AddRange(await GetPendingApprovalByTable(EnumApprovalTables.UserApproval));
             }
             else if (DelegateHandler.CanReadActivity(command.Table))
             {

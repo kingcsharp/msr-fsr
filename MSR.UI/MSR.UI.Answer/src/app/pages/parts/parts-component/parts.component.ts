@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
+  PartService, PartModel, SubPartModel, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -24,6 +24,7 @@ declare let jQuery: any;
 
 export class PartsComponent implements OnInit {
   privileges = EnumPrivilege;
+  approvalTables = EnumApprovalTables;
   defaultView: ViewSaved;
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
@@ -42,6 +43,7 @@ export class PartsComponent implements OnInit {
   uploadedFiles: FileModel[] = [];
   isActive: any[];
   uploadedFinished: boolean = false;
+  showApproveButtons: boolean = true;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
