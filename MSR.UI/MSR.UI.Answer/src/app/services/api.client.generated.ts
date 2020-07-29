@@ -9278,7 +9278,7 @@ export enum EnumApprovalTables {
     ProductApproval = 6,
     PurchaseOrderApproval = 7,
     UserApproval = 8,
-    All = 9,
+    All = 9
 }
 
 export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalPopoverModel {
