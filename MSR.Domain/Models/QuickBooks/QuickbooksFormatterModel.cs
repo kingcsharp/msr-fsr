@@ -6,6 +6,6 @@
 
         public string Data { get; set; }
 
-        public string ExportFileName => $"{Invoice.InvoiceClass}-DD-{Invoice.Id}".ToUpper();
+        public string ExportFileName { get; set; }
      }
 }

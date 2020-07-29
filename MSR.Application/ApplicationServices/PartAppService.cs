@@ -60,11 +60,7 @@ namespace MSR.Application.ApplicationServices
             var part = ret;
             if (!part.IsPending && command.Files != null)
             {
-                await _fileService.DetachFilesAsync(part.GetType().Name, part.Id);
-                foreach (var file in command.Files)
-                {
-                    await _fileService.CreateFileAsync(part.GetType().Name, part.Id, file);
-                }
+                await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
             return new CommandResponse<PartModel>(ret);
         }

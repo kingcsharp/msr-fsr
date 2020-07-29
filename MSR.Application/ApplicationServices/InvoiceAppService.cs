@@ -64,7 +64,7 @@ namespace MSR.Application.ApplicationServices
         {
             var retInvoices = await _invoiceService.GetInvoicesAsync(_mapper.Map<GetInvoices>(command));
 
-            var format = "IIF";
+            var format = "iif";
 
             var retIifData = await _quickBooksService.FormatAsync(new FormatQuickbooks()
             {
