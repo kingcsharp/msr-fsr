@@ -7,7 +7,6 @@ import { HelpCreateComponent } from './help-create/help-create.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { TableModule } from 'primeng/table';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { DropdownModule } from 'primeng/dropdown';
@@ -29,7 +28,6 @@ export const routes = [
     AutoCompleteModule,
     FormsModule,
     MultiSelectModule,
-    CKEditorModule,
     TableModule,
     NewWidgetModule,
     DropdownModule
