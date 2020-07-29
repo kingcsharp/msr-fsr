@@ -18,7 +18,7 @@ export class HelpCreateComponent implements OnInit {
   selectedRoles: Role[] = new Array<Role>();
   helpPageToEditId: number = 0;
   helpPageToEdit: HelpPage;
-  
+
   constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, 
     private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
@@ -41,7 +41,7 @@ export class HelpCreateComponent implements OnInit {
       }else{
 
         this.helpPageToEdit = new HelpPage();
-        this.helpPageToEdit.content = '';
+        this.helpPageToEdit.content = 'Sample Content';
       }
 
     });

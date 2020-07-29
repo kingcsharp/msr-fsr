@@ -29,7 +29,7 @@
                 <label for="articlecontent" class="col-form-label text-left">
                     Article Content
                 </label>
-                <ckeditor-wrapper [editorcontent]="helpPageToEdit.content"></ckeditor-wrapper>
+                <ckeditor-wrapper [editorcontent]="helpPageToEdit.content" (editorContentChange)="helpPageToEdit.content = $event"></ckeditor-wrapper>
             </div>
             <div class="form-group">
                 <label for="roles" class="col-form-label text-left">

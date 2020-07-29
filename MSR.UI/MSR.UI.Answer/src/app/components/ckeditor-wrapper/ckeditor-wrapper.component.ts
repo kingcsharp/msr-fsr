@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import * as ClassicEditor from '../../lib/ckeditor/ckeditor';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 
 @Component({
   selector: 'ckeditor-wrapper',
@@ -11,7 +12,7 @@ export class CkeditorWrapperComponent implements OnInit {
   public Editor = ClassicEditor;
   public config: any;
   @Input() editorcontent:string;
-
+  @Output() editorContentChange = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
@@ -53,6 +54,10 @@ export class CkeditorWrapperComponent implements OnInit {
       // This value must be kept in sync with the language defined in webpack.config.js.
       language: 'en'
     };
+  }
+
+  editorContentChanged(){
+    this.editorContentChange.emit(this.editorcontent);
   }
 
 }
