@@ -444,6 +444,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new GetInvoices()
             {
+                Id = request.Id,
                 CustomerId = request.CustomerId.GetValueOrDefault(0),
                 InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
                 Total = request.Total,

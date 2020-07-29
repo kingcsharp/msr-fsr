@@ -218,6 +218,10 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var InvoiceList = new List<Domain.Models.InvoiceModel>();
             var Invoices = _unitOfWork.Invoices.Query();
 
+            if (command.Id > 0)
+            {
+                Invoices = Invoices.Where(i => i.Id == command.Id);
+            }
             if (command.CustomerId > 0)
             {
                 Invoices = Invoices.Where(i => i.CustomerId == command.CustomerId);
