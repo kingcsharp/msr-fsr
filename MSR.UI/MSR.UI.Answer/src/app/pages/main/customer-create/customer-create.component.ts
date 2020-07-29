@@ -47,15 +47,15 @@ export class CustomerCreateComponent implements OnInit {
           this.customerService.customerGet(this.customerToEditId,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
             
             this.customer = response.object[0];
-            if(this.customer.location != null){
+            if(this.customer.location != null && this.customer.location.id != 0){
               this.selectedLocation = this.locationOptions.find(s => s.id == this.customer.location.id);
             }
 
-            if(this.customer.primaryContactUser != null){
+            if(this.customer.primaryContactUser != null && this.customer.primaryContactUser.id != 0){
               this.selectedPrimaryContactId = this.customer.primaryContactUser.id;
             }
 
-            if(this.customer.secondaryContactUser != null){
+            if(this.customer.secondaryContactUser != null && this.customer.secondaryContactUser.id != 0){
               this.selectedSecondaryContactId = this.customer.secondaryContactUser.id;
             }
 
@@ -81,10 +81,10 @@ export class CustomerCreateComponent implements OnInit {
     createCustomerRequest.phone = this.customer.phone;
     createCustomerRequest.primaryContactUserId = this.selectedPrimaryContactId;
     createCustomerRequest.secondaryContactUserId = this.selectedSecondaryContactId;
+    createCustomerRequest.customerNumber = this.customer.customerNumber;
 
     this.globals.showLoader(true);
     this.customerService.customerPost(env.apiVersion, createCustomerRequest).subscribe(responseHandler((response) => {
-        console.log(response);
         this.customer.id = response.object.id;
     }));
 
@@ -100,6 +100,7 @@ export class CustomerCreateComponent implements OnInit {
     updateCustomerRequest.phone = this.customer.phone;
     updateCustomerRequest.primaryContactUserId = this.selectedPrimaryContactId;
     updateCustomerRequest.secondaryContactUserId = this.selectedSecondaryContactId;
+    updateCustomerRequest.customerNumber = this.customer.customerNumber;
 
     this.globals.showLoader(true);
     this.customerService.customerPatch(env.apiVersion, updateCustomerRequest).subscribe(responseHandler((response) => {
