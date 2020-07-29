@@ -31,21 +31,36 @@ namespace MSR.Infrastructure.Resources.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<FileModel> ListFiles<T>(T entity, int entityId) where T: class
+        public ICollection<FileModel> ListFiles(string entityName, int entityId, int? fileId = null)
         {
-            var tableName = mapEntityToTable(entity.GetType().Name);
-            var files = _unitOfWork.FileEntityMap.Query().Where(x =>
-                x.EntityTableName == tableName &&
-                x.EntityId == entityId
-                ).Select(x =>
-                    x.FileObject
-                ).ToList();
+            var tableName = mapEntityToTable(entityName);
+            List<File> files;
+            if (fileId.HasValue) {
+                files = _unitOfWork.FileEntityMap.Query().Where(x =>
+                    x.EntityTableName == tableName &&
+                    x.EntityId == entityId &&
+                    x.FileId == fileId
+                    ).Select(x =>
+                        x.FileObject
+                    ).ToList();
+            } else {
+                files = _unitOfWork.FileEntityMap.Query().Where(x =>
+                    x.EntityTableName == tableName &&
+                    x.EntityId == entityId
+                    ).Select(x =>
+                        x.FileObject
+                    ).ToList();
+            }
 
             List<FileModel> ret = new List<FileModel>();
             foreach (var x in files) {
                 var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
+                    FileId = x.Id,
+                    EntityId = entityId,
+                    Base64String = "",
+                    ContentType = x.ContentType,
                     Name = x.Name,
                     FileURL = fileURL
                 });
@@ -71,9 +86,9 @@ namespace MSR.Infrastructure.Resources.Services
             return files;
         }
 
-        public async Task<bool> CreateFileAsync<T>(T entity, int entityId, FileModel file) where T : class
+        public async Task<FileModel> CreateFileAsync(string entityName, int entityId, FileModel file)
         {
-            var tableName = mapEntityToTable(entity.GetType().Name);
+            var tableName = mapEntityToTable(entityName);
 
             var url = await _fileUploader.UploadFile(file, tableName, entityId);
 
@@ -97,22 +112,60 @@ namespace MSR.Infrastructure.Resources.Services
             _unitOfWork.FileEntityMap.Add(fileEntityMap);
             await _unitOfWork.SaveChangesAsync();
 
-            return true;
+            return new FileModel() {
+                FileId = efFile.Id,
+                EntityId = entityId,
+                Name = file.Name,
+                Base64String = "",
+                ContentType = file.ContentType,
+                FileURL = url
+            };
         }
-        public async Task<bool> DeleteFilesAsync<T>(T entity, int entityId) where T : class
+        public async Task<int> DetachFilesAsync(string entityName, int entityId, int? fileId = null)
         {
-            string tableName = mapEntityToTable(entity.GetType().Name);
+            string tableName = mapEntityToTable(entityName);
+            int deleteCount = 0;
 
-            foreach (var e in _unitOfWork.FileEntityMap.Query().Where(x =>
-                    x.EntityTableName == tableName &&
-                    x.EntityId == entityId
-                ).ToList())
-            {
-                _unitOfWork.FileEntityMap.Delete(false, e);
+            if (fileId.HasValue) {
+                var file = _unitOfWork.FileEntityMap.Query().FirstOrDefault(x =>
+                        x.EntityTableName == tableName &&
+                        x.EntityId == entityId &&
+                        x.FileId == fileId.Value
+                    );
+                if (file != null){
+                    _unitOfWork.FileEntityMap.Delete(false, file);
+                    deleteCount++;
+                }
+            } else {
+                foreach (var e in _unitOfWork.FileEntityMap.Query().Where(x =>
+                        x.EntityTableName == tableName &&
+                        x.EntityId == entityId
+                    ).ToList())
+                {
+                    _unitOfWork.FileEntityMap.Delete(false, e);
+                    deleteCount++;
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();
-            return false;
+            return deleteCount;
+        }
+
+        public async Task<int> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files)
+        {
+            if (files == null) {
+                return 0;
+            }
+
+            var remcount = await DetachFilesAsync(entityName, entityId);
+
+            foreach (var file in files) {
+                await CreateFileAsync(entityName, entityId, file);
+                remcount += 1;
+            }
+
+            // returns the net number of files added
+            return remcount;
         }
 
         public static string mapEntityToTable(string entityName)

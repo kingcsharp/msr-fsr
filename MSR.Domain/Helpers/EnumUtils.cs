@@ -12,7 +12,8 @@ namespace MSR.Domain.Helpers
             var strippedName = name.Replace(" ", string.Empty).Replace("/", string.Empty);
             foreach (EnumMenuItem enumContentType in Enum.GetValues(typeof(EnumMenuItem)))
             {
-                if (enumContentType.ToString().Equals(strippedName))
+                if (enumContentType.ToString().Equals(strippedName) ||
+                    enumContentType.ToString().Equals(strippedName + "s")) // handle plural
                 {
                     return enumContentType;
                 }

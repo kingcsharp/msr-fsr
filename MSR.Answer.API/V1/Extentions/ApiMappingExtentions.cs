@@ -487,5 +487,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<RemoveMenuRoleMap>(request);
         }
+
+        public static CreateFile ToCreateFileCommand(this CreateFileRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateFile>(request);
+        }
     }
 }
