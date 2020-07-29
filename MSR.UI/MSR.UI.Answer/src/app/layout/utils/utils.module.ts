@@ -22,6 +22,8 @@ import { MultiselectWrapperFormComponent } from '../../../app/components/multise
 
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
+import { ApproveEntityComponent } from '../../../app/components/aproove-entity/approve-entity.component';
+
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 
@@ -32,7 +34,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    GridOptionsComponent
+    GridOptionsComponent,
+    ApproveEntityComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -41,7 +44,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
     GridOptionsComponent,
-    FileUploadModule
+    FileUploadModule,
+    ApproveEntityComponent
   ],
   imports: [
     CommonModule,

@@ -176,6 +176,10 @@
             (click)="showDialog(partmodel)"></i>
           <i class="far fa-trash-alt pointer" tooltip="Delete Part" data-cy="deleteRow"
             (click)="removeRow(partmodel)"></i>
+          <approve-entity [(show)]="showApproveButtons" entityId="partmodel.id" 
+          [activityType]="3">
+          </approve-entity>
+          <!-- [activityType]="approvalTables.PartApproval"> -->
         </td>
       </tr>
     </ng-template>
@@ -285,8 +289,11 @@
             <div class="col-md-8">
               <div>
                 <span class="pointer currFiles" *ngFor="let file of currPart.files">
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'" class="far fa-file-word"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'" class="far fa-file-word"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'"
+                    class="far fa-file-word"></i>
+                  <i tooltip="{{file.name}}"
+                    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
+                    class="far fa-file-word"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="far fa-file-word"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fas fa-file-code"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
@@ -295,8 +302,11 @@
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
                   <i tooltip="{{file.name}}" *ngIf="file.contentType == '	application/pdf'" class="far fa-file-pdf"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.ms-excel'" class="fa-file-excel"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" class="fa-file-excel"></i>
+                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.ms-excel'"
+                    class="fa-file-excel"></i>
+                  <i tooltip="{{file.name}}"
+                    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+                    class="fa-file-excel"></i>
                   <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
                     (click)="removeFile(file)"></i>
                 </span>

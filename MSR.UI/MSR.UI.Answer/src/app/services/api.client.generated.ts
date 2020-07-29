@@ -816,6 +816,303 @@ export class HelpService {
 }
 
 @Injectable()
+export class InvoiceService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    invoiceGet(customerId: number | null | undefined, description: string | null | undefined, invoiceDate: Date | null | undefined, total: number | null | undefined, statusId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceModel> {
+        let url_ = this.baseUrl + "/v{version}/Invoice?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (customerId !== undefined && customerId !== null)
+            url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
+        if (description !== undefined && description !== null)
+            url_ += "Description=" + encodeURIComponent("" + description) + "&";
+        if (invoiceDate !== undefined && invoiceDate !== null)
+            url_ += "InvoiceDate=" + encodeURIComponent(invoiceDate ? "" + invoiceDate.toJSON() : "") + "&";
+        if (total !== undefined && total !== null)
+            url_ += "Total=" + encodeURIComponent("" + total) + "&";
+        if (statusId !== undefined && statusId !== null)
+            url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processInvoiceGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInvoiceGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfInvoiceModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfInvoiceModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processInvoiceGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfInvoiceModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfInvoiceModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfInvoiceModel>(<any>null);
+    }
+
+    invoicePatch(version: string, request: UpdateInvoiceRequest): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Invoice";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processInvoicePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInvoicePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processInvoicePatch(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result204: any = null;
+            let resultData204 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result204 = AuditActionResult.fromJS(resultData204);
+            return _observableOf(result204);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    createOneInvoice(version: string, request: CreateInvoiceRequest): Observable<AuditActionResultOfInvoiceModel> {
+        let url_ = this.baseUrl + "/v{version}/Invoice/CreateOneInvoice";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOneInvoice(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOneInvoice(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfInvoiceModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfInvoiceModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateOneInvoice(response: HttpResponseBase): Observable<AuditActionResultOfInvoiceModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = AuditActionResultOfInvoiceModel.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfInvoiceModel>(<any>null);
+    }
+
+    createIndividualInvoices(version: string, request: CreateInvoiceRequest): Observable<AuditActionResultOfIEnumerableOfInvoiceModel> {
+        let url_ = this.baseUrl + "/v{version}/Invoice/CreateIndividualInvoices";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateIndividualInvoices(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateIndividualInvoices(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfInvoiceModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfInvoiceModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateIndividualInvoices(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfInvoiceModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = AuditActionResultOfIEnumerableOfInvoiceModel.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfInvoiceModel>(<any>null);
+    }
+
+    download(customerId: number | null | undefined, description: string | null | undefined, invoiceDate: Date | null | undefined, total: number | null | undefined, statusId: number | null | undefined, version: string): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/v{version}/Invoice/Download?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (customerId !== undefined && customerId !== null)
+            url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
+        if (description !== undefined && description !== null)
+            url_ += "Description=" + encodeURIComponent("" + description) + "&";
+        if (invoiceDate !== undefined && invoiceDate !== null)
+            url_ += "InvoiceDate=" + encodeURIComponent(invoiceDate ? "" + invoiceDate.toJSON() : "") + "&";
+        if (total !== undefined && total !== null)
+            url_ += "Total=" + encodeURIComponent("" + total) + "&";
+        if (statusId !== undefined && statusId !== null)
+            url_ += "StatusId=" + encodeURIComponent("" + statusId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDownload(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDownload(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDownload(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+}
+
+@Injectable()
 export class LocationService {
     private http: HttpClient;
     private baseUrl: string;
@@ -1287,13 +1584,17 @@ export class PartService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    partGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
+    partGet(id: number | null | undefined, attachFiles: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (attachFiles === null)
+            throw new Error("The parameter 'attachFiles' cannot be null.");
+        else if (attachFiles !== undefined)
+            url_ += "AttachFiles=" + encodeURIComponent("" + attachFiles) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -4473,6 +4774,7 @@ export class User implements IUser {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
+    fullName?: string | undefined;
 
     constructor(data?: IUser) {
         if (data) {
@@ -4514,6 +4816,7 @@ export class User implements IUser {
                 for (let item of _data["roles"])
                     this.roles!.push(Role.fromJS(item));
             }
+            this.fullName = _data["fullName"];
         }
     }
 
@@ -4555,6 +4858,7 @@ export class User implements IUser {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        data["fullName"] = this.fullName;
         return data; 
     }
 }
@@ -4585,6 +4889,7 @@ export interface IUser {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
+    fullName?: string | undefined;
 }
 
 export class Role implements IRole {
@@ -5459,6 +5764,411 @@ export interface IUpdateHelpPageRequest {
     roleIds?: number[] | undefined;
 }
 
+export class AuditActionResultOfIEnumerableOfInvoiceModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfInvoiceModel {
+    object?: InvoiceModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfInvoiceModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(InvoiceModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfInvoiceModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfInvoiceModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfIEnumerableOfInvoiceModel extends IAuditActionResult {
+    object?: InvoiceModel[] | undefined;
+}
+
+export class InvoiceModel extends TrackableModel implements IInvoiceModel {
+    invoiceNumber?: string | undefined;
+    customerId?: number;
+    description?: string | undefined;
+    invoiceDate?: Date;
+    invoiceClass?: string | undefined;
+    subtotal?: number;
+    taxPercentage?: number | undefined;
+    total?: number;
+    statusId?: number;
+    invoiceItems?: InvoiceItemModel[] | undefined;
+
+    constructor(data?: IInvoiceModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.invoiceNumber = _data["invoiceNumber"];
+            this.customerId = _data["customerId"];
+            this.description = _data["description"];
+            this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
+            this.invoiceClass = _data["invoiceClass"];
+            this.subtotal = _data["subtotal"];
+            this.taxPercentage = _data["taxPercentage"];
+            this.total = _data["total"];
+            this.statusId = _data["statusId"];
+            if (Array.isArray(_data["invoiceItems"])) {
+                this.invoiceItems = [] as any;
+                for (let item of _data["invoiceItems"])
+                    this.invoiceItems!.push(InvoiceItemModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): InvoiceModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new InvoiceModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["invoiceNumber"] = this.invoiceNumber;
+        data["customerId"] = this.customerId;
+        data["description"] = this.description;
+        data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
+        data["invoiceClass"] = this.invoiceClass;
+        data["subtotal"] = this.subtotal;
+        data["taxPercentage"] = this.taxPercentage;
+        data["total"] = this.total;
+        data["statusId"] = this.statusId;
+        if (Array.isArray(this.invoiceItems)) {
+            data["invoiceItems"] = [];
+            for (let item of this.invoiceItems)
+                data["invoiceItems"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IInvoiceModel extends ITrackableModel {
+    invoiceNumber?: string | undefined;
+    customerId?: number;
+    description?: string | undefined;
+    invoiceDate?: Date;
+    invoiceClass?: string | undefined;
+    subtotal?: number;
+    taxPercentage?: number | undefined;
+    total?: number;
+    statusId?: number;
+    invoiceItems?: InvoiceItemModel[] | undefined;
+}
+
+export class InvoiceItemModel implements IInvoiceItemModel {
+    invoiceId?: number;
+    purchaseOrderId?: number;
+    workOrderId?: number;
+
+    constructor(data?: IInvoiceItemModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.invoiceId = _data["invoiceId"];
+            this.purchaseOrderId = _data["purchaseOrderId"];
+            this.workOrderId = _data["workOrderId"];
+        }
+    }
+
+    static fromJS(data: any): InvoiceItemModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new InvoiceItemModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["invoiceId"] = this.invoiceId;
+        data["purchaseOrderId"] = this.purchaseOrderId;
+        data["workOrderId"] = this.workOrderId;
+        return data; 
+    }
+}
+
+export interface IInvoiceItemModel {
+    invoiceId?: number;
+    purchaseOrderId?: number;
+    workOrderId?: number;
+}
+
+export class AuditActionResultOfInvoiceModel extends AuditActionResult implements IAuditActionResultOfInvoiceModel {
+    object?: InvoiceModel | undefined;
+
+    constructor(data?: IAuditActionResultOfInvoiceModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? InvoiceModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfInvoiceModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfInvoiceModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfInvoiceModel extends IAuditActionResult {
+    object?: InvoiceModel | undefined;
+}
+
+export class CreateInvoiceRequest implements ICreateInvoiceRequest {
+    customerId!: number;
+    description!: string;
+    invoiceDate!: Date;
+    invoiceClass!: string;
+    taxPercentage?: number | undefined;
+    invoiceItems!: CreateInvoiceItemRequest[];
+
+    constructor(data?: ICreateInvoiceRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.invoiceItems = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.customerId = _data["customerId"];
+            this.description = _data["description"];
+            this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
+            this.invoiceClass = _data["invoiceClass"];
+            this.taxPercentage = _data["taxPercentage"];
+            if (Array.isArray(_data["invoiceItems"])) {
+                this.invoiceItems = [] as any;
+                for (let item of _data["invoiceItems"])
+                    this.invoiceItems!.push(CreateInvoiceItemRequest.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateInvoiceRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateInvoiceRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["customerId"] = this.customerId;
+        data["description"] = this.description;
+        data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
+        data["invoiceClass"] = this.invoiceClass;
+        data["taxPercentage"] = this.taxPercentage;
+        if (Array.isArray(this.invoiceItems)) {
+            data["invoiceItems"] = [];
+            for (let item of this.invoiceItems)
+                data["invoiceItems"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICreateInvoiceRequest {
+    customerId: number;
+    description: string;
+    invoiceDate: Date;
+    invoiceClass: string;
+    taxPercentage?: number | undefined;
+    invoiceItems: CreateInvoiceItemRequest[];
+}
+
+export class CreateInvoiceItemRequest implements ICreateInvoiceItemRequest {
+    purchaseOrderId!: number;
+    workOrderId!: number;
+
+    constructor(data?: ICreateInvoiceItemRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.purchaseOrderId = _data["purchaseOrderId"];
+            this.workOrderId = _data["workOrderId"];
+        }
+    }
+
+    static fromJS(data: any): CreateInvoiceItemRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateInvoiceItemRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["purchaseOrderId"] = this.purchaseOrderId;
+        data["workOrderId"] = this.workOrderId;
+        return data; 
+    }
+}
+
+export interface ICreateInvoiceItemRequest {
+    purchaseOrderId: number;
+    workOrderId: number;
+}
+
+export class UpdateInvoiceRequest implements IUpdateInvoiceRequest {
+    id!: number;
+    description?: string | undefined;
+    invoiceDate?: Date;
+    taxPercentage?: number | undefined;
+    invoiceItems!: UpdateInvoiceItemRequest[];
+
+    constructor(data?: IUpdateInvoiceRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.invoiceItems = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
+            this.taxPercentage = _data["taxPercentage"];
+            if (Array.isArray(_data["invoiceItems"])) {
+                this.invoiceItems = [] as any;
+                for (let item of _data["invoiceItems"])
+                    this.invoiceItems!.push(UpdateInvoiceItemRequest.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UpdateInvoiceRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateInvoiceRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
+        data["taxPercentage"] = this.taxPercentage;
+        if (Array.isArray(this.invoiceItems)) {
+            data["invoiceItems"] = [];
+            for (let item of this.invoiceItems)
+                data["invoiceItems"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IUpdateInvoiceRequest {
+    id: number;
+    description?: string | undefined;
+    invoiceDate?: Date;
+    taxPercentage?: number | undefined;
+    invoiceItems: UpdateInvoiceItemRequest[];
+}
+
+export class UpdateInvoiceItemRequest implements IUpdateInvoiceItemRequest {
+    purchaseOrderId?: number;
+    workOrderId?: number;
+
+    constructor(data?: IUpdateInvoiceItemRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.purchaseOrderId = _data["purchaseOrderId"];
+            this.workOrderId = _data["workOrderId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateInvoiceItemRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateInvoiceItemRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["purchaseOrderId"] = this.purchaseOrderId;
+        data["workOrderId"] = this.workOrderId;
+        return data; 
+    }
+}
+
+export interface IUpdateInvoiceItemRequest {
+    purchaseOrderId?: number;
+    workOrderId?: number;
+}
+
 export class AuditActionResultOfICollectionOfLocationModel extends AuditActionResult implements IAuditActionResultOfICollectionOfLocationModel {
     object?: LocationModel[] | undefined;
 
@@ -5880,6 +6590,7 @@ export interface IAuditActionResultOfICollectionOfPartModel extends IAuditAction
 }
 
 export class PartModel extends TrackableModel implements IPartModel {
+    isPending?: boolean;
     name?: string | undefined;
     partNumber?: string | undefined;
     oemPartNumber?: string | undefined;
@@ -5899,6 +6610,7 @@ export class PartModel extends TrackableModel implements IPartModel {
     init(_data?: any) {
         super.init(_data);
         if (_data) {
+            this.isPending = _data["isPending"];
             this.name = _data["name"];
             this.partNumber = _data["partNumber"];
             this.oemPartNumber = _data["oemPartNumber"];
@@ -5930,6 +6642,7 @@ export class PartModel extends TrackableModel implements IPartModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["isPending"] = this.isPending;
         data["name"] = this.name;
         data["partNumber"] = this.partNumber;
         data["oemPartNumber"] = this.oemPartNumber;
@@ -5955,6 +6668,7 @@ export class PartModel extends TrackableModel implements IPartModel {
 }
 
 export interface IPartModel extends ITrackableModel {
+    isPending?: boolean;
     name?: string | undefined;
     partNumber?: string | undefined;
     oemPartNumber?: string | undefined;
@@ -9513,6 +10227,13 @@ export class UpdateWorkflowStageRequest extends CreateWorkflowStageRequest imple
 
 export interface IUpdateWorkflowStageRequest extends ICreateWorkflowStageRequest {
     id: number;
+}
+
+export interface FileResponse {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
 }
 
 export class ApiException extends Error {

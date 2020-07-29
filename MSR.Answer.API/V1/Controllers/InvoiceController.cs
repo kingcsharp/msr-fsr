@@ -30,14 +30,14 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet("{id}"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<InvoiceModel>))]
-        public async Task<IActionResult> GetInvoice(int id)
-        {
-            var getInvoice = new GetInvoice() { Id = id };
-            var ret = await _dispatcher.DispatchAsync(getInvoice);
-            return ret.ToOkObjectResponse<InvoiceModel>();
-        }
+        //[HttpGet("{id}"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        //[SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<InvoiceModel>))]
+        //public async Task<IActionResult> GetInvoice(int id)
+        //{
+        //    var getInvoice = new GetInvoice() { Id = id };
+        //    var ret = await _dispatcher.DispatchAsync(getInvoice);
+        //    return ret.ToOkObjectResponse<InvoiceModel>();
+        //}
 
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceModel>>))]
