@@ -127,13 +127,13 @@ namespace MSR.Infrastructure.Resources.Services
             int deleteCount = 0;
 
             if (fileId.HasValue) {
-                var file = _unitOfWork.FileEntityMap.Query().Where(x =>
+                var file = _unitOfWork.FileEntityMap.Query().FirstOrDefault(x =>
                         x.EntityTableName == tableName &&
                         x.EntityId == entityId &&
                         x.FileId == fileId.Value
                     );
-                if (file.Any()){
-                    _unitOfWork.FileEntityMap.Delete(false, file.First());
+                if (file != null){
+                    _unitOfWork.FileEntityMap.Delete(false, file);
                     deleteCount++;
                 }
             } else {
@@ -149,6 +149,23 @@ namespace MSR.Infrastructure.Resources.Services
 
             await _unitOfWork.SaveChangesAsync();
             return deleteCount;
+        }
+
+        public async Task<int> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files)
+        {
+            if (files == null) {
+                return 0;
+            }
+
+            var remcount = await DetachFilesAsync(entityName, entityId);
+
+            foreach (var file in files) {
+                await CreateFileAsync(entityName, entityId, file);
+                remcount += 1;
+            }
+
+            // returns the net number of files added
+            return remcount;
         }
 
         public static string mapEntityToTable(string entityName)

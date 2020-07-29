@@ -49,19 +49,14 @@ namespace MSR.Application.ApplicationServices
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
         {
-            var ret = await _partService.CreatePartAsync(command);
-            var part = ret;
+            var part = await _partService.CreatePartAsync(command);
 
             // If the part is pending approval, do not upload the files yet.
             if (!part.IsPending)
             {
-                await _fileService.DetachFilesAsync(part.GetType().Name, part.Id);
-                foreach (var file in command.Files)
-                {
-                    await _fileService.CreateFileAsync(part.GetType().Name, part.Id, file);
-                }
+                await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
-            return new CommandResponse<PartModel>(ret);
+            return new CommandResponse<PartModel>(part);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
