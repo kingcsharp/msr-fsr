@@ -32,16 +32,10 @@ namespace MSR.Application.ApplicationServices
 
             ICollection<FileModel> files = new List<FileModel>();
 
-            if (!command.attachFiles)
-            {
-                files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
-            }
+            files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
 
             foreach (var part in ret)
             {
-                if (command.attachFiles) {
-                    files = _fileService.ListFiles(part.GetType().Name, part.Id);
-                }
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
             }
 

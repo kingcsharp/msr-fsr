@@ -31,7 +31,6 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var ret = await _dispatcher.DispatchAsync(new GetParts() {
                 partID = req.Id,
-                attachFiles = req.AttachFiles
             });
             return ret.ToOkObjectResponse<ICollection<PartModel>>();
         }

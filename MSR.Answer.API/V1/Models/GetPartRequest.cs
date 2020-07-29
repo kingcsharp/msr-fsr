@@ -3,6 +3,5 @@
     public class GetPartRequest
     {
         public int? Id { get; set; }
-        public bool AttachFiles { get; set; }
     }
 }
