@@ -25,6 +25,7 @@ import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService
 } from './services/api.client.generated';
+import { CkeditorWrapperComponent } from './components/ckeditor-wrapper/ckeditor-wrapper.component';
 
 const APP_PROVIDERS = [
   CheckAllService,
@@ -40,7 +41,8 @@ const APP_PROVIDERS = [
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
-    ErrorComponent
+    ErrorComponent,
+    CkeditorWrapperComponent
   ],
   imports: [
     BrowserModule,

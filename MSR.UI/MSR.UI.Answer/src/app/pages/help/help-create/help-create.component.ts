@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HelpService, CreateHelpPageRequest, RoleService, Role, HelpPage, UpdateHelpPageRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,19 +16,13 @@ export class HelpCreateComponent implements OnInit {
 
   availableRoles: Role[] = new Array<Role>();
   selectedRoles: Role[] = new Array<Role>();
-  public Editor = ClassicEditor;
   helpPageToEditId: number = 0;
   helpPageToEdit: HelpPage;
-  editorConfig:any;
 
   constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, 
     private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
-
-    this.editorConfig = { toolbar: [ 'bold', 'italic', 'link',
-    '|', 'undo', 'redo' , 
-    '|',  'insertTable', 'heading', 'bulletedList', 'numberedList' ] };
 
     this.route.queryParams.subscribe(params => {
       this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);
