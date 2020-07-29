@@ -32,16 +32,10 @@ namespace MSR.Application.ApplicationServices
 
             ICollection<FileModel> files = new List<FileModel>();
 
-            if (!command.attachFiles)
-            {
-                files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
-            }
+            files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
 
             foreach (var part in ret)
             {
-                if (command.attachFiles) {
-                    files = _fileService.ListFiles(part.GetType().Name, part.Id);
-                }
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
             }
 
@@ -49,19 +43,14 @@ namespace MSR.Application.ApplicationServices
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
         {
-            var ret = await _partService.CreatePartAsync(command);
-            var part = ret;
+            var part = await _partService.CreatePartAsync(command);
 
             // If the part is pending approval, do not upload the files yet.
             if (!part.IsPending)
             {
-                await _fileService.DetachFilesAsync(part.GetType().Name, part.Id);
-                foreach (var file in command.Files)
-                {
-                    await _fileService.CreateFileAsync(part.GetType().Name, part.Id, file);
-                }
+                await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
-            return new CommandResponse<PartModel>(ret);
+            return new CommandResponse<PartModel>(part);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
@@ -70,11 +59,7 @@ namespace MSR.Application.ApplicationServices
             var part = ret;
             if (!part.IsPending && command.Files != null)
             {
-                await _fileService.DetachFilesAsync(part.GetType().Name, part.Id);
-                foreach (var file in command.Files)
-                {
-                    await _fileService.CreateFileAsync(part.GetType().Name, part.Id, file);
-                }
+                await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
             return new CommandResponse<PartModel>(ret);
         }
