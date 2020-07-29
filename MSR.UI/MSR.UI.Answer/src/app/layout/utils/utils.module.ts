@@ -25,7 +25,7 @@ import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wra
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component';
 import { ApproveEntityComponent } from '../../../app/components/aproove-entity/approve-entity.component';
-
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 
@@ -58,7 +58,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     MultiSelectModule,
     DialogModule,
     FileUploadModule,
-    TooltipModule
+    TooltipModule,
+    NgxDocViewerModule
   ]
 })
 export class UtilsModule {
