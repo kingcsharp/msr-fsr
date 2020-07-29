@@ -1,8 +1,11 @@
 import { Component, OnInit, Output, Input, EventEmitter, ElementRef } from '@angular/core';
+import { take } from 'rxjs/operators';
+import { responseHandler } from '../../utils/responseHandler';
 import {
-  FileModel
+  FileModel, EnumMenuItem, FileService
 } from '../../services/api.client.generated';
-
+import { environment as env } from '../../../environments/environment';
+// FileService, 
 @Component({
   selector: 'grid-file-viewer',
   templateUrl: './grid-file-viewer.component.html',
@@ -13,8 +16,10 @@ export class GridFileViewerComponent implements OnInit {
   selectedDocUrl: string;
   display: boolean = false;
   viewer: string;
+
   @Input() files: FileModel[];
-  constructor() {
+  @Input() menuItem: EnumMenuItem;
+  constructor(private fileService: FileService) {
 
   }
 
@@ -23,9 +28,18 @@ export class GridFileViewerComponent implements OnInit {
 
   }
 
-  showViewer(file) {
+  showViewer(file: FileModel) {
     this.viewer = this.getViewerType(file.contentType);
+    this.fileService.fileGet(EnumMenuItem[this.menuItem], file.entityId, file.fileId, env.apiVersion)
+      .pipe(take(1)).subscribe(responseHandler((resp) => {
+        this.display = true;
+        debugger;
+        this.clseDialog();
+      }));
+  }
 
+  clseDialog() {
+    this.display = false;
   }
 
   getViewerType(contentType) {

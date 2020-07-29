@@ -494,13 +494,13 @@ export class FileService {
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (entityName !== undefined && entityName !== null)
-            url_ += "entityName=" + encodeURIComponent("" + entityName) + "&";
+            url_ += "EntityName=" + encodeURIComponent("" + entityName) + "&";
         if (entityId === null)
             throw new Error("The parameter 'entityId' cannot be null.");
         else if (entityId !== undefined)
-            url_ += "entityId=" + encodeURIComponent("" + entityId) + "&";
+            url_ += "EntityId=" + encodeURIComponent("" + entityId) + "&";
         if (fileId !== undefined && fileId !== null)
-            url_ += "fileId=" + encodeURIComponent("" + fileId) + "&";
+            url_ += "FileId=" + encodeURIComponent("" + fileId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -608,13 +608,13 @@ export class FileService {
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (entityName !== undefined && entityName !== null)
-            url_ += "entityName=" + encodeURIComponent("" + entityName) + "&";
+            url_ += "EntityName=" + encodeURIComponent("" + entityName) + "&";
         if (entityId === null)
             throw new Error("The parameter 'entityId' cannot be null.");
         else if (entityId !== undefined)
-            url_ += "entityId=" + encodeURIComponent("" + entityId) + "&";
+            url_ += "EntityId=" + encodeURIComponent("" + entityId) + "&";
         if (fileId !== undefined && fileId !== null)
-            url_ += "fileId=" + encodeURIComponent("" + fileId) + "&";
+            url_ += "FileId=" + encodeURIComponent("" + fileId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1771,17 +1771,13 @@ export class PartService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    partGet(id: number | null | undefined, attachFiles: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
+    partGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        if (attachFiles === null)
-            throw new Error("The parameter 'attachFiles' cannot be null.");
-        else if (attachFiles !== undefined)
-            url_ += "AttachFiles=" + encodeURIComponent("" + attachFiles) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -9278,7 +9274,7 @@ export enum EnumApprovalTables {
     ProductApproval = 6,
     PurchaseOrderApproval = 7,
     UserApproval = 8,
-    All = 9
+    All = 9,
 }
 
 export class AuditActionResultOfPendingApprovalPopoverModel extends AuditActionResult implements IAuditActionResultOfPendingApprovalPopoverModel {

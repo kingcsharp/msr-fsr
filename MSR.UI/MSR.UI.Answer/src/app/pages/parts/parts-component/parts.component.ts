@@ -24,6 +24,7 @@ declare let jQuery: any;
 
 export class PartsComponent implements OnInit {
   privileges = EnumPrivilege;
+  menuItems = EnumMenuItem;
   approvalTables = EnumApprovalTables;
   defaultView: ViewSaved;
   gridStorageId: string;
@@ -79,7 +80,7 @@ export class PartsComponent implements OnInit {
 
   getParts() {
     this.globals.showLoader(true);
-    this.partsService.partGet(null, false, env.apiVersion).pipe(take(1))
+    this.partsService.partGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object;
@@ -236,10 +237,10 @@ export class PartsComponent implements OnInit {
     this.currPart.files.splice(currIndex, 1);
   }
 
-  removeuploadFile(event){
+  removeuploadFile(event) {
     var index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
     this.uploadedFiles.splice(index, 1);
-  } 
+  }
 
   myUploader(event) {
     const ctrl = this;

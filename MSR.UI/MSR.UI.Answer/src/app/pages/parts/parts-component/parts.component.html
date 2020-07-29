@@ -142,7 +142,7 @@
           {{partmodel.maximumCycles }}
         </td>
         <td [hidden]="!cg.isVisibleCol('files',gridSettings)">
-          <grid-file-viewer [files]="partmodel.files"></grid-file-viewer>
+          <grid-file-viewer [menuItem]="menuItems.Parts" [files]="partmodel.files"></grid-file-viewer>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           {{partmodel.createdOn | date :'short' }}
