@@ -12,7 +12,7 @@
         data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
         <section class="widget mrg-btm-sm" widget>
             <header>
-                <h5>
+                <h5 class="text-left">
                     <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
                     </span>
                     {{bodyText}}
@@ -26,11 +26,12 @@
                         <label for="firstName" class="col-md-2 col-form-label text-md-right">
                             Comments
                         </label>
-                        <div class="col-md-4 ">
-                            <input type="text" id="comments" name="comments" [(ngModel)]="comments"
+                        <div class="col-md-10">
+                            <textarea rows="6" cols="150" type="text" id="comments" name="comments" [(ngModel)]="comments"
                                 data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                                 data-parsley-required="true" class="form-control input-transparent"
-                                tooltip="Min length 3 characters" placeholder="Comments" data-cy="name-input">
+                                tooltip="Min length 3 characters" placeholder="Comments" data-cy="name-input" ></textarea>
+
                         </div>
                     </div>
                 </fieldset>

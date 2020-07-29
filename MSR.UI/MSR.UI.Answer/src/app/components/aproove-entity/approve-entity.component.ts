@@ -8,6 +8,12 @@ import {
   WorkflowPendingApprovalService, EnumApprovalTables
 } from '../../services/api.client.generated';
 
+//USE: 
+// approvalTables is of type: EnumApprovalTables
+//<approve-entity [(show)]="showApproveButtons" [entityId]="entity.id" 
+// [activityType]="approvalTables.PartApproval">
+// </approve-entity>
+
 @Component({
   selector: 'approve-entity',
   templateUrl: './approve-entity.component.html',
@@ -21,7 +27,6 @@ export class ApproveEntityComponent implements OnInit {
   title: string = "";
   bodyText: string = "";
 
-  // @Input() gridStorageId: string;
   @Input() activityType: EnumApprovalTables;
   @Input() show: boolean;
   @Output() showchange: EventEmitter<boolean> = new EventEmitter<boolean>();

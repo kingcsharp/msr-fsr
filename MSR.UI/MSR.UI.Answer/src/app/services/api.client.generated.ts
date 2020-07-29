@@ -478,6 +478,191 @@ export class CustomerService {
 }
 
 @Injectable()
+export class FileService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    fileGet(entityName: string | null | undefined, entityId: number | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
+        let url_ = this.baseUrl + "/v{version}/File?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (entityName !== undefined && entityName !== null)
+            url_ += "entityName=" + encodeURIComponent("" + entityName) + "&";
+        if (entityId === null)
+            throw new Error("The parameter 'entityId' cannot be null.");
+        else if (entityId !== undefined)
+            url_ += "entityId=" + encodeURIComponent("" + entityId) + "&";
+        if (fileId !== undefined && fileId !== null)
+            url_ += "fileId=" + encodeURIComponent("" + fileId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFileGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFileGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfFileModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfFileModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFileGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfFileModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfFileModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfFileModel>(<any>null);
+    }
+
+    filePost(version: string, newfile: CreateFileRequest): Observable<AuditActionResultOfFileModel> {
+        let url_ = this.baseUrl + "/v{version}/File";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newfile);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFilePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFilePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfFileModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfFileModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFilePost(response: HttpResponseBase): Observable<AuditActionResultOfFileModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfFileModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfFileModel>(<any>null);
+    }
+
+    fileDelete(entityName: string | null | undefined, entityId: number | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/File?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (entityName !== undefined && entityName !== null)
+            url_ += "entityName=" + encodeURIComponent("" + entityName) + "&";
+        if (entityId === null)
+            throw new Error("The parameter 'entityId' cannot be null.");
+        else if (entityId !== undefined)
+            url_ += "entityId=" + encodeURIComponent("" + entityId) + "&";
+        if (fileId !== undefined && fileId !== null)
+            url_ += "fileId=" + encodeURIComponent("" + fileId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFileDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFileDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFileDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+}
+
+@Injectable()
 export class HelpService {
     private http: HttpClient;
     private baseUrl: string;
@@ -826,11 +1011,13 @@ export class InvoiceService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    invoiceGet(customerId: number | null | undefined, description: string | null | undefined, invoiceDate: Date | null | undefined, total: number | null | undefined, statusId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceModel> {
+    invoiceGet(id: number | null | undefined, customerId: number | null | undefined, description: string | null | undefined, invoiceDate: Date | null | undefined, total: number | null | undefined, statusId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfInvoiceModel> {
         let url_ = this.baseUrl + "/v{version}/Invoice?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (customerId !== undefined && customerId !== null)
             url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
         if (description !== undefined && description !== null)
@@ -5474,6 +5661,188 @@ export interface IUpdateCustomerRequest {
     isActive?: boolean | undefined;
 }
 
+export class AuditActionResultOfICollectionOfFileModel extends AuditActionResult implements IAuditActionResultOfICollectionOfFileModel {
+    object?: FileModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfFileModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(FileModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfFileModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfFileModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfFileModel extends IAuditActionResult {
+    object?: FileModel[] | undefined;
+}
+
+export class FileModel implements IFileModel {
+    fileId?: number | undefined;
+    entityId?: number | undefined;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+    fileURL?: string | undefined;
+
+    constructor(data?: IFileModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileId = _data["fileId"];
+            this.entityId = _data["entityId"];
+            this.name = _data["name"];
+            this.base64String = _data["base64String"];
+            this.contentType = _data["contentType"];
+            this.fileURL = _data["fileURL"];
+        }
+    }
+
+    static fromJS(data: any): FileModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileId"] = this.fileId;
+        data["entityId"] = this.entityId;
+        data["name"] = this.name;
+        data["base64String"] = this.base64String;
+        data["contentType"] = this.contentType;
+        data["fileURL"] = this.fileURL;
+        return data; 
+    }
+}
+
+export interface IFileModel {
+    fileId?: number | undefined;
+    entityId?: number | undefined;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+    fileURL?: string | undefined;
+}
+
+export class AuditActionResultOfFileModel extends AuditActionResult implements IAuditActionResultOfFileModel {
+    object?: FileModel | undefined;
+
+    constructor(data?: IAuditActionResultOfFileModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? FileModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfFileModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfFileModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfFileModel extends IAuditActionResult {
+    object?: FileModel | undefined;
+}
+
+export class CreateFileRequest implements ICreateFileRequest {
+    entityName?: string | undefined;
+    entityId?: number;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+
+    constructor(data?: ICreateFileRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.entityName = _data["entityName"];
+            this.entityId = _data["entityId"];
+            this.name = _data["name"];
+            this.base64String = _data["base64String"];
+            this.contentType = _data["contentType"];
+        }
+    }
+
+    static fromJS(data: any): CreateFileRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateFileRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["entityName"] = this.entityName;
+        data["entityId"] = this.entityId;
+        data["name"] = this.name;
+        data["base64String"] = this.base64String;
+        data["contentType"] = this.contentType;
+        return data; 
+    }
+}
+
+export interface ICreateFileRequest {
+    entityName?: string | undefined;
+    entityId?: number;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    contentType?: string | undefined;
+}
+
 export class AuditActionResultOfIEnumerableOfHelpPage extends AuditActionResult implements IAuditActionResultOfIEnumerableOfHelpPage {
     object?: HelpPage[] | undefined;
 
@@ -6728,62 +7097,6 @@ export interface ISubPartModel {
     parentId?: number;
     partId?: number;
     qty?: number;
-}
-
-export class FileModel implements IFileModel {
-    fileId?: number | undefined;
-    entityId?: number | undefined;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
-    fileURL?: string | undefined;
-
-    constructor(data?: IFileModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.fileId = _data["fileId"];
-            this.entityId = _data["entityId"];
-            this.name = _data["name"];
-            this.base64String = _data["base64String"];
-            this.contentType = _data["contentType"];
-            this.fileURL = _data["fileURL"];
-        }
-    }
-
-    static fromJS(data: any): FileModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new FileModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["fileId"] = this.fileId;
-        data["entityId"] = this.entityId;
-        data["name"] = this.name;
-        data["base64String"] = this.base64String;
-        data["contentType"] = this.contentType;
-        data["fileURL"] = this.fileURL;
-        return data; 
-    }
-}
-
-export interface IFileModel {
-    fileId?: number | undefined;
-    entityId?: number | undefined;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
-    fileURL?: string | undefined;
 }
 
 export class AuditActionResultOfPartModel extends AuditActionResult implements IAuditActionResultOfPartModel {

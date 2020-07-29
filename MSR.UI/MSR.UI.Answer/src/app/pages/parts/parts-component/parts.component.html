@@ -161,10 +161,7 @@
             (click)="showDialog(partmodel)"></i>
           <i class="far fa-trash-alt pointer" tooltip="Delete Part" data-cy="deleteRow"
             (click)="removeRow(partmodel)"></i>
-          <approve-entity [(show)]="showApproveButtons" entityId="partmodel.id" 
-          [activityType]="3">
-          </approve-entity>
-          <!-- [activityType]="approvalTables.PartApproval"> -->
+          
         </td>
       </tr>
     </ng-template>

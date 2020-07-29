@@ -37,7 +37,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
     GridOptionsComponent,
-    GridFileViewerComponent
+    GridFileViewerComponent,
     ApproveEntityComponent
   ],
   exports: [
@@ -48,7 +48,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     PcalendarWrapperComponent,
     GridOptionsComponent,
     FileUploadModule,
-    GridFileViewerComponent
+    GridFileViewerComponent,
     ApproveEntityComponent
   ],
   imports: [
