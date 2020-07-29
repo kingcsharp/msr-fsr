@@ -38,7 +38,7 @@ namespace MSR.Infrastructure.Resources.AWS
 
             // If there is no data to upload, then we are simply updating the
             // pointers, and not uploading the data.
-            if (!String.IsNullOrWhiteSpace(file.Base64String))
+            if (!string.IsNullOrWhiteSpace(file.Base64String))
             {
                 var response = await _s3Handler.PutObjectAsync(new PutObjectRequest()
                 {
