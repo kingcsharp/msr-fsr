@@ -28,15 +28,15 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<FileModel>>))]
-        public async Task<IActionResult> GetFiles(string entityName, int entityId, int? fileId)
+        public async Task<IActionResult> GetFiles([FromQuery] GetFileRequest req)
         {
-            if (!DelegateHandler.HasPrivilege(EnumUtils.ParseMenuType(entityName), EnumPrivilege.CanRead)) {
+            if (!DelegateHandler.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanRead)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var ret = await _dispatcher.DispatchAsync(new GetFiles() {
-                entityName = entityName,
-                entityId = entityId,
-                fileId = fileId
+                entityName = req.EntityName,
+                entityId = req.EntityId,
+                fileId = req.FileId
             });
             return ret.ToOkObjectResponse<ICollection<FileModel>>();
         }
@@ -55,15 +55,15 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpDelete]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> DetachFile(string entityName, int entityId, int? fileId)
+        public async Task<IActionResult> DetachFile([FromQuery] DetachFileRequest req)
         {
-            if (!DelegateHandler.HasPrivilege(EnumUtils.ParseMenuType(entityName), EnumPrivilege.CanDelete)) {
+            if (!DelegateHandler.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanDelete)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var command = new DetachFile() {
-                entityId = entityId,
-                entityName = entityName,
-                fileId = fileId
+                entityId = req.EntityId,
+                entityName = req.EntityName,
+                fileId = req.FileId
             };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<int>("File was successfully removed.");
