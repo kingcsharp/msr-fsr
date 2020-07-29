@@ -45,7 +45,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<FileModel>("File was successfully added.");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DetachFile(string entityName, int entityId, int? fileId)
         {
@@ -55,7 +55,7 @@ namespace MSR.Answer.API.V1.Controllers
                 fileId = fileId
             };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<FileModel>("File was successfully removed.");
+            return ret.ToOkObjectResponse<int>("File was successfully removed.");
         }
     }
 }

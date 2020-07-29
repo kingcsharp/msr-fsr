@@ -38,7 +38,7 @@ namespace MSR.Infrastructure.Resources.Services
             if (fileId.HasValue) {
                 files = _unitOfWork.FileEntityMap.Query().Where(x =>
                     x.EntityTableName == tableName &&
-                    x.EntityId == entityId && 
+                    x.EntityId == entityId &&
                     x.FileId == fileId
                     ).Select(x =>
                         x.FileObject
@@ -57,6 +57,10 @@ namespace MSR.Infrastructure.Resources.Services
                 var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
+                    FileId = x.Id,
+                    EntityId = entityId,
+                    Base64String = "",
+                    ContentType = x.ContentType,
                     Name = x.Name,
                     FileURL = fileURL
                 });
@@ -117,18 +121,20 @@ namespace MSR.Infrastructure.Resources.Services
                 FileURL = url
             };
         }
-        public async Task<bool> DetachFilesAsync(string entityName, int entityId, int? fileId = null)
+        public async Task<int> DetachFilesAsync(string entityName, int entityId, int? fileId = null)
         {
             string tableName = mapEntityToTable(entityName);
+            int deleteCount = 0;
 
             if (fileId.HasValue) {
                 var file = _unitOfWork.FileEntityMap.Query().Where(x =>
                         x.EntityTableName == tableName &&
-                        x.EntityId == entityId && 
+                        x.EntityId == entityId &&
                         x.FileId == fileId.Value
                     );
                 if (file.Any()){
                     _unitOfWork.FileEntityMap.Delete(false, file.First());
+                    deleteCount++;
                 }
             } else {
                 foreach (var e in _unitOfWork.FileEntityMap.Query().Where(x =>
@@ -137,11 +143,12 @@ namespace MSR.Infrastructure.Resources.Services
                     ).ToList())
                 {
                     _unitOfWork.FileEntityMap.Delete(false, e);
+                    deleteCount++;
                 }
             }
 
             await _unitOfWork.SaveChangesAsync();
-            return true;
+            return deleteCount;
         }
 
         public static string mapEntityToTable(string entityName)

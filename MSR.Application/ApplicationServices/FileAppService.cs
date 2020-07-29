@@ -45,7 +45,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(DetachFile command, CancellationToken cancellationToken = default)
         {
             var ret = await _fileService.DetachFilesAsync(command.entityName, command.entityId, command.fileId);
-            return new CommandResponse<bool>(ret);
+            return new CommandResponse<int>(ret);
         }
     }
 }
