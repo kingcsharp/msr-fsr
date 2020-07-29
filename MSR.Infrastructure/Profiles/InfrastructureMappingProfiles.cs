@@ -20,6 +20,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Customer, Domain.Models.Customer>().ReverseMap();
             CreateMap<Location, Domain.Models.LocationModel>().ReverseMap();
+            CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
@@ -144,6 +145,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProductApproval, Product>().ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<PurchaseOrderApproval, PurchaseOrder>().ForMember(dest => dest.Id, opt => opt.Ignore());
             #endregion
+
+
 
         }
     }
