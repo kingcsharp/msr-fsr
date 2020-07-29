@@ -5,6 +5,7 @@ namespace MSR.Domain.Commands
 {
     public class GetInvoices : Command
     {
+        public int? Id { get; set; }
         public string InvoiceNumber { get; set; }
         public int CustomerId { get; set; }
         public string Description { get; set; }
