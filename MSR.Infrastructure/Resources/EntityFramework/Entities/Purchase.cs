@@ -27,5 +27,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public decimal PurchasePrice { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+        public virtual Location Location { get; set; }
     }
 }

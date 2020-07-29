@@ -40,7 +40,7 @@ namespace MSR.Application.ApplicationServices
             foreach (var part in ret)
             {
                 if (command.attachFiles) {
-                    files = _fileService.ListFiles(part, part.Id);
+                    files = _fileService.ListFiles(part.GetType().Name, part.Id);
                 }
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
             }
@@ -55,10 +55,10 @@ namespace MSR.Application.ApplicationServices
             // If the part is pending approval, do not upload the files yet.
             if (!part.IsPending)
             {
-                await _fileService.DeleteFilesAsync(part, part.Id);
+                await _fileService.DetachFilesAsync(part.GetType().Name, part.Id);
                 foreach (var file in command.Files)
                 {
-                    await _fileService.CreateFileAsync(part, part.Id, file);
+                    await _fileService.CreateFileAsync(part.GetType().Name, part.Id, file);
                 }
             }
             return new CommandResponse<PartModel>(ret);
@@ -70,10 +70,10 @@ namespace MSR.Application.ApplicationServices
             var part = ret;
             if (!part.IsPending && command.Files != null)
             {
-                await _fileService.DeleteFilesAsync(part, part.Id);
+                await _fileService.DetachFilesAsync(part.GetType().Name, part.Id);
                 foreach (var file in command.Files)
                 {
-                    await _fileService.CreateFileAsync(part, part.Id, file);
+                    await _fileService.CreateFileAsync(part.GetType().Name, part.Id, file);
                 }
             }
             return new CommandResponse<PartModel>(ret);

@@ -240,6 +240,16 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
         }
 
+        public async Task<Domain.Models.User> GetUserAsync(int Id)
+        {
+            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == Id);
+
+            if (user == null)
+                return null;
+            
+            return _mapper.Map<Domain.Models.User>(user);
+        }
+
         public async Task<Domain.Models.User> GetLoggedInUserData(int Id)
         {
             var user = await _unitOfWork.Users.Query()
