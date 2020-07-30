@@ -15,8 +15,9 @@ namespace MSR.Application.Extentions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<AccountAppService>();
-            services.AddScoped<UserAppService>();
-            services.AddScoped<WorkflowAppService>();
+            services.AddScoped<CustomerAppService>();
+            services.AddScoped<HelpAppService>();
+            services.AddScoped<LocationAppService>();
             services.AddScoped<MenuAppService>();
             services.AddScoped<PartAppService>();
             services.AddScoped<ProcedureAppService>();
@@ -24,6 +25,10 @@ namespace MSR.Application.Extentions
             services.AddScoped<ProcedureStepTemplateAppService>();
             services.AddScoped<ProcedureTypeAppService>();
             services.AddScoped<WorkOrderAppService>();
+            services.AddScoped<RoleAppService>();
+            services.AddScoped<UserAppService>();
+            services.AddScoped<WorkflowAppService>();
+
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 

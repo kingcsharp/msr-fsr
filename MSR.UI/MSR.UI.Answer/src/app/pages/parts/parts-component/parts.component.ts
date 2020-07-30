@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest
+  PartService, PartModel, SubPartModel, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -12,6 +12,11 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { debug } from 'console';
+import { HtmlAstPath } from '@angular/compiler';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
+
+
 declare let jQuery: any;
 
 @Component({
@@ -37,6 +42,9 @@ export class PartsComponent implements OnInit {
   workflowGroups: any[] = [];
   getWorkflowGroupsDone: boolean = false;
   allParts: any[] = [];
+  uploadedFiles: FileModel[] = [];
+  isActive: any[];
+  uploadedFinished: boolean = false;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -50,19 +58,24 @@ export class PartsComponent implements OnInit {
     new ColumnsSaved({ id: 'partNumber', label: 'Part Number', visible: true }),
     new ColumnsSaved({ id: 'oemPartNumber', label: 'OEM Part Number', visible: true }),
     new ColumnsSaved({ id: 'isKit', label: 'Is Kit', visible: true }),
+    new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
     new ColumnsSaved({ id: 'maximumCycles', label: 'Maximun Cycles', visible: true }),
+    new ColumnsSaved({ id: 'files', label: 'Reference Files', visible: true }),
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
-    this.isKitStatus = [{ label: 'Is Kit', value: true },
-    { label: 'Is Not Kit', value: false }];
+    this.isKitStatus = [{ label: 'Yes', value: true },
+    { label: 'No', value: false }];
+    this.isActive = [{ label: 'Yes', value: true },
+    { label: 'No', value: false }];
 
     this.canAddStages = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
     this.getParts();
+    this.data = [];
   }
 
   getParts() {
@@ -140,6 +153,7 @@ export class PartsComponent implements OnInit {
       ret.isKit = false;
       ret.name = '';
       ret.createSubParts = [];
+      ret.isActive = true;
       return ret;
     } else {
       let copyPart: PartModel = new PartModel();
@@ -147,7 +161,6 @@ export class PartsComponent implements OnInit {
       if (copyPart.createSubParts === null || copyPart.createSubParts === undefined) {
         copyPart.createSubParts = [];
       }
-      copyPart.isKit = copyPart.createSubParts.length > 0;
       return copyPart;
     }
   }
@@ -177,20 +190,29 @@ export class PartsComponent implements OnInit {
   removeRow(part) {
     const ctrl = this;
     this.globals.showLoader(true);
-    // this.workflowStageService.workflowStageDelete(part.id, env.apiVersion)
-    //   .pipe(take(1)).subscribe(responseHandler((resp) => {
-    //     const index = this.data.findIndex(x => x.id === workflowStage.id);
-    //     this.data.splice(index, 1);
-    //   }, () => {
-    //     // DO not update user
-    //   }));
+    this.partsService.partDelete(part.id, env.apiVersion)
+      .pipe(take(1)).subscribe(responseHandler((resp) => {
+        const index = this.data.findIndex(x => x.id === part.id);
+        this.data.splice(index, 1);
+      }, () => {
+        // DO not update user
+      }));
   }
-
   //onWorkflowSubmit
   onpartSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
+
+      if (!this.uploadedFinished) {
+        let element: HTMLElement = document.getElementsByTagName('p-fileUpload')[0]
+          .getElementsByTagName('p-button')[0]
+          .getElementsByClassName('ui-clickable')[0] as HTMLElement;
+        element.click();
+        return;
+      } else {
+        this.uploadedFinished = false;
+      }
 
       let method: Observable<AuditActionResultOfPartModel> = null;
       this.globals.showLoader(true);
@@ -206,11 +228,62 @@ export class PartsComponent implements OnInit {
           if (ctrl.currPart.id === undefined) {
             ctrl.data.push(resp.object);
           }
+          else {
+            const index = this.data.findIndex(x => x.id === this.currPart.id);
+            this.data.splice(index, 1);
+            this.data.splice(index, 0, resp.object);
+          }
           ctrl.clseDialog();
         }
       }, () => {
-        // DO not update user
       }));
+    }
+  }
+
+  removeFile(file) {
+    var currIndex = this.currPart.files.findIndex(x => x.id === file.id);
+    this.currPart.files.splice(currIndex, 1);
+  }
+
+  myUploader(event) {
+    const ctrl = this;
+    var currItem = 0;
+    var fileLength = event.files.length;
+    ctrl.uploadedFiles = [];
+
+    if (fileLength === 0) {
+      ctrl.uploadedFinished = true;
+      ctrl.onpartSubmit();
+    }
+    for (let file of event.files) {
+      let fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = function () {
+        currItem++;
+        var fileModel = new FileModel();
+        fileModel.name = file.name;
+        fileModel.base64String = fileReader.result.toString();
+        fileModel.contentType = file.type;
+        if (ctrl.uploadedFiles.findIndex(x => x.name === fileModel.name) === -1) {
+          ctrl.uploadedFiles.push(fileModel);
+        }
+        if (currItem === fileLength) {
+          ctrl.uploadedFinished = true;
+          ctrl.removeAllFilesWithNoId(ctrl.currPart.files);
+          ctrl.currPart.files.push(...ctrl.uploadedFiles);
+          ctrl.uploadedFiles = [];
+          ctrl.onpartSubmit();
+        }
+      };
+    }
+  }
+
+  removeAllFilesWithNoId(files: FileModel[]) {
+    var length = files.length;
+    while (length--) {
+      if (files[length].fileId === undefined || files[length].fileId === null) {
+        files.splice(length, 1);
+      }
     }
   }
 
@@ -218,10 +291,12 @@ export class PartsComponent implements OnInit {
     var ret = new CreatePartRequest({
       name: currentPart.name,
       partNumber: currentPart.partNumber,
+      isActive: currentPart.isActive,
       createSubParts: currentPart.createSubParts,
       maximumCycles: currentPart.maximumCycles,
       nickName: currentPart.nickName,
-      oemPartNumber: currentPart.oemPartNumber
+      oemPartNumber: currentPart.oemPartNumber,
+      files: currentPart.files
     });
     return ret;
   }

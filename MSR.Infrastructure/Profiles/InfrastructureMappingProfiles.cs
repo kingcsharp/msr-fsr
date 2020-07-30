@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.VisualBasic.CompilerServices;
 using MSR.Domain.Commands;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
@@ -27,6 +28,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderTask, Domain.Models.WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, Domain.Models.WorkOrderTaskMonitorModel>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
+            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
+            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
@@ -53,6 +56,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateCustomer, CustomerApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<Domain.Models.InvoiceModel, Invoice>().ReverseMap();
+            CreateMap<CreateOneInvoice, Invoice>();
+            CreateMap<CreateUpdateInvoiceItem, InvoiceItem>();
+            CreateMap<UpdateInvoice, Invoice>();
+            CreateMap<DownloadAsIIFInvoices, GetInvoices>();
+
             CreateMap<Domain.Models.LocationModel, Location>().ReverseMap();
             CreateMap<Domain.Models.LocationModel, LocationApproval>().ReverseMap();
             CreateMap<CreateLocation, LocationApproval>();
@@ -61,6 +70,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateLocation, LocationApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateLocation, Location>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<HelpPage, Domain.Models.HelpPage>()
@@ -86,7 +96,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreatePart, Part>().ForMember("Subparts", opts => opts.Ignore());
             CreateMap<Domain.Models.SubPartModel, PartSubPartMap>();
             CreateMap<UpdatePart, PartApproval>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.Id));
             CreateMap<UpdatePart, Part>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             #endregion
@@ -151,8 +162,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PurchaseOrderApproval, PurchaseOrder>().ForMember(dest => dest.Id, opt => opt.Ignore());
             #endregion
 
+            CreateMap<MenuRolePermission, Domain.Models.Permission>().ReverseMap();
 
-
+            CreateMap<MenuItem, Domain.Models.MenuItem>()
+                .ForMember(dest => dest.Roles, opt => opt.Ignore()).ReverseMap();
+            CreateMap<MenuGroup, Domain.Models.MenuGroup>().ReverseMap();
         }
     }
 }

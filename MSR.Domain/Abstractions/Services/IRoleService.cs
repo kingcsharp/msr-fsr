@@ -6,10 +6,6 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IRoleService
     {
-        Task<int> CreateMenuRoleMapAsync(CreateMenuRoleMap command);
         Task<ICollection<Role>> GetRolesMapAsync(GetRoles command);
-        Task<bool> UpdateMenuRoleMapAsync(UpdateMenuRoleMap command);
-        Task<bool> RemoveMenuRoleMap(int id);
-
     }
 }

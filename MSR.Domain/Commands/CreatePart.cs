@@ -17,6 +17,7 @@ namespace MSR.Domain.Commands
         public int? MaximumCycles { get; set; }
         public ICollection<SubPartModel> SubParts { get; set; }
         public string Comment { get; set; }
-        public List<File> Files { get; set; }
+        public bool IsActive { get; set; }
+        public List<FileModel> Files { get; set; }
     }
 }
