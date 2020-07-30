@@ -33,8 +33,8 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'internalAddress', label: 'Internal Address', visible: true }),
-      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'address1', label: 'Address 1', visible: false }),
       new ColumnsSaved({ id: 'city', label: 'City', visible: false }),
       new ColumnsSaved({ id: 'state', label: 'State/Province', visible: false }),
@@ -61,7 +61,7 @@ export class LocationsComponent implements OnInit {
 
   getLocations(){
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null,null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
       this.loading = false;
     }));

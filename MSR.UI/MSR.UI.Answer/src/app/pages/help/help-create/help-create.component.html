@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <h1 class="page-title">
+        <h1 class="page-title" data-cy="page-title">
             Create Help Page
         </h1>
     </div>
@@ -19,17 +19,22 @@
                 <label for="friendlyurl" class="col-form-label text-left">
                     Friendly Url
                 </label>
-                <input type="text" id="friendlyurl" name="friendlyurl" [(ngModel)]="helpPageToEdit.friendlyURL"
+                <!--<input type="text" id="friendlyurl" name="friendlyurl" [(ngModel)]="helpPageToEdit.friendlyURL"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent"
                     tooltip="Friendly Url of Help Page" placeholder="Url of the page e.g. Parts/Update Or Parts"
-                    data-cy="friendlyurl-input">
+                    data-cy="friendlyurl-input">-->
+            <div class="col-12">
+                <p-dropdown placeholder="Select Url" name="friendlyurl" [options]="urls" showClear="true" appendTo="body"
+                    [(ngModel)]="helpPageToEdit.friendlyURL">
+                </p-dropdown>
+            </div>
             </div>
             <div class="form-group">
                 <label for="articlecontent" class="col-form-label text-left">
                     Article Content
                 </label>
-                <ckeditor name="articlecontent" [editor]="Editor" [(ngModel)]="helpPageToEdit.helpContent" data="<p>Hello, world!</p>"></ckeditor>
+                <ckeditor-wrapper [editorcontent]="helpPageToEdit.content" (editorContentChange)="helpPageToEdit.content = $event"></ckeditor-wrapper>
             </div>
             <div class="form-group">
                 <label for="roles" class="col-form-label text-left">
