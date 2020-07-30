@@ -62,7 +62,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkOrder> WorkOrders { get; }
         IRepository<File> Files { get; }
         IRepository<FileEntityMap> FileEntityMap { get; }
-        IRepository<WorkOrder> WorkOrders { get; }
 
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
 
