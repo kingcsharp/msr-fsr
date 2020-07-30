@@ -2,7 +2,6 @@
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Models;
-using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
@@ -14,11 +13,12 @@ namespace MSR.Infrastructure.Resources.Services
     public class FileService : IFileService
     {
         IUploadFiles _fileUploader;
-        IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public FileService(IFileHandlerFactory fileHanderFactory, IUnitOfWork unitOfWork)
         {
             _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
+            _unitOfWork = unitOfWork;
         }
 
         public Task<bool> CreateDocumentAsync<T>(T entity, int entityId, Domain.Models.File file) where T : class

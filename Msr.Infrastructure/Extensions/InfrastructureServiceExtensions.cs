@@ -33,7 +33,7 @@ namespace MSR.Infrastructure.Extensions
         {
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
 
-            services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dbConfig.ConnectionString).EnableDetailedErrors().EnableSensitiveDataLogging());
+            services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseSqlServer(dbConfig.ConnectionString).EnableDetailedErrors().EnableSensitiveDataLogging());
             var s3Config = config.GetSection(nameof(S3Information)).Get<S3Information>();
             services.AddSingleton(s3Config);
 

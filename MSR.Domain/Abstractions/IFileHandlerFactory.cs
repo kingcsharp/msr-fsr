@@ -1,8 +1,5 @@
 ﻿using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MSR.Domain.Abstractions
 {

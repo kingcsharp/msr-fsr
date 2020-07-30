@@ -6,15 +6,615 @@
 	},
 	"item": [
 		{
+			"name": "Menu",
+			"item": [
+				{
+					"name": "GetMenu",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Menu",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Role to Menu",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"menuId\":97,\r\n    \"roleId\":21\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Menu/Role",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Menu",
+								"Role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Role from Menu",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Menu/Role?MenuId=97&RoleId=27",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Menu",
+								"Role"
+							],
+							"query": [
+								{
+									"key": "MenuId",
+									"value": "97"
+								},
+								{
+									"key": "RoleId",
+									"value": "27"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "GetLoggedInUserData",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Users",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Users"
+							],
+							"query": [
+								{
+									"key": "FirstName",
+									"value": "James",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"jbridgeford_test\",\r\n  \"firstName\": \"James\",\r\n  \"lastName\": \"Bridgeford\",\r\n  \"title\": \"Administrator\",\r\n  \"email\": \"james.bridgeford@protonmail.ch\",\r\n  \"securityStamp\": \"\",\r\n  \"phone\": \"555-444-3333\",\r\n  \"supervisorId\": null,\r\n  \"locationId\": null,\r\n  \"isActive\": true,\r\n  \"isAnswerUser\": true,\r\n  \"customerId\": null,\r\n  \"lockoutEndDateUtc\": null,\r\n  \"lockoutEnabled\": false,\r\n  \"accessFailedCount\": 0,\r\n  \"timeZoneId\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Users",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"id\":107\r\n\t\"userName\": \"jbridgeford_test\",\r\n\t\"firstName\": \"James\",\r\n\t\"lastName\": \"Bridgeford\",\r\n\t\"title\": \"Administrator\",\r\n\t\"email\": \"james.bridgeford@protonmail.ch\",\r\n\t\"securityStamp\": \"\",\r\n\t\"phone\": \"555-444-3333\",\r\n\t\"supervisorId\": null,\r\n\t\"locationId\": null,\r\n\t\"isActive\": true,\r\n\t\"isAnswerUser\": true,\r\n\t\"customerId\": null,\r\n\t\"lockoutEndDateUtc\": null,\r\n\t\"lockoutEnabled\": false,\r\n\t\"accessFailedCount\": 0,\r\n\t\"timeZoneId\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Users",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Help",
+			"item": [
+				{
+					"name": "CreateHelpPage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"TestHelp\",\r\n  \"friendlyURL\": \"/Test\",\r\n  \"helpContent\": \"This is a Test\",\r\n  \"roleIds\": [\r\n    2,4,5,27,33\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Help",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Help"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateHelpPageRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"helpPageId\":1,\r\n  \"roleId\":27\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Help/Role",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Help",
+								"Role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetHelpPage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Help",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Help"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteHelpPage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Help/1",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Help",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteHelpPageRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Help/Role/5",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Help",
+								"Role",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateHelpPage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"helpPageId\":2,\r\n  \"title\": \"TestHelp\",\r\n  \"friendlyURL\": \"/Test\",\r\n  \"helpContent\": \"This is a Test123\",\r\n  \"roleIds\": [\r\n    4,5,27,3\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Help",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Help"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Parts",
+			"item": [
+				{
+					"name": "Get Parts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Part",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Part"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "Update Location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"locationId\": 839, \"name\": \"asdasdasd33333 434343 abc123\", \"parentId\": 832, \"postalCode\":\"37128\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Location",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Locations By Parent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Location?ParentId=1",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Location"
+							],
+							"query": [
+								{
+									"key": "ParentId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Locations By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Environment-SSL}}v1/Location?Id=1",
+							"host": [
+								"{{Environment-SSL}}v1"
+							],
+							"path": [
+								"Location"
+							],
+							"query": [
+								{
+									"key": "Id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Login - Success",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "82abee0d-52f0-484a-a44a-9b929321262b",
+						"id": "e3368e66-2d7d-4213-8e9e-1f5375629897",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+							"postman.setEnvironmentVariable(\"token\", jsonData.object);"
 						],
 						"type": "text/javascript"
 					}
@@ -46,61 +646,7 @@
 			"response": []
 		},
 		{
-			"name": "GetMenuForUser",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": ""
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetUsers",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"userName\": \"jbridgeford_test\",\r\n  \"firstName\": \"James\",\r\n  \"lastName\": \"Bridgeford\",\r\n  \"title\": \"Administrator\",\r\n  \"email\": \"james.bridgeford@protonmail.ch\",\r\n  \"securityStamp\": \"\",\r\n  \"phone\": \"555-444-3333\",\r\n  \"supervisorId\": null,\r\n  \"locationId\": null,\r\n  \"isActive\": true,\r\n  \"isAnswerUser\": true,\r\n  \"customerId\": null,\r\n  \"lockoutEndDateUtc\": null,\r\n  \"lockoutEnabled\": false,\r\n  \"accessFailedCount\": 0,\r\n  \"timeZoneId\": null\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{Environment-SSL}}v1/Users",
-					"host": [
-						"{{Environment-SSL}}v1"
-					],
-					"path": [
-						"Users"
-					],
-					"query": [
-						{
-							"key": "FirstName",
-							"value": "James",
-							"disabled": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CreateUser",
+			"name": "GetPendingApprovalNotification",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -113,16 +659,14 @@
 	],
 	"variable": [
 		{
-			"id": "145152a4-e4d2-428c-ae2d-a0e2485b6c5c",
+			"id": "6c13d0d0-ca20-4f51-bc6a-365db8742ebe",
 			"key": "UserName",
-			"value": "jbridgeford",
-			"type": "string"
+			"value": "jbridgeford"
 		},
 		{
-			"id": "6ce925d2-56c1-4b90-978c-61d5da062469",
+			"id": "9ebc81f1-133d-4bb0-8029-5c124db73a97",
 			"key": "Password",
-			"value": "9jY9NMx6.",
-			"type": "string"
+			"value": "9jY9NMx6."
 		}
 	],
 	"protocolProfileBehavior": {}

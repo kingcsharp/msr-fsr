@@ -2,7 +2,7 @@
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public abstract class ApprovalEntity : TrackableEntity
+    public class ApprovalEntity : TrackableEntity
     {
         public string Name { get; set; }
         public int WorkflowId { get; set; }
@@ -14,8 +14,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int StatusId { get; set; }
         [ForeignKey("StatusId")]
         public virtual Status Status { get; set; }
-        [ForeignKey("CreatedBy")]
-        public virtual User Created { get; set; }
 
         [NotMapped]
         public string ActivityType

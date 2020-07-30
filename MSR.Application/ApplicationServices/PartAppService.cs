@@ -1,7 +1,4 @@
-﻿
-using MSR.Domain.Abstractions;
-using MSR.Domain.Abstractions.AWS;
-using MSR.Domain.Abstractions.Services;
+﻿using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
