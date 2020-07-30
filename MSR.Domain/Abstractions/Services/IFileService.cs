@@ -10,7 +10,7 @@ namespace MSR.Domain.Abstractions.Services
         ICollection<FileModel> ListFiles(string entityName, int entityId, int? fileId = null);
         ICollection<FileModel> ListFilesForEntitySet(string tableName, ICollection<int> entityIds);
         Task<int> DetachFilesAsync(string entityName, int entityId, int? fileId = null);
-        Task<int> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files);
+        Task<ICollection<FileModel>> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files);
         Task<bool> CreateDocumentAsync<T>(T entity, int entityId, FileModel file) where T : class;
     }
 }
