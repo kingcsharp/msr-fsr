@@ -22,22 +22,22 @@ pipeline {
         UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
-        stage("Running xUnit Tests") {
-            agent { label 'ubuntu-node' }
-            steps {
-                script {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh "git mv Msr.Infrastructure MSR.Infrastructure"
-                        sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
-                        sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                        sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                        sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
-                        step([$class: 'MSTestPublisher', testResultsFile: "**/*.trx", failOnError: true, keepLongStdio: true])
-                        sh "exit 1"
-                    }
-                }
-            }
-        }
+        //stage("Running xUnit Tests") {
+        //    agent { label 'ubuntu-node' }
+        //    steps {
+        //        script {
+        //            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        //                sh "git mv Msr.Infrastructure MSR.Infrastructure"
+        //                sh 'dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"'
+        //                sh 'dotnet test MSR.Application.Tests/ --logger trx;LogFileName=unit_tests.xml'
+        //                sh 'dotnet test MSR.Domain.Tests/ --logger trx;LogFileName=unit_tests.xml'
+        //                sh 'dotnet test MSR.Infrastructure.Tests/ --logger trx;LogFileName=unit_tests.xml'
+        //                step([$class: 'MSTestPublisher', testResultsFile: "**/*.trx", failOnError: true, keepLongStdio: true])
+        //                sh "exit 1"
+        //            }
+        //        }
+        //    }
+        //}
         stage('Build & Deploy') {
             parallel {
                 stage('Build and Deploy UI') {
@@ -69,10 +69,10 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
+                                        //deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
                                     } else if (env.BRANCH_NAME == 'Stage') {
                                         echo "Deploying Stage"
-                                        deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                                        //deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
                                     }
                                 }
 
@@ -129,10 +129,10 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}", "reverseproxy")
+                                        //deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}", "reverseproxy")
                                     } else if (env.BRANCH_NAME == 'Stage') {
                                         echo "Deploying Stage"
-                                        deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                                        //deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                                     }
                                 }
 
@@ -149,6 +149,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Running API Tests") {
             agent { label 'jenkins-ecs-slave' }
             steps {
@@ -163,6 +164,7 @@ pipeline {
                 }
             }
         }
+        */
         /*
         stage("Run Cypress Test") {
             agent { label 'master' }
