@@ -25,7 +25,7 @@ export class Sidebar {
     // show tooltip add .
     // description
     menuItems.forEach(function (item) {
-      const elem = menuStructure.find(x => x.name === item.menuGroup.name);
+      const elem = menuStructure.find(x => x.name === item.menuGroup?.name);
       if (elem === undefined) {
         let menuItem = { submenu: [{ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info }] };
         Object.assign(menuItem, item.menuGroup);
