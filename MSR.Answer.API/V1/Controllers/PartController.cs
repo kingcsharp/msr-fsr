@@ -46,7 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = newpart.ToCreatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             var message = "Part was successfully submitted to workflow for approval.";
-            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault())
+            if (!(ret as ICommandResponse<PartModel>).Data.IsPending)
             {
                 message = "Part was successfully added.";
             }
@@ -61,7 +61,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             var message = "Part update was successfully submitted to workflow for approval.";
-            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault())
+            if (!(ret as ICommandResponse<PartModel>).Data.IsPending)
             {
                 message = "Part was successfully updated.";
             }

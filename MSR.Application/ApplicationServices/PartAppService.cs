@@ -49,7 +49,7 @@ namespace MSR.Application.ApplicationServices
             // If the part is pending approval, do not upload the files yet.
             if (!part.IsPending)
             {
-                await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
+                part.Files = await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
             return new CommandResponse<PartModel>(part);
         }
