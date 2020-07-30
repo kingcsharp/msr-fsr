@@ -61,7 +61,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             var user = await _unitOfWork.Users.Query()
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuRolePermission)
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
-                .Where(x=>x.UserName == command.UserName)
+                .Where(x => x.UserName == command.UserName)
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -233,7 +233,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
         {
             var totalMenuItems = Enum.GetNames(typeof(EnumMenuItem)).Length;
             var jaggedArray = new int[totalMenuItems][];
-
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
                 var efRole = role.Role;
@@ -245,10 +244,20 @@ namespace MSR.Infrastructure.Resources.Services.Account
                         var efMenuItem = menuItem.MenuItem;
 
                         var menuItemNum = (int)EnumUtils.ParseMenuType(efMenuItem.Name);
-                        jaggedArray[menuItemNum] = GetListEnumPrivileges(menuItem.MenuRolePermission);
+                        var permissions = GetListEnumPrivileges(menuItem.MenuRolePermission);
+                        if (jaggedArray[menuItemNum] == null)
+                        {
+                            jaggedArray[menuItemNum] = permissions;
+                        }
+                        else
+                        {
+                            jaggedArray[menuItemNum] = jaggedArray[menuItemNum].Union(permissions).ToArray();
+                        }
+
                     }
                 }
             }
+
             return jaggedArray;
         }
 
