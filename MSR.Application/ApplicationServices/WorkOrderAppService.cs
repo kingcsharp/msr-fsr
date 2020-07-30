@@ -12,6 +12,7 @@ namespace MSR.Application.ApplicationServices
     public class WorkOrderAppService :
         ICommandHandler<GetWorkOrder>,
         ICommandHandler<CreateWorkOrder>,
+        ICommandHandler<DeleteWorkOrder>,
         ICommandHandler<UpdateWorkOrder>
     {
         private readonly IWorkOrderService _procedureService;
@@ -35,6 +36,11 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _procedureService.UpdateWorkOrderAsync(command);
             return new CommandResponse<WorkOrderModel>(ret);
+        }
+        public async Task<ICommandResponse> HandleAsync(DeleteWorkOrder command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.DeleteWorkOrderAsync(command);
+            return new CommandResponse<bool>(ret);
         }
     }
 }

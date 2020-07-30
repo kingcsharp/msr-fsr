@@ -54,5 +54,15 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderModel>();
         }
+
+        [HttpDelete]
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanDelete)]
+        [SwaggerResponse(typeof(AuditActionResult<bool>))]
+        public async Task<IActionResult> UpdateWorkOrder(DeleteWorkOrderRequest newobj)
+        {
+            var command = newobj.ToDeleteWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<bool>();
+        }
     }
 }

@@ -72,13 +72,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             if (user.CanApprove(EnumMenuItem.WIPMenu))
             {
-                WorkOrder procedure = _mapper.Map<WorkOrder>(command);
-                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
+                WorkOrder workorder = _mapper.Map<WorkOrder>(command);
+                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
-                _unitOfWork.WorkOrders.Add(procedure);
+                _unitOfWork.WorkOrders.Add(workorder);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.WorkOrderModel>(procedure);
+                ret = _mapper.Map<Domain.Models.WorkOrderModel>(workorder);
             }
             else
             {
@@ -99,15 +99,15 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.WorkOrderModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Monitors))
+            if (user.CanApprove(EnumMenuItem.WipStatus))
             {
-                var procedure = _mapper.Map(command, current);
-                _unitOfWork.WorkOrders.Update(procedure);
+                var workorder = _mapper.Map(command, current);
+                _unitOfWork.WorkOrders.Update(workorder);
 
                 // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
+                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
-                ret = _mapper.Map<Domain.Models.WorkOrderModel>(procedure);
+                ret = _mapper.Map<Domain.Models.WorkOrderModel>(workorder);
             }
             else
             {
@@ -116,6 +116,29 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return ret;
 
+        }
+        public async Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command)
+        {
+            var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            var user = await _unitOfWork.GetLoggedInUserAsync();
+
+            if (user.CanApprove(EnumMenuItem.WipStatus)) {
+                var workorder = _mapper.Map(command, current);
+                _unitOfWork.WorkOrders.Delete(false, workorder.Id);
+
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {user.Id}");
+            }
+
+            return true;
         }
     }
 }
