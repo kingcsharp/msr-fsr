@@ -16,6 +16,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int ProcedureStepId { get; set; }
 
+        public int ProcedureStepTypeId { get; set; }
+
         public int StatusId { get; set; }
 
         public int TaskStepOrder { get; set; }
@@ -32,6 +34,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public DateTime? TaskRunningSince { get; set; }
 
         public virtual ProcedureStep ProcedureStep { get; set; }
+
+        public virtual ProcedureStepType ProcedureStepType { get; set; }
 
         public virtual Status Status { get; set; }
 

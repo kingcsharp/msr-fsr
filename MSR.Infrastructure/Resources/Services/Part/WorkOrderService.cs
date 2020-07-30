@@ -49,13 +49,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var result = workorders.Select(x => {
                 var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
-                // unlink the backpointers to the work order model, which cause a loops.
+                // unlink the backpointers to the work order model, which causes loops.
                 wom.Purchase.WorkOrders = null;
                 wom.Product.WorkOrders = null;
                 foreach (var wop in wom.WorkOrderParts) {
                     wop.WorkOrder = null;
-                    wop.Parent = null; // TODO: there is a bug in the DB requiring a parent
-                    wop.Children = null;  //    and this breaks the parent-child relationship.
+                    wop.Parent = null;
+                    wop.Children = null;
                 }
                 foreach (var wot in wom.WorkOrderTasks) {
                     wot.WorkOrder = null;
@@ -70,9 +70,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.WorkOrderModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Monitors))
+            if (user.CanApprove(EnumMenuItem.WIPMenu))
             {
-                EntityFramework.Entities.WorkOrder procedure = _mapper.Map<EntityFramework.Entities.WorkOrder>(command);
+                WorkOrder procedure = _mapper.Map<WorkOrder>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
                 _unitOfWork.WorkOrders.Add(procedure);

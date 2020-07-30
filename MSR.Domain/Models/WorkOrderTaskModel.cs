@@ -7,6 +7,7 @@ namespace MSR.Domain.Models
     {
         public int WorkOrderId { get; set; }
         public int ProcedureStepId { get; set; }
+        public int ProcedureStepTypeId { get; set; }
         public int StatusId { get; set; }
         public int TaskStepOrder { get; set; }
         public int? AssignedTo { get; set; }
@@ -15,6 +16,7 @@ namespace MSR.Domain.Models
         public bool? TaskIsRunning { get; set; }
         public DateTime? TaskRunningSince { get; set; }
         public virtual ProcedureStep ProcedureStep { get; set; }
+        public virtual ProcedureStepTypeModel ProcedureStepType { get; set; }
         public virtual StatusModel Status { get; set; }
         public virtual WorkOrderModel WorkOrder { get; set; }
         public virtual ICollection<WorkOrderTaskMonitorModel> WorkOrderTaskMonitors { get; set; }

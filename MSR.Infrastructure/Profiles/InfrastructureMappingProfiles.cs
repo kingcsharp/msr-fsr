@@ -105,6 +105,7 @@ namespace MSR.Infrastructure.Profiles
             #region Procedure
             CreateMap<Procedure, Domain.Models.Procedure>();
             CreateMap<ProcedureStep, Domain.Models.ProcedureStep>();
+            CreateMap<ProcedureStepType, Domain.Models.ProcedureStepTypeModel>().ReverseMap();
             CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate>();
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, Domain.Models.WorkOrderModel>();
