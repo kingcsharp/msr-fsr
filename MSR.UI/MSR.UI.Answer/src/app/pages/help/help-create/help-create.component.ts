@@ -33,7 +33,7 @@ export class HelpCreateComponent implements OnInit {
 
       if (this.helpPageToEditId !== 0) {
 
-          this.helpService.helpGet(this.helpPageToEditId,env.apiVersion).subscribe(responseHandler((response) => {
+          this.helpService.helpGet(this.helpPageToEditId,null,env.apiVersion).subscribe(responseHandler((response) => {
             
             this.helpPageToEdit = response.object[0] as HelpPage;
             
@@ -55,7 +55,7 @@ export class HelpCreateComponent implements OnInit {
       this.availableRoles = this.availableRoles.concat(response.object);
     });
 
-    this.helpService.helpGet(null,env.apiVersion).subscribe(responseHandler((response) => {
+    this.helpService.helpGet(null,null,env.apiVersion).subscribe(responseHandler((response) => {
 
         let friendlyUrls = response.object.map(s => s.friendlyURL);
         console.log(friendlyUrls);
