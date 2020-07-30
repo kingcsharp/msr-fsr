@@ -1,5 +1,5 @@
 describe('Help Functionality', () => {
-    it('TC149_OpenASupportTicketCreatesATicketInJira', () => {
+    it('TC295_ANewHelpPageCanBeAdded', () => {
         
         cy.server()
 
@@ -20,7 +20,7 @@ describe('Help Functionality', () => {
         cy.get('[data-cy=logout-link]', {timeout: 20000}).url().should('include', '/people/people')
 
         var menuBaseItemName = "Help";
-        var menuChildItemName = "Support Ticket";
+        var menuChildItemName = "Help Pages";
 
         cy.get('#side-nav a.accordion-toggle>span', { timeout: maxTimeout }).each((elem) => {
             if (Cypress.$(elem).text().trim().indexOf(menuBaseItemName) > -1) {
@@ -36,9 +36,11 @@ describe('Help Functionality', () => {
 
         cy.get(".ui-blockui-document", { timeout: 8000 }).should("not.be.visible");
 
-        cy.get('#ui-dialog-0-label').contains(menuChildItemName).click();
+        cy.get('.page-title').contains(menuChildItemName).click();
 
-        cy.get('[data-cy=close-btn]').click()
+        cy.get('[data-cy=add-button]').click()
+
+        cy.get('[data-cy=page-title]').contains('Create Help Page')
 
     })
 })
