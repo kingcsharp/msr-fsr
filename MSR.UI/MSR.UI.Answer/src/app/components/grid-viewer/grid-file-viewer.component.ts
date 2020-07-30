@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, Input, EventEmitter, ElementRef } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { responseHandler } from '../../utils/responseHandler';
+
 import {
   FileModel, EnumMenuItem, FileService
 } from '../../services/api.client.generated';
@@ -28,7 +29,7 @@ export class GridFileViewerComponent implements OnInit {
 
   }
 
-  getSingularMenuName(menuItem){
+  getSingularMenuName(menuItem) {
     var name = EnumMenuItem[menuItem];
     return name.replace(/s$/, '');
   }
@@ -37,8 +38,13 @@ export class GridFileViewerComponent implements OnInit {
     this.viewer = this.getViewerType(file.contentType);
     this.fileService.fileGet(this.getSingularMenuName(this.menuItem), file.entityId, file.fileId, env.apiVersion)
       .pipe(take(1)).subscribe(responseHandler((resp) => {
-        this.display = true;
-        this.selectedDocUrl = resp.object.fileURL;
+        if (resp.object.length == 0) {
+          //err
+        }
+        else {
+          this.selectedDocUrl = resp.object[0].fileURL;
+          this.display = true;
+        }
       }));
   }
 

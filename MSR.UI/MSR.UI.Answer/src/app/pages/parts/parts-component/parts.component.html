@@ -10,10 +10,11 @@
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="canAddStages" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
+        <button *ngIf="canCreate" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
           data-cy="add-button">
           + Add
         </button>
+        <csv-import [showButton]="canCreate" [menuItem]="menuItems.Parts" title="Import Sub Parts" (onUpload)="uploadParts($event)"></csv-import>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
           [gridVersion]="gridVersion" data-cy="usergrid-options">
         </grid-options>

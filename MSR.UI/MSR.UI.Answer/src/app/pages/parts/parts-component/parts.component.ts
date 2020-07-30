@@ -31,7 +31,7 @@ export class PartsComponent implements OnInit {
   gridSettings: ColumnsSaved[];
   roles: any[];
   allRoles: any[] = [];
-  canAddStages: boolean = false;
+  canCreate: boolean = false;
   canActivateStages: boolean = false;
   canEditStages: boolean = false;
   display: boolean = false;
@@ -71,7 +71,7 @@ export class PartsComponent implements OnInit {
     this.isActive = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
 
-    this.canAddStages = this.hasPrivilege(this.privileges.CanCreate);
+    this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
     this.getParts();
@@ -97,6 +97,11 @@ export class PartsComponent implements OnInit {
       var usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
       ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
     });
+  }
+
+  uploadParts(ev){
+    console.log(ev);
+    console.log('yes');
   }
 
   getAllPartsAndUsedIn() {
@@ -255,15 +260,6 @@ export class PartsComponent implements OnInit {
           fileModel.contentType = file.type;
           ctrl.uploadedFiles.push(fileModel);
         };
-      }
-    }
-  }
-
-  removeAllFilesWithNoId(files: FileModel[]) {
-    var length = files.length;
-    while (length--) {
-      if (files[length].fileId === undefined || files[length].fileId === null) {
-        files.splice(length, 1);
       }
     }
   }
