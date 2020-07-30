@@ -19,8 +19,6 @@ namespace MSR.Domain.Models
         public virtual ProductModel Product { get; set; }
         public virtual PurchaseModel Purchase { get; set; }
         public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
-        /*
-        public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
-        */
+        public virtual ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,16 +27,27 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
         public async Task<ICollection<Domain.Models.WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
-            List<EntityFramework.Entities.WorkOrder> procedures;
+            List<EntityFramework.Entities.WorkOrder> workorders;
+            IQueryable<WorkOrder> query;
+
             if (command.Id.HasValue) {
-                procedures = await _unitOfWork.WorkOrders.Query().Where(x => x.Id == command.Id.Value).ToListAsync();
-                if (procedures.Count == 0) {
-                    throw new DomainException($"Work Order ID {command.Id.Value} not found", DomainError.NotFound);
-                }
+                query = _unitOfWork.WorkOrders.Query().Where(x => x.Id == command.Id.Value);
             } else {
-                procedures = await _unitOfWork.WorkOrders.Query().ToListAsync();
+                query = _unitOfWork.WorkOrders.Query();
             }
-            var result = procedures.Select(x => {
+            workorders = await query
+                .Include(x => x.WorkOrderParts)
+                .Include(x => x.WorkOrderTasks)
+                .Include(x => x.Product)
+                .Include(x => x.Purchase)
+                .Include(x => x.Location)
+                .ToListAsync();
+
+            if (workorders.Count == 0) {
+                throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
+            }
+
+            var result = workorders.Select(x => {
                 var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
                 // unlink the backpointers to the work order model, which cause a loops.
                 wom.Purchase.WorkOrders = null;
@@ -43,7 +55,10 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 foreach (var wop in wom.WorkOrderParts) {
                     wop.WorkOrder = null;
                     wop.Parent = null; // TODO: there is a bug in the DB requiring a parent
-                    wop.Children = null;  //       and this breaks the parent-child relationship.
+                    wop.Children = null;  //    and this breaks the parent-child relationship.
+                }
+                foreach (var wot in wom.WorkOrderTasks) {
+                    wot.WorkOrder = null;
                 }
                 return wom;
             }).OrderBy(x => x.Id).ToList();

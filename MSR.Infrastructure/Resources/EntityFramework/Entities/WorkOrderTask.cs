@@ -21,6 +21,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int TaskStepOrder { get; set; }
 
         public int? AssignedTo { get; set; }
+
+        [ForeignKey("AssignedTo")]
         public virtual User AssignedToUser { get; set; }
 
         public decimal? TotalTaskTime { get; set; }

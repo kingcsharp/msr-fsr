@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+
+namespace MSR.Domain.Models
+{
+    public class WorkOrderTaskModel
+    {
+        public int WorkOrderId { get; set; }
+        public int ProcedureStepId { get; set; }
+        public int StatusId { get; set; }
+        public int TaskStepOrder { get; set; }
+        public int? AssignedTo { get; set; }
+        public virtual User AssignedToUser { get; set; }
+        public decimal? TotalTaskTime { get; set; }
+        public bool? TaskIsRunning { get; set; }
+        public DateTime? TaskRunningSince { get; set; }
+        public virtual ProcedureStep ProcedureStep { get; set; }
+        public virtual StatusModel Status { get; set; }
+        public virtual WorkOrderModel WorkOrder { get; set; }
+        public virtual ICollection<WorkOrderTaskMonitorModel> WorkOrderTaskMonitors { get; set; }
+    }
+}
