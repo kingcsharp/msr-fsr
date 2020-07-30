@@ -15,6 +15,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetParts>,
         ICommandHandler<CreatePart>,
         ICommandHandler<DeletePart>,
+        ICommandHandler<ImportParts>,
         ICommandHandler<UpdatePart>
     {
         private readonly IPartService _partService;
@@ -48,7 +49,7 @@ namespace MSR.Application.ApplicationServices
             // If the part is pending approval, do not upload the files yet.
             if (!part.IsPending)
             {
-                await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
+                part.Files = await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
             return new CommandResponse<PartModel>(part);
         }
@@ -68,6 +69,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _partService.DeletePartAsync(command);
             return new CommandResponse<PartModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(ImportParts command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _partService.ImportPartsAsync(command);
+            return new CommandResponse<ICollection<int>>(ret);
         }
     }
 }

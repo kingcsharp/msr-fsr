@@ -151,21 +151,20 @@ namespace MSR.Infrastructure.Resources.Services
             return deleteCount;
         }
 
-        public async Task<int> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files)
+        public async Task<ICollection<FileModel>> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files)
         {
+            List<FileModel> ret = new List<FileModel>();
             if (files == null) {
-                return 0;
+                return ret;
             }
 
-            var remcount = await DetachFilesAsync(entityName, entityId);
+            await DetachFilesAsync(entityName, entityId);
 
             foreach (var file in files) {
-                await CreateFileAsync(entityName, entityId, file);
-                remcount += 1;
+                ret.Add(await CreateFileAsync(entityName, entityId, file));
             }
 
-            // returns the net number of files added
-            return remcount;
+            return ret;
         }
 
         public static string mapEntityToTable(string entityName)
