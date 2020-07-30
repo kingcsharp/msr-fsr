@@ -1,0 +1,53 @@
+<span class="pointer" *ngFor="let file of files" (click)="showViewer(file)">
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'" class="fad fa-file-word"></i>
+  <i tooltip="{{file.name}}"
+    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
+    class="fad fa-file-word"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="fad fa-file-alt"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fad fa-file-alt"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/csv'" class="fad fa-file-csv"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/pdf'" class="fad fa-file-pdf"></i>
+  <i tooltip="{{file.name}}"
+    *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+    class="fad fa-file-excel"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/tiff'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/webp'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
+</span>
+
+<p-dialog *ngIf="display" header="Viewer" [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+          </span>
+          Workflow Details
+        </h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <div class="col-xs-12">
+              <!-- <ngx-doc-viewer [url]="selectedDocUrl" [viewer]="viewer" style="width:100%;height:80vh;"></ngx-doc-viewer> -->
+              <!-- <ngx-doc-viewer [url]="url" [viewer]="url" style="width:100%;height:50vh;">
+              </ngx-doc-viewer> -->
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Close
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>

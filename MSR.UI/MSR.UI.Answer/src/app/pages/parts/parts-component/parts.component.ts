@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
+  PartService, PartModel, SubPartModel, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -12,9 +12,6 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { debug } from 'console';
-import { HtmlAstPath } from '@angular/compiler';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 
 declare let jQuery: any;
@@ -27,6 +24,8 @@ declare let jQuery: any;
 
 export class PartsComponent implements OnInit {
   privileges = EnumPrivilege;
+  menuItems = EnumMenuItem;
+  approvalTables = EnumApprovalTables;
   defaultView: ViewSaved;
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
@@ -45,6 +44,7 @@ export class PartsComponent implements OnInit {
   uploadedFiles: FileModel[] = [];
   isActive: any[];
   uploadedFinished: boolean = false;
+  showApproveButtons: boolean = true;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -132,6 +132,7 @@ export class PartsComponent implements OnInit {
 
   showDialog(part: PartModel) {
     this.getPartsDropdown();
+    this.uploadedFiles = [];
     this.currPart = this.getPart(part);
     this.display = true;
   }
@@ -203,19 +204,10 @@ export class PartsComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-
-      if (!this.uploadedFinished) {
-        let element: HTMLElement = document.getElementsByTagName('p-fileUpload')[0]
-          .getElementsByTagName('p-button')[0]
-          .getElementsByClassName('ui-clickable')[0] as HTMLElement;
-        element.click();
-        return;
-      } else {
-        this.uploadedFinished = false;
-      }
-
       let method: Observable<AuditActionResultOfPartModel> = null;
       this.globals.showLoader(true);
+
+      this.currPart.files.push(...this.uploadedFiles);
 
       if (this.currPart.id === undefined) {
         method = this.partsService.partPost(env.apiVersion, this.getCreatePartRequest(this.currPart));
@@ -245,36 +237,25 @@ export class PartsComponent implements OnInit {
     this.currPart.files.splice(currIndex, 1);
   }
 
+  removeuploadFile(event) {
+    var index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
+    this.uploadedFiles.splice(index, 1);
+  }
+
   myUploader(event) {
     const ctrl = this;
-    var currItem = 0;
-    var fileLength = event.files.length;
-    ctrl.uploadedFiles = [];
-
-    if (fileLength === 0) {
-      ctrl.uploadedFinished = true;
-      ctrl.onpartSubmit();
-    }
     for (let file of event.files) {
-      let fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = function () {
-        currItem++;
-        var fileModel = new FileModel();
-        fileModel.name = file.name;
-        fileModel.base64String = fileReader.result.toString();
-        fileModel.contentType = file.type;
-        if (ctrl.uploadedFiles.findIndex(x => x.name === fileModel.name) === -1) {
+      if (ctrl.uploadedFiles.findIndex(x => x.name === file.name) === -1) {
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = function () {
+          var fileModel = new FileModel();
+          fileModel.name = file.name;
+          fileModel.base64String = fileReader.result.toString();
+          fileModel.contentType = file.type;
           ctrl.uploadedFiles.push(fileModel);
-        }
-        if (currItem === fileLength) {
-          ctrl.uploadedFinished = true;
-          ctrl.removeAllFilesWithNoId(ctrl.currPart.files);
-          ctrl.currPart.files.push(...ctrl.uploadedFiles);
-          ctrl.uploadedFiles = [];
-          ctrl.onpartSubmit();
-        }
-      };
+        };
+      }
     }
   }
 

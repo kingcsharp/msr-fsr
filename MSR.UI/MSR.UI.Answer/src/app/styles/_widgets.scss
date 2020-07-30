@@ -1901,12 +1901,6 @@ input.parsley-error {
   }
 }
 
-p-fileUpload p-button {
-  z-index: -100;
-  opacity: 0;
-  position: absolute;
-}
-
 .ui-fileupload.ui-widget {
   min-width: 300px;
 }
@@ -1933,4 +1927,28 @@ p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
   i {
     margin-right: 2px;
   }
+}
+
+.fa-file-csv,
+.fa-file-pdf,
+.fa-file-word,
+.fa-file-excel,
+.fa-file-alt {
+  --fa-secondary-color: white;
+  --fa-secondary-opacity: 1.0;
+}
+
+.fa-file-csv,.fa-file-excel {
+  --fa-primary-color: green;
+}
+
+.fa-file-pdf {
+  --fa-primary-color: red;
+}
+
+.fa-file-word {
+  --fa-primary-color: blue;
+}
+.fa-file-alt {
+  --fa-primary-color: gray;;
 }
