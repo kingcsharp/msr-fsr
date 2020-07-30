@@ -129,10 +129,10 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        //deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}", "reverseproxy")
+                                        deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}", "reverseproxy")
                                     } else if (env.BRANCH_NAME == 'Stage') {
                                         echo "Deploying Stage"
-                                        //deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                                        deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                                     }
                                 }
 
