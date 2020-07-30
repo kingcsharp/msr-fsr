@@ -5,6 +5,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Globals } from '../../../models/lib/globals';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-help-create',
@@ -19,6 +20,9 @@ export class HelpCreateComponent implements OnInit {
   helpPageToEditId: number = 0;
   helpPageToEdit: HelpPage;
 
+  menuItems:any;
+  urls:Array<SelectItem> = new Array<SelectItem>();
+
   constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, 
     private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
@@ -32,6 +36,7 @@ export class HelpCreateComponent implements OnInit {
           this.helpService.helpGet(this.helpPageToEditId,env.apiVersion).subscribe(responseHandler((response) => {
             
             this.helpPageToEdit = response.object[0] as HelpPage;
+            
             this.helpPageToEdit.roles.forEach(role => {
               this.selectedRoles.push(role);
 
@@ -50,6 +55,66 @@ export class HelpCreateComponent implements OnInit {
       this.availableRoles = this.availableRoles.concat(response.object);
     });
 
+    this.helpService.helpGet(null,env.apiVersion).subscribe(responseHandler((response) => {
+
+        let friendlyUrls = response.object.map(s => s.friendlyURL);
+        console.log(friendlyUrls);
+        this.generateFriendlyUrlOptions(friendlyUrls);
+    }));
+
+    
+
+  }
+
+  generateFriendlyUrlOptions(friendlyUrlsUsed: Array<string>){
+
+    this.menuItems = this.generateMenu(this.globals.user.roles[0].menus);
+
+    this.menuItems.forEach(menuItem => {
+      
+        let parentPath = menuItem.name.toLowerCase();
+        menuItem.submenu.forEach(subMenuItem => {
+          let childPath = subMenuItem.url.toLowerCase();
+          if(childPath != '#'){
+            let selectItemValue = '/' + parentPath + '/' + childPath;
+
+            if(friendlyUrlsUsed.find(s => s == selectItemValue) == null){
+                this.urls.push({ label: selectItemValue, value: selectItemValue });
+            }
+            
+          }
+          
+        });
+
+    });
+
+  }
+
+  generateMenu(menuItems: any) {
+    let menuStructure: any = [];
+    // show tooltip add .
+    // description
+    menuItems.forEach(function (item) {
+      const elem = menuStructure.find(x => x.name === item.menuGroup.name);
+      if (elem === undefined) {
+        let menuItem = { submenu: [{ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info }] };
+        Object.assign(menuItem, item.menuGroup);
+        menuStructure.push(menuItem);
+      } else {
+        const submenuItem = elem.submenu.find(x => x.name === item.name);
+        if (submenuItem === undefined) {
+          elem.submenu.push({ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info });
+        }
+      }
+    });
+
+
+    menuStructure.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
+    menuStructure.forEach(function (item) {
+      item.submenu.sort((a, b) => (a.orderNumber > b.orderNumber) ? -1 : 1);
+    });
+
+    return menuStructure;
   }
 
   saveHelpPage() {

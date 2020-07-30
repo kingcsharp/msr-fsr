@@ -54,7 +54,6 @@ export class HelpComponent implements OnInit {
     this.globals.showLoader(true);
     this.helpService.helpGet(null, env.apiVersion).subscribe(responseHandler(response => {
       this.data = new Array<HelpPage>();
-      console.log(response)
       
       response.object.forEach(helpPage => {
         this.data.push(helpPage);
@@ -88,7 +87,8 @@ export class HelpComponent implements OnInit {
     this.globals.showLoader(true);
     this.helpService.helpDelete(this.helpPageToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      console.log(response);
+      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.helpPageToDelete.id);
+      this.data.splice(index, 1);
 
     }));
   }
