@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Models
 {
@@ -17,8 +18,8 @@ namespace MSR.Domain.Models
         public virtual LocationModel Location { get; set; }
         public virtual ProductModel Product { get; set; }
         public virtual PurchaseModel Purchase { get; set; }
+        public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
         /*
-        public virtual ICollection<WorkOrderPart> WorkOrderParts { get; set; }
         public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
         */
     }

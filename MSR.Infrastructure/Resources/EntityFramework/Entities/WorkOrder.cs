@@ -13,8 +13,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             WorkOrderTasks = new HashSet<WorkOrderTask>();
         }
 
-        public int Id { get; set; }
-
         public int PurchaseId { get; set; }
 
         public int ProductId { get; set; }

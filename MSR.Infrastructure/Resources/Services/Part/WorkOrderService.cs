@@ -40,6 +40,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 // unlink the backpointers to the work order model, which cause a loops.
                 wom.Purchase.WorkOrders = null;
                 wom.Product.WorkOrders = null;
+                foreach (var wop in wom.WorkOrderParts) {
+                    wop.WorkOrder = null;
+                    wop.Parent = null; // TODO: there is a bug in the DB requiring a parent
+                    wop.Children = null;  //       and this breaks the parent-child relationship.
+                }
                 return wom;
             }).OrderBy(x => x.Id).ToList();
 
