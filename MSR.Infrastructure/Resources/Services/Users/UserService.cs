@@ -246,7 +246,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             if (user == null)
                 return null;
-            
+
             return _mapper.Map<Domain.Models.User>(user);
         }
 
@@ -254,9 +254,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
         {
             var user = await _unitOfWork.Users.Query()
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
-                .ThenInclude(x => x.MenuRolePermission)
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
-                .ThenInclude(x => x.MenuItem)
+                .ThenInclude(x => x.MenuItem).ThenInclude(x => x.MenuGroup)
                 .Where(x => x.Id == Id)
                 .FirstOrDefaultAsync();
 
@@ -298,15 +296,6 @@ namespace MSR.Infrastructure.Resources.Services.Users
                             OrderNumber = efMenuItem.MenuGroup.OrderNumber,
                             URL = efMenuItem.MenuGroup.URL
                         };
-                    }
-
-                    if (menuItem.MenuRolePermission != null)
-                    {
-                        var listEnumPrivilege = new List<int>();
-                        if (menuItem.MenuRolePermission != null)
-                        {
-                            domainMenuItem.Permissions = _mapper.Map<Domain.Models.Permission>(menuItem.MenuRolePermission);
-                        }
                     }
 
                     domainRole.Menus.Add(domainMenuItem);
