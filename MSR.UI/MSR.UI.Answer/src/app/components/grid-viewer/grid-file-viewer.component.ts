@@ -28,13 +28,17 @@ export class GridFileViewerComponent implements OnInit {
 
   }
 
+  getSingularMenuName(menuItem){
+    var name = EnumMenuItem[menuItem];
+    return name.replace(/s$/, '');
+  }
+
   showViewer(file: FileModel) {
     this.viewer = this.getViewerType(file.contentType);
-    this.fileService.fileGet(EnumMenuItem[this.menuItem], file.entityId, file.fileId, env.apiVersion)
+    this.fileService.fileGet(this.getSingularMenuName(this.menuItem), file.entityId, file.fileId, env.apiVersion)
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         this.display = true;
-        debugger;
-        this.clseDialog();
+        this.selectedDocUrl = resp.object.fileURL;
       }));
   }
 
