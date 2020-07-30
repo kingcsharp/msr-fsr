@@ -35,7 +35,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
             } else {
                 procedures = await _unitOfWork.WorkOrders.Query().ToListAsync();
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.WorkOrderModel>(x)).OrderBy(x => x.Id).ToList();
+            var result = procedures.Select(x => {
+                var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
+                // unlink the backpointers to the work order model, which cause a loops.
+                wom.Purchase.WorkOrders = null;
+                wom.Product.WorkOrders = null;
+                return wom;
+            }).OrderBy(x => x.Id).ToList();
+
             return result;
         }
         public async Task<Domain.Models.WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)

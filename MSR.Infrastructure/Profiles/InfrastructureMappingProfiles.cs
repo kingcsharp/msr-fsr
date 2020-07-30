@@ -21,6 +21,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Customer, Domain.Models.Customer>().ReverseMap();
             CreateMap<Location, Domain.Models.LocationModel>().ReverseMap();
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
+            CreateMap<Purchase, Domain.Models.PurchaseModel>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();

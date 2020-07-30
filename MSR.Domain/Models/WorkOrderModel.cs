@@ -16,8 +16,8 @@ namespace MSR.Domain.Models
         public int? LocationId { get; set; }
         public virtual LocationModel Location { get; set; }
         public virtual ProductModel Product { get; set; }
+        public virtual PurchaseModel Purchase { get; set; }
         /*
-        public virtual Purchase Purchase { get; set; }
         public virtual ICollection<WorkOrderPart> WorkOrderParts { get; set; }
         public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
         */
