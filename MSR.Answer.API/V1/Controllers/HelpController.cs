@@ -73,11 +73,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse("HelpPage Deleted successfully");
         }
 
-        [HttpDelete("Role/{id}"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
+        [HttpDelete("Role"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> DeleteHelpPageRole(int id)
+        public async Task<IActionResult> DeleteHelpPageRole([FromQuery]DeleteHelpPageRoleRequest request)
         {
-            var command = new DeleteHelpPageRole() { HelpPageRoleId = id };
+            var command = new DeleteHelpPageRole() { HelpPageId = request.HelpPageId, roleId = request.roleId };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse("Role removed HelpPage successfully");
         }

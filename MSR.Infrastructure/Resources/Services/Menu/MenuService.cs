@@ -26,7 +26,12 @@ namespace MSR.Infrastructure.Resources.Services.Menu
         }
         public async Task<IEnumerable<Domain.Models.MenuItem>> GetMenuAsync(GetMenu command)
         {
-            var menuItems = _unitOfWork.MenuItems.Query().Include(i => i.Roles).ThenInclude(i => i.MenuRolePermission);
+            var menuItems = _unitOfWork.MenuItems.Query().Include(i => i.Roles).ThenInclude(i => i.MenuRolePermission)
+                                                         .Include(i => i.MenuGroup)
+                                                         .Include(i => i.Roles).ThenInclude(i => i.Role).ThenInclude(i => i.ChildRoles)
+                                                                               .ThenInclude(i => i.ChildRole).ThenInclude(i => i.Menus)
+                                                                               .ThenInclude(i => i.MenuRolePermission);
+
             var retMenuItems = new List<Domain.Models.MenuItem>();
 
             foreach (var efMenuItem in menuItems)
@@ -92,7 +97,10 @@ namespace MSR.Infrastructure.Resources.Services.Menu
 
         public async Task<bool> RemoveMenuRoleMap(RemoveMenuRoleMap command)
         {
-            var menuRole = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuItem).Include(i => i.Role).Include(i => i.MenuRolePermission).Where(i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId).FirstOrDefaultAsync();
+            var menuRole = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuItem)
+                                                              .Include(i => i.Role)
+                                                              .Include(i => i.MenuRolePermission)
+                                                              .FirstOrDefaultAsync(i => i.MenuItemId == command.MenuId && i.RoleId == command.RoleId);
 
             if(menuRole is null)
             {
