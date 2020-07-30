@@ -30,7 +30,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
 
-            Domain.Models.Customer retCustomer = null;
+            Domain.Models.Customer retCustomer;
 
             if (user.CanApprove(EnumMenuItem.CustomersDepartments))
             {
@@ -232,8 +232,8 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             curCustomer.Name = command.Name ?? curCustomer.Name;
             curCustomer.Phone = command.Phone ?? curCustomer.Phone;
             curCustomer.LocationId = command.LocationId;
-            curCustomer.PrimaryContactUserId = command.PrimaryContactUserId.HasValue ? command.PrimaryContactUserId : curCustomer.PrimaryContactUserId.Value;
-            curCustomer.SecondaryContactUserId = command.SecondaryContactUserId.HasValue ? command.SecondaryContactUserId : curCustomer.SecondaryContactUserId.Value;
+            curCustomer.PrimaryContactUserId = command.PrimaryContactUserId.HasValue ? command.PrimaryContactUserId.Value : curCustomer.PrimaryContactUserId.HasValue ? curCustomer.PrimaryContactUserId.Value : (int?)null;
+            curCustomer.SecondaryContactUserId = command.SecondaryContactUserId.HasValue ? command.SecondaryContactUserId.Value : curCustomer.SecondaryContactUserId.HasValue ? curCustomer.SecondaryContactUserId.Value : (int?)null;
         }
     }
 }

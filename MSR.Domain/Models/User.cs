@@ -16,6 +16,7 @@ namespace MSR.Domain.Models
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
         public string Title { get; set; }
         public string Email { get; set; }
         public string SecurityStamp { get; set; }

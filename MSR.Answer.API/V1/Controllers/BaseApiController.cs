@@ -9,6 +9,7 @@ namespace MSR.Answer.API.V1.Controllers
     public abstract class BaseApiController : ControllerBase
     {
         public int UserId => DelegateHandler.GetCurrentUserId();
+        
         public string Controller => this.ControllerContext.RouteData.Values["controller"].ToString();
     }
 }

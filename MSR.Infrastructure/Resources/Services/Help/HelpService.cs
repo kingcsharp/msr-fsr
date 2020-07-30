@@ -131,6 +131,11 @@ namespace MSR.Infrastructure.Resources.Services.Help
                 helpPages = helpPages.Where(i => i.Id == command.Id.Value);
             }
 
+            if (!string.IsNullOrWhiteSpace(command.FriendlyURL))
+            {
+                helpPages = helpPages.Where(i => i.FriendlyUrl == command.FriendlyURL);
+            }
+
             var pageList = new List<Domain.Models.HelpPage>();
 
             foreach(var helpPage in helpPages.ToList())

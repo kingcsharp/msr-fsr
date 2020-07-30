@@ -91,9 +91,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
                 throw;
             }
 
@@ -126,16 +125,22 @@ namespace MSR.Infrastructure.Resources.EntityFramework
             if ((creatable = entry.Entity as CreatableEntity) != null)
             {
                 int? answerUserId = DelegateHandler.GetCurrentUserId();
+                User user = null;
+                if (answerUserId.HasValue)
+                {
+                    user = User.FirstOrDefault(i => i.Id == answerUserId.Value);
+                }
+
                 if (entry.State == EntityState.Added)
                 {
                     creatable.CreatedOn = now;
-                    creatable.CreatedBy = answerUserId;
+                    creatable.Created = user;
                 }
                 TrackableEntity trackable;
                 if ((trackable = entry.Entity as TrackableEntity) != null)
                 {
                     trackable.LastUpdatedOn = now;
-                    trackable.LastUpdatedBy = answerUserId;
+                    trackable.LastUpdated = user;
                 }
             }
         }

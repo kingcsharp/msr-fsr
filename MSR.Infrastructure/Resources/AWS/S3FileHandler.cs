@@ -2,7 +2,6 @@
 using Amazon.S3.Model;
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Exceptions;
-using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Helpers;
 using System;
