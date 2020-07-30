@@ -247,7 +247,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
                 .ThenInclude(x => x.MenuRolePermission)
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
-                .ThenInclude(x => x.MenuItem)
+                .ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
                 .Where(x => x.Id == Id)
                 .FirstOrDefaultAsync();
 
