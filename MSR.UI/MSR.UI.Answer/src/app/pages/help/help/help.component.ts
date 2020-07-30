@@ -52,7 +52,7 @@ export class HelpComponent implements OnInit {
   getHelpPages(){
 
     this.globals.showLoader(true);
-    this.helpService.helpGet(null, env.apiVersion).subscribe(responseHandler(response => {
+    this.helpService.helpGet(null,null, env.apiVersion).subscribe(responseHandler(response => {
       this.data = new Array<HelpPage>();
       
       response.object.forEach(helpPage => {
