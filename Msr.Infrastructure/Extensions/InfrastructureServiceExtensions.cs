@@ -32,7 +32,8 @@ namespace MSR.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
         {
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
-            services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dbConfig.ConnectionString));
+
+            services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseSqlServer(dbConfig.ConnectionString));
             var s3Config = config.GetSection(nameof(S3Information)).Get<S3Information>();
             services.AddSingleton(s3Config);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
