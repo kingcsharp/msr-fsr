@@ -172,6 +172,24 @@ class QuoteProductModel implements IQuoteProduct {
 const demoData = [
   new QuoteProductModel({
     id: 0,
+    isProduct: false,
+    submittedDate: new Date('05/12/2020'),
+    company: null,
+    submittedBy: 'Derek',
+    partKitNo: null,
+    procedureName: null,
+    productName: 'Test_Part_Alpha',
+    representative:'Derek',
+    revision: 0,
+    equipmentCost: null,
+    materialCost: null,
+    totalPrice: null,
+    cycleTime: null,
+    lastUpdateOn: new Date(),
+    lastUpdatedBy: 'Derek'
+  }),
+  new QuoteProductModel({
+    id: 0,
     isProduct: true,
     submittedDate: new Date('04/27/2020'),
     company: '[MSR-FSR]INTEL F28 - [ID:1586]',
@@ -188,5 +206,4 @@ const demoData = [
     lastUpdateOn: new Date(),
     lastUpdatedBy: 'Derek'
   }),
-
 ]
