@@ -475,5 +475,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<CreateFile>(request);
         }
+
+        public static UploadFile ToUploadFileCommand(this UploadFileRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UploadFile>(request);
+        }
     }
 }

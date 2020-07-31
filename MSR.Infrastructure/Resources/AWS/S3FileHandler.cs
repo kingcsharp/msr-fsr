@@ -45,7 +45,8 @@ namespace MSR.Infrastructure.Resources.AWS
                 {
                     ContentType = base64File.ContentType,
                     BucketName = _s3Information.FileBucketName,
-                    Key = uniqueName
+                    Key = uniqueName,
+                     
                 };
                 
                 using var ms = new MemoryStream(base64File.FileContents);
