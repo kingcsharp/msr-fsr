@@ -12,15 +12,16 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 })
 export class QuotesComponent implements OnInit {
   privileges = EnumPrivilege;
+  menuItems = EnumMenuItem;
   defaultView: ViewSaved;
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
   gridVersion: string;
   data: any;
-  canStartQuote: boolean = false;
-  canDeleteQuote: boolean = false;
-  canEditProduct: boolean = false;
-  canViewProduct: boolean = false;
+  canCreate: boolean = false;
+  canDelete: boolean = false;
+  canEdit: boolean = false;
+  canView: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -48,10 +49,10 @@ export class QuotesComponent implements OnInit {
       new ColumnsSaved({ id: 'lastUpdateOn', label: 'LastUpdateOn', visible: false }),
       new ColumnsSaved({ id: 'lastUpdatedBy', label: 'LastUpdated By', visible: false })
     ];
-    this.canStartQuote = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDeleteQuote = this.hasPrivilege(this.privileges.CanDelete);
-    this.canEditProduct = this.hasPrivilege(this.privileges.CanEdit);
-    this.canViewProduct = this.hasPrivilege(this.privileges.CanRead);
+    this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
+    this.canDelete = this.hasPrivilege(this.privileges.CanDelete);
+    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
+    this.canView = this.hasPrivilege(this.privileges.CanRead);
 
     this.data = []
     this.getQuotesProducts();
@@ -71,7 +72,7 @@ export class QuotesComponent implements OnInit {
     console.log('Click Add Quote');
   }
 
-  onClickImportQuote() {
+  onClickImportQuote($event) {
     //TODO: Import CSV process;
     console.log('Click Import Quote');
   }
