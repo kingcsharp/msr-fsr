@@ -269,7 +269,11 @@
             <label for="demo[]" class="col-md-2 col-form-label text-md-right">
               Files
             </label>
-            <p-fileUpload class="col-md-10" name="demo[]" url="./upload.php" customUpload="true"
+            <cmh-file-uploader class="col-md-10" *ngIf="currPart.files !==undefined" 
+            [menuItem]="menuItems.Parts" [(files)]="currPart.files">
+
+            </cmh-file-uploader>
+            <!-- <p-fileUpload class="col-md-10" name="demo[]" url="./upload.php" customUpload="true"
               (onSelect)="myUploader($event)" (onRemove)="removeuploadFile($event)" [showUploadButton]="false"
               [showCancelButton]="false" multiple="multiple" accept="" maxFileSize="1000000000"
               cancelIcon="far fa-trash-alt">
@@ -320,7 +324,7 @@
                   </li>
                 </ul>
               </ng-template>
-            </p-fileUpload>
+            </p-fileUpload> -->
           </div>
         </fieldset>
       </div>

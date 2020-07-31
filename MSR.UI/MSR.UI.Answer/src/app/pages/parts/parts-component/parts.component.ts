@@ -132,7 +132,7 @@ export class PartsComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Parts, privName);
+    return this.globals.hasPrivilege(this.menuItems.Parts, privName);
   }
 
   showDialog(part: PartModel) {
