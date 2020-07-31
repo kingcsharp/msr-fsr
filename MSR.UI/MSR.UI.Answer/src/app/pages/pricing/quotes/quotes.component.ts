@@ -66,6 +66,36 @@ export class QuotesComponent implements OnInit {
     this.data = demoData;
   }
 
+  onClickAddQuote() {
+    //TODO: Add Quote;
+    console.log('Click Add Quote');
+  }
+
+  onClickImportQuote() {
+    //TODO: Import CSV process;
+    console.log('Click Import Quote');
+  }
+
+  onClickStartQuote(quoteId: number) {
+    //TODO: Start Quote;
+    console.log('Click Start Quote - ', quoteId);
+  }
+
+  onClickDeleteQuote(quoteId: number) {
+    //TODO: Delete Quote;
+    console.log('Click Delete Quote - ', quoteId);
+  }
+
+  onClickEditProduct(productId: number) {
+    //TODO: Edit Product();
+    console.log('Click Edit product - ', productId);
+  }
+
+  onClickViewProduct(productId: number) {
+    //TODO: View Product
+    console.log('Click Viwe product - ', productId);
+  }
+
 }
 
 // TODO: This is temp code, will remove when back-end APIs have done.
