@@ -4,9 +4,9 @@ describe('Help Functionality', () => {
         cy.server()
 
         cy.route({
-            method: 'DELETE',
-            url: '/v1/Help/**',
-            response: { "successMessage": "HelpPage Deleted successfully", "errorMessages": [], "id": 0, "hasErrors": false, "hasValidationErrors": false }
+            method: 'PATCH',
+            url: '/v1/Help',
+            response: {"successMessage":"HelpPage Updated successfully","errorMessages":[],"id":0,"hasErrors":false,"hasValidationErrors":false}
         })
 
         var adminUsername = Cypress.env('admin-username')
@@ -50,23 +50,12 @@ describe('Help Functionality', () => {
 
         cy.get('.page-title').contains(menuChildItemName).click();
 
-        const idToDelete;
-        cy.get('[data-cy=helppage-id]').first().invoke('text').then((text) => {
-            idToDelete = text;
-   
-        });
+        cy.get('[data-cy=edit-button]').first().click();
 
-        cy.get('[data-cy=delete-button]').first().click();
+        cy.get('[data-cy=title-input]').clear()
+        cy.get('[data-cy=title-input]').type("Cypress Sample Test Title").should('have.value', "Cypress Sample Test Title")
 
-
-        cy.get('[data-cy=confirmdelete-button]').click();
-        
-        cy.get('[aria-live="polite"]').should("be.visible");
-        cy.get('[aria-live="polite"]').should("not.be.visible");
-
-        cy.get('[data-cy=helppage-id]').first().invoke('text').then((text) => {
-            expect(text).not.to.include(idToDelete)
-        });
+        cy.get('[data-cy=update-button]').click()
 
         cy.get('@warningMessage').should("not.called")
         cy.get('@errorMessage').should("not.called")
