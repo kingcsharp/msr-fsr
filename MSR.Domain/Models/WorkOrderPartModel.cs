@@ -6,7 +6,7 @@ namespace MSR.Domain.Models
     {
         public int WorkOrderId { get; set; }
         public int PartId { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         public string SerialNumber { get; set; }
         public virtual PartModel Part { get; set; }
         public virtual WorkOrderModel WorkOrder { get; set; }

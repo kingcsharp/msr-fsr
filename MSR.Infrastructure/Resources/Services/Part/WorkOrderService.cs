@@ -67,12 +67,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.WorkOrders.Add(workorder);
                 await _unitOfWork.SaveChangesAsync();
 
-                foreach (int id in command.WorkOrderPartIds) {
-                    AttachWorkOrderPart(workorder, id);
-                }
-                foreach (int id in command.WorkOrderTaskIds) {
-                }
-
                 await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
                 ret = DetachBackPointers(
@@ -138,14 +132,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
 
             return true;
-        }
-
-        private void AttachWorkOrderPart(WorkOrder wo, int partId)
-        {
-            _unitOfWork.WorkOrderParts.Add(new WorkOrderPart() {
-                WorkOrderId = wo.Id,
-                PartId = partId
-            });
         }
 
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)

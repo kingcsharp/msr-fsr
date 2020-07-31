@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSR.Domain.Models;
+using System;
 using System.Collections.Generic;
 
 namespace MSR.Answer.API.V1.Models
@@ -12,7 +13,7 @@ namespace MSR.Answer.API.V1.Models
         public DateTime ScheduledEndDate { get; set; }
         public bool HasNCR { get; set; }
         public int LocationId { get; set; }
-        public virtual ICollection<int> WorkOrderPartIds { get; set; }
-        public virtual ICollection<int> WorkOrderTaskIds { get; set; }
+        public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
+        public virtual ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
     }
 }
