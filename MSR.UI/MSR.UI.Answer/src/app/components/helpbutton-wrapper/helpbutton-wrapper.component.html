@@ -1,4 +1,21 @@
-<button *ngIf="canViewHelpPage" class="btn btn-success width-100 mb-xs sm-mrg" 
-role="button" data-cy="help-button">
+<button *ngIf="canViewHelpPage" class="btn btn-primary width-100 mb-xs sm-mrg"
+ role="button" data-cy="help-button" (click)="this.display = !this.display">
 Help
 </button>
+<p-dialog header="Help" [(visible)]="display" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
+  [style]="{width: '50vw'}" data-cy="user-header">
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <div class="widget-body" [innerHTML]="helpContent" *ngIf="helpContent != null">
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button type="button" (click)="this.display = !this.display" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Close
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>
