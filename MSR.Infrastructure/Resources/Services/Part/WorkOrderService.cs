@@ -86,11 +86,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             if(current is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
+                throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.WorkOrderModel ret;
+            WorkOrderModel ret;
 
             if (user.CanApprove(EnumMenuItem.WipStatus))
             {

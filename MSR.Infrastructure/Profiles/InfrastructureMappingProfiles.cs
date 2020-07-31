@@ -111,6 +111,9 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, Domain.Models.WorkOrderModel>();
             CreateMap<CreateWorkOrder, WorkOrder>();
+            CreateMap<UpdateWorkOrder, WorkOrder>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedure, ProcedureApproval>();
             CreateMap<CreateProcedure, Procedure>();
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();

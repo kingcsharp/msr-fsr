@@ -2,9 +2,8 @@
 
 namespace MSR.Domain.Commands
 {
-    public class UpdateWorkOrder : Command
+    public class UpdateWorkOrder : CreateWorkOrder
     {
         public int Id { get; set; }
-        public string Name { get; set; }
     }
 }
