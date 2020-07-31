@@ -1,11 +1,11 @@
-import { Component, OnInit,  ElementRef  } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { CustomerService } from '../../../services/api.client.generated';
-import { environment as env } from '../../../../environments/environment';
-import { responseHandler } from '../../../utils/responseHandler';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege } from '../../../models/enums/privileges';
-import { Globals } from '../../../models/lib/globals';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
+import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
+import { CommonGrid } from '../../../models/lib/CommonGrid';
+import { EnumPrivilege } from '../../../models/enums/privileges';
+import { Globals } from '../../../models/lib/globals';
 
 @Component({
   selector: 'app-customers',
@@ -15,15 +15,15 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class CustomersComponent implements OnInit {
 
-  privileges = EnumPrivilege;
-  gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
-  gridStorageId: string;
+  privileges = EnumPrivilege;
+  gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
+  loading: boolean = true;
+  gridStorageId: string;
   canAddLocation: boolean = false;
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
-
-  constructor(private customerService: CustomerService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  data: any[] = [];
+  constructor(private customerService: CustomerService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -55,7 +55,7 @@ export class CustomersComponent implements OnInit {
     return this.globals.hasPrivilege('HelpPages', privilegeName);
   }
 
-  getCustomers(){
+  getCustomers() {
     this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       console.log(response);
     }));

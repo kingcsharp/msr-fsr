@@ -1933,12 +1933,14 @@ p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
 .fa-file-pdf,
 .fa-file-word,
 .fa-file-excel,
-.fa-file-alt {
+.fa-file-alt,
+.fa-file-powerpoint {
   --fa-secondary-color: white;
-  --fa-secondary-opacity: 1.0;
+  --fa-secondary-opacity: 1;
 }
 
-.fa-file-csv,.fa-file-excel {
+.fa-file-csv,
+.fa-file-excel {
   --fa-primary-color: green;
 }
 
@@ -1946,9 +1948,94 @@ p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
   --fa-primary-color: red;
 }
 
+.fa-file-powerpoint {
+  --fa-primary-color: #cc4424;
+}
+
 .fa-file-word {
   --fa-primary-color: blue;
 }
 .fa-file-alt {
-  --fa-primary-color: gray;;
+  --fa-primary-color: gray;
+}
+
+.fileupload-content {
+  padding: 0;
+}
+.fileLi {
+  padding: 3px 0;
+  margin-right: 0;
+  margin-left: 0;
+  border-bottom: 1px solid;
+  &:last-child {
+    border-bottom: 0px;
+  }
+  > div {
+    line-height: 50px;
+    &:first-child {
+      line-height: 0;
+    }
+  }
+  .fad {
+    font-size: 65px;
+  }
+}
+
+body .ui-fileupload .ui-fileupload-content {
+  padding: 0;
+}
+
+.fa-trash-alt:hover {
+  color: #db4912;
+  transition: all 0.8s;
+}
+
+.ui-fileupload-files {
+  width: 100%;
+  padding: 3px 0;
+  margin-right: 0;
+  margin-left: 0;
+  border-bottom: 1px solid;
+  .ui-fileupload-row {
+    border: none;
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 15px;
+    padding-left: 15px;
+    button {
+      border: none !important;
+      border-radius: 0;
+      top: 9px;
+      &:hover {
+        border-color: none !important;
+        background-color: #262e37 !important;
+        color: #fff !important;
+      }
+      .pi-times {
+        font-size: 16px;
+      }
+      .pi-times::before {
+        content: "\e93d";
+      }
+    }
+    > div:last-child {
+      padding-right: 15px;
+    }
+  }
+}
+.ui-fileupload-row {
+  margin-right: -15px;
+  margin-left: -15px;
+  width: 100%;
+  display: block;
+  padding: 3px 0;
+  border-bottom: 1px solid;
+  > div {
+    padding: 0;
+    &:last-child {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
 }

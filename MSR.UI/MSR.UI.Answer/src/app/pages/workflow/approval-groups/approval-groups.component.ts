@@ -64,8 +64,8 @@ export class ApprovalGroupsComponent implements OnInit {
     this.roles = [];
 
     this.canAddGroups = this.hasPrivilege(this.privileges.CanCreate);
-    this.canActivateGroups = this.hasPrivilege(this.privileges.CanActivate);;
-    this.canEditGroups = this.hasPrivilege(this.privileges.CanEdit);;
+    this.canActivateGroups = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEditGroups = this.hasPrivilege(this.privileges.CanEdit);
     this.getWorkflowGroups();
     this.getUsers();
     this.getRoles();
@@ -98,8 +98,7 @@ export class ApprovalGroupsComponent implements OnInit {
         this.addToGridRolesDropdown(elem.groupRoles);
         return elem;
       });
-    }
-    else {
+    } else {
       setTimeout(() => {
         this.mapData();
       }, 100);
@@ -198,7 +197,7 @@ export class ApprovalGroupsComponent implements OnInit {
         // DO not update user
       }));
   }
-  //onWorkflowSubmit
+
   onWorkflowSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;

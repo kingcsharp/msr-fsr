@@ -9,7 +9,6 @@ const routes: Routes = [
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
       { path: 'workflow', loadChildren: () => import('../pages/workflow/workflow.module').then(m => m.WorkflowModule) },
       { path: 'parts', loadChildren: () => import('../pages/parts/parts.module').then(m => m.PartsModule) },
-      //fw urls to be removed in the future for the moment they help us in case we need to add stuff.
       { path: 'inbox', loadChildren: () => import('../pages/inbox/inbox.module').then(m => m.InboxModule) },
       { path: 'charts', loadChildren: () => import('../pages/charts/charts.module').then(m => m.ChartsModule) },
       { path: 'profile', loadChildren: () => import('../pages/profile/profile.module').then(m => m.ProfileModule) },

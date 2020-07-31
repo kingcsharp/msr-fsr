@@ -6,7 +6,6 @@ import {
   FileModel, EnumMenuItem, FileService
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
-// FileService, 
 @Component({
   selector: 'grid-file-viewer',
   templateUrl: './grid-file-viewer.component.html',
@@ -17,7 +16,7 @@ export class GridFileViewerComponent implements OnInit {
   selectedDocUrl: string;
   display: boolean = false;
   viewer: string;
-  selectedFile:FileModel;
+  selectedFile: FileModel;
 
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem;
@@ -31,7 +30,7 @@ export class GridFileViewerComponent implements OnInit {
   }
 
   getSingularMenuName(menuItem) {
-    var name = EnumMenuItem[menuItem];
+    let name = EnumMenuItem[menuItem];
     return name.replace(/s$/, '');
   }
 
@@ -40,10 +39,9 @@ export class GridFileViewerComponent implements OnInit {
     this.viewer = this.getViewerType(file.contentType);
     this.fileService.fileGet(this.getSingularMenuName(this.menuItem), file.entityId, file.fileId, env.apiVersion)
       .pipe(take(1)).subscribe(responseHandler((resp) => {
-        if (resp.object.length == 0) {
-          //err
-        }
-        else {
+        if (resp.object.length === 0) {
+          // err
+        } else {
           this.selectedDocUrl = resp.object[0].fileURL;
           this.display = true;
         }
@@ -60,6 +58,7 @@ export class GridFileViewerComponent implements OnInit {
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
       case 'application/vnd.ms-excel':
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
         return 'office';
       case 'text/plain':
       case 'text/html':

@@ -83,9 +83,7 @@ export class LoginService {
     this.userService.loggedInUser(env.apiVersion).pipe(take(1))
       .subscribe((result) => {
         Object.assign(user, result.object);
-
-        var decodedToken = jwt.decodeToken(token);
-
+        const decodedToken = jwt.decodeToken(token);
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
         user.privileges = JSON.parse(decodedToken.Privileges);
 

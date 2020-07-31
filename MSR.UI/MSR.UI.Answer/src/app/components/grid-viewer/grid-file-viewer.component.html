@@ -3,10 +3,14 @@
   <i tooltip="{{file.name}}"
     *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
     class="fad fa-file-word"></i>
+  <i tooltip="{{file.name}}"
+    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'"
+    class="fad fa-file-powerpoint"></i>
   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="fad fa-file-alt"></i>
   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fad fa-file-alt"></i>
   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/csv'" class="fad fa-file-csv"></i>
   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/pdf'" class="fad fa-file-pdf"></i>
+  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/csv'" class="fad fa-file-csv"></i>
   <i tooltip="{{file.name}}"
     *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
     class="fad fa-file-excel"></i>
@@ -35,8 +39,6 @@
           <div class="form-group row">
             <div class="col-lg-12">
               <ngx-doc-viewer [url]="selectedDocUrl" [viewer]="viewer" style="width:100%;height:80vh;"></ngx-doc-viewer>
-              <!-- <ngx-doc-viewer [url]="url" [viewer]="url" style="width:100%;height:50vh;">
-              </ngx-doc-viewer> -->
             </div>
           </div>
         </fieldset>

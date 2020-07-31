@@ -24,7 +24,7 @@ export class LocationCreateComponent implements OnInit {
 
     this.countryOptions = new LookUpItems().Countries();
 
-    this.locationService.locationGet(null,env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.parentLocationOptions = response.object;
 
@@ -35,11 +35,11 @@ export class LocationCreateComponent implements OnInit {
 
       if (this.locationToEdit.id !== 0) {
 
-          this.locationService.locationGet(this.locationToEdit.id,env.apiVersion).subscribe(responseHandler((response) => {
-            
-            console.log(response);
+        this.locationService.locationGet(this.locationToEdit.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-          }));
+          console.log(response);
+
+        }));
 
       }
 
@@ -47,11 +47,11 @@ export class LocationCreateComponent implements OnInit {
 
   }
 
-  updateLocation(){
-    if(this.selectedParentLocation != undefined){
+  updateLocation() {
+    if (this.selectedParentLocation !== undefined) {
       this.locationToEdit.parentId = this.selectedParentLocation.id;
     }
-    
+
     let updateLocationRequest = new UpdateLocationRequest();
     updateLocationRequest.locationId = this.locationToEdit.id;
     updateLocationRequest.address1 = this.locationToEdit.address1;
@@ -65,19 +65,19 @@ export class LocationCreateComponent implements OnInit {
     updateLocationRequest.phone = this.locationToEdit.phone;
     updateLocationRequest.postalCode = this.locationToEdit.postalCode;
     updateLocationRequest.state = this.locationToEdit.state;
-    
+
     this.globals.showLoader(true);
-    this.locationService.locationPatch(env.apiVersion,updateLocationRequest).subscribe(responseHandler((response) => {
+    this.locationService.locationPatch(env.apiVersion, updateLocationRequest).subscribe(responseHandler((response) => {
 
     }));
   }
 
-  saveLocation(){
+  saveLocation() {
 
-    if(this.selectedParentLocation != undefined){
+    if (this.selectedParentLocation !== undefined) {
       this.locationToEdit.parentId = this.selectedParentLocation.id;
     }
-    
+
     let createLocationRequest = new CreateLocationRequest();
     createLocationRequest.address1 = this.locationToEdit.address1;
     createLocationRequest.address2 = this.locationToEdit.address2;
@@ -92,7 +92,7 @@ export class LocationCreateComponent implements OnInit {
     createLocationRequest.state = this.locationToEdit.state;
 
     this.globals.showLoader(true);
-    this.locationService.locationPost(env.apiVersion,createLocationRequest).subscribe(responseHandler((response) => {
+    this.locationService.locationPost(env.apiVersion, createLocationRequest).subscribe(responseHandler((response) => {
 
       this.locationToEdit.id = response.object.id;
       console.log(this.locationToEdit);
