@@ -63,7 +63,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 WorkOrder workorder = _mapper.Map<WorkOrder>(command);
 
                 _unitOfWork.WorkOrders.Add(workorder);
-                await _unitOfWork.SaveChangesAsync();
 
                 await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 

@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic.CompilerServices;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Profiles
 {
@@ -44,6 +45,9 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.ProductId, opts => opts.Condition(src => src.ProductId > 0))
                 .ForMember(dest => dest.PurchaseId, opts => opts.Condition(src => src.PurchaseId > 0))
                 .ForMember(dest => dest.Price, opts => opts.Condition(src => src.Price > 0));
+            CreateMap<WorkOrderTaskMonitorRequest, WorkOrderTaskMonitorModel>().ReverseMap();
+            CreateMap<WorkOrderPartRequest, WorkOrderPartModel>().ReverseMap();
+            CreateMap<WorkOrderTaskRequest, WorkOrderTaskModel>().ReverseMap();
             CreateMap<DeleteMenuRoleMapRequest, RemoveMenuRoleMap>();
             CreateMap<CreateFileRequest, CreateFile>();
             CreateMap<CreateFile, Domain.Models.FileModel>();
