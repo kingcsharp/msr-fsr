@@ -107,7 +107,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> UpdatePartAsync(UpdatePart command)
         {
-            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+            Part current = await _unitOfWork.Parts.Query()
+                .Include(x => x.Subparts)
+                .Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
 
             if (current is null)
