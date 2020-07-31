@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic.CompilerServices;
 using MSR.Domain.Commands;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using System.Linq;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -109,6 +110,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate>();
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, Domain.Models.WorkOrderModel>();
+            CreateMap<CreateWorkOrder, WorkOrder>();
             CreateMap<CreateProcedure, ProcedureApproval>();
             CreateMap<CreateProcedure, Procedure>();
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();

@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -49,18 +50,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var result = workorders.Select(x => {
                 var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
-                // unlink the backpointers to the work order model, which causes loops.
-                wom.Purchase.WorkOrders = null;
-                wom.Product.WorkOrders = null;
-                foreach (var wop in wom.WorkOrderParts) {
-                    wop.WorkOrder = null;
-                    wop.Parent = null;
-                    wop.Children = null;
-                }
-                foreach (var wot in wom.WorkOrderTasks) {
-                    wot.WorkOrder = null;
-                }
-                return wom;
+                return DetachBackPointers(wom);
             }).OrderBy(x => x.Id).ToList();
 
             return result;
@@ -73,12 +63,21 @@ namespace MSR.Infrastructure.Resources.Services.Role
             if (user.CanApprove(EnumMenuItem.WIPMenu))
             {
                 WorkOrder workorder = _mapper.Map<WorkOrder>(command);
-                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
                 _unitOfWork.WorkOrders.Add(workorder);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.WorkOrderModel>(workorder);
+                foreach (int id in command.WorkOrderPartIds) {
+                    AttachWorkOrderPart(workorder, id);
+                }
+                foreach (int id in command.WorkOrderTaskIds) {
+                }
+
+                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+
+                ret = DetachBackPointers(
+                    _mapper.Map<Domain.Models.WorkOrderModel>(workorder)
+                );
             }
             else
             {
@@ -139,6 +138,35 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
 
             return true;
+        }
+
+        private void AttachWorkOrderPart(WorkOrder wo, int partId)
+        {
+            _unitOfWork.WorkOrderParts.Add(new WorkOrderPart() {
+                WorkOrderId = wo.Id,
+                PartId = partId
+            });
+        }
+
+        private WorkOrderModel DetachBackPointers(WorkOrderModel wom)
+        {
+            var model = _mapper.Map<WorkOrderModel>(wom);
+            // unlink the backpointers to the work order model, which causes loops.
+            if (model.Purchase != null) {
+                model.Purchase.WorkOrders = null;
+            }
+            if (model.Product != null) {
+                model.Product.WorkOrders = null;
+            }
+            foreach (var wop in model.WorkOrderParts) {
+                wop.WorkOrder = null;
+                wop.Parent = null;
+                wop.Children = null;
+            }
+            foreach (var wot in model.WorkOrderTasks) {
+                wot.WorkOrder = null;
+            }
+            return model;
         }
     }
 }
