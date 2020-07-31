@@ -71,6 +71,7 @@ export class QuotesComponent implements OnInit {
 // TODO: This is temp code, will remove when back-end APIs have done.
 interface IQuoteProduct {
   id: number;
+  isProduct: boolean;
   submittedDate: Date;
   company?: string;
   submittedBy: string;
@@ -90,6 +91,7 @@ interface IQuoteProduct {
 
 class QuoteProductModel implements IQuoteProduct {
   id: number;
+  isProduct: boolean;
   submittedDate: Date;
   company?: string | undefined;
   submittedBy: string;
@@ -118,6 +120,7 @@ class QuoteProductModel implements IQuoteProduct {
   init(_data?: any) {
     if (_data) {
       this.id = _data["id"];
+      this.isProduct = _data["isProduct"]
       this.submittedDate = _data["submittedDate"];
       this.company = _data["company"];
       this.submittedBy = _data["submittedBy"];
@@ -146,6 +149,7 @@ class QuoteProductModel implements IQuoteProduct {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["id"] = this.id;
+    data["isProduct"] = this.isProduct;
     data["submittedDate"] = this.submittedDate;
     data["company"] = this.company;
     data["submittedBy"] = this.submittedBy;
@@ -168,6 +172,7 @@ class QuoteProductModel implements IQuoteProduct {
 const demoData = [
   new QuoteProductModel({
     id: 0,
+    isProduct: true,
     submittedDate: new Date('04/27/2020'),
     company: '[MSR-FSR]INTEL F28 - [ID:1586]',
     submittedBy: 'Derek',
