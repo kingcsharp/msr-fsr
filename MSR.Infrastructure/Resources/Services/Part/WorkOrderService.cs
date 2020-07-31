@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -29,12 +30,10 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
             List<EntityFramework.Entities.WorkOrder> workorders;
-            IQueryable<WorkOrder> query;
+            IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
             if (command.Id.HasValue) {
-                query = _unitOfWork.WorkOrders.Query().Where(x => x.Id == command.Id.Value);
-            } else {
-                query = _unitOfWork.WorkOrders.Query();
+                query = query.Where(x => x.Id == command.Id.Value);
             }
             workorders = await query
                 .Include(x => x.WorkOrderParts)
@@ -57,10 +56,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<Domain.Models.WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.WorkOrderModel ret;
+            WorkOrderModel ret;
 
-            if (user.CanApprove(EnumMenuItem.WIPMenu))
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
                 WorkOrder workorder = _mapper.Map<WorkOrder>(command);
 
@@ -75,7 +73,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
             }
 
             return ret;
@@ -89,10 +87,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            var user = await _unitOfWork.GetLoggedInUserAsync();
             WorkOrderModel ret;
 
-            if (user.CanApprove(EnumMenuItem.WipStatus))
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
                 var workorder = _mapper.Map(command, current);
                 _unitOfWork.WorkOrders.Update(workorder);
@@ -104,7 +101,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
             }
 
             return ret;
@@ -119,16 +116,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-
-            if (user.CanApprove(EnumMenuItem.WipStatus)) {
+            if (DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove)) {
                 var workorder = _mapper.Map(command, current);
                 _unitOfWork.WorkOrders.Delete(false, workorder.Id);
 
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
             } else {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
             }
 
             return true;

@@ -27,11 +27,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet()]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
-        public async Task<IActionResult> GetWorkOrder(int? id)
+        public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest req)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrder() {
-                Id = id
-            });
+            var command = req.ToGetWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
         }
 
@@ -53,16 +52,6 @@ namespace MSR.Answer.API.V1.Controllers
             var command = newobj.ToUpdateWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderModel>();
-        }
-
-        [HttpDelete]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanDelete)]
-        [SwaggerResponse(typeof(AuditActionResult<bool>))]
-        public async Task<IActionResult> UpdateWorkOrder(DeleteWorkOrderRequest newobj)
-        {
-            var command = newobj.ToDeleteWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<bool>();
         }
     }
 }

@@ -38,6 +38,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<File, Domain.Models.FileModel>().ReverseMap();
             CreateMap<CreateWorkOrderRequest, CreateWorkOrder>().ReverseMap();
             CreateMap<DeleteWorkOrderRequest, DeleteWorkOrder>().ReverseMap();
+            CreateMap<GetWorkOrderRequest, GetWorkOrder>();
             CreateMap<UpdateWorkOrderRequest, UpdateWorkOrder>()
                 .ForMember(dest => dest.LocationId, opts => opts.Condition(src => src.LocationId > 0))
                 .ForMember(dest => dest.ProductId, opts => opts.Condition(src => src.ProductId > 0))

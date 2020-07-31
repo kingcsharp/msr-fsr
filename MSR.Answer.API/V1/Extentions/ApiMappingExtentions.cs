@@ -404,6 +404,10 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<DeleteWorkOrder>(request);
         }
+        public static GetWorkOrder ToGetWorkOrderCommand(this GetWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetWorkOrder>(request);
+        }
 
         public static CreateIndividualInvoices ToCreateIndividualInvoicesCommand(this CreateInvoiceRequest request)
         {
