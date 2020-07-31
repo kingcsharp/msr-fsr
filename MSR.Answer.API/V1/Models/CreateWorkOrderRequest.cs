@@ -13,7 +13,7 @@ namespace MSR.Answer.API.V1.Models
         public DateTime ScheduledEndDate { get; set; }
         public bool HasNCR { get; set; }
         public int LocationId { get; set; }
-        public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
-        public virtual ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
+        public virtual ICollection<WorkOrderPartRequest> WorkOrderParts { get; set; }
+        public virtual ICollection<WorkOrderTaskRequest> WorkOrderTasks { get; set; }
     }
 }

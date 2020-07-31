@@ -27,31 +27,31 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet()]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
-        public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest req)
+        public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest request)
         {
-            var command = req.ToGetWorkOrderCommand();
+            var command = request.ToGetWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>("WorkOrder GET Success");
         }
 
         [HttpPost]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
-        public async Task<IActionResult> AddWorkOrder(CreateWorkOrderRequest newobj)
+        public async Task<IActionResult> AddWorkOrder(CreateWorkOrderRequest request)
         {
-            var command = newobj.ToCreateWorkOrderCommand();
+            var command = request.ToCreateWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderModel>();
+            return ret.ToOkObjectResponse<WorkOrderModel>("WorkOrder created succesfully");
         }
 
         [HttpPatch]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
-        public async Task<IActionResult> UpdateWorkOrder(UpdateWorkOrderRequest newobj)
+        public async Task<IActionResult> UpdateWorkOrder(UpdateWorkOrderRequest request)
         {
-            var command = newobj.ToUpdateWorkOrderCommand();
+            var command = request.ToUpdateWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderModel>();
+            return ret.ToOkObjectResponse<WorkOrderModel>("WorkOrder updated successfully");
         }
     }
 }
