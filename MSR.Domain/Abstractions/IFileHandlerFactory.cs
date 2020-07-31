@@ -1,6 +1,5 @@
 ﻿using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Models;
-
 namespace MSR.Domain.Abstractions
 {
     public interface IFileHandlerFactory

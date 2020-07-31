@@ -37,6 +37,7 @@ export class ApprovalGroupsComponent implements OnInit {
   data: any;
   statuses: any[];
   users: any[] = [];
+  getBackendRoles: boolean = false;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService, private userService: UserService,
     private elem: ElementRef, private roleService: RoleService, private workflowGroupService: WorkflowGroupService) {
@@ -67,7 +68,7 @@ export class ApprovalGroupsComponent implements OnInit {
     this.canEditGroups = this.hasPrivilege(this.privileges.CanEdit);;
     this.getWorkflowGroups();
     this.getUsers();
-    this.getRoles()
+    this.getRoles();
   }
 
   getUsers() {
@@ -81,17 +82,28 @@ export class ApprovalGroupsComponent implements OnInit {
   }
 
   getWorkflowGroups() {
-    const ctrl = this;
+    // const ctrl = this;
     this.globals.showLoader(true);
     this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        ctrl.data = response.object;
-        ctrl.data.map((elem) => {
-          this.updateRolesUsersSavedForItem(elem);
-          this.addToGridRolesDropdown(elem.groupRoles);
-          return elem;
-        });
+        this.data = response.object;
+        this.mapData();
       }));
+  }
+
+  mapData() {
+    if (this.getBackendRoles) {
+      this.data.map((elem) => {
+        this.updateRolesUsersSavedForItem(elem);
+        this.addToGridRolesDropdown(elem.groupRoles);
+        return elem;
+      });
+    }
+    else {
+      setTimeout(() => {
+        this.mapData();
+      }, 100);
+    }
   }
 
   updateRolesUsersSavedForItem(elem: any) {
@@ -130,6 +142,7 @@ export class ApprovalGroupsComponent implements OnInit {
           ctrl.allRoles.push({ label: x.name, value: x.id });
         });
         ctrl.backendRoles = response.object;
+        ctrl.getBackendRoles = true;
       }));
   }
 

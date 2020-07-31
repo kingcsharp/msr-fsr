@@ -9,6 +9,8 @@ namespace MSR.Domain.Models
         public PartModel()
         {
             CreateSubParts = new HashSet<SubPartModel>();
+            Files = new HashSet<FileModel>();
+            IsPending = false;
         }
         public string Name { get; set; }
         public string PartNumber { get; set; }
@@ -19,5 +21,11 @@ namespace MSR.Domain.Models
         public string CreatedByName { get; set; }
         public string LastUpdatedByName { get; set; }
         public virtual ICollection<SubPartModel> CreateSubParts { get; set; }
+        public virtual ICollection<FileModel> Files { get; set; }
+        public bool? IsActive { get; set; }
+
+        // Set to "true" if the system put the data in
+        // the PartApproval table, and there is now new Part row.
+        public bool IsPending;
     }
 }

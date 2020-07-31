@@ -1368,7 +1368,8 @@ body .ui-multiselect .ui-multiselect-label {
   right: -2px;
 }
 
-form .ui-multiselect,form .ui-dropdown{
+form .ui-multiselect,
+form .ui-dropdown {
   width: 100%;
   background: #1d232a;
 }
@@ -1432,7 +1433,8 @@ body .ui-datepicker .ui-datepicker-header {
   border-radius: 0;
 }
 
-body .ui-datepicker table td.ui-datepicker-today > a, body .ui-datepicker table td.ui-datepicker-today > span {
+body .ui-datepicker table td.ui-datepicker-today > a,
+body .ui-datepicker table td.ui-datepicker-today > span {
   background-color: #5b6777;
   color: #ffffff;
 }
@@ -1441,14 +1443,16 @@ body .ui-datepicker:not(.ui-state-disabled) table td a:not(.ui-state-active):not
   background-color: #5b6877;
 }
 
-body .ui-datepicker .ui-datepicker-header .ui-datepicker-prev, body .ui-datepicker .ui-datepicker-header .ui-datepicker-next {
+body .ui-datepicker .ui-datepicker-header .ui-datepicker-prev,
+body .ui-datepicker .ui-datepicker-header .ui-datepicker-next {
   cursor: pointer;
   top: 0;
   color: #ffffff;
   transition: color 0.2s, box-shadow 0.2s;
 }
 
-body .ui-datepicker table td > a, body .ui-datepicker table td > span {
+body .ui-datepicker table td > a,
+body .ui-datepicker table td > span {
   display: block;
   text-align: center;
   color: #ffffff;
@@ -1457,12 +1461,13 @@ body .ui-datepicker table td > a, body .ui-datepicker table td > span {
   border-radius: 3px;
 }
 
-body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker-prev:hover, body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker-next:hover {
+body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker-prev:hover,
+body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker-next:hover {
   color: #5e6b7a;
 }
 /*END DATE TIME PICKERS*/
 
-.switch{
+.switch {
   box-sizing: content-box;
 }
 
@@ -1477,17 +1482,17 @@ body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker
   transition: all ease 0.2s;
   -webkit-transition: all ease 0.2s;
   border-radius: 20px;
-  box-shadow: inset 0 0 1px rgba(0,0,0,.5);
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
 }
 .switch i:before {
   display: block;
-  content: '';
+  content: "";
   width: 30px;
   height: 30px;
   padding: 1px;
   border-radius: 20px;
   background: white;
-  box-shadow: 0 1px 2px rgba(0,0,0,.5);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 .switch :checked + i {
   padding-right: 0;
@@ -1520,26 +1525,26 @@ body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker
 
 .form-group.has-warning .fileinput {
   .fileinput-preview {
-    color: theme-color('warning');
+    color: theme-color("warning");
   }
   .thumbnail {
-    border-color: theme-color('warning');
+    border-color: theme-color("warning");
   }
 }
 .form-group.has-error .fileinput {
   .fileinput-preview {
-    color: theme-color('danger');
+    color: theme-color("danger");
   }
   .thumbnail {
-    border-color: theme-color('danger');
+    border-color: theme-color("danger");
   }
 }
 .form-group.has-success .fileinput {
   .fileinput-preview {
-    color: theme-color('success');
+    color: theme-color("success");
   }
   .thumbnail {
-    border-color: theme-color('success');
+    border-color: theme-color("success");
   }
 }
 
@@ -1549,12 +1554,11 @@ body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker
   padding: 1px 6px;
 }
 
-
 /**
  * Dropzone
  */
 
-.dropzone{
+.dropzone {
   border: 2px dashed #ccc;
   @include border-radius($border-radius);
 }
@@ -1567,7 +1571,8 @@ body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker
   display: block;
   border: 1px solid $table-border-color;
 
-  > .md-header, .md-footer {
+  > .md-header,
+  .md-footer {
     display: block;
     padding: 6px 4px;
     background: $gray-light;
@@ -1590,7 +1595,7 @@ body .ui-datepicker:not(.ui-state-disabled) .ui-datepicker-header .ui-datepicker
     font-family: $font-family-monospace;
     font-size: $font-size-base;
     outline: 0;
-    outline: thin dotted  \9; /* IE6-9 */
+    outline: thin dotted \9; /* IE6-9 */
     margin: 0;
     display: block;
     width: 100%;
@@ -1645,7 +1650,7 @@ $slider-handle-size: 26px;
     }
     .slider-handle {
       margin-left: -$slider-handle-size/2;
-      margin-top: -$slider-handle-size*3/8;
+      margin-top: -$slider-handle-size * 3/8;
       &.triangle {
         border-width: 0 $slider-line-height/2 $slider-line-height/2 $slider-line-height/2;
         width: 0;
@@ -1672,7 +1677,7 @@ $slider-handle-size: 26px;
       bottom: 0;
     }
     .slider-handle {
-      margin-left: -$slider-handle-size*3/8;
+      margin-left: -$slider-handle-size * 3/8;
       margin-top: -$slider-handle-size/2;
       &.triangle {
         border-width: $slider-line-height/2 0 $slider-line-height/2 $slider-line-height/2;
@@ -1778,7 +1783,6 @@ $slider-handle-size: 26px;
   resize: none;
 }
 
-
 /**
 * datetime
 **/
@@ -1792,7 +1796,8 @@ $slider-handle-size: 26px;
 
 /* Awesome Bootstrap Checkbox */
 
-.abc-checkbox, .abc-radio {
+.abc-checkbox,
+.abc-radio {
   margin-bottom: 0.5rem;
 }
 
@@ -1853,18 +1858,18 @@ $slider-handle-size: 26px;
   }
 }
 
-input.parsley-error{
-  border-color: theme-color('danger');
+input.parsley-error {
+  border-color: theme-color("danger");
 }
 
-.parsley-errors-list{
+.parsley-errors-list {
   font-size: $small-font-size;
   padding-left: 0;
   margin-bottom: 5px;
 
-  li{
+  li {
     list-style: none;
-    color: theme-color('danger');
+    color: theme-color("danger");
   }
 }
 
@@ -1890,8 +1895,60 @@ input.parsley-error{
   }
 }
 
-.partTbl{
-  p-paginator p-dropdown{
-      float: left;
+.partTbl {
+  p-paginator p-dropdown {
+    float: left;
   }
+}
+
+.ui-fileupload.ui-widget {
+  min-width: 300px;
+}
+
+.ui-fileupload.ui-widget .ui-button,
+.ui-fileupload-choose.ui-button,
+body .ui-fileupload .ui-fileupload-buttonbar,
+body .ui-fileupload .ui-fileupload-content {
+  background-color: #262e37;
+  border: 1px solid #c8c8c8;
+  color: #fff;
+}
+
+p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
+.ui-fileupload.ui-widget .ui-button:not(.ui-state-disabled):hover,
+.ui-fileupload-choose.ui-button:not(.ui-state-disabled):hover {
+  background-color: #f8f8f8;
+  border-color: #f8f8f8;
+  color: #262e37;
+}
+
+.currFiles {
+  margin-right: 5px;
+  i {
+    margin-right: 2px;
+  }
+}
+
+.fa-file-csv,
+.fa-file-pdf,
+.fa-file-word,
+.fa-file-excel,
+.fa-file-alt {
+  --fa-secondary-color: white;
+  --fa-secondary-opacity: 1.0;
+}
+
+.fa-file-csv,.fa-file-excel {
+  --fa-primary-color: green;
+}
+
+.fa-file-pdf {
+  --fa-primary-color: red;
+}
+
+.fa-file-word {
+  --fa-primary-color: blue;
+}
+.fa-file-alt {
+  --fa-primary-color: gray;;
 }
