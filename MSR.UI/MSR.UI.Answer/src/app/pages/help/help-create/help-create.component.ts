@@ -46,7 +46,7 @@ export class HelpCreateComponent implements OnInit {
       }else{
 
         this.helpPageToEdit = new HelpPage();
-        this.helpPageToEdit.content = 'Sample Content';
+        this.helpPageToEdit.content = '';
       }
 
     });
