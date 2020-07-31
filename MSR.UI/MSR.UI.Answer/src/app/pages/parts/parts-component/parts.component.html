@@ -14,7 +14,8 @@
           data-cy="add-button">
           + Add
         </button>
-        <csv-import [showButton]="canCreate" [menuItem]="menuItems.Parts" title="Import Sub Parts" (onUpload)="uploadParts($event)"></csv-import>
+        <csv-import [showButton]="canCreate" [menuItem]="menuItems.Parts" title="Import Sub Parts"
+          (onUpload)="uploadParts($event)"></csv-import>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
           [gridVersion]="gridVersion" data-cy="usergrid-options">
         </grid-options>
@@ -162,7 +163,6 @@
             (click)="showDialog(partmodel)"></i>
           <i class="far fa-trash-alt pointer" tooltip="Delete Part" data-cy="deleteRow"
             (click)="removeRow(partmodel)"></i>
-          
         </td>
       </tr>
     </ng-template>
@@ -267,43 +267,58 @@
           </div>
           <div class="form-group row">
             <label for="demo[]" class="col-md-2 col-form-label text-md-right">
-              Current Files
-            </label>
-            <div class="col-md-8">
-              <div>
-                <span class="pointer currFiles" *ngFor="let file of currPart.files">
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'"
-                    class="fad fa-file-word fa-6x"></i>
-                  <i tooltip="{{file.name}}"
-                    *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
-                    class="fad fa-file-word fa-6x"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="fad fa-file-alt fa-6x"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fad fa-file-alt fa-6x"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/csv'" class="fad fa-file-csv fa-6x"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/pdf'"
-                    class="fad fa-file-pdf fa-6x"></i>
-                  <i tooltip="{{file.name}}"
-                    *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
-                    class="fad fa-file-excel fa-6x"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/tiff'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/webp'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
-                  <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
-                    (click)="removeFile(file)"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="demo[]" class="col-md-2 col-form-label text-md-right">
               Files
             </label>
-            <p-fileUpload name="demo[]" url="./upload.php" customUpload="true" (onSelect)="myUploader($event)"
-             (onRemove)="removeuploadFile($event)" [showUploadButton]="false" [showCancelButton]="false"
-              multiple="multiple" accept="" maxFileSize="1000000000">
+            <p-fileUpload class="col-md-10" name="demo[]" url="./upload.php" customUpload="true"
+              (onSelect)="myUploader($event)" (onRemove)="removeuploadFile($event)" [showUploadButton]="false"
+              [showCancelButton]="false" multiple="multiple" accept="" maxFileSize="1000000000"
+              cancelIcon="far fa-trash-alt">
               <ng-template pTemplate="content">
+                <ul *ngIf="currPart.files !==undefined && currPart.files.length>0">
+                  <li class="row fileLi" *ngFor="let file of currPart.files">
+                    <div class="col-sm-2 col-md-2 col-lg-1 text-center">
+                      <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'"
+                        class="fad fa-file-word"></i>
+                      <i tooltip="{{file.name}}"
+                        *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
+                        class="fad fa-file-word"></i>
+                      <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'"
+                        class="fad fa-file-alt"></i>
+                      <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'"
+                        class="fad fa-file-alt"></i>
+                      <i tooltip="{{file.name}}"
+                        *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'"
+                        class="fad fa-file-powerpoint"></i>
+                      <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/csv'"
+                        class="fad fa-file-csv"></i>
+                      <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/pdf'"
+                        class="fad fa-file-pdf"></i>
+                      <i tooltip="{{file.name}}"
+                        *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+                        class="fad fa-file-excel"></i>
+                      <img
+                        src="https://msrfsr.s3.amazonaws.com/Part-8965-alec.jpg?AWSAccessKeyId=AKIAICSMBG7PI54MHTTQ&Expires=1596178352&Signature=1zQKCqqwDicMWubL%2FucyvxoMkR4%3D"
+                        *ngIf="file.contentType == 'image/gif'" width="50" class="ng-star-inserted" />
+                      <img
+                        src="https://msrfsr.s3.amazonaws.com/Part-8965-alec.jpg?AWSAccessKeyId=AKIAICSMBG7PI54MHTTQ&Expires=1596178352&Signature=1zQKCqqwDicMWubL%2FucyvxoMkR4%3D"
+                        *ngIf="file.contentType == 'image/tiff'" width="50" class="ng-star-inserted" />
+                      <img
+                        src="https://msrfsr.s3.amazonaws.com/Part-8965-alec.jpg?AWSAccessKeyId=AKIAICSMBG7PI54MHTTQ&Expires=1596178352&Signature=1zQKCqqwDicMWubL%2FucyvxoMkR4%3D"
+                        *ngIf="file.contentType == 'image/webp'" width="50" class="ng-star-inserted" />
+                      <img
+                        src="https://msrfsr.s3.amazonaws.com/Part-8965-alec.jpg?AWSAccessKeyId=AKIAICSMBG7PI54MHTTQ&Expires=1596178352&Signature=1zQKCqqwDicMWubL%2FucyvxoMkR4%3D"
+                        *ngIf="file.contentType == 'image/jpeg'" width="50" class="ng-star-inserted" />
+                      <img
+                        src="https://msrfsr.s3.amazonaws.com/Part-8965-alec.jpg?AWSAccessKeyId=AKIAICSMBG7PI54MHTTQ&Expires=1596178352&Signature=1zQKCqqwDicMWubL%2FucyvxoMkR4%3D"
+                        *ngIf="file.contentType == 'image/png'" width="50" class="ng-star-inserted" />
+                    </div>
+                    <div class="col-sm-9  col-md-9 col-lg-10">{{file.name}}</div>
+                    <div class="col-sm-1 col-md-1">
+                      <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
+                        (click)="removeFile(file)"></i>
+                    </div>
+                  </li>
+                </ul>
               </ng-template>
             </p-fileUpload>
           </div>

@@ -238,7 +238,7 @@ export class PartsComponent implements OnInit {
   }
 
   removeFile(file) {
-    var currIndex = this.currPart.files.findIndex(x => x.id === file.id);
+    var currIndex = this.currPart.files.findIndex(x => x.fileId === file.fileId);
     this.currPart.files.splice(currIndex, 1);
   }
 

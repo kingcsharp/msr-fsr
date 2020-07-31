@@ -17,7 +17,7 @@ export class GridFileViewerComponent implements OnInit {
   selectedDocUrl: string;
   display: boolean = false;
   viewer: string;
-  selectedFile:FileModel;
+  selectedFile: FileModel;
 
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem;
@@ -60,6 +60,7 @@ export class GridFileViewerComponent implements OnInit {
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
       case 'application/vnd.ms-excel':
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
         return 'office';
       case 'text/plain':
       case 'text/html':
