@@ -7,6 +7,7 @@ using MSR.Infrastructure.Helpers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using MSR.Domain.Models;
 
 namespace MSR.Infrastructure.Resources.AWS
 {

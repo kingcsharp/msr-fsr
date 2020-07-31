@@ -1317,13 +1317,15 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (parentId !== undefined && parentId !== null)
             url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1993,6 +1995,61 @@ export class PartService {
             }));
         }
         return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    import(version: string, req: ImportPartsRequest): Observable<AuditActionResultOfICollectionOfInteger> {
+        let url_ = this.baseUrl + "/v{version}/Part/import";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(req);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processImport(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processImport(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processImport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfInteger> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfInteger.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfInteger>(<any>null);
     }
 }
 
@@ -4973,7 +5030,6 @@ export class User implements IUser {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
-    fullName?: string | undefined;
 
     constructor(data?: IUser) {
         if (data) {
@@ -5016,7 +5072,6 @@ export class User implements IUser {
                 for (let item of _data["roles"])
                     this.roles!.push(Role.fromJS(item));
             }
-            this.fullName = _data["fullName"];
         }
     }
 
@@ -5059,7 +5114,6 @@ export class User implements IUser {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
-        data["fullName"] = this.fullName;
         return data; 
     }
 }
@@ -5091,7 +5145,6 @@ export interface IUser {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
-    fullName?: string | undefined;
 }
 
 export class Role implements IRole {
@@ -5563,6 +5616,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
     locationId?: number | undefined;
     primaryContactUserId?: number | undefined;
     secondaryContactUserId?: number | undefined;
+    customerNumber?: string | undefined;
 
     constructor(data?: ICreateCustomerRequest) {
         if (data) {
@@ -5581,6 +5635,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
             this.locationId = _data["locationId"];
             this.primaryContactUserId = _data["primaryContactUserId"];
             this.secondaryContactUserId = _data["secondaryContactUserId"];
+            this.customerNumber = _data["customerNumber"];
         }
     }
 
@@ -5599,6 +5654,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
         data["locationId"] = this.locationId;
         data["primaryContactUserId"] = this.primaryContactUserId;
         data["secondaryContactUserId"] = this.secondaryContactUserId;
+        data["customerNumber"] = this.customerNumber;
         return data; 
     }
 }
@@ -5610,6 +5666,7 @@ export interface ICreateCustomerRequest {
     locationId?: number | undefined;
     primaryContactUserId?: number | undefined;
     secondaryContactUserId?: number | undefined;
+    customerNumber?: string | undefined;
 }
 
 export class UpdateCustomerRequest implements IUpdateCustomerRequest {
@@ -5621,6 +5678,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
     secondaryContactUserId?: number | undefined;
     customerId!: number;
     isActive?: boolean | undefined;
+    customerNumber?: string | undefined;
 
     constructor(data?: IUpdateCustomerRequest) {
         if (data) {
@@ -5641,6 +5699,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
             this.secondaryContactUserId = _data["secondaryContactUserId"];
             this.customerId = _data["customerId"];
             this.isActive = _data["isActive"];
+            this.customerNumber = _data["customerNumber"];
         }
     }
 
@@ -5661,6 +5720,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
         data["secondaryContactUserId"] = this.secondaryContactUserId;
         data["customerId"] = this.customerId;
         data["isActive"] = this.isActive;
+        data["customerNumber"] = this.customerNumber;
         return data; 
     }
 }
@@ -5674,6 +5734,7 @@ export interface IUpdateCustomerRequest {
     secondaryContactUserId?: number | undefined;
     customerId: number;
     isActive?: boolean | undefined;
+    customerNumber?: string | undefined;
 }
 
 export class AuditActionResultOfICollectionOfFileModel extends AuditActionResult implements IAuditActionResultOfICollectionOfFileModel {
@@ -7306,6 +7367,83 @@ export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartR
 
 export interface IUpdatePartRequest extends ICreatePartRequest {
     id: number;
+}
+
+export class AuditActionResultOfICollectionOfInteger extends AuditActionResult implements IAuditActionResultOfICollectionOfInteger {
+    object?: number[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfInteger) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfInteger {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfInteger();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item);
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfInteger extends IAuditActionResult {
+    object?: number[] | undefined;
+}
+
+export class ImportPartsRequest implements IImportPartsRequest {
+    base64Data!: string;
+
+    constructor(data?: IImportPartsRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.base64Data = _data["base64Data"];
+        }
+    }
+
+    static fromJS(data: any): ImportPartsRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new ImportPartsRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["base64Data"] = this.base64Data;
+        return data; 
+    }
+}
+
+export interface IImportPartsRequest {
+    base64Data: string;
 }
 
 export class AuditActionResultOfICollectionOfProcedure extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedure {
