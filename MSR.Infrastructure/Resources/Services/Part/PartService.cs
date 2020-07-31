@@ -6,12 +6,16 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Newtonsoft.Json;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Role
@@ -176,6 +180,36 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var ret = _mapper.Map<PartModel>(current);
             return ret;
+        }
+
+        public async Task<ICollection<int>> ImportPartsAsync(ImportParts command)
+        {
+            byte[] data = Convert.FromBase64String(command.base64Data);
+            string csvdata = Encoding.UTF8.GetString(data);
+            IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvdata);
+            List<int> ids = new List<int>();
+
+            if (!DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove)) {
+                // importing parts requiring appoval is not supported
+                throw new DomainException("Permission denied for import", DomainError.BadRequest);
+            }
+
+            foreach (PartCSVRecord record in records) {
+                if (record.Id > 0) {
+                    var part = await UpdatePartAsync(
+                        _mapper.Map<UpdatePart>(record)
+                    );
+                    ids.Add(part.Id);
+                } else {
+                    var part = await CreatePartAsync(
+                        _mapper.Map<CreatePart>(record)
+                    );
+                    ids.Add(part.Id);
+
+                }
+            }
+
+            return ids;
         }
 
         private int GetWorkflowID()

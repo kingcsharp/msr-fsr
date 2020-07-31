@@ -6,7 +6,6 @@ import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { TrendModule } from 'ngx-trend';
 import { UtilsModule } from '../../layout/utils/utils.module';
 import { RickshawChartModule } from '../../components/rickshaw/rickshaw.module';
 import { LiveTileModule } from '../../components/tile/tile.module';
@@ -39,7 +38,6 @@ export const routes = [
     RouterModule.forChild(routes),
     WidgetModule,
     ProgressbarModule.forRoot(),
-    TrendModule,
     CheckboxModule,
     MultiSelectModule,
     BsDropdownModule.forRoot(),

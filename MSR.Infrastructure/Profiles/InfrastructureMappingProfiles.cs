@@ -173,6 +173,9 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<MenuItem, Domain.Models.MenuItem>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore()).ReverseMap();
             CreateMap<MenuGroup, Domain.Models.MenuGroup>().ReverseMap();
+
+            CreateMap<PartCSVRecord, UpdatePart>();
+            CreateMap<PartCSVRecord, CreatePart>();
         }
     }
 }

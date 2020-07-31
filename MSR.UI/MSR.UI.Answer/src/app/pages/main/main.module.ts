@@ -9,7 +9,7 @@ import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { TrendModule } from 'ngx-trend';
+// import { TrendModule } from 'ngx-trend';
 import { TaskContainerComponent } from './analytics/components/task-container/task-container.component';
 import { TaskComponent } from './analytics/components/task/task';
 import { VisitsComponent } from './visits/visits.component';
@@ -83,7 +83,7 @@ export const routes = [
     RouterModule.forChild(routes),
     WidgetModule,
     ProgressbarModule.forRoot(),
-    TrendModule,
+    // TrendModule,
     CheckboxModule,
     MultiSelectModule,
     BsDropdownModule.forRoot(),

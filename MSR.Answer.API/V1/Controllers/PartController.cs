@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
@@ -8,7 +9,9 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using NSwag.Annotations;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -43,7 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = newpart.ToCreatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             var message = "Part was successfully submitted to workflow for approval.";
-            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault())
+            if (!(ret as ICommandResponse<PartModel>).Data.IsPending)
             {
                 message = "Part was successfully added.";
             }
@@ -58,7 +61,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = newpart.ToUpdatePartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             var message = "Part update was successfully submitted to workflow for approval.";
-            if ((ret as ICommandResponse<PartModel>).Data.IsActive.GetValueOrDefault())
+            if (!(ret as ICommandResponse<PartModel>).Data.IsPending)
             {
                 message = "Part was successfully updated.";
             }
@@ -75,6 +78,18 @@ namespace MSR.Answer.API.V1.Controllers
             };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<PartModel>("Part was successfully removed.");
+        }
+
+        [HttpPost("import")]
+        [HasPrivilegeApi("Parts", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<int>>))]
+        public async Task<IActionResult> ImportParts(ImportPartsRequest req)
+        {
+            var command = new ImportParts() {
+                base64Data = req.base64Data
+            };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<int>>("Parts successfully imported");
         }
     }
 }
