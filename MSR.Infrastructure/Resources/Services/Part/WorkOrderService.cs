@@ -58,22 +58,20 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             WorkOrderModel ret;
 
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            if (!DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
-                WorkOrder workorder = _mapper.Map<WorkOrder>(command);
-
-                _unitOfWork.WorkOrders.Add(workorder);
-
-                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
-
-                ret = DetachBackPointers(
-                    _mapper.Map<Domain.Models.WorkOrderModel>(workorder)
-                );
+                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
             }
-            else
-            {
-                throw new DomainException($"Permission deined for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
-            }
+
+            WorkOrder workorder = _mapper.Map<WorkOrder>(command);
+
+            _unitOfWork.WorkOrders.Add(workorder);
+
+            await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+
+            ret = DetachBackPointers(
+                _mapper.Map<Domain.Models.WorkOrderModel>(workorder)
+            );
 
             return ret;
         }
@@ -86,22 +84,19 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
+            if (!DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            {
+                throw new DomainException($"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
+            }
+
             WorkOrderModel ret;
+            var workorder = _mapper.Map(command, current);
+            _unitOfWork.WorkOrders.Update(workorder);
 
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
-            {
-                var workorder = _mapper.Map(command, current);
-                _unitOfWork.WorkOrders.Update(workorder);
+            // This will call SaveChangesAsync
+            await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
-                // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
-
-                ret = _mapper.Map<Domain.Models.WorkOrderModel>(workorder);
-            }
-            else
-            {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
-            }
+            ret = _mapper.Map<Domain.Models.WorkOrderModel>(workorder);
 
             return ret;
 
@@ -115,15 +110,15 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove)) {
-                var workorder = _mapper.Map(command, current);
-                _unitOfWork.WorkOrders.Delete(false, workorder.Id);
-
-                // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
-            } else {
-                throw new DomainException($"Permission deined for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
+            if (!DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove)) {
+                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
             }
+
+            var workorder = _mapper.Map(command, current);
+            _unitOfWork.WorkOrders.Delete(false, workorder.Id);
+
+            // This will call SaveChangesAsync
+            await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
             return true;
         }
