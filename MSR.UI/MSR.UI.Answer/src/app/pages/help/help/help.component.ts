@@ -78,7 +78,7 @@ export class HelpComponent implements OnInit {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(helpPage: HelpPage) {
+  closeConfirmDeleteDialog() {
     this.helpPageToDelete = null;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }

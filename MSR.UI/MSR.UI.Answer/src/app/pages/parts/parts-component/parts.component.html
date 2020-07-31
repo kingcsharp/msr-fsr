@@ -5,7 +5,7 @@
 
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
@@ -341,7 +341,7 @@
             <widget>
               <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
                 [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
-                [loading]="loading" [paginator]="true"
+                [paginator]="true"
                 currentPageReportTemplate="Showing {first}-{last} of {{currPart.createSubParts.length}}"
                 [filterDelay]="0">
                 <ng-template pTemplate="header">

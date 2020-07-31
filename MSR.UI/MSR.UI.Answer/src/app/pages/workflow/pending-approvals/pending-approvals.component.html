@@ -4,7 +4,7 @@
 </h1>
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
     stateKey="{{gridStorageId}}" data-cy="table-container">
     <ng-template pTemplate="caption">
@@ -184,7 +184,7 @@
 </h1>
 <widget>
   <p-table #dt2 [value]="productData" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {{productData.length}}" [filterDelay]="0" stateStorage="local"
     stateKey="{{gridStorageId2}}" data-cy="table-container2">
     <ng-template pTemplate="caption">

@@ -22,7 +22,7 @@ export class CustomersComponent implements OnInit {
   canAddLocation: boolean = false;
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
-
+  data: any[] = [];
   constructor(private customerService: CustomerService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
