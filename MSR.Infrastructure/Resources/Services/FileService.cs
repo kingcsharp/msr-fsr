@@ -76,7 +76,7 @@ namespace MSR.Infrastructure.Resources.Services
                 .Where(x => x.EntityTableName == tableName && entityIds.Contains(x.EntityId))
                 .Select(x => new FileModel()
                 {
-                    FileId = x.Id,
+                    FileId = x.FileId,
                     Name = x.FileObject.Name,
                     FileURL = "", // Not available here because it requires a call to AWS
                     EntityId = x.EntityId,

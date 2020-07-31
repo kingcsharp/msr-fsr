@@ -28,6 +28,7 @@ import { ApproveEntityComponent } from '../../../app/components/aproove-entity/a
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
+import { CsvImportComponent } from '../../../app/components/csv-import/csv-import.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     PcalendarWrapperComponent,
     GridOptionsComponent,
     GridFileViewerComponent,
-    ApproveEntityComponent
+    ApproveEntityComponent,
+    CsvImportComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -49,7 +51,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     GridOptionsComponent,
     FileUploadModule,
     GridFileViewerComponent,
-    ApproveEntityComponent
+    ApproveEntityComponent,
+    CsvImportComponent
   ],
   imports: [
     CommonModule,
