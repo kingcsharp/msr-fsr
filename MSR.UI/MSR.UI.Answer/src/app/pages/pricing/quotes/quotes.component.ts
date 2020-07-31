@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { Globals } from '../../../models/lib/globals';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { ViewSaved } from '../../../models/lib/ViewSaved';
+import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
+import { CommonGrid } from '../../../models/lib/CommonGrid';
 
 @Component({
   selector: 'app-quotes',
@@ -6,10 +11,177 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./quotes.component.scss']
 })
 export class QuotesComponent implements OnInit {
+  privileges = EnumPrivilege;
+  defaultView: ViewSaved;
+  gridStorageId: string;
+  gridSettings: ColumnsSaved[];
+  gridVersion: string;
+  data: any;
+  canStartQuote: boolean = false;
+  canDeleteQuote: boolean = false;
+  canEditProduct: boolean = false;
+  canViewProduct: boolean = false;
 
-  constructor() { }
+  constructor(
+    public globals: Globals,
+    public cg: CommonGrid,
+    private elem: ElementRef,
+  ) { }
 
   ngOnInit(): void {
+    this.gridVersion = '1.0.0';
+    this.gridStorageId = 'quotesGrid' + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridSettings = [
+      new ColumnsSaved({ id: 'submittedDate', label: 'Submitted Date', visible: true }),
+      new ColumnsSaved({ id: 'company', label: 'Company', visible: true }),
+      new ColumnsSaved({ id: 'submittedBy', label: 'Submitted By', visible: true }),
+      new ColumnsSaved({ id: 'partKitNo', label: 'Part/Kit Number', visible: true }),
+      new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true }),
+      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
+      new ColumnsSaved({ id: 'representative', label: 'Representative', visible: false }),
+      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
+      new ColumnsSaved({ id: 'equipmentCost', label: 'Equipment Cost', visible: false }),
+      new ColumnsSaved({ id: 'materialCost', label: 'Material Cost', visible: false }),
+      new ColumnsSaved({ id: 'salesTax', label: 'Sales Tax', visible: false }),
+      new ColumnsSaved({ id: 'totalPrice', label: 'Total Price', visible: false }),
+      new ColumnsSaved({ id: 'cycleTime', label: 'Cycle Time', visible: false }),
+      new ColumnsSaved({ id: 'lastUpdateOn', label: 'LastUpdateOn', visible: false }),
+      new ColumnsSaved({ id: 'lastUpdatedBy', label: 'LastUpdated By', visible: false })
+    ];
+    this.canStartQuote = this.hasPrivilege(this.privileges.CanCreate);
+    this.canDeleteQuote = this.hasPrivilege(this.privileges.CanDelete);
+    this.canEditProduct = this.hasPrivilege(this.privileges.CanEdit);
+    this.canViewProduct = this.hasPrivilege(this.privileges.CanRead);
+
+    this.data = []
+    this.getQuotesProducts();
+  }
+
+  hasPrivilege(privName) {
+    return this.globals.hasPrivilege(EnumMenuItem.QuotesProducts, privName);
+  }
+
+  getQuotesProducts() {
+    this.globals.showLoader(false);
+    this.data = demoData;
   }
 
 }
+
+// TODO: This is temp code, will remove when back-end APIs have done.
+interface IQuoteProduct {
+  id: number;
+  submittedDate: Date;
+  company?: string;
+  submittedBy: string;
+  partKitNo?: number | string;
+  procedureName?: string;
+  productName?: string;
+  representative?: string
+  revision: number;
+  equipmentCost?: number;
+  materialCost?: number;
+  salesTax?: number;
+  totalPrice?: number;
+  cycleTime?: number;
+  lastUpdateOn: Date;
+  lastUpdatedBy: string;
+ }
+
+class QuoteProductModel implements IQuoteProduct {
+  id: number;
+  submittedDate: Date;
+  company?: string | undefined;
+  submittedBy: string;
+  partKitNo?: number | string | undefined;
+  procedureName?: string | undefined;
+  productName?: string | undefined;
+  representative?: string | undefined
+  revision: number;
+  equipmentCost?: number | undefined;
+  materialCost?: number | undefined;
+  salesTax?: number | undefined;
+  totalPrice?: number | undefined;
+  cycleTime?: number | undefined;
+  lastUpdateOn: Date;
+  lastUpdatedBy: string;
+
+  constructor(data?: IQuoteProduct) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data["id"];
+      this.submittedDate = _data["submittedDate"];
+      this.company = _data["company"];
+      this.submittedBy = _data["submittedBy"];
+      this.partKitNo = _data["partKitNo"];
+      this.procedureName = _data["procedureName"];
+      this.productName = _data["productName"];
+      this.representative = _data["representative"];
+      this.revision = _data["revision"];
+      this.equipmentCost = _data["equipmentCost"];
+      this.materialCost = _data["equipmentCost"];
+      this.salesTax = _data["salesTax"];
+      this.totalPrice = _data["totalPrice"];
+      this.cycleTime = _data["cycleTime"];
+      this.lastUpdateOn = _data["lastUpdateOn"];
+      this.lastUpdatedBy = _data["lastUpdatedBy"]
+    }
+  }
+
+  static fromJS(data: any): QuoteProductModel {
+      data = typeof data === 'object' ? data : {};
+      let result = new QuoteProductModel();
+      result.init(data);
+      return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["id"] = this.id;
+    data["submittedDate"] = this.submittedDate;
+    data["company"] = this.company;
+    data["submittedBy"] = this.submittedBy;
+    data["partKitNo"] = this.partKitNo;
+    data["procedureName"] = this.procedureName;
+    data["productName"] = this.productName;
+    data["representative"] = this.representative;
+    data["revision"] = this.revision;
+    data["equipmentCost"] = this.equipmentCost;
+    data["materialCost"] = this.materialCost;
+    data["salesTax"] = this.salesTax;
+    data["totalPrice"] = this.totalPrice;
+    data["cycleTime"] = this.cycleTime;
+    data["lastUpdateOn"] = this.lastUpdateOn;
+    data["lastUpdatedBy"] = this.lastUpdatedBy;
+    return data;
+  }
+}
+
+const demoData = [
+  new QuoteProductModel({
+    id: 0,
+    submittedDate: new Date('04/27/2020'),
+    company: '[MSR-FSR]INTEL F28 - [ID:1586]',
+    submittedBy: 'Derek',
+    partKitNo: 633014638,
+    procedureName: 'REX SS KIT Cleaning',
+    productName: '633014638 - REX Cu Small kit, 1272',
+    representative:'Derek',
+    revision: 1,
+    equipmentCost: 415.25,
+    materialCost: 500.12,
+    totalPrice: 415.09,
+    cycleTime: 2,
+    lastUpdateOn: new Date(),
+    lastUpdatedBy: 'Derek'
+  }),
+
+]
