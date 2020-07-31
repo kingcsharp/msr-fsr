@@ -12,8 +12,8 @@ import { responseHandler } from '../../../utils/responseHandler';
 })
 export class CustomerCreateComponent implements OnInit {
 
-  customer:Customer = null;
-  customerToEditId:number = 0;
+  customer: Customer = null;
+  customerToEditId: number = 0;
   constructor(private customerService: CustomerService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -23,13 +23,13 @@ export class CustomerCreateComponent implements OnInit {
 
       if (this.customerToEditId !== 0) {
 
-          this.customerService.customerGet(this.customerToEditId,null,null,null,null,null,null,null,env.apiVersion).subscribe(responseHandler((response) => {
-            
-            console.log(response);
+        this.customerService.customerGet(this.customerToEditId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
-          }));
+          console.log(response);
 
-      }else{
+        }));
+
+      } else {
 
         this.customer = new Customer();
         console.log(this.customer);

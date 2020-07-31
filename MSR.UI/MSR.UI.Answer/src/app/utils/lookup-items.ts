@@ -1,6 +1,6 @@
 export class LookUpItems {
 
-     public Countries() {
+    public Countries() {
         return [
             { label: 'Afganistan', value: 'Afganistan' },
             { label: 'Albania', value: 'Albania' },
@@ -56,7 +56,7 @@ export class LookUpItems {
             { label: 'Cook Islands', value: 'Cook Islands' },
             { label: 'Costa Rica', value: 'Costa Rica' },
             { label: 'Cote DIvoire', value: 'Cote DIvoire' },
-            { label: 'Cote D\'Ivoire', value:'Cote D\'Ivoire'},
+            { label: 'Cote D\'Ivoire', value: 'Cote D\'Ivoire' },
             { label: 'Croatia', value: 'Croatia' },
             { label: 'Cuba', value: 'Cuba' },
             { label: 'Curaco', value: 'Curaco' },
@@ -251,5 +251,4 @@ export class LookUpItems {
             { label: 'Zimbabwe', value: 'Zimbabwe' }
         ];
     }
-
 }

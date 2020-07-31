@@ -58,30 +58,30 @@ export class Globals {
     }
 
     hasPrivilege(controllerEnum, privilege) {
-        var privileges = this.user.privileges[controllerEnum];
+        const privileges = this.user.privileges[controllerEnum];
         if (privileges === undefined) {
             return false;
         }
-        var ret = privileges.indexOf(privilege) > -1;
+        const ret = privileges.indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilegeByTableName(tableName, privilege) {
-        var approvalEnum = EnumApprovalTables[tableName];
+        const approvalEnum = EnumApprovalTables[tableName];
         if (approvalEnum === undefined) {
-            console.error("tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables", EnumApprovalTables);
+            console.error('tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables', EnumApprovalTables);
         }
 
-        var ret = this.user.approvalPrivileges[approvalEnum].indexOf(privilege) > -1;
+        const ret = this.user.approvalPrivileges[approvalEnum].indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilege(activityEnumVal, privilege) {
-        var privileges = this.user.approvalPrivileges[activityEnumVal];
+        const privileges = this.user.approvalPrivileges[activityEnumVal];
         if (privileges === undefined) {
             return false;
         }
-        var ret = privileges.indexOf(privilege) > -1;
+        const ret = privileges.indexOf(privilege) > -1;
         return ret;
     }
 

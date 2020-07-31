@@ -24,7 +24,7 @@ export class LocationsComponent implements OnInit {
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
 
-  constructor(private locationService: LocationService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private locationService: LocationService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -50,16 +50,13 @@ export class LocationsComponent implements OnInit {
     this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
     this.getLocations();
-
-    
-
   }
 
   hasPrivilege(privName) {
     return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
-  getLocations(){
+  getLocations() {
     this.globals.showLoader(true);
     this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
@@ -67,12 +64,12 @@ export class LocationsComponent implements OnInit {
     }));
   }
 
-  getParentName(parentId):string{
+  getParentName(parentId): string {
 
-    return this.data.filter(s => s.id == parentId)[0].name;
+    return this.data.filter(s => s.id === parentId)[0].name;
 
   }
 
-  
+
 
 }

@@ -27,9 +27,9 @@ export class MultiselectWrapperFormComponent implements OnInit {
   }
 
   getElementValue(id) {
-    var length = this.currentOptions.length;
-    while(length--){
-      if (this.currentOptions[length].value.id == id) {
+    let length = this.currentOptions.length;
+    while (length--) {
+      if (this.currentOptions[length].value.id === id) {
         return this.currentOptions[length].value;
       }
     }
@@ -39,7 +39,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
   setSelectedObjects() {
     if (this.model !== undefined) {
       this.model.map((x) => {
-        var elem = this.getElementValue(x);
+        let elem = this.getElementValue(x);
         if (elem !== null) {
           this.selectedObjs.items.push(elem);
         }

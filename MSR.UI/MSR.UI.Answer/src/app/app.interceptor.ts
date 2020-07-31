@@ -57,7 +57,7 @@ export class AppInterceptor implements HttpInterceptor {
         if (err.error) {
           let reader = new FileReader();
           reader.onload = event => {
-            if(event.target.result === ""){
+            if (event.target.result === '') {
               this.toastr.error('Internal Server Error, please try again later.');
               return throwError(undefined);
             }

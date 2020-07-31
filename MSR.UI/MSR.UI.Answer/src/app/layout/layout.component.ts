@@ -91,7 +91,7 @@ export class Layout {
   }
 
   sidebarDisplay(display): void {
-    if(this.supportTicketModalDisplayed){
+    if (this.supportTicketModalDisplayed) {
       return;
     }
     let _display = display === 'Hide' ? true : false;
@@ -115,7 +115,7 @@ export class Layout {
     this.sidebarState = !this.sidebarState;
   }
 
-  displaySupportTicketModalDisplay():void{
+  displaySupportTicketModalDisplay(): void {
     this.supportTicketModalDisplayed = true;
   }
 }

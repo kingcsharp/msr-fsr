@@ -46,7 +46,7 @@ export class CsvImportComponent implements OnInit {
   }
 
   removeuploadFile(event) {
-    var index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
+    const index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
     this.uploadedFiles.splice(index, 1);
   }
 
@@ -57,7 +57,7 @@ export class CsvImportComponent implements OnInit {
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = function () {
-          var fileModel = new FileModel();
+          let fileModel = new FileModel();
           fileModel.name = file.name;
           fileModel.base64String = fileReader.result.toString();
           fileModel.contentType = file.type;
