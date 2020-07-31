@@ -35,6 +35,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             if (user.CanApprove(EnumMenuItem.CustomersDepartments))
             {
                 var customer = _mapper.Map<Customer>(command);
+                //Because automapper is stupid.
                 if(customer.LocationId == 0)
                 {
                     customer.LocationId = null;
@@ -51,6 +52,20 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 await _unitOfWork.Customers.AddAsync(customer);
                 await _unitOfWork.SaveChangesAsync();
                 retCustomer = _mapper.Map<Domain.Models.Customer>(customer);
+                //We are doing this because Automapper won't let us have nulls for some reason. 
+                if(retCustomer.Location.Id == 0)
+                {
+                    retCustomer.Location = null;
+                }             
+                if(retCustomer.PrimaryContactUser.Id == 0)
+                {
+                    retCustomer.PrimaryContactUser = null;
+                }             
+                if(retCustomer.SecondaryContactUser.Id == 0)
+                {
+                    retCustomer.SecondaryContactUser = null;
+                }
+                
 
                 await _unitOfWork.LogApprovalTransaction(customer, customer.Id);
             }

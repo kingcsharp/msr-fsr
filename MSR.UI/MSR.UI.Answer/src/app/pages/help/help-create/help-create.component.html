@@ -10,7 +10,7 @@
                 <label for="title" class="col-form-label text-left">
                     Title
                 </label>
-                <input type="text" id="title" name="title" [(ngModel)]="helpPageToEdit.title"
+                <input type="text" id="title" name="title" [(ngModel)]="helpPageToEdit.title" data-cy="title-input"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Title of Help Page"
                     placeholder="" data-cy="title-input">
@@ -19,13 +19,8 @@
                 <label for="friendlyurl" class="col-form-label text-left">
                     Friendly Url
                 </label>
-                <!--<input type="text" id="friendlyurl" name="friendlyurl" [(ngModel)]="helpPageToEdit.friendlyURL"
-                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
-                    data-parsley-required="true" class="form-control input-transparent"
-                    tooltip="Friendly Url of Help Page" placeholder="Url of the page e.g. Parts/Update Or Parts"
-                    data-cy="friendlyurl-input">-->
             <div class="col-12">
-                <p-dropdown placeholder="Select Url" name="friendlyurl" [options]="urls" showClear="true" appendTo="body"
+                <p-dropdown placeholder="Select Url" name="friendlyurl" [options]="urls" showClear="true" appendTo="body" data-cy="friendlyurl-dropdown"
                     [(ngModel)]="helpPageToEdit.friendlyURL">
                 </p-dropdown>
             </div>
@@ -40,7 +35,7 @@
                 <label for="roles" class="col-form-label text-left">
                     Roles
                 </label>
-                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles" optionLabel="name"
+                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles" optionLabel="name" data-cy="roles-multiselect"
                     [itemSize]="15" [baseZIndex]="100002" appendTo="body">
                     <ng-template let-value pTemplate="selectedItems">
                         <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">
@@ -53,7 +48,7 @@
         </form>
     </div>
     <div class="row">
-        <button type="button" class="btn btn-primary m-2" (click)="saveHelpPage()" *ngIf="helpPageToEditId == 0">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="saveHelpPage()" *ngIf="helpPageToEditId == 0" data-cy="save-button">Save</button>
         <button type="button" class="btn btn-primary m-2" (click)="updateHelpPage()" *ngIf="helpPageToEditId != 0">Update</button>
         <button type="button" class="btn btn-warning m-2" [routerLink]="['../help']">Cancel</button>
     </div>

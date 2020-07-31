@@ -1,5 +1,4 @@
-﻿
-namespace MSR.Domain.Models.Config
+﻿namespace MSR.Domain.Models.Config
 {
     public class S3Information
     {
