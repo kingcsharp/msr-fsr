@@ -49,7 +49,7 @@
     </div>
     <div class="row">
         <button type="button" class="btn btn-primary m-2" (click)="saveHelpPage()" *ngIf="helpPageToEditId == 0" data-cy="save-button">Save</button>
-        <button type="button" class="btn btn-primary m-2" (click)="updateHelpPage()" *ngIf="helpPageToEditId != 0">Update</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateHelpPage()" *ngIf="helpPageToEditId != 0" data-cy="update-button">Update</button>
         <button type="button" class="btn btn-warning m-2" [routerLink]="['../help']">Cancel</button>
     </div>
 </div>

@@ -4,7 +4,7 @@ import { environment as env } from '../../../../environments/environment'
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -20,10 +20,14 @@ export class CustomersComponent implements OnInit {
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
-  canAddLocation: boolean = false;
-  canEditLocation: boolean = false;
-  canDeleteLocation: boolean = false;
+  canAddCustomer: boolean = false;
+  canEditCustomer: boolean = false;
+  canDeleteCustomer: boolean = false;
+  customerToDelete: Customer;
+  showConfirmDeleteDialog: boolean = false;
+  approvalTables = EnumApprovalTables;
 
+  
   constructor(private customerService: CustomerService, private userService:UserService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
@@ -41,19 +45,20 @@ export class CustomersComponent implements OnInit {
       new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
       new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
     ];
 
-    this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
-    this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
+    this.canAddCustomer = this.hasPrivilege(this.privileges.CanCreate);
+    this.canDeleteCustomer = this.hasPrivilege(this.privileges.CanDelete);
+    this.canEditCustomer = this.hasPrivilege(this.privileges.CanEdit);
     this.getCustomers();
 
 
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
+    return this.globals.hasPrivilege(EnumMenuItem.CustomersDepartments, privName);
   }
 
   getCustomers(){
@@ -65,6 +70,30 @@ export class CustomersComponent implements OnInit {
       this.data = response.object;
       
       this.loading = false;
+
+    }));
+
+  }
+
+  openConfirmDeleteDialog(customer: Customer){
+
+    this.customerToDelete = customer;
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+  }
+
+  closeConfirmDeleteDialog(customer: Customer){
+    this.customerToDelete = null;
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+  }
+
+  deleteCustomer(){
+
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    this.globals.showLoader(true);
+    this.customerService.customerDelete(this.customerToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+
+      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.customerToDelete.id);
+      this.data.splice(index, 1);
 
     }));
 

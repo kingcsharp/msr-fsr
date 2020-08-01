@@ -254,13 +254,13 @@ export class RoleassignmentsComponent implements OnInit {
           createMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
   
           this.menuService.rolePost(env.apiVersion,createMenuRoleMapRequest).subscribe(responseHandler((response) => {
-              console.log(response);
+
           }));
 
         }else{
 
           this.menuService.roleDelete(pendingPermission.menuModule.id,pendingPermission.roleModule.id,env.apiVersion).subscribe(responseHandler((response) => {
-              console.log(response);
+  
           }));
 
         }
@@ -276,7 +276,7 @@ export class RoleassignmentsComponent implements OnInit {
           updateMenuRoleMapRequest.canEdit = pendingPermission.roleModule.permissions.find(s => s.name === "Edit").value;
           updateMenuRoleMapRequest.canRead = pendingPermission.roleModule.permissions.find(s => s.name === "Read").value;
           this.menuService.rolePatch(env.apiVersion,updateMenuRoleMapRequest).subscribe(responseHandler((response) => {
-              console.log(response);
+
           }));
 
       }

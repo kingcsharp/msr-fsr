@@ -9,7 +9,7 @@
       stateStorage="local" stateKey="{{gridStorageId}}">
       <ng-template pTemplate="caption">
         <div class="text-right">
-          <button *ngIf="canAddLocation" [routerLink]="['../customer-create']"
+          <button *ngIf="canAddCustomer" [routerLink]="['../customer-create']"
             class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
             + Add
           </button>
@@ -125,6 +125,8 @@
                 (click)="commonGrid.filter(dt,'createdOn')"></i>
             </div>
           </th>
+          <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
+          </th>
           <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
           </th>
         </tr>
@@ -161,13 +163,24 @@
             {{customer.isActive}}
           </td>
           <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)">
-            {{customer.createdBy}}
+            {{customer.created.fullName}}
           </td>
           <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
             {{customer.createdOn | date :'short'}}
           </td>
+          <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)"  *ngIf="customer.status != null">
+            {{customer.status}}
+          </td>
+          <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="customer.status == null">
+            Approved
+          </td>
           <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-            
+            <i *ngIf="canEditCustomer" class="fa fa-cog pointer" tooltip="Edit Customer" data-cy="edit-button"
+                [routerLink]="['../customer-create']" [queryParams]="{id: customer.id}"></i>
+            <i *ngIf="canDeleteCustomer" class="fa fa-trash pointer" tooltip="Delete Customer" data-cy="delete-button"
+                      (click)="openConfirmDeleteDialog(customer)"></i>
+            <approve-entity [(show)]="showApproveButtons" [entityId]="customer.id" [activityType]="approvalTables.CustomerApproval">
+            </approve-entity>
           </td>
         </tr>
       </ng-template>
@@ -178,3 +191,20 @@
       </ng-template>
     </p-table>
   </widget>
+
+  <p-dialog header="Confirm Delete Customer" [(visible)]="showConfirmDeleteDialog" [appendTo]="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  Are you sure you want to Delete this Customer? This action cannot be undone.
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="deleteCustomer()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

@@ -1,10 +1,14 @@
 <div class="container">
   <div class="row">
-    <h1 class="page-title">
-      <i class="fas fa-life-bouy"></i>
-      Help Pages
-    </h1>
-    <helpbutton-wrapper></helpbutton-wrapper>
+    <div class="col-6">
+      <h1 class="page-title">
+        <i class="fas fa-life-bouy"></i>
+        Help Pages
+      </h1>
+    </div>
+    <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+      <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+    </div>
   </div>
   <div class="row">
     <widget>
@@ -71,7 +75,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-helpPage>
           <tr class="ui-selectable-row">
-            <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
+            <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)" data-cy="helppage-id">
               {{helpPage.id}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('title', gridSettings)">
@@ -84,8 +88,10 @@
               <span *ngFor="let role of helpPage.roles" class="badge mr-xs badge-secondary">{{role.name}}</span>
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-              <i *ngIf="canEditHelpPage" class="fa fa-cog pointer" tooltip="Edit Help Page" [routerLink]="['../help-create']"  [queryParams]="{id: helpPage.id}"></i>
-              <i *ngIf="canDeleteHelpPage" class="fa fa-trash pointer" tooltip="Delete Help Page" (click)="openConfirmDeleteDialog(helpPage)"></i>
+              <i *ngIf="canEditHelpPage" class="fa fa-cog pointer" tooltip="Edit Help Page" data-cy="edit-button"
+                [routerLink]="['../help-create']" [queryParams]="{id: helpPage.id}"></i>
+              <i *ngIf="canDeleteHelpPage" class="fa fa-trash pointer" tooltip="Delete Help Page" data-cy="delete-button"
+                (click)="openConfirmDeleteDialog(helpPage)"></i>
             </td>
           </tr>
         </ng-template>
@@ -98,15 +104,17 @@
     </widget>
   </div>
 </div>
-<p-dialog header="Confirm Delete Help Page" [(visible)]="showConfirmDeleteDialog" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog header="Confirm Delete Help Page" [(visible)]="showConfirmDeleteDialog" [appendTo]="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   Are you sure you want to Delete this Help Page? This action cannot be undone.
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="deleteHelpPage()" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+      <button type="submit" (click)="deleteHelpPage()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
         Delete
       </button>
-      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
         Cancel
       </button>
     </div>
