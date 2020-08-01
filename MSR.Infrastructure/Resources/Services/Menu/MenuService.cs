@@ -121,18 +121,27 @@ namespace MSR.Infrastructure.Resources.Services.Menu
 
         public async Task<bool> UpdateMenuRoleMapAsync(UpdateMenuRoleMap command)
         {
-            var roleMenu = await _unitOfWork.MenuRoles.FirstOrDefaultAsync(false, i => i.Id == command.MenuRoleId);
+            var roleMenu = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuRolePermission)
+                                                      .FirstOrDefaultAsync(i => i.RoleId == command.RoleId && i.MenuItemId == command.MenuId);
 
             if (roleMenu == null) { throw new DomainException("MenuRole does not exist", DomainError.BadRequest); }
 
-            var menuRolePermission = _mapper.Map<MenuRolePermission>(command);
+            if(roleMenu.MenuRolePermission is null)
+            {
+                var menuRolePermission = _mapper.Map<MenuRolePermission>(command);
 
-            menuRolePermission.MenuRole = roleMenu;
-            menuRolePermission.MenuRoleId = roleMenu.Id;
+                menuRolePermission.MenuRole = roleMenu;
+                menuRolePermission.MenuRoleId = roleMenu.Id;
 
-            await _unitOfWork.MenuRolePermissions.AddAsync(menuRolePermission);
+                await _unitOfWork.MenuRolePermissions.AddAsync(menuRolePermission);
+                await _unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+
+            roleMenu.MenuRolePermission = _mapper.Map<MenuRolePermission>(command);
+            _unitOfWork.MenuRoles.Update(roleMenu);
             await _unitOfWork.SaveChangesAsync();
-
             return true;
         }
 

@@ -128,7 +128,8 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.LocationId}", DomainError.NotFound);
             }
 
-            _unitOfWork.Locations.Delete(false, curLocation);
+            curLocation.IsActive = false;
+            _unitOfWork.Locations.Update(curLocation);
             await _unitOfWork.SaveChangesAsync();
         }
     }

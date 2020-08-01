@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(Location))]
-    public partial class Location: TrackableEntity
+    public partial class Location: DeletableEntity
     {
         public int OldId { get; set; }
 

@@ -3,12 +3,14 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Answer.Domain.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Config;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,17 +22,19 @@ namespace MSR.Answer.API.V1.Controllers
     public class FileController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private CurrentUserInformation _currentUser;
 
-        public FileController(ICommandDispatcher dispatcher)
+        public FileController(ICommandDispatcher dispatcher, CurrentUserInformation currentUser)
         {
             _dispatcher = dispatcher;
+            _currentUser = currentUser;
         }
 
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<FileModel>>))]
         public async Task<IActionResult> GetFiles([FromQuery] GetFileRequest req)
         {
-            if (!DelegateHandler.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanRead)) {
+            if (!_currentUser.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanRead)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var ret = await _dispatcher.DispatchAsync(new GetFiles() {
@@ -45,7 +49,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<FileModel>))]
         public async Task<IActionResult> AddFile(CreateFileRequest newfile)
         {
-            if (!DelegateHandler.HasPrivilege(EnumUtils.ParseMenuType(newfile.EntityName), EnumPrivilege.CanCreate)) {
+            if (!_currentUser.HasPrivilege(EnumUtils.ParseMenuType(newfile.EntityName), EnumPrivilege.CanCreate)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var command = newfile.ToCreateFileCommand();
@@ -53,11 +57,20 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<FileModel>("File was successfully added.");
         }
 
+        [HttpPost("Help")]
+        [SwaggerResponse(typeof(AuditActionResult<UploadResponse>))]
+        public async Task<IActionResult> UploadFile([FromForm]UploadFileRequest request)
+        {
+            var command = request.ToUploadFileCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<UploadResponse>("File was successfully Uploaded.");
+        }
+
         [HttpDelete]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DetachFile([FromQuery] DetachFileRequest req)
         {
-            if (!DelegateHandler.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanDelete)) {
+            if (!_currentUser.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanDelete)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var command = new DetachFile() {

@@ -40,25 +40,15 @@ namespace MSR.Infrastructure.Resources.AWS
             // pointers, and not uploading the data.
             if (!string.IsNullOrWhiteSpace(file.Base64String))
             {
-                var base64File = Base64Helper.Parse(file.Base64String);
-                var putObj = new PutObjectRequest()
-                {
-                    ContentType = base64File.ContentType,
-                    BucketName = _s3Information.FileBucketName,
-                    Key = uniqueName
-                };
-                
-                using var ms = new MemoryStream(base64File.FileContents);
-
-                putObj.InputStream = ms;
-                var response = await _s3Handler.PutObjectAsync(putObj);
-                if ((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
-                {
-                    throw new DomainException($"Attempt to Upload File: {file.Name} to S3 failed.");
-                }
+                await Upload(file.Base64String, _s3Information.FileBucketName, uniqueName);
             }
 
             return $"{uniqueName}";
+        }
+
+        public Task<string> UploadHelpFile(FileModel file)
+        {
+            return Upload(file.Base64String, _s3Information.HelpbucketName, file.Name);
         }
 
         public string GetURL(string key, int expiresInSeconds)
@@ -70,5 +60,29 @@ namespace MSR.Infrastructure.Resources.AWS
                 Expires = DateTime.Now.AddSeconds(expiresInSeconds)
             });
         }
+
+        private async Task<string> Upload(string base64String, string bucketName, string name)
+        {
+            var base64File = Base64Helper.Parse(base64String);
+            var putObj = new PutObjectRequest()
+            {
+                ContentType = base64File.ContentType,
+                BucketName = bucketName,
+                Key = name,
+            };
+
+            using var ms = new MemoryStream(base64File.FileContents);
+
+            putObj.InputStream = ms;
+            var response = await _s3Handler.PutObjectAsync(putObj);
+            if ((int)response.HttpStatusCode < 200 || (int)response.HttpStatusCode > 299)
+            {
+                throw new DomainException($"Attempt to Upload File: {name} to S3 failed.");
+            }
+
+            return $"{_s3Information.AWSURL}/{bucketName}/{name}"; 
+
+        }
+
     }
 }

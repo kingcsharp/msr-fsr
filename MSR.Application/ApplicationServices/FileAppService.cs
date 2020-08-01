@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MSR.Answer.Domain.Models;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
@@ -15,7 +16,8 @@ namespace MSR.Application.ApplicationServices
     public class FileAppService :
         ICommandHandler<GetFiles>,
         ICommandHandler<CreateFile>,
-        ICommandHandler<DetachFile>
+        ICommandHandler<DetachFile>,
+        ICommandHandler<UploadFile>
     {
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
@@ -46,6 +48,13 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _fileService.DetachFilesAsync(command.entityName, command.entityId, command.fileId);
             return new CommandResponse<int>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UploadFile command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _fileService.UploadHelpFile(command);
+            return new CommandResponse<UploadResponse>(ret);
+
         }
     }
 }

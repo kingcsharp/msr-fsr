@@ -4,6 +4,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MSR.Answer.API.V1.Extentions
@@ -254,7 +255,8 @@ namespace MSR.Answer.API.V1.Extentions
                 CanDelete = request.CanDelete,
                 CanEdit = request.CanEdit,
                 CanRead = request.CanRead,
-                MenuRoleId = request.MenuRoleId
+                RoleId = request.RoleId,
+                MenuId = request.MenuId
             };
         }
 
@@ -474,6 +476,15 @@ namespace MSR.Answer.API.V1.Extentions
         public static CreateFile ToCreateFileCommand(this CreateFileRequest request)
         {
             return AutoMapperHelper.Mapper.Map<CreateFile>(request);
+        }
+
+        public static UploadFile ToUploadFileCommand(this UploadFileRequest request)
+        {
+            var file = AutoMapperHelper.Mapper.Map<UploadFile>(request);
+            var stream = new MemoryStream();
+            request.Image.CopyTo(stream);
+            file.Base64String = Convert.ToBase64String(stream.ToArray());
+            return file;
         }
     }
 }

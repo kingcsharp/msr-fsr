@@ -80,6 +80,10 @@ namespace MSR.Answer.API.Extentions
                             return true;
                         };
 
+                        var curUser = new CurrentUserInformation(accountId, approvalPrivilegesDic, deserializedUserPrivileges);
+
+                        services.AddSingleton(curUser);
+
                         return Task.CompletedTask;
                     }
                 };

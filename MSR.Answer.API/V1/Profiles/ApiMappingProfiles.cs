@@ -40,6 +40,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateCustomerRequest, CreateCustomer>();
             CreateMap<UpdateCustomerRequest, UpdateCustomer>();
             CreateMap<CreateFileRequest, CreateFile>();
+            CreateMap<UploadFileRequest, UploadFile>();
         }
     }
 }
