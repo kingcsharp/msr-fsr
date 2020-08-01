@@ -78,7 +78,12 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());
 
             CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();
-            CreateMap<UpdateMenuRoleMap, MenuRolePermission>();
+            CreateMap<UpdateMenuRoleMap, MenuRolePermission>()
+                .ForMember(dest => dest.Created, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdated, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedOn, opts => opts.Ignore());
 
             #region Part
             CreateMap<Part, Domain.Models.PartModel>()
@@ -173,6 +178,8 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
+
+            CreateMap<UploadFile, Domain.Models.FileModel>();
         }
     }
 }

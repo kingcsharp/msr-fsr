@@ -54,7 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateMenuRoleMapCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse("Permissions added to Menu for Role");
+            return ret.ToOkObjectResponse("Permissions Added/Updated");
         }
 
         [HttpDelete("Role")]

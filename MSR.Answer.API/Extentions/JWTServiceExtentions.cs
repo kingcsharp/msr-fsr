@@ -40,11 +40,45 @@ namespace MSR.Answer.API.Extentions
                         {// return unauthorized if user no longer exists
                             context.Fail("Unauthorized");
                         }
+
+                        DelegateHandler.GetCurrentUserId = () => accountId;
+
                         string claimVal = context.Principal.FindFirst(c => c.Type == "ApprovalPrivileges").Value;
+
                         var approvalPrivilegesDic = JsonConvert.DeserializeObject<Dictionary<int, int[]>>(claimVal);
 
+                        DelegateHandler.CanApproveActivity = (EnumApprovalTables) =>
+                        {
+                            var activityToBeApproved = (int)EnumApprovalTables;
+
+                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
+                        };
+
+                        DelegateHandler.CanReadActivity = (EnumApprovalTables) =>
+                        {
+                            var activityToBeApproved = (int)EnumApprovalTables;
+
+                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanRead);
+                        };
+
                         string userPrivileges = context.Principal.FindFirst(c => c.Type == "Privileges").Value;
+
                         var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
+
+                        DelegateHandler.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
+                        {
+                            var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
+                            if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
+                            {
+                                return false;
+                            }
+
+                            return true;
+                        };
 
                         var curUser = new CurrentUserInformation(accountId, approvalPrivilegesDic, deserializedUserPrivileges);
 

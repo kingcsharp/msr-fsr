@@ -3,6 +3,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Answer.Domain.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -56,13 +57,13 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<FileModel>("File was successfully added.");
         }
 
-        [HttpPost("Upload")]
-        [SwaggerResponse(typeof(AuditActionResult<FileModel>))]
+        [HttpPost("Help")]
+        [SwaggerResponse(typeof(AuditActionResult<UploadResponse>))]
         public async Task<IActionResult> UploadFile([FromForm]UploadFileRequest request)
         {
             var command = request.ToUploadFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<FileModel>("File was successfully Uploaded.");
+            return ret.ToOkObjectResponse<UploadResponse>("File was successfully Uploaded.");
         }
 
         [HttpDelete]
