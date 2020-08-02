@@ -1,6 +1,7 @@
 <p-fileUpload class="col-md-10" name="fileUpload" url="./upload.php" customUpload="true" (onSelect)="myUploader($event)"
-    (onRemove)="removeuploadFile($event)" [showUploadButton]="false" [showCancelButton]="false" multiple="multiple"
-    accept="" maxFileSize="1000000000" cancelIcon="far fa-trash-alt">
+    (onRemove)="removeuploadFile($event)" [showUploadButton]="showUploadButton" [showCancelButton]="showCancelButton" [multiple]="multiple"
+    [accept]="accept" [chooseLabel]="chooseLabel" [maxFileSize]="maxFileSize">
+
     <ng-template pTemplate="content">
         <ul *ngIf="showLi && files !==undefined && files.length>0">
             <li class="row fileLi" *ngFor="let file of files">
@@ -25,7 +26,7 @@
                         *ngIf="file.fileId !== undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
                         width="50" class="ng-star-inserted" />
                     <img [src]="file.base64String"
-                        *ngIf="file.fileId !== undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
+                        *ngIf="file.fileId === undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
                         width="50" class="ng-star-inserted" />
                 </div>
                 <div class="col-sm-9  col-md-9 col-lg-10">{{file.name}}</div>

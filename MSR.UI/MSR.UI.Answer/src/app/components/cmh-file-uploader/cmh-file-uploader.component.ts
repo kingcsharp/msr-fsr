@@ -12,6 +12,7 @@ import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { INFERRED_TYPE } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'cmh-file-uploader',
@@ -21,6 +22,11 @@ import { Observable } from 'rxjs';
 export class CmhFileUploaderComponent implements OnInit {
   uploadedFiles: any = [];
   showLi: boolean = false;
+
+  // [showUploadButton]="false" [showCancelButton]="false" multiple="multiple"
+  //   accept="accept" maxFileSize="1000000000"
+
+
   constructor(private fileService: FileService, private globals: Globals) {
 
   }
@@ -28,7 +34,17 @@ export class CmhFileUploaderComponent implements OnInit {
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem; // Need to pick which view you are trying to get the files from
   @Output() filesChange: EventEmitter<Array<FileModel>> = new EventEmitter<Array<FileModel>>();
+  @Input() showUploadButton: boolean;
+  @Input() showCancelButton: boolean;
+  @Input() multiple: string;
+  @Input() maxFileSize: number;
+  @Input() accept: string;
+  @Input() chooseLabel: string;
   ngOnInit(): void {
+    if (this.chooseLabel === "" || this.chooseLabel === undefined) {
+      this.chooseLabel = "Select Files";
+    }
+
     if (this.files.length > 0) {
       this.globals.showLoader(true);
       this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), this.files[0].entityId, null, env.apiVersion)
