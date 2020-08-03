@@ -3,7 +3,7 @@ import { take } from 'rxjs/operators';
 import { responseHandler } from '../../utils/responseHandler';
 
 import {
-  EnumMenuItem, PartService, ImportPartsRequest
+  EnumMenuItem, PartService, ImportPartsRequest, PartModel
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 
@@ -32,11 +32,12 @@ export class CsvImportComponent implements OnInit {
   submitImport() {
     switch (this.menuItem) {
       case EnumMenuItem.Parts:
-        var imporPartReq = new ImportPartsRequest();
+        let imporPartReq = new ImportPartsRequest();
         imporPartReq.base64Data = this.uploadedFiles[0].base64String;
         this.partService.import(env.apiVersion, imporPartReq).pipe(take(1))
           .subscribe(responseHandler((resp) => {
-            this.change.emit(this.uploadedFiles);
+            this.change.emit(resp.object);
+            this.clseDialog();
           }));
         break;
     }
