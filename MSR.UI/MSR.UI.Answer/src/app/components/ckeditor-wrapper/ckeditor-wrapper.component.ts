@@ -11,7 +11,7 @@ export class CkeditorWrapperComponent implements OnInit {
 
   public Editor = ClassicEditor;
   public config: any;
-  @Input() editorcontent:string;
+  @Input() editorcontent: string;
   @Output() editorContentChange = new EventEmitter();
   constructor() { }
 
@@ -46,17 +46,17 @@ export class CkeditorWrapperComponent implements OnInit {
         withCredentials: false,
 
         // Headers sent along with the XMLHttpRequest to the upload server.
-        //headers: {
+        // headers: {
         //  'X-CSRF-TOKEN': 'CSFR-Token',
         //  Authorization: 'Bearer <JSON Web Token>'
-        //}
+        // }
       },
       // This value must be kept in sync with the language defined in webpack.config.js.
       language: 'en'
     };
   }
 
-  editorContentChanged(){
+  editorContentChanged() {
     this.editorContentChange.emit(this.editorcontent);
   }
 

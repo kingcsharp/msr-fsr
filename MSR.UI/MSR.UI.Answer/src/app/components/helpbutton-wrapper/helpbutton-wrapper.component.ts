@@ -12,15 +12,15 @@ import { responseHandler } from '../../utils/responseHandler';
 })
 export class HelpbuttonWrapperComponent implements OnInit {
   canViewHelpPage = true;
-  helpMenuUrl:string;
+  helpMenuUrl: string;
   display: boolean = false;
   helpContent: string;
 
   constructor(private router: Router, private globals: Globals, private helpService: HelpService) { }
 
   ngOnInit(): void {
-    console.log(this.router.url.replace('/app',''));
-    this.helpMenuUrl = this.router.url.replace('/app','');
+    console.log(this.router.url.replace('/app', ''));
+    this.helpMenuUrl = this.router.url.replace('/app', '');
 
     this.helpService.helpGet(null, this.helpMenuUrl, env.apiVersion).subscribe(responseHandler(response => {
 

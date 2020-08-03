@@ -20,10 +20,10 @@ export class HelpCreateComponent implements OnInit {
   helpPageToEditId: number = 0;
   helpPageToEdit: HelpPage;
 
-  menuItems:any;
-  urls:Array<SelectItem> = new Array<SelectItem>();
+  menuItems: any;
+  urls: Array<SelectItem> = new Array<SelectItem>();
 
-  constructor(private helpService: HelpService, private roleService: RoleService, private location: Location, 
+  constructor(private helpService: HelpService, private roleService: RoleService, private location: Location,
     private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
@@ -32,17 +32,17 @@ export class HelpCreateComponent implements OnInit {
       this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);
       if (this.helpPageToEditId !== 0) {
 
-          this.helpService.helpGet(this.helpPageToEditId,null,env.apiVersion).subscribe(responseHandler((response) => {
-            
-            this.helpPageToEdit = response.object[0] as HelpPage;
-            
-            this.helpPageToEdit.roles.forEach(role => {
-              this.selectedRoles.push(role);
+        this.helpService.helpGet(this.helpPageToEditId, null, env.apiVersion).subscribe(responseHandler((response) => {
 
-            });
-          }));
+          this.helpPageToEdit = response.object[0] as HelpPage;
 
-      }else{
+          this.helpPageToEdit.roles.forEach(role => {
+            this.selectedRoles.push(role);
+
+          });
+        }));
+
+      } else {
 
         this.helpPageToEdit = new HelpPage();
       }
@@ -53,25 +53,25 @@ export class HelpCreateComponent implements OnInit {
     });
   }
 
-  generateFriendlyUrlOptions(friendlyUrlsUsed: Array<string>){
+  generateFriendlyUrlOptions(friendlyUrlsUsed: Array<string>) {
 
     this.menuItems = this.generateMenu(this.globals.user.roles[0].menus);
 
     this.menuItems.forEach(menuItem => {
-      
-        let parentPath = menuItem.name.toLowerCase();
-        menuItem.submenu.forEach(subMenuItem => {
-          let childPath = subMenuItem.url.toLowerCase();
-          if(childPath != '#'){
-            let selectItemValue = '/' + parentPath + '/' + childPath;
 
-            if(friendlyUrlsUsed.find(s => s == selectItemValue) == null){
-                this.urls.push({ label: selectItemValue, value: selectItemValue });
-            }
-            
+      let parentPath = menuItem.name.toLowerCase();
+      menuItem.submenu.forEach(subMenuItem => {
+        let childPath = subMenuItem.url.toLowerCase();
+        if (childPath !== '#') {
+          let selectItemValue = '/' + parentPath + '/' + childPath;
+
+          if (friendlyUrlsUsed.find(s => s === selectItemValue) === null) {
+            this.urls.push({ label: selectItemValue, value: selectItemValue });
           }
-          
-        });
+
+        }
+
+      });
 
     });
 
@@ -138,7 +138,7 @@ export class HelpCreateComponent implements OnInit {
     }
 
 
-    this.helpService.helpPatch(env.apiVersion,updateHelpPageRequest).subscribe(responseHandler((response) => {
+    this.helpService.helpPatch(env.apiVersion, updateHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
         console.log(response);
         this.helpPageToEditId = response.object.id;

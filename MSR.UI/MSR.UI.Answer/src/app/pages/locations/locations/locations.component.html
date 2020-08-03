@@ -185,10 +185,10 @@
         <td [hidden]="!commonGrid.isVisibleCol('phone', gridSettings)">
           {{location.phone}}
         </td>
-        <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parentId != null">
-          {{ location.parentId }}
+        <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent != null">
+          {{ location.parent.name }}
         </td>
-        <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parentId == null">
+        <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent == null">
           
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('timezone', gridSettings)">
@@ -208,7 +208,7 @@
                 [routerLink]="['../location-create']" [queryParams]="{id: location.id}"></i>
           <i *ngIf="canDeleteLocation" class="fa fa-trash pointer" tooltip="Delete Location" data-cy="delete-button"
             (click)="openConfirmDeleteDialog(location)"></i>
-          <approve-entity [(show)]="showApproveButtons" [entityId]="location.id" [activityType]="approvalTables.LocationApproval">
+          <approve-entity [(status)]="location.status" [entityId]="location.id" [activityType]="approvalTables.LocationApproval">
           </approve-entity>
         </td>
       </tr>
@@ -224,7 +224,7 @@
   [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   <div class="container">
     <div class="row">
-      <span [ngClass]="['text-danger','font-weight-bold']" *ngIf="locationToDelete != null && locationToDelete.parentId != null"> Warning: This is a Parent Location, all child locations will be deleted also.</span>
+      <span [ngClass]="['text-danger','font-weight-bold']" *ngIf="locationToDelete != null && locationToDelete.parent != null"> Warning: This is a Parent Location, all child locations will be deleted also.</span>
     </div>
     <div class="row">
       Are you sure you want to Delete this Location?

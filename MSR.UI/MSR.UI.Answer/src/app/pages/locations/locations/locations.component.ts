@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class LocationsComponent implements OnInit {
 
-  data: Array<LocationModel>;
+  data: Array<any>;
   approvalTables = EnumApprovalTables;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
@@ -27,7 +27,7 @@ export class LocationsComponent implements OnInit {
   canDeleteLocation: boolean = false;
   canApproveLocation: boolean = false;
 
-  constructor(private locationService: LocationService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private locationService: LocationService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -57,7 +57,7 @@ export class LocationsComponent implements OnInit {
     this.canApproveLocation = this.hasPrivilege(this.privileges.CanApprove);
     this.getLocations();
 
-    
+
 
   }
 
@@ -65,38 +65,41 @@ export class LocationsComponent implements OnInit {
     return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
-  getLocations(){
+  getLocations() {
     this.globals.showLoader(true);
-    this.locationService.locationGet(null,null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
+      this.data.map((elem) => {
+        elem.show = elem.status !== null;
+      });
       this.loading = false;
     }));
   }
 
-  getParentName(parentId):string{
+  getParentName(parentId): string {
 
-    return this.data.filter(s => s.id == parentId)[0].name;
+    return this.data.filter(s => s.id === parentId)[0].name;
 
   }
 
-  openConfirmDeleteDialog(location: LocationModel){
+  openConfirmDeleteDialog(location: LocationModel) {
 
     this.locationToDelete = location;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(location: LocationModel){
+  closeConfirmDeleteDialog(location: LocationModel) {
     this.locationToDelete = null;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  deleteLocation(){
+  deleteLocation() {
 
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     this.globals.showLoader(true);
     this.locationService.locationDelete(this.locationToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.locationToDelete.id);
+      const index: number = this.data.map(function (e) { return e.id; }).indexOf(this.locationToDelete.id);
       this.data.splice(index, 1);
 
     }));

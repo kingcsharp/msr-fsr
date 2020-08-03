@@ -14,7 +14,7 @@ import { GridOptionsComponent } from '../../components/grid-options/grid-options
 import { MultiselectWrapperComponent } from '../../components/multiselect-wrapper/multiselect-wrapper.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
-import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component'
+import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -24,7 +24,7 @@ export const routes = [
 
 @NgModule({
   declarations: [HelpComponent, HelpCreateComponent, GridOptionsComponent,
-     MultiselectWrapperComponent,CkeditorWrapperComponent, HelpbuttonWrapperComponent],
+    MultiselectWrapperComponent, CkeditorWrapperComponent, HelpbuttonWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

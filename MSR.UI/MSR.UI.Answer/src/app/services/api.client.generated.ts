@@ -5545,6 +5545,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
     country?: string | undefined;
     phone?: string | undefined;
     parentId?: number | undefined;
+    parent?: LocationModel | undefined;
     internalAddress?: string | undefined;
     invoiceClass?: string | undefined;
     timeZone?: TimeZone | undefined;
@@ -5567,6 +5568,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
             this.country = _data["country"];
             this.phone = _data["phone"];
             this.parentId = _data["parentId"];
+            this.parent = _data["parent"] ? LocationModel.fromJS(_data["parent"]) : <any>undefined;
             this.internalAddress = _data["internalAddress"];
             this.invoiceClass = _data["invoiceClass"];
             this.timeZone = _data["timeZone"] ? TimeZone.fromJS(_data["timeZone"]) : <any>undefined;
@@ -5593,6 +5595,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
         data["country"] = this.country;
         data["phone"] = this.phone;
         data["parentId"] = this.parentId;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["internalAddress"] = this.internalAddress;
         data["invoiceClass"] = this.invoiceClass;
         data["timeZone"] = this.timeZone ? this.timeZone.toJSON() : <any>undefined;
@@ -5613,6 +5616,7 @@ export interface ILocationModel extends IDeletableModel {
     country?: string | undefined;
     phone?: string | undefined;
     parentId?: number | undefined;
+    parent?: LocationModel | undefined;
     internalAddress?: string | undefined;
     invoiceClass?: string | undefined;
     timeZone?: TimeZone | undefined;
