@@ -9,36 +9,68 @@ namespace MSR.Infrastructure.Profiles
     {
         public InfrastructureMappingProfiles()
         {
+            #region User
             CreateMap<User, Domain.Models.User>()
                 .ForMember(dest => dest.Roles, opts => opts.Ignore())
                 .ForMember(dest => dest.SupervisorName, opt => opt.MapFrom(src => src.Supervisor.GetFullName()))
                 .ReverseMap();
             CreateMap<CreateUser, User>();
             CreateMap<UpdateUser, User>();
+            CreateMap<User, UserApproval>();
+            #endregion
 
-            CreateMap<Customer, Customer>();
-
-
+            #region Customer 
             CreateMap<Customer, Domain.Models.Customer>().ReverseMap()
-                .ForMember(dest => dest.Location, opts => opts.AllowNull())
-                .ForMember(dest => dest.PrimaryContactUser, opts => opts.AllowNull())
-                .ForMember(dest => dest.SecondaryContactUser, opts => opts.AllowNull())
-                .AfterMap((src, dest) => dest.Location = src.Location == null ? null : dest.Location)
-                .AfterMap((src, dest) => dest.PrimaryContactUser = src.PrimaryContactUser == null ? null : dest.PrimaryContactUser)
-                .AfterMap((src, dest) => dest.SecondaryContactUser = src.SecondaryContactUser == null ? null : dest.SecondaryContactUser);
-          
+                    .ForMember(dest => dest.Location, opts => opts.AllowNull())
+                    .ForMember(dest => dest.PrimaryContactUser, opts => opts.AllowNull())
+                    .ForMember(dest => dest.SecondaryContactUser, opts => opts.AllowNull())
+                    .AfterMap((src, dest) => dest.Location = src.Location == null ? null : dest.Location)
+                    .AfterMap((src, dest) => dest.PrimaryContactUser = src.PrimaryContactUser == null ? null : dest.PrimaryContactUser)
+                    .AfterMap((src, dest) => dest.SecondaryContactUser = src.SecondaryContactUser == null ? null : dest.SecondaryContactUser);
+            CreateMap<Domain.Models.Customer, Customer>().ReverseMap();
+            CreateMap<CustomerApproval, Domain.Models.Customer>()
+                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name));
+            CreateMap<CreateCustomer, Customer>();
+            CreateMap<CreateCustomer, CustomerApproval>();
+            CreateMap<Customer, CustomerApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<UpdateCustomer, Customer>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateCustomer, CustomerApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            #endregion
+
+            #region Location
             CreateMap<Location, Domain.Models.LocationModel>().ReverseMap();
+            CreateMap<GetLocations, Location>();
+            CreateMap<Domain.Models.LocationModel, Location>().ReverseMap();
+            CreateMap<Domain.Models.LocationModel, LocationApproval>();
+            CreateMap<LocationApproval, Domain.Models.LocationModel>()
+                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name));
+            CreateMap<CreateLocation, LocationApproval>();
+            CreateMap<CreateLocation, Location>();
+            CreateMap<LocationApproval, Location>().ReverseMap()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<UpdateLocation, LocationApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateLocation, Location>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            #endregion
+
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
-            CreateMap<GetLocations, Location>();
-            CreateMap<User, UserApproval>();
-
-            CreateMap<GetLocations, Location>();
+           
 
             CreateMap<Role, Domain.Models.Role>()
                 .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
-            CreateMap<Location, Domain.Models.LocationModel>();
 
             /*Workflow*/
             CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
@@ -48,14 +80,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>();
             CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>();
 
-            CreateMap<Domain.Models.Customer, Customer>().ReverseMap();
-            CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();
-            CreateMap<CreateCustomer, Customer>();
-            CreateMap<UpdateCustomer, Customer>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<CreateCustomer, CustomerApproval>();
-            CreateMap<UpdateCustomer, CustomerApproval>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+          
 
             CreateMap<Domain.Models.InvoiceModel, Invoice>().ReverseMap();
             CreateMap<CreateOneInvoice, Invoice>();
@@ -63,21 +88,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateInvoice, Invoice>();
             CreateMap<DownloadAsIIFInvoices, GetInvoices>();
 
-            CreateMap<Domain.Models.LocationModel, Location>().ReverseMap();
-            CreateMap<Domain.Models.LocationModel, LocationApproval>().ReverseMap();
-            CreateMap<CreateLocation, LocationApproval>();
-            CreateMap<CreateLocation, Location>();
-
-            CreateMap<UpdateLocation, LocationApproval>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<UpdateLocation, Location>()
-                .ForMember(dest => dest.Id, opts => opts.Ignore())
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+           
 
             CreateMap<HelpPage, Domain.Models.HelpPage>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());
 
-            CreateMap<Domain.Models.Customer, CustomerApproval>().ReverseMap();
+           
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>()
                 .ForMember(dest => dest.Created, opts => opts.Ignore())
                 .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())

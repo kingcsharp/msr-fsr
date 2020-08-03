@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
+using MSR.Domain.Models.Config;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.Location
 {
@@ -41,7 +43,9 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
             var locations = await locationQuery.ToListAsync();
             var locationIds = locations.Select(i => i.Id);
-            var locationApprovals = await _unitOfWork.LocationApprovals.Query().Where(i => locationIds.Contains(i.LocationId)).ToListAsync();
+            var locationApprovals = await _unitOfWork.LocationApprovals.Query()
+                                                                       .Include(i => i.Status)
+                                                                       .Where(i => locationIds.Contains(i.LocationId)).ToListAsync();
             var ret = new List<LocationModel>();
             foreach(var location in locations)
             {
@@ -62,11 +66,10 @@ namespace MSR.Infrastructure.Resources.Services.Location
             var user = await _unitOfWork.GetLoggedInUserAsync();
             LocationModel retLocation;
 
-            if (user.CanApprove(EnumMenuItem.Locations))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval))
             {
                 var location = _mapper.Map<EntityFramework.Entities.Location>(command);
                 _unitOfWork.Locations.Add(location);
-                await _unitOfWork.SaveChangesAsync();
 
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
                 retLocation = _mapper.Map<LocationModel>(location);
@@ -74,7 +77,11 @@ namespace MSR.Infrastructure.Resources.Services.Location
             else
             {
                 var locationApproval = _mapper.Map<LocationApproval>(command);
-                _unitOfWork.LocationApprovals.Add(locationApproval);
+                locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
+                locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.WorkflowGroup?.Id ?? 0);
+                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+                
+                await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
 
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
@@ -92,26 +99,29 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            var user = await _unitOfWork.GetLoggedInUserAsync();
             LocationModel retLocation;
 
-
-            if (user.CanApprove(EnumMenuItem.Locations))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval))
             {
                 var location = _mapper.Map(command,curLocation);
+                
                 _unitOfWork.Locations.Update(location);
-                await _unitOfWork.SaveChangesAsync();
-
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
+
                 retLocation = _mapper.Map<LocationModel>(location);
             }
             else
             {
-                var locationApproval = _mapper.Map<LocationApproval>(command);
+                var locationApproval = _mapper.Map<LocationApproval>(curLocation);
+                _mapper.Map(command, locationApproval);
                 locationApproval.LocationId = curLocation.Id;
-                _unitOfWork.LocationApprovals.Add(locationApproval);
-                await _unitOfWork.SaveChangesAsync();
+                locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
+                locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
+                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
 
+                await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
+                await _unitOfWork.SaveChangesAsync();
+                
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
             }
 
@@ -119,7 +129,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         }
 
-        public async Task DeactivateLocationAsync(DeactivateLocation command)
+        public async Task<LocationModel> DeactivateLocationAsync(DeactivateLocation command)
         {
             var curLocation = await _unitOfWork.Locations.FirstOrDefaultAsync(false, i => i.Id == command.LocationId);
 
@@ -128,9 +138,40 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.LocationId}", DomainError.NotFound);
             }
 
+            LocationModel retLocation;
+
             curLocation.IsActive = false;
-            _unitOfWork.Locations.Update(curLocation);
-            await _unitOfWork.SaveChangesAsync();
+
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval))
+            {
+
+                _unitOfWork.Locations.Update(curLocation);
+
+                foreach(var location in await _unitOfWork.Locations.Query().Where(i => i.ParentId == curLocation.Id).ToListAsync())
+                {
+                    location.IsActive = false;
+                    _unitOfWork.Locations.Update(location);
+                }
+
+                await _unitOfWork.LogApprovalTransaction(curLocation, curLocation.Id);
+
+                retLocation = _mapper.Map<LocationModel>(curLocation);
+            }
+            else
+            {
+                var locationApproval = _mapper.Map<LocationApproval>(curLocation);
+                locationApproval.LocationId = curLocation.Id;
+                locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
+                locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.WorkflowGroup?.Id ?? 0);
+                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+
+                await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
+                await _unitOfWork.SaveChangesAsync();
+
+                retLocation = _mapper.Map<LocationModel>(locationApproval);
+            }
+
+            return retLocation;
         }
     }
 }

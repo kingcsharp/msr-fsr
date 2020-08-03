@@ -22,19 +22,17 @@ namespace MSR.Answer.API.V1.Controllers
     public class FileController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
-        private CurrentUserInformation _currentUser;
 
-        public FileController(ICommandDispatcher dispatcher, CurrentUserInformation currentUser)
+        public FileController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-            _currentUser = currentUser;
         }
 
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<FileModel>>))]
         public async Task<IActionResult> GetFiles([FromQuery] GetFileRequest req)
         {
-            if (!_currentUser.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanRead)) {
+            if (!CurrentUser.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanRead)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var ret = await _dispatcher.DispatchAsync(new GetFiles() {
@@ -49,7 +47,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<FileModel>))]
         public async Task<IActionResult> AddFile(CreateFileRequest newfile)
         {
-            if (!_currentUser.HasPrivilege(EnumUtils.ParseMenuType(newfile.EntityName), EnumPrivilege.CanCreate)) {
+            if (!CurrentUser.HasPrivilege(EnumUtils.ParseMenuType(newfile.EntityName), EnumPrivilege.CanCreate)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var command = newfile.ToCreateFileCommand();
@@ -70,7 +68,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DetachFile([FromQuery] DetachFileRequest req)
         {
-            if (!_currentUser.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanDelete)) {
+            if (!CurrentUser.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanDelete)) {
                 throw new DomainException("Permission Denied", DomainError.BadRequest);
             }
             var command = new DetachFile() {

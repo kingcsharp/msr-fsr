@@ -65,7 +65,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new CreateUser()
             {
-                CurrentUser = DelegateHandler.GetCurrentUserId(),
+                CurrentUser = CurrentUser.GetId(),
                 UserName = request.UserName,
                 FirstName = request.FirstName,
                 LastName = request.LastName,

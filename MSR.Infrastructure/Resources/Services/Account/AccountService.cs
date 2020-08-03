@@ -122,7 +122,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 throw new DomainException("User not found", DomainError.NotFound);
             }
 
-            DelegateHandler.GetCurrentUserId = () => user.Id;
+            Domain.Helpers.CurrentUser.GetId = () => user.Id;
 
             _authenticationHelper.CreatePasswordHash(command.Password, out var hash, out var salt);
             user.PasswordHash = hash;
