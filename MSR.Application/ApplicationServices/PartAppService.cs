@@ -79,7 +79,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(ImportParts command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.ImportPartsAsync(command);
-            return new CommandResponse<ICollection<int>>(ret);
+            return new CommandResponse<ICollection<PartModel>>(ret);
         }
     }
 }
