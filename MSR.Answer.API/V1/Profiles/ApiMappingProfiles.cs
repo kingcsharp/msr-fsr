@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Profiles
 {
@@ -34,10 +35,12 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>();
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();
-            CreateMap<File, Domain.Models.FileModel>().ReverseMap();
             CreateMap<DeleteMenuRoleMapRequest, RemoveMenuRoleMap>();
+            CreateMap<File, FileModel>().ReverseMap();
+            CreateMap<CreateCustomerRequest, CreateCustomer>();
+            CreateMap<UpdateCustomerRequest, UpdateCustomer>();
             CreateMap<CreateFileRequest, CreateFile>();
-            CreateMap<CreateFile, Domain.Models.FileModel>();
+            CreateMap<UploadFileRequest, UploadFile>();
         }
     }
 }

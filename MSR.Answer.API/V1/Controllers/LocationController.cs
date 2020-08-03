@@ -42,8 +42,9 @@ namespace MSR.Answer.API.V1.Controllers
         public async Task<IActionResult> CreateLocation([FromBody, Required] CreateLocationRequest request)
         {
             var command = request.ToCreateLocationCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<LocationModel>($"Location Created Successfully");
+            var ret = await _dispatcher.DispatchAsync(command); 
+
+            return ret.ToOkObjectResponse<LocationModel>(DetermineResponseMessage(ret, "Create"));
         }
 
         [HttpPatch, SwaggerResponse(typeof(AuditActionResult))]
@@ -52,7 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateLocationCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse("Location Updated Successfully");
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret, "Update"));
         }
 
         [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult))]
@@ -61,7 +62,21 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeactivateLocation() { LocationId = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse("Location Deactivated Successfully");
+            
+            return ret.ToOkObjectResponse(DetermineResponseMessage(ret,"Deactivate"));
+        }
+
+        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        {
+            var location = commandResponse.ToEntity<LocationModel>();
+            var response = $"Location {action} Successfull";
+
+            if (!string.IsNullOrWhiteSpace(location.Status))
+            {
+                response = $"Location {action} Pending Approval";
+            }
+
+            return response;
         }
     }
 }

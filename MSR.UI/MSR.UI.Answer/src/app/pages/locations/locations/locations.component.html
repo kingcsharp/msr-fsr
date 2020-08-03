@@ -142,6 +142,12 @@
               (click)="commonGrid.filter(dt,'address2')"></i>
           </div>
         </th>
+        <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
+
+        </th>
+        <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
+
+        </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-location>
@@ -156,7 +162,7 @@
           {{location.internalAddress}}
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)">
-          {{location.createdBy}}
+          <!--{{location.created.fullName}}-->
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
           {{location.createdOn}}
@@ -180,7 +186,7 @@
           {{location.phone}}
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parentId != null">
-          {{ getParentName(location.parentId) }}
+          {{ location.parentId }}
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parentId == null">
           
@@ -191,6 +197,20 @@
         <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
           {{location.address2}}
         </td>
+        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)"  *ngIf="location.status != null">
+          {{location.status}}
+        </td>
+        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status == null">
+          Approved
+        </td>
+        <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
+          <i *ngIf="canEditLocation" class="fa fa-cog pointer" tooltip="Edit Location" data-cy="edit-button"
+                [routerLink]="['../location-create']" [queryParams]="{id: location.id}"></i>
+          <i *ngIf="canDeleteLocation" class="fa fa-trash pointer" tooltip="Delete Location" data-cy="delete-button"
+            (click)="openConfirmDeleteDialog(location)"></i>
+          <approve-entity [(show)]="showApproveButtons" [entityId]="location.id" [activityType]="approvalTables.LocationApproval">
+          </approve-entity>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
@@ -200,3 +220,26 @@
     </ng-template>
   </p-table>
 </widget>
+<p-dialog header="Confirm Delete Help Page" [(visible)]="showConfirmDeleteDialog" [appendTo]="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      <span [ngClass]="['text-danger','font-weight-bold']" *ngIf="locationToDelete != null && locationToDelete.parentId != null"> Warning: This is a Parent Location, all child locations will be deleted also.</span>
+    </div>
+    <div class="row">
+      Are you sure you want to Delete this Location?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="deleteLocation()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

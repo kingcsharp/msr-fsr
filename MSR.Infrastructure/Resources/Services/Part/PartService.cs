@@ -54,7 +54,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             PartModel ret;
 
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 List<PartSubPartMap> children = new List<PartSubPartMap>();
                 if (command.SubParts != null)
@@ -98,7 +98,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = new PartModel() {
+                ret = new PartModel()
+                {
                     IsPending = true
                 };
             }
@@ -119,7 +120,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             PartModel ret;
 
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
                 foreach (var child in current.Subparts)
                 {
@@ -169,7 +170,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             {
                 throw new DomainException($"{nameof(Part)} not found with ID: {command.Id}", DomainError.NotFound);
             }
-            if (DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanDelete))
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanDelete))
             {
                 _unitOfWork.Parts.Delete(false, current, true);
                 // This will call SaveChangesAsync
@@ -197,13 +198,16 @@ namespace MSR.Infrastructure.Resources.Services.Role
             IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvdata);
             List<PartModel> parts = new List<PartModel>();
 
-            if (!DelegateHandler.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            {
                 // importing parts requiring appoval is not supported
                 throw new DomainException("Permission denied for import", DomainError.BadRequest);
             }
 
-            foreach (PartCSVRecord record in records) {
-                if (record.Id > 0) {
+            foreach (PartCSVRecord record in records)
+            {
+                if (record.Id > 0)
+                {
                     var part = await UpdatePartAsync(
                         _mapper.Map<UpdatePart>(record)
                     );
@@ -228,7 +232,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     x.WorkflowActivity.ApprovalTableName.Equals("PartApproval"))
                 .Select(x => x.Workflow.Id);
 
-            if (wfid.Any()) {
+            if (wfid.Any())
+            {
                 return wfid.First();
             }
 
@@ -241,7 +246,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 .Query()
                 .Where(x => x.Workflow.Id == workflowID);
 
-            if (!wfsid.Any()) {
+            if (!wfsid.Any())
+            {
                 return -1;
             }
 
@@ -249,7 +255,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 .Query()
                 .Where(x => x.WorkflowStageId == wfsid.First().WorkflowStageId);
 
-            if (wfgid.Any()) {
+            if (wfgid.Any())
+            {
                 return wfgid.First().WorkflowGroupId;
             }
 

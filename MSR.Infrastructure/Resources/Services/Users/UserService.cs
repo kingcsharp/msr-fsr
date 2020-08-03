@@ -44,7 +44,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
             command.Roles = null;
 
-            var efUser = _mapper.Map<User>(command);
+            var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
 
             if (efUser.EmailAlreadyExists(_unitOfWork))
             {
@@ -65,7 +65,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
             efUser.PasswordHash = hash;
             efUser.PasswordSalt = salt;
 
-            efUser.CreatedBy = command.CurrentUser;
+            var createdByUser = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == command.CurrentUser);
+            efUser.Created = createdByUser;
             efUser.CreatedOn = DateTime.UtcNow;
 
             _unitOfWork.Users.Add(efUser);
@@ -224,7 +225,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return userList;
         }
 
-        private static void SetRolesToUser(User user, Domain.Models.User userToAdd)
+        private static void SetRolesToUser(EntityFramework.Entities.User user, Domain.Models.User userToAdd)
         {
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
@@ -315,14 +316,14 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             if (user is null || role is null)
             {
-                throw new DomainException($"{nameof(User)} OR {nameof(Role)} not found.", DomainError.NotFound);
+                throw new DomainException($"{nameof(EntityFramework.Entities.User)} OR {nameof(Role)} not found.", DomainError.NotFound);
             }
 
             var curUserRole = await _unitOfWork.UserRoles.FirstOrDefaultAsync(false, i => i.RoleId == command.RoleId && i.UserId == command.UserId);
 
             if (curUserRole != null)
             {
-                throw new DomainException($"{nameof(User)} already assigned to {nameof(Role)}", DomainError.Conflict);
+                throw new DomainException($"{nameof(EntityFramework.Entities.User)} already assigned to {nameof(Role)}", DomainError.Conflict);
             }
 
             if (curUser.CanApprove(EnumMenuItem.Users))
@@ -368,7 +369,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             if (curUserRole is null)
             {
-                throw new DomainException($"{nameof(User)} not assigned to {nameof(Role)}", DomainError.BadRequest);
+                throw new DomainException($"{nameof(EntityFramework.Entities.User)} not assigned to {nameof(Role)}", DomainError.BadRequest);
             }
 
             if (curUser.CanApprove(EnumMenuItem.Users))
@@ -418,6 +419,20 @@ namespace MSR.Infrastructure.Resources.Services.Users
             await _unitOfWork.LogApprovalTransaction(curUserRole, curUserRole.Id);
             _unitOfWork.UserRoles.Delete(false, curUserRole);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<Domain.Models.User> GetUserById(int id)
+        {
+            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == id);
+
+            if(user is null)
+            {
+                return new Domain.Models.User();
+            }
+
+            var retUser = _mapper.Map<Domain.Models.User>(user);
+
+            return retUser;
         }
     }
 }

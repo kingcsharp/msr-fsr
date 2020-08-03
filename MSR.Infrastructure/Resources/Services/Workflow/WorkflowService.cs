@@ -94,7 +94,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
             var pendingNotificationItems = new List<PendingNotificationItem>() { };
 
-            if (DelegateHandler.CanReadActivity(EnumApprovalTables.CustomerApproval))
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.CustomerApproval))
             {
                 var pendingNotificationCount = await _unitOfWork.CustomerApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
                 if (pendingNotificationCount > 0)
@@ -102,7 +102,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                     pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Customers", Table = (int)EnumApprovalTables.CustomerApproval, Count = pendingNotificationCount });
                 }
             }
-            if (DelegateHandler.CanReadActivity(EnumApprovalTables.LocationApproval))
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.LocationApproval))
             {
                 var locationApprovalCount = await _unitOfWork.LocationApprovals.CountAsync();
                 if (locationApprovalCount>0)
@@ -110,7 +110,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                     pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Locations", Table = (int)EnumApprovalTables.LocationApproval, Count = locationApprovalCount });
                 }
             }
-            if (DelegateHandler.CanReadActivity(EnumApprovalTables.PartApproval))
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.PartApproval))
             {
                 var partsApprovalCount = await _unitOfWork.PartApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
                 if (partsApprovalCount > 0)
@@ -118,7 +118,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                     pendingNotificationItems.Add(new PendingNotificationItem() { Name = "Parts", Table = (int)EnumApprovalTables.PartApproval, Count = partsApprovalCount });
                 }
             }
-            if (DelegateHandler.CanReadActivity(EnumApprovalTables.ProcedureApproval))
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.ProcedureApproval))
             {
                 var procedureApprovalCount = await _unitOfWork.ProcedureApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
                 if (procedureApprovalCount > 0)
@@ -127,7 +127,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 }
                 
             }
-            if (DelegateHandler.CanReadActivity(EnumApprovalTables.PurchaseOrderApproval))
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.PurchaseOrderApproval))
             {
                 var purchaseOrderApprovalCount = await _unitOfWork.PurchaseOrderApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
                 if (purchaseOrderApprovalCount > 0)
@@ -136,7 +136,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 }
                 
             }
-            if (DelegateHandler.CanReadActivity(EnumApprovalTables.UserApproval))
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.UserApproval))
             {
                 var userApprovalCount = await _unitOfWork.UserApprovals.CountAsync(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId);
                 if (userApprovalCount > 0)

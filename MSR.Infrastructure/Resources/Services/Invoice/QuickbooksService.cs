@@ -200,7 +200,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             if (item?.WorkOrder?.Purchase != null)
             {
-                var workOrderCreator = await _userService.GetUserAsync(item.WorkOrder.Purchase.CreatedBy.GetValueOrDefault());
+                var workOrderCreator = await _userService.GetUserAsync(item.WorkOrder.Purchase.CreatedBy);
 
                 if (!string.IsNullOrEmpty(workOrderCreator.FullName?.Trim()))
                 {

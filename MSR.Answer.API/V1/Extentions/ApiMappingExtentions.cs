@@ -4,6 +4,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MSR.Answer.API.V1.Extentions
@@ -64,7 +65,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new CreateUser()
             {
-                CurrentUser = DelegateHandler.GetCurrentUserId(),
+                CurrentUser = CurrentUser.GetId(),
                 UserName = request.UserName,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -254,7 +255,8 @@ namespace MSR.Answer.API.V1.Extentions
                 CanDelete = request.CanDelete,
                 CanEdit = request.CanEdit,
                 CanRead = request.CanRead,
-                MenuRoleId = request.MenuRoleId
+                RoleId = request.RoleId,
+                MenuId = request.MenuId
             };
         }
 
@@ -275,29 +277,12 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static CreateCustomer ToCreateCustomerCommand(this CreateCustomerRequest request)
         {
-            return new CreateCustomer()
-            {
-                Address = request.Address,
-                LocationId = request.LocationId.GetValueOrDefault(0),
-                Name = request.Name,
-                Phone = request.Phone,
-                PrimaryContactUserId = request.PrimaryContactUserId.GetValueOrDefault(0),
-                SecondaryContactUserId = request.SecondaryContactUserId.GetValueOrDefault(0)
-            };
+            return AutoMapperHelper.Mapper.Map<CreateCustomer>(request);
         }
 
         public static UpdateCustomer ToUpdateCustomerCommand(this UpdateCustomerRequest request)
         {
-            return new UpdateCustomer()
-            {
-                Address = request.Address,
-                IsActive = request.IsActive,
-                LocationId = request.LocationId,
-                Name = request.Name,
-                Phone = request.Phone,
-                PrimaryContactUserId = request.PrimaryContactUserId,
-                SecondaryContactUserId = request.SecondaryContactUserId
-            };
+            return AutoMapperHelper.Mapper.Map<UpdateCustomer>(request);
         }
 
         public static GetLocations ToGetLocationCommand(this GetLocationRequest request)
@@ -491,6 +476,15 @@ namespace MSR.Answer.API.V1.Extentions
         public static CreateFile ToCreateFileCommand(this CreateFileRequest request)
         {
             return AutoMapperHelper.Mapper.Map<CreateFile>(request);
+        }
+
+        public static UploadFile ToUploadFileCommand(this UploadFileRequest request)
+        {
+            var file = AutoMapperHelper.Mapper.Map<UploadFile>(request);
+            var stream = new MemoryStream();
+            request.Image.CopyTo(stream);
+            file.Base64String = Convert.ToBase64String(stream.ToArray());
+            return file;
         }
     }
 }
