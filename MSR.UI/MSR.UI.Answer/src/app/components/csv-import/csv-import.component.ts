@@ -3,7 +3,7 @@ import { take } from 'rxjs/operators';
 import { responseHandler } from '../../utils/responseHandler';
 
 import {
-  EnumMenuItem, PartService, FileModel
+  EnumMenuItem, PartService, ImportPartsRequest
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 
@@ -20,7 +20,7 @@ export class CsvImportComponent implements OnInit {
   @Output('onUpload') change = new EventEmitter<Array<any>>();
   @Input() showButton: boolean;
   @Input() title: string;
-  @Input() fileName:string; //file needs to be placed in assets/CsvFiles/yourfilename.csv
+  @Input() fileName: string; //file needs to be placed in assets/CsvFiles/yourfilename.csv
   constructor(private partService: PartService) {
 
   }
@@ -32,7 +32,9 @@ export class CsvImportComponent implements OnInit {
   submitImport() {
     switch (this.menuItem) {
       case EnumMenuItem.Parts:
-        this.partService.import(env.apiVersion, this.uploadedFiles[0].base64String).pipe(take(1))
+        var imporPartReq = new ImportPartsRequest();
+        imporPartReq.base64Data = this.uploadedFiles[0].base64String;
+        this.partService.import(env.apiVersion, imporPartReq).pipe(take(1))
           .subscribe(responseHandler((resp) => {
             this.change.emit(this.uploadedFiles);
           }));
