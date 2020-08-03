@@ -92,8 +92,7 @@ export class HelpCreateComponent implements OnInit {
 
   generateMenu(menuItems: any) {
     let menuStructure: any = [];
-    // show tooltip add .
-    // description
+
     menuItems.forEach(function (item) {
       const elem = menuStructure.find(x => x.name === item.menuGroup.name);
       if (elem === undefined) {
@@ -137,11 +136,9 @@ export class HelpCreateComponent implements OnInit {
     this.globals.showLoader(true);
     this.helpService.helpPost(env.apiVersion,createHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
-        console.log(response);
         this.helpPageToEditId = response.object.id;
       }
     }, (error) => {
-      console.log(error);
     }));
     
 

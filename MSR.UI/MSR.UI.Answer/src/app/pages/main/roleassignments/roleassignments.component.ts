@@ -268,7 +268,8 @@ export class RoleassignmentsComponent implements OnInit {
       }else{
 
           let updateMenuRoleMapRequest = new UpdateMenuRoleMapRequest();
-          updateMenuRoleMapRequest.menuRoleId = pendingPermission.menuModule.id;
+          updateMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
+          updateMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
           updateMenuRoleMapRequest.canActivate = pendingPermission.roleModule.permissions.find(s => s.name === "Activate").value;
           updateMenuRoleMapRequest.canApprove = pendingPermission.roleModule.permissions.find(s => s.name === "Approve").value;
           updateMenuRoleMapRequest.canCreate = pendingPermission.roleModule.permissions.find(s => s.name === "Create").value;
