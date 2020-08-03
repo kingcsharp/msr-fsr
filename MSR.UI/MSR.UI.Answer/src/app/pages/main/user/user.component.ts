@@ -139,7 +139,7 @@ export class UserComponent implements OnInit {
   updateUsersData(usersData) {
     const ctrl = this;
     ctrl.data = usersData.map((x) => {
-      var userIndex = ctrl.allUsers.findIndex(z => z.value === x.id);
+      const userIndex = ctrl.allUsers.findIndex(z => z.value === x.id);
       if (userIndex < 0) {
         ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
       }
@@ -223,7 +223,7 @@ export class UserComponent implements OnInit {
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
           if (ctrl.currUser.id !== undefined) {
-            var index = ctrl.data.findIndex(x => x.id == resp.object.id);
+            const index = ctrl.data.findIndex(x => x.id === resp.object.id);
             ctrl.data.splice(index, 1);
           }
 

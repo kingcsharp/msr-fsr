@@ -7,10 +7,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UtilsModule } from '../../layout/utils/utils.module';
-import { RickshawChartModule } from '../../components/rickshaw/rickshaw.module';
 import { LiveTileModule } from '../../components/tile/tile.module';
-import { FlotChartModule } from '../../components/flot/flot.module';
-import { JqSparklineModule } from '../../components/sparkline/sparkline.module';
 import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { FormsModule } from '@angular/forms';
@@ -60,12 +57,8 @@ export const routes = [
     TableModule,
     CalendarModule,
     UtilsModule,
-    RickshawChartModule,
     LiveTileModule,
     WidgetModule,
-    FlotChartModule,
-    RickshawChartModule,
-    JqSparklineModule,
     MapaelLayersMapModule,
     NewWidgetModule,
     PopoverModule.forRoot()

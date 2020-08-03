@@ -12,6 +12,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { debug } from 'console';
 
 
 declare let jQuery: any;
@@ -92,20 +93,19 @@ export class PartsComponent implements OnInit {
     this.emptyArr(ctrl.allParts);
     const allPartsObjects = this.getAllPartsAndUsedIn();
     Object.keys(allPartsObjects).forEach(function (key) {
-      var item = allPartsObjects[key];
-      var usedIn = item.usedIn.join(',');
-      var usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
+      const item = allPartsObjects[key];
+      const usedIn = item.usedIn.join(',');
+      const usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
       ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
     });
   }
 
-  uploadParts(ev){
-    console.log(ev);
-    console.log('yes');
+  uploadParts(ev) {
+    this.data.push(...ev);
   }
 
   getAllPartsAndUsedIn() {
-    var partsDictionary = {};
+    let partsDictionary = {};
     this.data.forEach((element: PartModel) => {
       if (partsDictionary[element.id] === undefined) {
         partsDictionary[element.id] = { element: element, usedIn: [] };
@@ -116,7 +116,7 @@ export class PartsComponent implements OnInit {
             } else {
               partsDictionary[subpart.parentId].usedIn.push(element.partNumber);
             }
-          })
+          });
         }
       }
     });
@@ -127,12 +127,12 @@ export class PartsComponent implements OnInit {
     if (subparts === undefined) {
       return -1;
     }
-    const index = subparts.findIndex(x => x.parentId === partId)
+    const index = subparts.findIndex(x => x.parentId === partId);
     return subparts[index].partId;
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Parts, privName);
+    return this.globals.hasPrivilege(this.menuItems.Parts, privName);
   }
 
   showDialog(part: PartModel) {
@@ -163,7 +163,7 @@ export class PartsComponent implements OnInit {
       return ret;
     } else {
       let copyPart: PartModel = new PartModel();
-      Object.assign(copyPart, part)
+      Object.assign(copyPart, part);
       if (copyPart.createSubParts === null || copyPart.createSubParts === undefined) {
         copyPart.createSubParts = [];
       }
@@ -177,7 +177,7 @@ export class PartsComponent implements OnInit {
   }
 
   removeSubPart(subpart: SubPartModel) {
-    var length = this.currPart.createSubParts.length;
+    let length = this.currPart.createSubParts.length;
     while (length--) {
       if (this.currPart.createSubParts[length] === subpart) {
         this.currPart.createSubParts.splice(length, 1);
@@ -204,7 +204,7 @@ export class PartsComponent implements OnInit {
         // DO not update user
       }));
   }
-  //onWorkflowSubmit
+
   onpartSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
@@ -224,8 +224,7 @@ export class PartsComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currPart.id === undefined) {
             ctrl.data.push(resp.object);
-          }
-          else {
+          } else {
             const index = this.data.findIndex(x => x.id === this.currPart.id);
             this.data.splice(index, 1);
             this.data.splice(index, 0, resp.object);
@@ -238,12 +237,12 @@ export class PartsComponent implements OnInit {
   }
 
   removeFile(file) {
-    var currIndex = this.currPart.files.findIndex(x => x.id === file.id);
+    const currIndex = this.currPart.files.findIndex(x => x.fileId === file.fileId);
     this.currPart.files.splice(currIndex, 1);
   }
 
   removeuploadFile(event) {
-    var index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
+    const index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
     this.uploadedFiles.splice(index, 1);
   }
 
@@ -254,7 +253,7 @@ export class PartsComponent implements OnInit {
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = function () {
-          var fileModel = new FileModel();
+          let fileModel = new FileModel();
           fileModel.name = file.name;
           fileModel.base64String = fileReader.result.toString();
           fileModel.contentType = file.type;
@@ -265,7 +264,7 @@ export class PartsComponent implements OnInit {
   }
 
   getCreatePartRequest(currentPart: PartModel): CreatePartRequest {
-    var ret = new CreatePartRequest({
+    let ret = new CreatePartRequest({
       name: currentPart.name,
       partNumber: currentPart.partNumber,
       isActive: currentPart.isActive,
@@ -279,7 +278,7 @@ export class PartsComponent implements OnInit {
   }
 
   getUpdatePartRequest(currentPart: PartModel): UpdatePartRequest {
-    var partUpdate: UpdatePartRequest = new UpdatePartRequest();
+    let partUpdate: UpdatePartRequest = new UpdatePartRequest();
     partUpdate.id = currentPart.id;
     Object.assign(partUpdate, this.getCreatePartRequest(currentPart));
     return partUpdate;

@@ -1933,12 +1933,14 @@ p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
 .fa-file-pdf,
 .fa-file-word,
 .fa-file-excel,
-.fa-file-alt {
+.fa-file-alt,
+.fa-file-powerpoint {
   --fa-secondary-color: white;
-  --fa-secondary-opacity: 1.0;
+  --fa-secondary-opacity: 1;
 }
 
-.fa-file-csv,.fa-file-excel {
+.fa-file-csv,
+.fa-file-excel {
   --fa-primary-color: green;
 }
 
@@ -1946,9 +1948,55 @@ p-fileUpload .ui-fileupload-choose:not(.ui-state-disabled):hover,
   --fa-primary-color: red;
 }
 
+.fa-file-powerpoint {
+  --fa-primary-color: #cc4424;
+}
+
 .fa-file-word {
   --fa-primary-color: blue;
 }
 .fa-file-alt {
-  --fa-primary-color: gray;;
+  --fa-primary-color: gray;
+}
+
+.fileupload-content {
+  padding: 0;
+}
+.fileLi {
+  padding: 3px 0;
+  margin-right: 0;
+  margin-left: 0;
+  border-bottom: 1px solid;
+  &:last-child {
+    border-bottom: 0px;
+  }
+  > div {
+    line-height: 50px;
+    &:first-child {
+      line-height: 0;
+    }
+  }
+  .fad {
+    font-size: 65px;
+  }
+}
+
+body .ui-fileupload .ui-fileupload-content {
+  padding: 0;
+}
+
+.fa-trash-alt:hover {
+  color: #db4912;
+  transition: all 0.8s;
+}
+
+.ui-fileupload-files {
+  display: none !important;
+}
+.ui-fileupload-content .ui-progressbar {
+  height: 0px;
+}
+
+p-dialog {
+  text-align: left;
 }

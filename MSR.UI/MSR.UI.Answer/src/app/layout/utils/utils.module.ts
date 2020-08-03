@@ -29,6 +29,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CsvImportComponent } from '../../../app/components/csv-import/csv-import.component';
+import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { CsvImportComponent } from '../../../app/components/csv-import/csv-impor
     GridOptionsComponent,
     GridFileViewerComponent,
     ApproveEntityComponent,
-    CsvImportComponent
+    CsvImportComponent,
+    CmhFileUploaderComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -52,7 +54,8 @@ import { CsvImportComponent } from '../../../app/components/csv-import/csv-impor
     FileUploadModule,
     GridFileViewerComponent,
     ApproveEntityComponent,
-    CsvImportComponent
+    CsvImportComponent,
+    CmhFileUploaderComponent
   ],
   imports: [
     CommonModule,

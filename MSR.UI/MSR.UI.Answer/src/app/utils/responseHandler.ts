@@ -14,7 +14,7 @@ function responseHandler(nextFn, errorFn?) {
             }
             let reader = new FileReader();
             reader.onload = event => {
-                if(event.target.result === ''){
+                if (event.target.result === '') {
                     return;
                 }
                 const errorParsed = JSON.parse(event.target.result.toString());

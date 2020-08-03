@@ -82,14 +82,14 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpPost("import")]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<int>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
         public async Task<IActionResult> ImportParts(ImportPartsRequest req)
         {
             var command = new ImportParts() {
                 base64Data = req.base64Data
             };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<int>>("Parts successfully imported");
+            return ret.ToOkObjectResponse<ICollection<PartModel>>("Parts successfully imported");
         }
     }
 }

@@ -10,7 +10,7 @@ namespace MSR.Infrastructure.Helpers
         public byte[] FileContents { get; set; }
         public static Base64Helper Parse(string base64Content)
         {
-            if (string.IsNullOrEmpty(base64Content))
+            if (string.IsNullOrWhiteSpace(base64Content))
             {
                 return null;
             }
@@ -61,7 +61,7 @@ namespace MSR.Infrastructure.Helpers
 
         public override string ToString()
         {
-            return string.Format("data:{0};base64,{1}", ContentType, Convert.ToBase64String(FileContents));
+            return $"data:{ContentType};base64,{Convert.ToBase64String(FileContents)}";
         }
     }
 }
