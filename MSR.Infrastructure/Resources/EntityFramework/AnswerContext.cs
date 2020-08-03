@@ -124,7 +124,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
             CreatableEntity creatable;
             if ((creatable = entry.Entity as CreatableEntity) != null)
             {
-                int? answerUserId = DelegateHandler.GetCurrentUserId();
+                int? answerUserId = CurrentUser.GetId();
                 User user = null;
                 if (answerUserId.HasValue)
                 {

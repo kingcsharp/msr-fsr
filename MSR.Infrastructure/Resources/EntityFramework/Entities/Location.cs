@@ -1,11 +1,16 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    [Table(nameof(Location))]
     public partial class Location: DeletableEntity
     {
+        public Location() 
+        {
+            Children = new HashSet<Location>();
+        }
+
         public int OldId { get; set; }
 
         [StringLength(100)]
@@ -34,10 +39,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? ParentId { get; set; }
 
+        [ForeignKey("ParentId")]
+        public virtual Location Parent { get; set; }
+
         [StringLength(20)]
         public string InternalAddress { get; set; }
 
         [StringLength(20)]
         public string InvoiceClass { get; set; }
+
+        public virtual ICollection<Location> Children { get; set; }
     }
 }

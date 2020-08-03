@@ -41,13 +41,14 @@ namespace MSR.Answer.API.Extentions
                             context.Fail("Unauthorized");
                         }
 
-                        DelegateHandler.GetCurrentUserId = () => accountId;
-
                         string claimVal = context.Principal.FindFirst(c => c.Type == "ApprovalPrivileges").Value;
-
                         var approvalPrivilegesDic = JsonConvert.DeserializeObject<Dictionary<int, int[]>>(claimVal);
 
-                        DelegateHandler.CanApproveActivity = (EnumApprovalTables) =>
+                        string userPrivileges = context.Principal.FindFirst(c => c.Type == "Privileges").Value;
+                        var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
+
+                        CurrentUser.GetId = () => accountId;
+                        CurrentUser.CanApproveActivity = (EnumApprovalTables) =>
                         {
                             var activityToBeApproved = (int)EnumApprovalTables;
 
@@ -55,8 +56,7 @@ namespace MSR.Answer.API.Extentions
 
                             return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
                         };
-
-                        DelegateHandler.CanReadActivity = (EnumApprovalTables) =>
+                        CurrentUser.CanReadActivity = (EnumApprovalTables) =>
                         {
                             var activityToBeApproved = (int)EnumApprovalTables;
 
@@ -64,12 +64,7 @@ namespace MSR.Answer.API.Extentions
 
                             return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanRead);
                         };
-
-                        string userPrivileges = context.Principal.FindFirst(c => c.Type == "Privileges").Value;
-
-                        var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
-
-                        DelegateHandler.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
+                        CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
                         {
                             var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
                             if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
@@ -79,10 +74,6 @@ namespace MSR.Answer.API.Extentions
 
                             return true;
                         };
-
-                        var curUser = new CurrentUserInformation(accountId, approvalPrivilegesDic, deserializedUserPrivileges);
-
-                        services.AddSingleton(curUser);
 
                         return Task.CompletedTask;
                     }

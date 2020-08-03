@@ -275,7 +275,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
                     throw new Exception("To be able to validate the ownership of the record, " +
                                         "the entity must implement the ITrackableEntity interface");
 
-                if (trackableEntity.Created.Id != DelegateHandler.GetCurrentUserId())
+                if (trackableEntity.Created.Id != CurrentUser.GetId())
                     throw new Exception("You are not the owner of this record");
             }
         }

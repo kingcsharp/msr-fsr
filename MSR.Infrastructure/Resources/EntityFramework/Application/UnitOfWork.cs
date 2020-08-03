@@ -147,7 +147,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
 
         public async Task SaveChangesAsync()
         {
-            await Context.SaveChangesAsync();
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                var data = ex.Message;
+            }
         }
 
         public DbSet<T> Query<T>() where T : class
