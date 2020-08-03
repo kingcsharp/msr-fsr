@@ -12,6 +12,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { debug } from 'console';
 
 
 declare let jQuery: any;
@@ -100,8 +101,7 @@ export class PartsComponent implements OnInit {
   }
 
   uploadParts(ev) {
-    console.log(ev);
-    console.log('yes');
+    this.data.push(...ev);
   }
 
   getAllPartsAndUsedIn() {
@@ -132,7 +132,7 @@ export class PartsComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Parts, privName);
+    return this.globals.hasPrivilege(this.menuItems.Parts, privName);
   }
 
   showDialog(part: PartModel) {

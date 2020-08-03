@@ -1991,51 +1991,12 @@ body .ui-fileupload .ui-fileupload-content {
 }
 
 .ui-fileupload-files {
-  width: 100%;
-  padding: 3px 0;
-  margin-right: 0;
-  margin-left: 0;
-  border-bottom: 1px solid;
-  .ui-fileupload-row {
-    border: none;
-    margin-right: 0;
-    margin-left: 0;
-    padding-right: 15px;
-    padding-left: 15px;
-    button {
-      border: none !important;
-      border-radius: 0;
-      top: 9px;
-      &:hover {
-        border-color: none !important;
-        background-color: #262e37 !important;
-        color: #fff !important;
-      }
-      .pi-times {
-        font-size: 16px;
-      }
-      .pi-times::before {
-        content: "\e93d";
-      }
-    }
-    > div:last-child {
-      padding-right: 15px;
-    }
-  }
+  display: none !important;
 }
-.ui-fileupload-row {
-  margin-right: -15px;
-  margin-left: -15px;
-  width: 100%;
-  display: block;
-  padding: 3px 0;
-  border-bottom: 1px solid;
-  > div {
-    padding: 0;
-    &:last-child {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-  }
+.ui-fileupload-content .ui-progressbar {
+  height: 0px;
+}
+
+p-dialog {
+  text-align: left;
 }

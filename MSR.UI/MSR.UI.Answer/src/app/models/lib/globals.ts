@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
-import { MenuItem } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
@@ -83,6 +83,11 @@ export class Globals {
         }
         const ret = privileges.indexOf(privilege) > -1;
         return ret;
+    }
+
+    getSingularMenuName(menuItem) {
+        let name = EnumMenuItem[menuItem];
+        return name.replace(/s$/, '');
     }
 
     updateLogin(val) {

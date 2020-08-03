@@ -186,8 +186,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
         public async Task<ICollection<int>> ImportPartsAsync(ImportParts command)
         {
-            byte[] data = Convert.FromBase64String(command.base64Data);
-            string csvdata = Encoding.UTF8.GetString(data);
+            var base64File = Base64Helper.Parse(command.base64Data);
+            string csvdata = Encoding.UTF8.GetString(base64File.FileContents);
             IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvdata);
             List<int> ids = new List<int>();
 

@@ -10,7 +10,6 @@ const routes: Routes = [
       { path: 'workflow', loadChildren: () => import('../pages/workflow/workflow.module').then(m => m.WorkflowModule) },
       { path: 'parts', loadChildren: () => import('../pages/parts/parts.module').then(m => m.PartsModule) },
       { path: 'inbox', loadChildren: () => import('../pages/inbox/inbox.module').then(m => m.InboxModule) },
-      { path: 'charts', loadChildren: () => import('../pages/charts/charts.module').then(m => m.ChartsModule) },
       { path: 'profile', loadChildren: () => import('../pages/profile/profile.module').then(m => m.ProfileModule) },
       { path: 'ecommerce', loadChildren: () => import('../pages/ecommerce/ecommerce.module').then(m => m.EcommerceModule) },
       { path: 'core', loadChildren: () => import('../pages/core/core-elements.module').then(m => m.CoreElementsModule) },
