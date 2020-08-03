@@ -179,7 +179,7 @@
                 [routerLink]="['../customer-create']" [queryParams]="{id: customer.id}"></i>
             <i *ngIf="canDeleteCustomer" class="fa fa-trash pointer" tooltip="Delete Customer" data-cy="delete-button"
                       (click)="openConfirmDeleteDialog(customer)"></i>
-            <approve-entity [(show)]="showApproveButtons" [entityId]="customer.id" [activityType]="approvalTables.CustomerApproval">
+            <approve-entity [(status)]="customer.status"  [entityId]="customer.id" [activityType]="approvalTables.CustomerApproval">
             </approve-entity>
           </td>
         </tr>

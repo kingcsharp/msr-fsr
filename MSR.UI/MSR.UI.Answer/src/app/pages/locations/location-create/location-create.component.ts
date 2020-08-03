@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest, UpdateLocationRequest } from '../../../services/api.client.generated';
+import { LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest, UpdateLocationRequest, ILocationModel } from '../../../services/api.client.generated';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -46,11 +46,11 @@ export class LocationCreateComponent implements OnInit {
 
           }
 
-
         }));
 
       } else {
         this.locationToEdit = new LocationModel();
+
       }
 
     });
