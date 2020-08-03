@@ -1991,8 +1991,12 @@ body .ui-fileupload .ui-fileupload-content {
 }
 
 .ui-fileupload-files {
-      display: none !important;
+  display: none !important;
 }
 .ui-fileupload-content .ui-progressbar {
   height: 0px;
+}
+
+p-dialog {
+  text-align: left;
 }

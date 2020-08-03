@@ -3,7 +3,7 @@ import { take } from 'rxjs/operators';
 import { responseHandler } from '../../utils/responseHandler';
 
 import {
-  FileModel, EnumMenuItem, FileService
+  EnumMenuItem, PartService, FileModel
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 
@@ -20,7 +20,8 @@ export class CsvImportComponent implements OnInit {
   @Output('onUpload') change = new EventEmitter<Array<any>>();
   @Input() showButton: boolean;
   @Input() title: string;
-  constructor() {
+  @Input() fileName:string; //file needs to be placed in assets/CsvFiles/yourfilename.csv
+  constructor(private partService: PartService) {
 
   }
 
@@ -29,11 +30,14 @@ export class CsvImportComponent implements OnInit {
   }
 
   submitImport() {
-    // this.uploadedFiles. pipe(take(1)).subscribe(responseHandler((resp) => {
-
-    // }));
-
-    this.change.emit(this.uploadedFiles);
+    switch (this.menuItem) {
+      case EnumMenuItem.Parts:
+        this.partService.import(env.apiVersion, this.uploadedFiles[0].base64String).pipe(take(1))
+          .subscribe(responseHandler((resp) => {
+            this.change.emit(this.uploadedFiles);
+          }));
+        break;
+    }
   }
 
   showDialog() {
@@ -42,29 +46,8 @@ export class CsvImportComponent implements OnInit {
   }
 
   clseDialog() {
+    this.uploadedFiles = undefined;
     this.display = false;
-  }
-
-  removeuploadFile(event) {
-    const index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
-    this.uploadedFiles.splice(index, 1);
-  }
-
-  myUploader(event) {
-    const ctrl = this;
-    for (let file of event.files) {
-      if (ctrl.uploadedFiles.findIndex(x => x.name === file.name) === -1) {
-        let fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = function () {
-          let fileModel = new FileModel();
-          fileModel.name = file.name;
-          fileModel.base64String = fileReader.result.toString();
-          fileModel.contentType = file.type;
-          ctrl.uploadedFiles.push(fileModel);
-        };
-      }
-    }
   }
 
 }

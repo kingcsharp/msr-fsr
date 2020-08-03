@@ -63,7 +63,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 .ThenInclude(x => x.MenuRolePermission)
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
                 .ThenInclude(x => x.MenuItem)
-                .Where(x=>x.UserName == command.UserName)
+                .Where(x => x.UserName == command.UserName)
                 .FirstOrDefaultAsync();
             if (user == null)
             {
@@ -209,7 +209,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             {
                 foreach (var item in canApproveMenuItemRoles)
                 {
-                    if (item.MenuItemId == workflowLinkModel.MenuItemId && workflowLinkModel.RoleIds.Contains(item.RoleId))
+                    if (item.MenuItemId == workflowLinkModel.MenuItemId && workflowLinkModel.RoleIds != null && workflowLinkModel.RoleIds.Contains(item.RoleId))
                     {
                         var key = (int)EnumUtils.GetValueFromDescription<EnumApprovalTables>(workflowLinkModel.ApprovalTableName);
                         var privileges = GetListEnumPrivileges(item.MenuRolePermission);

@@ -14,8 +14,8 @@
           data-cy="add-button">
           + Add
         </button>
-        <csv-import [showButton]="canCreate" [menuItem]="menuItems.Parts" title="Import Sub Parts"
-          (onUpload)="uploadParts($event)"></csv-import>
+        <csv-import [showButton]="canCreate" [menuItem]="menuItems.Parts" title="Import Parts"
+          (onUpload)="uploadParts($event)" fileName="PartsSample.csv"></csv-import>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
           [gridVersion]="gridVersion" data-cy="usergrid-options">
         </grid-options>
