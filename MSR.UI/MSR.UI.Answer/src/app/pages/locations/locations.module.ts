@@ -11,7 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { LocationCreateComponent } from './location-create/location-create.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { ApproveEntityComponent } from '../../components/aproove-entity/approve-entity.component';
-
+import { CsvImportComponent } from '../../components/csv-import/csv-import.component';
+import { CmhFileUploaderComponent } from '../../components/cmh-file-uploader/cmh-file-uploader.component'
 export const routes = [
   { path: '', redirectTo: 'locations', pathMatch: 'full' },
   { path: 'locations', component: LocationsComponent, pathMatch: 'full' },
@@ -20,7 +21,7 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [LocationsComponent, GridOptionsComponent, LocationCreateComponent, ApproveEntityComponent],
+  declarations: [LocationsComponent, GridOptionsComponent, LocationCreateComponent, ApproveEntityComponent,CsvImportComponent, CmhFileUploaderComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

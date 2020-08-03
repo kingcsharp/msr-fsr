@@ -26,6 +26,7 @@ export class LocationsComponent implements OnInit {
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
   canApproveLocation: boolean = false;
+  menuItems = EnumMenuItem;
 
   constructor(private locationService: LocationService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 

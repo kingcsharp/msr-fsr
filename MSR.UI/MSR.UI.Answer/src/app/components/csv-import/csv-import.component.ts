@@ -22,11 +22,9 @@ export class CsvImportComponent implements OnInit {
   @Input() title: string;
   @Input() fileName: string; // file needs to be placed in assets/CsvFiles/yourfilename.csv
   constructor(private partService: PartService) {
-
   }
 
   ngOnInit(): void {
-
   }
 
   submitImport() {
