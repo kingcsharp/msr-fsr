@@ -20,18 +20,22 @@
                     <legend>
                     </legend>
                     <div class="form-group row">
-                        <div class="col-xs-12">
-                            <label for="demo[]" class="col-md-2 col-form-label">
-                                Select Csv File
-                            </label>
-                            <p-fileUpload name="demo[]" url="./upload.php" customUpload="true"
-                                (onSelect)="myUploader($event)" (onRemove)="removeuploadFile($event)"
-                                [showUploadButton]="false" [showCancelButton]="false" multiple="multiple" accept=""
-                                maxFileSize="1000000000" [fileLimit]="1">
-                                <ng-template pTemplate="content">
-                                </ng-template>
-                            </p-fileUpload>
-                        </div>
+                        <label class="col-md-2 col-form-label text-md-right">
+                            Select Csv File
+                        </label>
+                        <cmh-file-uploader class="col-md-10" *ngIf="uploadedFiles !==undefined" [menuItem]="menuItem"
+                            [(files)]="uploadedFiles" accept=".csv" chooseLabel="Select CSV File">
+                        </cmh-file-uploader>
+                    </div>
+                    <div>
+                        <label class="col-md-2 col-form-label text-md-right">
+                            Sample File
+                        </label>
+                        <a href="/assets/CsvFiles/{{fileName}}" download>
+                            <button type="button" class="btn" download><i class="fas fa-download"></i> Download
+                                Sample
+                                File</button>
+                        </a>
                     </div>
                 </fieldset>
             </div>

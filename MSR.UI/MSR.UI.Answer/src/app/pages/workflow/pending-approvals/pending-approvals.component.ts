@@ -24,7 +24,7 @@ declare let jQuery: any;
 export class PendingApprovalsComponent implements OnInit {
 
   privileges = EnumPrivilege;
-  approvalTables = EnumApprovalTables; //EnumApprovalTables.ProductApproval = 6 in the backend
+  approvalTables = EnumApprovalTables; // EnumApprovalTables.ProductApproval = 6 in the backend
   defaultView: ViewSaved;
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
@@ -173,14 +173,13 @@ export class PendingApprovalsComponent implements OnInit {
     this.globals.showLoader(true);
     const ctrl = this;
     if (this.currAction.action === this.approveAction) {
-      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, this.currAction.comments,env.apiVersion)
+      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, this.currAction.comments, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.currAction.approval.status = resp.object.status;
           this.addToGridStatusDropdown(resp.object);
           ctrl.clseDialog();
         }));
-    }
-    else {
+    } else {
       this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.currAction.approval.status = resp.object.status;

@@ -162,7 +162,7 @@
           {{location.internalAddress}}
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)">
-          {{location.created.fullName}}
+          <!--{{location.created.fullName}}-->
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
           {{location.createdOn}}
@@ -186,7 +186,7 @@
           {{location.phone}}
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parentId != null">
-          {{ getParentName(location.parentId) }}
+          {{ location.parentId }}
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parentId == null">
           
@@ -222,7 +222,14 @@
 </widget>
 <p-dialog header="Confirm Delete Help Page" [(visible)]="showConfirmDeleteDialog" [appendTo]="body"
   [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
-  Are you sure you want to Delete this Location? This action cannot be undone.
+  <div class="container">
+    <div class="row">
+      <span [ngClass]="['text-danger','font-weight-bold']" *ngIf="locationToDelete != null && locationToDelete.parentId != null"> Warning: This is a Parent Location, all child locations will be deleted also.</span>
+    </div>
+    <div class="row">
+      Are you sure you want to Delete this Location?
+    </div>
+  </div>
   <p-footer>
     <div class="pull-right">
       <button type="submit" (click)="deleteLocation()" class="btn btn-outline-inverse width-100 mb-xs" role="button"

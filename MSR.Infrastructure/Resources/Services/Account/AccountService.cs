@@ -208,7 +208,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             {
                 foreach (var item in canApproveMenuItemRoles)
                 {
-                    if (item.MenuItemId == workflowLinkModel.MenuItemId && workflowLinkModel.RoleIds.Contains(item.RoleId))
+                    if (item.MenuItemId == workflowLinkModel.MenuItemId && workflowLinkModel.RoleIds != null && workflowLinkModel.RoleIds.Contains(item.RoleId))
                     {
                         var key = (int)EnumUtils.GetValueFromDescription<EnumApprovalTables>(workflowLinkModel.ApprovalTableName);
                         var privileges = GetListEnumPrivileges(item.MenuRolePermission);

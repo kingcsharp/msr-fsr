@@ -108,7 +108,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> UpdatePartAsync(UpdatePart command)
         {
-            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+            Part current = await _unitOfWork.Parts.Query()
+                .Include(x => x.Subparts)
+                .Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
 
             if (current is null)
@@ -183,12 +185,18 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return ret;
         }
 
-        public async Task<ICollection<int>> ImportPartsAsync(ImportParts command)
+        private readonly string _byteOrderMarkUtf8 =
+            Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+
+        public async Task<ICollection<PartModel>> ImportPartsAsync(ImportParts command)
         {
-            byte[] data = Convert.FromBase64String(command.base64Data);
-            string csvdata = Encoding.UTF8.GetString(data);
+            var base64File = Base64Helper.Parse(command.base64Data);
+            string csvdata = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r","").Trim();
+            if (csvdata.StartsWith(_byteOrderMarkUtf8, StringComparison.Ordinal)) {
+                csvdata = csvdata.Remove(0, _byteOrderMarkUtf8.Length);
+            }
             IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvdata);
-            List<int> ids = new List<int>();
+            List<PartModel> parts = new List<PartModel>();
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
             {
@@ -203,19 +211,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     var part = await UpdatePartAsync(
                         _mapper.Map<UpdatePart>(record)
                     );
-                    ids.Add(part.Id);
-                }
-                else
-                {
+                    parts.Add(_mapper.Map<PartModel>(part));
+                } else {
                     var part = await CreatePartAsync(
                         _mapper.Map<CreatePart>(record)
                     );
-                    ids.Add(part.Id);
+                    parts.Add(_mapper.Map<PartModel>(part));
 
                 }
             }
 
-            return ids;
+            return parts;
         }
 
         private int GetWorkflowID()

@@ -660,6 +660,68 @@ export class FileService {
         }
         return _observableOf<AuditActionResult>(<any>null);
     }
+
+    help(version: string, name: string | null | undefined, contentType: string | null | undefined, fileName: string | null | undefined, image: FileParameter | null | undefined): Observable<AuditActionResultOfUploadResponse> {
+        let url_ = this.baseUrl + "/v{version}/File/Help";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (name !== null && name !== undefined)
+            content_.append("Name", name.toString());
+        if (contentType !== null && contentType !== undefined)
+            content_.append("ContentType", contentType.toString());
+        if (fileName !== null && fileName !== undefined)
+            content_.append("FileName", fileName.toString());
+        if (image !== null && image !== undefined)
+            content_.append("Image", image.data, image.fileName ? image.fileName : "Image");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHelp(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHelp(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfUploadResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfUploadResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processHelp(response: HttpResponseBase): Observable<AuditActionResultOfUploadResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfUploadResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfUploadResponse>(<any>null);
+    }
 }
 
 @Injectable()
@@ -1997,7 +2059,7 @@ export class PartService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    import(version: string, req: ImportPartsRequest): Observable<AuditActionResultOfICollectionOfInteger> {
+    import(version: string, req: ImportPartsRequest): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part/import";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2023,14 +2085,14 @@ export class PartService {
                 try {
                     return this.processImport(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processImport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfInteger> {
+    protected processImport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPartModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2041,7 +2103,7 @@ export class PartService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfInteger.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfPartModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2049,7 +2111,7 @@ export class PartService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfInteger>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfPartModel>(<any>null);
     }
 }
 
@@ -5439,7 +5501,40 @@ export enum EnumMenuItem {
     Roles = 32,
 }
 
-export class LocationModel extends TrackableModel implements ILocationModel {
+export class DeletableModel extends TrackableModel implements IDeletableModel {
+    isActive?: boolean;
+
+    constructor(data?: IDeletableModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): DeletableModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeletableModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isActive"] = this.isActive;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IDeletableModel extends ITrackableModel {
+    isActive?: boolean;
+}
+
+export class LocationModel extends DeletableModel implements ILocationModel {
     oldId?: number;
     name?: string | undefined;
     address1?: string | undefined;
@@ -5507,7 +5602,7 @@ export class LocationModel extends TrackableModel implements ILocationModel {
     }
 }
 
-export interface ILocationModel extends ITrackableModel {
+export interface ILocationModel extends IDeletableModel {
     oldId?: number;
     name?: string | undefined;
     address1?: string | undefined;
@@ -5917,6 +6012,75 @@ export interface ICreateFileRequest {
     name?: string | undefined;
     base64String?: string | undefined;
     contentType?: string | undefined;
+}
+
+export class AuditActionResultOfUploadResponse extends AuditActionResult implements IAuditActionResultOfUploadResponse {
+    object?: UploadResponse | undefined;
+
+    constructor(data?: IAuditActionResultOfUploadResponse) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? UploadResponse.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfUploadResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfUploadResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfUploadResponse extends IAuditActionResult {
+    object?: UploadResponse | undefined;
+}
+
+export class UploadResponse implements IUploadResponse {
+    url?: string | undefined;
+
+    constructor(data?: IUploadResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): UploadResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new UploadResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        return data; 
+    }
+}
+
+export interface IUploadResponse {
+    url?: string | undefined;
 }
 
 export class AuditActionResultOfIEnumerableOfHelpPage extends AuditActionResult implements IAuditActionResultOfIEnumerableOfHelpPage {
@@ -6934,7 +7098,8 @@ export interface ICreateMenuRoleMapRequest {
 }
 
 export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
-    menuRoleId?: number;
+    roleId!: number;
+    menuId!: number;
     canRead?: boolean;
     canCreate?: boolean;
     canEdit?: boolean;
@@ -6953,7 +7118,8 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.menuRoleId = _data["menuRoleId"];
+            this.roleId = _data["roleId"];
+            this.menuId = _data["menuId"];
             this.canRead = _data["canRead"];
             this.canCreate = _data["canCreate"];
             this.canEdit = _data["canEdit"];
@@ -6972,7 +7138,8 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["menuRoleId"] = this.menuRoleId;
+        data["roleId"] = this.roleId;
+        data["menuId"] = this.menuId;
         data["canRead"] = this.canRead;
         data["canCreate"] = this.canCreate;
         data["canEdit"] = this.canEdit;
@@ -6984,7 +7151,8 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
 }
 
 export interface IUpdateMenuRoleMapRequest {
-    menuRoleId?: number;
+    roleId: number;
+    menuId: number;
     canRead?: boolean;
     canCreate?: boolean;
     canEdit?: boolean;
@@ -7367,47 +7535,6 @@ export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartR
 
 export interface IUpdatePartRequest extends ICreatePartRequest {
     id: number;
-}
-
-export class AuditActionResultOfICollectionOfInteger extends AuditActionResult implements IAuditActionResultOfICollectionOfInteger {
-    object?: number[] | undefined;
-
-    constructor(data?: IAuditActionResultOfICollectionOfInteger) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            if (Array.isArray(_data["object"])) {
-                this.object = [] as any;
-                for (let item of _data["object"])
-                    this.object!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfICollectionOfInteger {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfInteger();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.object)) {
-            data["object"] = [];
-            for (let item of this.object)
-                data["object"].push(item);
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfICollectionOfInteger extends IAuditActionResult {
-    object?: number[] | undefined;
 }
 
 export class ImportPartsRequest implements IImportPartsRequest {
@@ -9706,39 +9833,6 @@ export interface IAuditActionResultOfICollectionOfWorkflowActivityModel extends 
     object?: WorkflowActivityModel[] | undefined;
 }
 
-export class DeletableModel extends TrackableModel implements IDeletableModel {
-    isActive?: boolean;
-
-    constructor(data?: IDeletableModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.isActive = _data["isActive"];
-        }
-    }
-
-    static fromJS(data: any): DeletableModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new DeletableModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isActive"] = this.isActive;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IDeletableModel extends ITrackableModel {
-    isActive?: boolean;
-}
-
 export class WorkflowActivityModel extends DeletableModel implements IWorkflowActivityModel {
     name?: string | undefined;
     approvalTableName?: string | undefined;
@@ -10693,6 +10787,11 @@ export class UpdateWorkflowStageRequest extends CreateWorkflowStageRequest imple
 
 export interface IUpdateWorkflowStageRequest extends ICreateWorkflowStageRequest {
     id: number;
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export interface FileResponse {
