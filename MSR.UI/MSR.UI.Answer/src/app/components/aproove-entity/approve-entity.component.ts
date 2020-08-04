@@ -36,7 +36,7 @@ export class ApproveEntityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.status);
+
   }
 
   showDialog(approve) {
