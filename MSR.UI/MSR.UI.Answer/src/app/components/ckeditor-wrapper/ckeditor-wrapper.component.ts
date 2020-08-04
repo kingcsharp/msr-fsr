@@ -16,18 +16,46 @@ export class CkeditorWrapperComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
+    let options = new Array<string>();
+    ClassicEditor.builtinPlugins.map(plugin => {
+      console.log(plugin.pluginName);
+      options.push(plugin.pluginName);
+
+    });
+
+    console.log(options);
+
     this.config = {
+      fontColor: {
+        colors: [
+          {
+            color: 'hsl(0, 0%, 0%)',
+            label: 'Black',
+            default:true
+          },
+          {
+            color: 'hsl(0, 0%, 30%)',
+            label: 'Dim grey'
+          },
+          {
+            color: 'hsl(0, 0%, 60%)',
+            label: 'Grey'
+          },
+          {
+            color: 'hsl(0, 0%, 90%)',
+            label: 'Light grey'
+          },
+          {
+            color: 'hsl(0, 0%, 100%)',
+            label: 'White',
+            hasBorder: true
+          }
+        ]
+      },
       toolbar: {
         items: [
-          'bold',
-          'italic',
-          'link',
-          'bulletedList',
-          'numberedList',
-          'imageUpload',
-          'blockQuote',
-          'undo',
-          'redo'
+          "BlockQuote", "Bold", "CKFinder", "FontBackgroundColor", "FontColor", "FontFamily", "FontSize", "Heading", "Highlight", "HorizontalLine", "ImageUpload", "Indent", "Italic", "Link", "PageBreak", "RemoveFormat", "Strikethrough", "Subscript", "Superscript"
         ]
       },
       image: {
