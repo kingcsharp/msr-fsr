@@ -3,9 +3,14 @@ import { HelpService, CreateHelpPageRequest, RoleService, Role, HelpPage, Update
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Route } from '@angular/router';
 import { Globals } from '../../../models/lib/globals';
 import { SelectItem } from 'primeng/api';
+import {LoadedRouterConfig} from '@angular/router/bundles/router.umd.js';
+import {LocationsModule} from '../../locations/locations.module';
+import {MainModule} from '../../main/main.module';
+import {PartsModule} from '../../parts/parts.module';
+import { WorkflowModule} from '../../workflow/workflow.module';
 
 @Component({
   selector: 'app-help-create',
@@ -22,13 +27,13 @@ export class HelpCreateComponent implements OnInit {
 
   menuItems: any;
   urls: Array<SelectItem> = new Array<SelectItem>();
-
+  friendlyUrlOptions: Array<string> = new Array<string>();
   constructor(private helpService: HelpService, private roleService: RoleService, private location: Location,
-    private route: ActivatedRoute, public globals: Globals, private router: Router) { }
+    private activatedRoute: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
 
-    this.route.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe(params => {
       this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);
       if (this.helpPageToEditId !== 0) {
 
@@ -51,56 +56,49 @@ export class HelpCreateComponent implements OnInit {
     this.roleService.role(env.apiVersion).subscribe(response => {
       this.availableRoles = this.availableRoles.concat(response.object);
     });
-  }
 
-  generateFriendlyUrlOptions(friendlyUrlsUsed: Array<string>) {
+    this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
-    this.menuItems = this.generateMenu(this.globals.user.roles[0].menus);
+        let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
 
-    this.menuItems.forEach(menuItem => {
+        this.generateAllUrlPathsRegistered();
+        this.friendlyUrlOptions.forEach( friendlyUrlOption => {
 
-      let parentPath = menuItem.name.toLowerCase();
-      menuItem.submenu.forEach(subMenuItem => {
-        let childPath = subMenuItem.url.toLowerCase();
-        if (childPath !== '#') {
-          let selectItemValue = '/' + parentPath + '/' + childPath;
+          if(friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined){
 
-          if (friendlyUrlsUsed.find(s => s === selectItemValue) === null) {
-            this.urls.push({ label: selectItemValue, value: selectItemValue });
+            this.urls.push({ label: friendlyUrlOption, value: friendlyUrlOption });
+
           }
 
-        }
-
-      });
-
-    });
+        });
+    }))
 
   }
 
-  generateMenu(menuItems: any) {
-    let menuStructure: any = [];
+  generateAllUrlPathsRegistered(){
 
-    menuItems.forEach(function (item) {
-      const elem = menuStructure.find(x => x.name === item.menuGroup.name);
-      if (elem === undefined) {
-        let menuItem = { submenu: [{ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info }] };
-        Object.assign(menuItem, item.menuGroup);
-        menuStructure.push(menuItem);
-      } else {
-        const submenuItem = elem.submenu.find(x => x.name === item.name);
-        if (submenuItem === undefined) {
-          elem.submenu.push({ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info });
-        }
-      }
-    });
+    let helpPaths = this.getHelpPaths();
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(helpPaths);
 
+    let locationPaths = LocationsModule.routes.filter(s => s.path !== '').map(m =>'/locations/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(locationPaths);
+    
+    let mainPaths = MainModule.routes.filter(s => s.path !== '').map(m =>'/people/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(mainPaths);
+    
+    let partsPaths = PartsModule.routes.filter(s => s.path !== '').map(m =>'/parts/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(partsPaths);
 
-    menuStructure.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
-    menuStructure.forEach(function (item) {
-      item.submenu.sort((a, b) => (a.orderNumber > b.orderNumber) ? -1 : 1);
-    });
+    let workflowPaths = PartsModule.routes.filter(s => s.path !== '').map(m =>'/workflow/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(workflowPaths);
+    
+  }
 
-    return menuStructure;
+  getHelpPaths():Array<string>{
+    var routerConfig = <LoadedRouterConfig>(<any>this.router.config.find(s => s.path === 'app'))['_loadedConfig'];
+    var helpConfig = <LoadedRouterConfig>(<any>routerConfig.routes[0].children.find(s => s.path === 'help'))['_loadedConfig']
+    var helpPaths = helpConfig.routes.filter(s => s.path !== '').map(m => '/help/' + m.path);
+    return helpPaths;
   }
 
   saveHelpPage() {
@@ -140,11 +138,9 @@ export class HelpCreateComponent implements OnInit {
 
     this.helpService.helpPatch(env.apiVersion, updateHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
-        console.log(response);
         this.helpPageToEditId = response.object.id;
       }
     }, (error) => {
-      console.log(error);
     }));
   }
 

@@ -17,7 +17,7 @@ import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/cked
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 
 export const routes = [
-  { path: '', redirectTo: 'people', pathMatch: 'full' },
+  { path: '', redirectTo: 'help', pathMatch: 'full' },
   { path: 'help', component: HelpComponent, pathMatch: 'full' },
   { path: 'help-create', component: HelpCreateComponent, pathMatch: 'full' },
 ];
