@@ -190,7 +190,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Roles, opt => opt.Ignore()).ReverseMap();
             CreateMap<MenuGroup, Domain.Models.MenuGroup>().ReverseMap();
 
-            CreateMap<Status, Domain.Models.Status>().ReverseMap();
+            CreateMap<Status, Domain.Models.StatusModel>().ReverseMap();
 
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
