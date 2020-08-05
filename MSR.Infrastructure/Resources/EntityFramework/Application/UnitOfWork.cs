@@ -118,11 +118,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<PartSubPartMap> PartSubPartMaps { get { return _partSubPartMap ?? (_partSubPartMap = new EFRepository<PartSubPartMap>(Context)); } }
         public IRepository<Invoice> Invoices { get { return _invoices ??= new EFRepository<Invoice>(Context); } }
         public IRepository<InvoiceItem> InvoiceItems { get { return _invoiceItems ??= new EFRepository<InvoiceItem>(Context); } }
-        public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
-        public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
         public IRepository<WorkOrder> WorkOrders { get { return _workOrders ??= new EFRepository<WorkOrder>(Context); } }
         public IRepository<WorkOrderPart> WorkOrderParts { get { return _workOrderParts ??= new EFRepository<WorkOrderPart>(Context); } }
         public IRepository<WorkOrderTask> WorkOrderTasks { get { return _workOrderTasks ??= new EFRepository<WorkOrderTask>(Context); } }
+        public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
+        public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
 
         #endregion Repositories
 
