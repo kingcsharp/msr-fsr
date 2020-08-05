@@ -25,7 +25,6 @@ import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService, FileService
 } from './services/api.client.generated';
-import { InvoiceComponent } from './pages/invoice/invoice.component';
 
 const APP_PROVIDERS = [
   CheckAllService,
@@ -41,8 +40,7 @@ const APP_PROVIDERS = [
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
-    ErrorComponent,
-    InvoiceComponent
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

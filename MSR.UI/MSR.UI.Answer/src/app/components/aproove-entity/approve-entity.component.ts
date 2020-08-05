@@ -28,8 +28,8 @@ export class ApproveEntityComponent implements OnInit {
   bodyText: string = '';
 
   @Input() activityType: EnumApprovalTables;
-  @Input() show: boolean;
-  @Output() showchange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() status: string;
+  @Output() statusChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() entityId: number;
   constructor(public _globals: Globals, private workflowPendingApprovalService: WorkflowPendingApprovalService) {
 
@@ -56,15 +56,15 @@ export class ApproveEntityComponent implements OnInit {
     if (this.approve) {
       this.workflowPendingApprovalService.workflowPendingApprovalPost(this.activityType, this.entityId, this.comments, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          this.show = false;
-          this.showchange.emit(this.show);
+          this.status = "Approved";
+          this.statusChange.emit(this.status);
           ctrl.clseDialog();
         }));
     } else {
       this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.activityType, this.entityId, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          this.show = false;
-          this.showchange.emit(this.show);
+          this.status = "Cancelled";
+          this.statusChange.emit(this.status);
           ctrl.clseDialog();
         }));
     }

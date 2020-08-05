@@ -1,8 +1,8 @@
-<i data-cy="cancel-approval" *ngIf="show && _globals.hasActivityPrivilege(activityType, privileges.CanDelete)"
+<i data-cy="cancel-approval" *ngIf="(status ==='In Progress'||status ==='Pending') && _globals.hasActivityPrivilege(activityType, privileges.CanDelete)"
     class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost" appendTo="body"
     (click)="showDialog(false)"></i>
 
-<i data-cy="approve-approval" *ngIf="show && _globals.hasActivityPrivilege(activityType, privileges.CanApprove)"
+<i data-cy="approve-approval" *ngIf="(status ==='In Progress'||status ==='Pending') && _globals.hasActivityPrivilege(activityType, privileges.CanApprove)"
     class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
     (click)="showDialog(true)"></i>
 
