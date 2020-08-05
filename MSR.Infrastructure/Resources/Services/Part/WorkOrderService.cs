@@ -58,9 +58,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             WorkOrderModel ret;
 
-            if (!DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
+                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
             }
 
             WorkOrder workorder = _mapper.Map<WorkOrder>(command);
@@ -84,9 +84,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (!DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
-                throw new DomainException($"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
+                throw new DomainException($"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}");
             }
 
             WorkOrderModel ret;
@@ -110,8 +110,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (!DelegateHandler.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove)) {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {DelegateHandler.GetCurrentUserId()}");
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove)) {
+                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
             }
 
             var workorder = _mapper.Map(command, current);
