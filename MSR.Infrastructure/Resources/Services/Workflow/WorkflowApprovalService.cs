@@ -380,7 +380,7 @@ namespace MSR.Infrastructure.Resources.Services
                 //}
                 ret.AddRange(await GetPendingApprovalByTable(EnumApprovalTables.UserApproval));
             }
-            else if (DelegateHandler.CanReadActivity(command.Table))
+            else if (CurrentUser.CanReadActivity(command.Table))
             {
                 ret.AddRange(await GetPendingApprovalByTable(command.Table));
             }

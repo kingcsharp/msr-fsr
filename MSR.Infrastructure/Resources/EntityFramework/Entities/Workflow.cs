@@ -15,11 +15,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         [StringLength(100)]
         public string Name { get; set; }
-        [ForeignKey("CreatedBy")]
-        public virtual User Created { get; set; }
-
-        [ForeignKey("LastUpdatedBy")]
-        public virtual User LastUpdated { get; set; }
 
         public virtual ICollection<WorkflowStageMap> MemberStages { get; set; }
         public virtual ICollection<WorkflowActivityMap> ActivityMaps { get; set; }

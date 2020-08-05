@@ -37,7 +37,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public string GetFullName()
         {
-            return this.FirstName + " " + this.LastName;
+            return $"{FirstName} {LastName}";
         }
     }
 }

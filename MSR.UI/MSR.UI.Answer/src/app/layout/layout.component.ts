@@ -9,7 +9,7 @@ import {
 } from '@angular/router';
 import { Globals } from '../models/lib/globals';
 
-declare let Raphael: any;
+// declare let Raphael: any;
 
 
 @Component({
@@ -29,9 +29,9 @@ export class Layout {
 
   constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone, private _globals: Globals) {
     this.globals = this._globals;
-    Raphael.prototype.safari = function (): any {
-      return;
-    };
+    // Raphael.prototype.safari = function (): any {
+    //   return;
+    // };
     router.events.subscribe((event: RouterEvent) => {
       setTimeout(() => {
         this._navigationInterceptor(event);
@@ -91,7 +91,7 @@ export class Layout {
   }
 
   sidebarDisplay(display): void {
-    if(this.supportTicketModalDisplayed){
+    if (this.supportTicketModalDisplayed) {
       return;
     }
     let _display = display === 'Hide' ? true : false;
@@ -115,7 +115,7 @@ export class Layout {
     this.sidebarState = !this.sidebarState;
   }
 
-  displaySupportTicketModalDisplay():void{
+  displaySupportTicketModalDisplay(): void {
     this.supportTicketModalDisplayed = true;
   }
 }

@@ -6,7 +6,7 @@ import {
   FileModel, EnumMenuItem, FileService
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
-// FileService, 
+import { Globals } from '../../../app/models/lib/globals';
 @Component({
   selector: 'grid-file-viewer',
   templateUrl: './grid-file-viewer.component.html',
@@ -17,11 +17,11 @@ export class GridFileViewerComponent implements OnInit {
   selectedDocUrl: string;
   display: boolean = false;
   viewer: string;
-  selectedFile:FileModel;
+  selectedFile: FileModel;
 
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem;
-  constructor(private fileService: FileService) {
+  constructor(private fileService: FileService, private globals: Globals) {
 
   }
 
@@ -30,20 +30,14 @@ export class GridFileViewerComponent implements OnInit {
 
   }
 
-  getSingularMenuName(menuItem) {
-    var name = EnumMenuItem[menuItem];
-    return name.replace(/s$/, '');
-  }
-
   showViewer(file: FileModel) {
     this.selectedFile = file;
     this.viewer = this.getViewerType(file.contentType);
-    this.fileService.fileGet(this.getSingularMenuName(this.menuItem), file.entityId, file.fileId, env.apiVersion)
+    this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), file.entityId, file.fileId, env.apiVersion)
       .pipe(take(1)).subscribe(responseHandler((resp) => {
-        if (resp.object.length == 0) {
-          //err
-        }
-        else {
+        if (resp.object.length === 0) {
+          // err
+        } else {
           this.selectedDocUrl = resp.object[0].fileURL;
           this.display = true;
         }
@@ -60,6 +54,7 @@ export class GridFileViewerComponent implements OnInit {
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
       case 'application/vnd.ms-excel':
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
         return 'office';
       case 'text/plain':
       case 'text/html':

@@ -10,6 +10,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
             builder.ToTable(nameof(PartSubPartMap));
             builder.HasOne(sp => sp.ParentPart).WithMany(p => p.Subparts);
             builder.HasOne(sp => sp.Part);
+            _ = builder.HasOne(i => i.Created)
+                   .WithMany().HasForeignKey(i => i.CreatedBy);
         }
     }
 }

@@ -1,0 +1,13 @@
+﻿using MSR.Domain.Commanding.Enums;
+using System;
+
+namespace MSR.Domain.Helpers
+{
+    public static class CurrentUser
+    {
+        public static Func<int> GetId;
+        public static Func<EnumApprovalTables, bool> CanApproveActivity;
+        public static Func<EnumApprovalTables, bool> CanReadActivity;
+        public static Func<EnumMenuItem, EnumPrivilege, bool> HasPrivilege;
+    }
+}

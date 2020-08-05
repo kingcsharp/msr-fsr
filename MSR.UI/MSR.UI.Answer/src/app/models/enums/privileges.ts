@@ -18,8 +18,7 @@ export enum EnumApprovalTables {
     UserApproval = 8
 }
 
-export enum EnumMenuItem
-{
+export enum EnumMenuItem {
     AdminCostSettings = 0
     , ApprovalGroups = 1
     , ApprovalStages = 2

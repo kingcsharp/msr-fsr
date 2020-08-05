@@ -59,12 +59,11 @@ namespace MSR.Infrastructure.Resources.Services.Account
         public async Task<string> LoginAsync(SystemLogin command)
         {
             var user = await _unitOfWork.Users.Query()
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
-                .ThenInclude(x => x.MenuRolePermission)
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
-                .ThenInclude(x => x.MenuItem)
-                .Where(x=>x.UserName == command.UserName)
+                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuRolePermission)
+                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
+                .Where(x => x.UserName == command.UserName)
                 .FirstOrDefaultAsync();
+
             if (user == null)
             {
                 throw new DomainException("Username Or Password are invalid", DomainError.NotFound);
@@ -123,7 +122,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 throw new DomainException("User not found", DomainError.NotFound);
             }
 
-            DelegateHandler.GetCurrentUserId = () => user.Id;
+            Domain.Helpers.CurrentUser.GetId = () => user.Id;
 
             _authenticationHelper.CreatePasswordHash(command.Password, out var hash, out var salt);
             user.PasswordHash = hash;
@@ -209,7 +208,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             {
                 foreach (var item in canApproveMenuItemRoles)
                 {
-                    if (item.MenuItemId == workflowLinkModel.MenuItemId && workflowLinkModel.RoleIds.Contains(item.RoleId))
+                    if (item.MenuItemId == workflowLinkModel.MenuItemId && workflowLinkModel.RoleIds != null && workflowLinkModel.RoleIds.Contains(item.RoleId))
                     {
                         var key = (int)EnumUtils.GetValueFromDescription<EnumApprovalTables>(workflowLinkModel.ApprovalTableName);
                         var privileges = GetListEnumPrivileges(item.MenuRolePermission);
@@ -230,11 +229,10 @@ namespace MSR.Infrastructure.Resources.Services.Account
             return result;
         }
 
-        private static int[][] GetTokenUserRoles(EntityFramework.Entities.User user)
+        private static int[][] GetTokenUserRoles(User user)
         {
             var totalMenuItems = Enum.GetNames(typeof(EnumMenuItem)).Length;
             var jaggedArray = new int[totalMenuItems][];
-
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
                 var efRole = role.Role;
@@ -246,11 +244,20 @@ namespace MSR.Infrastructure.Resources.Services.Account
                         var efMenuItem = menuItem.MenuItem;
 
                         var menuItemNum = (int)EnumUtils.ParseMenuType(efMenuItem.Name);
-                        jaggedArray[menuItemNum] = GetListEnumPrivileges(menuItem.MenuRolePermission);
-                        //var a = GetListEnumPrivileges(menuItem.MenuRolePermission);
+                        var permissions = GetListEnumPrivileges(menuItem.MenuRolePermission);
+                        if (jaggedArray[menuItemNum] == null)
+                        {
+                            jaggedArray[menuItemNum] = permissions;
+                        }
+                        else
+                        {
+                            jaggedArray[menuItemNum] = jaggedArray[menuItemNum].Union(permissions).ToArray();
+                        }
+
                     }
                 }
             }
+
             return jaggedArray;
         }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
-import { MenuItem } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
@@ -58,31 +58,36 @@ export class Globals {
     }
 
     hasPrivilege(controllerEnum, privilege) {
-        var privileges = this.user.privileges[controllerEnum];
+        const privileges = this.user.privileges[controllerEnum];
         if (privileges === undefined) {
             return false;
         }
-        var ret = privileges.indexOf(privilege) > -1;
+        const ret = privileges.indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilegeByTableName(tableName, privilege) {
-        var approvalEnum = EnumApprovalTables[tableName];
+        const approvalEnum = EnumApprovalTables[tableName];
         if (approvalEnum === undefined) {
-            console.error("tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables", EnumApprovalTables);
+            console.error('tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables', EnumApprovalTables);
         }
 
-        var ret = this.user.approvalPrivileges[approvalEnum].indexOf(privilege) > -1;
+        const ret = this.user.approvalPrivileges[approvalEnum].indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilege(activityEnumVal, privilege) {
-        var privileges = this.user.approvalPrivileges[activityEnumVal];
+        const privileges = this.user.approvalPrivileges[activityEnumVal];
         if (privileges === undefined) {
             return false;
         }
-        var ret = privileges.indexOf(privilege) > -1;
+        const ret = privileges.indexOf(privilege) > -1;
         return ret;
+    }
+
+    getSingularMenuName(menuItem) {
+        let name = EnumMenuItem[menuItem];
+        return name.replace(/s$/, '');
     }
 
     updateLogin(val) {

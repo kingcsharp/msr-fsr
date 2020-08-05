@@ -10,6 +10,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { LocationCreateComponent } from './location-create/location-create.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { ApproveEntityComponent} from '../../components/aproove-entity/approve-entity.component'
 
 export const routes = [
   { path: '', redirectTo: 'locations', pathMatch: 'full' },
@@ -19,7 +20,7 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [LocationsComponent, GridOptionsComponent, LocationCreateComponent],
+  declarations: [LocationsComponent, GridOptionsComponent, LocationCreateComponent,ApproveEntityComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

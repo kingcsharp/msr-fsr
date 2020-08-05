@@ -4,7 +4,8 @@ namespace MSR.Domain.Commands
 {
     public class UpdateMenuRoleMap: Command
     {
-        public int MenuRoleId { get; set; }
+        public int RoleId { get; set; }
+        public int MenuId { get; set; }
         public bool CanRead { get; set; }
         public bool CanCreate { get; set; }
         public bool CanEdit { get; set; }

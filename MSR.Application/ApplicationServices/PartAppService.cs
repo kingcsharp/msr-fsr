@@ -56,13 +56,18 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
         {
-            var ret = await _partService.UpdatePartAsync(command);
-            var part = ret;
-            if (!part.IsPending && command.Files != null)
+            var part = await _partService.UpdatePartAsync(command);
+            if (!part.IsPending && command.Files != null && command.Files.Count > 0)
             {
-                await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
+                part.Files = await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
-            return new CommandResponse<PartModel>(ret);
+            else
+            {
+                List<int> ids = new List<int>();
+                ids.Add(part.Id);
+                part.Files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ids).ToList();
+            }
+            return new CommandResponse<PartModel>(part);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeletePart command, CancellationToken cancellationToken = default)
@@ -74,7 +79,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(ImportParts command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.ImportPartsAsync(command);
-            return new CommandResponse<ICollection<int>>(ret);
+            return new CommandResponse<ICollection<PartModel>>(ret);
         }
     }
 }

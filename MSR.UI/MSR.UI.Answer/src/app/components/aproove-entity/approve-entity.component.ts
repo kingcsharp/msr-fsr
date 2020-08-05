@@ -8,10 +8,10 @@ import {
   WorkflowPendingApprovalService, EnumApprovalTables
 } from '../../services/api.client.generated';
 
-//USE: 
+// USE:
 // approvalTables is of type: EnumApprovalTables
-//<approve-entity [(show)]="showApproveButtons" [entityId]="entity.id" 
-// [activityType]="approvalTables.PartApproval">
+// <approve-entity [(show)]='showApproveButtons' [entityId]='entity.id'
+// [activityType]='approvalTables.PartApproval'>
 // </approve-entity>
 
 @Component({
@@ -22,10 +22,10 @@ import {
 export class ApproveEntityComponent implements OnInit {
   display: boolean = false;
   privileges = EnumPrivilege;
-  comments: string = "";
+  comments: string = '';
   approve: boolean = false;
-  title: string = "";
-  bodyText: string = "";
+  title: string = '';
+  bodyText: string = '';
 
   @Input() activityType: EnumApprovalTables;
   @Input() show: boolean;
@@ -43,7 +43,7 @@ export class ApproveEntityComponent implements OnInit {
     this.display = true;
     this.approve = approve;
     this.title = approve ? 'Submit Approval Workflow' : 'Attention';
-    this.bodyText = approve ? 'Approval Workflow & Submit' : 'If you proceed you will lose any edits you made. Are you sure?'
+    this.bodyText = approve ? 'Approval Workflow & Submit' : 'If you proceed you will lose any edits you made. Are you sure?';
   }
 
   clseDialog() {
@@ -60,8 +60,7 @@ export class ApproveEntityComponent implements OnInit {
           this.showchange.emit(this.show);
           ctrl.clseDialog();
         }));
-    }
-    else {
+    } else {
       this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.activityType, this.entityId, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.show = false;
