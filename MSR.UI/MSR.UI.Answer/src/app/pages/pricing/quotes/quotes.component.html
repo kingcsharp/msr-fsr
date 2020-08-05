@@ -23,8 +23,8 @@
 				<button *ngIf="canCreate"
           class="btn btn-success width-100 mb-xs sm-mrg"
 					role="button"
-					data-cy="add-button"
-					(click)="onClickAddQuote()"
+          data-cy="add-button"
+          [routerLink]="['../quote-create']"
 				>+ Add</button>
 
         <csv-import [showButton]="canCreate" [menuItem]="menuItems.QuotesProducts" title="Import Sub Parts" (onUpload)="onClickImportQuote($event)"></csv-import>

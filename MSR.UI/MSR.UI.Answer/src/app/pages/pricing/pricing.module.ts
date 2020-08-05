@@ -23,14 +23,19 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { QuoteCreateComponent } from './quote-create/quote-create.component';
+import { ProductDefinitionComponent } from './product-definition/product-definition.component';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
   { path: 'products', component:QuotesComponent, pathMatch: 'full' },
+  { path: 'quote-create', component: QuoteCreateComponent, pathMatch: 'full'},
+  { path: 'product-edit', component: ProductDefinitionComponent, pathMatch: 'full'},
+  { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'}
 ];
 
 @NgModule({
-  declarations: [QuotesComponent],
+  declarations: [QuotesComponent, QuoteCreateComponent, ProductDefinitionComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

@@ -67,11 +67,6 @@ export class QuotesComponent implements OnInit {
     this.data = demoData;
   }
 
-  onClickAddQuote() {
-    //TODO: Add Quote;
-    console.log('Click Add Quote');
-  }
-
   onClickImportQuote($event) {
     //TODO: Import CSV process;
     console.log('Click Import Quote');
