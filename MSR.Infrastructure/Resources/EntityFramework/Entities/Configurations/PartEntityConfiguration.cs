@@ -9,6 +9,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
         {
             builder.ToTable(nameof(Part));
             builder.HasMany(part => part.Subparts).WithOne().HasForeignKey(sp => sp.ParentPartId);
+            _ = builder.HasOne(i => i.Created)
+                   .WithMany().HasForeignKey(i => i.CreatedBy);
+            _ = builder.HasOne(i => i.LastUpdated)
+                   .WithMany().HasForeignKey(i => i.LastUpdatedBy);
         }
     }
 }

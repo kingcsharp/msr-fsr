@@ -4,12 +4,13 @@ import { LocationsComponent } from './locations/locations.component';
 import { RouterModule } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
+import { GridOptionsComponent } from '../../components/grid-options/grid-options.component';
 import { DialogModule } from 'primeng/dialog';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { LocationCreateComponent } from './location-create/location-create.component';
 import { DropdownModule } from 'primeng/dropdown';
-import { UtilsModule } from '../../../app/layout/utils/utils.module';
+import { ApproveEntityComponent} from '../../components/aproove-entity/approve-entity.component'
 
 export const routes = [
   { path: '', redirectTo: 'locations', pathMatch: 'full' },
@@ -19,7 +20,7 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [LocationsComponent],
+  declarations: [LocationsComponent, GridOptionsComponent, LocationCreateComponent,ApproveEntityComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -28,8 +29,7 @@ export const routes = [
     DialogModule,
     MultiSelectModule,
     FormsModule,
-    DropdownModule,
-    UtilsModule
+    DropdownModule
   ]
 })
 export class LocationsModule {

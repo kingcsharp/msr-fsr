@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using MSR.Answer.Domain.Models;
 using MSR.Domain.Abstractions;
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -15,15 +18,17 @@ namespace MSR.Infrastructure.Resources.Services
 {
     public class FileService : IFileService
     {
-        IUploadFiles _fileUploader;
-        IDownloadFiles _fileDownloader;
-        IUnitOfWork _unitOfWork;
+        private readonly IUploadFiles _fileUploader;
+        private readonly IDownloadFiles _fileDownloader;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public FileService(IFileHandlerFactory fileHanderFactory, IUnitOfWork unitOfWork)
+        public FileService(IFileHandlerFactory fileHanderFactory, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
             _fileDownloader = fileHanderFactory.CreateDownloader(FileProvider.S3);
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public Task<bool> CreateDocumentAsync<T>(T entity, int entityId, FileModel file) where T : class
@@ -170,6 +175,18 @@ namespace MSR.Infrastructure.Resources.Services
         public static string mapEntityToTable(string entityName)
         {
             return entityName.Replace("Model", "");
+        }
+
+        public async Task<UploadResponse> UploadHelpFile(UploadFile command)
+        {
+            var fileModel = _mapper.Map<FileModel>(command);
+
+            var ret = await _fileUploader.UploadHelpFile(fileModel);
+
+            return new UploadResponse()
+            {
+                URL = ret
+            };
         }
     }
 }

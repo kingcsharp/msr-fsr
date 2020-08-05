@@ -45,7 +45,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
         
         public virtual EntityEntry<TEntity> Add(TEntity entity)
         {
-            //return _dbSet.Add(entity);
             return _dbSet.Add(entity);
         }
 
@@ -153,12 +152,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 
         public virtual IQueryable<TEntity> Query()
         {
-            return _dbSet;
+            return AddDefaultIncludes(_dbSet);
         }
 
         public virtual IQueryable<TEntity> QueryAsNoTracking()
         {
-            return _dbSet.AsNoTracking();
+            return AddDefaultIncludes(_dbSet).AsNoTracking();
         }
 
         public virtual int Count(Expression<Func<TEntity, bool>> filter)
@@ -207,6 +206,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 
             return entity;
         }
+
 
         public virtual TEntity FirstOrDefaultAsNoTracking(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
             params Expression<Func<TEntity, object>>[] includes)
@@ -275,7 +275,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
                     throw new Exception("To be able to validate the ownership of the record, " +
                                         "the entity must implement the ITrackableEntity interface");
 
-                if (trackableEntity.CreatedBy != DelegateHandler.GetCurrentUserId())
+                if (trackableEntity.Created.Id != CurrentUser.GetId())
                     throw new Exception("You are not the owner of this record");
             }
         }
@@ -338,6 +338,20 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 
         #region PRIVATE
 
+        private IQueryable<TEntity> AddDefaultIncludes(IQueryable<TEntity> query)
+        {
+            if (typeof(TEntity).IsAssignableFrom(typeof(TrackableEntity)))
+            {
+                query = query.Include("LastUpdatedBy");
+            }
+
+            if (typeof(TEntity).IsAssignableFrom(typeof(CreatableEntity)))
+            {
+                query = query.Include("CreatedBy");
+            }
+
+            return query;
+        }
         private void SaveChanges()
         {
             _context.SaveChanges();

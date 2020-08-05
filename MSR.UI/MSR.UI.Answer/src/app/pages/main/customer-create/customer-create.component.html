@@ -16,6 +16,43 @@
                     placeholder="" data-cy="title-input">
             </div>
             <div class="form-group">
+                <label for="customernumber" class="col-form-label text-left">
+                    Customer Number
+                </label>
+                <input type="text" id="customernumber" name="customernumber" [(ngModel)]="customer.customerNumber"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Customer Number"
+                    placeholder="" data-cy="title-input">
+            </div>
+            <div class="form-group" *ngIf="locationOptions != null && locationOptions.length != 0">
+                <label class="col-form-label text-left" for="location">
+                    Location
+                </label>
+                <div class="col-12">
+                    <p-dropdown placeholder="Select Location" name="location" [options]="locationOptions" showClear="true" optionLabel="name" appendTo="body"
+                        [baseZIndex]="100001" [(ngModel)]="selectedLocation">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="allUsers != null && allUsers.length != 0">
+                <label class="col-form-label text-left" for="primaryContact">
+                    Primary Contact
+                </label>
+                <div class="col-12 text-left">  
+                    <p-dropdown placeholder="Select Primary Contact" name="primaryContact" [options]="allUsers" showClear="true" [(ngModel)]="selectedPrimaryContactId">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="allUsers != null && allUsers.length != 0">
+                <label class="col-form-label text-left" for="secondaryContact">
+                    Secondary Contact
+                </label>
+                <div class="col-12">
+                    <p-dropdown placeholder="Select Secondary Contact" name="secondaryContact" [options]="allUsers" showClear="true" [(ngModel)]="selectedSecondaryContactId">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="address" class="col-form-label text-left">
                     Address
                 </label>
@@ -28,26 +65,17 @@
                 <label for="phone" class="col-form-label text-left">
                     Phone
                 </label>
-                <input type="text" id="address" name="address" [(ngModel)]="customer.phone"
+                <input type="text" id="addr ess" name="address" [(ngModel)]="customer.phone"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Phone"
-                    placeholder="" data-cy="title-input">
-            </div>
-            <div class="form-group">
-                <label for="customernumber" class="col-form-label text-left">
-                    Customer Number
-                </label>
-                <input type="text" id="customernumber" name="customernumber" [(ngModel)]="customer.customerNumber"
-                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
-                    data-parsley-required="true" class="form-control input-transparent" tooltip="Customer Number"
                     placeholder="" data-cy="title-input">
             </div>
         </form>
     </div>
     <div class="row">
-        <button type="button" class="btn btn-primary m-2" (click)="saveLocation()" *ngIf="customer.id == 0">Save</button>
-        <button type="button" class="btn btn-primary m-2" (click)="updateLocation()" *ngIf="customer.id != 0">Update</button>
-        <button type="button" class="btn btn-warning m-2" [routerLink]="['../locations']">Cancel</button>
+        <button type="button" class="btn btn-primary m-2" (click)="saveCustomer()" *ngIf="customer.id == 0">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateCustomer()" *ngIf="customer.id != 0">Update</button>
+        <button type="button" class="btn btn-warning m-2" [routerLink]="['../customers']">Cancel</button>
     </div>
 </div>
 

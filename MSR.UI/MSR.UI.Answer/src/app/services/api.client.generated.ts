@@ -660,6 +660,68 @@ export class FileService {
         }
         return _observableOf<AuditActionResult>(<any>null);
     }
+
+    help(version: string, name: string | null | undefined, contentType: string | null | undefined, fileName: string | null | undefined, image: FileParameter | null | undefined): Observable<AuditActionResultOfUploadResponse> {
+        let url_ = this.baseUrl + "/v{version}/File/Help";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (name !== null && name !== undefined)
+            content_.append("Name", name.toString());
+        if (contentType !== null && contentType !== undefined)
+            content_.append("ContentType", contentType.toString());
+        if (fileName !== null && fileName !== undefined)
+            content_.append("FileName", fileName.toString());
+        if (image !== null && image !== undefined)
+            content_.append("Image", image.data, image.fileName ? image.fileName : "Image");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processHelp(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processHelp(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfUploadResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfUploadResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processHelp(response: HttpResponseBase): Observable<AuditActionResultOfUploadResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfUploadResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfUploadResponse>(<any>null);
+    }
 }
 
 @Injectable()
@@ -673,13 +735,15 @@ export class HelpService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    helpGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
+    helpGet(id: number | null | undefined, friendlyURL: string | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfHelpPage> {
         let url_ = this.baseUrl + "/v{version}/Help?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (friendlyURL !== undefined && friendlyURL !== null)
+            url_ += "FriendlyURL=" + encodeURIComponent("" + friendlyURL) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -891,6 +955,65 @@ export class HelpService {
         return _observableOf<AuditActionResultOfHelpPage>(<any>null);
     }
 
+    roleDelete(helpPageId: number | undefined, roleId: number | undefined, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Help/Role?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (helpPageId === null)
+            throw new Error("The parameter 'helpPageId' cannot be null.");
+        else if (helpPageId !== undefined)
+            url_ += "HelpPageId=" + encodeURIComponent("" + helpPageId) + "&";
+        if (roleId === null)
+            throw new Error("The parameter 'roleId' cannot be null.");
+        else if (roleId !== undefined)
+            url_ += "roleId=" + encodeURIComponent("" + roleId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRoleDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRoleDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRoleDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+
     helpDelete(id: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Help/{id}";
         if (id === undefined || id === null)
@@ -924,60 +1047,6 @@ export class HelpService {
     }
 
     protected processHelpDelete(response: HttpResponseBase): Observable<AuditActionResult> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResult>(<any>null);
-    }
-
-    roleDelete(id: number, version: string): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/Help/Role/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRoleDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRoleDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRoleDelete(response: HttpResponseBase): Observable<AuditActionResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1310,13 +1379,15 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (parentId !== undefined && parentId !== null)
             url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1988,7 +2059,7 @@ export class PartService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    import(version: string, req: ImportPartsRequest): Observable<AuditActionResultOfICollectionOfInteger> {
+    import(version: string, req: ImportPartsRequest): Observable<AuditActionResultOfICollectionOfPartModel> {
         let url_ = this.baseUrl + "/v{version}/Part/import";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2014,14 +2085,14 @@ export class PartService {
                 try {
                     return this.processImport(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processImport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfInteger> {
+    protected processImport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPartModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2032,7 +2103,7 @@ export class PartService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfInteger.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfPartModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2040,7 +2111,7 @@ export class PartService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfInteger>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfPartModel>(<any>null);
     }
 }
 
@@ -4877,8 +4948,10 @@ export interface IEntityModel {
 export abstract class TrackableModel extends EntityModel implements ITrackableModel {
     lastUpdatedOn?: Date | undefined;
     lastUpdatedBy?: number | undefined;
+    lastUpdated?: User | undefined;
     createdOn?: Date;
     createdBy?: number | undefined;
+    created?: User | undefined;
 
     constructor(data?: ITrackableModel) {
         super(data);
@@ -4889,8 +4962,10 @@ export abstract class TrackableModel extends EntityModel implements ITrackableMo
         if (_data) {
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             this.lastUpdatedBy = _data["lastUpdatedBy"];
+            this.lastUpdated = _data["lastUpdated"] ? User.fromJS(_data["lastUpdated"]) : <any>undefined;
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.createdBy = _data["createdBy"];
+            this.created = _data["created"] ? User.fromJS(_data["created"]) : <any>undefined;
         }
     }
 
@@ -4903,8 +4978,10 @@ export abstract class TrackableModel extends EntityModel implements ITrackableMo
         data = typeof data === 'object' ? data : {};
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         data["lastUpdatedBy"] = this.lastUpdatedBy;
+        data["lastUpdated"] = this.lastUpdated ? this.lastUpdated.toJSON() : <any>undefined;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["createdBy"] = this.createdBy;
+        data["created"] = this.created ? this.created.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
@@ -4913,8 +4990,10 @@ export abstract class TrackableModel extends EntityModel implements ITrackableMo
 export interface ITrackableModel extends IEntityModel {
     lastUpdatedOn?: Date | undefined;
     lastUpdatedBy?: number | undefined;
+    lastUpdated?: User | undefined;
     createdOn?: Date;
     createdBy?: number | undefined;
+    created?: User | undefined;
 }
 
 export class Customer extends TrackableModel implements ICustomer {
@@ -4993,6 +5072,7 @@ export class User implements IUser {
     userName?: string | undefined;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    fullName?: string | undefined;
     title?: string | undefined;
     email?: string | undefined;
     securityStamp?: string | undefined;
@@ -5012,7 +5092,6 @@ export class User implements IUser {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
-    fullName?: string | undefined;
 
     constructor(data?: IUser) {
         if (data) {
@@ -5031,6 +5110,7 @@ export class User implements IUser {
             this.userName = _data["userName"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            this.fullName = _data["fullName"];
             this.title = _data["title"];
             this.email = _data["email"];
             this.securityStamp = _data["securityStamp"];
@@ -5054,7 +5134,6 @@ export class User implements IUser {
                 for (let item of _data["roles"])
                     this.roles!.push(Role.fromJS(item));
             }
-            this.fullName = _data["fullName"];
         }
     }
 
@@ -5073,6 +5152,7 @@ export class User implements IUser {
         data["userName"] = this.userName;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        data["fullName"] = this.fullName;
         data["title"] = this.title;
         data["email"] = this.email;
         data["securityStamp"] = this.securityStamp;
@@ -5096,7 +5176,6 @@ export class User implements IUser {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
-        data["fullName"] = this.fullName;
         return data; 
     }
 }
@@ -5108,6 +5187,7 @@ export interface IUser {
     userName?: string | undefined;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    fullName?: string | undefined;
     title?: string | undefined;
     email?: string | undefined;
     securityStamp?: string | undefined;
@@ -5127,7 +5207,6 @@ export interface IUser {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
-    fullName?: string | undefined;
 }
 
 export class Role implements IRole {
@@ -5422,7 +5501,40 @@ export enum EnumMenuItem {
     Roles = 32,
 }
 
-export class LocationModel extends TrackableModel implements ILocationModel {
+export class DeletableModel extends TrackableModel implements IDeletableModel {
+    isActive?: boolean;
+
+    constructor(data?: IDeletableModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): DeletableModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeletableModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isActive"] = this.isActive;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IDeletableModel extends ITrackableModel {
+    isActive?: boolean;
+}
+
+export class LocationModel extends DeletableModel implements ILocationModel {
     oldId?: number;
     name?: string | undefined;
     address1?: string | undefined;
@@ -5490,7 +5602,7 @@ export class LocationModel extends TrackableModel implements ILocationModel {
     }
 }
 
-export interface ILocationModel extends ITrackableModel {
+export interface ILocationModel extends IDeletableModel {
     oldId?: number;
     name?: string | undefined;
     address1?: string | undefined;
@@ -5599,6 +5711,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
     locationId?: number | undefined;
     primaryContactUserId?: number | undefined;
     secondaryContactUserId?: number | undefined;
+    customerNumber?: string | undefined;
 
     constructor(data?: ICreateCustomerRequest) {
         if (data) {
@@ -5617,6 +5730,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
             this.locationId = _data["locationId"];
             this.primaryContactUserId = _data["primaryContactUserId"];
             this.secondaryContactUserId = _data["secondaryContactUserId"];
+            this.customerNumber = _data["customerNumber"];
         }
     }
 
@@ -5635,6 +5749,7 @@ export class CreateCustomerRequest implements ICreateCustomerRequest {
         data["locationId"] = this.locationId;
         data["primaryContactUserId"] = this.primaryContactUserId;
         data["secondaryContactUserId"] = this.secondaryContactUserId;
+        data["customerNumber"] = this.customerNumber;
         return data; 
     }
 }
@@ -5646,6 +5761,7 @@ export interface ICreateCustomerRequest {
     locationId?: number | undefined;
     primaryContactUserId?: number | undefined;
     secondaryContactUserId?: number | undefined;
+    customerNumber?: string | undefined;
 }
 
 export class UpdateCustomerRequest implements IUpdateCustomerRequest {
@@ -5657,6 +5773,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
     secondaryContactUserId?: number | undefined;
     customerId!: number;
     isActive?: boolean | undefined;
+    customerNumber?: string | undefined;
 
     constructor(data?: IUpdateCustomerRequest) {
         if (data) {
@@ -5677,6 +5794,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
             this.secondaryContactUserId = _data["secondaryContactUserId"];
             this.customerId = _data["customerId"];
             this.isActive = _data["isActive"];
+            this.customerNumber = _data["customerNumber"];
         }
     }
 
@@ -5697,6 +5815,7 @@ export class UpdateCustomerRequest implements IUpdateCustomerRequest {
         data["secondaryContactUserId"] = this.secondaryContactUserId;
         data["customerId"] = this.customerId;
         data["isActive"] = this.isActive;
+        data["customerNumber"] = this.customerNumber;
         return data; 
     }
 }
@@ -5710,6 +5829,7 @@ export interface IUpdateCustomerRequest {
     secondaryContactUserId?: number | undefined;
     customerId: number;
     isActive?: boolean | undefined;
+    customerNumber?: string | undefined;
 }
 
 export class AuditActionResultOfICollectionOfFileModel extends AuditActionResult implements IAuditActionResultOfICollectionOfFileModel {
@@ -5892,6 +6012,75 @@ export interface ICreateFileRequest {
     name?: string | undefined;
     base64String?: string | undefined;
     contentType?: string | undefined;
+}
+
+export class AuditActionResultOfUploadResponse extends AuditActionResult implements IAuditActionResultOfUploadResponse {
+    object?: UploadResponse | undefined;
+
+    constructor(data?: IAuditActionResultOfUploadResponse) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? UploadResponse.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfUploadResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfUploadResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfUploadResponse extends IAuditActionResult {
+    object?: UploadResponse | undefined;
+}
+
+export class UploadResponse implements IUploadResponse {
+    url?: string | undefined;
+
+    constructor(data?: IUploadResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): UploadResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new UploadResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        return data; 
+    }
+}
+
+export interface IUploadResponse {
+    url?: string | undefined;
 }
 
 export class AuditActionResultOfIEnumerableOfHelpPage extends AuditActionResult implements IAuditActionResultOfIEnumerableOfHelpPage {
@@ -6909,7 +7098,8 @@ export interface ICreateMenuRoleMapRequest {
 }
 
 export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
-    menuRoleId?: number;
+    roleId!: number;
+    menuId!: number;
     canRead?: boolean;
     canCreate?: boolean;
     canEdit?: boolean;
@@ -6928,7 +7118,8 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.menuRoleId = _data["menuRoleId"];
+            this.roleId = _data["roleId"];
+            this.menuId = _data["menuId"];
             this.canRead = _data["canRead"];
             this.canCreate = _data["canCreate"];
             this.canEdit = _data["canEdit"];
@@ -6947,7 +7138,8 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["menuRoleId"] = this.menuRoleId;
+        data["roleId"] = this.roleId;
+        data["menuId"] = this.menuId;
         data["canRead"] = this.canRead;
         data["canCreate"] = this.canCreate;
         data["canEdit"] = this.canEdit;
@@ -6959,7 +7151,8 @@ export class UpdateMenuRoleMapRequest implements IUpdateMenuRoleMapRequest {
 }
 
 export interface IUpdateMenuRoleMapRequest {
-    menuRoleId?: number;
+    roleId: number;
+    menuId: number;
     canRead?: boolean;
     canCreate?: boolean;
     canEdit?: boolean;
@@ -7342,47 +7535,6 @@ export class UpdatePartRequest extends CreatePartRequest implements IUpdatePartR
 
 export interface IUpdatePartRequest extends ICreatePartRequest {
     id: number;
-}
-
-export class AuditActionResultOfICollectionOfInteger extends AuditActionResult implements IAuditActionResultOfICollectionOfInteger {
-    object?: number[] | undefined;
-
-    constructor(data?: IAuditActionResultOfICollectionOfInteger) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            if (Array.isArray(_data["object"])) {
-                this.object = [] as any;
-                for (let item of _data["object"])
-                    this.object!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfICollectionOfInteger {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfInteger();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.object)) {
-            data["object"] = [];
-            for (let item of this.object)
-                data["object"].push(item);
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfICollectionOfInteger extends IAuditActionResult {
-    object?: number[] | undefined;
 }
 
 export class ImportPartsRequest implements IImportPartsRequest {
@@ -9681,39 +9833,6 @@ export interface IAuditActionResultOfICollectionOfWorkflowActivityModel extends 
     object?: WorkflowActivityModel[] | undefined;
 }
 
-export class DeletableModel extends TrackableModel implements IDeletableModel {
-    isActive?: boolean;
-
-    constructor(data?: IDeletableModel) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.isActive = _data["isActive"];
-        }
-    }
-
-    static fromJS(data: any): DeletableModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new DeletableModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isActive"] = this.isActive;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IDeletableModel extends ITrackableModel {
-    isActive?: boolean;
-}
-
 export class WorkflowActivityModel extends DeletableModel implements IWorkflowActivityModel {
     name?: string | undefined;
     approvalTableName?: string | undefined;
@@ -10668,6 +10787,11 @@ export class UpdateWorkflowStageRequest extends CreateWorkflowStageRequest imple
 
 export interface IUpdateWorkflowStageRequest extends ICreateWorkflowStageRequest {
     id: number;
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export interface FileResponse {

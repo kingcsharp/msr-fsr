@@ -8,5 +8,6 @@
         public int? LocationId { get; set; }
         public int? PrimaryContactUserId { get; set; }
         public int? SecondaryContactUserId { get; set; }
+        public string CustomerNumber { get; set; }
     }
 }

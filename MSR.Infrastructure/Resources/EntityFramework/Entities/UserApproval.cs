@@ -22,8 +22,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int StatusId { get; set; }
         [ForeignKey("StatusId")]
         public virtual Status Status { get; set; }
-        [ForeignKey("CreatedBy")]
-        public virtual User Created { get; set; }
 
         public int? OldId { get; set; }
 

@@ -26,9 +26,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual Location Location { get; set; }
 
-        public int StatusId { get; set; }
-        public virtual Status Status { get; set; }
-
         public string CustomerNumber { get; set; }
         public bool IsActive { get; set; }
     }

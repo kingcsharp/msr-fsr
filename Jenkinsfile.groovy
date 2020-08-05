@@ -69,7 +69,7 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        //deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
+                                        deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
                                     } else if (env.BRANCH_NAME == 'Stage') {
                                         echo "Deploying Stage"
                                         //deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
