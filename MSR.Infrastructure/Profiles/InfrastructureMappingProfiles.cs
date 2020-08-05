@@ -22,8 +22,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Customer, Domain.Models.Customer>().ReverseMap();
             CreateMap<Location, Domain.Models.LocationModel>().ReverseMap();
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
-            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
-            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
@@ -50,11 +48,15 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateCustomer, CustomerApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            #region Invoice
+            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
+            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
             CreateMap<Domain.Models.InvoiceModel, Invoice>().ReverseMap();
             CreateMap<CreateOneInvoice, Invoice>();
             CreateMap<CreateUpdateInvoiceItem, InvoiceItem>();
             CreateMap<UpdateInvoice, Invoice>();
             CreateMap<DownloadAsIIFInvoices, GetInvoices>();
+            #endregion
 
             CreateMap<Domain.Models.LocationModel, Location>().ReverseMap();
             CreateMap<Domain.Models.LocationModel, LocationApproval>().ReverseMap();
@@ -163,6 +165,29 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<MenuGroup, Domain.Models.MenuGroup>().ReverseMap();
 
             CreateMap<Status, Domain.Models.Status>().ReverseMap();
+
+            #region Product
+            CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
+            #endregion
+
+            #region Quote
+            CreateMap<Quote, Domain.Models.QuoteModel>().ReverseMap();
+            #endregion
+
+            // TODO: set CreatedBy from James update on the foreignkey 
+            CreateMap<Domain.Models.ProductModel, Domain.Models.QuotesProductsModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.CreatedBy.ToString()))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
+
+            CreateMap<Domain.Models.QuoteModel, Domain.Models.QuotesProductsModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.SubmittedBy.FullName))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Product.Procedure.Name));
         }
     }
 }

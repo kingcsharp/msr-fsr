@@ -487,5 +487,11 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<RemoveMenuRoleMap>(request);
         }
+
+        public static GetQuotesProducts ToGetQuotesProductsRequestCommand(this GetQuotesProductsRequest request)
+        {
+            return new GetQuotesProducts();
+        }
+
     }
 }

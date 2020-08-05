@@ -65,6 +65,8 @@ namespace MSR.Infrastructure.Extensions
             services.AddSingleton<IFileHandlerFactory, FileHandlerFactory>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<S3FileHandler>();
+            services.AddScoped<IQuoteService, QuoteService>();
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
