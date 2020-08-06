@@ -14,6 +14,7 @@ using MSR.Domain.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using MSR.Domain.Views;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -433,6 +434,26 @@ namespace MSR.Infrastructure.Resources.Services.Users
             var retUser = _mapper.Map<Domain.Models.User>(user);
 
             return retUser;
+        }
+
+        public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
+        {
+            var user = await _unitOfWork.Users.Query().Include(i => i.Roles).FirstOrDefaultAsync(i => i.Id == command.Id);
+
+            if (user is null)
+            {
+                throw new DomainException($"No {nameof(User)} with ID: {command.Id} found", DomainError.NotFound);
+            }
+
+            var trainingCerts = user.Roles.Select(i => new TrainingCertificationView()
+            {
+                CertificationFromDate = i.CertificationFromDate,
+                CertificationToDate = i.CertificationToDate,
+                EmployeeName = user.GetFullName(),
+                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(DateTime.UtcNow,i.CertificationToDate.Value) <= 0 ? "Expired" : "Active" : "Active")
+            });
+
+            return trainingCerts;
         }
     }
 }
