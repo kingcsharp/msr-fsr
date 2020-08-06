@@ -38,7 +38,6 @@ export class LocationCreateComponent implements OnInit {
 
         this.locationService.locationGet(null, this.locationToEditId, env.apiVersion).subscribe(responseHandler((response) => {
 
-          console.log(response);
           this.locationToEdit = response.object[0];
           if (this.locationToEdit.parentId !== null) {
 

@@ -38,7 +38,7 @@ export class RoleassignmentsComponent implements OnInit {
   }
 
   getMenuItems() {
-
+    this.globals.showLoader(true);
     this.menuService.menu(env.apiVersion).subscribe(responseHandler((response) => {
 
       let menuItems = response.object;
