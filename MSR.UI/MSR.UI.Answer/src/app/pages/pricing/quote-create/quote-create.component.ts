@@ -18,6 +18,20 @@ export class QuoteCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.data = new QuoteModel();
+    this.data.quoteItems = [new QuoteItemModel()]
+  }
+
+  addQuoteItem() {
+    this.data.quoteItems.push(new QuoteItemModel())
+  }
+
+  removeQuoteItem() {
+    this.data.quoteItems.pop()
+  }
+
+  submit() {
+    // TODO: Submit fuction, Create a Quote API integration
+    console.log('submit:', this.data)
   }
 
 }

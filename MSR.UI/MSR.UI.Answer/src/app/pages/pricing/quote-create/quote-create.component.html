@@ -46,7 +46,12 @@
             <tr>
                 <th class="text-right">Customer:</th>
                 <td>
-                  <select id="customerId" class="form-control input-transparent">
+                  <select
+                    id="customerId"
+                    class="form-control input-transparent"
+                    name="customerId"
+                    [(ngModel)]="data.customerId"
+                  >
                     <option value="">Select Customer</option>
                     <option value="1566">  [MSR-FSR]APPLIED MATERIALS - [ID:1566]</option>
                     <option value="1574">  [MSR-FSR]ATA - [ID:1574]</option>
@@ -54,21 +59,19 @@
                 </td>
                 <th class="text-right">Contact:</th>
                 <td>
-                  <input type="text" id="contact" class="form-control input-transparent">
+                  <input type="text" id="contact" class="form-control input-transparent" name="contact" [(ngModel)]="data.contact">
                 </td>
                 <th class="text-right">Delivery</th>
                 <td>
-                  <input type="text" id="delivery" class="form-control input-transparent">
+                  <input type="text" id="delivery" class="form-control input-transparent" name="delivery" [(ngModel)]="data.delivery">
                 </td>
               </tr>
               <tr>
-                <th class="text-right">&nbsp;</th>
-                <td>
-                  <input type="hidden" name="Supplier" value="2">
-                </td>
+                <th class="text-right"></th>
+                <td></td>
                 <th class="text-right">Title:</th>
                 <td>
-                  <input type="text" id="title" class="form-control input-transparent">
+                  <input type="text" id="title" class="form-control input-transparent" name="title" [(ngModel)]="data.title">
                 </td>
                 <th class="text-right"></th>
                 <td></td>
@@ -76,10 +79,9 @@
               <tr>
                 <th class="text-right"></th>
                 <td></td>
-
                 <th class="text-right">Phone:</th>
                 <td>
-                  <input type="text" id="phone" class="form-control input-transparent">
+                  <input type="text" id="phone" class="form-control input-transparent" name="phone" [(ngModel)]="data.phone">
                 </td>
                 <th class="text-right"></th>
                 <td></td>
@@ -102,33 +104,33 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
+            <tr *ngFor="let quoteItem of data.quoteItems; index as i;">
+              <td>{{i+1}}</td>
               <td>
-                <input class="form-control input-transparent">
+                <input class="form-control input-transparent" name="`quoteItem${i}_quantity`" [(ngModel)]="data.quoteItems[i].quantity">
               </td>
               <td>
-                <input class="form-control input-transparent">
+                <input class="form-control input-transparent" name="`quoteItem${i}_description`" [(ngModel)]="data.quoteItems[i].description">
               </td>
               <td>
-                <input class="form-control input-transparent">
+                <input class="form-control input-transparent" name="`quoteItem${i}_leadTime`" [(ngModel)]="data.quoteItems[i].leadTime">
               </td>
               <td>
-                <input class="form-control input-transparent">
+                <input class="form-control input-transparent" name="`quoteItem${i}_customerPartNo`" [(ngModel)]="data.quoteItems[i].customerPartNo">
               </td>
               <td>
-                <input class="form-control input-transparent">
+                <input class="form-control input-transparent" name="`quoteItem${i}_price`" [(ngModel)]="data.quoteItems[i].price">
               </td>
               <td>
-                <input class="form-control input-transparent">
+                <input class="form-control input-transparent" name="`quoteItem${i}_extension`" [(ngModel)]="data.quoteItems[i].extension">
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="7">
-                <a id="add_row" class="btn btn-primary pull-left" tooltip="Add an Item to the Quote"><i class="fa fa-plus-circle"></i> Add Item</a>
-                <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" tooltip="Removes Last Item from the Quote"><i class="fa fa-minus-circle"></i> Remove Item</a>
+                <a id="add_row" class="btn btn-primary pull-left" tooltip="Add an Item to the Quote" (click)="addQuoteItem()"><i class="fa fa-plus-circle"></i> Add Item</a>
+                <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" tooltip="Removes Last Item from the Quote" (click)="removeQuoteItem()"><i class="fa fa-minus-circle"></i> Remove Item</a>
               </td>
             </tr>
           </tfoot>
@@ -144,10 +146,10 @@
           <tbody>
             <tr>
               <td>
-                <textarea class="form-control input-transparent" cols="20" rows="3" style="width:100"></textarea>
+                <textarea class="form-control input-transparent" cols="20" rows="3" style="width:100" name="existingProcess" [(ngModel)]="data.existingProcess"></textarea>
               </td>
               <td>
-                <textarea class="form-control input-transparent" cols="20" rows="3" style="width:100"></textarea>
+                <textarea class="form-control input-transparent" cols="20" rows="3" style="width:100" name="processDescription" [(ngModel)]="data.processDescription"></textarea>
               </td>
             </tr>
           </tbody>
@@ -188,10 +190,10 @@
             <tr>
               <td colspan="5" width="60%"></td>
               <td width="20%" style="border-bottom: 1px solid #000 !important;">
-                <input class="form-control input-transparent single-line">
+                <input class="form-control input-transparent single-line" name="createdByName" [(ngModel)]="data.createdByName">
               </td>
               <td width="30%" style="border-bottom: 1px solid #000 !important;">
-                <input class="form-control input-transparent single-line">
+                <input class="form-control input-transparent single-line" name="titleSubmit" [(ngModel)]="data.titleSubmit">
               </td>
             </tr>
             <tr>
@@ -202,7 +204,7 @@
             <tr>
               <td colspan="5" width="60%"></td>
               <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
-                <input class="form-control input-transparent single-line">
+                <input class="form-control input-transparent single-line" name="address" [(ngModel)]="data.address">
               </td>
             </tr>
             <tr>
@@ -218,7 +220,7 @@
 
         <a class="pull-right btn btn-danger fa" style="margin-left: 10px;" [routerLink]="['../products']">Cancel</a>
 
-        <input type="submit" id="submit" class="pull-right btn btn-success fa fa-send" style="margin-left: 10px;" tooltip="Save and Send Quote to Client" value="Save &amp; Submit">
+        <input type="submit" id="submit" class="pull-right btn btn-success fa fa-send" style="margin-left: 10px;" tooltip="Save and Send Quote to Client" value="Save & Submit" (click)="submit()">
 
       </div>
     </form>
