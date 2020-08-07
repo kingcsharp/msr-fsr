@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using NSwag.Annotations;
 using System;
@@ -21,10 +24,12 @@ namespace MSR.Answer.API.V1.Controllers
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private IHubContext<MessageHub> _messageHub;
 
-        public PartController(ICommandDispatcher dispatcher)
+        public PartController(ICommandDispatcher dispatcher, IHubContext<MessageHub> hub)
         {
             _dispatcher = dispatcher;
+            _messageHub = hub;
         }
 
         [HttpGet]
@@ -89,6 +94,10 @@ namespace MSR.Answer.API.V1.Controllers
                 base64Data = req.base64Data
             };
             var ret = await _dispatcher.DispatchAsync(command);
+
+            // TODO: move to own controller
+            await _messageHub.Clients.All.SendAsync("ReceiveMessage", "ONE", "TWO");
+
             return ret.ToOkObjectResponse<int>("Parts successfully imported");
         }
     }

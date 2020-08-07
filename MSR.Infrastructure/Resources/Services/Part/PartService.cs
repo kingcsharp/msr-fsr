@@ -227,14 +227,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var b64data = Convert.ToBase64String(Encoding.UTF8.GetBytes(data));
             string type = "text/plain";
             string importUniqueFile = "PARTIMPORT" + Guid.NewGuid();
-            _fileService.UploadImportFile(new UploadFile() {
+            var uploadTask = _fileService.UploadImportFile(new UploadFile() {
                 Name = importUniqueFile,
                 ContentType = type,
                 Base64String = FileService.GetURLEncodedBase64(b64data, type)
             });
 
             // TODO NEXT: hook into SQS
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
+            Task.WhenAll(uploadTask);
+            return 0;
         }
 
         private int GetWorkflowID()
