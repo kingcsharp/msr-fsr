@@ -129,6 +129,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.Id));
             CreateMap<UpdatePart, Part>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Domain.Models.PartModel, CreatePart>();
+            CreateMap<Domain.Models.PartModel, UpdatePart>();
             #endregion
 
             #region Procedure
@@ -204,8 +206,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Status, Domain.Models.StatusModel>().ReverseMap();
 
-            CreateMap<PartCSVRecord, UpdatePart>();
-            CreateMap<PartCSVRecord, CreatePart>();
+            CreateMap<PartCSVRecord, Domain.Models.PartModel>();
 
             CreateMap<UploadFile, Domain.Models.FileModel>();
         }

@@ -31,6 +31,11 @@ namespace MSR.Infrastructure.Resources.Services
             _mapper = mapper;
         }
 
+        public static string GetURLEncodedBase64(string rawb64, string type)
+        {
+            return $"data:{type};base64,{rawb64}";
+        }
+
         public Task<bool> CreateDocumentAsync<T>(T entity, int entityId, FileModel file) where T : class
         {
             throw new NotImplementedException();
@@ -182,6 +187,18 @@ namespace MSR.Infrastructure.Resources.Services
             var fileModel = _mapper.Map<FileModel>(command);
 
             var ret = await _fileUploader.UploadHelpFile(fileModel);
+
+            return new UploadResponse()
+            {
+                URL = ret
+            };
+        }
+
+        public async Task<UploadResponse> UploadImportFile(UploadFile command)
+        {
+            var fileModel = _mapper.Map<FileModel>(command);
+
+            var ret = await _fileUploader.UploadImportFile(fileModel);
 
             return new UploadResponse()
             {

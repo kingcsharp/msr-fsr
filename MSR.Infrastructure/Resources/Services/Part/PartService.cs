@@ -7,6 +7,7 @@ using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Helpers;
+using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -14,8 +15,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Role
@@ -24,11 +28,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public PartService(IUnitOfWork unitOfWork, IMapper mapper)
+        public PartService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<ICollection<PartModel>> GetPartsAsync(GetParts command)
@@ -188,7 +194,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         private readonly string _byteOrderMarkUtf8 =
             Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
 
-        public async Task<ICollection<PartModel>> ImportPartsAsync(ImportParts command)
+        public int ImportPartsAsync(ImportParts command)
         {
             var base64File = Base64Helper.Parse(command.base64Data);
             string csvdata = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r","").Trim();
@@ -204,24 +210,31 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException("Permission denied for import", DomainError.BadRequest);
             }
 
+            // First: parse the file to ensure valid data
             foreach (PartCSVRecord record in records)
             {
-                if (record.Id > 0)
-                {
-                    var part = await UpdatePartAsync(
-                        _mapper.Map<UpdatePart>(record)
-                    );
-                    parts.Add(_mapper.Map<PartModel>(part));
-                } else {
-                    var part = await CreatePartAsync(
-                        _mapper.Map<CreatePart>(record)
-                    );
-                    parts.Add(_mapper.Map<PartModel>(part));
-
-                }
+                var part = _mapper.Map<PartModel>(record);
+                parts.Add(part);
             }
 
-            return parts;
+            // Then submit the data for processing
+            return importDataAsync(parts);
+        }
+
+        private int importDataAsync(List<PartModel> parts)
+        {
+            var data = JsonConvert.SerializeObject(parts);
+            var b64data = Convert.ToBase64String(Encoding.UTF8.GetBytes(data));
+            string type = "text/plain";
+            string importUniqueFile = "PARTIMPORT" + Guid.NewGuid();
+            _fileService.UploadImportFile(new UploadFile() {
+                Name = importUniqueFile,
+                ContentType = type,
+                Base64String = FileService.GetURLEncodedBase64(b64data, type)
+            });
+
+            // TODO NEXT: hook into SQS
+            throw new NotImplementedException();
         }
 
         private int GetWorkflowID()

@@ -51,6 +51,11 @@ namespace MSR.Infrastructure.Resources.AWS
             return Upload(file.Base64String, _s3Information.HelpbucketName, file.Name);
         }
 
+        public Task<string> UploadImportFile(FileModel file)
+        {
+            return Upload(file.Base64String, _s3Information.FileBucketName, file.Name);
+        }
+
         public string GetURL(string key, int expiresInSeconds)
         {
             return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest()

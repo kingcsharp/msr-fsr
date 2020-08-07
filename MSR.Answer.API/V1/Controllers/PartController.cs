@@ -89,7 +89,7 @@ namespace MSR.Answer.API.V1.Controllers
                 base64Data = req.base64Data
             };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<PartModel>>("Parts successfully imported");
+            return ret.ToOkObjectResponse<int>("Parts successfully imported");
         }
     }
 }
