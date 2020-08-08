@@ -26,12 +26,12 @@ export class Layout {
   supportTicketModalDisplayed: boolean = false;
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
-
   constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone, private _globals: Globals) {
     this.globals = this._globals;
     // Raphael.prototype.safari = function (): any {
     //   return;
     // };
+    
     router.events.subscribe((event: RouterEvent) => {
       setTimeout(() => {
         this._navigationInterceptor(event);

@@ -4,13 +4,15 @@
 </h1>
 
 <widget>
+
+
     <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
         currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
         stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
             <div class="text-right">
-                <button *ngIf="canCreate" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg"
+                <button *ngIf="userPrivileges.canCreate" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg"
                     role="button" data-cy="add-button">
                     + Add
                 </button>
@@ -30,126 +32,85 @@
                 <th></th>
             </tr>
             <tr>
-                <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
-                    <div class="position-relative">
-                        <input id="id" pInputText type="text" tooltip="Search by Id"
-                            (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
-                            [value]="dt.filters['id']?.value">
-                        <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
-                            (click)="cg.filter(dt,'id')"></i>
-                    </div>
+                <th grid-input-filter [dt]="dt" searchField="id" [hidden]="!cg.isVisibleCol('id',gridSettings)"
+                    [gridSettings]="gridSettings">
                 </th>
-
-                <th [hidden]="!cg.isVisibleCol('description',gridSettings)">
-                    <div class="position-relative">
-                        <input id="description" pInputText type="text" tooltip="Search by Description"
-                            (input)="dt.filter($event.target.value, 'description', 'contains')" class="ui-column-filter"
-                            [value]="dt.filters['description']?.value">
-                        <i *ngIf="dt.filters['description']?.value" class="fclear pi pi-times pointer"
-                            (click)="cg.filter(dt,'description')"></i>
-                    </div>
+                <th grid-input-filter [dt]="dt" searchField="customerName"
+                    [hidden]="!cg.isVisibleCol('customerName',gridSettings)" [gridSettings]="gridSettings">
                 </th>
-                <th [hidden]="!cg.isVisibleCol('invoiceNumber',gridSettings)">
-                    <div class="position-relative">
-                        <input id="invoiceNumber" pInputText type="text" tooltip="Search by Invoice Number"
-                            (input)="dt.filter($event.target.value, 'invoiceNumber', 'contains')" class="ui-column-filter"
-                            [value]="dt.filters['invoiceNumber']?.value">
-                        <i *ngIf="dt.filters['invoiceNumber']?.value" class="fclear pi pi-times pointer"
-                            (click)="cg.filter(dt,'invoiceNumber')"></i>
-                    </div>
+                <th grid-input-filter [dt]="dt" searchField="description"
+                    [hidden]="!cg.isVisibleCol('description',gridSettings)" [gridSettings]="gridSettings">
                 </th>
-                <th [hidden]="!cg.isVisibleCol('total',gridSettings)">
-                    <div class="position-relative">
-                        <input id="total" pInputText type="text" tooltip="Search by Amount"
-                            (input)="dt.filter($event.target.value, 'total', 'contains')" class="ui-column-filter"
-                            [value]="dt.filters['total']?.value">
-                        <i *ngIf="dt.filters['total']?.value" class="fclear pi pi-times pointer"
-                            (click)="cg.filter(dt,'total')"></i>
-                    </div>
+                <th grid-input-filter [dt]="dt" searchField="invoiceNumber"
+                    [hidden]="!cg.isVisibleCol('invoiceNumber',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="total" [hidden]="!cg.isVisibleCol('total',gridSettings)"
+                    [gridSettings]="gridSettings">
                 </th>
                 <th [hidden]="!cg.isVisibleCol('invoiceDate',gridSettings)">
                     <div class="position-relative" tooltip="Search by Invoice Date">
-                        <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'invoiceDate'" [datatable]="dt">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="invoiceDate" [datatable]="dt">
                         </pcalendar-wrapper>
                     </div>
                 </th>
                 <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
                     <div class="position-relative" tooltip="Search by Created Date">
-                        <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
                         </pcalendar-wrapper>
                     </div>
                 </th>
-                <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
-                    <div class="position-relative">
-                        <input id="createdByName" pInputText type="text" tooltip="Search by Name"
-                            (input)="dt.filter($event.target.value, 'createdByName', 'contains')"
-                            class="ui-column-filter" [value]="dt.filters['createdByName']?.value">
-                        <i *ngIf="dt.filters['createdByName']?.value" class="fclear pi pi-times pointer"
-                            (click)="cg.filter(dt,'createdByName')"></i>
-                    </div>
+                <th grid-input-filter [dt]="dt" searchField="created.fullName"
+                    [hidden]="!cg.isVisibleCol('created.fullName',gridSettings)" [gridSettings]="gridSettings">
                 </th>
                 <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
                     <div class="position-relative" tooltip="Search by Last Updated On Date">
-                        <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'"
-                            [datatable]="dt">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="lastUpdatedOn" [datatable]="dt">
                         </pcalendar-wrapper>
                     </div>
                 </th>
-                <th [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
-                    <div class="position-relative">
-                        <input id="lastUpdatedByName" pInputText type="text" tooltip="Search by Name"
-                            (input)="dt.filter($event.target.value, 'lastUpdatedByName', 'contains')"
-                            class="ui-column-filter" [value]="dt.filters['lastUpdatedByName']?.value">
-                        <i *ngIf="dt.filters['lastUpdatedByName']?.value" class="fclear pi pi-times pointer"
-                            (click)="cg.filter(dt,'lastUpdatedByName')"></i>
-                    </div>
+                <th grid-input-filter [dt]="dt" searchField="lastUpdated.fullName"
+                    [hidden]="!cg.isVisibleCol('lastUpdated.fullName',gridSettings)" [gridSettings]="gridSettings">
                 </th>
                 <th></th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-partmodel>
+        <ng-template pTemplate="body" let-invoiceModel>
             <tr class="ui-selectable-row">
                 <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
-                    {{partmodel.id}}
+                    {{invoiceModel.id}}
                 </td>
-                <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
-                    {{partmodel.name}}
+                <td class="text-capitalize" [hidden]="!cg.isVisibleCol('customerName',gridSettings)">
+                    {{invoiceModel.customerName}}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('partNumber',gridSettings)">
-                    {{partmodel.partNumber}}
+                <td [hidden]="!cg.isVisibleCol('description',gridSettings)">
+                    {{invoiceModel.description}}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('oemPartNumber',gridSettings)">
-                    {{partmodel.oemPartNumber }}
+                <td [hidden]="!cg.isVisibleCol('invoiceNumber',gridSettings)">
+                    {{invoiceModel.invoiceNumber }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('isKit',gridSettings)">
-                    {{partmodel?.isKit?'Yes':'No' }}
+                <td [hidden]="!cg.isVisibleCol('total',gridSettings)">
+                    {{invoiceModel.total }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
-                    {{partmodel?.isActive?'Yes':'No' }}
-                </td>
-                <td [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
-                    {{partmodel.maximumCycles }}
-                </td>
-                <td [hidden]="!cg.isVisibleCol('files',gridSettings)">
-                    <grid-file-viewer [menuItem]="menuItems.Parts" [files]="partmodel.files"></grid-file-viewer>
+                <td [hidden]="!cg.isVisibleCol('invoiceDate',gridSettings)">
+                    {{invoiceModel.invoiceDate | date :'short' }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-                    {{partmodel.createdOn | date :'short' }}
+                    {{invoiceModel.createdOn | date :'short' }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
-                    {{partmodel.createdByName }}
+                <td [hidden]="!cg.isVisibleCol('created.fullName',gridSettings)">
+                    {{invoiceModel.created.fullName }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-                    {{partmodel.lastUpdatedOn | date :'short' }}
+                    {{invoiceModel.lastUpdatedOn | date :'short' }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
-                    {{partmodel.lastUpdatedByName }}
+                <td [hidden]="!cg.isVisibleCol('lastUpdated.fullName',gridSettings)">
+                    {{invoiceModel.lastUpdated.fullName }}
                 </td>
                 <td>
-                    <i *ngIf="canEditStages" class="fa fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
-                        (click)="showDialog(partmodel)"></i>
-                    <i class="far fa-trash-alt pointer" tooltip="Delete Part" data-cy="deleteRow"
-                        (click)="removeRow(partmodel)"></i>
+                    <i *ngIf="userPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
+                        (click)="showDialog(invoiceModel)"></i>
+                    <i *ngIf="userPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete Part" data-cy="deleteRow"
+                        (click)="removeRow(invoiceModel)"></i>
                 </td>
             </tr>
         </ng-template>
@@ -160,3 +121,89 @@
         </ng-template>
     </p-table>
 </widget>
+<p-dialog header="{{ currentInvoice.id === undefined ?'Create Invoice':'Edit Invoice'}}" [(visible)]="display"
+    [style]="{width: '50vw'}" data-cy="user-header">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="onInvoiceSubmit()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    Invoice Details
+                </h5>
+            </header>
+            <!--  ret.invoiceDate;
+      ret.invoiceItems = []; -->
+            <div class="widget-body">
+                <fieldset>
+                    <legend>
+                    </legend>
+
+                    <div class="form-group row">
+                        <label for="description" class="col-md-2 col-form-label text-md-right">
+                            Description
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="text" id="description" name="description"
+                                [(ngModel)]="currentInvoice.description" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                                class="form-control input-transparent" tooltip="Min length 3 characters"
+                                placeholder="Description" data-cy="description-input">
+                        </div>
+                        <label for="taxPercentage" class="col-md-2 col-form-label text-md-right">
+                            Tax Percentage
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="number" id="taxPercentage" name="taxPercentage"
+                                [(ngModel)]="currentInvoice.taxPercentage" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-required="true"
+                                class="form-control input-transparent"
+                                placeholder="Tax Percentage" data-cy="taxPercentage-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+                            Location
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <p-dropdown placeholder="Select Location" name="locations" [options]="locations"
+                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.locationId">
+                            </p-dropdown>
+                        </div>
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+                            Customer
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <p-dropdown placeholder="Select Customer" name="customers" [options]="customers"
+                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customerId">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                            Work Orders
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <multiselect-wrapper-form [options]="currentInvoice.invoiceItems" [(model)]="currentInvoice.invoiceItems"
+                            defaultLabelProperty="purchaseOrderName" defaultLabel="Select Work Orders">
+                            </multiselect-wrapper-form>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                    data-cy="save-button">
+                    Save
+                </button>
+                <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Cancel
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

@@ -22,11 +22,6 @@ import { INFERRED_TYPE } from '@angular/compiler/src/output/output_ast';
 export class CmhFileUploaderComponent implements OnInit {
   uploadedFiles: any = [];
   showLi: boolean = false;
-
-  // [showUploadButton]="false" [showCancelButton]="false" multiple="multiple"
-  //   accept="accept" maxFileSize="1000000000"
-
-
   constructor(private fileService: FileService, private globals: Globals) {
 
   }

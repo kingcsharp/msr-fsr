@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CsvImportComponent } from '../../../app/components/csv-import/csv-import.component';
 import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
+import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploa
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
-    CmhFileUploaderComponent
+    CmhFileUploaderComponent,
+    GridInputFilterComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -55,7 +57,8 @@ import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploa
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
-    CmhFileUploaderComponent
+    CmhFileUploaderComponent,
+    GridInputFilterComponent
   ],
   imports: [
     CommonModule,

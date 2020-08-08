@@ -23,8 +23,9 @@ import { environment } from '../environments/environment';
 
 import * as $ from 'jquery';
 import {
-  UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService,
-  WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService, FileService
+  UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
+  WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
+  FileService, InvoiceService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -70,6 +71,8 @@ const APP_PROVIDERS = [
     PartService,
     FileService,
     UserService,
+    InvoiceService,
+    CustomerService,
     {
       provide: API_BASE_URL,
       useValue: environment.url

@@ -5,7 +5,10 @@ import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
-import { EnumApprovalTables } from '../../models/enums/privileges';
+import { EnumApprovalTables, EnumPrivilege } from '../../models/enums/privileges';
+import { AllowedActions } from './AllowedActions';
+
+
 
 
 
@@ -64,6 +67,18 @@ export class Globals {
         }
         const ret = privileges.indexOf(privilege) > -1;
         return ret;
+    }
+
+    getEnumPrivileges(controllerEnum): AllowedActions {
+        var allowedActions = new AllowedActions({
+            canCreate: this.hasPrivilege(controllerEnum, EnumPrivilege.CanCreate),
+            canActivate: this.hasPrivilege(controllerEnum, EnumPrivilege.CanActivate),
+            canDelete: this.hasPrivilege(controllerEnum, EnumPrivilege.CanDelete),
+            canEdit: this.hasPrivilege(controllerEnum, EnumPrivilege.CanEdit),
+            canRead: this.hasPrivilege(controllerEnum, EnumPrivilege.CanRead)
+        });
+
+        return allowedActions;
     }
 
     hasActivityPrivilegeByTableName(tableName, privilege) {

@@ -35,7 +35,6 @@
             <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
-
         <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
             [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
