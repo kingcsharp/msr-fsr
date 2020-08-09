@@ -227,6 +227,28 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
         }
 
+            #region Product
+            CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
+            #endregion
+
+            #region Quote
+            CreateMap<Quote, Domain.Models.QuoteModel>().ReverseMap();
+            CreateMap<CreateQuote, Quote>().ReverseMap();
+            #endregion
+
+            CreateMap<Domain.Models.ProductModel, Domain.Models.QuotesProductsModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.CreatedBy.ToString()))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
+
+            CreateMap<Domain.Models.QuoteModel, Domain.Models.QuotesProductsModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.SubmittedBy.FullName))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Product.Procedure.Name));
         private int? GetLocationId(Invoice src)
         {
             return src.InvoiceItems?.FirstOrDefault()?.WorkOrder?.Purchase?.LocationId;
