@@ -28,7 +28,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<IEnumerable<QuoteModel>> GetQuotesAsync()
         {
             var quoteList = new List<QuoteModel>();
-            var quotes = _unitOfWork.Quotes.Query();
+            var quotes = _unitOfWork.Quotes
+                            .Query()
+                            .Include(q => q.Product)
+                            .Include(q => q.Customer)
+                            .Include(q => q.Status);
 
             foreach (var quote in quotes.ToList())
             {
@@ -36,6 +40,49 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
 
             return quoteList.AsEnumerable();
+        }
+
+        public async Task<QuoteModel> CreateQuoteAsync(CreateQuote command)
+        {
+            var quote = _mapper.Map<Quote>(command);
+
+            // Unused by required by the model
+            quote.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
+            quote.SubmittedById = CurrentUser.GetId();
+            quote.SubmittedDate = DateTime.UtcNow;
+
+            // Save the new Quote
+            await _unitOfWork.Quotes.AddAndSaveChangesAsync(quote);
+
+            quote = await _unitOfWork.Quotes
+                                .Query()
+                                .Include(q => q.Customer)
+                                .Include(q => q.Product)
+                                .FirstOrDefaultAsync();
+
+            //quote.Product = await _unitOfWork.Products.FirstOrDefaultAsync(false, i => i.Id == quote.ProductId);
+            //quote.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == quote.CustomerId);
+
+            var retQuote = _mapper.Map<QuoteModel>(quote);
+
+            return retQuote;
+        }
+
+        public async Task<QuoteModel> DeleteQuoteAsync(DeleteQuote command)
+        {
+            var current = await _unitOfWork.Quotes.Query().Where(x => x.Id == command.Id)
+                  .FirstOrDefaultAsync();
+            if (current is null)
+            {
+                throw new DomainException($"{nameof(Quote)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            _unitOfWork.Quotes.Delete(false, current, true);
+            // This will call SaveChangesAsync
+            await _unitOfWork.SaveChangesAsync();
+
+            var ret = _mapper.Map<QuoteModel>(current);
+            return ret;
         }
     }
 }
