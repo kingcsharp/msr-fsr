@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MSR.Domain.Models.BaseModels;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Models
 {
