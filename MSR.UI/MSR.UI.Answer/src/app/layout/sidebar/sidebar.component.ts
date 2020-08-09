@@ -13,19 +13,33 @@ export class Sidebar {
   sidebarHeight: number = 0;
   sidebarMenu: any = 0;
   sidebarItems: any;
-  supportTicketModalDisplay:boolean = false;
+  supportTicketModalDisplay: boolean = false;
 
 
   constructor(private renderer: Renderer2, private el: ElementRef, private globals: Globals) {
-    this.sidebarItems = this.generateMenu(globals.user.roles[0].menus);
+
+    this.sidebarItems = this.generateMenu(globals.user.roles);
   }
 
-  generateMenu(menuItems: any) {
+  generateMenu(roles: any) {
     let menuStructure: any = [];
+    roles.forEach(role => {
+      this.generateMenuItems(role.menus, menuStructure);
+    });
+
+    menuStructure.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
+    menuStructure.forEach(function (item) {
+      item.submenu.sort((a, b) => (a.orderNumber > b.orderNumber) ? -1 : 1);
+    });
+
+    return menuStructure;
+  }
+
+  generateMenuItems(menuItems: any, menuStructure: any[]) {
     // show tooltip add .
     // description
     menuItems.forEach(function (item) {
-      const elem = menuStructure.find(x => x.name === item.menuGroup.name);
+      const elem = menuStructure.find(x => x.name === item.menuGroup?.name);
       if (elem === undefined) {
         let menuItem = { submenu: [{ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info }] };
         Object.assign(menuItem, item.menuGroup);
@@ -37,14 +51,6 @@ export class Sidebar {
         }
       }
     });
-
-
-    menuStructure.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : -1);
-    menuStructure.forEach(function (item) {
-      item.submenu.sort((a, b) => (a.orderNumber > b.orderNumber) ? -1 : 1);
-    });
-
-    return menuStructure;
   }
 
   setSidebarHeight(event) {
@@ -79,7 +85,7 @@ export class Sidebar {
       .querySelector('.content'), 'margin-top', this.sidebarHeight + 'px');
   }
 
-  toggleSupportTicketModal(){
+  toggleSupportTicketModal() {
     this.displaySupportTicketModalDisplay.emit();
   }
 

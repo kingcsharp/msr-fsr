@@ -27,10 +27,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? MaximumCycles { get; set; }
         public virtual ICollection<PartSubPartMap> Subparts { get; set; }
         public virtual ICollection<WorkOrderPart> WorkOrderParts { get; set; }
-        [ForeignKey("CreatedBy")]
-        public virtual User Created { get; set; }
-        [ForeignKey("LastUpdatedBy")]
-        public virtual User LastUpdated { get; set; }
-        public bool IsActive { get; set; }
     }
 }

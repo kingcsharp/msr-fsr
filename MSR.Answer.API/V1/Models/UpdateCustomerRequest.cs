@@ -13,5 +13,6 @@ namespace MSR.Answer.API.V1.Models
         [Required]
         public int CustomerId { get; set; }
         public bool? IsActive { get; set; }
+        public string CustomerNumber { get; set; }
     }
 }

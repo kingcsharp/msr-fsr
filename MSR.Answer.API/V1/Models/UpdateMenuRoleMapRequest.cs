@@ -1,8 +1,13 @@
-﻿namespace MSR.Answer.API.V1.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MSR.Answer.API.V1.Models
 {
     public class UpdateMenuRoleMapRequest
     {
-        public int MenuRoleId { get; set; }
+        [Required]
+        public int RoleId { get; set; }
+        [Required]
+        public int MenuId { get; set; }
         public bool CanRead { get; set; }
         public bool CanCreate { get; set; }
         public bool CanEdit { get; set; }

@@ -15,6 +15,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetParts>,
         ICommandHandler<CreatePart>,
         ICommandHandler<DeletePart>,
+        ICommandHandler<ImportParts>,
         ICommandHandler<UpdatePart>
     {
         private readonly IPartService _partService;
@@ -32,16 +33,10 @@ namespace MSR.Application.ApplicationServices
 
             ICollection<FileModel> files = new List<FileModel>();
 
-            if (!command.attachFiles)
-            {
-                files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
-            }
+            files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
 
             foreach (var part in ret)
             {
-                if (command.attachFiles) {
-                    files = _fileService.ListFiles(part, part.Id);
-                }
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
             }
 
@@ -49,40 +44,42 @@ namespace MSR.Application.ApplicationServices
         }
         public async Task<ICommandResponse> HandleAsync(CreatePart command, CancellationToken cancellationToken = default)
         {
-            var ret = await _partService.CreatePartAsync(command);
-            var part = ret;
+            var part = await _partService.CreatePartAsync(command);
 
             // If the part is pending approval, do not upload the files yet.
             if (!part.IsPending)
             {
-                await _fileService.DeleteFilesAsync(part, part.Id);
-                foreach (var file in command.Files)
-                {
-                    await _fileService.CreateFileAsync(part, part.Id, file);
-                }
+                part.Files = await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
-            return new CommandResponse<PartModel>(ret);
+            return new CommandResponse<PartModel>(part);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdatePart command, CancellationToken cancellationToken = default)
         {
-            var ret = await _partService.UpdatePartAsync(command);
-            var part = ret;
-            if (!part.IsPending && command.Files != null)
+            var part = await _partService.UpdatePartAsync(command);
+            if (!part.IsPending && command.Files != null && command.Files.Count > 0)
             {
-                await _fileService.DeleteFilesAsync(part, part.Id);
-                foreach (var file in command.Files)
-                {
-                    await _fileService.CreateFileAsync(part, part.Id, file);
-                }
+                part.Files = await _fileService.AttachFilesAsync(part.GetType().Name, part.Id, command.Files);
             }
-            return new CommandResponse<PartModel>(ret);
+            else
+            {
+                List<int> ids = new List<int>();
+                ids.Add(part.Id);
+                part.Files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ids).ToList();
+            }
+            return new CommandResponse<PartModel>(part);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeletePart command, CancellationToken cancellationToken = default)
         {
             var ret = await _partService.DeletePartAsync(command);
             return new CommandResponse<PartModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(ImportParts command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _partService.ImportPartsAsync(command);
+            return new CommandResponse<ICollection<PartModel>>(ret);
         }
     }
 }

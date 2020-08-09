@@ -30,8 +30,8 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(DeactivateLocation command, CancellationToken cancellationToken = default)
         {
-            await _locationService.DeactivateLocationAsync(command);
-            return CommandResponse.SuccessCommand;
+            var ret = await _locationService.DeactivateLocationAsync(command);
+            return new CommandResponse<LocationModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateLocation command, CancellationToken cancellationToken = default)

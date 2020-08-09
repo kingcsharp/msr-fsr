@@ -23,7 +23,6 @@ export class RoleassignmentsComponent implements OnInit {
 
   selectedRoleModule:RoleModel;
 
-  updateSuccessful: boolean = false;
   errorUpdatingPermissions:boolean = false;
   pendingPermissionsUpdate:boolean = false;
 
@@ -186,7 +185,6 @@ export class RoleassignmentsComponent implements OnInit {
   roleChanged(event:Event, menuModule:MenuModel, roleModule:RoleModel){
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
-    this.updateSuccessful = false;
 
     if(roleModule.value){
       this.pendingPermissions.push({
@@ -212,7 +210,6 @@ export class RoleassignmentsComponent implements OnInit {
   permissionChanged(event:Event, menuModule:MenuModel, roleModule:RoleModel, permissionModule:PermissionModel){
     permissionModule.value = !permissionModule.value;
     this.pendingPermissionsUpdate = true;
-    this.updateSuccessful = false;
 
     if(permissionModule.value){
       this.pendingPermissions.push({
@@ -238,7 +235,6 @@ export class RoleassignmentsComponent implements OnInit {
     this.menuModules = this.originalMenuModules;
     this.selectedMenuModule = null;
     this.selectedRoleModule = null;
-    this.updateSuccessful = false;
     this.errorUpdatingPermissions = false;
     this.pendingPermissionsUpdate = false;
 
@@ -247,8 +243,8 @@ export class RoleassignmentsComponent implements OnInit {
   savePendingChanges(){
 
     this.pendingPermissions.forEach(pendingPermission =>{
-      //TODO: Add back when Role stuff is fixed with Web API
-      //this.globals.showLoader(true);
+
+      this.globals.showLoader(true);
       if(pendingPermission.permissionModule == null){
         
         if(pendingPermission.event === 'add'){
@@ -256,27 +252,24 @@ export class RoleassignmentsComponent implements OnInit {
           let createMenuRoleMapRequest = new CreateMenuRoleMapRequest();
           createMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
           createMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
-          //TODO: Replace when fixed
-          //this.menuService.rolePost(env.apiVersion,createMenuRoleMapRequest).subscribe(responseHandler((response) => {
-          //    console.log(response);
-          //}));
+  
+          this.menuService.rolePost(env.apiVersion,createMenuRoleMapRequest).subscribe(responseHandler((response) => {
+
+          }));
 
         }else{
 
-          let createMenuRoleMapRequest = new CreateMenuRoleMapRequest();
-          createMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
-          createMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
-          //TODO: Replace when fixed
-          //this.menuService.roleDelete(createMenuRoleMapRequest.roleId,env.apiVersion).subscribe(responseHandler((response) => {
-          //    console.log(response);
-          //}));
+          this.menuService.roleDelete(pendingPermission.menuModule.id,pendingPermission.roleModule.id,env.apiVersion).subscribe(responseHandler((response) => {
+  
+          }));
 
         }
 
       }else{
 
           let updateMenuRoleMapRequest = new UpdateMenuRoleMapRequest();
-          updateMenuRoleMapRequest.menuRoleId = pendingPermission.menuModule.id;
+          updateMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
+          updateMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
           updateMenuRoleMapRequest.canActivate = pendingPermission.roleModule.permissions.find(s => s.name === "Activate").value;
           updateMenuRoleMapRequest.canApprove = pendingPermission.roleModule.permissions.find(s => s.name === "Approve").value;
           updateMenuRoleMapRequest.canCreate = pendingPermission.roleModule.permissions.find(s => s.name === "Create").value;
@@ -284,7 +277,7 @@ export class RoleassignmentsComponent implements OnInit {
           updateMenuRoleMapRequest.canEdit = pendingPermission.roleModule.permissions.find(s => s.name === "Edit").value;
           updateMenuRoleMapRequest.canRead = pendingPermission.roleModule.permissions.find(s => s.name === "Read").value;
           this.menuService.rolePatch(env.apiVersion,updateMenuRoleMapRequest).subscribe(responseHandler((response) => {
-              console.log(response);
+
           }));
 
       }
@@ -292,6 +285,5 @@ export class RoleassignmentsComponent implements OnInit {
     });
 
     this.clearPendingChanges();
-    this.updateSuccessful = true;
   }
 }

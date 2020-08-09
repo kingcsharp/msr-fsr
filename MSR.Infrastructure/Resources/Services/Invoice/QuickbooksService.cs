@@ -29,28 +29,38 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<IEnumerable<QuickbooksFormatterModel>> FormatAsync(FormatQuickbooks command)
         {
-            return command.Invoices.Select(invoice => new QuickbooksFormatterModel()
+            return command.Invoices.Select(invoice =>
             {
-                Invoice = invoice,
-                Data = FormatInvoiceDataAsync(invoice.Id, command.FormatType)
-                                                .ConfigureAwait(false)
-                                                .GetAwaiter()
-                                                .GetResult()
+                (string invoiceNumber, string data, string type) = FormatInvoiceDataAsync(invoice.Id, command.FormatType)
+                                                                    .ConfigureAwait(false)
+                                                                    .GetAwaiter()
+                                                                    .GetResult();
+
+                var quickbooksFormatter = new QuickbooksFormatterModel()
+                {
+                    Invoice = invoice,
+                    Data = data,
+                    ExportFileName = $"{invoiceNumber}.{type.ToLower()}"
+                };
+
+                return quickbooksFormatter;
             }).ToList();
         }
 
-        private async Task<string> FormatInvoiceDataAsync(int invoiceId, string formatType)
+        private async Task<(string, string, string)> FormatInvoiceDataAsync(int invoiceId, string formatType)
         {
-            switch (formatType?.ToUpper())
+            switch (formatType.ToLower())
             {
-                case "IIF":
-                    return await FormatInvoiceDataAsIIFAsync(invoiceId);
+                case "iif":
+                    (string invoiceNumber, string data) = await FormatInvoiceDataAsIIFAsync(invoiceId);
+
+                    return (invoiceNumber, data, "iif");
                 default:
                     throw new InvalidOperationException($"Quickbooks formatter type {formatType} not supported");
             }
         }
 
-        private async Task<string> FormatInvoiceDataAsIIFAsync(int invoiceId)
+        private async Task<(string, string)> FormatInvoiceDataAsIIFAsync(int invoiceId)
         {
             var invoiceFileText = new StringBuilder();
 
@@ -183,14 +193,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             invoiceFileText.AppendFormat("ENDTRNS");
 
-            return invoiceFileText.ToString();
+            return (invoiceNumber, invoiceFileText.ToString());
         }
 
         private async Task<string> GetPurchaseName(EntityFramework.Entities.InvoiceItem item)
         {
             if (item?.WorkOrder?.Purchase != null)
             {
-                var workOrderCreator = await _userService.GetUserAsync(item.WorkOrder.Purchase.CreatedBy.GetValueOrDefault());
+                var workOrderCreator = await _userService.GetUserAsync(item.WorkOrder.Purchase.CreatedBy);
 
                 if (!string.IsNullOrEmpty(workOrderCreator.FullName?.Trim()))
                 {
@@ -210,7 +220,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 foreach (var formattedInvoice in command.FormattedInvoices)
                 {
-                    var fileName = Path.ChangeExtension(formattedInvoice.ExportFileName, command.FormatType ?? "IIF");
+                    var fileName = Path.ChangeExtension(formattedInvoice.ExportFileName, command.FormatType ?? "iif");
 
                     var entry = invoiceArchive.CreateEntry(fileName);
 

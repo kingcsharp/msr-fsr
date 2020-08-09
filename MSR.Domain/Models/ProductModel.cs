@@ -18,5 +18,7 @@ namespace MSR.Domain.Models
         public decimal? SalesTax { get; set; }
         public decimal TotalSalePrice { get; set; }
         public int CycleTime { get; set; }
+        public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
+
     }
 }

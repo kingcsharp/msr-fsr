@@ -19,7 +19,7 @@ export class HelpComponent implements OnInit {
   privileges = EnumPrivilege;
   data: Array<HelpPage>;
   allRoles: Array<SelectItem>;
-  roleFilter:string;
+  roleFilter: string;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
@@ -29,7 +29,7 @@ export class HelpComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   helpPageToDelete: HelpPage;
 
-  constructor(private helpService: HelpService,private roleService: RoleService, 
+  constructor(private helpService: HelpService, private roleService: RoleService,
     private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
@@ -49,21 +49,20 @@ export class HelpComponent implements OnInit {
     this.getHelpPages();
   }
 
-  getHelpPages(){
+  getHelpPages() {
 
     this.globals.showLoader(true);
-    this.helpService.helpGet(null, env.apiVersion).subscribe(responseHandler(response => {
+    this.helpService.helpGet(null,null, env.apiVersion).subscribe(responseHandler(response => {
       this.data = new Array<HelpPage>();
-      console.log(response)
       
       response.object.forEach(helpPage => {
         this.data.push(helpPage);
       });
       this.allRoles = new Array<SelectItem>();
-      let distinctRolesFromReturnedResults = response.object.map(s => s.roles).flat().map(role => ({ label: role.name, value: role.name }) ).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
+      let distinctRolesFromReturnedResults = response.object.map(s => s.roles).flat().map(role => ({ label: role.name, value: role.name })).filter((value, index, self) => self.findIndex(role => role.label === value.label) === index);
       this.allRoles = this.allRoles.concat(distinctRolesFromReturnedResults);
       this.loading = false;
-      
+
     }));
 
   }
@@ -72,25 +71,25 @@ export class HelpComponent implements OnInit {
     return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
-  openConfirmDeleteDialog(helpPage: HelpPage){
+  openConfirmDeleteDialog(helpPage: HelpPage) {
 
     this.helpPageToDelete = helpPage;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(helpPage: HelpPage){
+  closeConfirmDeleteDialog() {
     this.helpPageToDelete = null;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  deleteHelpPage(){
+  deleteHelpPage() {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     this.globals.showLoader(true);
     this.helpService.helpDelete(this.helpPageToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      console.log(response);
+      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.helpPageToDelete.id);
+      this.data.splice(index, 1);
 
     }));
   }
-
 }

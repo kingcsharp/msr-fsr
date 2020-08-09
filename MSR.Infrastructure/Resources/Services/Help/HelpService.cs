@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Email;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -91,7 +92,7 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
         public async Task DeleteHelpPage(DeleteHelpPage command)
         {
-            var helpPage = await _unitOfWork.HelpPages.FirstOrDefaultAsync(false, i => i.Id == command.HelpPageId);
+            var helpPage = await _unitOfWork.HelpPages.Query().Include(i => i.Roles).FirstOrDefaultAsync(i => i.Id == command.HelpPageId);
 
             if(helpPage is null)
             {
@@ -112,10 +113,10 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
         public async Task DeleteHelpPageRole(DeleteHelpPageRole command)
         {
-            var helpPageRole = await _unitOfWork.HelpPageRoles.FirstOrDefaultAsync(false, i => i.Id == command.HelpPageRoleId);
+            var helpPageRole = await _unitOfWork.HelpPageRoles.FirstOrDefaultAsync(false, i => i.RoleId == command.roleId && i.HelpPageId == command.HelpPageId);
             if (helpPageRole is null)
             {
-                throw new DomainException($"{nameof(Domain.Models.HelpPage)} not found with ID: {command.HelpPageRoleId}");
+                throw new DomainException($"{nameof(Domain.Models.HelpPage)} not found");
             }
 
             _unitOfWork.HelpPageRoles.Delete(false, helpPageRole);
@@ -131,9 +132,16 @@ namespace MSR.Infrastructure.Resources.Services.Help
                 helpPages = helpPages.Where(i => i.Id == command.Id.Value);
             }
 
+            if (!string.IsNullOrWhiteSpace(command.FriendlyURL))
+            {
+                helpPages = helpPages.Where(i => i.FriendlyUrl == command.FriendlyURL);
+            }
+
             var pageList = new List<Domain.Models.HelpPage>();
 
-            foreach(var helpPage in helpPages.ToList())
+            var helpPageList = helpPages.Include(i => i.Roles).ThenInclude(j => j.Role).ToList();
+
+            foreach (var helpPage in helpPageList ?? new List<HelpPage>())
             {
                 var page = _mapper.Map<Domain.Models.HelpPage>(helpPage);
 
@@ -147,7 +155,7 @@ namespace MSR.Infrastructure.Resources.Services.Help
 
         public async Task UpdateHelpPage(UpdateHelpPage command)
         {
-            var helpPage = await _unitOfWork.HelpPages.FirstOrDefaultAsync(false, i => i.Id == command.HelpPageId);
+            var helpPage = await _unitOfWork.HelpPages.Query().Include(i => i.Roles).ThenInclude(j => j.Role).FirstOrDefaultAsync(i => i.Id == command.HelpPageId);
             if (helpPage is null)
             {
                 throw new DomainException($"{nameof(Domain.Models.HelpPage)} not found with ID {command.HelpPageId}", DomainError.NotFound);

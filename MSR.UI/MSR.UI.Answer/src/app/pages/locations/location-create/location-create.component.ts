@@ -14,7 +14,8 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class LocationCreateComponent implements OnInit {
 
-  locationToEdit: LocationModel = new LocationModel();
+  locationToEdit: LocationModel;
+  locationToEditId:number;
   parentLocationOptions: Array<LocationModel>;
   countryOptions: SelectItem[];
   selectedParentLocation: LocationModel;
@@ -24,23 +25,32 @@ export class LocationCreateComponent implements OnInit {
 
     this.countryOptions = new LookUpItems().Countries();
 
-    this.locationService.locationGet(null,env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null,null,env.apiVersion).subscribe(responseHandler((response) => {
 
       this.parentLocationOptions = response.object;
 
     }));
 
     this.route.queryParams.subscribe(params => {
-      this.locationToEdit.id = params['id'] == null ? 0 : params['id'];
+      this.locationToEditId = params['id'] == null ? 0 : Number(params['id']);
 
-      if (this.locationToEdit.id !== 0) {
+      if (this.locationToEditId !== 0) {
 
-          this.locationService.locationGet(this.locationToEdit.id,env.apiVersion).subscribe(responseHandler((response) => {
+          this.locationService.locationGet(null,this.locationToEditId,env.apiVersion).subscribe(responseHandler((response) => {
             
             console.log(response);
+            this.locationToEdit = response.object[0];
+            if(this.locationToEdit.parentId != null){
+
+              this.selectedParentLocation = this.parentLocationOptions.find(s => s.id == this.locationToEdit.id);
+
+            }
+            
 
           }));
 
+      }else{
+        this.locationToEdit = new LocationModel();
       }
 
     });

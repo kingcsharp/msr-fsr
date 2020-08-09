@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
+  PartService, PartModel, SubPartModel, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -13,8 +13,6 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { debug } from 'console';
-import { HtmlAstPath } from '@angular/compiler';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 
 declare let jQuery: any;
@@ -27,12 +25,14 @@ declare let jQuery: any;
 
 export class PartsComponent implements OnInit {
   privileges = EnumPrivilege;
+  menuItems = EnumMenuItem;
+  approvalTables = EnumApprovalTables;
   defaultView: ViewSaved;
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
   roles: any[];
   allRoles: any[] = [];
-  canAddStages: boolean = false;
+  canCreate: boolean = false;
   canActivateStages: boolean = false;
   canEditStages: boolean = false;
   display: boolean = false;
@@ -45,6 +45,7 @@ export class PartsComponent implements OnInit {
   uploadedFiles: FileModel[] = [];
   isActive: any[];
   uploadedFinished: boolean = false;
+  showApproveButtons: boolean = true;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -71,7 +72,7 @@ export class PartsComponent implements OnInit {
     this.isActive = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
 
-    this.canAddStages = this.hasPrivilege(this.privileges.CanCreate);
+    this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
     this.getParts();
@@ -92,15 +93,28 @@ export class PartsComponent implements OnInit {
     this.emptyArr(ctrl.allParts);
     const allPartsObjects = this.getAllPartsAndUsedIn();
     Object.keys(allPartsObjects).forEach(function (key) {
-      var item = allPartsObjects[key];
-      var usedIn = item.usedIn.join(',');
-      var usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
+      const item = allPartsObjects[key];
+      const usedIn = item.usedIn.join(',');
+      const usedInStr = usedIn.length > 0 ? ` Used In [${usedIn}]` : '';
       ctrl.allParts.push({ label: `${item.element.name} [${item.element.partNumber}]${usedInStr}`, value: item.element.id });
     });
   }
 
+  uploadParts(ev) {
+    ev.forEach((element: PartModel) => {
+      const index = this.data.findIndex(x => x.id === element.id);
+      if (index !== -1) {
+        this.data.splice(index, 1);
+        this.data.splice(index, 0, element);
+      } else {
+        this.data.push(element);
+      }
+    });
+
+  }
+
   getAllPartsAndUsedIn() {
-    var partsDictionary = {};
+    let partsDictionary = {};
     this.data.forEach((element: PartModel) => {
       if (partsDictionary[element.id] === undefined) {
         partsDictionary[element.id] = { element: element, usedIn: [] };
@@ -111,7 +125,7 @@ export class PartsComponent implements OnInit {
             } else {
               partsDictionary[subpart.parentId].usedIn.push(element.partNumber);
             }
-          })
+          });
         }
       }
     });
@@ -122,16 +136,17 @@ export class PartsComponent implements OnInit {
     if (subparts === undefined) {
       return -1;
     }
-    const index = subparts.findIndex(x => x.parentId === partId)
+    const index = subparts.findIndex(x => x.parentId === partId);
     return subparts[index].partId;
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Parts, privName);
+    return this.globals.hasPrivilege(this.menuItems.Parts, privName);
   }
 
   showDialog(part: PartModel) {
     this.getPartsDropdown();
+    this.uploadedFiles = [];
     this.currPart = this.getPart(part);
     this.display = true;
   }
@@ -157,7 +172,7 @@ export class PartsComponent implements OnInit {
       return ret;
     } else {
       let copyPart: PartModel = new PartModel();
-      Object.assign(copyPart, part)
+      Object.assign(copyPart, part);
       if (copyPart.createSubParts === null || copyPart.createSubParts === undefined) {
         copyPart.createSubParts = [];
       }
@@ -171,7 +186,7 @@ export class PartsComponent implements OnInit {
   }
 
   removeSubPart(subpart: SubPartModel) {
-    var length = this.currPart.createSubParts.length;
+    let length = this.currPart.createSubParts.length;
     while (length--) {
       if (this.currPart.createSubParts[length] === subpart) {
         this.currPart.createSubParts.splice(length, 1);
@@ -198,24 +213,15 @@ export class PartsComponent implements OnInit {
         // DO not update user
       }));
   }
-  //onWorkflowSubmit
+
   onpartSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-
-      if (!this.uploadedFinished) {
-        let element: HTMLElement = document.getElementsByTagName('p-fileUpload')[0]
-          .getElementsByTagName('p-button')[0]
-          .getElementsByClassName('ui-clickable')[0] as HTMLElement;
-        element.click();
-        return;
-      } else {
-        this.uploadedFinished = false;
-      }
-
       let method: Observable<AuditActionResultOfPartModel> = null;
       this.globals.showLoader(true);
+
+      this.currPart.files.push(...this.uploadedFiles);
 
       if (this.currPart.id === undefined) {
         method = this.partsService.partPost(env.apiVersion, this.getCreatePartRequest(this.currPart));
@@ -227,8 +233,7 @@ export class PartsComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currPart.id === undefined) {
             ctrl.data.push(resp.object);
-          }
-          else {
+          } else {
             const index = this.data.findIndex(x => x.id === this.currPart.id);
             this.data.splice(index, 1);
             this.data.splice(index, 0, resp.object);
@@ -241,54 +246,34 @@ export class PartsComponent implements OnInit {
   }
 
   removeFile(file) {
-    var currIndex = this.currPart.files.findIndex(x => x.id === file.id);
+    const currIndex = this.currPart.files.findIndex(x => x.fileId === file.fileId);
     this.currPart.files.splice(currIndex, 1);
+  }
+
+  removeuploadFile(event) {
+    const index = this.uploadedFiles.findIndex(x => x.name === event.file.name);
+    this.uploadedFiles.splice(index, 1);
   }
 
   myUploader(event) {
     const ctrl = this;
-    var currItem = 0;
-    var fileLength = event.files.length;
-    ctrl.uploadedFiles = [];
-
-    if (fileLength === 0) {
-      ctrl.uploadedFinished = true;
-      ctrl.onpartSubmit();
-    }
     for (let file of event.files) {
-      let fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = function () {
-        currItem++;
-        var fileModel = new FileModel();
-        fileModel.name = file.name;
-        fileModel.base64String = fileReader.result.toString();
-        fileModel.contentType = file.type;
-        if (ctrl.uploadedFiles.findIndex(x => x.name === fileModel.name) === -1) {
+      if (ctrl.uploadedFiles.findIndex(x => x.name === file.name) === -1) {
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = function () {
+          let fileModel = new FileModel();
+          fileModel.name = file.name;
+          fileModel.base64String = fileReader.result.toString();
+          fileModel.contentType = file.type;
           ctrl.uploadedFiles.push(fileModel);
-        }
-        if (currItem === fileLength) {
-          ctrl.uploadedFinished = true;
-          ctrl.removeAllFilesWithNoId(ctrl.currPart.files);
-          ctrl.currPart.files.push(...ctrl.uploadedFiles);
-          ctrl.uploadedFiles = [];
-          ctrl.onpartSubmit();
-        }
-      };
-    }
-  }
-
-  removeAllFilesWithNoId(files: FileModel[]) {
-    var length = files.length;
-    while (length--) {
-      if (files[length].fileId === undefined || files[length].fileId === null) {
-        files.splice(length, 1);
+        };
       }
     }
   }
 
   getCreatePartRequest(currentPart: PartModel): CreatePartRequest {
-    var ret = new CreatePartRequest({
+    let ret = new CreatePartRequest({
       name: currentPart.name,
       partNumber: currentPart.partNumber,
       isActive: currentPart.isActive,
@@ -302,7 +287,7 @@ export class PartsComponent implements OnInit {
   }
 
   getUpdatePartRequest(currentPart: PartModel): UpdatePartRequest {
-    var partUpdate: UpdatePartRequest = new UpdatePartRequest();
+    let partUpdate: UpdatePartRequest = new UpdatePartRequest();
     partUpdate.id = currentPart.id;
     Object.assign(partUpdate, this.getCreatePartRequest(currentPart));
     return partUpdate;

@@ -120,7 +120,7 @@ export class ApprovalWorkflowComponent implements OnInit {
   updateActivitiesSavedForItem(elem: any) {
     if (!this.getAllActivities) {
       setTimeout(() => {
-        this.updateStagesSavedForItem(elem)
+        this.updateStagesSavedForItem(elem);
       }, 100);
       return;
     }
@@ -139,7 +139,7 @@ export class ApprovalWorkflowComponent implements OnInit {
   updateStagesSavedForItem(elem: any) {
     if (!this.getstagesDr) {
       setTimeout(() => {
-        this.updateStagesSavedForItem(elem)
+        this.updateStagesSavedForItem(elem);
       }, 100);
       return;
     }

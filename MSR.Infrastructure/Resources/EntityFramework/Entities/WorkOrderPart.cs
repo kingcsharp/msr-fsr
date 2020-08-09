@@ -16,7 +16,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int PartId { get; set; }
 
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         [StringLength(50)]
         public string SerialNumber { get; set; }

@@ -16,12 +16,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Name { get; set; }
 
         public bool? IsActive { get; set; }
-
-        [ForeignKey("CreatedBy")]
-        public virtual User Created { get; set; }
-
-        [ForeignKey("LastUpdatedBy")]
-        public virtual User LastUpdated { get; set; }
         public virtual ICollection<WorkflowGroupStageMap> Group { get; set; }
     }
 }

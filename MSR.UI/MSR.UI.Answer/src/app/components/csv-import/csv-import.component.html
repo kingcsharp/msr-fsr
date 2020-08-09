@@ -1,0 +1,56 @@
+<button *ngIf="showButton" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
+    data-cy="import-button">
+    + Import
+</button>
+
+
+<p-dialog *ngIf="display" header="Import" [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="submitImport()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    {{title}}
+                </h5>
+            </header>
+            <div class="widget-body">
+                <fieldset>
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label text-md-right">
+                            Select Csv File
+                        </label>
+                        <cmh-file-uploader class="col-md-10" *ngIf="uploadedFiles !==undefined" [menuItem]="menuItem"
+                            [(files)]="uploadedFiles" accept=".csv" chooseLabel="Select CSV File">
+                        </cmh-file-uploader>
+                    </div>
+                    <div>
+                        <label class="col-md-2 col-form-label text-md-right">
+                            Sample File
+                        </label>
+                        <a href="/assets/CsvFiles/{{fileName}}" download>
+                            <button type="button" class="btn" download><i class="fas fa-download"></i> Download
+                                Sample
+                                File</button>
+                        </a>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                    data-cy="save-import-button">
+                    Save
+                </button>
+                <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Close
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

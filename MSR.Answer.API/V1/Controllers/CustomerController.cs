@@ -41,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers
             var createCustomer = request.ToCreateCustomerCommand();
 
             var ret = await _dispatcher.DispatchAsync(createCustomer);
-            return ret.ToOkObjectResponse<Customer>("Customer Created Successuflly");
+            return ret.ToOkObjectResponse<Customer>("Customer Created Successfully");
         }
 
         [HttpPatch, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanEdit)]

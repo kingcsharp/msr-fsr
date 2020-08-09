@@ -4,7 +4,7 @@ import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -15,14 +15,17 @@ import { Globals } from '../../../models/lib/globals';
 export class LocationsComponent implements OnInit {
 
   data: Array<LocationModel>;
-
+  approvalTables = EnumApprovalTables;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
+  locationToDelete: LocationModel;
+  showConfirmDeleteDialog: boolean = false;
   canAddLocation: boolean = false;
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
+  canApproveLocation: boolean = false;
 
   constructor(private locationService: LocationService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -33,8 +36,8 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'internalAddress', label: 'Internal Address', visible: true }),
-      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'address1', label: 'Address 1', visible: false }),
       new ColumnsSaved({ id: 'city', label: 'City', visible: false }),
       new ColumnsSaved({ id: 'state', label: 'State/Province', visible: false }),
@@ -44,11 +47,14 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'parentId', label: 'Parent', visible: false }),
       new ColumnsSaved({ id: 'timezone', label: 'Timezone', visible: false }),
       new ColumnsSaved({ id: 'address2', label: 'Address 2', visible: false }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
+      new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
     ];
 
     this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
     this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
+    this.canApproveLocation = this.hasPrivilege(this.privileges.CanApprove);
     this.getLocations();
 
     
@@ -61,7 +67,7 @@ export class LocationsComponent implements OnInit {
 
   getLocations(){
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null,null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
       this.loading = false;
     }));
@@ -73,6 +79,28 @@ export class LocationsComponent implements OnInit {
 
   }
 
-  
+  openConfirmDeleteDialog(location: LocationModel){
+
+    this.locationToDelete = location;
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+  }
+
+  closeConfirmDeleteDialog(location: LocationModel){
+    this.locationToDelete = null;
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+  }
+
+  deleteLocation(){
+
+    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    this.globals.showLoader(true);
+    this.locationService.locationDelete(this.locationToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+
+      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.locationToDelete.id);
+      this.data.splice(index, 1);
+
+    }));
+
+  }
 
 }

@@ -5,15 +5,17 @@
 
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="canAddStages" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
+        <button *ngIf="canCreate" (click)="showDialog()" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
           data-cy="add-button">
           + Add
         </button>
+        <csv-import [showButton]="canCreate" [menuItem]="menuItems.Parts" title="Import Parts"
+          (onUpload)="uploadParts($event)" fileName="PartsSample.csv"></csv-import>
         <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
           [gridVersion]="gridVersion" data-cy="usergrid-options">
         </grid-options>
@@ -142,22 +144,7 @@
           {{partmodel.maximumCycles }}
         </td>
         <td [hidden]="!cg.isVisibleCol('files',gridSettings)">
-          <span class="pointer" *ngFor="let file of partmodel.files" tooltip="{{file.name}}">
-            <i *ngIf="file.contentType == 'application/msword'" class="far fa-file-word"></i>
-            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
-              class="far fa-file-word"></i>
-            <i *ngIf="file.contentType == 'text/plain'" class="far fa-file-word"></i>
-            <i *ngIf="file.contentType == 'text/html'" class="fas fa-file-code"></i>
-            <i *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
-            <i *ngIf="file.contentType == 'image/tiff'" class="fas fa-images"></i>
-            <i *ngIf="file.contentType == 'image/webp'" class="fas fa-images"></i>
-            <i *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
-            <i *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
-            <i *ngIf="file.contentType == '	application/pdf'" class="far fa-file-pdf"></i>
-            <i *ngIf="file.contentType == 'application/vnd.ms-excel'" class="fa-file-excel"></i>
-            <i *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
-              class="fa-file-excel"></i>
-          </span>
+          <grid-file-viewer [menuItem]="menuItems.Parts" [files]="partmodel.files"></grid-file-viewer>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           {{partmodel.createdOn | date :'short' }}
@@ -280,48 +267,33 @@
           </div>
           <div class="form-group row">
             <label for="demo[]" class="col-md-2 col-form-label text-md-right">
-              Current Files
-            </label>
-            <div class="col-md-8">
-              <div>
-                <span class="pointer currFiles" *ngFor="let file of currPart.files">
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'" class="far fa-file-word"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'" class="far fa-file-word"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/plain'" class="far fa-file-word"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'text/html'" class="fas fa-file-code"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/gif'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/tiff'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/webp'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/jpeg'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'image/png'" class="fas fa-images"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == '	application/pdf'" class="far fa-file-pdf"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.ms-excel'" class="fa-file-excel"></i>
-                  <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" class="fa-file-excel"></i>
-                  <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
-                    (click)="removeFile(file)"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="demo[]" class="col-md-2 col-form-label text-md-right">
               Files
             </label>
-            <p-fileUpload name="demo[]" url="./upload.php" customUpload="true" (uploadHandler)="myUploader($event)"
-              multiple="multiple" accept="" maxFileSize="1000000000">
-              <ng-template pTemplate="content">
-                <!-- <h3 *ngIf="uploadedFiles.length">Drop Files Here</h3> -->
-                <!-- <ul *ngIf="uploadedFiles.length">
-                  <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-                </ul> -->
-              </ng-template>
-            </p-fileUpload>
+            <cmh-file-uploader class="col-md-10" *ngIf="currPart.files !==undefined" [menuItem]="menuItems.Parts"
+            multiple="multiple"  
+            [(files)]="currPart.files">
+            </cmh-file-uploader>
           </div>
+        </fieldset>
+      </div>
+    </section>
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+          </span>
+          Subparts
+        </h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
           <div class="form-group row partTbl">
             <widget>
               <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
                 [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
-                [loading]="loading" [paginator]="true"
+                [paginator]="true"
                 currentPageReportTemplate="Showing {first}-{last} of {{currPart.createSubParts.length}}"
                 [filterDelay]="0">
                 <ng-template pTemplate="header">

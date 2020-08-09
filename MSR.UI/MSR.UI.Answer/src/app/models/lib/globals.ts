@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
-import { MenuItem } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
-import { ColumnsSaved } from './ColumnsSaved';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
 import { EnumApprovalTables } from '../../models/enums/privileges';
@@ -58,28 +57,37 @@ export class Globals {
         }, 100);
     }
 
-    // hasPrivilege(controllerName, privilege) {
-    //     const menuItem = this.user.roles[0].menus.filter(x => x.name.replace(' ', '').replace('/', '').toLowerCase() === controllerName.toLowerCase());
-    //     if (menuItem.length === 0 || menuItem[0] === undefined) {
-    //         return false;
-    //     }
-    //     const ret = menuItem[0].permissions.indexOf(privilege) > -1;
-    //     return ret;
-    // }
-
     hasPrivilege(controllerEnum, privilege) {
-        var ret = this.user.privileges[controllerEnum].indexOf(privilege) > -1;
+        const privileges = this.user.privileges[controllerEnum];
+        if (privileges === undefined) {
+            return false;
+        }
+        const ret = privileges.indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilegeByTableName(tableName, privilege) {
-        var ret = this.user.approvalPrivileges[EnumApprovalTables[tableName]].indexOf(privilege) > -1;
+        const approvalEnum = EnumApprovalTables[tableName];
+        if (approvalEnum === undefined) {
+            console.error('tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables', EnumApprovalTables);
+        }
+
+        const ret = this.user.approvalPrivileges[approvalEnum].indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilege(activityEnumVal, privilege) {
-        var ret = this.user.approvalPrivileges[activityEnumVal].indexOf(privilege) > -1;
+        const privileges = this.user.approvalPrivileges[activityEnumVal];
+        if (privileges === undefined) {
+            return false;
+        }
+        const ret = privileges.indexOf(privilege) > -1;
         return ret;
+    }
+
+    getSingularMenuName(menuItem) {
+        let name = EnumMenuItem[menuItem];
+        return name.replace(/s$/, '');
     }
 
     updateLogin(val) {

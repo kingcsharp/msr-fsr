@@ -8,6 +8,7 @@ namespace MSR.Domain.Abstractions.Services
     public interface IUserService
     {
         Task<ICollection<User>> GetUsersAsync(GetUsers command);
+        Task<User> GetUserById(int id);
         Task<User> CreateUserAsync(CreateUser command);
         Task<User> UpdateUserAsync(UpdateUser command);
         Task DeactivateUserAsync(DeactivateUser command);

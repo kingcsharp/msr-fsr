@@ -3,7 +3,7 @@ using MSR.Domain.Models.BaseModels;
 
 namespace MSR.Domain.Models
 {
-    public class LocationModel: TrackableModel
+    public class LocationModel: DeletableModel
     {
         public int OldId { get; set; }
         public string Name { get; set; }

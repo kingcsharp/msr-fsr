@@ -10,20 +10,15 @@ namespace MSR.Answer.API.V1.Extentions
 {
     public static class CommandResponseExtentions
     {
+        public static T ToEntity<T>(this ICommandResponse commandResponse)
+        {
+            return ((ICommandResponse<T>)commandResponse).Data;
+        }
+
         public static IActionResult ToOkObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)
         {
             var result = ValidateCommandResponse(commandResponse);
             return result ?? new OkObjectResult(new AuditActionResult<TResult>()
-            {
-                Object = ((ICommandResponse<TResult>)commandResponse).Data,
-                SuccessMessage = message
-            });
-        }
-
-        public static IActionResult ToAcceptedObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)
-        {
-            var result = ValidateCommandResponse(commandResponse);
-            return result ?? new AcceptedResult(commandResponse.GetType().Name, new AuditActionResult<TResult>()
             {
                 Object = ((ICommandResponse<TResult>)commandResponse).Data,
                 SuccessMessage = message
@@ -35,6 +30,16 @@ namespace MSR.Answer.API.V1.Extentions
             var result = ValidateCommandResponse(commandResponse);
             return result ?? new OkObjectResult(new AuditActionResult()
             {
+                SuccessMessage = message
+            });
+        }
+
+        public static IActionResult ToAcceptedObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)
+        {
+            var result = ValidateCommandResponse(commandResponse);
+            return result ?? new AcceptedResult(commandResponse.GetType().Name, new AuditActionResult<TResult>()
+            {
+                Object = ((ICommandResponse<TResult>)commandResponse).Data,
                 SuccessMessage = message
             });
         }

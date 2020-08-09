@@ -82,7 +82,7 @@ export class ApprovalStagesComponent implements OnInit {
     const ctrl = this;
     if (!this.getWorkflowGroupsDone) {
       setTimeout(() => {
-        this.setGroupsSaved()
+        this.setGroupsSaved();
       }, 100);
       return;
     }
@@ -164,7 +164,7 @@ export class ApprovalStagesComponent implements OnInit {
         // DO not update user
       }));
   }
-  //onWorkflowSubmit
+
   onWorkflowSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
