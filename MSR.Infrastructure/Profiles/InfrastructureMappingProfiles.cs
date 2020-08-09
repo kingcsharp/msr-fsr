@@ -214,7 +214,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, CreatePart>();
 
             CreateMap<UploadFile, Domain.Models.FileModel>();
-            CreateMap<Status, Domain.Models.Status>().ReverseMap();
 
             #region Product
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
