@@ -33,7 +33,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Description { get; set; }
 
         [StringLength(50)]
-        public string Respresentative { get; set; }
+        public string Representative { get; set; }
 
         public int StatusId { get; set; }
 
