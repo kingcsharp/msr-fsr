@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding.Enums;
-using MSR.Domain.Commands;
-using MSR.Domain.Exceptions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
-using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Resources.Services.Invoices
 {
@@ -27,9 +23,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<IEnumerable<Domain.Models.ProductModel>> GetProductsAsync()
         {
             var productList = new List<Domain.Models.ProductModel>();
-            var products = _unitOfWork.Products.Query();
+            var products = _unitOfWork.Products
+                                .Query()
+                                .Include(p => p.Procedure)
+                                .Include( p => p.Customer)
+                                .Include(p => p.Created)
+                                .Include(p => p.LastUpdated);
 
-            foreach (var product in products.ToList())
+            foreach (var product in await products.ToListAsync())
             {
                 productList.Add(_mapper.Map<Domain.Models.ProductModel>(product));
             }

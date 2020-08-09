@@ -50,5 +50,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? CycleTime { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+
+        public virtual ICollection<Quote> Quotes { get; set; }
     }
 }

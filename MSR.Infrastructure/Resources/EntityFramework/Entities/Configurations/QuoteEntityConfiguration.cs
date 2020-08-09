@@ -9,12 +9,17 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
         {
             _ = builder.ToTable(nameof(Quote));
             _ = builder.HasKey(nameof(Quote.Id));
-            //_ = builder.HasOne(i => i.Customer)
-            //       .WithOne()
-            //       .HasForeignKey<Customer>(c => c.Id);
-            //_ = builder.HasOne(i => i.SubmittedBy)
-            //       .WithOne()
-            //       .HasForeignKey<User>(c => c.Id);
+            _ = builder.HasOne(q => q.Customer)
+                       .WithMany(c => c.Quotes)
+                       .HasForeignKey(q => q.CustomerId)
+                       .IsRequired();
+            _ = builder.HasOne(q => q.Product)
+                   .WithMany(p => p.Quotes )
+                   .HasForeignKey(c => c.ProductId);
+            _ = builder.HasOne(q => q.SubmittedBy)
+                   .WithMany()
+                   .HasForeignKey(u => u.SubmittedById)
+                   .IsRequired();
         }
     }
 }

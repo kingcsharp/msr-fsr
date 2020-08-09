@@ -29,7 +29,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<IEnumerable<QuoteModel>> GetQuotesAsync()
         {
             var quoteList = new List<QuoteModel>();
-            var quotes = _unitOfWork.Quotes.Query();
+            var quotes = _unitOfWork.Quotes
+                            .Query()
+                            .Include(q => q.Product)
+                            .Include(q => q.Customer)
+                            .Include(q => q.Status);
 
             foreach (var quote in await quotes.ToListAsync())
             {
@@ -51,9 +55,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Save the new Quote
             await _unitOfWork.Quotes.AddAndSaveChangesAsync(quote);
 
-            // TODO: Find out why Product/Customer are not automatically loaded using the attribute ForeignKey
-            quote.Product = await _unitOfWork.Products.FirstOrDefaultAsync(false, i => i.Id == quote.ProductId);
-            quote.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == quote.CustomerId);
+            quote = await _unitOfWork.Quotes
+                                .Query()
+                                .Include(q => q.Customer)
+                                .Include(q => q.Product)
+                                .FirstOrDefaultAsync();
+
+            //quote.Product = await _unitOfWork.Products.FirstOrDefaultAsync(false, i => i.Id == quote.ProductId);
+            //quote.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == quote.CustomerId);
 
             var retQuote = _mapper.Map<QuoteModel>(quote);
 

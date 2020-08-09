@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public partial class Customer: DeletableEntity
@@ -23,5 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual Location Location { get; set; }
 
         public string CustomerNumber { get; set; }
+
+        public virtual ICollection<Quote> Quotes { get; set; }
     }
 }
