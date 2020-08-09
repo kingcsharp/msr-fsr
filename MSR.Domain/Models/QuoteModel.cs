@@ -12,7 +12,7 @@ namespace MSR.Domain.Models
         public virtual User SubmittedBy { get; set; }
         public string PartKitNo { get; set; }
         public string Description { get; set; }
-        public string Respresentative { get; set; }
+        public string Representative { get; set; }
         public int StatusId { get; set; }
         public string QuoteJson { get; set; }
         public string CustomerRequirementJson { get; set; }
