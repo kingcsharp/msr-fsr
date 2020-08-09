@@ -11,16 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Resources\EntityFramework\Entities\Configurations\QuoteEntityConfiguration.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Resources\AWS\Abstractions\" />
     <Folder Include="Resources\Email\Abstrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Resources\EntityFramework\Entities\Configurations\QuoteEntityConfiguration.cs" />
   </ItemGroup>
 
   <ItemGroup>

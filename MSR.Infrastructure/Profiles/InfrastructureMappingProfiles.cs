@@ -172,6 +172,7 @@ namespace MSR.Infrastructure.Profiles
 
             #region Quote
             CreateMap<Quote, Domain.Models.QuoteModel>().ReverseMap();
+            CreateMap<CreateQuote, Quote>().ReverseMap();
             #endregion
 
             // TODO: set CreatedBy from James update on the foreignkey 

@@ -493,5 +493,9 @@ namespace MSR.Answer.API.V1.Extentions
             return new GetQuotesProducts();
         }
 
+        public static CreateQuote ToCreateQuoteCommand(this CreateQuoteRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateQuote>(request);
+        }
     }
 }
