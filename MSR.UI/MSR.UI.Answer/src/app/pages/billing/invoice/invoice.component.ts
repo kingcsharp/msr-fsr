@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, AbstractType } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceModel, InvoiceItemModel, CustomerService, LocationService,
@@ -46,6 +46,7 @@ export class InvoiceComponent implements OnInit {
   userPrivileges: AllowedActions;
   customers: Array<Customer>;
   locations: Array<LocationModel>;
+  invoiceItemOptions: any;
 
   constructor(private globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
     private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService, private locationService: LocationService) {
@@ -104,8 +105,9 @@ export class InvoiceComponent implements OnInit {
   }
 
   showDialog(invoice: InvoiceModel) {
-    this.display = true;
     this.currentInvoice = this.getInvoice(invoice);
+    this.invoiceItemOptions = JSON.parse(JSON.stringify(this.currentInvoice.invoiceItems));
+    this.display = true;
   }
 
   clseDialog() {
