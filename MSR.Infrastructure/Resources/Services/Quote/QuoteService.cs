@@ -45,7 +45,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             // Unused by required by the model
             quote.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
-            quote.SubmittedById = DelegateHandler.GetCurrentUserId();
+            quote.SubmittedById = CurrentUser.GetId();
             quote.SubmittedDate = DateTime.UtcNow;
 
             // Save the new Quote
