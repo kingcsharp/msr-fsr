@@ -224,7 +224,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateQuote, Quote>().ReverseMap();
             #endregion
 
-            // TODO: set CreatedBy from James update on the foreignkey 
             CreateMap<Domain.Models.ProductModel, Domain.Models.QuotesProductsModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
