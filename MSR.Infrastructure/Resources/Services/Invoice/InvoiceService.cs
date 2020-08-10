@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -215,44 +216,87 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<IEnumerable<Domain.Models.InvoiceModel>> GetInvoicesAsync(GetInvoices command)
         {
-            var InvoiceList = new List<Domain.Models.InvoiceModel>();
-            var Invoices = _unitOfWork.Invoices.Query();
+            var invoiceList = new List<Domain.Models.InvoiceModel>();
+            var invoices = _unitOfWork.Invoices.Query();
 
             if (command.Id > 0)
             {
-                Invoices = Invoices.Where(i => i.Id == command.Id);
+                invoices = invoices.Where(i => i.Id == command.Id);
             }
             if (command.CustomerId > 0)
             {
-                Invoices = Invoices.Where(i => i.CustomerId == command.CustomerId);
+                invoices = invoices.Where(i => i.CustomerId == command.CustomerId);
             }
             if (!string.IsNullOrEmpty(command.InvoiceNumber))
             {
-                Invoices = Invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
+                invoices = invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
             }
             if (!string.IsNullOrWhiteSpace(command.Description))
             {
-                Invoices = Invoices.Where(i => i.Description == command.Description);
+                invoices = invoices.Where(i => i.Description == command.Description);
             }
             if (command.InvoiceDate > DateTime.MinValue)
             {
-                Invoices = Invoices.Where(i => i.InvoiceDate == command.InvoiceDate);
+                invoices = invoices.Where(i => i.InvoiceDate == command.InvoiceDate);
             }
             if (command.Total.HasValue)
             {
-                Invoices = Invoices.Where(i => i.Total == command.Total);
+                invoices = invoices.Where(i => i.Total == command.Total);
             }
             if (command.StatusId.HasValue)
             {
-                Invoices = Invoices.Where(i => i.StatusId == command.StatusId);
+                invoices = invoices.Where(i => i.StatusId == command.StatusId);
             }
 
-            foreach (var Invoice in Invoices.ToList())
+            foreach (var invoice in await invoices.Include(i => i.Customer).ToListAsync())
             {
-                InvoiceList.Add(_mapper.Map<Domain.Models.InvoiceModel>(Invoice));
+                invoiceList.Add(_mapper.Map<Domain.Models.InvoiceModel>(invoice));
             }
 
-            return InvoiceList.AsEnumerable();
+            return invoiceList.AsEnumerable();
+        }
+
+        public async Task<IEnumerable<Domain.Views.InvoiceView>> GetInvoicesAsync(GetInvoicesGridView command)
+        {
+            var invoiceList = new List<Domain.Views.InvoiceView>();
+            // TO FIX: Including Customer returns an empty enumeration
+            var invoices = _unitOfWork.Invoices.Query();//.Include("Customer");
+
+            if (command.Id > 0)
+            {
+                invoices = invoices.Where(i => i.Id == command.Id);
+            }
+            if (command.CustomerId > 0)
+            {
+                invoices = invoices.Where(i => i.CustomerId == command.CustomerId);
+            }
+            if (!string.IsNullOrEmpty(command.InvoiceNumber))
+            {
+                invoices = invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
+            }
+            if (!string.IsNullOrWhiteSpace(command.Description))
+            {
+                invoices = invoices.Where(i => i.Description == command.Description);
+            }
+            if (command.InvoiceDate > DateTime.MinValue)
+            {
+                invoices = invoices.Where(i => i.InvoiceDate == command.InvoiceDate);
+            }
+            if (command.Total.HasValue)
+            {
+                invoices = invoices.Where(i => i.Total == command.Total);
+            }
+            if (command.StatusId.HasValue)
+            {
+                invoices = invoices.Where(i => i.StatusId == command.StatusId);
+            }
+
+            foreach (var invoice in invoices.ToList())
+            {
+                invoiceList.Add(_mapper.Map<Domain.Views.InvoiceView>(invoice));
+            }
+
+            return invoiceList.AsEnumerable();
         }
 
         private void UpdateInvoiceRecord(Invoice curInvoice, UpdateInvoice command)

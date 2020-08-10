@@ -443,15 +443,12 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static GetInvoices ToGetInvoicesCommand(this GetInvoicesRequest request)
         {
-            return new GetInvoices()
-            {
-                Id = request.Id,
-                CustomerId = request.CustomerId.GetValueOrDefault(0),
-                InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
-                Total = request.Total,
-                Description = request.Description,
-                StatusId = request.StatusId
-            };
+            return AutoMapperHelper.Mapper.Map<GetInvoices>(request);
+        }
+
+        public static GetInvoicesGridView ToGetInvoicesGridViewCommand(this GetInvoicesRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetInvoicesGridView>(request);
         }
 
         public static UpdateInvoice ToUpdateInvoiceCommand(this UpdateInvoiceRequest request)

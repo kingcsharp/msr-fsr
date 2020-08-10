@@ -5,6 +5,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace MSR.Application.ApplicationServices
     public class InvoiceAppService :
         ICommandHandler<GetInvoice>,
         ICommandHandler<GetInvoices>,
+        ICommandHandler<GetInvoicesGridView>,
         ICommandHandler<CreateOneInvoice>,
         ICommandHandler<CreateIndividualInvoices>,
         ICommandHandler<UpdateInvoice>,
@@ -41,6 +43,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _invoiceService.GetInvoicesAsync(command);
             return new CommandResponse<IEnumerable<InvoiceModel>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetInvoicesGridView command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _invoiceService.GetInvoicesAsync(command);
+            return new CommandResponse<IEnumerable<InvoiceView>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateOneInvoice command, CancellationToken cancellationToken = default)
