@@ -340,14 +340,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 
         private IQueryable<TEntity> AddDefaultIncludes(IQueryable<TEntity> query)
         {
-            if (typeof(TEntity).IsAssignableFrom(typeof(TrackableEntity)))
+            if (typeof(TrackableEntity).IsAssignableFrom(typeof(TEntity)))
             {
-                query = query.Include("LastUpdatedBy");
+                query = query.Include("LastUpdated");
             }
 
-            if (typeof(TEntity).IsAssignableFrom(typeof(CreatableEntity)))
+            if (typeof(CreatableEntity).IsAssignableFrom(typeof(TEntity)))
             {
-                query = query.Include("CreatedBy");
+                query = query.Include("Created");
             }
 
             return query;
