@@ -5,6 +5,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class QuoteProductAppService :
-        ICommandHandler<GetQuotesProducts>
+        ICommandHandler<GetQuotesProductsGridView>
     {
         private readonly IQuoteService _quoteService;
         private readonly IProductService _productService;
@@ -25,28 +26,29 @@ namespace MSR.Application.ApplicationServices
             _mapper = mapper;
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetQuotesProducts command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetQuotesProductsGridView command, CancellationToken cancellationToken = default)
         {
-            var retQuotes = await _quoteService.GetQuotesAsync();
-            var retProducts = await _productService.GetProductsAsync();
+            var quotes = await _quoteService.GetQuotesAsync();
+            var products = await _productService.GetProductsAsync();
 
-            var ret = new List<QuotesProductsModel>();
+            // Merged view of Quotes and Products
+            var retQuotesProductsViewsList = new List<QuotesProductsView>();
 
-            foreach (var product in retProducts)
+            foreach (var product in products)
             {
-                var qpModel = _mapper.Map<QuotesProductsModel>(product);
+                var qpModel = _mapper.Map<QuotesProductsView>(product);
                 qpModel.IsProduct = true;
-                ret.Add(qpModel);
+                retQuotesProductsViewsList.Add(qpModel);
             }
 
-            foreach (var quote in retQuotes)
+            foreach (var quote in quotes)
             {
-                var qpModel = _mapper.Map<QuotesProductsModel>(quote);
+                var qpModel = _mapper.Map<QuotesProductsView>(quote);
                 qpModel.IsProduct = false;
-                ret.Add(qpModel);
+                retQuotesProductsViewsList.Add(qpModel);
             }
 
-            return new CommandResponse<IEnumerable<QuotesProductsModel>>(ret);
+            return new CommandResponse<IEnumerable<QuotesProductsView>>(retQuotesProductsViewsList);
         }
 
     }

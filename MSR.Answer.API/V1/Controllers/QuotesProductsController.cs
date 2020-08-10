@@ -11,6 +11,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -26,12 +27,12 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, HasPrivilegeApi("QuotesProducts", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<QuotesProductsModel>>))]
-        public async Task<IActionResult> Get([FromQuery] GetQuotesProductsRequest filters)
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<QuotesProductsView>>))]
+        public async Task<IActionResult> Get([FromQuery] GetQuotesProductsGridViewRequest filters)
         {
-            var getQuotesProducts = filters.ToGetQuotesProductsRequestCommand();
-            var ret = await _dispatcher.DispatchAsync(getQuotesProducts);
-            return ret.ToOkObjectResponse<IEnumerable<QuotesProductsModel>>();
+            var getQuotesProductsGridView = filters.ToGetQuotesProductsRequestCommand();
+            var ret = await _dispatcher.DispatchAsync(getQuotesProductsGridView);
+            return ret.ToOkObjectResponse<IEnumerable<QuotesProductsView>>();
         }
     }
 }

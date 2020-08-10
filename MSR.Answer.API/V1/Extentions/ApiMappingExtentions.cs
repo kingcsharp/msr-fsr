@@ -495,6 +495,11 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<ImportFile>(request);
         }
+            
+        public static GetQuotesProductsGridView ToGetQuotesProductsRequestCommand(this GetQuotesProductsGridViewRequest request)
+        {
+            return new GetQuotesProductsGridView();
+        }
 
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
     }
