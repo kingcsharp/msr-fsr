@@ -147,11 +147,10 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
             LocationModel retLocation;
 
-            curLocation.IsActive = false;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval))
             {
-
+                curLocation.IsActive = false;
                 _unitOfWork.Locations.Update(curLocation);
 
                 foreach(var location in await _unitOfWork.Locations.Query().Where(i => i.ParentId == curLocation.Id).ToListAsync())
@@ -167,6 +166,8 @@ namespace MSR.Infrastructure.Resources.Services.Location
             else
             {
                 var locationApproval = _mapper.Map<LocationApproval>(curLocation);
+
+                locationApproval.IsActive = false;
                 locationApproval.LocationId = curLocation.Id;
                 locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
                 locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
