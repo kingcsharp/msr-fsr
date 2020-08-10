@@ -486,5 +486,10 @@ namespace MSR.Answer.API.V1.Extentions
             file.Base64String = Convert.ToBase64String(stream.ToArray());
             return file;
         }
+
+        public static ImportFile ToImportFileCommand(this ImportRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<ImportFile>(request);
+        }
     }
 }

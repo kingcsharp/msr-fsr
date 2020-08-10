@@ -39,5 +39,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(20)]
         public string InvoiceClass { get; set; }
 
+        public bool IsActive { get; set; }
+
     }
 }

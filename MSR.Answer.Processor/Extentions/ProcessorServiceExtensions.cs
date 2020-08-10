@@ -8,15 +8,18 @@ using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Extensions;
 using Serilog;
 using Serilog.Formatting.Json;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace MSR.Answer.API.Extentions
+namespace MSR.Answer.Processor.Extentions
 {
-    public static class ApiServiceExtentions
+    public static class ProcessorServiceExtensions
     {
-        public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddProcessorServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var emailConfig = config.GetSection(nameof(EmailInformation)).Get<EmailInformation>();
-            var generalConfig = config.GetSection(nameof(GeneralInformation)).Get<GeneralInformation>();
+            var emailConfig = configuration.GetSection(nameof(EmailInformation)).Get<EmailInformation>();
+            var generalConfig = configuration.GetSection(nameof(GeneralInformation)).Get<GeneralInformation>();
             services.AddSingleton(generalConfig);
             services.AddSingleton(emailConfig);
 
@@ -24,7 +27,7 @@ namespace MSR.Answer.API.Extentions
             {
                 i.AddMaps(new[]
                 {
-                    "MSR.Answer.Api",
+                    "MSR.Answer.Processor",
                     "MSR.Application",
                     "MSR.Domain",
                     "MSR.Infrastructure"
@@ -40,9 +43,8 @@ namespace MSR.Answer.API.Extentions
             services.AddSingleton(mapperConfiguration.CreateMapper());
             AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
-            services.AddDomainServices(config);
-            services.AddInfrastructureServices(config);
-            services.AddJWTServices(config);
+            services.AddDomainServices(configuration);
+            services.AddInfrastructureServices(configuration);
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
                 builder.AllowAnyMethod()
@@ -54,7 +56,7 @@ namespace MSR.Answer.API.Extentions
             var loggerConfig = new LoggerConfiguration()
                 .WriteTo.Console(new JsonFormatter())
                 .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
-            
+
             Log.Logger = loggerConfig.CreateLogger();
             services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
 

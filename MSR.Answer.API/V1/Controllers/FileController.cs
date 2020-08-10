@@ -13,6 +13,7 @@ using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using NSwag.Annotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -62,6 +63,15 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUploadFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<UploadResponse>("File was successfully Uploaded.");
+        }
+
+        [HttpPost("Import")]
+        [SwaggerResponse(typeof(ImportAuditActionResult<IEnumerable<object>>))]
+        public async Task<IActionResult> ImportFile([FromBody, Required] ImportRequest request)
+        {
+            var command = request.ToImportFileCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToImportOkObjectResponse<IEnumerable<object>>("Data Imported Successfully");
         }
 
         [HttpDelete]

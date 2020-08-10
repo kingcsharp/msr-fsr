@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{8A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain.Tests", "MSR.Domain.Tests\MSR.Domain.Tests.csproj", "{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSR.Answer.Processor", "MSR.Answer.Processor\MSR.Answer.Processor.csproj", "{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +93,7 @@ Global
 		{A968AC91-CD80-43EA-8064-32B0B64F243E} = {56962048-023D-4836-A5A0-BC378A2F584E}
 		{47B52A08-DCE7-40D1-A9CB-489DF60B306A} = {8AFDD297-93F0-48CF-A6AB-EA4733938228}
 		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51} = {56962048-023D-4836-A5A0-BC378A2F584E}
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBCD06A9-C49D-49C9-A0C1-821E3D256A46}

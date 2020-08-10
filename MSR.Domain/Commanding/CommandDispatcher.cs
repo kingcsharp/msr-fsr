@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Intigration;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MSR.Domain.Intigration.Abstractions;
 
 namespace MSR.Domain.Commanding
 {
@@ -17,9 +19,9 @@ namespace MSR.Domain.Commanding
             _logger = logger;
         }
 
-        public async Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class,ICommand
+        public async Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, ICommand
         {
-            if(command == null)
+            if (command == null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
@@ -27,13 +29,14 @@ namespace MSR.Domain.Commanding
             {
                 var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
 
-                if (handler == null) {
+                if (handler == null)
+                {
                     throw new Exception($"No service for {command}");
                 }
 
                 return await (handler as ICommandHandler<TCommand>).HandleAsync(command, cancellationToken);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return CommandResponse.Error(ex);
             }
@@ -42,6 +45,22 @@ namespace MSR.Domain.Commanding
         public Task<ICommandResponse<TResponse>> DispatchAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task DispatchEventAsync<TIntegrationEvent>(TIntegrationEvent integrationEvent, CancellationToken cancellationToken = default) where TIntegrationEvent : IntegrationEvent
+        {
+            if (integrationEvent == null)
+            {
+                throw new ArgumentNullException(nameof(integrationEvent));
+            }
+            var handler = _serviceProvider.GetService(typeof(IIntegrationEventHandler<TIntegrationEvent>));
+
+            if (handler == null)
+            {
+                throw new Exception($"No service for {integrationEvent.GetType().Name}");
+            }
+
+            await (handler as IIntegrationEventHandler<TIntegrationEvent>).HandleAsync(integrationEvent, cancellationToken);
         }
     }
 }

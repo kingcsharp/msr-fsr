@@ -33,12 +33,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateCustomer, Customer>();
             CreateMap<CreateCustomer, CustomerApproval>();
             CreateMap<Customer, CustomerApproval>()
+                .ForMember(dest => dest.SecondarContactUserId, opts => opts.MapFrom(src => src.SecondaryContactUserId))
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<UpdateCustomer, Customer>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateCustomer, CustomerApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.SecondarContactUserId, opts => opts.MapFrom(src => src.SecondaryContactUserId))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #endregion
