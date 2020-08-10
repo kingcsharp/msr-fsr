@@ -7,7 +7,7 @@ namespace MSR.Answer.API.V1.Models
     public class CreateInvoiceRequest
     {
         [Required]
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
 
         [Required]
         [MaxLength(100)]

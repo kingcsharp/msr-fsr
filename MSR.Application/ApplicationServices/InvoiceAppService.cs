@@ -56,6 +56,7 @@ namespace MSR.Application.ApplicationServices
             var ret = await _invoiceService.CreateInvoiceAsync(command);
             return new CommandResponse<InvoiceModel>(ret);
         }
+
         public async Task<ICommandResponse> HandleAsync(CreateIndividualInvoices command, CancellationToken cancellationToken = default)
         {
             var ret = await _invoiceService.CreateInvoicesAsync(command);

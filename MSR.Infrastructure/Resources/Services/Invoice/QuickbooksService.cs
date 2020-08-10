@@ -11,6 +11,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Domain.Abstractions.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSR.Infrastructure.Resources.Services.Invoices
 {
@@ -64,7 +65,13 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             var invoiceFileText = new StringBuilder();
 
-            var invoice = _unitOfWork.Invoices.Query().Where(x => x.Id == invoiceId).SingleOrDefault();
+            var invoice = _unitOfWork.Invoices.Query()
+                                .Include(i => i.InvoiceItems)
+                                .ThenInclude(ii => ii.WorkOrder)
+                                .ThenInclude(wo => wo.Purchase)
+                                .ThenInclude(p => p.Location)
+                                .Where(x => x.Id == invoiceId)
+                                .SingleOrDefault();
 
             if (invoice == null)
             {

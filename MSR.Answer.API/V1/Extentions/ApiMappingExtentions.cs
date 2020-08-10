@@ -405,15 +405,14 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 var inv = new CreateOneInvoice()
                 {
-                    CustomerId = request.CustomerId,
+                    CustomerId = request.CustomerId.GetValueOrDefault(0),
                     Description = request.Description,
                     InvoiceClass = request.InvoiceClass,
                     InvoiceDate = request.InvoiceDate,
                     TaxPercentage = request.TaxPercentage,
                     InvoiceItems = new List<CreateUpdateInvoiceItem>() {
                             new CreateUpdateInvoiceItem() {
-                                PurchaseOrderId = item.PurchaseOrderId,
-                                WorkOrderId  = item.WorkOrderId
+                                Id = item.Id.GetValueOrDefault(0)
                             }
                         }
                 };
@@ -428,15 +427,14 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new CreateOneInvoice()
             {
-                CustomerId = request.CustomerId,
+                CustomerId = request.CustomerId.GetValueOrDefault(0),
                 Description = request.Description,
                 InvoiceClass = request.InvoiceClass,
                 InvoiceDate = request.InvoiceDate,
                 TaxPercentage = request.TaxPercentage,
                 InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
                 {
-                    PurchaseOrderId = x.PurchaseOrderId,
-                    WorkOrderId = x.WorkOrderId
+                    Id = x.Id.GetValueOrDefault(0)
                 }).ToList()
             };
         }
@@ -455,14 +453,13 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new UpdateInvoice()
             {
-                Id = request.Id,
+                Id = request.Id.GetValueOrDefault(0),
                 Description = request.Description,
                 InvoiceDate = request.InvoiceDate,
                 TaxPercentage = request.TaxPercentage,
                 InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
                 {
-                    PurchaseOrderId = x.PurchaseOrderId,
-                    WorkOrderId = x.WorkOrderId
+                    Id = x.Id.GetValueOrDefault(0)
                 }).ToList()
             };
         }
