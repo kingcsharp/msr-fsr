@@ -40,6 +40,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
         void Attach(TEntity entity);
         void AttachOrAddEntities(TEntity rootEntity);
         void Update(TEntity entityToUpdate);
+        void UpdateAndSaveChanges(TEntity entityToUpdate);
+        Task UpdateAndSaveChangesAsync(TEntity entityToUpdate);
+
 
         TEntity FirstOrDefault(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
             params Expression<Func<TEntity, object>>[] includes);
