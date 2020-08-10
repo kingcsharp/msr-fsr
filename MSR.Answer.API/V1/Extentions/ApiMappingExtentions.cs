@@ -503,9 +503,9 @@ namespace MSR.Answer.API.V1.Extentions
             return file;
         }
 
-        public static GetQuotesProducts ToGetQuotesProductsRequestCommand(this GetQuotesProductsRequest request)
+        public static GetQuotesProductsGridView ToGetQuotesProductsRequestCommand(this GetQuotesProductsGridViewRequest request)
         {
-            return new GetQuotesProducts();
+            return new GetQuotesProductsGridView();
         }
 
         public static CreateQuote ToCreateQuoteCommand(this CreateQuoteRequest request)

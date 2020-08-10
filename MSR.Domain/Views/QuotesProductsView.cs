@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MSR.Domain.Models
+namespace MSR.Domain.Views
 {
-    public class QuotesProductsModel
+    public class QuotesProductsView
     {
         public int Id { get; set; }
         public bool IsProduct { get; set; }
