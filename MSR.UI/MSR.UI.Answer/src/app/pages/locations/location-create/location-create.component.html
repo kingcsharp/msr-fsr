@@ -106,7 +106,7 @@
             </div>
         </form>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="locationToEditId !== null">
         <button type="button" class="btn btn-primary m-2" (click)="saveLocation()"
             *ngIf="locationToEdit.id ===  undefined" data-cy="save-button">Save</button>
         <button type="button" class="btn btn-primary m-2" (click)="updateLocation()"
