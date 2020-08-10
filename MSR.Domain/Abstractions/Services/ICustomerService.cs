@@ -11,6 +11,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<IEnumerable<Customer>> GetCustomersAsync(GetMultipleCustomers command);
         Task<Customer> CreateCustomerAsync(CreateCustomer command);
         Task<Customer> UpdateCustomerAsync(UpdateCustomer command);
-        Task DeleteCustomerAsync(int Id);
+        Task<Customer> DeleteCustomerAsync(int Id);
+        Task<IEnumerable<Customer>> ImportCustomers(string csvData);
     }
 }

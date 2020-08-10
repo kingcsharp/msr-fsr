@@ -14,6 +14,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Models.Config;
 using MSR.Domain.Helpers;
+using MSR.Infrastructure.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.Location
 {
@@ -35,13 +36,19 @@ namespace MSR.Infrastructure.Resources.Services.Location
             {
                 locationQuery = locationQuery.Where(i => i.Id == command.Id);
             }
+            else
+            {
+                locationQuery = locationQuery.Where(i => i.IsActive);
+            }
             
             if (command.ParentId.HasValue && command.ParentId.Value != 0)
             {
                 locationQuery = locationQuery.Where(i => i.ParentId == command.ParentId);
             }
 
-            var locations = await locationQuery.ToListAsync();
+            var locations = await locationQuery.Include(i => i.Parent)
+                                               .ToListAsync();
+
             var locationIds = locations.Select(i => i.Id);
             var locationApprovals = await _unitOfWork.LocationApprovals.Query()
                                                                        .Include(i => i.Status)
@@ -78,7 +85,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             {
                 var locationApproval = _mapper.Map<LocationApproval>(command);
                 locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
-                locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.WorkflowGroup?.Id ?? 0);
+                locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
                 locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
                 
                 await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
@@ -162,7 +169,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 var locationApproval = _mapper.Map<LocationApproval>(curLocation);
                 locationApproval.LocationId = curLocation.Id;
                 locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
-                locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.WorkflowGroup?.Id ?? 0);
+                locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
                 locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
 
                 await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
@@ -172,6 +179,41 @@ namespace MSR.Infrastructure.Resources.Services.Location
             }
 
             return retLocation;
+        }
+
+        public async Task<(IEnumerable<LocationModel> ImportedData, IEnumerable<ImportError> ImportErrors)> ImportLocations(string csvData)
+        {
+            var records = CSVHelper.ParseRecords<LocationImportItem>(csvData);
+            var locations = new List<LocationModel>();
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.CustomersDepartments, EnumPrivilege.CanApprove))
+            {
+                throw new DomainException("Permission denied for import", DomainError.BadRequest);
+            }
+
+            foreach (var record in records)
+            {
+                try
+                {
+                    if (record.Id.HasValue && record.Id.Value > 0)
+                    {
+                        var ret = await UpdateLocationAsync(_mapper.Map<UpdateLocation>(record));
+                        locations.Add(ret);
+                    }
+                    else
+                    {
+                        var ret = await CreateLocationAsync(_mapper.Map<CreateLocation>(record));
+                        locations.Add(ret);
+                    }
+                }
+                catch
+                {
+                    //If we get an error on a single import dump it and keep going. 
+                }
+            }
+
+            return (locations, null);
+
         }
     }
 }

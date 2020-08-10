@@ -1,13 +1,13 @@
 using CsvHelper;
-using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace MSR.Infrastructure.Helpers
+namespace MSR.Domain.Helpers
 {
     public class CSVHelper
     {
-        public static IEnumerable ParseRecords<T>(string data)
+        public static IEnumerable<T> ParseRecords<T>(string data)
         {
             var reader = new StringReader(data);
             var csv = new CsvReader(reader, CultureInfo.InvariantCulture);

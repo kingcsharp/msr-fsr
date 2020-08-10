@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
-namespace MSR.Infrastructure.Helpers
+namespace MSR.Domain.Helpers
 {
     public class Base64Helper
     {
         public string ContentType { get; set; }
 
+        public static string ByteOrderMarkUtf8 => Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
         public byte[] FileContents { get; set; }
         public static Base64Helper Parse(string base64Content)
         {
