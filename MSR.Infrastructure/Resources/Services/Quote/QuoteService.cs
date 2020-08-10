@@ -54,15 +54,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Save the new Quote
             await _unitOfWork.Quotes.AddAndSaveChangesAsync(quote);
 
-            quote = await _unitOfWork.Quotes
-                                .Query()
-                                .Include(q => q.Customer)
-                                .Include(q => q.Product)
-                                .FirstOrDefaultAsync();
-
-            //quote.Product = await _unitOfWork.Products.FirstOrDefaultAsync(false, i => i.Id == quote.ProductId);
-            //quote.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == quote.CustomerId);
-
+            // Returning QuoteModel from the inserted quote
             var retQuote = _mapper.Map<QuoteModel>(quote);
 
             return retQuote;
