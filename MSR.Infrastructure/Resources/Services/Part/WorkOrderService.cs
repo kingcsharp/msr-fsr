@@ -43,7 +43,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 .Include(x => x.Location)
                 .ToListAsync();
 
-            if (workorders.Count == 0) {
+            if (workorders.Count == 0 && command.Id.HasValue) {
                 throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
             }
 
