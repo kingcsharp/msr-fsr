@@ -22,5 +22,6 @@ namespace MSR.Domain.Views
         public string CreatedBy { get; set; } // dbo.Invoice.CreatedBy.GetFullName()
         public DateTime LastUpdatedOn { get; set; }
         public string LastUpdatedBy { get; set; }// dbo.Invoice.LastUpdatedBy.GetFullName() 
+        public ICollection<InvoiceItemView> InvoiceItems { get; set; }
     }
 }
