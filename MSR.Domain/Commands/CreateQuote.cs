@@ -12,6 +12,6 @@ namespace MSR.Domain.Commands
         public string Representative { get; set; }
         public string QuoteJson { get; set; }
         public string CustomerRequirementJson { get; set; }
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
     }
 }
