@@ -236,7 +236,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.SubmittedBy.FullName))
-                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Product.Procedure.Name));
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Product.Procedure.Name))
+                .ForMember(dest => dest.IsDeletable, opt => opt.MapFrom(src => !src.ProductId.HasValue));
         }
     }
 }

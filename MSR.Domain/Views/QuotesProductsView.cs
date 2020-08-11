@@ -6,6 +6,7 @@ namespace MSR.Domain.Views
     {
         public int Id { get; set; }
         public bool IsProduct { get; set; }
+        public bool IsDeletable { get; set; }
         public DateTime SubmittedDate { get; set; }
         public string Company { get; set; }
         public string SubmittedBy { get; set; }
