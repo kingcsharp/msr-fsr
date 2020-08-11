@@ -45,7 +45,14 @@ namespace MSR.Infrastructure.Tests.Resources.Services
         [Fact]
         public async Task Call_UpdateWorkOrderAsync()
         {
-
+            var response = await _workorderService.UpdateWorkOrderAsync(new UpdateWorkOrder() {
+                Id = 1,
+                Price = 234.56M
+            });
+            response.Should().Match<WorkOrderModel>(x => (
+                x.Id == 1 &&
+                x.Price == 234.56M
+            ));
         }
 
         [Fact]

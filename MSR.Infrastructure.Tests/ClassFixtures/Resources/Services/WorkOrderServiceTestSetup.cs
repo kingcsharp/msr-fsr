@@ -2,16 +2,15 @@ using Microsoft.Extensions.DependencyInjection;
 using MockQueryable.Moq;
 using Moq;
 using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.Services.Role;
-using MSR.Infrastructure.Tests.TestFixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 {
@@ -25,10 +24,13 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 
             var workOrders = new Mock<IRepository<WorkOrder>>();
             var workOrdersList = new List<WorkOrder>() { 
-                new WorkOrder() { Price = 123.45M }
+                new WorkOrder() { Id = 1, Price = 123.45M }
             };
             var workOrdersMock = workOrdersList.AsQueryable().BuildMock();
             workOrders.Setup(m => m.Query()).Returns(workOrdersMock.Object);
+            workOrders.Setup(m => m.FirstOrDefaultAsync(It.IsAny<bool>(),
+                It.IsAny<Expression<Func<WorkOrder, bool>>>())
+            ).Returns(Task.FromResult(workOrdersList[0]));
             mockUnitOfWork.SetupGet(m => m.WorkOrders)
                 .Returns(workOrders.Object);
 
