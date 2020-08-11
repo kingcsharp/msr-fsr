@@ -2,6 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MockQueryable.Moq;
 using Moq;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.Services.Role;
@@ -29,6 +31,9 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
             workOrders.Setup(m => m.Query()).Returns(workOrdersMock.Object);
             mockUnitOfWork.SetupGet(m => m.WorkOrders)
                 .Returns(workOrders.Object);
+
+            CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) => { return true; };
+            CurrentUser.GetId = () => { return 1; };
 
             var services = DatabaseFake.ServiceFakeSetup(mockUnitOfWork.Object);
             services.AddScoped<IWorkOrderService,WorkOrderService>();

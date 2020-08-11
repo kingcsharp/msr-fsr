@@ -34,5 +34,25 @@ namespace MSR.Infrastructure.Tests.Resources.Services
             var response = await _workorderService.GetWorkOrderAsync(new GetWorkOrder() { Id = null });
             response.Should().HaveCount(1);
         }
+
+        [Fact]
+        public async Task Call_CreateWorkOrderAsync()
+        {
+            var response = await _workorderService.CreateWorkOrderAsync(new CreateWorkOrder());
+            response.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task Call_UpdateWorkOrderAsync()
+        {
+
+        }
+
+        [Fact]
+        public async Task Call_DeleteWorkOrderAsync()
+        {
+
+        }
+
     }
 }

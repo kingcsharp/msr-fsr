@@ -84,6 +84,12 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources
             mockUnitOfWork.SetupGet(m => m.WorkOrders)
                 .Returns(workOrders.Object);
 
+            var approvalTransactionLogs = new Mock<IRepository<ApprovalTransactionLog>>();
+            var approvalTransactionLogsMock = new List<ApprovalTransactionLog>().AsQueryable().BuildMock();
+            approvalTransactionLogs.Setup(m => m.Query()).Returns(approvalTransactionLogsMock.Object);
+            mockUnitOfWork.SetupGet(m => m.ApprovalTransactionLogs)
+                .Returns(approvalTransactionLogs.Object);
+
             Expression<Func<User, bool>> testExpression = i => i.UserName == Constants.GoodUserName;
 
             mockIRepositoryUser.Setup(m => m.FirstOrDefault(It.IsAny<bool>(),
