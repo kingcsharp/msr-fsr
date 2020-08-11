@@ -197,7 +197,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             var invoiceList = new List<Domain.Models.InvoiceModel>();
             // TO FIX: Including Customer returns an empty enumeration
-            var invoices = _unitOfWork.Invoices.Query().Include("InvoiceItems");//.Include("Customer");
+            var invoices = _unitOfWork.Invoices.Query().Include(i => i.InvoiceItems).ThenInclude(ii => ii.WorkOrder).ThenInclude(wo => wo.Purchase).AsQueryable(); ;//.Include("Customer");
 
             if (command.Id > 0)
             {
@@ -230,6 +230,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             foreach (var invoice in await invoices.ToListAsync())
             {
+                invoice.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, c => c.Id == invoice.CustomerId);
                 invoiceList.Add(_mapper.Map<Domain.Models.InvoiceModel>(invoice));
             }
 
@@ -240,7 +241,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             var invoiceList = new List<Domain.Views.InvoiceView>();
             // TO FIX: Including Customer returns an empty enumeration
-            var invoices = _unitOfWork.Invoices.Query();//.Include("Customer");
+            var invoices = _unitOfWork.Invoices.Query().Include(i => i.InvoiceItems).ThenInclude(ii => ii.WorkOrder).ThenInclude(wo => wo.Purchase).AsQueryable();//.Include("Customer");
 
             if (command.Id > 0)
             {
@@ -273,6 +274,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             foreach (var invoice in await invoices.ToListAsync())
             {
+                invoice.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, c => c.Id == invoice.CustomerId);
                 invoiceList.Add(_mapper.Map<Domain.Views.InvoiceView>(invoice));
             }
 
