@@ -1,28 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MSR.Answer.API.Attributes;
-using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
-using MSR.Domain.Models;
 using NSwag.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using MSR.Answer.API.Attributes;
+using MSR.Domain.Commanding.Enums;
+using MSR.Answer.API.Filters;
+using MSR.Domain.Models;
+using MSR.Domain.Views;
 
 namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class QuoteController : BaseApiController
+    public class QuoteProductController : BaseApiController
     {
-        private ICommandDispatcher _dispatcher;
+        private const string privilegeApiName = "QuotesProducts";
+        private readonly ICommandDispatcher _dispatcher;
 
-        public QuoteController(ICommandDispatcher dispatcher)
+        public QuoteProductController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
+
+        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<QuotesProductsView>>))]
+        public async Task<IActionResult> Get([FromQuery] GetQuotesProductsGridViewRequest filters)
+        {
+            var getQuotesProductsGridView = filters.ToGetQuotesProductsRequestCommand();
+            var ret = await _dispatcher.DispatchAsync(getQuotesProductsGridView);
+            return ret.ToOkObjectResponse<IEnumerable<QuotesProductsView>>();
+        }
+
 
         /// <summary>
         /// Creates a Quote based on the <paramref name="newQuote"/> request.
@@ -31,7 +44,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <permission>CanCreate Privilege required</permission>
         /// <returns>Quote DTO</returns>
         [HttpPost]
-        [HasPrivilegeApi("QuotesProducts", EnumPrivilege.CanCreate)]
+        [HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<QuoteModel>))]
         public async Task<IActionResult> Post([FromBody, Required] CreateQuoteRequest newQuote)
         {
@@ -47,11 +60,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <permission>CanDelete Privilege required</permission>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [HasPrivilegeApi("QuotesProducts", EnumPrivilege.CanDelete)]
+        [HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> Delete([FromRoute]int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var command = new DeleteQuote() {
+            var command = new DeleteQuote()
+            {
                 Id = id
             };
             var ret = await _dispatcher.DispatchAsync(command);
