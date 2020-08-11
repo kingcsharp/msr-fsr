@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.VisualBasic.CompilerServices;
 using MSR.Domain.Commands;
+using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Linq;
 
@@ -87,15 +88,21 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>();
             CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>();
 
-          
-
-            CreateMap<Domain.Models.InvoiceModel, Invoice>().ReverseMap();
+            #region Invoice
+            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
+            CreateMap<Invoice, InvoiceView>()
+                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Total))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.InvoiceDate))
+                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.Created.GetFullName()))
+                .ForMember(dest => dest.LastUpdatedBy, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
+            CreateMap<InvoiceItem, InvoiceItemView>()
+                .ForMember(dest => dest.PurchaseNumber, opt => opt.MapFrom(src => src.WorkOrder.Purchase.CustomerPurchaseNumber));
             CreateMap<CreateOneInvoice, Invoice>();
             CreateMap<CreateUpdateInvoiceItem, InvoiceItem>();
             CreateMap<UpdateInvoice, Invoice>();
             CreateMap<DownloadAsIIFInvoices, GetInvoices>();
-
-           
+            #endregion
 
             CreateMap<HelpPage, Domain.Models.HelpPage>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());

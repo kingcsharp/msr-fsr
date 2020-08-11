@@ -7,7 +7,7 @@ namespace MSR.Answer.API.V1.Models
     public class UpdateInvoiceRequest
     {
         [Required]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Description { get; set; }
 
@@ -15,7 +15,6 @@ namespace MSR.Answer.API.V1.Models
 
         public decimal? TaxPercentage { get; set; }
 
-        [Required]
         public ICollection<UpdateInvoiceItemRequest> InvoiceItems { get; set; }
     }
 }

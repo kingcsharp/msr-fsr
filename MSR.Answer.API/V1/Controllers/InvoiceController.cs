@@ -9,6 +9,7 @@ using AutoMapper;
 using NSwag.Annotations;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
@@ -31,12 +32,12 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceModel>>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceView>>))]
         public async Task<IActionResult> GetInvoices([FromQuery] GetInvoicesRequest filters)
         {
-            var getInvoices = filters.ToGetInvoicesCommand();
-            var ret = await _dispatcher.DispatchAsync(getInvoices);
-            return ret.ToOkObjectResponse<IEnumerable<InvoiceModel>>();
+            var getInvoicesGridView = filters.ToGetInvoicesGridViewCommand();
+            var ret = await _dispatcher.DispatchAsync(getInvoicesGridView);
+            return ret.ToOkObjectResponse<IEnumerable<InvoiceView>>();
         }
 
         [HttpPost("CreateOneInvoice"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]

@@ -405,15 +405,14 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 var inv = new CreateOneInvoice()
                 {
-                    CustomerId = request.CustomerId,
+                    CustomerId = request.CustomerId.GetValueOrDefault(0),
                     Description = request.Description,
                     InvoiceClass = request.InvoiceClass,
                     InvoiceDate = request.InvoiceDate,
                     TaxPercentage = request.TaxPercentage,
                     InvoiceItems = new List<CreateUpdateInvoiceItem>() {
                             new CreateUpdateInvoiceItem() {
-                                PurchaseOrderId = item.PurchaseOrderId,
-                                WorkOrderId  = item.WorkOrderId
+                                Id = item.Id.GetValueOrDefault(0)
                             }
                         }
                 };
@@ -428,44 +427,39 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new CreateOneInvoice()
             {
-                CustomerId = request.CustomerId,
+                CustomerId = request.CustomerId.GetValueOrDefault(0),
                 Description = request.Description,
                 InvoiceClass = request.InvoiceClass,
                 InvoiceDate = request.InvoiceDate,
                 TaxPercentage = request.TaxPercentage,
                 InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
                 {
-                    PurchaseOrderId = x.PurchaseOrderId,
-                    WorkOrderId = x.WorkOrderId
+                    Id = x.Id.GetValueOrDefault(0)
                 }).ToList()
             };
         }
 
         public static GetInvoices ToGetInvoicesCommand(this GetInvoicesRequest request)
         {
-            return new GetInvoices()
-            {
-                Id = request.Id,
-                CustomerId = request.CustomerId.GetValueOrDefault(0),
-                InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
-                Total = request.Total,
-                Description = request.Description,
-                StatusId = request.StatusId
-            };
+            return AutoMapperHelper.Mapper.Map<GetInvoices>(request);
+        }
+
+        public static GetInvoicesGridView ToGetInvoicesGridViewCommand(this GetInvoicesRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetInvoicesGridView>(request);
         }
 
         public static UpdateInvoice ToUpdateInvoiceCommand(this UpdateInvoiceRequest request)
         {
             return new UpdateInvoice()
             {
-                Id = request.Id,
+                Id = request.Id.GetValueOrDefault(0),
                 Description = request.Description,
                 InvoiceDate = request.InvoiceDate,
                 TaxPercentage = request.TaxPercentage,
                 InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
                 {
-                    PurchaseOrderId = x.PurchaseOrderId,
-                    WorkOrderId = x.WorkOrderId
+                    Id = x.Id.GetValueOrDefault(0)
                 }).ToList()
             };
         }
