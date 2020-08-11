@@ -113,8 +113,6 @@
                 <td>
                     <i *ngIf="userPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
                         (click)="showDialog(invoiceModel)"></i>
-                    <i *ngIf="userPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete Part"
-                        data-cy="deleteRow" (click)="removeRow(invoiceModel)"></i>
                 </td>
             </tr>
         </ng-template>
