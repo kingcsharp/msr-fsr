@@ -4,20 +4,24 @@
 </h1>
 
 <widget>
-
-
     <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
         currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
         stateKey="{{gridStorageId}}">
         <ng-template pTemplate="caption">
             <div class="text-right">
+                <button *ngIf="userPrivileges.canRead" (click)="downloadFilteredInvoices()"
+                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="add-button">
+                    Download Filtered Invoices
+                </button>
+                <button *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices()" class="btn btn-success mb-xs sm-mrg"
+                    role="button" data-cy="add-button">
+                    Download All Invoices
+                </button>
                 <button *ngIf="userPrivileges.canCreate" (click)="showDialog()"
                     class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
                     + Add
                 </button>
-                <!-- <csv-import [showButton]="canCreate" [menuItem]="menuItems.Parts" title="Import Parts"
-            (onUpload)="uploadParts($event)" fileName="PartsSample.csv"></csv-import> -->
                 <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
                     [gridVersion]="gridVersion" data-cy="usergrid-options">
                 </grid-options>
@@ -122,7 +126,7 @@
     </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currentInvoice.id === undefined ?'Create Invoice':'Edit Invoice'}}"
-    [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
+    [(visible)]="display" [style]="{width: '100vw'}" data-cy="user-header">
     <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
         data-parsley-priority-enabled="false" (ngSubmit)="onInvoiceSubmit()" novalidate="novalidate">
         <section class="widget mrg-btm-sm" widget>
@@ -164,16 +168,23 @@
                             Location
                         </label>
                         <div class="col-md-4 col-12">
-                            <p-dropdown placeholder="Select Location" name="locations" [options]="locations"
-                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.locationId">
+                            <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
+                                (onChange)="locationChanged()" optionLabel="name" placeholder="Select Location"
+                                name="locations" [options]="locations" dataKey="id" [virtualScroll]="true" itemSize="30"
+                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.location"
+                                [ngModelOptions]="{standalone: true}">
                             </p-dropdown>
                         </div>
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
                             Customer
                         </label>
                         <div class="col-md-4 col-12">
-                            <p-dropdown placeholder="Select Customer" name="customers" [options]="customers"
-                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customerId">
+                            <!-- {{currentInvoice.customer | json}} -->
+                            <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
+                                (onChange)="customerChanged()" optionLabel="name" placeholder="Select Customer"
+                                name="customers" [options]="customers" dataKey="id" [virtualScroll]="true" itemSize="30"
+                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customer"
+                                [ngModelOptions]="{standalone: true}">
                             </p-dropdown>
                         </div>
                     </div>
@@ -181,9 +192,8 @@
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
                             Work Orders
                         </label>
-                        <div class="col-md-4 col-12">
-                            <!-- <div>{{currentInvoice | json}}</div> -->
-                            <multiselect-wrapper-form [options]="invoiceItemOptions"
+                        <div class="col-md-10 col-12">
+                            <multiselect-wrapper-form *ngIf="showInvoiceItems" [options]="invoiceItemOptions"
                                 [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId"
                                 defaultLabelProperty="purchaseOrderName" defaultLabel="Select Work Orders">
                             </multiselect-wrapper-form>
@@ -191,6 +201,102 @@
                     </div>
                 </fieldset>
             </div>
+        </section>
+        <section>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    Work Orders
+                </h5>
+            </header>
+            <widget>
+                <p-table #dt2 [value]="workorders" dataKey="id" styleClass="ui-table-customers formTbl"
+                    [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
+                    [paginator]="true" currentPageReportTemplate="Showing {first}-{last} of {{workorders?.length}}"
+                    [filterDelay]="0" stateStorage="local" stateKey="{{gridWoStorageId}}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th></th>
+                            <th *ngFor="let col of gridWoSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+                                data-cy="usertable-header">
+                                {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="purchase.customerPurchaseNumber"
+                                [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="customerLine"
+                                [hidden]="!cg.isVisibleCol('customerLine',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="serialNumber"
+                                [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="location.name"
+                                [hidden]="!cg.isVisibleCol('location.name',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="product.name"
+                                [hidden]="!cg.isVisibleCol('product.name',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th [hidden]="!cg.isVisibleCol('actualEndDate',gridWoSettings)">
+                                <div class="position-relative" tooltip="Search by Work Order Complete Date">
+                                    <pcalendar-wrapper [gridStorageId]="gridWoSettings" filterId="actualEndDate"
+                                        [datatable]="dt2">
+                                    </pcalendar-wrapper>
+                                </div>
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="product.totalSalePrice"
+                                [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-workOrderModel>
+                        <tr class="ui-selectable-row">
+                            <td>
+                                <p-checkbox [(ngModel)]="workOrderModel.checked" [ngModelOptions]="{standalone: true}"
+                                    (onChange)="selectWorkOrder($event,workOrderModel)" binary="true"></p-checkbox>
+                            </td>
+                            <td class="text-capitalize"
+                                [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">
+                                {{workOrderModel.purchase.customerPurchaseNumber}}
+                            </td>
+                            <td class="text-capitalize" [hidden]="!cg.isVisibleCol('customerLine',gridWoSettings)">
+                                {{workOrderModel.customerLine}}
+                            </td>
+                            <td class="text-capitalize" [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)">
+                                {{workOrderModel.serialNumber}}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('location.name',gridWoSettings)" class="text-capitalize">
+                                {{workOrderModel.location.name}}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('product.name',gridWoSettings)" class="text-capitalize">
+                                {{workOrderModel.product.name }}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('actualEndDate',gridWoSettings)" class="text-capitalize">
+                                {{workOrderModel.actualEndDate | date :'short' }}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)"
+                                class="text-capitalize">
+                                {{workOrderModel.product.totalSalePrice}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8" style="text-align:left">No work orders found.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </widget>
         </section>
         <p-footer>
             <div class="pull-right">

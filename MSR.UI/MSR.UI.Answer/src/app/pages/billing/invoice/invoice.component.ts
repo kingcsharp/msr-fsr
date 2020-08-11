@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, AbstractType } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceModel, InvoiceItemModel, CustomerService, LocationService,
-  CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel
+  CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -13,6 +13,8 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { replaceArrayItems, pushIfNotExists } from '../../../models/lib/Utils';
+import { UrlHandlingStrategy } from '@angular/router';
 
 declare let jQuery: any;
 
@@ -27,7 +29,9 @@ export class InvoiceComponent implements OnInit {
   approvalTables = EnumApprovalTables;
   defaultView: ViewSaved;
   gridStorageId: string;
+  gridWoStorageId: string;
   gridSettings: ColumnsSaved[];
+  gridWoSettings: ColumnsSaved[];
   roles: any[];
   allRoles: any[] = [];
   canCreate: boolean = false;
@@ -47,14 +51,17 @@ export class InvoiceComponent implements OnInit {
   customers: Array<Customer>;
   locations: Array<LocationModel>;
   invoiceItemOptions: any;
-
+  showWorkOrders: boolean = false;
+  showInvoiceItems: boolean = true;
+  workorders: Array<WorkOrderModel> = new Array<WorkOrderModel>();
   constructor(private globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
-    private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService, private locationService: LocationService) {
+    private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService,
+    private locationService: LocationService, private workOrderService: WorkOrderService) {
 
   }
 
   ngOnInit(): void {
-    this.currentInvoice = this.getInvoice(undefined);
+    // this.currentInvoice = this.getInvoice(undefined);
     this.gridStorageId = 'invoiceGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
@@ -68,6 +75,17 @@ export class InvoiceComponent implements OnInit {
     new ColumnsSaved({ id: 'lastUpdated.fullName', label: 'Updated By', visible: false })
     ];
 
+    this.gridWoStorageId = 'invoiceWorkorderGrid' + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridWoSettings = [
+      new ColumnsSaved({ id: 'purchase.customerPurchaseNumber', label: 'Customer Puchase Number', visible: true }),
+      new ColumnsSaved({ id: 'customerLine', label: 'Customer Line', visible: true }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Work Order Item', visible: true }),
+      new ColumnsSaved({ id: 'location.name', label: 'Location', visible: true }),
+      new ColumnsSaved({ id: 'product.name', label: 'Product Name', visible: true }),
+      new ColumnsSaved({ id: 'actualEndDate', label: 'Work Order Complete Date', visible: true }),
+      new ColumnsSaved({ id: 'product.totalSalePrice', label: 'Total', visible: true })
+    ];
+
     this.isKitStatus = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
     this.isActive = [{ label: 'Yes', value: true },
@@ -75,6 +93,7 @@ export class InvoiceComponent implements OnInit {
 
     // this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Invoices);
     var a = {
+      canRead: true,
       canActivate: true,
       canCreate: true,
       canEdit: true,
@@ -89,6 +108,30 @@ export class InvoiceComponent implements OnInit {
     this.data = [];
   }
 
+  getWorkOrders() {
+    if (this.currentInvoice.customerId !== undefined && this.currentInvoice.locationId !== undefined) {
+      this.workOrderService.workOrder(null, null, this.currentInvoice.customerId,
+        this.currentInvoice.locationId, env.apiVersion).pipe(take(1))
+        .subscribe(responseHandler(response => {
+          const workOrdersUpdated = response.object.map((wo) => {
+            const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
+            wo.serialNumber = firstPartWithNullParent.serialNumber;
+            return wo;
+          });
+          replaceArrayItems(this.workorders, workOrdersUpdated);
+        }));
+    }
+  }
+
+  locationChanged() {
+    this.currentInvoice.locationId = this.currentInvoice.location.id;
+    this.getWorkOrders();
+  }
+
+  customerChanged() {
+    this.currentInvoice.customerId = this.currentInvoice.customer.id;
+    this.getWorkOrders();
+  }
 
   getCustomers() {
     this.customerService.customerGet(null, null, null, null, null, null, null, true, env.apiVersion).pipe(take(1))
@@ -97,17 +140,66 @@ export class InvoiceComponent implements OnInit {
       }));
   }
 
+  downloadAllInvoices() {
+    this.invoiceService.download(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.downloadItem(response.data);
+      }));
+  }
+
+  downloadFilteredInvoices() {
+    if (localStorage[this.gridStorageId] !== undefined) {
+      var filters = JSON.parse(localStorage[this.gridStorageId]).filters;
+      this.invoiceService.download(this.getFilterVal(filters, "id"), this.getFilterVal(filters, "customerName"),
+        this.getFilterVal(filters, "description"),
+        this.getFilterVal(filters, "invoiceNumber"), this.getFilterVal(filters, "invoiceDate"),
+        this.getFilterVal(filters, "createdOn"), this.getFilterVal(filters, "createdByName"),
+        this.getFilterVal(filters, "lastUpdatedOn"), this.getFilterVal(filters, "lastUpdatedByName"),
+        this.getFilterVal(filters, "total"), this.getFilterVal(filters, "statusId"), env.apiVersion)
+        .pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.downloadItem(response.data);
+        }));
+    }
+  }
+
+  downloadItem(data) {
+    var URL = window.URL;
+    var downloadURL = URL.createObjectURL(data);
+    window.open(downloadURL);
+  }
+
   getLocations() {
     this.locationService.locationGet(null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.locations = response.object;
+        this.locations = response.object.filter(x => x.parentId === null);
       }));
   }
 
   showDialog(invoice: InvoiceModel) {
     this.currentInvoice = this.getInvoice(invoice);
     this.invoiceItemOptions = JSON.parse(JSON.stringify(this.currentInvoice.invoiceItems));
+    this.getWorkOrders();
     this.display = true;
+  }
+
+  selectWorkOrder(ev, workorder: WorkOrderModel) {
+    if (ev.checked) {
+      this.showInvoiceItems = false;
+      var addInvoiceItem = new InvoiceItemModel({
+        purchaseOrderId: workorder.purchase.purchaseOrderId,
+        purchaseOrderName: workorder.purchase.customerPurchaseNumber,
+        workOrderId: workorder.id,
+      });
+
+      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, "purchaseOrderId");
+      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, "purchaseOrderId");
+
+      setTimeout(() => {
+        this.showInvoiceItems = true;
+      }, 10);
+    }
   }
 
   clseDialog() {
@@ -117,20 +209,34 @@ export class InvoiceComponent implements OnInit {
 
   getInvoices() {
     this.globals.showLoader(true);
-    this.invoiceService.invoiceGet(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
+    this.invoiceService.invoiceGet(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+      .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.data = response.object;
       }));
   }
 
-  getInvoice(invoice: InvoiceModel) {
+  getFilterVal(sotorageGridFilters, id) {
+    if (sotorageGridFilters === undefined) {
+      return null;
+    }
+    const item = sotorageGridFilters[id];
+    if (item === undefined) {
+      return null;
+    }
+    return sotorageGridFilters[id].value;
+  }
+
+  getInvoice(invoice) {
     if (invoice === undefined) {
-      let ret = new CreateInvoiceRequest();
+      let ret = new InvoiceModel();
       ret.invoiceItems = [];
       return ret;
     }
-    return invoice;
 
+    invoice.location = this.locations.find(x => x.id === invoice.locationId);
+    invoice.customer = this.customers.find(x => x.id === invoice.customerId);
+    return invoice;
   }
 }

@@ -6510,6 +6510,7 @@ export interface IAuditActionResultOfIEnumerableOfInvoiceModel extends IAuditAct
 export class InvoiceModel extends TrackableModel implements IInvoiceModel {
     invoiceNumber?: string | undefined;
     customerId?: number;
+    locationId?: number;
     customerName?: string | undefined;
     description?: string | undefined;
     invoiceDate?: Date;
@@ -6529,6 +6530,7 @@ export class InvoiceModel extends TrackableModel implements IInvoiceModel {
         if (_data) {
             this.invoiceNumber = _data["invoiceNumber"];
             this.customerId = _data["customerId"];
+            this.locationId = _data["locationId"];
             this.customerName = _data["customerName"];
             this.description = _data["description"];
             this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
@@ -6556,6 +6558,7 @@ export class InvoiceModel extends TrackableModel implements IInvoiceModel {
         data = typeof data === 'object' ? data : {};
         data["invoiceNumber"] = this.invoiceNumber;
         data["customerId"] = this.customerId;
+        data["locationId"] = this.locationId;
         data["customerName"] = this.customerName;
         data["description"] = this.description;
         data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
@@ -6577,6 +6580,7 @@ export class InvoiceModel extends TrackableModel implements IInvoiceModel {
 export interface IInvoiceModel extends ITrackableModel {
     invoiceNumber?: string | undefined;
     customerId?: number;
+    locationId?: number;
     customerName?: string | undefined;
     description?: string | undefined;
     invoiceDate?: Date;
@@ -9818,6 +9822,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     purchaseId?: number;
     productId?: number;
     price?: number;
+    customerLine?: string | undefined;
     scheduledStartDate?: Date;
     scheduledEndDate?: Date;
     actualStartDate?: Date | undefined;
@@ -9845,6 +9850,7 @@ export class WorkOrderModel implements IWorkOrderModel {
             this.purchaseId = _data["purchaseId"];
             this.productId = _data["productId"];
             this.price = _data["price"];
+            this.customerLine = _data["customerLine"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
             this.actualStartDate = _data["actualStartDate"] ? new Date(_data["actualStartDate"].toString()) : <any>undefined;
@@ -9880,6 +9886,7 @@ export class WorkOrderModel implements IWorkOrderModel {
         data["purchaseId"] = this.purchaseId;
         data["productId"] = this.productId;
         data["price"] = this.price;
+        data["customerLine"] = this.customerLine;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
         data["actualStartDate"] = this.actualStartDate ? this.actualStartDate.toISOString() : <any>undefined;
@@ -9908,6 +9915,7 @@ export interface IWorkOrderModel {
     purchaseId?: number;
     productId?: number;
     price?: number;
+    customerLine?: string | undefined;
     scheduledStartDate?: Date;
     scheduledEndDate?: Date;
     actualStartDate?: Date | undefined;

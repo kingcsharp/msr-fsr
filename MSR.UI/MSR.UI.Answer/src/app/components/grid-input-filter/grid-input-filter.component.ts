@@ -15,12 +15,13 @@ export class GridInputFilterComponent implements OnInit {
   @Input() searchField: string;
   @Input() dt: any;
   @Input() gridSettings: ColumnsSaved[];
-  constructor(public globals: Globals, public cg: CommonGrid,) {
+  constructor(public globals: Globals, public cg: CommonGrid) {
 
   }
 
   ngOnInit(): void {
     this.filterTooltipLabel = this.gridSettings.find(x => x.id === this.searchField).label;
+    var a = this.dt;
     this.show = true;
   }
 }
