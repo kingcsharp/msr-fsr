@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using MSR.Infrastructure.Resources.Services.Account;
 using MSR.Infrastructure.Resources.Services.Workflow;
 using Moq;
@@ -77,6 +77,12 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources
             menuRoles.Setup(m => m.Query()).Returns(menuRolesMock.Object);
             mockUnitOfWork.SetupGet(m => m.MenuRoles)
                 .Returns(menuRoles.Object);
+
+            var workOrders = new Mock<IRepository<WorkOrder>>();
+            var workOrdersMock = new List<WorkOrder>().AsQueryable().BuildMock();
+            workOrders.Setup(m => m.Query()).Returns(workOrdersMock.Object);
+            mockUnitOfWork.SetupGet(m => m.WorkOrders)
+                .Returns(workOrders.Object);
 
             Expression<Func<User, bool>> testExpression = i => i.UserName == Constants.GoodUserName;
 
