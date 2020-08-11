@@ -41,7 +41,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public string CustomerRequirementJson { get; set; }
 
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
 
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }

@@ -11,6 +11,6 @@ namespace MSR.Answer.API.V1.Models
         public string Representative { get; set; }
         public string QuoteJson { get; set; }
         public string CustomerRequirementJson { get; set; }
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
     }
 }
