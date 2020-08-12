@@ -466,17 +466,8 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static DownloadAsIIFInvoices ToDownloadCommand(this DownloadInvoicesRequest request)
         {
-            return new DownloadAsIIFInvoices()
-            {
-                CustomerId = request.CustomerId,
-                InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
-                Total = request.Total,
-                Description = request.Description,
-                StatusId = request.StatusId
-            };
+            return AutoMapperHelper.Mapper.Map<DownloadAsIIFInvoices>(request);
         }
-
-
 
         public static RemoveMenuRoleMap ToRemoveMenuRoleMapCommand(this DeleteMenuRoleMapRequest request)
         {

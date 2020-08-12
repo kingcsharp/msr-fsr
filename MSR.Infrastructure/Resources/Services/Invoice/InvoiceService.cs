@@ -25,7 +25,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             _mapper = mapper;
         }
 
-        public async Task<Domain.Models.InvoiceModel> CreateInvoiceAsync(CreateOneInvoice command)
+        public async Task<Domain.Views.InvoiceView> CreateInvoiceAsync(CreateOneInvoice command)
         {
             if (command.InvoiceItems?.Count == 0)
             {
@@ -60,7 +60,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             await _unitOfWork.Invoices.AddAndSaveChangesAsync(invoice);
 
             // Retreive saved Invoice
-            var retInvoice = _mapper.Map<Domain.Models.InvoiceModel>(invoice);
+            var retInvoice = _mapper.Map<Domain.Views.InvoiceView>(invoice);
 
             // Update InvoiceNumber using the Invoice ID
             invoice.InvoiceNumber = $"{retInvoice.InvoiceNumber}-{retInvoice.Id}";
@@ -78,10 +78,10 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             invoice.Total = (decimal)((invoice.Subtotal + (invoice.Subtotal * invoice.TaxPercentage / 100)));
         }
 
-        public async Task<IEnumerable<Domain.Models.InvoiceModel>> CreateInvoicesAsync(CreateIndividualInvoices command)
+        public async Task<IEnumerable<Domain.Views.InvoiceView>> CreateInvoicesAsync(CreateIndividualInvoices command)
         {
             var invoices = new List<Invoice>();
-            var retInvoices = new List<Domain.Models.InvoiceModel>();
+            var retInvoices = new List<Domain.Views.InvoiceView>();
 
             var statusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
 
@@ -116,7 +116,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 });
 
                 // Getting parent InvoiceClass from Location
-                var locationInvoiceClass = invoice.InvoiceItems.FirstOrDefault().WorkOrder.Purchase?.Location?.InvoiceClass;
+                var locationInvoiceClass = invoice.InvoiceItems.First().WorkOrder.Purchase?.Location?.InvoiceClass;
 
                 // Create temporary InvoiceNumber based on Invoice Id
                 invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}";
@@ -134,7 +134,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 invoices.ForEach(invoice =>
                 {
                     // Retreive saved Invoice
-                    var retInvoice = _mapper.Map<Domain.Models.InvoiceModel>(invoice);
+                    var retInvoice = _mapper.Map<Domain.Views.InvoiceView>(invoice);
 
                     invoice.InvoiceNumber = $"{retInvoice.InvoiceNumber}-{retInvoice.Id}";
                     retInvoice.InvoiceNumber = invoice.InvoiceNumber;
@@ -196,85 +196,82 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<IEnumerable<Domain.Models.InvoiceModel>> GetInvoicesAsync(GetInvoices command)
         {
             var invoiceList = new List<Domain.Models.InvoiceModel>();
-            // TO FIX: Including Customer returns an empty enumeration
-            var invoices = _unitOfWork.Invoices.Query().Include(i => i.InvoiceItems).ThenInclude(ii => ii.WorkOrder).ThenInclude(wo => wo.Purchase).AsQueryable(); ;//.Include("Customer");
-
-            if (command.Id > 0)
-            {
-                invoices = invoices.Where(i => i.Id == command.Id);
-            }
-            if (command.CustomerId > 0)
-            {
-                invoices = invoices.Where(i => i.CustomerId == command.CustomerId);
-            }
-            if (!string.IsNullOrEmpty(command.InvoiceNumber))
-            {
-                invoices = invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
-            }
-            if (!string.IsNullOrWhiteSpace(command.Description))
-            {
-                invoices = invoices.Where(i => i.Description == command.Description);
-            }
-            if (command.InvoiceDate > DateTime.MinValue)
-            {
-                invoices = invoices.Where(i => i.InvoiceDate == command.InvoiceDate);
-            }
-            if (command.Total.HasValue)
-            {
-                invoices = invoices.Where(i => i.Total == command.Total);
-            }
-            if (command.StatusId.HasValue)
-            {
-                invoices = invoices.Where(i => i.StatusId == command.StatusId);
-            }
+           
+            var invoices = GetFilteredInvoices(command);
 
             foreach (var invoice in await invoices.ToListAsync())
             {
-                invoice.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, c => c.Id == invoice.CustomerId);
                 invoiceList.Add(_mapper.Map<Domain.Models.InvoiceModel>(invoice));
             }
 
             return invoiceList.AsEnumerable();
         }
 
-        public async Task<IEnumerable<Domain.Views.InvoiceView>> GetInvoicesAsync(GetInvoicesGridView command)
+        private IQueryable<Invoice> GetFilteredInvoices(GetInvoices command)
         {
-            var invoiceList = new List<Domain.Views.InvoiceView>();
-            // TO FIX: Including Customer returns an empty enumeration
-            var invoices = _unitOfWork.Invoices.Query().Include(i => i.InvoiceItems).ThenInclude(ii => ii.WorkOrder).ThenInclude(wo => wo.Purchase).AsQueryable();//.Include("Customer");
+            var invoices = _unitOfWork.Invoices.Query()
+                                                .Include(i => i.Customer)
+                                                .Include(i => i.Status)
+                                                .Include(i => i.InvoiceItems).ThenInclude(ii => ii.PurchaseOrder)
+                                                .Include(i => i.InvoiceItems).ThenInclude(ii => ii.WorkOrder).ThenInclude(wo => wo.Purchase)
+                                                .AsQueryable();
 
-            if (command.Id > 0)
+            if (command.Id.HasValue)
             {
                 invoices = invoices.Where(i => i.Id == command.Id);
             }
-            if (command.CustomerId > 0)
+            if (!string.IsNullOrEmpty(command.CustomerName))
             {
-                invoices = invoices.Where(i => i.CustomerId == command.CustomerId);
+                invoices = invoices.Where(i => i.Customer.Name.ToLower().Contains(command.CustomerName.ToLower()));
+            }
+            if (!string.IsNullOrWhiteSpace(command.Description))
+            {
+                invoices = invoices.Where(i => i.Description.Contains(command.Description));
             }
             if (!string.IsNullOrEmpty(command.InvoiceNumber))
             {
                 invoices = invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
             }
-            if (!string.IsNullOrWhiteSpace(command.Description))
+            if (command.DueDate.HasValue)
             {
-                invoices = invoices.Where(i => i.Description == command.Description);
+                invoices = invoices.Where(i => i.InvoiceDate == command.DueDate);
             }
-            if (command.InvoiceDate > DateTime.MinValue)
+            if (command.CreatedOn.HasValue)
             {
-                invoices = invoices.Where(i => i.InvoiceDate == command.InvoiceDate);
+                invoices = invoices.Where(i => i.CreatedOn == command.CreatedOn);
             }
-            if (command.Total.HasValue)
+            if (!string.IsNullOrEmpty(command.CreatedByName))
             {
-                invoices = invoices.Where(i => i.Total == command.Total);
+                invoices = invoices.Where(i => i.Customer.Created.FirstName.ToLower().Contains(command.CreatedByName.ToLower()) || i.Customer.Created.LastName.ToLower().Contains(command.CreatedByName.ToLower()));
+            }
+            if (command.LastUpdatedOn.HasValue)
+            {
+                invoices = invoices.Where(i => i.LastUpdatedOn == command.LastUpdatedOn);
+            }
+            if (!string.IsNullOrEmpty(command.LastUpdatedByName))
+            {
+                invoices = invoices.Where(i => i.Customer.Created.FirstName.ToLower().Contains(command.LastUpdatedByName.ToLower()) || i.Customer.Created.LastName.ToLower().Contains(command.LastUpdatedByName.ToLower()));
+            }
+            if (command.Amount.HasValue)
+            {
+                invoices = invoices.Where(i => i.Total == command.Amount);
             }
             if (command.StatusId.HasValue)
             {
                 invoices = invoices.Where(i => i.StatusId == command.StatusId);
             }
 
+            return invoices;
+        }
+
+        public async Task<IEnumerable<Domain.Views.InvoiceView>> GetInvoicesAsync(GetInvoicesGridView command)
+        {
+            var invoiceList = new List<Domain.Views.InvoiceView>();
+
+            var invoices = GetFilteredInvoices(command);
+
             foreach (var invoice in await invoices.ToListAsync())
             {
-                invoice.Customer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, c => c.Id == invoice.CustomerId);
                 invoiceList.Add(_mapper.Map<Domain.Views.InvoiceView>(invoice));
             }
 
