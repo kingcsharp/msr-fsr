@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, AbstractType } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  InvoiceService, InvoiceModel, InvoiceItemModel, CustomerService, LocationService,
+  InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService,
   CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
@@ -67,12 +67,12 @@ export class InvoiceComponent implements OnInit {
     new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
     new ColumnsSaved({ id: 'description', label: 'Description', visible: true }),
     new ColumnsSaved({ id: 'invoiceNumber', label: 'Invoice Number', visible: true }),
-    new ColumnsSaved({ id: 'total', label: 'Amount', visible: true }),
-    new ColumnsSaved({ id: 'invoiceDate', label: 'Due Date', visible: true }),
-    new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
-    new ColumnsSaved({ id: 'created.fullName', label: 'Created By', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
-    new ColumnsSaved({ id: 'lastUpdated.fullName', label: 'Updated By', visible: false })
+    new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true }),
+    new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true }),
+    new ColumnsSaved({ id: 'cretedByName', label: 'Created By', visible: false }),
+    new ColumnsSaved({ id: 'lastatedOn', label: 'Created On', visible: false }),
+    new ColumnsSaved({ id: 'creaUpdatedOn', label: 'Updated On', visible: false }),
+    new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
 
     this.gridWoStorageId = 'invoiceWorkorderGrid' + this.elem.nativeElement.tagName.toLowerCase();
@@ -177,7 +177,7 @@ export class InvoiceComponent implements OnInit {
       }));
   }
 
-  showDialog(invoice: InvoiceModel) {
+  showDialog(invoice: InvoiceView) {
     this.currentInvoice = this.getInvoice(invoice);
     this.invoiceItemOptions = JSON.parse(JSON.stringify(this.currentInvoice.invoiceItems));
     this.getWorkOrders();
@@ -187,9 +187,9 @@ export class InvoiceComponent implements OnInit {
   selectWorkOrder(ev, workorder: WorkOrderModel) {
     if (ev.checked) {
       this.showInvoiceItems = false;
-      var addInvoiceItem = new InvoiceItemModel({
+      var addInvoiceItem = new InvoiceItemView({
         purchaseOrderId: workorder.purchase.purchaseOrderId,
-        purchaseOrderName: workorder.purchase.customerPurchaseNumber,
+        purchaseNumber: workorder.purchase.customerPurchaseNumber,
         workOrderId: workorder.id,
       });
 
@@ -230,7 +230,7 @@ export class InvoiceComponent implements OnInit {
 
   getInvoice(invoice) {
     if (invoice === undefined) {
-      let ret = new InvoiceModel();
+      let ret = new InvoiceView();
       ret.invoiceItems = [];
       return ret;
     }

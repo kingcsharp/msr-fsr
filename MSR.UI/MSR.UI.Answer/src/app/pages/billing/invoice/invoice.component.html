@@ -48,12 +48,12 @@
                 <th grid-input-filter [dt]="dt" searchField="invoiceNumber"
                     [hidden]="!cg.isVisibleCol('invoiceNumber',gridSettings)" [gridSettings]="gridSettings">
                 </th>
-                <th grid-input-filter [dt]="dt" searchField="total" [hidden]="!cg.isVisibleCol('total',gridSettings)"
+                <th grid-input-filter [dt]="dt" searchField="amount" [hidden]="!cg.isVisibleCol('amount',gridSettings)"
                     [gridSettings]="gridSettings">
                 </th>
-                <th [hidden]="!cg.isVisibleCol('invoiceDate',gridSettings)">
+                <th [hidden]="!cg.isVisibleCol('dueDate',gridSettings)">
                     <div class="position-relative" tooltip="Search by Invoice Date">
-                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="invoiceDate" [datatable]="dt">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="dueDate" [datatable]="dt">
                         </pcalendar-wrapper>
                     </div>
                 </th>
@@ -63,8 +63,8 @@
                         </pcalendar-wrapper>
                     </div>
                 </th>
-                <th grid-input-filter [dt]="dt" searchField="created.fullName"
-                    [hidden]="!cg.isVisibleCol('created.fullName',gridSettings)" [gridSettings]="gridSettings">
+                <th grid-input-filter [dt]="dt" searchField="createdByName"
+                    [hidden]="!cg.isVisibleCol('createdByName',gridSettings)" [gridSettings]="gridSettings">
                 </th>
                 <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
                     <div class="position-relative" tooltip="Search by Last Updated On Date">
@@ -72,8 +72,8 @@
                         </pcalendar-wrapper>
                     </div>
                 </th>
-                <th grid-input-filter [dt]="dt" searchField="lastUpdated.fullName"
-                    [hidden]="!cg.isVisibleCol('lastUpdated.fullName',gridSettings)" [gridSettings]="gridSettings">
+                <th grid-input-filter [dt]="dt" searchField="lastUpdatedByName"
+                    [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)" [gridSettings]="gridSettings">
                 </th>
                 <th></th>
             </tr>
@@ -92,23 +92,23 @@
                 <td [hidden]="!cg.isVisibleCol('invoiceNumber',gridSettings)">
                     {{invoiceModel.invoiceNumber }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('total',gridSettings)">
-                    {{invoiceModel.total }}
+                <td [hidden]="!cg.isVisibleCol('amount',gridSettings)">
+                    {{invoiceModel.amount }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('invoiceDate',gridSettings)">
-                    {{invoiceModel.invoiceDate | date :'short' }}
+                <td [hidden]="!cg.isVisibleCol('dueDate',gridSettings)">
+                    {{invoiceModel.dueDate | date :'short' }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
                     {{invoiceModel.createdOn | date :'short' }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('created.fullName',gridSettings)">
-                    {{invoiceModel.created.fullName }}
+                <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+                    {{invoiceModel.createdByName }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
                     {{invoiceModel.lastUpdatedOn | date :'short' }}
                 </td>
-                <td [hidden]="!cg.isVisibleCol('lastUpdated.fullName',gridSettings)">
-                    {{invoiceModel.lastUpdated.fullName }}
+                <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+                    {{invoiceModel.lastUpdatedByName }}
                 </td>
                 <td>
                     <i *ngIf="userPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
