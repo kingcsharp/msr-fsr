@@ -58,7 +58,10 @@ namespace MSR.Infrastructure.Tests.Resources.Services
         [Fact]
         public async Task Call_DeleteWorkOrderAsync()
         {
-
+            var response = await _workorderService.DeleteWorkOrderAsync(new DeleteWorkOrder() {
+                Id = 1
+            });
+            response.Should().BeTrue();
         }
 
     }
