@@ -1,1 +1,294 @@
-<p>product-definition works!</p>
+<div class="container">
+  <div class="row mb-lg">
+    <div class="col-12">
+      <h1 class="page-title">
+        <span>New Product Definition</span>
+      </h1>
+    </div>
+  </div>
+
+  <widget>
+    <form role="form">
+      <div class="row mx-0 mb-lg">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="customerId">Customer :</label>
+            <p-dropdown placeholder="Select Customer" name="customerId" [options]="customersData" appendTo="body" [baseZIndex]="100001"
+            [(ngModel)]="productData.customerId">
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="locationId">Location :</label>
+            <p-dropdown placeholder="Select Location" name="locationId" [options]="locationsData" appendTo="body" [baseZIndex]="100002"
+              [(ngModel)]="productData.locationId">
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="productCustomerDivision">Division/Fab # :</label>
+            <input type="text" id="ProductCustomerDivision" class="form-control input-transparent" name="ProductCustomerDivision">
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group row mx-0">
+            <label for="cycleTime">Cycle Time :</label>
+            <div class="input-group input-group-transparent">
+              <input type="text" id="CycleTime" class="form-control input-transparent" name="CycleTime">
+              <span class="input-group-addon bg-secondary">
+                Days
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mx-0 mb-lg">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="productName">Product Name :</label>
+            <input type="text" id="productName" class="form-control input-transparent" name="productName">
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="form-group">
+            <label for="partId">Part :</label>
+            <!-- Note: primeNg dropdown has too long delays. need to discuss alternate option -->
+
+            <!-- <p-dropdown placeholder="Select Part" name="partId" [options]="partsData" appendTo="body" [baseZIndex]="100003"  [filter]="true"
+              [(ngModel)]="productData.partId" panelstyle="width: 100%">
+            </p-dropdown> -->
+            <div class="input-group input-group-transparent">
+              <select
+                name="partId"
+                class="form-control input-transparent"
+                placeholder="Select Part"
+                [(ngModel)]="productData.partId"
+              >
+                <option *ngFor="let part of partsData" value="{{part.value}}" class="w-100">{{part.label}}</option>
+              </select>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-primary" [routerLink]="['../../parts/parts']"><i class="fa fa-plus-circle" tooltip="Create a new Customer Part in a New Tab"></i ></button>
+                <button type="button" class="btn btn-default active" (click)="getParts(true)"><i class="fa fa-refresh" [class.fa-spin]="isRefreshingPartsData" tooltip="Refresh List of Approved Parts"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="form-group">
+            <label for="procedureId">Procedure :</label>
+            <!-- <p-dropdown placeholder="Select Procedure" name="procedureId" [options]="partsData" appendTo="body" [baseZIndex]="100004"  [filter]="true"
+              [(ngModel)]="productData.procedureId" panelstyle="width: 100%">
+            </p-dropdown> -->
+            <div class="input-group input-group-transparent">
+              <select
+                name="procedureId"
+                class="form-control input-transparent"
+                placeholder="Select Procedure"
+                [(ngModel)]="productData.procedureId"
+                (change)="onSelectProcedure($event)"
+              >
+                <option *ngFor="let procedure of proceduresData" value="{{procedure.value}}">{{procedure.label}}</option>
+              </select>
+              <div class="input-group-btn">
+                <!-- TODO: Add routing to procedure creation page -->
+                <button type="button" class="btn btn-primary"><i class="fa fa-plus-circle" tooltip="Create an new Procedure in a new Tab"></i></button>
+                <button type="button" class="btn btn-default active" (click)="getProcedures(true)"><i class="fa fa-refresh" [class.fa-spin]="isRefreshingProceduresData" tooltip="Refresh List of Approved Procedures"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mx-0 mt-5 mb-4">
+        <div class="col-sm-9">
+          <h2>Step Details</h2>
+        </div>
+        <div class="col-sm-3 d-flex justify-content-end">
+          <bootstrap-switch (onChange)="onToggle($event)" [isOn]="showAllStepColumns"></bootstrap-switch>
+        </div>
+      </div>
+
+      <div class="row mx-0" id="add-steps">
+        <div class="col-md-12 column mb-4">
+          <table class="table table-bordered table-hover table-striped table-condensed" id="process_steps">
+            <thead>
+              <tr data-toggle="tooltip" data-placement="top" title="" data-original-title="">
+                <th class="text-center" width="15%">
+                  Process
+                </th>
+                <th class="text-center" width="5%">
+                  Step #
+                </th>
+                <th class="text-center">
+                  Standard Direct Labor Minutes
+                </th>
+                <th class="text-center">
+                  Standard Machine Minutes
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Replacement Cost
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Utilization
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Useful Life
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Equip. Expense Per Minute
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Annual R&amp;M
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  R&amp;M Per Minute
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="row0" data-value="551707" data-toggle="tooltip" data-placement="top" title="" data-original-title="">
+                <td>
+                  <input id="Steps_0__Id" name="Steps[0].Id" type="hidden" value="551707">
+                  <input id="Steps_0__ObjectId" name="Steps[0].ObjectId" type="hidden" value="551707">
+
+                  <input id="Steps_0__StepTitle" name="Steps[0].StepTitle" type="hidden" value="">
+                  Planar Polish
+                  <input data-val="true" data-val-required="The Process field is required." id="Steps_0__Process" name="Steps[0].Process" type="hidden" value="Planar Polish">
+                  <select class="form-control form-control input-transparent preDefinedStep" id="proId" name="Steps[0].Process" style="display: none;">
+                    <option value="">Select</option>
+                    <option value="155214">Blow-off CDA</option>
+                    <option value="154944">CO2 Ice</option>
+                    <option value="169418">Final Clean 6-Stage Ceramic</option>
+                  </select>
+                </td>
+                <td>
+                  <input class="form-control input-transparent" data-val="true" id="Steps_0__Step" name="Steps[0].Step">
+                </td>
+                <td>
+                  <input class="form-control input-transparent" id="Steps_0__StandardDirectLaborMinutes" name="Steps[0].StandardDirectLaborMinutes">
+                </td>
+                <td>
+                  <input class="form-control input-transparent" id="Steps_0__StandardMachineMinutes" name="Steps[0].StandardMachineMinutes" type="text" value="15">
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input type="text" id="Steps_0__ReplacementCost" name="Steps[0].ReplacementCost" readonly="readonly" class="form-control input-transparent">
+                    <span class="input-group-addon bg-secondary">.00</span>
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <input class="form-control form-control input-transparent " id="Steps_0__Utilization" name="Steps[0].Utilization" readonly="readonly" type="text" value="1">
+                    <span class="input-group-addon bg-secondary">%</span>
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <input class="form-control form-control input-transparent useful-life" id="Steps_0__UsefulLife" name="Steps[0].UsefulLife"
+                  readonly="readonly" type="text" value="1">
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input class="form-control input-transparent" id="Steps_0__EquipExpensePerMinute" name="Steps[0].EquipExpensePerMinute" readonly="readonly" type="text" value="">
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input class="form-control input-transparent" id="Steps_0__AnnualRM" name="Steps[0].AnnualRM" readonly="readonly" type="text">
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input class="form-control input-transparent" id="Steps_0__RMPerMinute" name="Steps[0].RMPerMinute" readonly="readonly" type="text" value="">
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>&nbsp;</td>
+                <td class="text-right">Total:</td>
+                <td class="text-right">
+                  <input class="form-control input-transparent" id="totalDirectMins" name="TotalDirectMins" type="text" value="0.00">
+                </td>
+                <td class="text-right">
+                  <input class="form-control input-transparent" id="totalMachineMins" name="TotalMachineMins" type="text" value="0.00">
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td class="text-right">Dollars:</td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input class="form-control input-transparent" id="totalDirectDollar" name="TotalDirectDollar" readonly="readonly" type="text" value="0.00">
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input class="form-control input-transparent" id="standardMachineDollar" name="StandardMachineDollar" readonly="readonly" type="text" value="0.00">
+                  </div>
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td colspan="2" class="text-right">Material Cost:</td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input class="form-control input-transparent" data-val="true"
+                    id="MaterialCost" name="MaterialCost" type="text" value="">
+                  </div>
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td colspan="2" class="text-right">Recommended Sale Price:</td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input class="form-control input-transparent" id="totalSalePrice" name="TotalSalePrice" type="text" value="">
+                  </div>
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="col-md-12 d-flex justify-content-end mb-3">
+          <a id="add_row" class="btn btn-primary pull-left" tooltip="Add a Step to the Definition"><i class="fa fa-plus-circle"></i> Add Step</a>
+          <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" tooltop="Removes Last Step from Definition"><i class="fa fa-minus-circle"></i> Remove Step</a>
+        </div>
+      </div>
+
+      <div class="row mx-0 my-4">
+        <div class="col-md-12 d-flex justify-content-end">
+          <!-- <span class="pull-right btn btn-primary" style="margin-left: 10px;" tooltip="Generates a Quote Preview" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span> -->
+          <button class="pull-right btn btn-info" style="margin-left: 10px;" tooltip="Saves with In Progress Status">
+            <i class="fa fa-save"></i> Save Draft
+          </button>
+          <button class="pull-right btn btn-success" style="margin-left: 10px;" tooltip="Saves and Sends Quoation to Client">
+            <i class="fa fa-send"></i> Save & Submit
+          </button>
+          <a class="btn btn-warning back-step pull-right" tooltip="Back To Production Planning" style="margin-left: 10px;">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </widget>
+</div>
