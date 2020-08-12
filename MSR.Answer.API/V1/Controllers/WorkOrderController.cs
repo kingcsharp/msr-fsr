@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.Filters;
+using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using NSwag.Annotations;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,54 +17,41 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class WorkOrderController : BaseApiController
     {
-        [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
-        public async Task<IActionResult> Get([FromQuery] GetWorkOrderRequest request)
-        {
-            var ret = new List<WorkOrderModel>() {
-               new WorkOrderModel()
-            {
-                ActualEndDate = DateTime.Now,
-                ActualStartDate = DateTime.Now.AddDays(-3),
-                HasNCR = true,
-                Id = 1,
-                Location = new LocationModel() { Id = 22, Name = "Loc1" },
-                LocationId = 22,
-                Price = 23,
-                Product = new ProductModel() { Name = "Prod1" },
-                ProductId = 1,
-                Purchase = new PurchaseModel()
-                {
-                    CustomerPurchaseNumber = "ababsf123",
-                    Id = 24
-                },
-                PurchaseId=24
-            },
-               new WorkOrderModel()
-            {
-                ActualEndDate = DateTime.Now,
-                ActualStartDate = DateTime.Now.AddDays(-4),
-                HasNCR = false,
-                Id = 2,
-                Location = new LocationModel() { Id = 12, Name = "Loc12" },
-                LocationId = 12,
-                Price = 55,
-                Product = new ProductModel() { Name = "Prod12" },
-                ProductId = 2,
-                Purchase = new PurchaseModel()
-                {
-                    CustomerPurchaseNumber = "bbbbbb",
-                    Id = 23
-                },
-                PurchaseId=23
-            }
-               };
+        private ICommandDispatcher _dispatcher;
 
-            return new OkObjectResult(new AuditActionResult<ICollection<WorkOrderModel>>()
-            {
-                Object = ret,
-                SuccessMessage = "GOD GUY"
-            });
+        public WorkOrderController(ICommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
+        [HttpGet()]
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
+        public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest request)
+        {
+            var command = request.ToGetWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>("WorkOrder GET Success");
+        }
+
+        [HttpPost]
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
+        public async Task<IActionResult> AddWorkOrder(CreateWorkOrderRequest request)
+        {
+            var command = request.ToCreateWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<WorkOrderModel>("WorkOrder created succesfully");
+        }
+
+        [HttpPatch]
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanEdit)]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
+        public async Task<IActionResult> UpdateWorkOrder(UpdateWorkOrderRequest request)
+        {
+            var command = request.ToUpdateWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<WorkOrderModel>("WorkOrder updated successfully");
         }
     }
 }
