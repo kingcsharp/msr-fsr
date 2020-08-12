@@ -1,5 +1,4 @@
-﻿
-using MSR.Domain.Commands;
+﻿using MSR.Domain.Commands;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Tests.TestFixtures
