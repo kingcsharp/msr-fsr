@@ -148,7 +148,10 @@
           <td [hidden]="!commonGrid.isVisibleCol('phone', gridSettings)">
             {{customer.phone}}
           </td>
-          <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)">
+          <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)" *ngIf="customer.location === undefined">
+            
+          </td>
+          <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)" *ngIf="customer.location !== undefined">
             {{customer.location.name}}
           </td>
           <td [hidden]="!commonGrid.isVisibleCol('primaryContact', gridSettings)">
