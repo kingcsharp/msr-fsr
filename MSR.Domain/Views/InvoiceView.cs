@@ -19,9 +19,11 @@ namespace MSR.Domain.Views
         /// </summary>
         public DateTime DueDate { get; set; } // dbo.Invoice.InvoiceDate
         public DateTime CreatedOn { get; set; }
-        public string CreatedBy { get; set; } // dbo.Invoice.CreatedBy.GetFullName()
+        public string CreatedByName { get; set; } // dbo.Invoice.CreatedBy.GetFullName()
         public DateTime LastUpdatedOn { get; set; }
-        public string LastUpdatedBy { get; set; }// dbo.Invoice.LastUpdatedBy.GetFullName() 
+        public string LastUpdatedByName { get; set; }// dbo.Invoice.LastUpdatedBy.GetFullName() 
+        public int StatusId { get; set; }
+        public int LocationId { get; set; }
         public ICollection<InvoiceItemView> InvoiceItems { get; set; }
     }
 }

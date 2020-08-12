@@ -41,21 +41,21 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("CreateOneInvoice"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<InvoiceModel>))]
+        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<InvoiceView>))]
         public async Task<IActionResult> CreateOneInvoice([FromBody, Required] CreateInvoiceRequest request)
         {
             var createOneInvoice = request.ToCreateOneInvoiceCommand();
             var ret = await _dispatcher.DispatchAsync(createOneInvoice);
-            return ret.ToOkObjectResponse<InvoiceModel>();
+            return ret.ToOkObjectResponse<InvoiceView>();
         }
 
         [HttpPost("CreateIndividualInvoices"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<IEnumerable<InvoiceModel>>))]
+        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<IEnumerable<InvoiceView>>))]
         public async Task<IActionResult> CreateIndividualInvoices([FromBody, Required] CreateInvoiceRequest request)
         {
             var createIndividualInvoices = request.ToCreateIndividualInvoicesCommand();
             var ret = await _dispatcher.DispatchAsync(createIndividualInvoices);
-            return ret.ToOkObjectResponse<IEnumerable<InvoiceModel>>();
+            return ret.ToOkObjectResponse<IEnumerable<InvoiceView>>();
         }
 
         [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]

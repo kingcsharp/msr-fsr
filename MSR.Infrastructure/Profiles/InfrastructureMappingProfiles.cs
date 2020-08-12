@@ -94,8 +94,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Total))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.InvoiceDate))
-                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.Created.GetFullName()))
-                .ForMember(dest => dest.LastUpdatedBy, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
+                .ForMember(dest => dest.LocationId, opt => opt.MapFrom(src => src.InvoiceItems.First().WorkOrder.Purchase.LocationId))
+                .ForMember(dest => dest.LastUpdatedByName, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
             CreateMap<InvoiceItem, InvoiceItemView>()
                 .ForMember(dest => dest.PurchaseNumber, opt => opt.MapFrom(src => src.WorkOrder.Purchase.CustomerPurchaseNumber));
             CreateMap<CreateOneInvoice, Invoice>();
