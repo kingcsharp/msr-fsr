@@ -59,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
-        [SwaggerResponse(HttpStatusCode.NoContent, typeof(AuditActionResult))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<InvoiceView>))]
         public async Task<IActionResult> UpdateInvoice([FromBody, Required] UpdateInvoiceRequest request)
         {
             var updateInvoice = request.ToUpdateInvoiceCommand();
