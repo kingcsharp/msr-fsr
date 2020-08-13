@@ -1,235 +1,250 @@
-<h1 class="page-title">
-  <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
-  {{globals.activeMenu.name}}
-</h1>
-<widget>
-  <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-    [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
-    [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true" [filterDelay]="0"
-    stateStorage="local" stateKey="{{gridStorageId}}">
-    <ng-template pTemplate="caption">
-      <div class="text-right">
-        <button *ngIf="canAddLocation" [routerLink]="['../location-create']" class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
-          + Add
-        </button>
-        <csv-import [showButton]="canAddLocation" [menuItem]="menuItems.Locations" title="Import Locations"
-          (onUpload)="uploadParts($event)" fileName="LocationsSample.csv"></csv-import>
-        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
-          [gridVersion]="gridVersion" data-cy="usergrid-options" [hidden]="false">
-        </grid-options>
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-      <tr>
-        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-          data-cy="usertable-header">
-          {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label != 'Actions'"></p-sortIcon>
-        </th>
-      </tr>
-      <tr>
-        <th [hidden]="!commonGrid.isVisibleCol('id',gridSettings)">
-          <div class="position-relative">
-            <input id="id" pInputText type="text" tooltip="Search by Id"
-              (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['id']?.value">
-            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'id')"></i>
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h1 class="page-title">
+        <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+        {{globals.activeMenu.name}}
+      </h1>
+    </div>
+    <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+      <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+    </div>
+  </div>
+  <div class="row">
+    <widget>
+      <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+        [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true" [filterDelay]="0"
+        stateStorage="local" stateKey="{{gridStorageId}}">
+        <ng-template pTemplate="caption">
+          <div class="text-right">
+            <button *ngIf="canAddLocation" [routerLink]="['../location-create']"
+              class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+              + Add
+            </button>
+            <csv-import [showButton]="canAddLocation" [menuItem]="menuItems.Locations" title="Import Locations"
+              (onUpload)="uploadParts($event)" fileName="LocationsSample.csv"></csv-import>
+            <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+              [gridVersion]="gridVersion" data-cy="usergrid-options" [hidden]="false">
+            </grid-options>
           </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('name',gridSettings)">
-          <div class="position-relative">
-            <input id="name" pInputText type="text" tooltip="Search by Name"
-              (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['name']?.value">
-            <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'name')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('internalAddress',gridSettings)">
-          <div class="position-relative">
-            <input id="internalAddress" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'internalAddress', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['internalAddress']?.value">
-            <i *ngIf="dt.filters['internalAddress']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'internalAddress')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('createdBy',gridSettings)">
-          <div class="position-relative">
-            <input id="createdBy" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'createdBy', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['createdBy']?.value">
-            <i *ngIf="dt.filters['createdBy']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'createdBy')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)">
-          <div class="position-relative">
-            <input id="createdOn" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['createdOn']?.value">
-            <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'createdOn')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('address1',gridSettings)">
-          <div class="position-relative">
-            <input id="address1" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'address1', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['address1']?.value">
-            <i *ngIf="dt.filters['address1']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'address1')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('city',gridSettings)">
-          <div class="position-relative">
-            <input id="city" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'city', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['city']?.value">
-            <i *ngIf="dt.filters['city']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'city')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('state',gridSettings)">
-          <div class="position-relative">
-            <input id="state" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'state', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['state']?.value">
-            <i *ngIf="dt.filters['state']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'state')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('postalcode',gridSettings)">
-          <div class="position-relative">
-            <input id="postalcode" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'postalcode', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['postalcode']?.value">
-            <i *ngIf="dt.filters['postalcode']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'postalcode')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('country',gridSettings)">
-          <div class="position-relative">
-            <input id="country" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'country', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['country']?.value">
-            <i *ngIf="dt.filters['country']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'country')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('phone',gridSettings)">
-          <div class="position-relative">
-            <input id="phone" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'phone', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['phone']?.value">
-            <i *ngIf="dt.filters['phone']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'phone')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('timezone',gridSettings)">
-          <div class="position-relative">
-            <input id="timezone" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'timezone', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['timezone']?.value">
-            <i *ngIf="dt.filters['timezone']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'timezone')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('address2',gridSettings)">
-          <div class="position-relative">
-            <input id="address2" pInputText type="text" tooltip="Search by Title"
-              (input)="dt.filter($event.target.value, 'address2', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['address2']?.value">
-            <i *ngIf="dt.filters['address2']?.value" class="fclear pi pi-times pointer"
-              (click)="commonGrid.filter(dt,'address2')"></i>
-          </div>
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+              data-cy="usertable-header">
+              {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label != 'Actions'"></p-sortIcon>
+            </th>
+          </tr>
+          <tr>
+            <th [hidden]="!commonGrid.isVisibleCol('id',gridSettings)">
+              <div class="position-relative">
+                <input id="id" pInputText type="text" tooltip="Search by Id"
+                  (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['id']?.value">
+                <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'id')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('name',gridSettings)">
+              <div class="position-relative">
+                <input id="name" pInputText type="text" tooltip="Search by Name"
+                  (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['name']?.value">
+                <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'name')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('internalAddress',gridSettings)">
+              <div class="position-relative">
+                <input id="internalAddress" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'internalAddress', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['internalAddress']?.value">
+                <i *ngIf="dt.filters['internalAddress']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'internalAddress')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('createdBy',gridSettings)">
+              <div class="position-relative">
+                <input id="createdBy" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'createdBy', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['createdBy']?.value">
+                <i *ngIf="dt.filters['createdBy']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'createdBy')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)">
+              <div class="position-relative">
+                <input id="createdOn" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['createdOn']?.value">
+                <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'createdOn')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('address1',gridSettings)">
+              <div class="position-relative">
+                <input id="address1" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'address1', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['address1']?.value">
+                <i *ngIf="dt.filters['address1']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'address1')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('city',gridSettings)">
+              <div class="position-relative">
+                <input id="city" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'city', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['city']?.value">
+                <i *ngIf="dt.filters['city']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'city')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('state',gridSettings)">
+              <div class="position-relative">
+                <input id="state" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'state', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['state']?.value">
+                <i *ngIf="dt.filters['state']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'state')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('postalcode',gridSettings)">
+              <div class="position-relative">
+                <input id="postalcode" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'postalcode', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['postalcode']?.value">
+                <i *ngIf="dt.filters['postalcode']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'postalcode')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('country',gridSettings)">
+              <div class="position-relative">
+                <input id="country" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'country', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['country']?.value">
+                <i *ngIf="dt.filters['country']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'country')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('phone',gridSettings)">
+              <div class="position-relative">
+                <input id="phone" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'phone', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['phone']?.value">
+                <i *ngIf="dt.filters['phone']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'phone')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('timezone',gridSettings)">
+              <div class="position-relative">
+                <input id="timezone" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'timezone', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['timezone']?.value">
+                <i *ngIf="dt.filters['timezone']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'timezone')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('address2',gridSettings)">
+              <div class="position-relative">
+                <input id="address2" pInputText type="text" tooltip="Search by Title"
+                  (input)="dt.filter($event.target.value, 'address2', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['address2']?.value">
+                <i *ngIf="dt.filters['address2']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'address2')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
 
-        </th>
-        <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
 
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-location>
-      <tr class="ui-selectable-row">
-        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
-          {{location.id}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('name', gridSettings)">
-          {{location.name}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('internalAddress', gridSettings)">
-          {{location.internalAddress}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)"  *ngIf="location.created !== undefined">
-          {{location.created.fullName}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)"  *ngIf="location.created === undefined">
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-location>
+          <tr class="ui-selectable-row">
+            <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
+              {{location.id}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('name', gridSettings)">
+              {{location.name}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('internalAddress', gridSettings)">
+              {{location.internalAddress}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)" *ngIf="location.created !== undefined">
+              {{location.created.fullName}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)" *ngIf="location.created === undefined">
 
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
-          {{location.createdOn}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('address1', gridSettings)">
-          {{location.address1}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('city', gridSettings)">
-          {{location.city}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('state', gridSettings)">
-          {{location.state}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('postalcode', gridSettings)">
-          {{location.postalcode}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('country', gridSettings)">
-          {{location.country}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('phone', gridSettings)">
-          {{location.phone}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent != null">
-          {{ location.parent.name }}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent == null">
-          
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('timezone', gridSettings)">
-          {{location.timezone}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
-          {{location.address2}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)"  *ngIf="location.status != null">
-          {{location.status}}
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status == null">
-          Approved
-        </td>
-        <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-          <i *ngIf="canEditLocation" class="fa fa-cog pointer" tooltip="Edit Location" data-cy="edit-button"
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
+              {{location.createdOn}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('address1', gridSettings)">
+              {{location.address1}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('city', gridSettings)">
+              {{location.city}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('state', gridSettings)">
+              {{location.state}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('postalcode', gridSettings)">
+              {{location.postalcode}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('country', gridSettings)">
+              {{location.country}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('phone', gridSettings)">
+              {{location.phone}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent != null">
+              {{ location.parent.name }}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent == null">
+
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('timezone', gridSettings)">
+              {{location.timezone}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
+              {{location.address2}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status != null">
+              {{location.status}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status == null">
+              Approved
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
+              <i *ngIf="canEditLocation" class="fa fa-cog pointer" tooltip="Edit Location" data-cy="edit-button"
                 [routerLink]="['../location-create']" [queryParams]="{id: location.id}"></i>
-          <i *ngIf="canDeleteLocation" class="fa fa-trash pointer" tooltip="Delete Location" data-cy="delete-button"
-            (click)="openConfirmDeleteDialog(location)"></i>
-          <approve-entity [(status)]="location.status" [entityId]="location.id" [activityType]="approvalTables.LocationApproval">
-          </approve-entity>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="8" style="text-align:left">No Help Pages to Display</td>
-      </tr>
-    </ng-template>
-  </p-table>
-</widget>
+              <i *ngIf="canDeleteLocation" class="fa fa-trash pointer" tooltip="Delete Location" data-cy="delete-button"
+                (click)="openConfirmDeleteDialog(location)"></i>
+              <approve-entity [(status)]="location.status" [entityId]="location.id"
+                [activityType]="approvalTables.LocationApproval">
+              </approve-entity>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" style="text-align:left">No Help Pages to Display</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </widget>
+  </div>
+</div>
 <p-dialog header="Confirm Delete Help Page" [(visible)]="showConfirmDeleteDialog" [appendTo]="body"
   [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   <div class="container">
     <div class="row">
-      <span [ngClass]="['text-danger','font-weight-bold']" *ngIf="locationToDelete != null && locationToDelete.parent != null"> Warning: This is a Parent Location, all child locations will be deleted also.</span>
+      <span [ngClass]="['text-danger','font-weight-bold']"
+        *ngIf="locationToDelete != null && locationToDelete.parent != null"> Warning: This is a Parent Location, all
+        child locations will be deleted also.</span>
     </div>
     <div class="row">
       Are you sure you want to Delete this Location?

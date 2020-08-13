@@ -25,6 +25,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerCreateComponent } from './customer-create/customer-create.component';
 import { CertificationsComponent } from './certifications/certifications.component';
+import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -41,7 +42,8 @@ export const routes = [
     RoleassignmentsComponent,
     CustomersComponent,
     CustomerCreateComponent,
-    CertificationsComponent
+    CertificationsComponent,
+    HelpbuttonWrapperComponent
   ],
   imports: [
     CommonModule,

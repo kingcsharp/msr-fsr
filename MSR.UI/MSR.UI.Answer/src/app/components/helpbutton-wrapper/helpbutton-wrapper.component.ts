@@ -8,7 +8,8 @@ import { responseHandler } from '../../utils/responseHandler';
 @Component({
   selector: 'helpbutton-wrapper',
   templateUrl: './helpbutton-wrapper.component.html',
-  styleUrls: ['./helpbutton-wrapper.component.scss']
+  styleUrls: ['./helpbutton-wrapper.component.scss'],
+  providers: [HelpService]
 })
 export class HelpbuttonWrapperComponent implements OnInit {
   canViewHelpPage = false;

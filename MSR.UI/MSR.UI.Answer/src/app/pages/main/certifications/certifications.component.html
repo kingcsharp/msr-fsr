@@ -73,11 +73,6 @@
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
                             <div class="position-relative">
-                                <!--<input id="status" pInputText type="text" tooltip="Search by Status"
-                                    (input)="dt.filter($event.target.value, 'status', 'contains')"
-                                    class="ui-column-filter" [value]="dt.filters['status']?.value">
-                                <i *ngIf="dt.filters['status']?.value" class="fclear pi pi-times pointer"
-                                    (click)="commonGrid.filter(dt,'status')"></i>-->
                                 <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions" [filterId]="'status'"
                                 [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
                                 </multiselect-wrapper>

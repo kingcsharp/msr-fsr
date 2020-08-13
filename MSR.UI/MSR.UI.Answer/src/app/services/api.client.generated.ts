@@ -6223,6 +6223,7 @@ export class FileModel implements IFileModel {
     entityId?: number | undefined;
     name?: string | undefined;
     base64String?: string | undefined;
+    fileContents?: string | undefined;
     contentType?: string | undefined;
     fileURL?: string | undefined;
 
@@ -6241,6 +6242,7 @@ export class FileModel implements IFileModel {
             this.entityId = _data["entityId"];
             this.name = _data["name"];
             this.base64String = _data["base64String"];
+            this.fileContents = _data["fileContents"];
             this.contentType = _data["contentType"];
             this.fileURL = _data["fileURL"];
         }
@@ -6259,6 +6261,7 @@ export class FileModel implements IFileModel {
         data["entityId"] = this.entityId;
         data["name"] = this.name;
         data["base64String"] = this.base64String;
+        data["fileContents"] = this.fileContents;
         data["contentType"] = this.contentType;
         data["fileURL"] = this.fileURL;
         return data; 
@@ -6270,6 +6273,7 @@ export interface IFileModel {
     entityId?: number | undefined;
     name?: string | undefined;
     base64String?: string | undefined;
+    fileContents?: string | undefined;
     contentType?: string | undefined;
     fileURL?: string | undefined;
 }
