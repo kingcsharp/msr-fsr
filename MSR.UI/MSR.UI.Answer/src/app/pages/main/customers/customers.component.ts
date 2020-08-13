@@ -94,6 +94,7 @@ export class CustomersComponent implements OnInit {
 
       const index: number = this.data.map(function (e) { return e.id; }).indexOf(this.customerToDelete.id);
       this.data.splice(index, 1);
+      this.globals.showLoader(true);
 
     }));
 

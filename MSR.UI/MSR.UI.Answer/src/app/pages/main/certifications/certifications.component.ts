@@ -17,11 +17,12 @@ export class CertificationsComponent implements OnInit {
   data: any;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
+  loading: boolean = false;
   gridStorageId: string;
   canAddLocation: boolean = false;
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
+  statusOptions: any[];
 
   constructor(private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -30,6 +31,7 @@ export class CertificationsComponent implements OnInit {
 
     this.gridSettings = [
       new ColumnsSaved({ id: 'employeeName', label: 'Employee Name', visible: true }),
+      new ColumnsSaved({ id: 'certificationName', label: 'Certification', visible: true}),
       new ColumnsSaved({ id: 'certificationFromDate', label: 'Begin Date', visible: true }),
       new ColumnsSaved({ id: 'certificationToDate', label: 'End Date', visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true })
@@ -39,24 +41,15 @@ export class CertificationsComponent implements OnInit {
     this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
 
-    this.data = new Array<TrainingCertificationView>();
-
-
-    let mockDataA = new TrainingCertificationView();
-    mockDataA.employeeName = "MSR-FSR";
-    mockDataA.status = "Active";
-    mockDataA.certificationFromDate = new Date("2020-01-01"); 
-    mockDataA.certificationToDate = new Date("2020-05-5");  
-
-    this.data.push(mockDataA)
-    this.loading = false;
-    // TODO: Added API when Get All is fixed
-    /*
+    this.globals.showLoader(true);
     this.userService.trainingCertification(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
-      console.log(response);
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
+
     }));
-    */
+ 
   }
 
   hasPrivilege(privilegeName) {

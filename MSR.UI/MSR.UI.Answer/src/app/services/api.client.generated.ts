@@ -1599,6 +1599,174 @@ export class LocationService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
+    sensorGet(id: number, version: string): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+        let url_ = this.baseUrl + "/v{version}/Location/{id}/Sensor";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{Id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSensorGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSensorGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSensorGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfSensorItemModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfSensorItemModel>(<any>null);
+    }
+
+    sensorPost(locationId: number, sensorId: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Location/{LocationId}/Sensor/{SensorId}";
+        if (locationId === undefined || locationId === null)
+            throw new Error("The parameter 'locationId' must be defined.");
+        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
+        if (sensorId === undefined || sensorId === null)
+            throw new Error("The parameter 'sensorId' must be defined.");
+        url_ = url_.replace("{sensorId}", encodeURIComponent("" + sensorId));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSensorPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSensorPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSensorPost(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    sensorDelete(locationId: number, sensorId: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Location/{LocationId}/Sensor/{SensorId}";
+        if (locationId === undefined || locationId === null)
+            throw new Error("The parameter 'locationId' must be defined.");
+        url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
+        if (sensorId === undefined || sensorId === null)
+            throw new Error("The parameter 'sensorId' must be defined.");
+        url_ = url_.replace("{sensorId}", encodeURIComponent("" + sensorId));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSensorDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSensorDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSensorDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+
     locationDelete(id: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Location/{id}";
         if (id === undefined || id === null)
@@ -3157,6 +3325,71 @@ export class RoleService {
 }
 
 @Injectable()
+export class SensorService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    sensor(sensorId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+        let url_ = this.baseUrl + "/v{version}/Sensor?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (sensorId !== undefined && sensorId !== null)
+            url_ += "SensorId=" + encodeURIComponent("" + sensorId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSensor(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSensor(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSensor(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfSensorItemModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfSensorItemModel>(<any>null);
+    }
+}
+
+@Injectable()
 export class UserService {
     private http: HttpClient;
     private baseUrl: string;
@@ -3395,14 +3628,12 @@ export class UserService {
         return _observableOf<AuditActionResultOfUser>(<any>null);
     }
 
-    trainingCertification(userId: number | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
+    trainingCertification(userId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
         let url_ = this.baseUrl + "/v{version}/User/TrainingCertification?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
+        if (userId !== undefined && userId !== null)
             url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -7103,6 +7334,92 @@ export interface IAuditActionResultOfICollectionOfLocationModel extends IAuditAc
     object?: LocationModel[] | undefined;
 }
 
+export class AuditActionResultOfIEnumerableOfSensorItemModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfSensorItemModel {
+    object?: SensorItemModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfSensorItemModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(SensorItemModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfSensorItemModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfSensorItemModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfIEnumerableOfSensorItemModel extends IAuditActionResult {
+    object?: SensorItemModel[] | undefined;
+}
+
+export class SensorItemModel extends EntityModel implements ISensorItemModel {
+    sensorName?: string | undefined;
+    itemId?: string | undefined;
+    locationId?: number | undefined;
+    assignedLocation?: LocationModel | undefined;
+
+    constructor(data?: ISensorItemModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.sensorName = _data["sensorName"];
+            this.itemId = _data["itemId"];
+            this.locationId = _data["locationId"];
+            this.assignedLocation = _data["assignedLocation"] ? LocationModel.fromJS(_data["assignedLocation"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): SensorItemModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SensorItemModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sensorName"] = this.sensorName;
+        data["itemId"] = this.itemId;
+        data["locationId"] = this.locationId;
+        data["assignedLocation"] = this.assignedLocation ? this.assignedLocation.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ISensorItemModel extends IEntityModel {
+    sensorName?: string | undefined;
+    itemId?: string | undefined;
+    locationId?: number | undefined;
+    assignedLocation?: LocationModel | undefined;
+}
+
 export class AuditActionResultOfLocationModel extends AuditActionResult implements IAuditActionResultOfLocationModel {
     object?: LocationModel | undefined;
 
@@ -9513,6 +9830,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
     status?: string | undefined;
+    certificationName?: string | undefined;
 
     constructor(data?: ITrainingCertificationView) {
         if (data) {
@@ -9529,6 +9847,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
             this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
             this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
             this.status = _data["status"];
+            this.certificationName = _data["certificationName"];
         }
     }
 
@@ -9545,6 +9864,7 @@ export class TrainingCertificationView implements ITrainingCertificationView {
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
         data["status"] = this.status;
+        data["certificationName"] = this.certificationName;
         return data; 
     }
 }
@@ -9554,6 +9874,7 @@ export interface ITrainingCertificationView {
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
     status?: string | undefined;
+    certificationName?: string | undefined;
 }
 
 export class CreateUserRequest implements ICreateUserRequest {
