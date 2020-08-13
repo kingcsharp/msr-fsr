@@ -483,7 +483,7 @@ namespace MSR.Answer.API.V1.Extentions
             var file = AutoMapperHelper.Mapper.Map<UploadFile>(request);
             var stream = new MemoryStream();
             request.Image.CopyTo(stream);
-            file.Base64String = Convert.ToBase64String(stream.ToArray());
+            file.FileContents = stream.ToArray();
             return file;
         }
 

@@ -6,6 +6,7 @@
         public int? EntityId { get; set; }
         public string Name { get; set; }
         public string Base64String { get; set; }
+        public byte[] FileContents { get; set; }
         public string ContentType { get; set; }
         public string FileURL { get; set; }
     }

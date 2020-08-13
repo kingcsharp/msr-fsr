@@ -3,7 +3,6 @@ using Amazon.S3.Model;
 using MSR.Domain.Abstractions.AWS;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models.Config;
-using MSR.Infrastructure.Helpers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -41,7 +40,8 @@ namespace MSR.Infrastructure.Resources.AWS
             // pointers, and not uploading the data.
             if (!string.IsNullOrWhiteSpace(file.Base64String))
             {
-                await Upload(file.Base64String, _s3Information.FileBucketName, uniqueName);
+                var base64File = Base64Helper.Parse(file.Base64String);
+                await Upload(base64File.FileContents,base64File.ContentType, _s3Information.FileBucketName, uniqueName);
             }
 
             return $"{uniqueName}";
@@ -49,7 +49,7 @@ namespace MSR.Infrastructure.Resources.AWS
 
         public Task<string> UploadHelpFile(FileModel file)
         {
-            return Upload(file.Base64String, _s3Information.HelpbucketName, file.Name);
+            return Upload(file.FileContents,file.ContentType, _s3Information.HelpbucketName, file.Name);
         }
 
         public string GetURL(string key, int expiresInSeconds)
@@ -62,17 +62,17 @@ namespace MSR.Infrastructure.Resources.AWS
             });
         }
 
-        private async Task<string> Upload(string base64String, string bucketName, string name)
+        private async Task<string> Upload(byte[] fileContents, string contentType, string bucketName, string name)
         {
-            var base64File = Base64Helper.Parse(base64String);
             var putObj = new PutObjectRequest()
             {
-                ContentType = base64File.ContentType,
+                ContentType = contentType,
                 BucketName = bucketName,
                 Key = name,
+                CannedACL = S3CannedACL.PublicRead
             };
 
-            using var ms = new MemoryStream(base64File.FileContents);
+            using var ms = new MemoryStream(fileContents);
 
             putObj.InputStream = ms;
             var response = await _s3Handler.PutObjectAsync(putObj);
