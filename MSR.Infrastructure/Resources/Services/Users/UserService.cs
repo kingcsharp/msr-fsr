@@ -438,22 +438,21 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
         {
-            var user = await _unitOfWork.Users.Query().Include(i => i.Roles).FirstOrDefaultAsync(i => i.Id == command.Id);
-
-            if (user is null)
+            IEnumerable<TrainingCertificationView> trainingCerts;
+            var userRoles = _unitOfWork.UserRoles.Query();
+ 
+            if (command.Id.HasValue)
             {
-                throw new DomainException($"No {nameof(User)} with ID: {command.Id} found", DomainError.NotFound);
+                 userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
             }
 
-            var trainingCerts = user.Roles.Select(i => new TrainingCertificationView()
+            return userRoles.Include(i => i.User).Include(i => i.Role).Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value).Select(i => new TrainingCertificationView()
             {
                 CertificationFromDate = i.CertificationFromDate,
                 CertificationToDate = i.CertificationToDate,
-                EmployeeName = user.GetFullName(),
-                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(DateTime.UtcNow,i.CertificationToDate.Value) <= 0 ? "Expired" : "Active" : "Active")
-            });
-
-            return trainingCerts;
+                EmployeeName = i.User.GetFullName(),
+                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active")
+            }).AsEnumerable();
         }
     }
 }
