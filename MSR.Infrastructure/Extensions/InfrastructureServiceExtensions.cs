@@ -21,11 +21,10 @@ using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
 using MSR.Infrastructure.Resources.Services.Help;
 using MSR.Infrastructure.Resources.Services.Invoices;
-using Amazon.S3;
 using MSR.Domain.Abstractions;
 using MSR.Infrastructure.Factories;
 using MSR.Infrastructure.Resources.AWS;
-using Amazon.Runtime;
+using MSR.Infrastructure.Resources.Services.Sensor;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -61,6 +60,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IQuickbooksService, QuickbooksService>();
             services.AddSingleton<IFileHandlerFactory, FileHandlerFactory>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<ISensorService, SensorService>();
             services.AddScoped<S3FileHandler>();
 
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
