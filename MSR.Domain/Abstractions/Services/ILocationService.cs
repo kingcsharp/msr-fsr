@@ -11,6 +11,12 @@ namespace MSR.Domain.Abstractions.Services
         Task<LocationModel> CreateLocationAsync(CreateLocation command);
         Task<LocationModel> UpdateLocationAsync(UpdateLocation command);
         Task<LocationModel> DeactivateLocationAsync(DeactivateLocation command);
-        Task<(IEnumerable<LocationModel> ImportedData, IEnumerable<ImportError> ImportErrors)> ImportLocations(string csvData);
+        Task<IEnumerable<LocationModel>> ImportLocations(string csvData);
+
+        Task<IEnumerable<SensorItemModel>> GetSensorsForLocation(GetSensorsForLocation command);
+
+        Task AddSensorToLocation(CreateLocationSensorMap command);
+        Task RemoveSensorFromLocation(DeleteLocationSensorMap command);
+
     }
 }
