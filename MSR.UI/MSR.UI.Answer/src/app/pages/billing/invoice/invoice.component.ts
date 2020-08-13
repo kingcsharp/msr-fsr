@@ -144,6 +144,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   downloadAllInvoices(invoiceId) {
+    this.globals.showLoader(true);
     this.invoiceService.download(invoiceId ? invoiceId : null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
@@ -152,6 +153,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   downloadFilteredInvoices() {
+    this.globals.showLoader(true);
     if (localStorage[this.gridStorageId] !== undefined) {
       var filters = JSON.parse(localStorage[this.gridStorageId]).filters;
       this.invoiceService.download(this.getFilterVal(filters, "id"), this.getFilterVal(filters, "customerName"),
@@ -164,6 +166,8 @@ export class InvoiceComponent implements OnInit {
         .subscribe(responseHandler(response => {
           this.downloadItem(response.data);
         }));
+    }else{
+      this.downloadAllInvoices(null);
     }
   }
 
