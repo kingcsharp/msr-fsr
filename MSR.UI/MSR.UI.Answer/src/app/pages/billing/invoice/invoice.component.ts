@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, AbstractType } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService,
-  CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel
+  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel, AuditActionResultOfInvoiceView
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -14,8 +14,9 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { replaceArrayItems, pushIfNotExists } from '../../../models/lib/Utils';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
 import { UrlHandlingStrategy } from '@angular/router';
+import { Observable } from 'rxjs';
 
 declare let jQuery: any;
 
@@ -52,6 +53,7 @@ export class InvoiceComponent implements OnInit {
   customers: Array<Customer>;
   locations: Array<LocationModel>;
   invoiceItemOptions: any;
+  combineSelected: boolean = true;
   showWorkOrders: boolean = false;
   showInvoiceItems: boolean = true;
   workorders: Array<WorkOrderModel> = new Array<WorkOrderModel>();
@@ -62,7 +64,6 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.currentInvoice = this.getInvoice(undefined);
     this.gridStorageId = 'invoiceGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
@@ -166,7 +167,7 @@ export class InvoiceComponent implements OnInit {
         .subscribe(responseHandler(response => {
           this.downloadItem(response.data);
         }));
-    }else{
+    } else {
       this.downloadAllInvoices(null);
     }
   }
@@ -231,6 +232,56 @@ export class InvoiceComponent implements OnInit {
       }));
   }
 
+  onpartSubmit() {
+    this.globals.showLoader(true);
+    jQuery('.parsleyjs').parsley().validate();
+    const ctrl = this;
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      let method: Observable<AuditActionResultOfInvoiceView> = null;
+      this.globals.showLoader(true);
+      let basicReqData: any = {
+        invoiceItems: this.currentInvoice.invoiceItems,
+        description: this.currentInvoice.description,
+        invoiceDate: this.currentInvoice.dueDate,
+        taxPercentage: this.currentInvoice.taxPercentage
+      }
+
+      if (this.currentInvoice.id === undefined) {
+        basicReqData.id = this.currentInvoice.id;
+        const invoiceUpdateRequest = new UpdateInvoiceRequest(basicReqData);
+        method = this.invoiceService.invoicePatch(env.apiVersion, invoiceUpdateRequest);
+      } else {
+        basicReqData.invoiceClass = this.currentInvoice.location.invoiceClass;
+        basicReqData.customerId = this.currentInvoice.customerId;
+        if (this.combineSelected) {
+          method = this.invoiceService.createOneInvoice(env.apiVersion, new CreateInvoiceRequest(basicReqData));
+        } else {
+          this.invoiceService.createIndividualInvoices(env.apiVersion, new CreateInvoiceRequest(basicReqData)).pipe(take(1)).subscribe(responseHandler((resp) => {
+            if (!resp.hasErrors) {
+              ctrl.data.push(...resp.object);
+              ctrl.clseDialog();
+            }
+          }, () => {
+          }));
+        }
+      }
+      method.pipe(take(1)).subscribe(responseHandler((resp) => {
+        if (!resp.hasErrors) {
+          if (ctrl.currentInvoice.id === undefined) {
+            ctrl.data.push(resp.object);
+          } else {
+            const index = ctrl.data.findIndex(x => x.id === ctrl.currentInvoice.id);
+            ctrl.data.splice(index, 1);
+            ctrl.data.splice(index, 0, resp.object);
+          }
+          ctrl.clseDialog();
+        }
+      }, () => {
+
+      }));
+    }
+  }
+
   getFilterVal(sotorageGridFilters, id) {
     if (sotorageGridFilters === undefined) {
       return null;
@@ -243,14 +294,17 @@ export class InvoiceComponent implements OnInit {
   }
 
   getInvoice(invoice) {
+    this.combineSelected = true;
     if (invoice === undefined) {
       let ret = new InvoiceView();
       ret.invoiceItems = [];
+      emptyArray(this.workorders);
       return ret;
     }
 
-    invoice.location = this.locations.find(x => x.id === invoice.locationId);
-    invoice.customer = this.customers.find(x => x.id === invoice.customerId);
-    return invoice;
+    let invoiceCopy = copyObj(invoice);
+    invoiceCopy.location = this.locations.find(x => x.id === invoice.locationId);
+    invoiceCopy.customer = this.customers.find(x => x.id === invoice.customerId);
+    return invoiceCopy;
   }
 }

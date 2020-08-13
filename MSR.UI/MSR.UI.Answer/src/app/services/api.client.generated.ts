@@ -1153,7 +1153,7 @@ export class InvoiceService {
         return _observableOf<AuditActionResultOfIEnumerableOfInvoiceView>(<any>null);
     }
 
-    invoicePatch(version: string, request: UpdateInvoiceRequest): Observable<AuditActionResult> {
+    invoicePatch(version: string, request: UpdateInvoiceRequest): Observable<AuditActionResultOfInvoiceView> {
         let url_ = this.baseUrl + "/v{version}/Invoice";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1179,33 +1179,33 @@ export class InvoiceService {
                 try {
                     return this.processInvoicePatch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfInvoiceView>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfInvoiceView>><any>_observableThrow(response_);
         }));
     }
 
-    protected processInvoicePatch(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processInvoicePatch(response: HttpResponseBase): Observable<AuditActionResultOfInvoiceView> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
+        if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result204: any = null;
-            let resultData204 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result204 = AuditActionResult.fromJS(resultData204);
-            return _observableOf(result204);
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = AuditActionResultOfInvoiceView.fromJS(resultData201);
+            return _observableOf(result201);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfInvoiceView>(<any>null);
     }
 
     createOneInvoice(version: string, request: CreateInvoiceRequest): Observable<AuditActionResultOfInvoiceView> {
@@ -6626,6 +6626,7 @@ export class InvoiceView implements IInvoiceView {
     amount?: number;
     dueDate?: Date;
     createdOn?: Date;
+    taxPercentage?: number;
     createdByName?: string | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedByName?: string | undefined;
@@ -6652,6 +6653,7 @@ export class InvoiceView implements IInvoiceView {
             this.amount = _data["amount"];
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.taxPercentage = _data["taxPercentage"];
             this.createdByName = _data["createdByName"];
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             this.lastUpdatedByName = _data["lastUpdatedByName"];
@@ -6682,6 +6684,7 @@ export class InvoiceView implements IInvoiceView {
         data["amount"] = this.amount;
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["taxPercentage"] = this.taxPercentage;
         data["createdByName"] = this.createdByName;
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         data["lastUpdatedByName"] = this.lastUpdatedByName;
@@ -6705,6 +6708,7 @@ export interface IInvoiceView {
     amount?: number;
     dueDate?: Date;
     createdOn?: Date;
+    taxPercentage?: number;
     createdByName?: string | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedByName?: string | undefined;

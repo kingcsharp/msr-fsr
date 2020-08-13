@@ -114,7 +114,7 @@
                     <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
                         (click)="showDialog(invoiceModel)"></i>
                     <i *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices(invoiceModel.id)"
-                    tooltip="Download Invoice" class="far fa-download pointer"></i>
+                        tooltip="Download Invoice" class="far fa-download pointer"></i>
                 </td>
             </tr>
         </ng-template>
@@ -179,13 +179,35 @@
                             Customer
                         </label>
                         <div class="col-md-4 col-12">
-                            <!-- {{currentInvoice.customer | json}} -->
                             <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
                                 (onChange)="customerChanged()" optionLabel="name" placeholder="Select Customer"
                                 name="customers" [options]="customers" dataKey="id" [virtualScroll]="true" itemSize="30"
                                 appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customer"
                                 [ngModelOptions]="{standalone: true}">
                             </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2  col-form-label text-md-right">
+                            Combine Selected
+                        </label>
+                        <div class="col-md-4 ">
+                            <div class="display-inline-block isActive">
+                                <p-calendar [(ngModel)]="currentInvoice.dueDate" (onSelect)="filterGrid()" [locale]="en">
+                                </p-calendar>
+                            </div>
+                        </div>
+                        <label class="col-md-2  col-form-label text-md-right">
+                            Combine Selected
+                        </label>
+                        <div class="col-md-4 ">
+                            <div class="display-inline-block isActive">
+                                <label class="form-check-label" for="combineSelected" class="switch">
+                                    <input class="form-check-input" [(ngModel)]="combineSelected" name="isKit"
+                                        type="checkbox" class="ios" checked id="combineSelected" />
+                                    <i data-cy="combineSelected-checkbox"></i>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">

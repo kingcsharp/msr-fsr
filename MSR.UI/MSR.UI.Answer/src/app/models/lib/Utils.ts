@@ -16,3 +16,11 @@ export function pushIfNotExists(item, array, id) {
         array.push(item);
     }
 }
+
+export function copyObj(objToCopy) {
+    const objCopy = JSON.parse(JSON.stringify(objToCopy));
+    return objCopy;
+}
+
+
+
