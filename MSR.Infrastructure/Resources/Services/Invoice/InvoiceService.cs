@@ -151,7 +151,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return retInvoices;
         }
 
-        public async Task<Domain.Models.InvoiceModel> UpdateInvoiceAsync(UpdateInvoice command)
+        public async Task<Domain.Views.InvoiceView> UpdateInvoiceAsync(UpdateInvoice command)
         {
             // Retreive invoice to update
             var invoice = await _unitOfWork.Invoices
@@ -176,7 +176,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Save invoice changes
             await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoice);
 
-            var retInvoice = _mapper.Map<Domain.Models.InvoiceModel>(invoice);
+            var retInvoice = _mapper.Map<Domain.Views.InvoiceView>(invoice);
 
             return retInvoice;
         }
