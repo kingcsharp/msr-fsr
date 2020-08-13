@@ -482,7 +482,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             var file = AutoMapperHelper.Mapper.Map<UploadFile>(request);
             var stream = new MemoryStream();
-            request.Image.CopyTo(stream);
+            request.upload.Files.FirstOrDefault().CopyTo(stream);
             file.FileContents = stream.ToArray();
             return file;
         }

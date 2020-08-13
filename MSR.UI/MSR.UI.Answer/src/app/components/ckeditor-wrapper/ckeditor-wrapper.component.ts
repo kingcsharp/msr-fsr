@@ -67,7 +67,7 @@ export class CkeditorWrapperComponent implements OnInit {
       simpleUpload: {
         // The URL that the images are uploaded to.
         uploadUrl: 'https://localhost:44398/v1/file/help',
-
+        //uploadUrl: 'https://aaaaaaa.free.beeceptor.com/',
         // Enable the XMLHttpRequest.withCredentials property.
         withCredentials: true,
 

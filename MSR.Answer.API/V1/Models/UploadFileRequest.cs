@@ -7,6 +7,6 @@ namespace MSR.Answer.API.V1.Models
         public string Name { get; set; }
         public string ContentType { get; set; }
         public string FileName { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormCollection upload { get; set; }
     }
 }
