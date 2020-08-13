@@ -6619,6 +6619,7 @@ export interface IAuditActionResultOfIEnumerableOfInvoiceView extends IAuditActi
 
 export class InvoiceView implements IInvoiceView {
     id?: number;
+    customerId?: string | undefined;
     customerName?: string | undefined;
     description?: string | undefined;
     invoiceNumber?: string | undefined;
@@ -6644,6 +6645,7 @@ export class InvoiceView implements IInvoiceView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.customerId = _data["customerId"];
             this.customerName = _data["customerName"];
             this.description = _data["description"];
             this.invoiceNumber = _data["invoiceNumber"];
@@ -6673,6 +6675,7 @@ export class InvoiceView implements IInvoiceView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["customerId"] = this.customerId;
         data["customerName"] = this.customerName;
         data["description"] = this.description;
         data["invoiceNumber"] = this.invoiceNumber;
@@ -6695,6 +6698,7 @@ export class InvoiceView implements IInvoiceView {
 
 export interface IInvoiceView {
     id?: number;
+    customerId?: string | undefined;
     customerName?: string | undefined;
     description?: string | undefined;
     invoiceNumber?: string | undefined;

@@ -14,8 +14,8 @@
                     class="btn btn-success mb-xs sm-mrg" role="button" data-cy="add-button">
                     Download Filtered Invoices
                 </button>
-                <button *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices()" class="btn btn-success mb-xs sm-mrg"
-                    role="button" data-cy="add-button">
+                <button *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices()"
+                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="add-button">
                     Download All Invoices
                 </button>
                 <button *ngIf="userPrivileges.canCreate" (click)="showDialog()"
@@ -111,8 +111,10 @@
                     {{invoiceModel.lastUpdatedByName }}
                 </td>
                 <td>
-                    <i *ngIf="userPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
+                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
                         (click)="showDialog(invoiceModel)"></i>
+                    <i *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices(invoiceModel.id)"
+                    tooltip="Download Invoice" class="far fa-download pointer"></i>
                 </td>
             </tr>
         </ng-template>

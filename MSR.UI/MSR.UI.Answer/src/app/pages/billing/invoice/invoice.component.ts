@@ -12,6 +12,7 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
 import { replaceArrayItems, pushIfNotExists } from '../../../models/lib/Utils';
 import { UrlHandlingStrategy } from '@angular/router';
@@ -115,7 +116,9 @@ export class InvoiceComponent implements OnInit {
         .subscribe(responseHandler(response => {
           const workOrdersUpdated = response.object.map((wo) => {
             const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
-            wo.serialNumber = firstPartWithNullParent.serialNumber;
+            if (firstPartWithNullParent !== undefined) {
+              wo.serialNumber = firstPartWithNullParent.serialNumber;
+            }
             return wo;
           });
           replaceArrayItems(this.workorders, workOrdersUpdated);
@@ -140,8 +143,8 @@ export class InvoiceComponent implements OnInit {
       }));
   }
 
-  downloadAllInvoices() {
-    this.invoiceService.download(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
+  downloadAllInvoices(invoiceId) {
+    this.invoiceService.download(invoiceId ? invoiceId : null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.downloadItem(response.data);
@@ -165,9 +168,16 @@ export class InvoiceComponent implements OnInit {
   }
 
   downloadItem(data) {
-    var URL = window.URL;
-    var downloadURL = URL.createObjectURL(data);
-    window.open(downloadURL);
+    // window.open(window.URL.createObjectURL(data));
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style.display = "none";
+    var url = window.URL.createObjectURL(data);
+    a.href = url;
+    a.download = `invoices_${moment().format("MM_DD_YYYY")}.zip`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
   }
 
   getLocations() {
