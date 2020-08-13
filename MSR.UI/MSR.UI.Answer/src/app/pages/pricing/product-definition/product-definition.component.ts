@@ -76,7 +76,7 @@ export class ProductDefinitionComponent implements OnInit {
       return ctrl.locationsData;
     }
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
       response.object.map((x) => {
         ctrl.locationsData.push({ label: x.name, value: x.id });
       });

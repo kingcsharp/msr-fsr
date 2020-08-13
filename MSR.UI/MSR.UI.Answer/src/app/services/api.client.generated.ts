@@ -2418,14 +2418,14 @@ export class PartService {
                 try {
                     return this.processImport(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfInteger>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfPartModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processImport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfInteger> {
+    protected processImport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPartModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2436,7 +2436,7 @@ export class PartService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfInteger.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfPartModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2444,7 +2444,7 @@ export class PartService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfInteger>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfPartModel>(<any>null);
     }
 }
 
