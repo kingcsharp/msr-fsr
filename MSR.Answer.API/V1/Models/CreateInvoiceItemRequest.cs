@@ -7,6 +7,8 @@ namespace MSR.Answer.API.V1.Models
     public class CreateInvoiceItemRequest
     {
         [Required]
-        public int? Id { get; set; }
+        public int? WorkOrderId { get; set; }
+        [Required]
+        public int? PurchaseOrderId { get; set; }
     }
 }

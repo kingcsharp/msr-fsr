@@ -3,6 +3,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using MSR.Domain.Commands;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using System;
 using System.Linq;
 
 namespace MSR.Infrastructure.Profiles
@@ -72,7 +73,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             #endregion
 
-            CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();
+            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZone>().ReverseMap();
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
            
@@ -95,7 +96,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.InvoiceDate))
                 .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.Created.GetFullName()))
-                .ForMember(dest => dest.LocationId, opt => opt.MapFrom(src => src.InvoiceItems.First().WorkOrder.Purchase.LocationId))
+                .ForMember(dest => dest.LocationId, opt => opt.MapFrom(src => GetLocationId(src)))
                 .ForMember(dest => dest.LastUpdatedByName, opt => opt.MapFrom(src => src.LastUpdated.GetFullName()));
             CreateMap<InvoiceItem, InvoiceItemView>()
                 .ForMember(dest => dest.PurchaseNumber, opt => opt.MapFrom(src => src.WorkOrder.Purchase.CustomerPurchaseNumber));
@@ -216,6 +217,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, CreatePart>();
 
             CreateMap<UploadFile, Domain.Models.FileModel>();
+        }
+
+        private int? GetLocationId(Invoice src)
+        {
+            return src.InvoiceItems?.FirstOrDefault()?.WorkOrder?.Purchase?.LocationId;
         }
     }
 }

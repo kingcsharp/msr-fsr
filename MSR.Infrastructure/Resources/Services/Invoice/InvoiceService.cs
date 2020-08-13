@@ -8,6 +8,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
@@ -25,7 +26,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             _mapper = mapper;
         }
 
-        public async Task<Domain.Views.InvoiceView> CreateInvoiceAsync(CreateOneInvoice command)
+        public async Task<InvoiceView> CreateInvoiceAsync(CreateOneInvoice command)
         {
             if (command.InvoiceItems?.Count == 0)
             {
@@ -44,44 +45,72 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                                          .ThenInclude(wo => wo.Purchase)
                                          .ThenInclude(p => p.Location)
                                          .Include(ii => ii.PurchaseOrder)
-                                         .First(ii => ii.Id == curItem.Id)
-            ).ToList();
+                                         .Where(ii => (ii.WorkOrderId == curItem.WorkOrderId &&
+                                                                ii.PurchaseOrderId == curItem.PurchaseOrderId) ||
+                                                                ii.InvoiceId == curItem.InvoiceId)
+                                         .SingleOrDefault())
+                .ToList()
+                .Select(ii => ii ?? new InvoiceItem())
+                .ToList();
 
-            // Getting parent InvoiceClass from Location
-            var locationInvoiceClass = invoice.InvoiceItems.FirstOrDefault().WorkOrder.Purchase?.Location?.InvoiceClass;
+            command.InvoiceItems.ToList().ForEach(cii =>
+            {
+                invoice.InvoiceItems.ToList().ForEach(iii =>
+                {
+                    if (!invoice.InvoiceItems.Any(i => iii.WorkOrderId == cii.WorkOrderId &&
+                                                        iii.PurchaseOrderId == cii.PurchaseOrderId))
+                    {
+                        iii.WorkOrderId = cii.WorkOrderId;
+                        iii.PurchaseOrderId = cii.PurchaseOrderId;
+                    }
+
+                });
+            });
 
             // Create temporary InvoiceNumber based on Invoice Id
-            invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}";
-
-            // Calculate Subtotal and Total
-            UpdateInvoiceTotals(invoice);
+            invoice.InvoiceNumber = $"{DateTime.Now:yy}";
 
             // Save the new Invoice
             await _unitOfWork.Invoices.AddAndSaveChangesAsync(invoice);
 
-            // Retreive saved Invoice
-            var retInvoice = _mapper.Map<Domain.Views.InvoiceView>(invoice);
+            invoice = _unitOfWork.Invoices.Query()
+                                         .Include(i => i.Customer)
+                                         .Include(i => i.InvoiceItems)
+                                         .ThenInclude(i => i.WorkOrder)
+                                         .ThenInclude(wo => wo.Purchase)
+                                         .ThenInclude(p => p.Location)
+                                         .Include(i => i.InvoiceItems)
+                                         .ThenInclude(i => i.PurchaseOrder)
+                                         .SingleOrDefault(i => i.Id == invoice.Id);
 
-            // Update InvoiceNumber using the Invoice ID
-            invoice.InvoiceNumber = $"{retInvoice.InvoiceNumber}-{retInvoice.Id}";
-            retInvoice.InvoiceNumber = invoice.InvoiceNumber;
+            // Getting parent InvoiceClass from Location
+            var locationInvoiceClass = invoice.InvoiceItems.FirstOrDefault().WorkOrder?.Purchase?.Location?.InvoiceClass;
+
+            // Update InvoiceNumber using the new Invoice ID
+            invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}-{invoice.Id}";
+
+            // Calculate Subtotal and Total based on WorkOrders
+            CalculateTotals(invoice);
 
             // Update Invoice with the new InvoiceNumber
             await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoice);
 
+            // Retreive saved Invoice
+            var retInvoice = _mapper.Map<InvoiceView>(invoice);
+
             return retInvoice;
         }
 
-        private void UpdateInvoiceTotals(Invoice invoice)
+        private void CalculateTotals(Invoice invoice)
         {
             invoice.Subtotal = invoice.InvoiceItems.Sum(x => x.WorkOrder.Price);
             invoice.Total = (decimal)((invoice.Subtotal + (invoice.Subtotal * invoice.TaxPercentage / 100)));
         }
 
-        public async Task<IEnumerable<Domain.Views.InvoiceView>> CreateInvoicesAsync(CreateIndividualInvoices command)
+        public async Task<IEnumerable<InvoiceView>> CreateInvoicesAsync(CreateIndividualInvoices command)
         {
             var invoices = new List<Invoice>();
-            var retInvoices = new List<Domain.Views.InvoiceView>();
+            var retInvoices = new List<InvoiceView>();
 
             var statusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
 
@@ -89,17 +118,17 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 var invoice = _mapper.Map<Invoice>(invoiceCommand);
 
-                // Unused by required by the model
-                invoice.StatusId = statusId;
+            // Unused by required by the model
+            invoice.StatusId = statusId;
 
                 if (invoiceCommand.InvoiceItems?.Count == 0)
                 {
                     throw new DomainException($"{nameof(Domain.Models.InvoiceModel)} must contain at least one WorkOrder");
                 }
 
-                // Verifying WorkOrder and PurchaseOrder IDs
-                invoice.InvoiceItems.ToList().ForEach(item =>
-                {
+            // Verifying WorkOrder and PurchaseOrder IDs
+            invoice.InvoiceItems.ToList().ForEach(item =>
+        {
                     item.WorkOrder = _unitOfWork.WorkOrders.Query().FirstOrDefault(x => x.Id == item.WorkOrderId);
 
                     if (item.WorkOrder is null)
@@ -115,14 +144,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                     }
                 });
 
-                // Getting parent InvoiceClass from Location
-                var locationInvoiceClass = invoice.InvoiceItems.First().WorkOrder.Purchase?.Location?.InvoiceClass;
+            // Getting parent InvoiceClass from Location
+            var locationInvoiceClass = invoice.InvoiceItems.First().WorkOrder.Purchase?.Location?.InvoiceClass;
 
-                // Create temporary InvoiceNumber based on Invoice Id
-                invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}";
+            // Create temporary InvoiceNumber based on Invoice Id
+            invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}";
 
-                // Save the new Invoice
-                await _unitOfWork.Invoices.AddAsync(invoice);
+            // Save the new Invoice
+            await _unitOfWork.Invoices.AddAsync(invoice);
 
                 invoices.Add(invoice);
             });
@@ -133,14 +162,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 invoices.ForEach(invoice =>
                 {
-                    // Retreive saved Invoice
-                    var retInvoice = _mapper.Map<Domain.Views.InvoiceView>(invoice);
+                // Retreive saved Invoice
+                var retInvoice = _mapper.Map<InvoiceView>(invoice);
 
                     invoice.InvoiceNumber = $"{retInvoice.InvoiceNumber}-{retInvoice.Id}";
                     retInvoice.InvoiceNumber = invoice.InvoiceNumber;
 
-                    // Update Invoice with InvoiceNumber
-                    _unitOfWork.Invoices.Update(invoice);
+                // Update Invoice with InvoiceNumber
+                _unitOfWork.Invoices.Update(invoice);
 
                     retInvoices.Add(retInvoice);
                 });
@@ -151,7 +180,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return retInvoices;
         }
 
-        public async Task<Domain.Views.InvoiceView> UpdateInvoiceAsync(UpdateInvoice command)
+        public async Task<InvoiceView> UpdateInvoiceAsync(UpdateInvoice command)
         {
             // Retreive invoice to update
             var invoice = await _unitOfWork.Invoices
@@ -171,12 +200,12 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             UpdateInvoiceDetails(invoice, command);
 
             // Update invoice totals
-            UpdateInvoiceTotals(invoice);
+            CalculateTotals(invoice);
 
             // Save invoice changes
             await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoice);
 
-            var retInvoice = _mapper.Map<Domain.Views.InvoiceView>(invoice);
+            var retInvoice = _mapper.Map<InvoiceView>(invoice);
 
             return retInvoice;
         }
@@ -196,7 +225,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<IEnumerable<Domain.Models.InvoiceModel>> GetInvoicesAsync(GetInvoices command)
         {
             var invoiceList = new List<Domain.Models.InvoiceModel>();
-           
+
             var invoices = GetFilteredInvoices(command);
 
             foreach (var invoice in await invoices.ToListAsync())
@@ -264,15 +293,15 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return invoices;
         }
 
-        public async Task<IEnumerable<Domain.Views.InvoiceView>> GetInvoicesAsync(GetInvoicesGridView command)
+        public async Task<IEnumerable<InvoiceView>> GetInvoicesAsync(GetInvoicesGridView command)
         {
-            var invoiceList = new List<Domain.Views.InvoiceView>();
+            var invoiceList = new List<InvoiceView>();
 
             var invoices = GetFilteredInvoices(command);
 
             foreach (var invoice in await invoices.ToListAsync())
             {
-                invoiceList.Add(_mapper.Map<Domain.Views.InvoiceView>(invoice));
+                invoiceList.Add(_mapper.Map<InvoiceView>(invoice));
             }
 
             return invoiceList.AsEnumerable();

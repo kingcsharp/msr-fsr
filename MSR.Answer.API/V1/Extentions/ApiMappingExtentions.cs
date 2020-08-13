@@ -396,47 +396,12 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static CreateIndividualInvoices ToCreateIndividualInvoicesCommand(this CreateInvoiceRequest request)
         {
-            var createIndividualInvoices = new CreateIndividualInvoices()
-            {
-                Invoices = new List<CreateOneInvoice>()
-            };
-
-            foreach (var item in request.InvoiceItems ?? new List<CreateInvoiceItemRequest>())
-            {
-                var inv = new CreateOneInvoice()
-                {
-                    CustomerId = request.CustomerId.GetValueOrDefault(0),
-                    Description = request.Description,
-                    InvoiceClass = request.InvoiceClass,
-                    InvoiceDate = request.InvoiceDate,
-                    TaxPercentage = request.TaxPercentage,
-                    InvoiceItems = new List<CreateUpdateInvoiceItem>() {
-                            new CreateUpdateInvoiceItem() {
-                                Id = item.Id.GetValueOrDefault(0)
-                            }
-                        }
-                };
-
-                createIndividualInvoices.Invoices.Add(inv);
-            }
-
-            return createIndividualInvoices;
+            return AutoMapperHelper.Mapper.Map<CreateIndividualInvoices>(request);
         }
 
         public static CreateOneInvoice ToCreateOneInvoiceCommand(this CreateInvoiceRequest request)
         {
-            return new CreateOneInvoice()
-            {
-                CustomerId = request.CustomerId.GetValueOrDefault(0),
-                Description = request.Description,
-                InvoiceClass = request.InvoiceClass,
-                InvoiceDate = request.InvoiceDate,
-                TaxPercentage = request.TaxPercentage,
-                InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
-                {
-                    Id = x.Id.GetValueOrDefault(0)
-                }).ToList()
-            };
+            return AutoMapperHelper.Mapper.Map<CreateOneInvoice>(request);
         }
 
         public static GetInvoices ToGetInvoicesCommand(this GetInvoicesRequest request)
