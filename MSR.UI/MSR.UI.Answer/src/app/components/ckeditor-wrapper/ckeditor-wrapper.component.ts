@@ -65,19 +65,17 @@ export class CkeditorWrapperComponent implements OnInit {
         ]
       },
       simpleUpload: {
-        // The URL that the images are uploaded to.
+
         uploadUrl: 'https://localhost:44398/v1/file/help',
-        //uploadUrl: 'https://aaaaaaa.free.beeceptor.com/',
-        // Enable the XMLHttpRequest.withCredentials property.
+
         withCredentials: true,
 
-        // Headers sent along with the XMLHttpRequest to the upload server.
          headers: {
           'X-CSRF-TOKEN': 'CSFR-Token',
           Authorization: 'Bearer ' + localStorage.getItem('token')
          }
       },
-      // This value must be kept in sync with the language defined in webpack.config.js.
+
       language: 'en'
     };
   }
