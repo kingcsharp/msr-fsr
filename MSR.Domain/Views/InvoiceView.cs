@@ -15,6 +15,7 @@ namespace MSR.Domain.Views
         /// Invoice Total
         /// </summary>
         public decimal Amount { get; set; } // dbo.Invoice.Total
+        public decimal TaxPercentage { get; set; }
         /// <summary>
         /// Invoice Date
         /// </summary>
