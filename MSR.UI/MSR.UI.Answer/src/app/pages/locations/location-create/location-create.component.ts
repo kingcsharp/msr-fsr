@@ -104,7 +104,7 @@ export class LocationCreateComponent implements OnInit {
     this.locationService.locationPost(env.apiVersion, createLocationRequest).subscribe(responseHandler((response) => {
 
       this.locationToEdit.id = response.object.id;
-      console.log(this.locationToEdit);
+
     }));
 
   }

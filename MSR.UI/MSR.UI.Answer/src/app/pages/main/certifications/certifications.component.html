@@ -44,6 +44,15 @@
                                     (click)="commonGrid.filter(dt,'employeeName')"></i>
                             </div>
                         </th>
+                        <th [hidden]="!commonGrid.isVisibleCol('certificationName',gridSettings)">
+                            <div class="position-relative">
+                                <input id="certificationName" pInputText type="text" tooltip="Search by Begin Date"
+                                    (input)="dt.filter($event.target.value, 'certificationName', 'contains')"
+                                    class="ui-column-filter" [value]="dt.filters['certificationName']?.value">
+                                <i *ngIf="dt.filters['certificationName']?.value" class="fclear pi pi-times pointer"
+                                    (click)="commonGrid.filter(dt,'certificationName')"></i>
+                            </div>
+                        </th>
                         <th [hidden]="!commonGrid.isVisibleCol('certificationFromDate',gridSettings)">
                             <div class="position-relative">
                                 <input id="certificationFromDate" pInputText type="text" tooltip="Search by Begin Date"
@@ -64,11 +73,14 @@
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
                             <div class="position-relative">
-                                <input id="status" pInputText type="text" tooltip="Search by Status"
+                                <!--<input id="status" pInputText type="text" tooltip="Search by Status"
                                     (input)="dt.filter($event.target.value, 'status', 'contains')"
                                     class="ui-column-filter" [value]="dt.filters['status']?.value">
                                 <i *ngIf="dt.filters['status']?.value" class="fclear pi pi-times pointer"
-                                    (click)="commonGrid.filter(dt,'status')"></i>
+                                    (click)="commonGrid.filter(dt,'status')"></i>-->
+                                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions" [filterId]="'status'"
+                                [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+                                </multiselect-wrapper>
                             </div>
                         </th>
                     </tr>
@@ -78,11 +90,14 @@
                         <td [hidden]="!commonGrid.isVisibleCol('employeeName', gridSettings)">
                             {{certification.employeeName}}
                         </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('certificationName', gridSettings)">
+                            {{certification.certificationName}}
+                        </td>
                         <td [hidden]="!commonGrid.isVisibleCol('certificationFromDate', gridSettings)">
-                            {{certification.certificationFromDate}}
+                            {{certification.certificationFromDate  | date :'short'}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('certificationToDate', gridSettings)">
-                            {{certification.certificationToDate}}
+                            {{certification.certificationToDate  | date :'short'}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
                             {{certification.status}}
