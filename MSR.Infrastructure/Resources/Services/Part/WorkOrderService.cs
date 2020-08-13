@@ -114,11 +114,10 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
             }
 
-            var workorder = _mapper.Map(command, current);
-            _unitOfWork.WorkOrders.Delete(false, workorder.Id);
+            _unitOfWork.WorkOrders.Delete(false, current.Id);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+            await _unitOfWork.LogApprovalTransaction(current, current.Id);
 
             return true;
         }

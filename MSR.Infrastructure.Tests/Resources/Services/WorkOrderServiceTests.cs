@@ -5,6 +5,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Tests.ClassFixtures.Resources.Services;
+using MSR.Infrastructure.Tests.TestFixtures;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,43 +23,50 @@ namespace MSR.Infrastructure.Tests.Resources.Services
         }
 
         [Fact]
-        public async Task Call_GetWorkOrderAsync_NotFound()
+        public Task Call_GetWorkOrderAsync_NotFound()
         {
-            Func<Task<ICollection<WorkOrderModel>>> response = () => _workorderService.GetWorkOrderAsync(new GetWorkOrder() { Id = 123 });
-            response.Should().Throw<DomainException>();
+            Func<Task<ICollection<WorkOrderModel>>> response = () =>
+                _workorderService.GetWorkOrderAsync(WorkOrderFixture.NotFoundWorkOrder);
+            return Task.FromResult(response.Should().Throw<DomainException>());
         }
 
         [Fact]
         public async Task Call_GetWorkOrderAsync_Found()
         {
-            var response = await _workorderService.GetWorkOrderAsync(new GetWorkOrder() { Id = null });
+            var response = await _workorderService.GetWorkOrderAsync(
+                WorkOrderFixture.AllWorkOrders
+            );
             response.Should().HaveCount(1);
         }
 
         [Fact]
         public async Task Call_CreateWorkOrderAsync()
         {
-            var response = await _workorderService.CreateWorkOrderAsync(new CreateWorkOrder());
+            var response = await _workorderService.CreateWorkOrderAsync(
+                WorkOrderFixture.WorkOrderCreate
+            );
             response.Should().NotBeNull();
         }
 
         [Fact]
         public async Task Call_UpdateWorkOrderAsync()
         {
-            var response = await _workorderService.UpdateWorkOrderAsync(new UpdateWorkOrder() {
-                Id = 1,
-                Price = 234.56M
-            });
+            var response = await _workorderService.UpdateWorkOrderAsync(
+                WorkOrderFixture.WorkOrderUpdate
+            );
             response.Should().Match<WorkOrderModel>(x => (
-                x.Id == 1 &&
-                x.Price == 234.56M
+                x.Id == WorkOrderFixture.WorkOrderUpdate.Id &&
+                x.Price == WorkOrderFixture.WorkOrderUpdate.Price
             ));
         }
 
         [Fact]
         public async Task Call_DeleteWorkOrderAsync()
         {
-
+            var response = await _workorderService.DeleteWorkOrderAsync(
+                WorkOrderFixture.WorkOrderDelete
+            );
+            response.Should().BeTrue();
         }
 
     }
