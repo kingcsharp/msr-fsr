@@ -163,8 +163,11 @@
         <td [hidden]="!commonGrid.isVisibleCol('internalAddress', gridSettings)">
           {{location.internalAddress}}
         </td>
-        <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)">
-          <!--{{location.created.fullName}}-->
+        <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)"  *ngIf="location.created !== undefined">
+          {{location.created.fullName}}
+        </td>
+        <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)"  *ngIf="location.created === undefined">
+
         </td>
         <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
           {{location.createdOn}}
