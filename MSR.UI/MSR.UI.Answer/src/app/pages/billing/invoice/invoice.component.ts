@@ -69,9 +69,9 @@ export class InvoiceComponent implements OnInit {
     new ColumnsSaved({ id: 'invoiceNumber', label: 'Invoice Number', visible: true }),
     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true }),
     new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true }),
-    new ColumnsSaved({ id: 'cretedByName', label: 'Created By', visible: false }),
-    new ColumnsSaved({ id: 'lastatedOn', label: 'Created On', visible: false }),
-    new ColumnsSaved({ id: 'creaUpdatedOn', label: 'Updated On', visible: false }),
+    new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
+    new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
+    new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false })
     ];
 
@@ -110,8 +110,8 @@ export class InvoiceComponent implements OnInit {
 
   getWorkOrders() {
     if (this.currentInvoice.customerId !== undefined && this.currentInvoice.locationId !== undefined) {
-      this.workOrderService.workOrder(null, null, this.currentInvoice.customerId,
-        this.currentInvoice.locationId, env.apiVersion).pipe(take(1))
+      this.workOrderService.workOrderGet(null, this.currentInvoice.customerId,
+        this.currentInvoice.locationId, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           const workOrdersUpdated = response.object.map((wo) => {
             const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
