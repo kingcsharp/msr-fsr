@@ -66,7 +66,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdateInvoice command, CancellationToken cancellationToken = default)
         {
             var ret = await _invoiceService.UpdateInvoiceAsync(command);
-            return new CommandResponse<InvoiceModel>(ret);
+            return new CommandResponse<InvoiceView>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DownloadAsIIFInvoices command, CancellationToken cancellationToken = default)

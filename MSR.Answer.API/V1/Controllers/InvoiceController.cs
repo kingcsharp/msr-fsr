@@ -46,7 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var createOneInvoice = request.ToCreateOneInvoiceCommand();
             var ret = await _dispatcher.DispatchAsync(createOneInvoice);
-            return ret.ToOkObjectResponse<InvoiceView>();
+            return ret.ToOkObjectResponse<InvoiceView>("Invoice has been successfully created.");
         }
 
         [HttpPost("CreateIndividualInvoices"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
@@ -55,7 +55,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var createIndividualInvoices = request.ToCreateIndividualInvoicesCommand();
             var ret = await _dispatcher.DispatchAsync(createIndividualInvoices);
-            return ret.ToOkObjectResponse<IEnumerable<InvoiceView>>();
+            return ret.ToOkObjectResponse<IEnumerable<InvoiceView>>("Invoice has been successfully created.");
         }
 
         [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
@@ -64,7 +64,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var updateInvoice = request.ToUpdateInvoiceCommand();
             var ret = await _dispatcher.DispatchAsync(updateInvoice);
-            return ret.ToOkObjectResponse("Invoice has been successfully updated.");
+            return ret.ToOkObjectResponse<InvoiceView>("Invoice has been successfully updated.");
         }
 
         [HttpGet("Download"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
