@@ -438,7 +438,6 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
         {
-            IEnumerable<TrainingCertificationView> trainingCerts;
             var userRoles = _unitOfWork.UserRoles.Query();
  
             if (command.Id.HasValue)
@@ -451,7 +450,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 CertificationFromDate = i.CertificationFromDate,
                 CertificationToDate = i.CertificationToDate,
                 EmployeeName = i.User.GetFullName(),
-                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active")
+                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
+                CertificationName = i.Role.Name
             }).AsEnumerable();
         }
     }

@@ -8,5 +8,6 @@ namespace MSR.Domain.Views
         public DateTime? CertificationFromDate { get; set; }
         public DateTime? CertificationToDate { get; set; }
         public string Status { get; set; }
+        public string CertificationName { get; set; }
     }
 }
