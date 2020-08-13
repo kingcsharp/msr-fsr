@@ -4,7 +4,6 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Exceptions;
-using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Collections.Generic;
@@ -12,9 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
-using MSR.Domain.Models.Config;
 using MSR.Domain.Helpers;
-using MSR.Infrastructure.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.Location
 {
@@ -182,7 +179,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             return retLocation;
         }
 
-        public async Task<(IEnumerable<LocationModel> ImportedData, IEnumerable<ImportError> ImportErrors)> ImportLocations(string csvData)
+        public async Task<IEnumerable<LocationModel>> ImportLocations(string csvData)
         {
             var records = CSVHelper.ParseRecords<LocationImportItem>(csvData);
             var locations = new List<LocationModel>();
@@ -213,7 +210,53 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 }
             }
 
-            return (locations, null);
+            return locations;
+
+        }
+
+        public async Task<IEnumerable<SensorItemModel>> GetSensorsForLocation(GetSensorsForLocation command)
+        {
+            var location = await _unitOfWork.Locations.Query().Include(i => i.Sensors).FirstOrDefaultAsync(i => i.Id == command.LocationId);
+
+            if(location is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.LocationId}", DomainError.NotFound);
+            }
+
+            return location.Sensors.Any() ? location.Sensors.Select(i => _mapper.Map<SensorItemModel>(i)) : new List<SensorItemModel>();
+        }
+
+        public async Task AddSensorToLocation(CreateLocationSensorMap command)
+        {
+            var location = await _unitOfWork.Locations.FirstOrDefaultAsync(false,i => i.Id == command.LocationId);
+            var sensor = await _unitOfWork.Sensors.FirstOrDefaultAsync(false, i => i.Id == command.SensorItemId);
+            
+            if(location is null || sensor is null)
+            {
+                throw new DomainException($"{nameof(SensorItem)} or {nameof(EntityFramework.Entities.Location)} not found", DomainError.BadRequest);
+            }
+
+            sensor.AssignedLocation = location;
+            sensor.LocationId = location.Id;
+
+            _unitOfWork.Sensors.Update(sensor);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task RemoveSensorFromLocation(DeleteLocationSensorMap command)
+        {
+            var sensor = await _unitOfWork.Sensors.FirstOrDefaultAsync(false, i => i.Id == command.SensorItemId);
+
+            if (sensor is null)
+            {
+                throw new DomainException($"{nameof(SensorItem)} not found", DomainError.BadRequest);
+            }
+
+            sensor.LocationId = null;
+            sensor.AssignedLocation = null;
+
+            _unitOfWork.Sensors.Update(sensor);
+            await _unitOfWork.SaveChangesAsync();
 
         }
     }

@@ -58,6 +58,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<File> File { get; set; }
         public DbSet<FileEntityMap> FileEntityMap { get; set; }
+        public DbSet<SensorItem> SensorItem { get; set; }
 
 
 

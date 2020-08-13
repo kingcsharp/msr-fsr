@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.VisualBasic.CompilerServices;
 using MSR.Domain.Commands;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
@@ -64,6 +63,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateLocation, Location>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<SensorItem, Domain.Models.SensorItemModel>().ReverseMap();
             #endregion
 
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();

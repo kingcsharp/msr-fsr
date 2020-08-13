@@ -9,7 +9,6 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,10 +40,19 @@ namespace MSR.Infrastructure.Resources.Services
                     customerApproval.Status = status;
                     _mapper.Map(customerApproval, customer);
                     _unitOfWork.Customers.Update(customer);
-                    _unitOfWork.CustomerApprovals.Update(customerApproval);
+                    _unitOfWork.CustomerApprovals.Delete(false, customerApproval);
+                    if (!customerApproval.IsActive)
+                    {
+                        var users = _unitOfWork.Users.Query().Where(i => i.CustomerId == customer.Id).ToList();
+                        foreach (var user in users)
+                        {
+                            user.IsActive = false;
+                            _unitOfWork.Users.Update(user);
+                        }
+                    }
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(customerApproval, customerApproval.Id, status.Name, command.Comments);
-                    result = (ApprovalEntity)customerApproval;
+                    result = customerApproval;
                     break;
                 case EnumApprovalTables.DocumentApproval:
                     var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -55,18 +63,26 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.DocumentApprovals.Update(documentApproval);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(documentApproval, documentApproval.Id, status.Name, command.Comments);
-                    result = (ApprovalEntity)documentApproval;
+                    result = documentApproval;
                     break;
                 case EnumApprovalTables.LocationApproval:
                     var locationApproval = await _unitOfWork.LocationApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var location = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     locationApproval.Status = status;
                     _mapper.Map(locationApproval, location);
-                    _unitOfWork.LocationApprovals.Update(locationApproval);
+                    _unitOfWork.LocationApprovals.Delete(false,locationApproval);
                     _unitOfWork.Locations.Update(location);
+                    if (!locationApproval.IsActive)
+                    {
+                        foreach (var childLocation in await _unitOfWork.Locations.Query().Where(i => i.ParentId == location.Id).ToListAsync())
+                        {
+                            childLocation.IsActive = false;
+                            _unitOfWork.Locations.Update(childLocation);
+                        }
+                    }
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(locationApproval, locationApproval.Id, status.Name, command.Comments);
-                    result = (ApprovalEntity)locationApproval;
+                    result = locationApproval;
                     break;
                 case EnumApprovalTables.PartApproval:
                     PartApproval partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -90,7 +106,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.PartApprovals.Update(partApproval);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(partApproval, partApproval.Id, status.Name, command.Comments);
-                    result = (ApprovalEntity)partApproval;
+                    result = partApproval;
                     break;
                 case EnumApprovalTables.ProcedureApproval:
                     var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
@@ -103,7 +119,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.Procedures.Update(procedure);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(procedureApproval, procedureApproval.Id, status.Name, command.Comments);
-                    result = (ApprovalEntity)procedureApproval;
+                    result = procedureApproval;
                     break;
                 case EnumApprovalTables.ProductApproval:
                     var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -114,7 +130,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.Products.Update(product);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(productApproval, productApproval.Id, status.Name, command.Comments);
-                    result = (ApprovalEntity)productApproval;
+                    result = productApproval;
                     break;
                 case EnumApprovalTables.PurchaseOrderApproval:
                     var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -125,7 +141,7 @@ namespace MSR.Infrastructure.Resources.Services
                     _unitOfWork.PurchaseOrders.Update(purchaseOrder);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(purchaseOrderApproval, purchaseOrderApproval.Id, status.Name, command.Comments);
-                    result = (ApprovalEntity)purchaseOrderApproval;
+                    result = purchaseOrderApproval;
                     break;
                 case EnumApprovalTables.UserApproval:
                     var userApproval = await _unitOfWork.UserApprovals.Query().Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == command.Id);

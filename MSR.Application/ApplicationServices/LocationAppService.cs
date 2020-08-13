@@ -14,7 +14,10 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetLocations>,
         ICommandHandler<CreateLocation>,
         ICommandHandler<UpdateLocation>,
-        ICommandHandler<DeactivateLocation>
+        ICommandHandler<DeactivateLocation>, 
+        ICommandHandler<GetSensorsForLocation>,
+        ICommandHandler<CreateLocationSensorMap>,
+        ICommandHandler<DeleteLocationSensorMap>
     {
         private readonly ILocationService _locationService;
         public LocationAppService(ILocationService locationService)
@@ -44,6 +47,24 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _locationService.CreateLocationAsync(command);
             return new CommandResponse<LocationModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetSensorsForLocation command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _locationService.GetSensorsForLocation(command);
+            return new CommandResponse<IEnumerable<SensorItemModel>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateLocationSensorMap command, CancellationToken cancellationToken = default)
+        {
+            await _locationService.AddSensorToLocation(command);
+            return CommandResponse.SuccessCommand;
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteLocationSensorMap command, CancellationToken cancellationToken = default)
+        {
+            await _locationService.RemoveSensorFromLocation(command);
+            return CommandResponse.SuccessCommand;
         }
     }
 }
