@@ -107,22 +107,22 @@
             <tr *ngFor="let quoteItem of data.quoteItems; index as i;">
               <td>{{i+1}}</td>
               <td>
-                <input class="form-control input-transparent" name="`quoteItem${i}_quantity`" [(ngModel)]="data.quoteItems[i].quantity">
+                <input class="form-control input-transparent" name="quoteItem{{i}}_quantity" [(ngModel)]="data.quoteItems[i].quantity">
               </td>
               <td>
-                <input class="form-control input-transparent" name="`quoteItem${i}_description`" [(ngModel)]="data.quoteItems[i].description">
+                <input class="form-control input-transparent" name="quoteItem{{i}}_description" [(ngModel)]="data.quoteItems[i].description">
               </td>
               <td>
-                <input class="form-control input-transparent" name="`quoteItem${i}_leadTime`" [(ngModel)]="data.quoteItems[i].leadTime">
+                <input class="form-control input-transparent" name="quoteItem{{i}}_leadTime" [(ngModel)]="data.quoteItems[i].leadTime">
               </td>
               <td>
-                <input class="form-control input-transparent" name="`quoteItem${i}_customerPartNo`" [(ngModel)]="data.quoteItems[i].customerPartNo">
+                <input class="form-control input-transparent" name="quoteItem{{i}}_customerPartNo" [(ngModel)]="data.quoteItems[i].customerPartNo">
               </td>
               <td>
-                <input class="form-control input-transparent" name="`quoteItem${i}_price`" [(ngModel)]="data.quoteItems[i].price">
+                <input class="form-control input-transparent" name="quoteItem{{i}}_price" [(ngModel)]="data.quoteItems[i].price">
               </td>
               <td>
-                <input class="form-control input-transparent" name="`quoteItem${i}_extension`" [(ngModel)]="data.quoteItems[i].extension">
+                <input class="form-control input-transparent" name="quoteItem{{i}}_extension" [(ngModel)]="data.quoteItems[i].extension">
               </td>
             </tr>
           </tbody>

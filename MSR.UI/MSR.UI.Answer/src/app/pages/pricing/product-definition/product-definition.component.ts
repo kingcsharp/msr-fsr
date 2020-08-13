@@ -38,6 +38,7 @@ export class ProductDefinitionComponent implements OnInit {
   isRefreshingPartsData: boolean = false;
   isRefreshingProceduresData: boolean = false;
   getProcedureStepsFlag: boolean = true;
+  newStepsCounts: number = 0;
 
   constructor(
     public globals: Globals,
@@ -49,6 +50,7 @@ export class ProductDefinitionComponent implements OnInit {
 
   ngOnInit(): void {
     this.productData = new ProductModel;
+    this.productData.procedureSteps = [];
     this.getLocations();
     this.getCustomers();
     this.getParts();
@@ -137,11 +139,24 @@ export class ProductDefinitionComponent implements OnInit {
     .subscribe(responseHandler(response => {
       ctrl.productData.procedureSteps = response.object;
       ctrl.getProcedureStepsFlag = true;
+      ctrl.newStepsCounts = 0;
     }));
   }
 
   onSelectProcedure($event) {
     this.getProcedureSteps($event.target.value)
+  }
+
+  onAddProcedureStep() {
+    this.productData.procedureSteps.push(new ProcedureStep);
+    this.newStepsCounts++;
+  }
+
+  onRemoveProcedureStep() {
+    if (this.newStepsCounts > 0) {
+      this.productData.procedureSteps.pop();
+      this.newStepsCounts--;
+    }
   }
 
   onToggle($event: boolean) {
@@ -161,7 +176,7 @@ class ProductModel {
   customerId: number;
   partId: number;
   procedureId: number;
-  procedureSteps: Procedure[];
+  procedureSteps: ProcedureStep[];
 }
 
 
