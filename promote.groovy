@@ -13,7 +13,7 @@ pipeline {
     }
     stages {
         stage("Get images") {
-            agent { label 'ubuntu-node' }
+            agent { label 'master' }
             steps {
                 script {
                     sh "aws ecs describe-task-definition --task-definition dev-answer-api > images.json --profile msrfsr"
