@@ -255,8 +255,8 @@
                                 [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)"
                                 [gridSettings]="gridWoSettings">
                             </th>
-                            <th grid-input-filter [dt]="dt2" searchField="customerLine"
-                                [hidden]="!cg.isVisibleCol('customerLine',gridWoSettings)"
+                            <th grid-input-filter [dt]="dt2" searchField="purchase.customerLineNumber"
+                                [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)"
                                 [gridSettings]="gridWoSettings">
                             </th>
                             <th grid-input-filter [dt]="dt2" searchField="serialNumber"
@@ -294,8 +294,8 @@
                                 [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">
                                 {{workOrderModel.purchase.customerPurchaseNumber}}
                             </td>
-                            <td class="text-capitalize" [hidden]="!cg.isVisibleCol('customerLine',gridWoSettings)">
-                                {{workOrderModel.customerLine}}
+                            <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)">
+                                {{workOrderModel.purchase.customerLineNumber}}
                             </td>
                             <td class="text-capitalize" [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)">
                                 {{workOrderModel.serialNumber}}
