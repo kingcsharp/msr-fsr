@@ -19,14 +19,14 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Customer 
-            CreateMap<Customer, Domain.Models.Customer>().ReverseMap()
+            CreateMap<Customer, Domain.Models.Customer>()
                     .ForMember(dest => dest.Location, opts => opts.AllowNull())
                     .ForMember(dest => dest.PrimaryContactUser, opts => opts.AllowNull())
                     .ForMember(dest => dest.SecondaryContactUser, opts => opts.AllowNull())
                     .AfterMap((src, dest) => dest.Location = src.Location == null ? null : dest.Location)
                     .AfterMap((src, dest) => dest.PrimaryContactUser = src.PrimaryContactUser == null ? null : dest.PrimaryContactUser)
                     .AfterMap((src, dest) => dest.SecondaryContactUser = src.SecondaryContactUser == null ? null : dest.SecondaryContactUser);
-            CreateMap<Domain.Models.Customer, Customer>().ReverseMap();
+            CreateMap<Domain.Models.Customer, Customer>();
             CreateMap<CustomerApproval, Domain.Models.Customer>()
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name));
             CreateMap<CreateCustomer, Customer>();

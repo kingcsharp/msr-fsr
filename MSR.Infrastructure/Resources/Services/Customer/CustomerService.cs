@@ -71,20 +71,6 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 await _unitOfWork.SaveChangesAsync();
                 retCustomer = _mapper.Map<Domain.Models.Customer>(customerApproval);
             }
-
-            //We are doing this because Automapper won't let us have nulls for some reason. 
-            if (retCustomer.Location.Id == 0)
-            {
-                retCustomer.Location = null;
-            }
-            if (retCustomer.PrimaryContactUser.Id == 0)
-            {
-                retCustomer.PrimaryContactUser = null;
-            }
-            if (retCustomer.SecondaryContactUser.Id == 0)
-            {
-                retCustomer.SecondaryContactUser = null;
-            }
             return retCustomer;
         }
 
