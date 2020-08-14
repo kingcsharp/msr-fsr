@@ -233,12 +233,11 @@ export class InvoiceComponent implements OnInit {
   }
 
   onInvoiceSubmit() {
-    this.globals.showLoader(true);
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      let method: Observable<AuditActionResultOfInvoiceView> = null;
       this.globals.showLoader(true);
+      let method: Observable<AuditActionResultOfInvoiceView> = null;
       let basicReqData: any = {
         description: this.currentInvoice.description,
         invoiceDate: moment(this.currentInvoice.dueDate, 'MM/DD/YYYY').toDate(),
@@ -308,6 +307,7 @@ export class InvoiceComponent implements OnInit {
     }
 
     let invoiceCopy = copyObj(invoice);
+    invoiceCopy.dueDate = moment(invoiceCopy.dueDate).toDate();
     invoiceCopy.location = this.locations.find(x => x.id === invoice.locationId);
     invoiceCopy.customer = this.customers.find(x => x.id === invoice.customerId);
     return invoiceCopy;

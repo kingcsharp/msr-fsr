@@ -1248,12 +1248,12 @@ export class InvoiceService {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 201) {
+        if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = AuditActionResultOfInvoiceView.fromJS(resultData201);
-            return _observableOf(result201);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfInvoiceView.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -1303,12 +1303,12 @@ export class InvoiceService {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 201) {
+        if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = AuditActionResultOfIEnumerableOfInvoiceView.fromJS(resultData201);
-            return _observableOf(result201);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfInvoiceView.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -6619,7 +6619,7 @@ export interface IAuditActionResultOfIEnumerableOfInvoiceView extends IAuditActi
 
 export class InvoiceView implements IInvoiceView {
     id?: number;
-    customerId?: string | undefined;
+    customerId?: number;
     customerName?: string | undefined;
     description?: string | undefined;
     invoiceNumber?: string | undefined;
@@ -6701,7 +6701,7 @@ export class InvoiceView implements IInvoiceView {
 
 export interface IInvoiceView {
     id?: number;
-    customerId?: string | undefined;
+    customerId?: number;
     customerName?: string | undefined;
     description?: string | undefined;
     invoiceNumber?: string | undefined;
