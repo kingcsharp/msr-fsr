@@ -56,7 +56,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("Help")]
-        [SwaggerResponse(typeof(AuditActionResult<UploadResponse>))]
+        [SwaggerResponse(typeof(UploadResponse))]
         public async Task<IActionResult> UploadFile([FromForm]UploadFileRequest request)
         {
             if (!request.Upload.Any())
@@ -65,7 +65,7 @@ namespace MSR.Answer.API.V1.Controllers
             }
             var command = request.ToUploadFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<UploadResponse>("File was successfully Uploaded.");
+            return new OkObjectResult(((ICommandResponse<UploadResponse>)ret).Data);
         }
 
         [HttpPost("Import")]
