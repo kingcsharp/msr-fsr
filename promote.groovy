@@ -10,6 +10,8 @@ pipeline {
         ACCOUNT_URL='425480257575.dkr.ecr.us-west-2.amazonaws.com'
         REGION='us-west-2'
         PROFILE='--profile msrfsr'
+        API_COMPOSE='docker-compose-api.yml'
+        UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
         stage("Get images") {
@@ -25,6 +27,10 @@ pipeline {
                     String[] api
                     api = apiImage.split(':')
                     println(api[1])
+                    sh "sudo sh update_image.sh dev ${api[1]} ${UI_COMPOSE}"
+                    sh "cat ${UI_COMPOSE}"
+                    sh "sudo sh update_image_api.sh dev ${api[1]} ${API_COMPOSE}"
+                    sh "cat ${API_COMPOSE}"
 
                 }
             }
