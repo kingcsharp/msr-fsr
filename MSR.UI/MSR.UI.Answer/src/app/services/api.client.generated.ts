@@ -661,7 +661,7 @@ export class FileService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    help(version: string, name: string | null | undefined, contentType: string | null | undefined, fileName: string | null | undefined, upload: FileParameter[] | null | undefined): Observable<AuditActionResultOfUploadResponse> {
+    help(version: string, name: string | null | undefined, contentType: string | null | undefined, fileName: string | null | undefined, upload: FileParameter[] | null | undefined): Observable<UploadResponse> {
         let url_ = this.baseUrl + "/v{version}/File/Help";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -694,14 +694,14 @@ export class FileService {
                 try {
                     return this.processHelp(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfUploadResponse>><any>_observableThrow(e);
+                    return <Observable<UploadResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfUploadResponse>><any>_observableThrow(response_);
+                return <Observable<UploadResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processHelp(response: HttpResponseBase): Observable<AuditActionResultOfUploadResponse> {
+    protected processHelp(response: HttpResponseBase): Observable<UploadResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -712,7 +712,7 @@ export class FileService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfUploadResponse.fromJS(resultData200);
+            result200 = UploadResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -720,7 +720,7 @@ export class FileService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfUploadResponse>(<any>null);
+        return _observableOf<UploadResponse>(<any>null);
     }
 
     import(version: string, request: ImportRequest): Observable<ImportAuditActionResultOfIEnumerableOfObject> {
@@ -6361,39 +6361,6 @@ export interface ICreateFileRequest {
     name?: string | undefined;
     base64String?: string | undefined;
     contentType?: string | undefined;
-}
-
-export class AuditActionResultOfUploadResponse extends AuditActionResult implements IAuditActionResultOfUploadResponse {
-    object?: UploadResponse | undefined;
-
-    constructor(data?: IAuditActionResultOfUploadResponse) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? UploadResponse.fromJS(_data["object"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfUploadResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfUploadResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfUploadResponse extends IAuditActionResult {
-    object?: UploadResponse | undefined;
 }
 
 export class UploadResponse implements IUploadResponse {
