@@ -34,7 +34,7 @@ namespace MSR.Domain.Validators
             }
 
             importErrors = errors.Any() ? errors : null;
-            return errors.Any();
+            return !errors.Any();
         }
     }
 }
