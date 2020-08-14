@@ -7,7 +7,7 @@ namespace MSR.Domain.Views
     public class InvoiceView
     {
         public int Id { get; set; }
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string Description { get; set; }
         public string InvoiceNumber { get; set; }
