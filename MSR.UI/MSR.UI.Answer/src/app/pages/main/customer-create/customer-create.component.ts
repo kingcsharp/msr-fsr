@@ -31,13 +31,19 @@ export class CustomerCreateComponent implements OnInit {
 
       this.allUsers = response.object.map(s => ({ label: s.lastName, value: s.id }));
 
+      this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
+
+        this.locationOptions = response.object;
+
+        this.getCustomer();
+
+      }));
+
     }));
 
-    this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
+  }
 
-      this.locationOptions = response.object;
-
-    }));
+  getCustomer(){
 
     this.route.queryParams.subscribe(params => {
       this.customerToEditId = params['id'] == null ? 0 : Number(params['id']);
