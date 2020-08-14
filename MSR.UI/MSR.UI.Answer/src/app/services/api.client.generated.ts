@@ -661,11 +661,18 @@ export class FileService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    help(version: string, name: string | null | undefined, contentType: string | null | undefined, fileName: string | null | undefined, image: FileParameter | null | undefined): Observable<AuditActionResultOfUploadResponse> {
-        let url_ = this.baseUrl + "/v{version}/File/Help";
+    help(upload: KeyValuePairOfStringAndStringValues[] | null | undefined, version: string, name: string | null | undefined, contentType: string | null | undefined, fileName: string | null | undefined): Observable<AuditActionResultOfUploadResponse> {
+        let url_ = this.baseUrl + "/v{version}/File/Help?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (upload !== undefined && upload !== null)
+            upload && upload.forEach((item, index) => {
+                for (let attr in item)
+        			if (item.hasOwnProperty(attr)) {
+        				url_ += "upload[" + index + "]." + attr + "=" + encodeURIComponent("" + (<any>item)[attr]) + "&";
+        			}
+            });
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = new FormData();
@@ -675,8 +682,6 @@ export class FileService {
             content_.append("ContentType", contentType.toString());
         if (fileName !== null && fileName !== undefined)
             content_.append("FileName", fileName.toString());
-        if (image !== null && image !== undefined)
-            content_.append("Image", image.data, image.fileName ? image.fileName : "Image");
 
         let options_ : any = {
             body: content_,
@@ -6223,6 +6228,7 @@ export class FileModel implements IFileModel {
     entityId?: number | undefined;
     name?: string | undefined;
     base64String?: string | undefined;
+    fileContents?: string | undefined;
     contentType?: string | undefined;
     fileURL?: string | undefined;
 
@@ -6241,6 +6247,7 @@ export class FileModel implements IFileModel {
             this.entityId = _data["entityId"];
             this.name = _data["name"];
             this.base64String = _data["base64String"];
+            this.fileContents = _data["fileContents"];
             this.contentType = _data["contentType"];
             this.fileURL = _data["fileURL"];
         }
@@ -6259,6 +6266,7 @@ export class FileModel implements IFileModel {
         data["entityId"] = this.entityId;
         data["name"] = this.name;
         data["base64String"] = this.base64String;
+        data["fileContents"] = this.fileContents;
         data["contentType"] = this.contentType;
         data["fileURL"] = this.fileURL;
         return data; 
@@ -6270,6 +6278,7 @@ export interface IFileModel {
     entityId?: number | undefined;
     name?: string | undefined;
     base64String?: string | undefined;
+    fileContents?: string | undefined;
     contentType?: string | undefined;
     fileURL?: string | undefined;
 }
@@ -6426,6 +6435,54 @@ export class UploadResponse implements IUploadResponse {
 
 export interface IUploadResponse {
     url?: string | undefined;
+}
+
+export class KeyValuePairOfStringAndStringValues implements IKeyValuePairOfStringAndStringValues {
+    key?: string;
+    value?: string[];
+
+    constructor(data?: IKeyValuePairOfStringAndStringValues) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.key = _data["key"];
+            if (Array.isArray(_data["value"])) {
+                this.value = [] as any;
+                for (let item of _data["value"])
+                    this.value!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): KeyValuePairOfStringAndStringValues {
+        data = typeof data === 'object' ? data : {};
+        let result = new KeyValuePairOfStringAndStringValues();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["key"] = this.key;
+        if (Array.isArray(this.value)) {
+            data["value"] = [];
+            for (let item of this.value)
+                data["value"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IKeyValuePairOfStringAndStringValues {
+    key?: string;
+    value?: string[];
 }
 
 export class AuditActionResultOfIEnumerableOfObject extends AuditActionResult implements IAuditActionResultOfIEnumerableOfObject {
@@ -11481,11 +11538,6 @@ export class UpdateWorkflowStageRequest extends CreateWorkflowStageRequest imple
 
 export interface IUpdateWorkflowStageRequest extends ICreateWorkflowStageRequest {
     id: number;
-}
-
-export interface FileParameter {
-    data: any;
-    fileName: string;
 }
 
 export interface FileResponse {

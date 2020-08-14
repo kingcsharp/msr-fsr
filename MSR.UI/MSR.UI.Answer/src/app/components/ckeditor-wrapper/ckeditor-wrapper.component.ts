@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import * as ClassicEditor from '../../lib/ckeditor/ckeditor';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import { environment as env } from '../../../environments/environment';
 
 @Component({
   selector: 'ckeditor-wrapper',
@@ -19,13 +20,10 @@ export class CkeditorWrapperComponent implements OnInit {
 
     let options = new Array<string>();
     ClassicEditor.builtinPlugins.map(plugin => {
-      console.log(plugin.pluginName);
+
       options.push(plugin.pluginName);
 
     });
-
-    console.log(options);
-
     this.config = {
       fontColor: {
         colors: [
@@ -67,19 +65,17 @@ export class CkeditorWrapperComponent implements OnInit {
         ]
       },
       simpleUpload: {
-        // The URL that the images are uploaded to.
-        uploadUrl: 'http://example.com',
 
-        // Enable the XMLHttpRequest.withCredentials property.
-        withCredentials: false,
+        uploadUrl: 'https://localhost:44398/v1/file/help',
 
-        // Headers sent along with the XMLHttpRequest to the upload server.
-        // headers: {
-        //  'X-CSRF-TOKEN': 'CSFR-Token',
-        //  Authorization: 'Bearer <JSON Web Token>'
-        // }
+        withCredentials: true,
+
+         headers: {
+          'X-CSRF-TOKEN': 'CSFR-Token',
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+         }
       },
-      // This value must be kept in sync with the language defined in webpack.config.js.
+
       language: 'en'
     };
   }

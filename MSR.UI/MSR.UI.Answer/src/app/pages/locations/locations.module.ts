@@ -12,7 +12,8 @@ import { LocationCreateComponent } from './location-create/location-create.compo
 import { DropdownModule } from 'primeng/dropdown';
 import { ApproveEntityComponent } from '../../components/aproove-entity/approve-entity.component';
 import { CsvImportComponent } from '../../components/csv-import/csv-import.component';
-import { CmhFileUploaderComponent } from '../../components/cmh-file-uploader/cmh-file-uploader.component'
+import { CmhFileUploaderComponent } from '../../components/cmh-file-uploader/cmh-file-uploader.component';
+import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 export const routes = [
   { path: '', redirectTo: 'locations', pathMatch: 'full' },
   { path: 'locations', component: LocationsComponent, pathMatch: 'full' },
@@ -21,7 +22,15 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [LocationsComponent, GridOptionsComponent, LocationCreateComponent, ApproveEntityComponent,CsvImportComponent, CmhFileUploaderComponent],
+  declarations: [
+    LocationsComponent, 
+    GridOptionsComponent, 
+    LocationCreateComponent, 
+    ApproveEntityComponent,
+    CsvImportComponent, 
+    CmhFileUploaderComponent,
+    HelpbuttonWrapperComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
