@@ -15,31 +15,31 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<DeleteWorkOrder>,
         ICommandHandler<UpdateWorkOrder>
     {
-        private readonly IWorkOrderService _procedureService;
+        private readonly IWorkOrderService _workOrderService;
 
         public WorkOrderAppService(IWorkOrderService procedureService)
         {
-            _procedureService = procedureService;
+            _workOrderService = procedureService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.GetWorkOrderAsync(command);
+            var ret = await _workOrderService.GetWorkOrderAsync(command);
             return new CommandResponse<ICollection<WorkOrderModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.CreateWorkOrderAsync(command);
+            var ret = await _workOrderService.CreateWorkOrderAsync(command);
             return new CommandResponse<WorkOrderModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(UpdateWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.UpdateWorkOrderAsync(command);
+            var ret = await _workOrderService.UpdateWorkOrderAsync(command);
             return new CommandResponse<WorkOrderModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(DeleteWorkOrder command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.DeleteWorkOrderAsync(command);
+            var ret = await _workOrderService.DeleteWorkOrderAsync(command);
             return new CommandResponse<bool>(ret);
         }
     }

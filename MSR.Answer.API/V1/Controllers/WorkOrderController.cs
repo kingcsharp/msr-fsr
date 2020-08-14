@@ -31,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToGetWorkOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>("WorkOrder GET Success");
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
         }
 
         [HttpPost]

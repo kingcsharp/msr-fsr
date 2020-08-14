@@ -6,6 +6,7 @@ using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.Services.Role;
+using MSR.Infrastructure.Tests.TestFixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 
             var workOrders = new Mock<IRepository<WorkOrder>>();
             var workOrdersList = new List<WorkOrder>() { 
-                new WorkOrder() { Id = 1, Price = 123.45M }
+                WorkOrderFixture.PlainWorkOrder
             };
             var workOrdersMock = workOrdersList.AsQueryable().BuildMock();
             workOrders.Setup(m => m.Query()).Returns(workOrdersMock.Object);

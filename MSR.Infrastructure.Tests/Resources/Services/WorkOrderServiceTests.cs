@@ -51,12 +51,11 @@ namespace MSR.Infrastructure.Tests.Resources.Services
         [Fact]
         public async Task Call_UpdateWorkOrderAsync()
         {
-            var response = await _workorderService.UpdateWorkOrderAsync(
-                WorkOrderFixture.WorkOrderUpdate
-            );
+            UpdateWorkOrder upd = WorkOrderFixture.WorkOrderUpdate;
+            var response = await _workorderService.UpdateWorkOrderAsync(upd);
             response.Should().Match<WorkOrderModel>(x => (
-                x.Id == WorkOrderFixture.WorkOrderUpdate.Id &&
-                x.Price == WorkOrderFixture.WorkOrderUpdate.Price
+                x.Id == upd.Id &&
+                x.Price == upd.Price
             ));
         }
 
