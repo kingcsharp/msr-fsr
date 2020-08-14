@@ -48,6 +48,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                     customer.SecondaryContactUserId = null;
                 }
 
+                customer.IsActive = true;
                 await _unitOfWork.Customers.AddAsync(customer);
                 await _unitOfWork.LogApprovalTransaction(customer, customer.Id);
                 
@@ -59,7 +60,8 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 customerApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(customerApproval);
                 customerApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(customerApproval.Workflow?.Id ?? 0);
                 customerApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
-                
+
+                customerApproval.IsActive = true;
                 if (customerApproval.LocationId == 0)
                 {
                     customerApproval.LocationId = null;

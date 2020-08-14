@@ -30,7 +30,6 @@ namespace MSR.Answer.Processor.SQSServices
         private CancellationTokenSource _tokenSource;
 
         public SqsConsumerService(
-            ConcurrentDictionary<string,Type> typeHandlers, 
             IAmazonSQS sqsClient, 
             SQSInformation sQSInformation, 
             ICommandDispatcher dispatcher,

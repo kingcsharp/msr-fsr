@@ -156,7 +156,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             }
             catch(Exception ex)
             {
-                var data = ex.Message;
+                throw;
             }
         }
 

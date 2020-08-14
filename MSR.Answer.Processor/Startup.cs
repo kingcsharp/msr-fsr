@@ -25,9 +25,9 @@ namespace MSR.Answer.Processor
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IConfiguration config)
+        public void ConfigureServices(IServiceCollection services)
         {
-            services.AddProcessorServices(config);
+            services.AddProcessorServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,10 +44,10 @@ namespace MSR.Answer.Processor
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
-                sqsConsumerService.StartConsuming();
             }
 
 
+            sqsConsumerService.StartConsuming();
         }
     }
 }

@@ -49,7 +49,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             var locationIds = locations.Select(i => i.Id);
             var locationApprovals = await _unitOfWork.LocationApprovals.Query()
                                                                        .Include(i => i.Status)
-                                                                       .Where(i => locationIds.Contains(i.LocationId)).ToListAsync();
+                                                                       .Where(i => i.LocationId.HasValue && locationIds.Contains(i.LocationId.Value)).ToListAsync();
             var ret = new List<LocationModel>();
             foreach(var location in locations)
             {
@@ -73,6 +73,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval))
             {
                 var location = _mapper.Map<EntityFramework.Entities.Location>(command);
+                location.IsActive = true;
                 _unitOfWork.Locations.Add(location);
 
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
@@ -84,7 +85,8 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
                 locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
                 locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
-                
+                locationApproval.IsActive = true;
+
                 await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
 
