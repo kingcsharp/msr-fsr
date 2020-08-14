@@ -41,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("CreateOneInvoice"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<InvoiceView>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<InvoiceView>))]
         public async Task<IActionResult> CreateOneInvoice([FromBody, Required] CreateInvoiceRequest request)
         {
             var createOneInvoice = request.ToCreateOneInvoiceCommand();
@@ -50,7 +50,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("CreateIndividualInvoices"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<IEnumerable<InvoiceView>>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceView>>))]
         public async Task<IActionResult> CreateIndividualInvoices([FromBody, Required] CreateInvoiceRequest request)
         {
             var createIndividualInvoices = request.ToCreateIndividualInvoicesCommand();
