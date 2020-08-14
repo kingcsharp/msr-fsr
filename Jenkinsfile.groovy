@@ -94,7 +94,7 @@ pipeline {
                                 dir('reverseproxy') {
                                     sh "sudo chmod 777 /var/run/docker.sock"
                                     sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
-                                    sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}$"
+                                    sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
 
                                     sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
