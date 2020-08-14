@@ -25,14 +25,14 @@
             <csv-import [showButton]="canAddLocation" [menuItem]="menuItems.Locations" title="Import Locations"
               (onUpload)="uploadParts($event)" fileName="LocationsSample.csv"></csv-import>
             <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
-              [gridVersion]="gridVersion" data-cy="usergrid-options" [hidden]="false">
+              [gridVersion]="gridVersion" data-cy="locations-options" [hidden]="false">
             </grid-options>
           </div>
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-              data-cy="usertable-header">
+              data-cy="locations-header">
               {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label != 'Actions'"></p-sortIcon>
             </th>
           </tr>
