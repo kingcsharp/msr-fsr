@@ -12,6 +12,7 @@ using MSR.Domain.Models;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -58,6 +59,10 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<UploadResponse>))]
         public async Task<IActionResult> UploadFile([FromForm]UploadFileRequest request)
         {
+            if (!request.Upload.Any())
+            {
+                return BadRequest();
+            }
             var command = request.ToUploadFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<UploadResponse>("File was successfully Uploaded.");

@@ -480,10 +480,18 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static UploadFile ToUploadFileCommand(this UploadFileRequest request)
         {
-            var file = AutoMapperHelper.Mapper.Map<UploadFile>(request);
             var stream = new MemoryStream();
-            request.Image.CopyTo(stream);
-            file.FileContents = stream.ToArray();
+            var incomingFile = request.Upload.First();
+            incomingFile.CopyTo(stream);
+
+            var file = new UploadFile()
+            {
+                ContentType = incomingFile.ContentType,
+                FileName = incomingFile.FileName,
+                Name = incomingFile.Name,
+                FileContents = stream.ToArray()
+            };
+
             return file;
         }
 

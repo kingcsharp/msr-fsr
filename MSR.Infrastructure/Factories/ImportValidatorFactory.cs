@@ -1,9 +1,7 @@
 ﻿using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
-using MSR.Infrastructure.Resources.Services.Customers;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using MSR.Infrastructure.Resources.Services.Location;
 using MSR.Domain.Validators;
 
 namespace MSR.Infrastructure.Factories

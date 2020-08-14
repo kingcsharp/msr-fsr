@@ -11,9 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Helpers;
-using MSR.Infrastructure.Helpers;
 using MSR.Domain.Models;
-using MSR.Domain.Commanding.Abstractions;
 
 namespace MSR.Infrastructure.Resources.Services.Customers
 {

@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Intigration;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MSR.Domain.Intigration.Abstractions;
 
 namespace MSR.Domain.Commanding
 {
@@ -45,22 +43,6 @@ namespace MSR.Domain.Commanding
         public Task<ICommandResponse<TResponse>> DispatchAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
-        }
-
-        public async Task DispatchEventAsync<TIntegrationEvent>(TIntegrationEvent integrationEvent, CancellationToken cancellationToken = default) where TIntegrationEvent : IntegrationEvent
-        {
-            if (integrationEvent == null)
-            {
-                throw new ArgumentNullException(nameof(integrationEvent));
-            }
-            var handler = _serviceProvider.GetService(typeof(IIntegrationEventHandler<TIntegrationEvent>));
-
-            if (handler == null)
-            {
-                throw new Exception($"No service for {integrationEvent.GetType().Name}");
-            }
-
-            await (handler as IIntegrationEventHandler<TIntegrationEvent>).HandleAsync(integrationEvent, cancellationToken);
         }
     }
 }

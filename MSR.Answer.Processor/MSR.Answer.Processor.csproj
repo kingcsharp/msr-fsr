@@ -9,6 +9,7 @@
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
     <None Remove="appsettings.Localhost.json" />
+    <None Remove="appsettings.QA.json" />
     <None Remove="appsettings.Stage.json" />
   </ItemGroup>
 
@@ -24,6 +25,11 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="appsettings.Localhost.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="appsettings.QA.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

@@ -31,7 +31,7 @@ namespace MSR.Domain.Helpers
 
                 base64file.FileContents = Convert.FromBase64String(fileContents);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }

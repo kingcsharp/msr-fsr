@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
@@ -9,9 +8,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using NSwag.Annotations;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers

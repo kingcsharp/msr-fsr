@@ -13,7 +13,6 @@ using System.Linq;
 using System.Collections.Generic;
 using MSR.Domain.Commanding.Enums;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace MSR.Answer.API.Extentions
 {

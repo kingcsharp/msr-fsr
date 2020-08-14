@@ -1,14 +1,11 @@
 ﻿using Amazon.SQS;
-using MSR.Domain.Intigration.Abstractions;
-using MSR.Domain.Intigration.Models;
+using MSR.Domain.SQSEventing.Abstractions;
+using MSR.Domain.SQSEventing.Models;
 using MSR.Domain.Models.Config;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MSR.Domain.Intigration
+namespace MSR.Domain.SQSEventing
 {
     public class BusSender : ISendSQSMessages
     {
@@ -23,7 +20,8 @@ namespace MSR.Domain.Intigration
        
         public async Task SendMessage(MessageEnvelope data)
         {
-            await _handler.SendMessageAsync(_sQSInformation.QueueURL, JsonConvert.SerializeObject(data));
+            var queueURL = (await _handler.GetQueueUrlAsync(_sQSInformation.QueueName)).QueueUrl;
+            await _handler.SendMessageAsync(queueURL, JsonConvert.SerializeObject(data));
         }
     }
 }

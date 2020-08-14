@@ -197,7 +197,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
 
-            CreateMap<UploadFile, Domain.Models.FileModel>();
+            CreateMap<UploadFile, Domain.Models.FileModel>()
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
         }
     }
 }

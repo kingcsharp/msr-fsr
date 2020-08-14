@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MSR.Domain.Intigration.Models
+﻿namespace MSR.Domain.SQSEventing.Models
 {
     public class MessageEnvelope
     {

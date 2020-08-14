@@ -4,7 +4,6 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;

@@ -3,20 +3,19 @@ using MSR.Answer.Domain.Models;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
-using MSR.Domain.IntegrationEvents;
-using MSR.Domain.Intigration.Abstractions;
-using MSR.Domain.Intigration.Models;
+using MSR.Domain.Events;
+using MSR.Domain.SQSEventing.Abstractions;
+using MSR.Domain.SQSEventing.Models;
 using MSR.Domain.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MSR.Application.EventServices;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -31,13 +30,25 @@ namespace MSR.Application.ApplicationServices
         private readonly IMapper _mapper;
         private readonly IImportValidatorFactory _validationFactory;
         private readonly ISendSQSMessages _bus;
+        //This is only here until we get the full Async lifecycle in
+        private readonly ICustomerService _customerService;
+        private readonly ILocationService _locationService;
 
-        public FileAppService(IFileService fileService, IMapper mapper, IImportValidatorFactory validationFactory, ISendSQSMessages bus)
+        public FileAppService(
+            IFileService fileService,
+            IMapper mapper,
+            IImportValidatorFactory validationFactory,
+            ISendSQSMessages bus,
+            ICustomerService customerService,
+            ILocationService locationService
+            )
         {
             _fileService = fileService;
             _mapper = mapper;
             _validationFactory = validationFactory;
             _bus = bus;
+            _customerService = customerService;
+            _locationService = locationService;
         }
 
         public Task<ICommandResponse> HandleAsync(GetFiles command, CancellationToken cancellationToken = default)
@@ -85,16 +96,26 @@ namespace MSR.Application.ApplicationServices
                 return new CommandResponse<IEnumerable<ImportError>>(importErrors);
             }
 
-            var importIntegrationEvent = new ImportIntegrationEvent()
+            //var importEvent = new ImportEvent()
+            //{
+            //    CsvData = csvData,
+            //    TokenData = "",
+            //    MenuItem = command.MenuItem
+            //};
+
+            switch (command.MenuItem)
             {
-                CsvData = csvData,
-                TokenData = "",
-                MenuItem = command.MenuItem
-            };
+                case EnumMenuItem.CustomersDepartments:
+                    var importedCustomers = await _customerService.ImportCustomers(csvData);
+                    break;
+                case EnumMenuItem.Locations:
+                    var importedLocations = await _locationService.ImportLocations(csvData);
+                    break;
+            }
 
-            var envelope = new MessageEnvelope(importIntegrationEvent.GetType().Name, JsonConvert.SerializeObject(importIntegrationEvent));
+            //var envelope = new MessageEnvelope(importIntegrationEvent.GetType().Name, importIntegrationEvent);
 
-            await _bus.SendMessage(envelope);
+            //await _bus.SendMessage(envelope);
 
             return CommandResponse.SuccessCommand;
         }

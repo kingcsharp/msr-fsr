@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MSR.Infrastructure.Resources.Services.Customers
+﻿namespace MSR.Infrastructure.Resources.Services.Customers
 {
     public class CustomerImportItem
     {

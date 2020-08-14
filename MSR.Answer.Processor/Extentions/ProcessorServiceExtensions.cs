@@ -1,16 +1,23 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MSR.Answer.Processor.SQSServices;
+using MSR.Answer.Processor.SQSServices.Abstractions;
 using MSR.Application.Extentions;
+using MSR.Domain.Commanding;
 using MSR.Domain.Extensions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models.Config;
+using MSR.Domain.SQSEventing;
+using MSR.Domain.SQSEventing.Abstractions;
 using MSR.Infrastructure.Extensions;
 using Serilog;
 using Serilog.Formatting.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace MSR.Answer.Processor.Extentions
 {
@@ -40,17 +47,38 @@ namespace MSR.Answer.Processor.Extentions
             //The CreateMapper will create the DI Mapper.  AutoMapperHelper Gives us a Static Mapper.  We need this 
             //When using AutoMapper in Static or other places where using Instance isn't required or feesable like the 
             //Api Request Class => Domain Command extention methods.  
-            services.AddSingleton(mapperConfiguration.CreateMapper());
             AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
             services.AddDomainServices(configuration);
             services.AddInfrastructureServices(configuration);
-            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+            services.AddSingleton(mapperConfiguration.CreateMapper());
+
+            var assemblies = new List<Assembly>();
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            foreach (string dll in Directory.GetFiles(path, "MSR.*.dll"))
             {
-                builder.AllowAnyMethod()
-                       .AllowAnyOrigin()
-                       .AllowAnyHeader();
-            }));
+                assemblies.Add(Assembly.LoadFile(dll));
+            }
+
+            var eventHandlers = new EventHandlers();
+            List<TypeInfo> eventTypeList = assemblies.SelectMany(a => a.DefinedTypes).Where(t => t.IsClass && SystemTypeExtensions.ImplementsInterfaceOf<IEventHandler>(t)).ToList();
+
+            foreach (Type type in eventTypeList)
+            {
+                foreach (Type serviceType in ((IEnumerable<Type>)type.GetInterfaces()).Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>)).ToList())
+                {
+                    services.AddTransient(serviceType, type);
+                    var args = serviceType.GetGenericArguments();
+                    foreach (var argType in args)
+                    {
+                        services.AddScoped(typeof(EventDispatcher<>).MakeGenericType(argType));
+                        eventHandlers.AddReference(argType);
+                    }
+                }
+            }
+            services.AddSingleton<IEventHandlers>(eventHandlers);
+            services.AddSingleton<ISqsConsumerService, SqsConsumerService>();
 
             services.AddLogging();
             var loggerConfig = new LoggerConfiguration()
