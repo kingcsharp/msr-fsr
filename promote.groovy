@@ -33,17 +33,21 @@ pipeline {
                 }
             }
         }
-        stage("Promoting UI to Stage") {
-            steps {
-                script {
-                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+        stage('Build & Deploy') {
+            parallel {
+                stage("Promoting UI to Stage") {
+                    steps {
+                        script {
+                            deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                        }
+                    }
                 }
-            }
-        }
-        stage("Promoting API to Stage") {
-            steps {
-                script {
-                    deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                stage("Promoting API to Stage") {
+                    steps {
+                        script {
+                            deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                        }
+                    }
                 }
             }
         }
