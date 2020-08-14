@@ -29,7 +29,7 @@ export class CustomerCreateComponent implements OnInit {
 
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.allUsers = response.object.map(s => ({ label: s.lastName, value: s.id }));
+      this.allUsers = response.object.map(s => ({ label: s.fullName, value: s.id }));
 
       this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
 

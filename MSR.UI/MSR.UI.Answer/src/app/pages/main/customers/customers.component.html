@@ -161,7 +161,7 @@
 
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)" *ngIf="customer.location !== undefined">
-              {{customer.location.name}}
+              {{customer.location?.name}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('primaryContact', gridSettings)">
               {{ customer.primaryContactUser?.firstName}}
@@ -175,7 +175,7 @@
               {{customer.isActive}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)">
-              {{customer.created.fullName}}
+              {{customer.created?.fullName}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
               {{customer.createdOn | date :'short'}}
