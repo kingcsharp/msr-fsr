@@ -189,11 +189,12 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-md-2  col-form-label text-md-right">
-                            Combine Selected
+                            Invoice Date
                         </label>
                         <div class="col-md-4 ">
                             <div class="display-inline-block isActive">
-                                <p-calendar [(ngModel)]="currentInvoice.dueDate" (onSelect)="filterGrid()" [locale]="en">
+                                <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="currentInvoice.dueDate"
+                                    dataType="string" [locale]="calendarEn">
                                 </p-calendar>
                             </div>
                         </div>
@@ -203,8 +204,9 @@
                         <div class="col-md-4 ">
                             <div class="display-inline-block isActive">
                                 <label class="form-check-label" for="combineSelected" class="switch">
-                                    <input class="form-check-input" [(ngModel)]="combineSelected" name="isKit"
-                                        type="checkbox" class="ios" checked id="combineSelected" />
+                                    <input class="form-check-input" [(ngModel)]="combineSelected"
+                                        [ngModelOptions]="{standalone: true}" name="isKit" type="checkbox" class="ios"
+                                        checked id="combineSelected" />
                                     <i data-cy="combineSelected-checkbox"></i>
                                 </label>
                             </div>
@@ -217,7 +219,7 @@
                         <div class="col-md-10 col-12">
                             <multiselect-wrapper-form *ngIf="showInvoiceItems" [options]="invoiceItemOptions"
                                 [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId"
-                                defaultLabelProperty="purchaseOrderName" defaultLabel="Select Work Orders">
+                                defaultLabelProperty="purchaseNumber" defaultLabel="Select Work Orders">
                             </multiselect-wrapper-form>
                         </div>
                     </div>

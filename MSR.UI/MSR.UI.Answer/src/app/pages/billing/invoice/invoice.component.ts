@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, AbstractType } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService,
-  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel, AuditActionResultOfInvoiceView
+  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -57,6 +57,7 @@ export class InvoiceComponent implements OnInit {
   showWorkOrders: boolean = false;
   showInvoiceItems: boolean = true;
   workorders: Array<WorkOrderModel> = new Array<WorkOrderModel>();
+  calendarEn: any;
   constructor(private globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
     private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService,
     private locationService: LocationService, private workOrderService: WorkOrderService) {
@@ -64,6 +65,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.calendarEn = this.globals.getCalendarDefault();
     this.gridStorageId = 'invoiceGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
@@ -115,14 +117,13 @@ export class InvoiceComponent implements OnInit {
       this.workOrderService.workOrderGet(null, this.currentInvoice.customerId,
         this.currentInvoice.locationId, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
-          const workOrdersUpdated = response.object.map((wo) => {
+          response.object.forEach((wo) => {
             const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
             if (firstPartWithNullParent !== undefined) {
               wo.serialNumber = firstPartWithNullParent.serialNumber;
             }
-            return wo;
           });
-          replaceArrayItems(this.workorders, workOrdersUpdated);
+          replaceArrayItems(this.workorders, response.object);
         }));
     }
   }
@@ -232,7 +233,7 @@ export class InvoiceComponent implements OnInit {
       }));
   }
 
-  onpartSubmit() {
+  onInvoiceSubmit() {
     this.globals.showLoader(true);
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
@@ -240,17 +241,21 @@ export class InvoiceComponent implements OnInit {
       let method: Observable<AuditActionResultOfInvoiceView> = null;
       this.globals.showLoader(true);
       let basicReqData: any = {
-        invoiceItems: this.currentInvoice.invoiceItems,
         description: this.currentInvoice.description,
-        invoiceDate: this.currentInvoice.dueDate,
+        invoiceDate: moment(this.currentInvoice.dueDate, "MM/DD/YYYY").toDate(),
         taxPercentage: this.currentInvoice.taxPercentage
       }
 
-      if (this.currentInvoice.id === undefined) {
+      if (this.currentInvoice.id !== undefined) {
         basicReqData.id = this.currentInvoice.id;
-        const invoiceUpdateRequest = new UpdateInvoiceRequest(basicReqData);
-        method = this.invoiceService.invoicePatch(env.apiVersion, invoiceUpdateRequest);
+        basicReqData.invoiceItems = this.currentInvoice.invoiceItems.map((item) => {
+          return new UpdateInvoiceItemRequest(item)
+        });
+        method = this.invoiceService.invoicePatch(env.apiVersion, new UpdateInvoiceRequest(basicReqData));
       } else {
+        basicReqData.invoiceItems = this.currentInvoice.invoiceItems.map((item) => {
+          return new CreateInvoiceItemRequest(item)
+        });
         basicReqData.invoiceClass = this.currentInvoice.location.invoiceClass;
         basicReqData.customerId = this.currentInvoice.customerId;
         if (this.combineSelected) {
@@ -297,6 +302,7 @@ export class InvoiceComponent implements OnInit {
     this.combineSelected = true;
     if (invoice === undefined) {
       let ret = new InvoiceView();
+      ret.dueDate = new Date();
       ret.invoiceItems = [];
       emptyArray(this.workorders);
       return ret;

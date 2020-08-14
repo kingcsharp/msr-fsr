@@ -1193,12 +1193,12 @@ export class InvoiceService {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 201) {
+        if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = AuditActionResultOfInvoiceView.fromJS(resultData201);
-            return _observableOf(result201);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfInvoiceView.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -6624,9 +6624,9 @@ export class InvoiceView implements IInvoiceView {
     description?: string | undefined;
     invoiceNumber?: string | undefined;
     amount?: number;
+    taxPercentage?: number;
     dueDate?: Date;
     createdOn?: Date;
-    taxPercentage?: number;
     createdByName?: string | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedByName?: string | undefined;
@@ -6651,9 +6651,9 @@ export class InvoiceView implements IInvoiceView {
             this.description = _data["description"];
             this.invoiceNumber = _data["invoiceNumber"];
             this.amount = _data["amount"];
+            this.taxPercentage = _data["taxPercentage"];
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.taxPercentage = _data["taxPercentage"];
             this.createdByName = _data["createdByName"];
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             this.lastUpdatedByName = _data["lastUpdatedByName"];
@@ -6682,9 +6682,9 @@ export class InvoiceView implements IInvoiceView {
         data["description"] = this.description;
         data["invoiceNumber"] = this.invoiceNumber;
         data["amount"] = this.amount;
+        data["taxPercentage"] = this.taxPercentage;
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["taxPercentage"] = this.taxPercentage;
         data["createdByName"] = this.createdByName;
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         data["lastUpdatedByName"] = this.lastUpdatedByName;
@@ -6706,9 +6706,9 @@ export interface IInvoiceView {
     description?: string | undefined;
     invoiceNumber?: string | undefined;
     amount?: number;
+    taxPercentage?: number;
     dueDate?: Date;
     createdOn?: Date;
-    taxPercentage?: number;
     createdByName?: string | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedByName?: string | undefined;

@@ -1909,7 +1909,7 @@ input.parsley-error {
   }
 }
 
-cdk-virtual-scroll-viewport{
+cdk-virtual-scroll-viewport {
   background: #323c48;
 }
 
@@ -2018,4 +2018,9 @@ body .ui-fileupload .ui-fileupload-content {
 
 p-dialog {
   text-align: left;
+}
+
+body .ui-inputtext {
+  color: #ffffff;
+  background: #1d232a;
 }
