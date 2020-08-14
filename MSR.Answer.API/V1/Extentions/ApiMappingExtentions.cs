@@ -394,6 +394,11 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<GetWorkOrder>(request);
         }
 
+        /// <summary>
+        /// Creates a collection of invoice commands for each InvoiceItem in the command.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static CreateIndividualInvoices ToCreateIndividualInvoicesCommand(this CreateInvoiceRequest request)
         {
             var createIndividualInvoices = new CreateIndividualInvoices()
@@ -405,14 +410,15 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 var inv = new CreateOneInvoice()
                 {
-                    CustomerId = request.CustomerId.GetValueOrDefault(0),
+                    CustomerId = request.CustomerId.GetValueOrDefault(),
                     Description = request.Description,
                     InvoiceClass = request.InvoiceClass,
                     InvoiceDate = request.InvoiceDate,
                     TaxPercentage = request.TaxPercentage,
                     InvoiceItems = new List<CreateUpdateInvoiceItem>() {
                             new CreateUpdateInvoiceItem() {
-                                Id = item.Id.GetValueOrDefault(0)
+                                PurchaseOrderId = item.PurchaseOrderId.GetValueOrDefault(),
+                                WorkOrderId  = item.WorkOrderId.GetValueOrDefault()
                             }
                         }
                 };
@@ -425,18 +431,7 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static CreateOneInvoice ToCreateOneInvoiceCommand(this CreateInvoiceRequest request)
         {
-            return new CreateOneInvoice()
-            {
-                CustomerId = request.CustomerId.GetValueOrDefault(0),
-                Description = request.Description,
-                InvoiceClass = request.InvoiceClass,
-                InvoiceDate = request.InvoiceDate,
-                TaxPercentage = request.TaxPercentage,
-                InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
-                {
-                    Id = x.Id.GetValueOrDefault(0)
-                }).ToList()
-            };
+            return AutoMapperHelper.Mapper.Map<CreateOneInvoice>(request);
         }
 
         public static GetInvoices ToGetInvoicesCommand(this GetInvoicesRequest request)
