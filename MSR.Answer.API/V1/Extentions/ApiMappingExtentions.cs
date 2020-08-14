@@ -394,9 +394,39 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<GetWorkOrder>(request);
         }
 
+        /// <summary>
+        /// Creates a collection of invoice commands for each InvoiceItem in the command.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static CreateIndividualInvoices ToCreateIndividualInvoicesCommand(this CreateInvoiceRequest request)
         {
-            return AutoMapperHelper.Mapper.Map<CreateIndividualInvoices>(request);
+            var createIndividualInvoices = new CreateIndividualInvoices()
+            {
+                Invoices = new List<CreateOneInvoice>()
+            };
+
+            foreach (var item in request.InvoiceItems ?? new List<CreateInvoiceItemRequest>())
+            {
+                var inv = new CreateOneInvoice()
+                {
+                    CustomerId = request.CustomerId.GetValueOrDefault(),
+                    Description = request.Description,
+                    InvoiceClass = request.InvoiceClass,
+                    InvoiceDate = request.InvoiceDate,
+                    TaxPercentage = request.TaxPercentage,
+                    InvoiceItems = new List<CreateUpdateInvoiceItem>() {
+                            new CreateUpdateInvoiceItem() {
+                                PurchaseOrderId = item.PurchaseOrderId.GetValueOrDefault(),
+                                WorkOrderId  = item.WorkOrderId.GetValueOrDefault()
+                            }
+                        }
+                };
+
+                createIndividualInvoices.Invoices.Add(inv);
+            }
+
+            return createIndividualInvoices;
         }
 
         public static CreateOneInvoice ToCreateOneInvoiceCommand(this CreateInvoiceRequest request)

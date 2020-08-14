@@ -38,6 +38,22 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Unused by required by the model
             invoice.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
 
+            invoice = await SaveInvoiceAsync(invoice, command.InvoiceItems);
+
+            // Retreive saved Invoice
+            var retInvoice = _mapper.Map<InvoiceView>(invoice);
+
+            return retInvoice;
+        }
+
+        /// <summary>
+        /// Saves the <paramref name="invoice"/> into the Invoice repository. InvoiceItem is processed based on <paramref name="invoiceItems"/> command by creating or updating it in the repository and assigning the WorkOrder and PurscheOrder from the command
+        /// </summary>
+        /// <param name="invoice"></param>
+        /// <param name="invoiceItems"></param>
+        /// <returns></returns>
+        private async Task<Invoice> SaveInvoiceAsync(Invoice invoice, IEnumerable<CreateUpdateInvoiceItem> invoiceItems)
+        {
             // Load InvoiceItems properties
             invoice.InvoiceItems = invoice.InvoiceItems.Select(curItem =>
                  _unitOfWork.InvoiceItems.Query()
@@ -53,7 +69,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 .Select(ii => ii ?? new InvoiceItem())
                 .ToList();
 
-            command.InvoiceItems.ToList().ForEach(cii =>
+            invoiceItems.ToList().ForEach(cii =>
             {
                 invoice.InvoiceItems.ToList().ForEach(iii =>
                 {
@@ -73,7 +89,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Save the new Invoice
             await _unitOfWork.Invoices.AddAndSaveChangesAsync(invoice);
 
-            invoice = _unitOfWork.Invoices.Query()
+            var invoiceDb = _unitOfWork.Invoices.Query()
                                          .Include(i => i.Customer)
                                          .Include(i => i.InvoiceItems)
                                          .ThenInclude(i => i.WorkOrder)
@@ -84,21 +100,18 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                                          .SingleOrDefault(i => i.Id == invoice.Id);
 
             // Getting parent InvoiceClass from Location
-            var locationInvoiceClass = invoice.InvoiceItems.FirstOrDefault().WorkOrder?.Purchase?.Location?.InvoiceClass;
+            var locationInvoiceClass = invoiceDb.InvoiceItems.FirstOrDefault().WorkOrder?.Purchase?.Location?.InvoiceClass;
 
             // Update InvoiceNumber using the new Invoice ID
-            invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}-{invoice.Id}";
+            invoiceDb.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}-{invoiceDb.Id}";
 
             // Calculate Subtotal and Total based on WorkOrders
-            CalculateTotals(invoice);
+            CalculateTotals(invoiceDb);
 
             // Update Invoice with the new InvoiceNumber
-            await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoice);
+            await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoiceDb);
 
-            // Retreive saved Invoice
-            var retInvoice = _mapper.Map<InvoiceView>(invoice);
-
-            return retInvoice;
+            return invoiceDb;
         }
 
         private void CalculateTotals(Invoice invoice)
@@ -109,72 +122,22 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<IEnumerable<InvoiceView>> CreateInvoicesAsync(CreateIndividualInvoices command)
         {
-            var invoices = new List<Invoice>();
             var retInvoices = new List<InvoiceView>();
 
             var statusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
 
-            command.Invoices?.ToList().ForEach(async invoiceCommand =>
+            // Enumerate all invoices command, create a separate Invoice entry per command
+            foreach (var invoiceCommand in command.Invoices)
             {
                 var invoice = _mapper.Map<Invoice>(invoiceCommand);
 
-            // Unused by required by the model
-            invoice.StatusId = statusId;
+                invoice.StatusId = statusId;
 
-                if (invoiceCommand.InvoiceItems?.Count == 0)
-                {
-                    throw new DomainException($"{nameof(Domain.Models.InvoiceModel)} must contain at least one WorkOrder");
-                }
+                var invoiceDb = await SaveInvoiceAsync(invoice, invoiceCommand.InvoiceItems);
 
-            // Verifying WorkOrder and PurchaseOrder IDs
-            invoice.InvoiceItems.ToList().ForEach(item =>
-        {
-                    item.WorkOrder = _unitOfWork.WorkOrders.Query().FirstOrDefault(x => x.Id == item.WorkOrderId);
+                var retInvoice = _mapper.Map<InvoiceView>(invoiceDb);
 
-                    if (item.WorkOrder is null)
-                    {
-                        throw new DomainException($"WorkOrder not found", DomainError.NotFound);
-                    }
-
-                    item.PurchaseOrder = _unitOfWork.PurchaseOrders.Query().FirstOrDefault(x => x.Id == item.PurchaseOrderId);
-
-                    if (item.PurchaseOrder is null)
-                    {
-                        throw new DomainException($"PurchaseOrder not found", DomainError.NotFound);
-                    }
-                });
-
-            // Getting parent InvoiceClass from Location
-            var locationInvoiceClass = invoice.InvoiceItems.First().WorkOrder.Purchase?.Location?.InvoiceClass;
-
-            // Create temporary InvoiceNumber based on Invoice Id
-            invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}";
-
-            // Save the new Invoice
-            await _unitOfWork.Invoices.AddAsync(invoice);
-
-                invoices.Add(invoice);
-            });
-
-            if (invoices.Count > 0)
-            {
-                await _unitOfWork.SaveChangesAsync();
-
-                invoices.ForEach(invoice =>
-                {
-                // Retreive saved Invoice
-                var retInvoice = _mapper.Map<InvoiceView>(invoice);
-
-                    invoice.InvoiceNumber = $"{retInvoice.InvoiceNumber}-{retInvoice.Id}";
-                    retInvoice.InvoiceNumber = invoice.InvoiceNumber;
-
-                // Update Invoice with InvoiceNumber
-                _unitOfWork.Invoices.Update(invoice);
-
-                    retInvoices.Add(retInvoice);
-                });
-
-                await _unitOfWork.SaveChangesAsync();
+                retInvoices.Add(retInvoice);
             }
 
             return retInvoices;

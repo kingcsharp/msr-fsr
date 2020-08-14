@@ -56,7 +56,6 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetInvoicesRequest, GetInvoices>();
             CreateMap<DownloadInvoicesRequest, DownloadAsIIFInvoices>();
             CreateMap<CreateInvoiceRequest, CreateOneInvoice>();
-            CreateMap<CreateInvoiceRequest, CreateIndividualInvoices>();
             CreateMap<CreateInvoiceItemRequest, CreateUpdateInvoiceItem>();
         }
     }
