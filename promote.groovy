@@ -19,7 +19,7 @@ pipeline {
                     sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition dev-answer-api --profile msrfsr --region us-west-2 > images.json"
                     sh "cat images.json"
                     def props = readJSON file: 'images.json'
-                    echo props.taskDefinition.revision
+                    println(props['taskDefinition'].revision)
                 }
             }
         }
