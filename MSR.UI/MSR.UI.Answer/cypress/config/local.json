@@ -5,6 +5,6 @@
     "admin-password": "cmhworks.2020",
     "admin-email": "admin-msrfsr@cmhworks.com",
     "environment": "local",
-    "maxTimeout": "10000"
+    "maxTimeout": "20000"
   }
 }

@@ -62,7 +62,7 @@ export class LocationCreateComponent implements OnInit {
     }
 
     let updateLocationRequest = new UpdateLocationRequest();
-    updateLocationRequest.locationId = this.locationToEdit.id;
+    updateLocationRequest.locationId = this.locationToEditId;
     updateLocationRequest.address1 = this.locationToEdit.address1;
     updateLocationRequest.address2 = this.locationToEdit.address2;
     updateLocationRequest.city = this.locationToEdit.city;
@@ -103,7 +103,7 @@ export class LocationCreateComponent implements OnInit {
     this.globals.showLoader(true);
     this.locationService.locationPost(env.apiVersion, createLocationRequest).subscribe(responseHandler((response) => {
 
-      this.locationToEdit.id = response.object.id;
+      this.locationToEditId = response.object.id;
 
     }));
 

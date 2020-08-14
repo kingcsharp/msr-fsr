@@ -108,9 +108,9 @@
     </div>
     <div class="row" *ngIf="locationToEditId !== null">
         <button type="button" class="btn btn-primary m-2" (click)="saveLocation()"
-            *ngIf="locationToEdit.id ===  undefined" data-cy="save-button">Save</button>
+            *ngIf="locationToEditId ===  0" data-cy="save-button">Save</button>
         <button type="button" class="btn btn-primary m-2" (click)="updateLocation()"
-            *ngIf="locationToEdit.id !==  undefined" data-cy="update-button">Update</button>
+            *ngIf="locationToEditId !==  0" data-cy="update-button">Update</button>
         <button type="button" class="btn btn-warning m-2" [routerLink]="['../locations']"  data-cy="cancel-button">Cancel</button>
     </div>
 </div>
