@@ -22,19 +22,14 @@ pipeline {
             steps {
                 script {
                     sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition dev-answer-api --profile msrfsr --region us-west-2 > images.json"
-                    sh "cat images.json"
                     def props = readJSON file: 'images.json'
-                    println(props['taskDefinition']['containerDefinitions'][0].image)
                     def apiImage = props['taskDefinition']['containerDefinitions'][0].image
-                    //def rpImage = props['taskDefinition']['containerDefinitions'][1].image
                     String[] api
                     api = apiImage.split(':')
-                    println(api[1])
                     sh "sudo sh update_image.sh dev ${api[1]} ${UI_COMPOSE}"
                     sh "cat ${UI_COMPOSE}"
                     sh "sudo sh update_image_api.sh dev ${api[1]} ${API_COMPOSE}"
                     sh "cat ${API_COMPOSE}"
-
                 }
             }
         }
