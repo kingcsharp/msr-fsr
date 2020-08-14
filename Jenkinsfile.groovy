@@ -14,8 +14,8 @@ pipeline {
         DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f"
         STAGE_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
         STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
-        DEV_PROJECT_API='answer-api'
-        DEV_PROJECT_UI='answer-ui'
+        DEV_PROJECT_API='dev-answer-api'
+        DEV_PROJECT_UI='dev-answer-ui'
         STAGE_PROJECT_API='stage-answer-api'
         STAGE_PROJECT_UI='stage-answer-ui'
         API_COMPOSE='docker-compose-api.yml'
