@@ -6866,7 +6866,8 @@ export interface ICreateInvoiceRequest {
 }
 
 export class CreateInvoiceItemRequest implements ICreateInvoiceItemRequest {
-    id!: number;
+    workOrderId!: number;
+    purchaseOrderId!: number;
 
     constructor(data?: ICreateInvoiceItemRequest) {
         if (data) {
@@ -6879,7 +6880,8 @@ export class CreateInvoiceItemRequest implements ICreateInvoiceItemRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
+            this.workOrderId = _data["workOrderId"];
+            this.purchaseOrderId = _data["purchaseOrderId"];
         }
     }
 
@@ -6892,13 +6894,15 @@ export class CreateInvoiceItemRequest implements ICreateInvoiceItemRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
+        data["workOrderId"] = this.workOrderId;
+        data["purchaseOrderId"] = this.purchaseOrderId;
         return data; 
     }
 }
 
 export interface ICreateInvoiceItemRequest {
-    id: number;
+    workOrderId: number;
+    purchaseOrderId: number;
 }
 
 export class UpdateInvoiceRequest implements IUpdateInvoiceRequest {

@@ -21,7 +21,6 @@ export class GridInputFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.filterTooltipLabel = this.gridSettings.find(x => x.id === this.searchField).label;
-    var a = this.dt;
     this.show = true;
   }
 }

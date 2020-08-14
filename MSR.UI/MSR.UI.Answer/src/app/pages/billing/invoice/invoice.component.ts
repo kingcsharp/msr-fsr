@@ -96,7 +96,7 @@ export class InvoiceComponent implements OnInit {
     { label: 'No', value: false }];
 
     // this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Invoices);
-    var a = {
+    const a = {
       canRead: true,
       canActivate: true,
       canCreate: true,
@@ -157,13 +157,13 @@ export class InvoiceComponent implements OnInit {
   downloadFilteredInvoices() {
     this.globals.showLoader(true);
     if (localStorage[this.gridStorageId] !== undefined) {
-      var filters = JSON.parse(localStorage[this.gridStorageId]).filters;
-      this.invoiceService.download(this.getFilterVal(filters, "id"), this.getFilterVal(filters, "customerName"),
-        this.getFilterVal(filters, "description"),
-        this.getFilterVal(filters, "invoiceNumber"), this.getFilterVal(filters, "invoiceDate"),
-        this.getFilterVal(filters, "createdOn"), this.getFilterVal(filters, "createdByName"),
-        this.getFilterVal(filters, "lastUpdatedOn"), this.getFilterVal(filters, "lastUpdatedByName"),
-        this.getFilterVal(filters, "total"), this.getFilterVal(filters, "statusId"), env.apiVersion)
+      let filters = JSON.parse(localStorage[this.gridStorageId]).filters;
+      this.invoiceService.download(this.getFilterVal(filters, 'id'), this.getFilterVal(filters, 'customerName'),
+        this.getFilterVal(filters, 'description'),
+        this.getFilterVal(filters, 'invoiceNumber'), this.getFilterVal(filters, 'invoiceDate'),
+        this.getFilterVal(filters, 'createdOn'), this.getFilterVal(filters, 'createdByName'),
+        this.getFilterVal(filters, 'lastUpdatedOn'), this.getFilterVal(filters, 'lastUpdatedByName'),
+        this.getFilterVal(filters, 'total'), this.getFilterVal(filters, 'statusId'), env.apiVersion)
         .pipe(take(1))
         .subscribe(responseHandler(response => {
           this.downloadItem(response.data);
@@ -174,13 +174,12 @@ export class InvoiceComponent implements OnInit {
   }
 
   downloadItem(data) {
-    // window.open(window.URL.createObjectURL(data));
-    var a = document.createElement("a");
+    let a = document.createElement('a');
     document.body.appendChild(a);
-    a.style.display = "none";
-    var url = window.URL.createObjectURL(data);
+    a.style.display = 'none';
+    const url = window.URL.createObjectURL(data);
     a.href = url;
-    a.download = `invoices_${moment().format("MM_DD_YYYY")}.zip`;
+    a.download = `invoices_${moment().format('MM_DD_YYYY')}.zip`;
     a.click();
     window.URL.revokeObjectURL(url);
     a.remove();
@@ -203,14 +202,14 @@ export class InvoiceComponent implements OnInit {
   selectWorkOrder(ev, workorder: WorkOrderModel) {
     if (ev.checked) {
       this.showInvoiceItems = false;
-      var addInvoiceItem = new InvoiceItemView({
+      let addInvoiceItem = new InvoiceItemView({
         purchaseOrderId: workorder.purchase.purchaseOrderId,
         purchaseNumber: workorder.purchase.customerPurchaseNumber,
         workOrderId: workorder.id,
       });
 
-      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, "purchaseOrderId");
-      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, "purchaseOrderId");
+      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'purchaseOrderId');
+      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'purchaseOrderId');
 
       setTimeout(() => {
         this.showInvoiceItems = true;
@@ -242,19 +241,19 @@ export class InvoiceComponent implements OnInit {
       this.globals.showLoader(true);
       let basicReqData: any = {
         description: this.currentInvoice.description,
-        invoiceDate: moment(this.currentInvoice.dueDate, "MM/DD/YYYY").toDate(),
+        invoiceDate: moment(this.currentInvoice.dueDate, 'MM/DD/YYYY').toDate(),
         taxPercentage: this.currentInvoice.taxPercentage
-      }
+      };
 
       if (this.currentInvoice.id !== undefined) {
         basicReqData.id = this.currentInvoice.id;
         basicReqData.invoiceItems = this.currentInvoice.invoiceItems.map((item) => {
-          return new UpdateInvoiceItemRequest(item)
+          return new UpdateInvoiceItemRequest(item);
         });
         method = this.invoiceService.invoicePatch(env.apiVersion, new UpdateInvoiceRequest(basicReqData));
       } else {
         basicReqData.invoiceItems = this.currentInvoice.invoiceItems.map((item) => {
-          return new CreateInvoiceItemRequest(item)
+          return new CreateInvoiceItemRequest(item);
         });
         basicReqData.invoiceClass = this.currentInvoice.location.invoiceClass;
         basicReqData.customerId = this.currentInvoice.customerId;

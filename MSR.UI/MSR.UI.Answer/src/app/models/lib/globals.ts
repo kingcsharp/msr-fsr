@@ -85,7 +85,7 @@ export class Globals {
     }
 
     getEnumPrivileges(controllerEnum): AllowedActions {
-        var allowedActions = new AllowedActions({
+        const allowedActions = new AllowedActions({
             canCreate: this.hasPrivilege(controllerEnum, EnumPrivilege.CanCreate),
             canActivate: this.hasPrivilege(controllerEnum, EnumPrivilege.CanActivate),
             canDelete: this.hasPrivilege(controllerEnum, EnumPrivilege.CanDelete),

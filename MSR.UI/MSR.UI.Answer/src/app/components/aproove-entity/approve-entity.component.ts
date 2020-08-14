@@ -56,14 +56,14 @@ export class ApproveEntityComponent implements OnInit {
     if (this.approve) {
       this.workflowPendingApprovalService.workflowPendingApprovalPost(this.activityType, this.entityId, this.comments, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          this.status = "Approved";
+          this.status = 'Approved';
           this.statusChange.emit(this.status);
           ctrl.clseDialog();
         }));
     } else {
       this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.activityType, this.entityId, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          this.status = "Cancelled";
+          this.status = 'Cancelled';
           this.statusChange.emit(this.status);
           ctrl.clseDialog();
         }));
