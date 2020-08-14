@@ -20,6 +20,12 @@ pipeline {
                     sh "cat images.json"
                     def props = readJSON file: 'images.json'
                     println(props['taskDefinition']['containerDefinitions'][0].image)
+                    def apiImage = props['taskDefinition']['containerDefinitions'][0].image
+                    //def rpImage = props['taskDefinition']['containerDefinitions'][1].image
+                    String[] api
+                    api = apiImage.split(':')
+                    println(api[1])
+
                 }
             }
         }
