@@ -1,5 +1,5 @@
-﻿namespace MSR.Infrastructure.Resources.Services.Location
-{
+﻿namespace MSR.Domain.Models
+{ 
     public class LocationImportItem
     {
         public int? Id { get; set; }

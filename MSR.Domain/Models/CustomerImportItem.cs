@@ -1,5 +1,5 @@
-﻿namespace MSR.Infrastructure.Resources.Services.Customers
-{
+﻿namespace MSR.Domain.Models
+{ 
     public class CustomerImportItem
     {
         public int? Id { get; set; }
