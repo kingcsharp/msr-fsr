@@ -1,5 +1,5 @@
 describe('Location Functionality', () => {
-    it('TC113_AddALocationWithAParent', () => {
+    it('TC113_AddALocationWithOutAParent', () => {
         
         cy.server()
 
@@ -102,7 +102,8 @@ describe('Location Functionality', () => {
         cy.get('[data-cy=internaladdress-input]').type("Loreum Ipsum").should('have.value', "Loreum Ipsum")
 
         cy.get('[data-cy=save-button]').click()
-        //cy.logout()
+        
+        cy.logout()
 
         cy.checkWebConsoleTracking();
 

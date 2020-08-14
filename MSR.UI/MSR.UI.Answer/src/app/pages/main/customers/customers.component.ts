@@ -26,6 +26,7 @@ export class CustomersComponent implements OnInit {
   customerToDelete: Customer;
   showConfirmDeleteDialog: boolean = false;
   approvalTables = EnumApprovalTables;
+  menuItems = EnumMenuItem;
 
 
   constructor(private customerService: CustomerService, private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
@@ -92,9 +93,8 @@ export class CustomersComponent implements OnInit {
     this.globals.showLoader(true);
     this.customerService.customerDelete(this.customerToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      const index: number = this.data.map(function (e) { return e.id; }).indexOf(this.customerToDelete.id);
-      this.data.splice(index, 1);
-      this.globals.showLoader(true);
+      this.data.length = 0;
+      this.getCustomers();
 
     }));
 

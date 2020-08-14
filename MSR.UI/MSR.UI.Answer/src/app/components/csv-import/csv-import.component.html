@@ -23,7 +23,7 @@
                         <label class="col-md-2 col-form-label text-md-right">
                             Select Csv File
                         </label>
-                        <cmh-file-uploader class="col-md-10" *ngIf="uploadedFiles !==undefined" [menuItem]="menuItem"
+                        <cmh-file-uploader class="col-md-10" [menuItem]="menuItem"
                             [(files)]="uploadedFiles" accept=".csv" chooseLabel="Select CSV File">
                         </cmh-file-uploader>
                     </div>

@@ -30,7 +30,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-                            data-cy="usertable-header">
+                            data-cy="certifications-header">
                             {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
                         </th>
                     </tr>
