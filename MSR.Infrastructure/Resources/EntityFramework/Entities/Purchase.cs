@@ -19,6 +19,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(50)]
         public string CustomerPurchaseNumber { get; set; }
 
+        public int CustomerLineNumber { get; set; }
+
         public int LocationId { get; set; }
 
         public int Qty { get; set; }
