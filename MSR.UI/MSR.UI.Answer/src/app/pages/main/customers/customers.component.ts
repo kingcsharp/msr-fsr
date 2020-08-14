@@ -26,6 +26,7 @@ export class CustomersComponent implements OnInit {
   customerToDelete: Customer;
   showConfirmDeleteDialog: boolean = false;
   approvalTables = EnumApprovalTables;
+  menuItems = EnumMenuItem;
 
 
   constructor(private customerService: CustomerService, private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }

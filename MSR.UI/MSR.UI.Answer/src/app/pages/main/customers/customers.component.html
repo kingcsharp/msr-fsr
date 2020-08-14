@@ -22,6 +22,8 @@
               class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
               + Add
             </button>
+            <csv-import [showButton]="canAddCustomer" [menuItem]="menuItems.CustomersDepartments" title="Import Customers"
+              (onUpload)="uploadParts($event)" fileName="CustomersSample.csv"></csv-import>
             <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
               [gridVersion]="gridVersion" data-cy="usergrid-options" [hidden]="false">
             </grid-options>
