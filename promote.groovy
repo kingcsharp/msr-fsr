@@ -16,7 +16,7 @@ pipeline {
             agent { label 'master' }
             steps {
                 script {
-                    sh "aws ecs describe-task-definition --task-definition dev-answer-api > images.json --profile msrfsr"
+                    sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition dev-answer-api > images.json --profile msrfsr"
                     sh "cat images.json"
                 }
             }
