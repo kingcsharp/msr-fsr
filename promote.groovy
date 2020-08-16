@@ -24,7 +24,8 @@ pipeline {
         PROD_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-prod/a05ebf3f959d039b"
     }
     parameters {
-        string(name: 'DEPLOY_ENV', defaultValue: 'STAGE', description: 'The target environment',)
+        //string(name: 'DEPLOY_ENV', defaultValue: 'STAGE', description: 'The target environment',)
+        choice(name: 'DEPLOY_ENV', choices: ['STAGE', 'PROD'], description: 'Choose an environment')
     }
     stages {
         stage("Get images") {
