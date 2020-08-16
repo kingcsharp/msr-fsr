@@ -17,11 +17,9 @@ pipeline {
         STAGE_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
         STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
     }
-    properties([
-            parameters([
-                    string(name: 'DEPLOY_ENV', defaultValue: 'STAGE', description: 'The target environment', )
-            ])
-    ])
+    parameters {
+        string(name: 'DEPLOY_ENV', defaultValue: 'STAGE', description: 'The target environment',)
+    }
     stages {
         stage("Get images") {
             steps {
