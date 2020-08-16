@@ -12,10 +12,16 @@ pipeline {
         PROFILE='--profile msrfsr'
         API_COMPOSE='docker-compose-api.yml'
         UI_COMPOSE='docker-compose-ui.yml'
+        QA_PROJECT_API='qa-answer-api'
+        QA_PROJECT_UI='qa-answer-ui'
         STAGE_PROJECT_API='stage-answer-api'
         STAGE_PROJECT_UI='stage-answer-ui'
         STAGE_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
         STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
+        PROD_PROJECT_API='prod-answer-api'
+        PROD_PROJECT_UI='prod-answer-ui'
+        PROD_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-prod/0d264f923b3ca5c5"
+        PROD_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-prod/a05ebf3f959d039b"
     }
     parameters {
         string(name: 'DEPLOY_ENV', defaultValue: 'STAGE', description: 'The target environment',)
@@ -25,15 +31,29 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to ${DEPLOY_ENV}"
-                    sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition dev-answer-api --profile msrfsr --region us-west-2 > images.json"
-                    def props = readJSON file: 'images.json'
-                    def apiImage = props['taskDefinition']['containerDefinitions'][0].image
-                    String[] api
-                    api = apiImage.split(':')
-                    sh "sudo sh update_image.sh dev ${api[1]} ${UI_COMPOSE}"
-                    sh "cat ${UI_COMPOSE}"
-                    sh "sudo sh update_image_api.sh dev ${api[1]} ${API_COMPOSE}"
-                    sh "cat ${API_COMPOSE}"
+                    if(DEPLOY_ENV == "STAGE")  {
+                        sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition ${QA_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
+                        def props = readJSON file: 'images.json'
+                        def apiImage = props['taskDefinition']['containerDefinitions'][0].image
+                        String[] api
+                        api = apiImage.split(':')
+                        sh "sudo sh update_image.sh dev ${api[1]} ${UI_COMPOSE}"
+                        sh "cat ${UI_COMPOSE}"
+                        sh "sudo sh update_image_api.sh dev ${api[1]} ${API_COMPOSE}"
+                        sh "cat ${API_COMPOSE}"
+                    } else if(DEPLOY_ENV == "PRODUCTION") {
+                        sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition ${STAGE_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
+                        def props = readJSON file: 'images.json'
+                        def apiImage = props['taskDefinition']['containerDefinitions'][0].image
+                        String[] api
+                        api = apiImage.split(':')
+                        sh "sudo sh update_image.sh dev ${api[1]} ${UI_COMPOSE}"
+                        sh "cat ${UI_COMPOSE}"
+                        sh "sudo sh update_image_api.sh dev ${api[1]} ${API_COMPOSE}"
+                        sh "cat ${API_COMPOSE}"
+                    } else {
+                        echo "Only promoting stage and production!"
+                    }
                 }
             }
         }
@@ -42,14 +62,26 @@ pipeline {
                 stage("Promoting UI to Stage") {
                     steps {
                         script {
-                            deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                            if(DEPLOY_ENV == "STAGE") {
+                                deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                            } else if (DEPLOY_ENV == "PRODUCTION") {
+                                deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
+                            }else {
+                                echo "Only promoting stage and production!"
+                            }
                         }
                     }
                 }
                 stage("Promoting API to Stage") {
                     steps {
                         script {
-                            deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                            if(DEPLOY_ENV == "STAGE") {
+                                deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                            } else if (DEPLOY_ENV == "PRODUCTION") {
+                                deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
+                            } else {
+                                echo "Only promoting stage and production!"
+                            }
                         }
                     }
                 }
