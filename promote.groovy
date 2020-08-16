@@ -12,8 +12,8 @@ pipeline {
         PROFILE='--profile msrfsr'
         API_COMPOSE='docker-compose-api.yml'
         UI_COMPOSE='docker-compose-ui.yml'
-        QA_PROJECT_API='qa-answer-api'
-        QA_PROJECT_UI='qa-answer-ui'
+        QA_PROJECT_API='dev-answer-api'
+        QA_PROJECT_UI='dev-answer-ui'
         STAGE_PROJECT_API='stage-answer-api'
         STAGE_PROJECT_UI='stage-answer-ui'
         STAGE_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
