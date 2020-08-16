@@ -25,7 +25,7 @@ pipeline {
     }
     parameters {
         //string(name: 'DEPLOY_ENV', defaultValue: 'STAGE', description: 'The target environment',)
-        choice(name: 'DEPLOY_ENV', choices: ['STAGE', 'PROD'], description: 'Choose an environment')
+        choice(name: 'DEPLOY_ENV', choices: ['STAGE', 'PRODUCTION'], description: 'Choose an environment')
     }
     stages {
         stage("Get images") {
