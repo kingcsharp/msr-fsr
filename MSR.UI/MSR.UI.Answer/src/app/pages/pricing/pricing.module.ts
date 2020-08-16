@@ -22,17 +22,20 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { QuoteCreateComponent } from './quote-create/quote-create.component';
 import { ProductDefinitionComponent } from './product-definition/product-definition.component';
+import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.component';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
   { path: 'products', component:QuotesComponent, pathMatch: 'full' },
   { path: 'quote-create', component: QuoteCreateComponent, pathMatch: 'full'},
   { path: 'product-edit', component: ProductDefinitionComponent, pathMatch: 'full'},
-  { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'}
+  { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'},
+  { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'}
 ];
 
 @NgModule({
-  declarations: [QuotesComponent, QuoteCreateComponent, ProductDefinitionComponent],
+  declarations: [QuotesComponent, QuoteCreateComponent, ProductDefinitionComponent, PurchaseOrdersComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -54,7 +57,8 @@ export const routes = [
     LiveTileModule,
     WidgetModule,
     MapaelLayersMapModule,
-    NewWidgetModule
+    NewWidgetModule,
+    ConfirmDialogModule
   ],
   providers: []
 })
