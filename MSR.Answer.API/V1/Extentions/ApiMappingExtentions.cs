@@ -377,6 +377,22 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<UpdateProcedureType>(request);
         }
 
+        public static CreateWorkOrder ToCreateWorkOrderCommand(this CreateWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateWorkOrder>(request);
+        }
+        public static UpdateWorkOrder ToUpdateWorkOrderCommand(this UpdateWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateWorkOrder>(request);
+        }
+        public static DeleteWorkOrder ToDeleteWorkOrderCommand(this DeleteWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<DeleteWorkOrder>(request);
+        }
+        public static GetWorkOrder ToGetWorkOrderCommand(this GetWorkOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetWorkOrder>(request);
+        }
 
         public static CreateIndividualInvoices ToCreateIndividualInvoicesCommand(this CreateInvoiceRequest request)
         {
