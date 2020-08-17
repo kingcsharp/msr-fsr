@@ -51,6 +51,7 @@ namespace MSR.Answer.Processor.Extentions
             services.AddApplicationServices();
             services.AddDomainServices(configuration);
             services.AddInfrastructureServices(configuration);
+            services.AddJWTServices(configuration);
             services.AddSingleton(mapperConfiguration.CreateMapper());
 
             var assemblies = new List<Assembly>();
