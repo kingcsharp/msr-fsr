@@ -1,5 +1,4 @@
 ﻿using MSR.Domain.Commanding;
-using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
 

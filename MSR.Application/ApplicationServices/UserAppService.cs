@@ -3,6 +3,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetLoggedInUserData>,
         ICommandHandler<CreateUserRole>,
         ICommandHandler<UpdateUserRole>,
-        ICommandHandler<DeleteUserRole>
+        ICommandHandler<DeleteUserRole>,
+        ICommandHandler<GetTrainingCertification>
     {
         private readonly IUserService _userService;
 
@@ -56,19 +58,29 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<User>(ret);
         }
 
-        public Task<ICommandResponse> HandleAsync(UpdateUserRole command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(UpdateUserRole command, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            await _userService.UpdateUserRoleAsync(command);
+            return CommandResponse.SuccessCommand;
+
         }
 
-        public Task<ICommandResponse> HandleAsync(CreateUserRole command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(CreateUserRole command, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            await _userService.CreateUserRoleAsync(command);
+            return CommandResponse.SuccessCommand;
         }
 
-        public Task<ICommandResponse> HandleAsync(DeleteUserRole command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(DeleteUserRole command, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            await _userService.DeleteUserRoleAsync(command);
+            return CommandResponse.SuccessCommand;
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetTrainingCertification command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _userService.GetTrainingCertificationAsync(command);
+            return new CommandResponse<IEnumerable<TrainingCertificationView>>(ret);
         }
     }
 }

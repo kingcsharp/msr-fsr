@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  WorkflowService, WorkflowModel,
+  WorkflowService, WorkflowModel, PostPendingApprovalRequest,
   WorkflowGroupService, WorkflowStageService, WorkflowPendingApprovalService
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
@@ -173,7 +173,13 @@ export class PendingApprovalsComponent implements OnInit {
     this.globals.showLoader(true);
     const ctrl = this;
     if (this.currAction.action === this.approveAction) {
-      this.workflowPendingApprovalService.workflowPendingApprovalPost(this.currAction.activityType, this.currAction.id, this.currAction.comments, env.apiVersion)
+
+      let postPendingApprovalRequest = new PostPendingApprovalRequest();
+      postPendingApprovalRequest.comments = this.currAction.comments;
+      postPendingApprovalRequest.id = this.currAction.id;
+      postPendingApprovalRequest.table = this.currAction.activityType;
+
+      this.workflowPendingApprovalService.workflowPendingApprovalPost(env.apiVersion, postPendingApprovalRequest)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.currAction.approval.status = resp.object.status;
           this.addToGridStatusDropdown(resp.object);

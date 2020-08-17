@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.VisualBasic.CompilerServices;
 using MSR.Domain.Commands;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -23,26 +22,31 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             #region Customer 
-            CreateMap<Customer, Domain.Models.Customer>().ReverseMap()
+            CreateMap<Customer, Domain.Models.Customer>()
                     .ForMember(dest => dest.Location, opts => opts.AllowNull())
                     .ForMember(dest => dest.PrimaryContactUser, opts => opts.AllowNull())
                     .ForMember(dest => dest.SecondaryContactUser, opts => opts.AllowNull())
                     .AfterMap((src, dest) => dest.Location = src.Location == null ? null : dest.Location)
                     .AfterMap((src, dest) => dest.PrimaryContactUser = src.PrimaryContactUser == null ? null : dest.PrimaryContactUser)
                     .AfterMap((src, dest) => dest.SecondaryContactUser = src.SecondaryContactUser == null ? null : dest.SecondaryContactUser);
-            CreateMap<Domain.Models.Customer, Customer>().ReverseMap();
+            CreateMap<Domain.Models.Customer, Customer>();
             CreateMap<CustomerApproval, Domain.Models.Customer>()
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name));
             CreateMap<CreateCustomer, Customer>();
             CreateMap<CreateCustomer, CustomerApproval>();
             CreateMap<Customer, CustomerApproval>()
+                .ForMember(dest => dest.SecondarContactUserId, opts => opts.MapFrom(src => src.SecondaryContactUserId))
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<UpdateCustomer, Customer>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateCustomer, CustomerApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.SecondarContactUserId, opts => opts.MapFrom(src => src.SecondaryContactUserId))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Domain.Models.CustomerImportItem, CreateCustomer>();
+            CreateMap<Domain.Models.CustomerImportItem, UpdateCustomer>()
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Id));
 
             #endregion
 
@@ -71,6 +75,9 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateLocation, Location>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Sensor, Domain.Models.SensorModel>().ReverseMap();
+            CreateMap<Domain.Models.LocationImportItem, CreateLocation>();
+            CreateMap<Domain.Models.LocationImportItem, UpdateLocation>();
             #endregion
 
             CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZone>().ReverseMap();
@@ -216,7 +223,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
 
-            CreateMap<UploadFile, Domain.Models.FileModel>();
+            CreateMap<UploadFile, Domain.Models.FileModel>()
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
         }
 
         private int? GetLocationId(Invoice src)

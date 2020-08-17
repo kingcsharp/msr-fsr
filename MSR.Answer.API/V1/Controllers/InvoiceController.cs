@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 using NSwag.Annotations;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Models;
@@ -13,7 +12,6 @@ using MSR.Domain.Views;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 
