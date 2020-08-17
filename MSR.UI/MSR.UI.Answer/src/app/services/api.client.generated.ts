@@ -10136,6 +10136,7 @@ export class PurchaseModel implements IPurchaseModel {
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
+    customerLineNumber?: number;
     locationId?: number;
     qty?: number;
     purchasePrice?: number;
@@ -10156,6 +10157,7 @@ export class PurchaseModel implements IPurchaseModel {
             this.purchaseOrderId = _data["purchaseOrderId"];
             this.purchaseOrderProductId = _data["purchaseOrderProductId"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
+            this.customerLineNumber = _data["customerLineNumber"];
             this.locationId = _data["locationId"];
             this.qty = _data["qty"];
             this.purchasePrice = _data["purchasePrice"];
@@ -10180,6 +10182,7 @@ export class PurchaseModel implements IPurchaseModel {
         data["purchaseOrderId"] = this.purchaseOrderId;
         data["purchaseOrderProductId"] = this.purchaseOrderProductId;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
+        data["customerLineNumber"] = this.customerLineNumber;
         data["locationId"] = this.locationId;
         data["qty"] = this.qty;
         data["purchasePrice"] = this.purchasePrice;
@@ -10197,6 +10200,7 @@ export interface IPurchaseModel {
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
+    customerLineNumber?: number;
     locationId?: number;
     qty?: number;
     purchasePrice?: number;

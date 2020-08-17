@@ -11,11 +11,11 @@
         <ng-template pTemplate="caption">
             <div class="text-right">
                 <button *ngIf="userPrivileges.canRead" (click)="downloadFilteredInvoices()"
-                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="add-button">
+                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="downloadFiltered-button">
                     Download Filtered Invoices
                 </button>
                 <button *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices()"
-                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="add-button">
+                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="downloadAll-button">
                     Download All Invoices
                 </button>
                 <button *ngIf="userPrivileges.canCreate" (click)="showDialog()"
@@ -79,7 +79,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-invoiceModel>
-            <tr class="ui-selectable-row">
+            <tr data-cy="row" class="ui-selectable-row">
                 <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
                     {{invoiceModel.id}}
                 </td>
@@ -93,7 +93,7 @@
                     {{invoiceModel.invoiceNumber }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('amount',gridSettings)">
-                    {{invoiceModel.amount }}
+                    {{invoiceModel.amount | currency }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('dueDate',gridSettings)">
                     {{invoiceModel.dueDate | date :'short' }}
@@ -173,7 +173,7 @@
                                 (onChange)="locationChanged()" optionLabel="name" placeholder="Select Location"
                                 name="locations" [options]="locations" dataKey="id" [virtualScroll]="true" itemSize="30"
                                 appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.location"
-                                [ngModelOptions]="{standalone: true}">
+                                [ngModelOptions]="{standalone: true}" data-cy="invoice-location">
                             </p-dropdown>
                         </div>
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
@@ -184,7 +184,7 @@
                                 (onChange)="customerChanged()" optionLabel="name" placeholder="Select Customer"
                                 name="customers" [options]="customers" dataKey="id" [virtualScroll]="true" itemSize="30"
                                 appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customer"
-                                [ngModelOptions]="{standalone: true}">
+                                [ngModelOptions]="{standalone: true}"  data-cy="invoice-customer">
                             </p-dropdown>
                         </div>
                     </div>
@@ -193,7 +193,7 @@
                             Invoice Date
                         </label>
                         <div class="col-md-4 ">
-                            <div class="display-inline-block isActive">
+                            <div  data-cy="actual-endDate" class="display-inline-block isActive">
                                 <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="currentInvoice.dueDate"
                                     dataType="string" [locale]="calendarEn">
                                 </p-calendar>
@@ -286,7 +286,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-workOrderModel>
                         <tr class="ui-selectable-row">
-                            <td>
+                            <td data-cy="work-order-checkbox">
                                 <p-checkbox [(ngModel)]="workOrderModel.checked" [ngModelOptions]="{standalone: true}"
                                     (onChange)="selectWorkOrder($event,workOrderModel)" binary="true"></p-checkbox>
                             </td>
@@ -311,7 +311,7 @@
                             </td>
                             <td [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)"
                                 class="text-capitalize">
-                                {{workOrderModel.product.totalSalePrice}}
+                                {{workOrderModel.product.totalSalePrice | currency}}
                             </td>
                         </tr>
                     </ng-template>
