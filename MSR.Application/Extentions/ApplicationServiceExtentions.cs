@@ -24,6 +24,7 @@ namespace MSR.Application.Extentions
             services.AddScoped<ProcedureStepMonitorAppService>();
             services.AddScoped<ProcedureStepTemplateAppService>();
             services.AddScoped<ProcedureTypeAppService>();
+            services.AddScoped<WorkOrderAppService>();
             services.AddScoped<RoleAppService>();
             services.AddScoped<UserAppService>();
             services.AddScoped<WorkflowAppService>();

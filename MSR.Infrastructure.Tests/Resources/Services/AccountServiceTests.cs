@@ -40,7 +40,7 @@ namespace MSR.Infrastructure.Tests.Resources.Services
         {
             Func<Task<string>> response = () => _accountService.LoginAsync(SystemLoginFixture.ExceptionCommand);
 
-            response.Should().Throw<ArgumentException>();
+            response.Should().Throw<DomainException>();
         }
     }
 }
