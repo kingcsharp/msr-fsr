@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
@@ -6,11 +6,15 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import {ConfirmationService} from 'primeng/api';
 
+declare let jQuery: any;
+
 @Component({
   selector: 'app-purchase-orders',
   templateUrl: './purchase-orders.component.html',
   styleUrls: ['./purchase-orders.component.scss'],
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: true
 })
 export class PurchaseOrdersComponent implements OnInit {
   privileges = EnumPrivilege;
@@ -24,6 +28,12 @@ export class PurchaseOrdersComponent implements OnInit {
   canDelete: boolean = false;
   canEdit: boolean = false;
   purchaseOrderStatus: any[];
+  display: boolean = false;
+  currentPO: PurchaseOrder;
+  customersData: any[] = [];
+  getCustomersFlag: boolean = false;
+  productsData: any[] = [];
+  getProductsFlag: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -56,6 +66,9 @@ export class PurchaseOrdersComponent implements OnInit {
     this.data = [];
     this.getPurchaseOrders();
     this.purchaseOrderStatus = purchaseOrderStatus;
+    this.getCustomers();
+    this.currentPO = new PurchaseOrder();
+    this.getProducts();
   }
 
   hasPrivilege(privName) {
@@ -68,6 +81,8 @@ export class PurchaseOrdersComponent implements OnInit {
 
   onClickEdit(purchaseOrder: PurchaseOrder) {
     //TODO: Edit function
+    this.currentPO = purchaseOrder;
+    this.display = true;
   }
 
   onClickDelete(purchaseOrder: PurchaseOrder) {
@@ -101,10 +116,60 @@ export class PurchaseOrdersComponent implements OnInit {
 
   closePurchaseOrder(purchaseOrder: PurchaseOrder) {
     //TODO: Close function
+    const index = this.data.findIndex(x => x.id === purchaseOrder.id);
+    this.data[index].status = 'Closed';
   }
 
   onClickAdd() {
     //TODO: Add function
+  }
+
+  clseDialog() {
+    this.display = false;
+    jQuery('.parsleyjs').parsley().reset();
+  }
+
+  getCustomers() {
+    const ctrl = this;
+    if (ctrl.getCustomersFlag) {
+      return ctrl.customersData;
+    }
+    ctrl.customersData = [
+      {
+        label: '[MSR-FSR] APPLIED MATERIALS - [ID:1566]',
+        value: 1566
+      },
+      {
+        label: '[MSR-FSR]ATA - [ID:1574]',
+        value: 1574
+      }
+    ];
+    ctrl.getCustomersFlag = true;
+  }
+
+  getProducts() {
+    const ctrl = this;
+    ctrl.productsData = [
+      {
+        id: 1,
+        name: 'Product 1'
+      },
+      {
+        id: 2,
+        name: 'Product 2'
+      }
+    ]
+  }
+
+  onEditSubmit() {
+    jQuery('.parsleyjs').parsley().validate();
+    const ctrl = this;
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      const index = this.data.findIndex(x => x.id === this.currentPO.id);
+      this.data[index]=this.currentPO;
+      this.currentPO = new PurchaseOrder();
+      ctrl.clseDialog();
+    }
   }
 
 }
@@ -119,6 +184,7 @@ interface IPurchaseOrder {
   uninvoicedBalance?: number;
   balance: number;
   customerName: string;
+  customerId: number,
   openDate: Date;
   closeDate?: Date;
   totalPurchaseLimit: number;
@@ -135,6 +201,7 @@ class PurchaseOrder implements IPurchaseOrder {
   uninvoicedBalance: number;
   balance: number;
   customerName: string;
+  customerId: number;
   openDate: Date;
   closeDate: Date;
   totalPurchaseLimit: number;
@@ -161,7 +228,8 @@ const demoData = [
     invoicedBalance: 0,
     uninvoicedBalance: 0,
     balance: 34775,
-    customerName: 'INTEL F32 1272',
+    customerName: '[MSR-FSR] APPLIED MATERIALS - [ID:1566]',
+    customerId: 1566,
     openDate: new Date(),
     closeDate: null,
     totalPurchaseLimit: 1234567,
@@ -176,7 +244,8 @@ const demoData = [
     invoicedBalance: 34775,
     uninvoicedBalance: 0,
     balance: 34775,
-    customerName: 'INTEL F32 1272',
+    customerName: '[MSR-FSR]ATA - [ID:1574]',
+    customerId: 1574,
     openDate: new Date(),
     closeDate: new Date(),
     totalPurchaseLimit: 1234567,

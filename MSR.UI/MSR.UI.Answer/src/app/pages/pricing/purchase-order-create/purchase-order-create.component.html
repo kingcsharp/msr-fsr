@@ -62,7 +62,9 @@
                 placeholder="Enter Reference Customer PO # (typically a blanket PO)"
                 type="text"
                 class="form-control input-transparent"
-                name="RefCustPO">
+                name="RefCustPO"
+                required
+              >
             </div>
           </div>
         </div>
@@ -81,7 +83,6 @@
                 type="text"
                 class="form-control input-transparent"
                 name="CustRefNum"
-                required
               >
             </div>
           </div>
@@ -109,13 +110,13 @@
 
         <div class="col-md-6 mb-3">
           <div class="form-group row">
-            <label for="" class="col-md-4 text-right">
+            <label for="ClosedDate" class="col-md-4 text-right">
               Close Date:
             </label>
             <p-calendar
               placeholder="Select Closed Date"
               class="col-md-8"
-              name="OpenDate"
+              name="ClosedDate"
               showIcon="true"
               styleClass="input-group input-group-transparent"
               inputStyleClass="form-control input-transparent"

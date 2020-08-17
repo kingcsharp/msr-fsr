@@ -364,7 +364,7 @@
           >
           </i>
           <i
-            *ngIf="canEdit"
+            *ngIf="canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-close pointer"
             tooltip="Close"
             data-cy="closeRow"
@@ -388,13 +388,252 @@
       </tr>
     </ng-template>
   </p-table>
-  <p-confirmDialog
-    #cd
-    header="Confirmation"
-    icon="pi pi-exclamation-triangle"
-    acceptLabel="Yes"
-    rejectLabel="No"
-    position="top"
-  >
-  </p-confirmDialog>
 </widget>
+
+<p-confirmDialog
+  #cd
+  header="Confirmation"
+  icon="pi pi-exclamation-triangle"
+  acceptLabel="Yes"
+  rejectLabel="No"
+  position="top"
+>
+</p-confirmDialog>
+
+<p-dialog
+  header="Edit Purchase Order"
+  [(visible)]="display"
+  [appendTo]="'body'"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '50vw'}"
+  data-cy="purchase-order-header"
+>
+  <form
+    data-parsley-validate
+    class="form-horizontal form-label-left parsleyjs"
+    method="post"
+    data-parsley-priority-enabled="false"
+    (ngSubmit)="onEditSubmit()"
+    novalidate="novalidate"
+  >
+    <section
+      class="widget mrg-btm-sm"
+      widget
+    >
+      <header>
+        <h5>Purchase Order Details</h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <label
+              for="firstName"
+              class="col-md-4 col-form-label text-md-right"
+            >
+              Customer:
+            </label>
+            <p-dropdown
+              class="col-md-8"
+              placeholder="Select Client"
+              name="CutomerId"
+              [(ngModel)]="currentPO.customerId"
+              [options]="customersData"
+              appendTo="body"
+              [baseZIndex]="100002"
+              required
+            >
+            </p-dropdown>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="POName"
+              class="col-md-4  col-form-label text-md-right"
+            >
+              PO Name :
+            </label>
+            <div class="col-md-8 ">
+              <input
+                placeholder="Enter PO Name"
+                type="text"
+                class="form-control input-transparent"
+                name="POName"
+                [(ngModel)]="currentPO.name"
+                data-parsley-trigger="change"
+                data-parsley-required="true"
+                tooltip="PO Name"
+                data-cy="poname-input"
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              class="form-control-label col-md-4 col-12 text-md-right"
+              for="RefCustPO"
+            >
+              Reference Cust PO #:
+            </label>
+            <div class="col-md-8 col-12">
+              <input
+                placeholder="Enter Reference Customer PO # (typically a blanket PO)"
+                type="text"
+                [(ngModel)]="currentPO.referencePo"
+                name="RefCustPO"
+                class="form-control input-transparent"
+                data-parsley-trigger="change"
+                data-parsley-required="true"
+                data-parsley-validation-threshold="1"
+                data-cy="refcustpo-input">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="CustRefNum"
+              class="col-md-4  col-form-label text-md-right"
+            >
+              Cust Ref# / MTTN:
+            </label>
+            <div class="col-md-8 col-12 ">
+              <input
+                placeholder="Enter Reference Number"
+                type="text"
+                class="form-control input-transparent"
+                name="CustRefNum"
+
+                data-parsley-trigger="change"
+                data-parsley-required="true"
+                tooltip="Customer Reference Number"
+                data-cy="custrefnum-input">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              class="form-control-label col-md-4 col-12 text-md-right"
+              for="OpenDate"
+            >
+              Open Date:
+            </label>
+            <p-calendar
+              [(ngModel)]="currentPO.openDate"
+              placeholder="Select Open Date"
+              class="col-md-8 col-12"
+              name="OpenDate"
+              showIcon="true"
+              styleClass="input-group input-group-transparent"
+              inputStyleClass="form-control input-transparent"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+              tooltip="Open Date"
+              data-cy="opendate-input"
+            >
+            </p-calendar>
+          </div>
+
+          <div class="form-group row">
+            <label
+              class="form-control-label col-md-4 col-12 text-md-right"
+              for="ClosedDate"
+            >
+              Close Date:
+            </label>
+            <p-calendar
+              [(ngModel)]="currentPO.closeDate"
+              placeholder="Select Closed Date"
+              class="col-md-8 col-12"
+              name="ClosedDate"
+              showIcon="true"
+              styleClass="input-group input-group-transparent"
+              inputStyleClass="form-control input-transparent"
+              tooltip="Closed Date"
+              data-cy="closedate-input"
+            >
+            </p-calendar>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="TotalPurchaseLimit"
+              class="form-control-label col-md-4 col-12 text-md-right"
+            >
+              Total Purchase Limit:
+            </label>
+            <div class="col-md-8 col-12 input-group input-group-transparent">
+              <span class="input-group-addon bg-secondary">$</span>
+              <input
+                [(ngModel)]="currentPO.totalPurchaseLimit"
+                placeholder="Enter total amount"
+                type="text"
+                class="form-control input-transparent"
+                name="TotalPurchaseLimit"
+                data-cy="totalamount-input"
+              >
+              <span class="input-group-addon bg-secondary">.00</span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="Tax"
+              class="form-control-label col-md-4 col-12 text-md-right"
+            >
+              Tax %:
+            </label>
+            <div class="col-md-8 col-12 input-group input-group-transparent">
+              <input
+                placeholder="Enter Tax %"
+                type="text"
+                class="form-control input-transparent"
+                name="Tax"
+              >
+              <span class="input-group-addon bg-secondary">%</span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="ProductId"
+              class="col-md-2 text-right"
+            >
+              Products:
+            </label>
+            <div class="col-md-10 col-12">
+              <multiselect-wrapper-form
+                [defaultLabelProperty]="'name'"
+                [defaultLabel]="'Select Products'"
+                name="ProductId"
+                [options]="productsData"
+              >
+              </multiselect-wrapper-form>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button
+          type="submit"
+          class="btn btn-outline-inverse width-100 mb-xs"
+          role="button"
+          data-cy="save-button"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          (click)="clseDialog()"
+          class="btn btn-outline-inverse width-100 mb-xs"
+          role="button"
+        >
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>
