@@ -78,7 +78,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new InvalidOperationException($"Unable to format invoice. Invoice {invoiceId} not found");
             }
 
-            var locationInvoiceClass = invoice.InvoiceItems?.FirstOrDefault().WorkOrder?.Purchase?.Location?.InvoiceClass;
+            var locationInvoiceClass = invoice.InvoiceItems.FirstOrDefault()?.WorkOrder?.Purchase?.Location?.InvoiceClass;
 
             var invoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}-{invoice.Id}";
 
