@@ -55,6 +55,13 @@ namespace MSR.Infrastructure.Resources.Services.Location
             foreach(var location in locations)
             {
                 var domlocation = _mapper.Map<LocationModel>(location);
+                var siteId = location.ParentId;
+
+                if(location.Parent != null && location.Parent.ParentId.HasValue)
+                {
+                    siteId = location.Parent.ParentId;
+                }
+                domlocation.Site = siteId;
                 var locationApproval = locationApprovals.FirstOrDefault(i => i.LocationId == location.Id);
                 if (locationApproval != null)
                 {
@@ -221,14 +228,27 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         public async Task<IEnumerable<SensorModel>> GetSensorsForLocation(GetSensorsForLocation command)
         {
-            var location = await _unitOfWork.Locations.Query().Include(i => i.Sensors).FirstOrDefaultAsync(i => i.Id == command.LocationId);
+            var location = await _unitOfWork.Locations.Query().Include(i => i.Sensors).Include(i => i.Parent).FirstOrDefaultAsync(i => i.Id == command.LocationId);
 
             if(location is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.LocationId}", DomainError.NotFound);
             }
 
-            return location.Sensors.Any() ? location.Sensors.Select(i => _mapper.Map<SensorModel>(i)) : new List<SensorModel>();
+            var siteId = location.ParentId;
+
+            var sensorList = location.Sensors.Any() ? location.Sensors.Select(i => _mapper.Map<SensorModel>(i)) : new List<SensorModel>();
+
+            foreach(var sensor in sensorList)
+            {
+                if (location.Parent != null && location.Parent.ParentId.HasValue)
+                {
+                    siteId = location.Parent.ParentId;
+                }
+                sensor.AssignedLocation.Site = siteId;
+            }
+
+            return sensorList;
         }
 
         public async Task AddSensorToLocation(CreateLocationSensorMap command)
