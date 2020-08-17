@@ -24,6 +24,7 @@ import { QuoteCreateComponent } from './quote-create/quote-create.component';
 import { ProductDefinitionComponent } from './product-definition/product-definition.component';
 import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.component';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import { PurchaseOrderCreateComponent } from './purchase-order-create/purchase-order-create.component';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -31,11 +32,12 @@ export const routes = [
   { path: 'quote-create', component: QuoteCreateComponent, pathMatch: 'full'},
   { path: 'product-edit', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'},
-  { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'}
+  { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'},
+  { path: 'purchaseorder-create', component: PurchaseOrderCreateComponent, pathMatch: 'full'}
 ];
 
 @NgModule({
-  declarations: [QuotesComponent, QuoteCreateComponent, ProductDefinitionComponent, PurchaseOrdersComponent],
+  declarations: [QuotesComponent, QuoteCreateComponent, ProductDefinitionComponent, PurchaseOrdersComponent, PurchaseOrderCreateComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
