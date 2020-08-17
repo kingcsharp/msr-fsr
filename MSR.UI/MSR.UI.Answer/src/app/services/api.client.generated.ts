@@ -3955,27 +3955,21 @@ export class WorkflowPendingApprovalService {
         return _observableOf<AuditActionResultOfICollectionOfPendingApprovalModel>(<any>null);
     }
 
-    workflowPendingApprovalPost(table: EnumApprovalTables | undefined, id: number | undefined, comments: string | null | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
-        let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
+    workflowPendingApprovalPost(version: string, request: PostPendingApprovalRequest): Observable<AuditActionResultOfPendingApprovalModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (table === null)
-            throw new Error("The parameter 'table' cannot be null.");
-        else if (table !== undefined)
-            url_ += "Table=" + encodeURIComponent("" + table) + "&";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        if (comments !== undefined && comments !== null)
-            url_ += "Comments=" + encodeURIComponent("" + comments) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(request);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
@@ -4132,6 +4126,187 @@ export class WorkflowPendingApprovalService {
             }));
         }
         return _observableOf<AuditActionResultOfPendingApprovalPopoverModel>(<any>null);
+    }
+}
+
+@Injectable()
+export class WorkOrderService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    workOrderGet(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: Date | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (customerId !== undefined && customerId !== null)
+            url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
+        if (locationId !== undefined && locationId !== null)
+            url_ += "LocationId=" + encodeURIComponent("" + locationId) + "&";
+        if (invoiceDate !== undefined && invoiceDate !== null)
+            url_ += "InvoiceDate=" + encodeURIComponent(invoiceDate ? "" + invoiceDate.toJSON() : "") + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkOrderGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkOrderGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkOrderGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkOrderModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderModel>(<any>null);
+    }
+
+    workOrderPost(version: string, request: CreateWorkOrderRequest): Observable<AuditActionResultOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkOrderPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkOrderPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkOrderPost(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkOrderModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkOrderModel>(<any>null);
+    }
+
+    workOrderPatch(version: string, request: UpdateWorkOrderRequest): Observable<AuditActionResultOfWorkOrderModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkOrderPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkOrderPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfWorkOrderModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkOrderPatch(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfWorkOrderModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfWorkOrderModel>(<any>null);
     }
 }
 
@@ -5922,7 +6097,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
     invoiceClass?: string | undefined;
     timeZone?: TimeZone | undefined;
     status?: string | undefined;
-    site?: LocationModel | undefined;
+    site?: number | undefined;
 
     constructor(data?: ILocationModel) {
         super(data);
@@ -5946,7 +6121,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
             this.invoiceClass = _data["invoiceClass"];
             this.timeZone = _data["timeZone"] ? TimeZone.fromJS(_data["timeZone"]) : <any>undefined;
             this.status = _data["status"];
-            this.site = _data["site"] ? LocationModel.fromJS(_data["site"]) : <any>undefined;
+            this.site = _data["site"];
         }
     }
 
@@ -5974,7 +6149,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
         data["invoiceClass"] = this.invoiceClass;
         data["timeZone"] = this.timeZone ? this.timeZone.toJSON() : <any>undefined;
         data["status"] = this.status;
-        data["site"] = this.site ? this.site.toJSON() : <any>undefined;
+        data["site"] = this.site;
         super.toJSON(data);
         return data; 
     }
@@ -5996,7 +6171,7 @@ export interface ILocationModel extends IDeletableModel {
     invoiceClass?: string | undefined;
     timeZone?: TimeZone | undefined;
     status?: string | undefined;
-    site?: LocationModel | undefined;
+    site?: number | undefined;
 }
 
 export class TimeZone implements ITimeZone {
@@ -10365,6 +10540,1045 @@ export class AuditActionResultOfPendingApprovalModel extends AuditActionResult i
 
 export interface IAuditActionResultOfPendingApprovalModel extends IAuditActionResult {
     object?: PendingApprovalModel | undefined;
+}
+
+export class PostPendingApprovalRequest implements IPostPendingApprovalRequest {
+    table?: EnumApprovalTables;
+    id?: number;
+    comments?: string | undefined;
+
+    constructor(data?: IPostPendingApprovalRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.table = _data["table"];
+            this.id = _data["id"];
+            this.comments = _data["comments"];
+        }
+    }
+
+    static fromJS(data: any): PostPendingApprovalRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostPendingApprovalRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["table"] = this.table;
+        data["id"] = this.id;
+        data["comments"] = this.comments;
+        return data; 
+    }
+}
+
+export interface IPostPendingApprovalRequest {
+    table?: EnumApprovalTables;
+    id?: number;
+    comments?: string | undefined;
+}
+
+export class AuditActionResultOfICollectionOfWorkOrderModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderModel {
+    object?: WorkOrderModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkOrderModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkOrderModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkOrderModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkOrderModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfWorkOrderModel extends IAuditActionResult {
+    object?: WorkOrderModel[] | undefined;
+}
+
+export class WorkOrderModel implements IWorkOrderModel {
+    id?: number;
+    purchaseId?: number;
+    productId?: number;
+    price?: number;
+    scheduledStartDate?: Date;
+    scheduledEndDate?: Date;
+    actualStartDate?: Date | undefined;
+    actualEndDate?: Date | undefined;
+    hasNCR?: boolean;
+    locationId?: number | undefined;
+    location?: LocationModel | undefined;
+    product?: ProductModel | undefined;
+    purchase?: PurchaseModel | undefined;
+    workOrderParts?: WorkOrderPartModel[] | undefined;
+    workOrderTasks?: WorkOrderTaskModel[] | undefined;
+
+    constructor(data?: IWorkOrderModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.purchaseId = _data["purchaseId"];
+            this.productId = _data["productId"];
+            this.price = _data["price"];
+            this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
+            this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
+            this.actualStartDate = _data["actualStartDate"] ? new Date(_data["actualStartDate"].toString()) : <any>undefined;
+            this.actualEndDate = _data["actualEndDate"] ? new Date(_data["actualEndDate"].toString()) : <any>undefined;
+            this.hasNCR = _data["hasNCR"];
+            this.locationId = _data["locationId"];
+            this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
+            this.product = _data["product"] ? ProductModel.fromJS(_data["product"]) : <any>undefined;
+            this.purchase = _data["purchase"] ? PurchaseModel.fromJS(_data["purchase"]) : <any>undefined;
+            if (Array.isArray(_data["workOrderParts"])) {
+                this.workOrderParts = [] as any;
+                for (let item of _data["workOrderParts"])
+                    this.workOrderParts!.push(WorkOrderPartModel.fromJS(item));
+            }
+            if (Array.isArray(_data["workOrderTasks"])) {
+                this.workOrderTasks = [] as any;
+                for (let item of _data["workOrderTasks"])
+                    this.workOrderTasks!.push(WorkOrderTaskModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): WorkOrderModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["purchaseId"] = this.purchaseId;
+        data["productId"] = this.productId;
+        data["price"] = this.price;
+        data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
+        data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
+        data["actualStartDate"] = this.actualStartDate ? this.actualStartDate.toISOString() : <any>undefined;
+        data["actualEndDate"] = this.actualEndDate ? this.actualEndDate.toISOString() : <any>undefined;
+        data["hasNCR"] = this.hasNCR;
+        data["locationId"] = this.locationId;
+        data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        data["product"] = this.product ? this.product.toJSON() : <any>undefined;
+        data["purchase"] = this.purchase ? this.purchase.toJSON() : <any>undefined;
+        if (Array.isArray(this.workOrderParts)) {
+            data["workOrderParts"] = [];
+            for (let item of this.workOrderParts)
+                data["workOrderParts"].push(item.toJSON());
+        }
+        if (Array.isArray(this.workOrderTasks)) {
+            data["workOrderTasks"] = [];
+            for (let item of this.workOrderTasks)
+                data["workOrderTasks"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IWorkOrderModel {
+    id?: number;
+    purchaseId?: number;
+    productId?: number;
+    price?: number;
+    scheduledStartDate?: Date;
+    scheduledEndDate?: Date;
+    actualStartDate?: Date | undefined;
+    actualEndDate?: Date | undefined;
+    hasNCR?: boolean;
+    locationId?: number | undefined;
+    location?: LocationModel | undefined;
+    product?: ProductModel | undefined;
+    purchase?: PurchaseModel | undefined;
+    workOrderParts?: WorkOrderPartModel[] | undefined;
+    workOrderTasks?: WorkOrderTaskModel[] | undefined;
+}
+
+export class ProductModel implements IProductModel {
+    name?: string | undefined;
+    revision?: number;
+    customerId?: number;
+    customerRequirementId?: number | undefined;
+    procedureId?: number;
+    partId?: number;
+    equipmentCost?: number;
+    materialCost?: number;
+    salesTax?: number | undefined;
+    totalSalePrice?: number;
+    cycleTime?: number | undefined;
+    workOrders?: WorkOrderModel[] | undefined;
+
+    constructor(data?: IProductModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+            this.customerId = _data["customerId"];
+            this.customerRequirementId = _data["customerRequirementId"];
+            this.procedureId = _data["procedureId"];
+            this.partId = _data["partId"];
+            this.equipmentCost = _data["equipmentCost"];
+            this.materialCost = _data["materialCost"];
+            this.salesTax = _data["salesTax"];
+            this.totalSalePrice = _data["totalSalePrice"];
+            this.cycleTime = _data["cycleTime"];
+            if (Array.isArray(_data["workOrders"])) {
+                this.workOrders = [] as any;
+                for (let item of _data["workOrders"])
+                    this.workOrders!.push(WorkOrderModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ProductModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        data["customerId"] = this.customerId;
+        data["customerRequirementId"] = this.customerRequirementId;
+        data["procedureId"] = this.procedureId;
+        data["partId"] = this.partId;
+        data["equipmentCost"] = this.equipmentCost;
+        data["materialCost"] = this.materialCost;
+        data["salesTax"] = this.salesTax;
+        data["totalSalePrice"] = this.totalSalePrice;
+        data["cycleTime"] = this.cycleTime;
+        if (Array.isArray(this.workOrders)) {
+            data["workOrders"] = [];
+            for (let item of this.workOrders)
+                data["workOrders"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IProductModel {
+    name?: string | undefined;
+    revision?: number;
+    customerId?: number;
+    customerRequirementId?: number | undefined;
+    procedureId?: number;
+    partId?: number;
+    equipmentCost?: number;
+    materialCost?: number;
+    salesTax?: number | undefined;
+    totalSalePrice?: number;
+    cycleTime?: number | undefined;
+    workOrders?: WorkOrderModel[] | undefined;
+}
+
+export class PurchaseModel implements IPurchaseModel {
+    id?: number;
+    purchaseOrderId?: number;
+    purchaseOrderProductId?: number;
+    customerPurchaseNumber?: string | undefined;
+    locationId?: number;
+    qty?: number;
+    purchasePrice?: number;
+    workOrders?: WorkOrderModel[] | undefined;
+
+    constructor(data?: IPurchaseModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.purchaseOrderId = _data["purchaseOrderId"];
+            this.purchaseOrderProductId = _data["purchaseOrderProductId"];
+            this.customerPurchaseNumber = _data["customerPurchaseNumber"];
+            this.locationId = _data["locationId"];
+            this.qty = _data["qty"];
+            this.purchasePrice = _data["purchasePrice"];
+            if (Array.isArray(_data["workOrders"])) {
+                this.workOrders = [] as any;
+                for (let item of _data["workOrders"])
+                    this.workOrders!.push(WorkOrderModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PurchaseModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["purchaseOrderId"] = this.purchaseOrderId;
+        data["purchaseOrderProductId"] = this.purchaseOrderProductId;
+        data["customerPurchaseNumber"] = this.customerPurchaseNumber;
+        data["locationId"] = this.locationId;
+        data["qty"] = this.qty;
+        data["purchasePrice"] = this.purchasePrice;
+        if (Array.isArray(this.workOrders)) {
+            data["workOrders"] = [];
+            for (let item of this.workOrders)
+                data["workOrders"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPurchaseModel {
+    id?: number;
+    purchaseOrderId?: number;
+    purchaseOrderProductId?: number;
+    customerPurchaseNumber?: string | undefined;
+    locationId?: number;
+    qty?: number;
+    purchasePrice?: number;
+    workOrders?: WorkOrderModel[] | undefined;
+}
+
+export class WorkOrderPartModel implements IWorkOrderPartModel {
+    workOrderId?: number;
+    partId?: number;
+    parentId?: number | undefined;
+    serialNumber?: string | undefined;
+    part?: PartModel | undefined;
+    workOrder?: WorkOrderModel | undefined;
+    children?: WorkOrderPartModel[] | undefined;
+    parent?: WorkOrderPartModel | undefined;
+
+    constructor(data?: IWorkOrderPartModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.partId = _data["partId"];
+            this.parentId = _data["parentId"];
+            this.serialNumber = _data["serialNumber"];
+            this.part = _data["part"] ? PartModel.fromJS(_data["part"]) : <any>undefined;
+            this.workOrder = _data["workOrder"] ? WorkOrderModel.fromJS(_data["workOrder"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children!.push(WorkOrderPartModel.fromJS(item));
+            }
+            this.parent = _data["parent"] ? WorkOrderPartModel.fromJS(_data["parent"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): WorkOrderPartModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderPartModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["partId"] = this.partId;
+        data["parentId"] = this.parentId;
+        data["serialNumber"] = this.serialNumber;
+        data["part"] = this.part ? this.part.toJSON() : <any>undefined;
+        data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IWorkOrderPartModel {
+    workOrderId?: number;
+    partId?: number;
+    parentId?: number | undefined;
+    serialNumber?: string | undefined;
+    part?: PartModel | undefined;
+    workOrder?: WorkOrderModel | undefined;
+    children?: WorkOrderPartModel[] | undefined;
+    parent?: WorkOrderPartModel | undefined;
+}
+
+export class WorkOrderTaskModel implements IWorkOrderTaskModel {
+    workOrderId?: number;
+    procedureStepId?: number;
+    procedureStepTypeId?: number;
+    statusId?: number;
+    taskStepOrder?: number;
+    assignedTo?: number | undefined;
+    assignedToUser?: User | undefined;
+    totalTaskTime?: number | undefined;
+    taskIsRunning?: boolean | undefined;
+    taskRunningSince?: Date | undefined;
+    procedureStep?: ProcedureStep | undefined;
+    procedureStepType?: ProcedureStepTypeModel | undefined;
+    status?: StatusModel | undefined;
+    workOrder?: WorkOrderModel | undefined;
+    workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
+
+    constructor(data?: IWorkOrderTaskModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
+            this.statusId = _data["statusId"];
+            this.taskStepOrder = _data["taskStepOrder"];
+            this.assignedTo = _data["assignedTo"];
+            this.assignedToUser = _data["assignedToUser"] ? User.fromJS(_data["assignedToUser"]) : <any>undefined;
+            this.totalTaskTime = _data["totalTaskTime"];
+            this.taskIsRunning = _data["taskIsRunning"];
+            this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
+            this.procedureStep = _data["procedureStep"] ? ProcedureStep.fromJS(_data["procedureStep"]) : <any>undefined;
+            this.procedureStepType = _data["procedureStepType"] ? ProcedureStepTypeModel.fromJS(_data["procedureStepType"]) : <any>undefined;
+            this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
+            this.workOrder = _data["workOrder"] ? WorkOrderModel.fromJS(_data["workOrder"]) : <any>undefined;
+            if (Array.isArray(_data["workOrderTaskMonitors"])) {
+                this.workOrderTaskMonitors = [] as any;
+                for (let item of _data["workOrderTaskMonitors"])
+                    this.workOrderTaskMonitors!.push(WorkOrderTaskMonitorModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): WorkOrderTaskModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderTaskModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["procedureStepId"] = this.procedureStepId;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
+        data["statusId"] = this.statusId;
+        data["taskStepOrder"] = this.taskStepOrder;
+        data["assignedTo"] = this.assignedTo;
+        data["assignedToUser"] = this.assignedToUser ? this.assignedToUser.toJSON() : <any>undefined;
+        data["totalTaskTime"] = this.totalTaskTime;
+        data["taskIsRunning"] = this.taskIsRunning;
+        data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
+        data["procedureStep"] = this.procedureStep ? this.procedureStep.toJSON() : <any>undefined;
+        data["procedureStepType"] = this.procedureStepType ? this.procedureStepType.toJSON() : <any>undefined;
+        data["status"] = this.status ? this.status.toJSON() : <any>undefined;
+        data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
+        if (Array.isArray(this.workOrderTaskMonitors)) {
+            data["workOrderTaskMonitors"] = [];
+            for (let item of this.workOrderTaskMonitors)
+                data["workOrderTaskMonitors"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IWorkOrderTaskModel {
+    workOrderId?: number;
+    procedureStepId?: number;
+    procedureStepTypeId?: number;
+    statusId?: number;
+    taskStepOrder?: number;
+    assignedTo?: number | undefined;
+    assignedToUser?: User | undefined;
+    totalTaskTime?: number | undefined;
+    taskIsRunning?: boolean | undefined;
+    taskRunningSince?: Date | undefined;
+    procedureStep?: ProcedureStep | undefined;
+    procedureStepType?: ProcedureStepTypeModel | undefined;
+    status?: StatusModel | undefined;
+    workOrder?: WorkOrderModel | undefined;
+    workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
+}
+
+export class ProcedureStepTypeModel implements IProcedureStepTypeModel {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IProcedureStepTypeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): ProcedureStepTypeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcedureStepTypeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IProcedureStepTypeModel {
+    id?: number;
+    name?: string | undefined;
+}
+
+export class StatusModel implements IStatusModel {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IStatusModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): StatusModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IStatusModel {
+    id?: number;
+    name?: string | undefined;
+}
+
+export class WorkOrderTaskMonitorModel implements IWorkOrderTaskMonitorModel {
+    workOrderTaskId?: number;
+    workOrderTask?: WorkOrderTaskModel | undefined;
+    procedureMonitorId?: number;
+    numVal?: number | undefined;
+    textVal?: string | undefined;
+    multiVal?: string | undefined;
+    sensorMappingId?: number;
+    comment?: string | undefined;
+
+    constructor(data?: IWorkOrderTaskMonitorModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderTaskId = _data["workOrderTaskId"];
+            this.workOrderTask = _data["workOrderTask"] ? WorkOrderTaskModel.fromJS(_data["workOrderTask"]) : <any>undefined;
+            this.procedureMonitorId = _data["procedureMonitorId"];
+            this.numVal = _data["numVal"];
+            this.textVal = _data["textVal"];
+            this.multiVal = _data["multiVal"];
+            this.sensorMappingId = _data["sensorMappingId"];
+            this.comment = _data["comment"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderTaskMonitorModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderTaskMonitorModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderTaskId"] = this.workOrderTaskId;
+        data["workOrderTask"] = this.workOrderTask ? this.workOrderTask.toJSON() : <any>undefined;
+        data["procedureMonitorId"] = this.procedureMonitorId;
+        data["numVal"] = this.numVal;
+        data["textVal"] = this.textVal;
+        data["multiVal"] = this.multiVal;
+        data["sensorMappingId"] = this.sensorMappingId;
+        data["comment"] = this.comment;
+        return data; 
+    }
+}
+
+export interface IWorkOrderTaskMonitorModel {
+    workOrderTaskId?: number;
+    workOrderTask?: WorkOrderTaskModel | undefined;
+    procedureMonitorId?: number;
+    numVal?: number | undefined;
+    textVal?: string | undefined;
+    multiVal?: string | undefined;
+    sensorMappingId?: number;
+    comment?: string | undefined;
+}
+
+export class AuditActionResultOfWorkOrderModel extends AuditActionResult implements IAuditActionResultOfWorkOrderModel {
+    object?: WorkOrderModel | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkOrderModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkOrderModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkOrderModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkOrderModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfWorkOrderModel extends IAuditActionResult {
+    object?: WorkOrderModel | undefined;
+}
+
+export class CreateWorkOrderRequest implements ICreateWorkOrderRequest {
+    purchaseId?: number;
+    productId?: number;
+    price?: number;
+    scheduledStartDate?: Date;
+    scheduledEndDate?: Date;
+    hasNCR?: boolean;
+    locationId?: number;
+    workOrderParts?: WorkOrderPartRequest[] | undefined;
+    workOrderTasks?: WorkOrderTaskRequest[] | undefined;
+
+    constructor(data?: ICreateWorkOrderRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.purchaseId = _data["purchaseId"];
+            this.productId = _data["productId"];
+            this.price = _data["price"];
+            this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
+            this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
+            this.hasNCR = _data["hasNCR"];
+            this.locationId = _data["locationId"];
+            if (Array.isArray(_data["workOrderParts"])) {
+                this.workOrderParts = [] as any;
+                for (let item of _data["workOrderParts"])
+                    this.workOrderParts!.push(WorkOrderPartRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["workOrderTasks"])) {
+                this.workOrderTasks = [] as any;
+                for (let item of _data["workOrderTasks"])
+                    this.workOrderTasks!.push(WorkOrderTaskRequest.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateWorkOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateWorkOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["purchaseId"] = this.purchaseId;
+        data["productId"] = this.productId;
+        data["price"] = this.price;
+        data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
+        data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
+        data["hasNCR"] = this.hasNCR;
+        data["locationId"] = this.locationId;
+        if (Array.isArray(this.workOrderParts)) {
+            data["workOrderParts"] = [];
+            for (let item of this.workOrderParts)
+                data["workOrderParts"].push(item.toJSON());
+        }
+        if (Array.isArray(this.workOrderTasks)) {
+            data["workOrderTasks"] = [];
+            for (let item of this.workOrderTasks)
+                data["workOrderTasks"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICreateWorkOrderRequest {
+    purchaseId?: number;
+    productId?: number;
+    price?: number;
+    scheduledStartDate?: Date;
+    scheduledEndDate?: Date;
+    hasNCR?: boolean;
+    locationId?: number;
+    workOrderParts?: WorkOrderPartRequest[] | undefined;
+    workOrderTasks?: WorkOrderTaskRequest[] | undefined;
+}
+
+export class WorkOrderPartRequest implements IWorkOrderPartRequest {
+    workOrderId?: number;
+    partId?: number;
+    parentId?: number | undefined;
+    serialNumber?: string | undefined;
+    part?: UpdatePartRequest | undefined;
+    workOrder?: UpdateWorkOrderRequest | undefined;
+    children?: WorkOrderPartRequest[] | undefined;
+    parent?: WorkOrderPartRequest | undefined;
+
+    constructor(data?: IWorkOrderPartRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.partId = _data["partId"];
+            this.parentId = _data["parentId"];
+            this.serialNumber = _data["serialNumber"];
+            this.part = _data["part"] ? UpdatePartRequest.fromJS(_data["part"]) : <any>undefined;
+            this.workOrder = _data["workOrder"] ? UpdateWorkOrderRequest.fromJS(_data["workOrder"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children!.push(WorkOrderPartRequest.fromJS(item));
+            }
+            this.parent = _data["parent"] ? WorkOrderPartRequest.fromJS(_data["parent"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): WorkOrderPartRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderPartRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["partId"] = this.partId;
+        data["parentId"] = this.parentId;
+        data["serialNumber"] = this.serialNumber;
+        data["part"] = this.part ? this.part.toJSON() : <any>undefined;
+        data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IWorkOrderPartRequest {
+    workOrderId?: number;
+    partId?: number;
+    parentId?: number | undefined;
+    serialNumber?: string | undefined;
+    part?: UpdatePartRequest | undefined;
+    workOrder?: UpdateWorkOrderRequest | undefined;
+    children?: WorkOrderPartRequest[] | undefined;
+    parent?: WorkOrderPartRequest | undefined;
+}
+
+export class UpdateWorkOrderRequest extends CreateWorkOrderRequest implements IUpdateWorkOrderRequest {
+    id?: number;
+
+    constructor(data?: IUpdateWorkOrderRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWorkOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWorkOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdateWorkOrderRequest extends ICreateWorkOrderRequest {
+    id?: number;
+}
+
+export class WorkOrderTaskRequest implements IWorkOrderTaskRequest {
+    workOrderId?: number;
+    procedureStepId?: number;
+    procedureStepTypeId?: number;
+    statusId?: number;
+    taskStepOrder?: number;
+    assignedTo?: number | undefined;
+    userId?: number | undefined;
+    totalTaskTime?: number | undefined;
+    taskIsRunning?: boolean | undefined;
+    taskRunningSince?: Date | undefined;
+    workOrderTaskMonitors?: WorkOrderTaskMonitorRequest[] | undefined;
+
+    constructor(data?: IWorkOrderTaskRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderId = _data["workOrderId"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
+            this.statusId = _data["statusId"];
+            this.taskStepOrder = _data["taskStepOrder"];
+            this.assignedTo = _data["assignedTo"];
+            this.userId = _data["userId"];
+            this.totalTaskTime = _data["totalTaskTime"];
+            this.taskIsRunning = _data["taskIsRunning"];
+            this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
+            if (Array.isArray(_data["workOrderTaskMonitors"])) {
+                this.workOrderTaskMonitors = [] as any;
+                for (let item of _data["workOrderTaskMonitors"])
+                    this.workOrderTaskMonitors!.push(WorkOrderTaskMonitorRequest.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): WorkOrderTaskRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderTaskRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderId"] = this.workOrderId;
+        data["procedureStepId"] = this.procedureStepId;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
+        data["statusId"] = this.statusId;
+        data["taskStepOrder"] = this.taskStepOrder;
+        data["assignedTo"] = this.assignedTo;
+        data["userId"] = this.userId;
+        data["totalTaskTime"] = this.totalTaskTime;
+        data["taskIsRunning"] = this.taskIsRunning;
+        data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
+        if (Array.isArray(this.workOrderTaskMonitors)) {
+            data["workOrderTaskMonitors"] = [];
+            for (let item of this.workOrderTaskMonitors)
+                data["workOrderTaskMonitors"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IWorkOrderTaskRequest {
+    workOrderId?: number;
+    procedureStepId?: number;
+    procedureStepTypeId?: number;
+    statusId?: number;
+    taskStepOrder?: number;
+    assignedTo?: number | undefined;
+    userId?: number | undefined;
+    totalTaskTime?: number | undefined;
+    taskIsRunning?: boolean | undefined;
+    taskRunningSince?: Date | undefined;
+    workOrderTaskMonitors?: WorkOrderTaskMonitorRequest[] | undefined;
+}
+
+export class WorkOrderTaskMonitorRequest implements IWorkOrderTaskMonitorRequest {
+    workOrderTaskId?: number;
+    workOrderTask?: WorkOrderTaskRequest | undefined;
+    procedureMonitorId?: number;
+    numVal?: number | undefined;
+    textVal?: string | undefined;
+    multiVal?: string | undefined;
+    sensorMappingId?: number;
+    comment?: string | undefined;
+
+    constructor(data?: IWorkOrderTaskMonitorRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.workOrderTaskId = _data["workOrderTaskId"];
+            this.workOrderTask = _data["workOrderTask"] ? WorkOrderTaskRequest.fromJS(_data["workOrderTask"]) : <any>undefined;
+            this.procedureMonitorId = _data["procedureMonitorId"];
+            this.numVal = _data["numVal"];
+            this.textVal = _data["textVal"];
+            this.multiVal = _data["multiVal"];
+            this.sensorMappingId = _data["sensorMappingId"];
+            this.comment = _data["comment"];
+        }
+    }
+
+    static fromJS(data: any): WorkOrderTaskMonitorRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkOrderTaskMonitorRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workOrderTaskId"] = this.workOrderTaskId;
+        data["workOrderTask"] = this.workOrderTask ? this.workOrderTask.toJSON() : <any>undefined;
+        data["procedureMonitorId"] = this.procedureMonitorId;
+        data["numVal"] = this.numVal;
+        data["textVal"] = this.textVal;
+        data["multiVal"] = this.multiVal;
+        data["sensorMappingId"] = this.sensorMappingId;
+        data["comment"] = this.comment;
+        return data; 
+    }
+}
+
+export interface IWorkOrderTaskMonitorRequest {
+    workOrderTaskId?: number;
+    workOrderTask?: WorkOrderTaskRequest | undefined;
+    procedureMonitorId?: number;
+    numVal?: number | undefined;
+    textVal?: string | undefined;
+    multiVal?: string | undefined;
+    sensorMappingId?: number;
+    comment?: string | undefined;
 }
 
 export class AuditActionResultOfPendingApprovalNotification extends AuditActionResult implements IAuditActionResultOfPendingApprovalNotification {
