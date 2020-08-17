@@ -159,7 +159,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             {
                 await Context.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 throw;
             }
