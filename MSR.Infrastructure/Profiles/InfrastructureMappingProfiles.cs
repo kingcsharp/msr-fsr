@@ -66,7 +66,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateLocation, Location>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<SensorItem, Domain.Models.SensorItemModel>().ReverseMap();
+            CreateMap<Sensor, Domain.Models.SensorModel>().ReverseMap();
             CreateMap<Domain.Models.LocationImportItem, CreateLocation>();
             CreateMap<Domain.Models.LocationImportItem, UpdateLocation>();
             #endregion

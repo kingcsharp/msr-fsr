@@ -2,12 +2,13 @@
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    [Table("SensorItemNameMap")]
-    public class SensorItem: Entity
+    public class Sensor: CreatableEntity
     {
         public string SensorName { get; set; }
-        public string ItemId { get; set; }
-        public virtual int? LocationId { get; set; }
+        public virtual int? SiteId { get; set; }
+        public virtual Location Site { get; set; }
+        public virtual int? AssignedLocationId { get; set; }
         public virtual Location AssignedLocation { get; set; }
+
     }
 }

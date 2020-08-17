@@ -14,6 +14,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
                    .WithMany().HasForeignKey(i => i.LastUpdatedBy);
             _ = builder.HasOne(i => i.Parent)
                     .WithMany(i => i.Children).HasForeignKey(i => i.ParentId);
+            _ = builder.HasMany(i => i.Sensors)
+                    .WithOne().HasForeignKey(i => i.Id);
         }
     }
 }

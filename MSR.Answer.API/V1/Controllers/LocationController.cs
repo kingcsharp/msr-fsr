@@ -37,13 +37,13 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<LocationModel>>();
         }
 
-        [HttpGet("{id}/Sensor"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<SensorItemModel>>))]
+        [HttpGet("{id}/Sensor"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<SensorModel>>))]
         [HasPrivilegeApi("Locations", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetSensorsForLocation([FromRoute] int Id)
         {
             var command = new GetSensorsForLocation() { LocationId = Id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<IEnumerable<SensorItemModel>>();
+            return ret.ToOkObjectResponse<IEnumerable<SensorModel>>();
 
         }
 

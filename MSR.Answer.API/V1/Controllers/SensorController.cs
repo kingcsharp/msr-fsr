@@ -27,12 +27,12 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<IEnumerable<SensorItemModel>>))]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<IEnumerable<SensorModel>>))]
         public async Task<IActionResult> Get([FromQuery] GetSensorRequest request)
         {
             var command = request.ToGetSensorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<IEnumerable<SensorItemModel>>();
+            return ret.ToOkObjectResponse<IEnumerable<SensorModel>>();
         }
     }
 }

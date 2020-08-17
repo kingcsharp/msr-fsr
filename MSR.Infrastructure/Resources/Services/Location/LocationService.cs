@@ -219,7 +219,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         }
 
-        public async Task<IEnumerable<SensorItemModel>> GetSensorsForLocation(GetSensorsForLocation command)
+        public async Task<IEnumerable<SensorModel>> GetSensorsForLocation(GetSensorsForLocation command)
         {
             var location = await _unitOfWork.Locations.Query().Include(i => i.Sensors).FirstOrDefaultAsync(i => i.Id == command.LocationId);
 
@@ -228,7 +228,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.LocationId}", DomainError.NotFound);
             }
 
-            return location.Sensors.Any() ? location.Sensors.Select(i => _mapper.Map<SensorItemModel>(i)) : new List<SensorItemModel>();
+            return location.Sensors.Any() ? location.Sensors.Select(i => _mapper.Map<SensorModel>(i)) : new List<SensorModel>();
         }
 
         public async Task AddSensorToLocation(CreateLocationSensorMap command)
@@ -238,11 +238,11 @@ namespace MSR.Infrastructure.Resources.Services.Location
             
             if(location is null || sensor is null)
             {
-                throw new DomainException($"{nameof(SensorItem)} or {nameof(EntityFramework.Entities.Location)} not found", DomainError.BadRequest);
+                throw new DomainException($"{nameof(EntityFramework.Entities.Sensor)} or {nameof(EntityFramework.Entities.Location)} not found", DomainError.BadRequest);
             }
 
             sensor.AssignedLocation = location;
-            sensor.LocationId = location.Id;
+            sensor.AssignedLocationId = location.Id;
 
             _unitOfWork.Sensors.Update(sensor);
             await _unitOfWork.SaveChangesAsync();
@@ -254,10 +254,10 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
             if (sensor is null)
             {
-                throw new DomainException($"{nameof(SensorItem)} not found", DomainError.BadRequest);
+                throw new DomainException($"{nameof(EntityFramework.Entities.Sensor)} not found", DomainError.BadRequest);
             }
 
-            sensor.LocationId = null;
+            sensor.AssignedLocationId = null;
             sensor.AssignedLocation = null;
 
             _unitOfWork.Sensors.Update(sensor);

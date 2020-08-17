@@ -24,7 +24,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetSensor command, CancellationToken cancellationToken = default)
         {
             var ret = await _sensorService.GetSensor(command);
-            return new CommandResponse<IEnumerable<SensorItemModel>>(ret);
+            return new CommandResponse<IEnumerable<SensorModel>>(ret);
         }
     }
 }
