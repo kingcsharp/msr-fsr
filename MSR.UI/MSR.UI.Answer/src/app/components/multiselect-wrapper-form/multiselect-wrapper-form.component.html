@@ -4,7 +4,7 @@
         <div *ngIf="items!==undefined && items!==null && items.length>0 && items.length<basicOptions.limit">
             <div *ngFor="let val of items" class="ui-multiselected-item-token ui-corner-all">
                 {{val.name}}
-                <i class="fal fa-times-circle" (click)="removeItem(val)" tooltip="Remove Item"></i>
+                <i class="fal fa-times-circle" (click)="removeItem(val)" tooltip="Remove Item" data-cy="remove-dropdown-item"></i>
             </div>
         </div>
         <div *ngIf="items!==undefined && items!==null && items.length>(basicOptions.limit-1)">{{items.length}} items

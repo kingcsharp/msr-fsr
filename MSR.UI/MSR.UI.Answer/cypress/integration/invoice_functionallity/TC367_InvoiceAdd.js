@@ -138,6 +138,15 @@ describe('Invoice Functionality', () => {
         cy.navigateToPage('Billing','Invoices');
 
         cy.get('[data-cy=add-button').click();
+
+        cy.get('[data-cy=workorder-table-header]').contains('Customer Puchase Number').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Customer Line').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Work Order Item').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Location').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Product Name').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Work Order Complete Date').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Total').click();
+
         cy.get('[data-cy=description-input]').type("AlecTest").should('have.value', "AlecTest");
         cy.get('[data-cy=actual-endDate]').find('input').clear().type("08/17/2020").should('have.value', "08/17/2020");
         cy.get('[data-cy=taxPercentage-input]').click();
@@ -146,8 +155,10 @@ describe('Invoice Functionality', () => {
         cy.get("[aria-label='UploadLocationUpdate']").click();
         cy.get('[data-cy=invoice-customer]').click();
         cy.get("[aria-label='INTEL F24']").click();
+
         cy.get('[data-cy=serialNumber]').type("SERIAL39084756").should('have.value', "SERIAL39084756");
         cy.get("[data-cy='work-order-checkbox']").find(".ui-chkbox-box:first").click();
+        
         cy.get("[data-cy='save-button']").click();
         cy.get(".ui-blockui-document", { timeout: 20000 }).should("not.be.visible");
 

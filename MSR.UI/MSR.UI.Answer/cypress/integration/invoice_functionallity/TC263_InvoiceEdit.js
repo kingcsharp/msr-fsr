@@ -123,11 +123,11 @@ describe('Invoice Functionality', () => {
                     "id": 36,
                     "customerId": 12,
                     "customerName": null,
-                    "description": "AlecTest2",
+                    "description": "AlecTest22",
                     "invoiceNumber": "05-20-36",
                     "amount": 113.0000,
-                    "taxPercentage": 13,
-                    "dueDate": "2020-08-19T03:00:00Z",
+                    "taxPercentage": 14,
+                    "dueDate": "2020-08-20T03:00:00Z",
                     "createdOn": "2020-08-17T16:20:35.703",
                     "createdByName": "Alexanderrrrrgg Elliss",
                     "lastUpdatedOn": "2020-08-17T18:49:57.9946652Z",
@@ -161,14 +161,36 @@ describe('Invoice Functionality', () => {
 
         cy.get('[data-cy=id]').type("36").should('have.value', "36");
         cy.get('tbody').find('tr:first-child td').get('[data-cy=editRow').click();
-        cy.get('[data-cy=description-input]').clear().type("AlecTest2").should('have.value', "AlecTest2");
-        
+
+        cy.get('[data-cy=workorder-table-header]').contains('Customer Puchase Number').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Customer Line').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Work Order Item').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Location').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Product Name').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Work Order Complete Date').click();
+        cy.get('[data-cy=workorder-table-header]').contains('Total').click();
+
+        cy.get('[data-cy=invoice-location]').should('have.attr', 'ng-reflect-is-disabled',"true");
+        cy.get('[data-cy=invoice-customer]').should('have.attr', 'ng-reflect-is-disabled',"true");
+        cy.get('[data-cy=description-input]').should('have.value', 'AlecTest2');
+        cy.get('[data-cy=taxPercentage-input]').should('have.value', '13');
+
+        cy.get('[data-cy=actual-endDate]').find('input').should('have.value', "08/19/2020");
+
+        cy.get('[data-cy=description-input]').clear().type("AlecTest22").should('have.value', "AlecTest22");
         cy.get('[data-cy=taxPercentage-input]').click();
-        cy.get('[data-cy=taxPercentage-input]').clear().type("13").should('have.value', "13");
-        cy.get('[data-cy=actual-endDate]').find('input').clear();
-        cy.get('[data-cy=actual-endDate]').find('input').type("8/19/2020").should('have.value', "8/19/2020");
+        cy.get('[data-cy=taxPercentage-input]').clear().type("14").should('have.value', "14");
+        cy.get('[data-cy=actual-endDate]').find('input').clear(); 
+        cy.get('[data-cy=actual-endDate]').find('input').type("08/20/2020").should('have.value', "08/20/2020");
         cy.get('[data-cy=actual-endDate]').find('input').click();
+        cy.get('[data-cy=taxPercentage-input]').click();
+
+        cy.get('[data-cy=remove-dropdown-item]').click();
+        cy.get('[data-cy=serialNumber]').type("SERIAL39084756").should('have.value', "SERIAL39084756");
+        cy.get("[data-cy='work-order-checkbox']").find(".ui-chkbox-box:first").click();
+
         cy.get("[data-cy='save-button']").click();
+
         cy.get(".ui-blockui-document", { timeout: 5000 }).should("be.visible");
         cy.get(".ui-blockui-document", { timeout: 40000 }).should("not.be.visible");
         cy.get('[data-cy=id]').clear().type("36").should('have.value', "36");

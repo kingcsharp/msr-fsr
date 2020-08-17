@@ -244,7 +244,7 @@
                         <tr>
                             <th></th>
                             <th *ngFor="let col of gridWoSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-                                data-cy="usertable-header">
+                                data-cy="workorder-table-header">
                                 {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
                             </th>
                         </tr>
