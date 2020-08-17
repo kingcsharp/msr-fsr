@@ -9,6 +9,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,24 +36,7 @@ namespace MSR.Infrastructure.Resources.Services
             switch (command.Table)
             {
                 case EnumApprovalTables.CustomerApproval:
-                    var customerApproval = await _unitOfWork.CustomerApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var customer = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(x => x.Id == customerApproval.CustomerId);
-                    customerApproval.Status = status;
-                    _mapper.Map(customerApproval, customer);
-                    _unitOfWork.Customers.Update(customer);
-                    _unitOfWork.CustomerApprovals.Delete(false, customerApproval);
-                    if (!customerApproval.IsActive)
-                    {
-                        var users = _unitOfWork.Users.Query().Where(i => i.CustomerId == customer.Id).ToList();
-                        foreach (var user in users)
-                        {
-                            user.IsActive = false;
-                            _unitOfWork.Users.Update(user);
-                        }
-                    }
-                    _unitOfWork.SaveChanges();
-                    await _unitOfWork.LogApprovalTransaction(customerApproval, customerApproval.Id, status.Name, command.Comments);
-                    result = customerApproval;
+                    result = await ApproveCustomer(command, status);
                     break;
                 case EnumApprovalTables.DocumentApproval:
                     var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -66,23 +50,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = documentApproval;
                     break;
                 case EnumApprovalTables.LocationApproval:
-                    var locationApproval = await _unitOfWork.LocationApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var location = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    locationApproval.Status = status;
-                    _mapper.Map(locationApproval, location);
-                    _unitOfWork.LocationApprovals.Delete(false,locationApproval);
-                    _unitOfWork.Locations.Update(location);
-                    if (!locationApproval.IsActive)
-                    {
-                        foreach (var childLocation in await _unitOfWork.Locations.Query().Where(i => i.ParentId == location.Id).ToListAsync())
-                        {
-                            childLocation.IsActive = false;
-                            _unitOfWork.Locations.Update(childLocation);
-                        }
-                    }
-                    _unitOfWork.SaveChanges();
-                    await _unitOfWork.LogApprovalTransaction(locationApproval, locationApproval.Id, status.Name, command.Comments);
-                    result = locationApproval;
+                    result = await ApproveLocation(command,status);
                     break;
                 case EnumApprovalTables.PartApproval:
                     PartApproval partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -462,6 +430,76 @@ namespace MSR.Infrastructure.Resources.Services
 
             return pendingApprovalModelResult;
         }
+
+        private async Task<ApprovalEntity> ApproveCustomer(PostApprovalModel command, EntityFramework.Entities.Status status)
+        {
+            var customerApproval = await _unitOfWork.CustomerApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+
+            if (customerApproval.CustomerId is null)
+            {
+                var customer = _mapper.Map<EntityFramework.Entities.Customer>(customerApproval);
+                customer.IsActive = true;
+                await _unitOfWork.Customers.AddAsync(customer);
+            }
+            else
+            {
+                var customer = await _unitOfWork.Customers.Query().FirstOrDefaultAsync(x => x.Id == customerApproval.CustomerId);
+                _mapper.Map(customerApproval, customer);
+
+                if (!customerApproval.IsActive)
+                {
+                    var users = _unitOfWork.Users.Query().Where(i => i.CustomerId == customer.Id).ToList();
+                    foreach (var user in users)
+                    {
+                        user.IsActive = false;
+                        _unitOfWork.Users.Update(user);
+                    }
+                }
+                _unitOfWork.Customers.Update(customer);
+            }
+
+            _unitOfWork.CustomerApprovals.Delete(false, customerApproval);
+
+
+            _unitOfWork.SaveChanges();
+            await _unitOfWork.LogApprovalTransaction(customerApproval, customerApproval.Id, status.Name, command.Comments);
+
+            return customerApproval;
+        }
+
+        private async Task<ApprovalEntity> ApproveLocation(PostApprovalModel command, EntityFramework.Entities.Status status)
+        {
+            var locationApproval = await _unitOfWork.LocationApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+
+            if (locationApproval.LocationId is null)
+            {
+                var location = _mapper.Map<EntityFramework.Entities.Location>(locationApproval);
+                location.IsActive = true;
+                await _unitOfWork.Locations.AddAsync(location);
+            }
+            else
+            {
+                var location = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                _mapper.Map(locationApproval, location);
+                _unitOfWork.Locations.Update(location);
+                if (!locationApproval.IsActive)
+                {
+                    foreach (var childLocation in await _unitOfWork.Locations.Query().Where(i => i.ParentId == location.Id).ToListAsync())
+                    {
+                        childLocation.IsActive = false;
+                        _unitOfWork.Locations.Update(childLocation);
+                    }
+                }
+            }
+
+            _unitOfWork.LocationApprovals.Delete(false, locationApproval);
+            _unitOfWork.SaveChanges();
+
+            await _unitOfWork.LogApprovalTransaction(locationApproval, locationApproval.Id, status.Name, command.Comments);
+
+            return locationApproval;
+        }
+
     }
 }
 
