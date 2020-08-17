@@ -104,6 +104,20 @@
                     data-parsley-minlength="3" data-parsley-required="true" class="form-control input-transparent"
                     tooltip="Internal Address" placeholder="" data-cy="internaladdress-input">
             </div>
+            <div class="form-group">
+                <label for="sensors" class="col-form-label text-left">
+                    Sensors
+                </label>
+                <p-multiSelect name="sensors" [options]="sensorOptopns" [(ngModel)]="selectedSensors" optionLabel="sensorName" data-cy="sensors-multiselect"
+                    [itemSize]="15" [baseZIndex]="100002" appendTo="body">
+                    <ng-template let-value pTemplate="selectedItems">
+                        <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">
+                            <span>{{val.sensorName}}</span>
+                        </div>
+                        <span *ngIf="!value || value.length === 0">Select Sensors</span>
+                    </ng-template>
+                </p-multiSelect>
+            </div>
         </form>
     </div>
     <div class="row" *ngIf="locationToEditId !== null">

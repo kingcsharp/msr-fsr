@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest, UpdateLocationRequest, ILocationModel } from '../../../services/api.client.generated';
+import { LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest, 
+  UpdateLocationRequest, ILocationModel, SensorItemModel } from '../../../services/api.client.generated';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -19,6 +20,10 @@ export class LocationCreateComponent implements OnInit {
   parentLocationOptions: Array<LocationModel>;
   countryOptions: SelectItem[];
   selectedParentLocation: LocationModel;
+  allLocations: LocationModel[];
+  sensorOptopns: SensorItemModel[];
+  selectedSensors: SensorItemModel[] = new Array<SensorItemModel>();
+
   constructor(private locationService: LocationService, private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
@@ -45,12 +50,22 @@ export class LocationCreateComponent implements OnInit {
 
           }
 
+          this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
+
+            this.allLocations = response.object;
+
+
+          }))
+
         }));
 
       } else {
         this.locationToEdit = new LocationModel();
 
       }
+
+      // TODO: Replace with Sensors GET when James is ready
+      this.sensorOptopns = this.mockSensorItemsGet();
 
     });
 
@@ -107,6 +122,28 @@ export class LocationCreateComponent implements OnInit {
 
     }));
 
+  }
+
+  mockSensorItemsGet(){
+
+    let sensorItemModels = new Array<SensorItemModel>()
+    
+    let sensorItemModelA = new SensorItemModel();
+    sensorItemModelA.id = 1;
+    sensorItemModelA.sensorName = 'Sample Sensor A';
+    sensorItemModels.push(sensorItemModelA);
+
+    let sensorItemModelB = new SensorItemModel();
+    sensorItemModelB.id = 2;
+    sensorItemModelB.sensorName = 'Sample Sensor B';
+    sensorItemModels.push(sensorItemModelB);
+
+    let sensorItemModelC = new SensorItemModel();
+    sensorItemModelC.id = 2;
+    sensorItemModelC.sensorName = 'Sample Sensor C';
+    sensorItemModels.push(sensorItemModelC);
+
+    return sensorItemModels;
   }
 
 }

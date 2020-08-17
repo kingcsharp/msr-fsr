@@ -723,7 +723,7 @@ export class FileService {
         return _observableOf<UploadResponse>(<any>null);
     }
 
-    import(version: string, request: ImportRequest): Observable<ImportAuditActionResultOfIEnumerableOfObject> {
+    import(version: string, request: ImportRequest): Observable<ImportAuditActionResultOfIEnumerableOfImportError> {
         let url_ = this.baseUrl + "/v{version}/File/Import";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -749,14 +749,14 @@ export class FileService {
                 try {
                     return this.processImport(<any>response_);
                 } catch (e) {
-                    return <Observable<ImportAuditActionResultOfIEnumerableOfObject>><any>_observableThrow(e);
+                    return <Observable<ImportAuditActionResultOfIEnumerableOfImportError>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ImportAuditActionResultOfIEnumerableOfObject>><any>_observableThrow(response_);
+                return <Observable<ImportAuditActionResultOfIEnumerableOfImportError>><any>_observableThrow(response_);
         }));
     }
 
-    protected processImport(response: HttpResponseBase): Observable<ImportAuditActionResultOfIEnumerableOfObject> {
+    protected processImport(response: HttpResponseBase): Observable<ImportAuditActionResultOfIEnumerableOfImportError> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -767,7 +767,7 @@ export class FileService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ImportAuditActionResultOfIEnumerableOfObject.fromJS(resultData200);
+            result200 = ImportAuditActionResultOfIEnumerableOfImportError.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -775,7 +775,7 @@ export class FileService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ImportAuditActionResultOfIEnumerableOfObject>(<any>null);
+        return _observableOf<ImportAuditActionResultOfIEnumerableOfImportError>(<any>null);
     }
 }
 
@@ -6399,10 +6399,10 @@ export interface IUploadResponse {
     url?: string | undefined;
 }
 
-export class AuditActionResultOfIEnumerableOfObject extends AuditActionResult implements IAuditActionResultOfIEnumerableOfObject {
-    object?: any[] | undefined;
+export class AuditActionResultOfIEnumerableOfImportError extends AuditActionResult implements IAuditActionResultOfIEnumerableOfImportError {
+    object?: ImportError[] | undefined;
 
-    constructor(data?: IAuditActionResultOfIEnumerableOfObject) {
+    constructor(data?: IAuditActionResultOfIEnumerableOfImportError) {
         super(data);
     }
 
@@ -6412,14 +6412,14 @@ export class AuditActionResultOfIEnumerableOfObject extends AuditActionResult im
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(item);
+                    this.object!.push(ImportError.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfIEnumerableOfObject {
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfImportError {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfIEnumerableOfObject();
+        let result = new AuditActionResultOfIEnumerableOfImportError();
         result.init(data);
         return result;
     }
@@ -6429,21 +6429,21 @@ export class AuditActionResultOfIEnumerableOfObject extends AuditActionResult im
         if (Array.isArray(this.object)) {
             data["object"] = [];
             for (let item of this.object)
-                data["object"].push(item);
+                data["object"].push(item.toJSON());
         }
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface IAuditActionResultOfIEnumerableOfObject extends IAuditActionResult {
-    object?: any[] | undefined;
+export interface IAuditActionResultOfIEnumerableOfImportError extends IAuditActionResult {
+    object?: ImportError[] | undefined;
 }
 
-export class ImportAuditActionResultOfIEnumerableOfObject extends AuditActionResultOfIEnumerableOfObject implements IImportAuditActionResultOfIEnumerableOfObject {
+export class ImportAuditActionResultOfIEnumerableOfImportError extends AuditActionResultOfIEnumerableOfImportError implements IImportAuditActionResultOfIEnumerableOfImportError {
     importErrors?: ImportError[] | undefined;
 
-    constructor(data?: IImportAuditActionResultOfIEnumerableOfObject) {
+    constructor(data?: IImportAuditActionResultOfIEnumerableOfImportError) {
         super(data);
     }
 
@@ -6458,9 +6458,9 @@ export class ImportAuditActionResultOfIEnumerableOfObject extends AuditActionRes
         }
     }
 
-    static fromJS(data: any): ImportAuditActionResultOfIEnumerableOfObject {
+    static fromJS(data: any): ImportAuditActionResultOfIEnumerableOfImportError {
         data = typeof data === 'object' ? data : {};
-        let result = new ImportAuditActionResultOfIEnumerableOfObject();
+        let result = new ImportAuditActionResultOfIEnumerableOfImportError();
         result.init(data);
         return result;
     }
@@ -6477,7 +6477,7 @@ export class ImportAuditActionResultOfIEnumerableOfObject extends AuditActionRes
     }
 }
 
-export interface IImportAuditActionResultOfIEnumerableOfObject extends IAuditActionResultOfIEnumerableOfObject {
+export interface IImportAuditActionResultOfIEnumerableOfImportError extends IAuditActionResultOfIEnumerableOfImportError {
     importErrors?: ImportError[] | undefined;
 }
 
