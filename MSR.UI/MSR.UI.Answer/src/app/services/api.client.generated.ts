@@ -723,7 +723,7 @@ export class FileService {
         return _observableOf<UploadResponse>(<any>null);
     }
 
-    import(version: string, request: ImportRequest): Observable<ImportAuditActionResultOfIEnumerableOfObject> {
+    import(version: string, request: ImportRequest): Observable<ImportAuditActionResultOfIEnumerableOfImportError> {
         let url_ = this.baseUrl + "/v{version}/File/Import";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -749,14 +749,14 @@ export class FileService {
                 try {
                     return this.processImport(<any>response_);
                 } catch (e) {
-                    return <Observable<ImportAuditActionResultOfIEnumerableOfObject>><any>_observableThrow(e);
+                    return <Observable<ImportAuditActionResultOfIEnumerableOfImportError>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ImportAuditActionResultOfIEnumerableOfObject>><any>_observableThrow(response_);
+                return <Observable<ImportAuditActionResultOfIEnumerableOfImportError>><any>_observableThrow(response_);
         }));
     }
 
-    protected processImport(response: HttpResponseBase): Observable<ImportAuditActionResultOfIEnumerableOfObject> {
+    protected processImport(response: HttpResponseBase): Observable<ImportAuditActionResultOfIEnumerableOfImportError> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -767,7 +767,7 @@ export class FileService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ImportAuditActionResultOfIEnumerableOfObject.fromJS(resultData200);
+            result200 = ImportAuditActionResultOfIEnumerableOfImportError.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -775,7 +775,7 @@ export class FileService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ImportAuditActionResultOfIEnumerableOfObject>(<any>null);
+        return _observableOf<ImportAuditActionResultOfIEnumerableOfImportError>(<any>null);
     }
 }
 
@@ -1599,7 +1599,7 @@ export class LocationService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    sensorGet(id: number, version: string): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+    sensorGet(id: number, version: string): Observable<AuditActionResultOfIEnumerableOfSensorModel> {
         let url_ = this.baseUrl + "/v{version}/Location/{id}/Sensor";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1624,14 +1624,14 @@ export class LocationService {
                 try {
                     return this.processSensorGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfSensorModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfSensorModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSensorGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+    protected processSensorGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfSensorModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1642,7 +1642,7 @@ export class LocationService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfIEnumerableOfSensorItemModel.fromJS(resultData200);
+            result200 = AuditActionResultOfIEnumerableOfSensorModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1650,11 +1650,11 @@ export class LocationService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfIEnumerableOfSensorItemModel>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfSensorModel>(<any>null);
     }
 
     sensorPost(locationId: number, sensorId: number, version: string): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/Location/{LocationId}/Sensor/{SensorId}";
+        let url_ = this.baseUrl + "/v{version}/Location/{locationId}/Sensor/{sensorId}";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
         url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
@@ -1711,7 +1711,7 @@ export class LocationService {
     }
 
     sensorDelete(locationId: number, sensorId: number, version: string): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/Location/{LocationId}/Sensor/{SensorId}";
+        let url_ = this.baseUrl + "/v{version}/Location/{locationId}/Sensor/{sensorId}";
         if (locationId === undefined || locationId === null)
             throw new Error("The parameter 'locationId' must be defined.");
         url_ = url_.replace("{locationId}", encodeURIComponent("" + locationId));
@@ -3335,13 +3335,15 @@ export class SensorService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    sensor(sensorId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+    sensor(sensorId: number | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfSensorModel> {
         let url_ = this.baseUrl + "/v{version}/Sensor?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (sensorId !== undefined && sensorId !== null)
             url_ += "SensorId=" + encodeURIComponent("" + sensorId) + "&";
+        if (siteId !== undefined && siteId !== null)
+            url_ += "SiteId=" + encodeURIComponent("" + siteId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3359,14 +3361,14 @@ export class SensorService {
                 try {
                     return this.processSensor(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfIEnumerableOfSensorModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfIEnumerableOfSensorItemModel>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfIEnumerableOfSensorModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSensor(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfSensorItemModel> {
+    protected processSensor(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfSensorModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3377,7 +3379,7 @@ export class SensorService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfIEnumerableOfSensorItemModel.fromJS(resultData200);
+            result200 = AuditActionResultOfIEnumerableOfSensorModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3385,7 +3387,7 @@ export class SensorService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfIEnumerableOfSensorItemModel>(<any>null);
+        return _observableOf<AuditActionResultOfIEnumerableOfSensorModel>(<any>null);
     }
 }
 
@@ -5286,13 +5288,51 @@ export interface IEntityModel {
     id?: number;
 }
 
-export abstract class TrackableModel extends EntityModel implements ITrackableModel {
-    lastUpdatedOn?: Date | undefined;
-    lastUpdatedBy?: number | undefined;
-    lastUpdated?: User | undefined;
+export class CreatableModel extends EntityModel implements ICreatableModel {
     createdOn?: Date;
     createdBy?: number | undefined;
     created?: User | undefined;
+
+    constructor(data?: ICreatableModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.created = _data["created"] ? User.fromJS(_data["created"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreatableModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatableModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["created"] = this.created ? this.created.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ICreatableModel extends IEntityModel {
+    createdOn?: Date;
+    createdBy?: number | undefined;
+    created?: User | undefined;
+}
+
+export abstract class TrackableModel extends CreatableModel implements ITrackableModel {
+    lastUpdatedOn?: Date | undefined;
+    lastUpdatedBy?: number | undefined;
+    lastUpdated?: User | undefined;
 
     constructor(data?: ITrackableModel) {
         super(data);
@@ -5304,9 +5344,6 @@ export abstract class TrackableModel extends EntityModel implements ITrackableMo
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             this.lastUpdatedBy = _data["lastUpdatedBy"];
             this.lastUpdated = _data["lastUpdated"] ? User.fromJS(_data["lastUpdated"]) : <any>undefined;
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.createdBy = _data["createdBy"];
-            this.created = _data["created"] ? User.fromJS(_data["created"]) : <any>undefined;
         }
     }
 
@@ -5320,21 +5357,15 @@ export abstract class TrackableModel extends EntityModel implements ITrackableMo
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         data["lastUpdatedBy"] = this.lastUpdatedBy;
         data["lastUpdated"] = this.lastUpdated ? this.lastUpdated.toJSON() : <any>undefined;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["createdBy"] = this.createdBy;
-        data["created"] = this.created ? this.created.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface ITrackableModel extends IEntityModel {
+export interface ITrackableModel extends ICreatableModel {
     lastUpdatedOn?: Date | undefined;
     lastUpdatedBy?: number | undefined;
     lastUpdated?: User | undefined;
-    createdOn?: Date;
-    createdBy?: number | undefined;
-    created?: User | undefined;
 }
 
 export class Customer extends TrackableModel implements ICustomer {
@@ -5891,6 +5922,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
     invoiceClass?: string | undefined;
     timeZone?: TimeZone | undefined;
     status?: string | undefined;
+    site?: LocationModel | undefined;
 
     constructor(data?: ILocationModel) {
         super(data);
@@ -5914,6 +5946,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
             this.invoiceClass = _data["invoiceClass"];
             this.timeZone = _data["timeZone"] ? TimeZone.fromJS(_data["timeZone"]) : <any>undefined;
             this.status = _data["status"];
+            this.site = _data["site"] ? LocationModel.fromJS(_data["site"]) : <any>undefined;
         }
     }
 
@@ -5941,6 +5974,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
         data["invoiceClass"] = this.invoiceClass;
         data["timeZone"] = this.timeZone ? this.timeZone.toJSON() : <any>undefined;
         data["status"] = this.status;
+        data["site"] = this.site ? this.site.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
@@ -5962,6 +5996,7 @@ export interface ILocationModel extends IDeletableModel {
     invoiceClass?: string | undefined;
     timeZone?: TimeZone | undefined;
     status?: string | undefined;
+    site?: LocationModel | undefined;
 }
 
 export class TimeZone implements ITimeZone {
@@ -6399,10 +6434,10 @@ export interface IUploadResponse {
     url?: string | undefined;
 }
 
-export class AuditActionResultOfIEnumerableOfObject extends AuditActionResult implements IAuditActionResultOfIEnumerableOfObject {
-    object?: any[] | undefined;
+export class AuditActionResultOfIEnumerableOfImportError extends AuditActionResult implements IAuditActionResultOfIEnumerableOfImportError {
+    object?: ImportError[] | undefined;
 
-    constructor(data?: IAuditActionResultOfIEnumerableOfObject) {
+    constructor(data?: IAuditActionResultOfIEnumerableOfImportError) {
         super(data);
     }
 
@@ -6412,14 +6447,14 @@ export class AuditActionResultOfIEnumerableOfObject extends AuditActionResult im
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(item);
+                    this.object!.push(ImportError.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfIEnumerableOfObject {
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfImportError {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfIEnumerableOfObject();
+        let result = new AuditActionResultOfIEnumerableOfImportError();
         result.init(data);
         return result;
     }
@@ -6429,21 +6464,21 @@ export class AuditActionResultOfIEnumerableOfObject extends AuditActionResult im
         if (Array.isArray(this.object)) {
             data["object"] = [];
             for (let item of this.object)
-                data["object"].push(item);
+                data["object"].push(item.toJSON());
         }
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface IAuditActionResultOfIEnumerableOfObject extends IAuditActionResult {
-    object?: any[] | undefined;
+export interface IAuditActionResultOfIEnumerableOfImportError extends IAuditActionResult {
+    object?: ImportError[] | undefined;
 }
 
-export class ImportAuditActionResultOfIEnumerableOfObject extends AuditActionResultOfIEnumerableOfObject implements IImportAuditActionResultOfIEnumerableOfObject {
+export class ImportAuditActionResultOfIEnumerableOfImportError extends AuditActionResultOfIEnumerableOfImportError implements IImportAuditActionResultOfIEnumerableOfImportError {
     importErrors?: ImportError[] | undefined;
 
-    constructor(data?: IImportAuditActionResultOfIEnumerableOfObject) {
+    constructor(data?: IImportAuditActionResultOfIEnumerableOfImportError) {
         super(data);
     }
 
@@ -6458,9 +6493,9 @@ export class ImportAuditActionResultOfIEnumerableOfObject extends AuditActionRes
         }
     }
 
-    static fromJS(data: any): ImportAuditActionResultOfIEnumerableOfObject {
+    static fromJS(data: any): ImportAuditActionResultOfIEnumerableOfImportError {
         data = typeof data === 'object' ? data : {};
-        let result = new ImportAuditActionResultOfIEnumerableOfObject();
+        let result = new ImportAuditActionResultOfIEnumerableOfImportError();
         result.init(data);
         return result;
     }
@@ -6477,7 +6512,7 @@ export class ImportAuditActionResultOfIEnumerableOfObject extends AuditActionRes
     }
 }
 
-export interface IImportAuditActionResultOfIEnumerableOfObject extends IAuditActionResultOfIEnumerableOfObject {
+export interface IImportAuditActionResultOfIEnumerableOfImportError extends IAuditActionResultOfIEnumerableOfImportError {
     importErrors?: ImportError[] | undefined;
 }
 
@@ -7305,10 +7340,10 @@ export interface IAuditActionResultOfICollectionOfLocationModel extends IAuditAc
     object?: LocationModel[] | undefined;
 }
 
-export class AuditActionResultOfIEnumerableOfSensorItemModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfSensorItemModel {
-    object?: SensorItemModel[] | undefined;
+export class AuditActionResultOfIEnumerableOfSensorModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfSensorModel {
+    object?: SensorModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfIEnumerableOfSensorItemModel) {
+    constructor(data?: IAuditActionResultOfIEnumerableOfSensorModel) {
         super(data);
     }
 
@@ -7318,14 +7353,14 @@ export class AuditActionResultOfIEnumerableOfSensorItemModel extends AuditAction
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(SensorItemModel.fromJS(item));
+                    this.object!.push(SensorModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfIEnumerableOfSensorItemModel {
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfSensorModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfIEnumerableOfSensorItemModel();
+        let result = new AuditActionResultOfIEnumerableOfSensorModel();
         result.init(data);
         return result;
     }
@@ -7342,17 +7377,16 @@ export class AuditActionResultOfIEnumerableOfSensorItemModel extends AuditAction
     }
 }
 
-export interface IAuditActionResultOfIEnumerableOfSensorItemModel extends IAuditActionResult {
-    object?: SensorItemModel[] | undefined;
+export interface IAuditActionResultOfIEnumerableOfSensorModel extends IAuditActionResult {
+    object?: SensorModel[] | undefined;
 }
 
-export class SensorItemModel extends EntityModel implements ISensorItemModel {
+export class SensorModel extends CreatableModel implements ISensorModel {
     sensorName?: string | undefined;
-    itemId?: string | undefined;
-    locationId?: number | undefined;
+    site?: LocationModel | undefined;
     assignedLocation?: LocationModel | undefined;
 
-    constructor(data?: ISensorItemModel) {
+    constructor(data?: ISensorModel) {
         super(data);
     }
 
@@ -7360,15 +7394,14 @@ export class SensorItemModel extends EntityModel implements ISensorItemModel {
         super.init(_data);
         if (_data) {
             this.sensorName = _data["sensorName"];
-            this.itemId = _data["itemId"];
-            this.locationId = _data["locationId"];
+            this.site = _data["site"] ? LocationModel.fromJS(_data["site"]) : <any>undefined;
             this.assignedLocation = _data["assignedLocation"] ? LocationModel.fromJS(_data["assignedLocation"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): SensorItemModel {
+    static fromJS(data: any): SensorModel {
         data = typeof data === 'object' ? data : {};
-        let result = new SensorItemModel();
+        let result = new SensorModel();
         result.init(data);
         return result;
     }
@@ -7376,18 +7409,16 @@ export class SensorItemModel extends EntityModel implements ISensorItemModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["sensorName"] = this.sensorName;
-        data["itemId"] = this.itemId;
-        data["locationId"] = this.locationId;
+        data["site"] = this.site ? this.site.toJSON() : <any>undefined;
         data["assignedLocation"] = this.assignedLocation ? this.assignedLocation.toJSON() : <any>undefined;
         super.toJSON(data);
         return data; 
     }
 }
 
-export interface ISensorItemModel extends IEntityModel {
+export interface ISensorModel extends ICreatableModel {
     sensorName?: string | undefined;
-    itemId?: string | undefined;
-    locationId?: number | undefined;
+    site?: LocationModel | undefined;
     assignedLocation?: LocationModel | undefined;
 }
 
