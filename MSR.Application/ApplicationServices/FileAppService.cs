@@ -5,16 +5,13 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
-using MSR.Domain.Events;
 using MSR.Domain.SQSEventing.Abstractions;
-using MSR.Domain.SQSEventing.Models;
 using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MSR.Application.EventServices;
 using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Application.ApplicationServices

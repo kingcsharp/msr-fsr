@@ -1,6 +1,4 @@
-﻿
-using MSR.Domain.Models.BaseModels;
-using System.Collections.Generic;
+﻿using MSR.Domain.Models.BaseModels;
 
 namespace MSR.Domain.Models
 {
@@ -21,5 +19,6 @@ namespace MSR.Domain.Models
         public string InvoiceClass { get; set; }
         public TimeZone TimeZone { get; set; }
         public string Status { get; set; }
+        public LocationModel Site { get; set; }
     }
 }

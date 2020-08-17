@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+﻿namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public class Sensor: CreatableEntity
     {
