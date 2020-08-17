@@ -30,7 +30,7 @@ export class CkeditorWrapperComponent implements OnInit {
           {
             color: 'hsl(0, 0%, 0%)',
             label: 'Black',
-            default:true
+            default: true
           },
           {
             color: 'hsl(0, 0%, 30%)',
@@ -53,7 +53,8 @@ export class CkeditorWrapperComponent implements OnInit {
       },
       toolbar: {
         items: [
-          "BlockQuote", "Bold", "CKFinder", "FontBackgroundColor", "FontColor", "FontFamily", "FontSize", "Heading", "Highlight", "HorizontalLine", "ImageUpload", "Indent", "Italic", "Link", "PageBreak", "RemoveFormat", "Strikethrough", "Subscript", "Superscript"
+          'BlockQuote', 'Bold', 'CKFinder', 'FontBackgroundColor', 'FontColor', 'FontFamily', 'FontSize', 'Heading', 'Highlight', 'HorizontalLine',
+           'ImageUpload', 'Indent', 'Italic', 'Link', 'PageBreak', 'RemoveFormat', 'Strikethrough', 'Subscript', 'Superscript'
         ]
       },
       image: {

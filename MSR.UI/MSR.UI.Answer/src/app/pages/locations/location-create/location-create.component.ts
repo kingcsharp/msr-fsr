@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest, 
-  UpdateLocationRequest, ILocationModel, SensorModel , SensorService} from '../../../services/api.client.generated';
+import {
+  LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest,
+  UpdateLocationRequest, ILocationModel, SensorModel, SensorService
+} from '../../../services/api.client.generated';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -21,51 +23,54 @@ export class LocationCreateComponent implements OnInit {
   parentLocationOptions: Array<LocationModel>;
   countryOptions: SelectItem[];
   selectedParentLocation: LocationModel;
-  allLocations: LocationModel[];
   sensorOptions: SensorModel[] = new Array<SensorModel>();
   selectedSensors: SensorModel[] = new Array<SensorModel>();
-
-  constructor(private locationService: LocationService, private sensorService:SensorService , private route: ActivatedRoute, public globals: Globals, private router: Router) { }
+  originalSensorsSelected: SensorModel[] = new Array<SensorModel>();
+  constructor(private locationService: LocationService, private sensorService: SensorService, private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
 
     this.countryOptions = new LookUpItems().Countries();
 
+    this.globals.showLoader(true);
     this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.parentLocationOptions = response.object;
 
+      this.route.queryParams.subscribe(params => {
+        this.locationToEditId = params['id'] == null ? 0 : Number(params['id']);
+
+        if (this.locationToEditId !== 0) {
+
+          this.globals.showLoader(true);
+          this.locationService.locationGet(null, this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
+
+            this.locationToEdit = locationGetResponse.object[0];
+            if (this.locationToEdit.parentId !== null) {
+
+              this.selectedParentLocation = this.parentLocationOptions.find(s => s.id === this.locationToEdit.id);
+
+              this.globals.showLoader(true);
+              this.locationService.sensorGet(this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationResponse) => {
+
+                this.selectedSensors = locationResponse.object;
+                this.originalSensorsSelected = locationResponse.object;
+              }));
+
+            }
+
+          }));
+
+        } else {
+          this.locationToEdit = new LocationModel();
+
+        }
+
+      });
+
     }));
 
-    this.route.queryParams.subscribe(params => {
-      this.locationToEditId = params['id'] == null ? 0 : Number(params['id']);
 
-      if (this.locationToEditId !== 0) {
-
-        this.locationService.locationGet(null, this.locationToEditId, env.apiVersion).subscribe(responseHandler((response) => {
-
-          this.locationToEdit = response.object[0];
-          if (this.locationToEdit.parentId !== null) {
-
-            this.selectedParentLocation = this.parentLocationOptions.find(s => s.id === this.locationToEdit.id);
-
-          }
-
-          this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
-
-            this.allLocations = response.object;
-
-
-          }))
-
-        }));
-
-      } else {
-        this.locationToEdit = new LocationModel();
-
-      }
-
-    });
 
   }
 
@@ -90,6 +95,52 @@ export class LocationCreateComponent implements OnInit {
 
     this.globals.showLoader(true);
     this.locationService.locationPatch(env.apiVersion, updateLocationRequest).subscribe(responseHandler((response) => {
+
+      let sensorsToAdd = new Array<SensorModel>();
+      let sensorsToDelete = new Array<SensorModel>();
+
+      if (this.selectedSensors.length !== 0) {
+
+        this.originalSensorsSelected.forEach(originalSensor => {
+
+          if (this.selectedSensors.find(s => s.id === originalSensor.id) === undefined) {
+            sensorsToDelete.push(originalSensor);
+          }
+
+        });
+
+        this.selectedSensors.forEach(selectedSensor => {
+
+          if (this.originalSensorsSelected.find(s => s.id === selectedSensor.id) === undefined) {
+            sensorsToAdd.push(selectedSensor);
+          }
+
+        });
+
+
+        sensorsToDelete.forEach(sensorToDelete => {
+          this.globals.showLoader(true);
+          this.locationService.sensorDelete(this.locationToEditId, sensorToDelete.id, env.apiVersion).subscribe(responseHandler((sensorResponse) => {
+
+
+
+          }));
+
+        });
+
+        sensorsToAdd.forEach(sensorToAdd => {
+          this.globals.showLoader(true);
+          this.locationService.sensorPost(this.locationToEditId, sensorToAdd.id, env.apiVersion).subscribe(responseHandler((sensorResponse) => {
+
+          }));
+
+        });
+
+
+
+      }
+
+      this.router.navigate(['app/locations/locations']);
 
     }));
   }
@@ -118,33 +169,37 @@ export class LocationCreateComponent implements OnInit {
 
       this.locationToEditId = response.object.id;
 
-      if(this.selectedSensors.length !== 0){
-        
+      if (this.selectedSensors.length !== 0) {
+
         this.selectedSensors.forEach(sensor => {
 
           this.globals.showLoader(true);
-          this.locationService.sensorPost(Number(this.locationToEditId),Number(sensor.id),env.apiVersion).subscribe(responseHandler((response) => {
+          this.locationService.sensorPost(Number(this.locationToEditId), Number(sensor.id), env.apiVersion).subscribe(responseHandler((sensorPostResponse) => {
 
-          }))
+          }));
 
-        })
+        });
 
       }
-      
+
+
+      this.router.navigate(['app/locations/locations']);
+
     }));
 
   }
 
-  parentSelected($event){
 
-    if($event.value === null){
+  parentSelected($event) {
+
+    if ($event.value === null) {
       this.selectedParentLocation = undefined;
-    }else{
-      this.sensorService.sensor(null,$event.site,env.apiVersion).subscribe(responseHandler((response) => {
+    } else {
+      this.sensorService.sensor(null, $event.site, env.apiVersion).subscribe(responseHandler((response) => {
 
         this.sensorOptions.length = 0;
-        this.sensorOptions.push(...response.object)
-        console.log(this.sensorOptions);
+        this.sensorOptions.push(...response.object);
+
       }));
     }
   }

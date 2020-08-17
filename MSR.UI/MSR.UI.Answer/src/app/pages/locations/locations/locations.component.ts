@@ -100,9 +100,9 @@ export class LocationsComponent implements OnInit {
     this.globals.showLoader(true);
     this.locationService.locationDelete(this.locationToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
+      this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler( (locationGetResponse) => {
         this.data.length = 0;
-        this.data = response.object;
+        this.data = locationGetResponse.object;
         this.data.map((elem) => {
           elem.show = elem.status !== null;
         });

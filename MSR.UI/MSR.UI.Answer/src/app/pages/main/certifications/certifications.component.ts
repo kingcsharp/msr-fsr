@@ -49,7 +49,6 @@ export class CertificationsComponent implements OnInit {
       ).map(x => ({ label: x.status, value: x.status }));
 
     }));
- 
   }
 
   hasPrivilege(privilegeName) {
