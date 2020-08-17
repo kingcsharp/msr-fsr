@@ -69,7 +69,7 @@ Cypress.Commands.add("navigateToPage", (menuBaseItemName,menuChildItemName) => {
         }
     });
 
-    cy.get(".ui-blockui-document", { timeout: 8000 }).should("not.be.visible");
+    cy.get(".ui-blockui-document", { timeout: 20000 }).should("not.be.visible");
 
 
 })

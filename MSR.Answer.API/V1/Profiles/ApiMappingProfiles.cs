@@ -52,6 +52,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateCustomerRequest, UpdateCustomer>();
             CreateMap<CreateFileRequest, CreateFile>();
             CreateMap<UploadFileRequest, UploadFile>();
+            CreateMap<ImportRequest, ImportFile>();
+            CreateMap<GetSensorRequest, GetSensor>();
         }
     }
 }

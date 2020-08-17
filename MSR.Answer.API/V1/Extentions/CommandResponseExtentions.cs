@@ -3,6 +3,8 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
@@ -55,6 +57,15 @@ namespace MSR.Answer.API.V1.Extentions
         {
             var result = ValidateCommandResponse(commandResponse);
             return result ?? new NoContentResult();
+        }
+        public static IActionResult ToImportOkObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)
+        {
+            var result = ValidateCommandResponse(commandResponse);
+            return result ?? new OkObjectResult(new ImportAuditActionResult<TResult>
+            {
+                ImportErrors = ((ICommandResponse<IEnumerable<ImportError>>)commandResponse).Data,
+                SuccessMessage = message
+            });
         }
 
         public static IActionResult ToCreatedResponse<TResult>(this ICommandResponse commandResponse, string message = null)
@@ -111,6 +122,7 @@ namespace MSR.Answer.API.V1.Extentions
 
             }
         }
+
 
     }
 }

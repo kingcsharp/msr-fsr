@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using MSR.Domain.Helpers;
 using MSR.Application.ApplicationServices;
+using MSR.Application.EventServices;
 
 namespace MSR.Application.Extentions
 {
@@ -28,6 +29,7 @@ namespace MSR.Application.Extentions
             services.AddScoped<RoleAppService>();
             services.AddScoped<UserAppService>();
             services.AddScoped<WorkflowAppService>();
+            services.AddScoped<EventServiceHandler>();
 
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -46,6 +48,7 @@ namespace MSR.Application.Extentions
                     services.AddTransient(serviceType, type);
                 }
             }
+
             return services;
         }
     }

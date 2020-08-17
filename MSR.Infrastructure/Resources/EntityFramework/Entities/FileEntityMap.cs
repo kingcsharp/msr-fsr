@@ -6,8 +6,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(FileEntityMap))]
     public partial class FileEntityMap: CreatableEntity
     {
-        public int Id { get; set; }
-
         public int FileId { get; set; }
 
         [ForeignKey("FileId")]

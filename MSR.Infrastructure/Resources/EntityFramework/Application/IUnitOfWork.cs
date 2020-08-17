@@ -66,6 +66,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<FileEntityMap> FileEntityMap { get; }
 
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
+        IRepository<Sensor> Sensors { get; }
 
 
         void SaveChanges();
