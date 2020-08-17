@@ -48,7 +48,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanCreate)]
-        public async Task<IActionResult> Post([FromQuery, Required] PostPendingApprovalRequest request)
+        public async Task<IActionResult> Post([FromBody, Required] PostPendingApprovalRequest request)
         {
             var command = request.ToPostApprovalCommand();
 
