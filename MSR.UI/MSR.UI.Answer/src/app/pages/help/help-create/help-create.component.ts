@@ -64,40 +64,35 @@ export class HelpCreateComponent implements OnInit {
         this.generateAllUrlPathsRegistered();
         this.friendlyUrlOptions.forEach( friendlyUrlOption => {
 
-          if(friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined){
+          if ( friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
 
             this.urls.push({ label: friendlyUrlOption, value: friendlyUrlOption });
 
           }
 
         });
-    }))
+    }));
 
   }
 
-  generateAllUrlPathsRegistered(){
+  generateAllUrlPathsRegistered() {
 
     let helpPaths = this.getHelpPaths();
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(helpPaths);
-
-    let locationPaths = LocationsModule.routes.filter(s => s.path !== '').map(m =>'/locations/' + m.path.toLowerCase());
+    let locationPaths = LocationsModule.routes.filter(s => s.path !== '').map(m => '/locations/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(locationPaths);
-    
-    let mainPaths = MainModule.routes.filter(s => s.path !== '').map(m =>'/people/' + m.path.toLowerCase());
+    let mainPaths = MainModule.routes.filter(s => s.path !== '').map(m => '/people/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(mainPaths);
-    
-    let partsPaths = PartsModule.routes.filter(s => s.path !== '').map(m =>'/parts/' + m.path.toLowerCase());
+    let partsPaths = PartsModule.routes.filter(s => s.path !== '').map(m => '/parts/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(partsPaths);
-
-    let workflowPaths = PartsModule.routes.filter(s => s.path !== '').map(m =>'/workflow/' + m.path.toLowerCase());
+    let workflowPaths = PartsModule.routes.filter(s => s.path !== '').map(m => '/workflow/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(workflowPaths);
-    
   }
 
-  getHelpPaths():Array<string>{
-    var routerConfig = <LoadedRouterConfig>(<any>this.router.config.find(s => s.path === 'app'))['_loadedConfig'];
-    var helpConfig = <LoadedRouterConfig>(<any>routerConfig.routes[0].children.find(s => s.path === 'help'))['_loadedConfig']
-    var helpPaths = helpConfig.routes.filter(s => s.path !== '').map(m => '/help/' + m.path);
+  getHelpPaths(): Array<string> {
+    let routerConfig = <LoadedRouterConfig>(<any>this.router.config.find(s => s.path === 'app'))['_loadedConfig'];
+    let helpConfig = <LoadedRouterConfig>(<any>routerConfig.routes[0].children.find(s => s.path === 'help'))['_loadedConfig'];
+    let helpPaths = helpConfig.routes.filter(s => s.path !== '').map(m => '/help/' + m.path);
     return helpPaths;
   }
 

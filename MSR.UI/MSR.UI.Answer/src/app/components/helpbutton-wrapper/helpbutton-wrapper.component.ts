@@ -25,14 +25,12 @@ export class HelpbuttonWrapperComponent implements OnInit {
 
     this.helpService.helpGet(null, this.helpMenuUrl, env.apiVersion).subscribe(responseHandler(response => {
 
-      if(response.object.length !== 0){
+      if ( response.object.length !== 0 ) {
         this.helpContent = response.object[0].content;
         this.canViewHelpPage = true;
-      }else{
+      } else {
         this.canViewHelpPage = false;
       }
-      
- 
 
     }));
 
