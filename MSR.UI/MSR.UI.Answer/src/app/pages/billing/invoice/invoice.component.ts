@@ -95,17 +95,8 @@ export class InvoiceComponent implements OnInit {
     this.isActive = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
 
-    // this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Invoices);
-    const a = {
-      canRead: true,
-      canActivate: true,
-      canCreate: true,
-      canEdit: true,
-      canDelete: true
-    } as AllowedActions;
-
-    this.userPrivileges = new AllowedActions(a);
-
+    this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Invoices);
+    
     this.getInvoices();
     this.getLocations();
     this.getCustomers();
