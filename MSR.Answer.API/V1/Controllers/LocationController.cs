@@ -57,7 +57,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<LocationModel>(DetermineResponseMessage(ret, "Create"));
         }
 
-        [HttpPost("{LocationId}/Sensor/{SensorId}"), SwaggerResponse(typeof(AuditActionResult))]
+        [HttpPost("{locationId}/Sensor/{sensorId}"), SwaggerResponse(typeof(AuditActionResult))]
         [HasPrivilegeApi("Locations", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> AddSensorToLocation([FromRoute, Required] int locationId, [FromRoute, Required] int sensorId)
         {
@@ -86,7 +86,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse(DetermineResponseMessage(ret,"Deactivate"));
         }
 
-        [HttpDelete("{LocationId}/Sensor/{SensorId}"), SwaggerResponse(typeof(AuditActionResult))]
+        [HttpDelete("{locationId}/Sensor/{sensorId}"), SwaggerResponse(typeof(AuditActionResult))]
         [HasPrivilegeApi("Locations", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> RemoveSensorFromLocation([FromRoute, Required] int locationId, [FromRoute, Required] int sensorId)
         {

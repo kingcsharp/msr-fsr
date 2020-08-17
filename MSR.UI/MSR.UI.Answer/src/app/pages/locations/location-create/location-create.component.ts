@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest, 
-  UpdateLocationRequest, ILocationModel, SensorItemModel } from '../../../services/api.client.generated';
+  UpdateLocationRequest, ILocationModel, SensorModel , SensorService} from '../../../services/api.client.generated';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -11,7 +11,8 @@ import { Globals } from '../../../models/lib/globals';
 @Component({
   selector: 'app-location-create',
   templateUrl: './location-create.component.html',
-  styleUrls: ['./location-create.component.scss']
+  styleUrls: ['./location-create.component.scss'],
+  providers: [SensorService]
 })
 export class LocationCreateComponent implements OnInit {
 
@@ -21,10 +22,10 @@ export class LocationCreateComponent implements OnInit {
   countryOptions: SelectItem[];
   selectedParentLocation: LocationModel;
   allLocations: LocationModel[];
-  sensorOptopns: SensorItemModel[];
-  selectedSensors: SensorItemModel[] = new Array<SensorItemModel>();
+  sensorOptions: SensorModel[] = new Array<SensorModel>();
+  selectedSensors: SensorModel[] = new Array<SensorModel>();
 
-  constructor(private locationService: LocationService, private route: ActivatedRoute, public globals: Globals, private router: Router) { }
+  constructor(private locationService: LocationService, private sensorService:SensorService , private route: ActivatedRoute, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
 
@@ -63,9 +64,6 @@ export class LocationCreateComponent implements OnInit {
         this.locationToEdit = new LocationModel();
 
       }
-
-      // TODO: Replace with Sensors GET when James is ready
-      this.sensorOptopns = this.mockSensorItemsGet();
 
     });
 
@@ -120,30 +118,35 @@ export class LocationCreateComponent implements OnInit {
 
       this.locationToEditId = response.object.id;
 
+      if(this.selectedSensors.length !== 0){
+        
+        this.selectedSensors.forEach(sensor => {
+
+          this.globals.showLoader(true);
+          this.locationService.sensorPost(Number(this.locationToEditId),Number(sensor.id),env.apiVersion).subscribe(responseHandler((response) => {
+
+          }))
+
+        })
+
+      }
+      
     }));
 
   }
 
-  mockSensorItemsGet(){
+  parentSelected($event){
 
-    let sensorItemModels = new Array<SensorItemModel>()
-    
-    let sensorItemModelA = new SensorItemModel();
-    sensorItemModelA.id = 1;
-    sensorItemModelA.sensorName = 'Sample Sensor A';
-    sensorItemModels.push(sensorItemModelA);
+    if($event.value === null){
+      this.selectedParentLocation = undefined;
+    }else{
+      this.sensorService.sensor(null,$event.site,env.apiVersion).subscribe(responseHandler((response) => {
 
-    let sensorItemModelB = new SensorItemModel();
-    sensorItemModelB.id = 2;
-    sensorItemModelB.sensorName = 'Sample Sensor B';
-    sensorItemModels.push(sensorItemModelB);
-
-    let sensorItemModelC = new SensorItemModel();
-    sensorItemModelC.id = 2;
-    sensorItemModelC.sensorName = 'Sample Sensor C';
-    sensorItemModels.push(sensorItemModelC);
-
-    return sensorItemModels;
+        this.sensorOptions.length = 0;
+        this.sensorOptions.push(...response.object)
+        console.log(this.sensorOptions);
+      }));
+    }
   }
 
 }
