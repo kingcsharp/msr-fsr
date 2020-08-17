@@ -6,5 +6,6 @@ namespace MSR.Domain.Commands
     public class GetSensor: Command
     {
         public int? SensorId { get; set; }
+        public int? SiteId { get; set; }
     }
 }

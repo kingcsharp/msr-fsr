@@ -52,7 +52,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetSensorsForLocation command, CancellationToken cancellationToken = default)
         {
             var ret = await _locationService.GetSensorsForLocation(command);
-            return new CommandResponse<IEnumerable<SensorItemModel>>(ret);
+            return new CommandResponse<IEnumerable<SensorModel>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateLocationSensorMap command, CancellationToken cancellationToken = default)

@@ -1,5 +1,4 @@
 ﻿using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Events;
 using MSR.Domain.SQSEventing.Abstractions;

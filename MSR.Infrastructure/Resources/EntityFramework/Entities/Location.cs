@@ -50,6 +50,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual ICollection<Location> Children { get; set; }
 
-        public virtual ICollection<SensorItem> Sensors { get; set; }
+        public virtual ICollection<Sensor> Sensors { get; set; }
     }
 }

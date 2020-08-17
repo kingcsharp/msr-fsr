@@ -6,7 +6,6 @@ using Amazon.SQS.Model;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using MSR.Answer.Processor.SQSServices.Abstractions;
-using System.Collections.Concurrent;
 using Amazon.SQS;
 using MSR.Domain.Models.Config;
 using System.Net;
