@@ -27,11 +27,11 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             _mapper = mapper;
         }
 
-        public async Task<Domain.Models.Customer> CreateCustomerAsync(CreateCustomer command)
+        public async Task<Domain.Models.Customer> CreateCustomerAsync(CreateCustomer command, bool import = false)
         {
             Domain.Models.Customer retCustomer;
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval) || import)
             {
                 var customer = _mapper.Map<EntityFramework.Entities.Customer>(command);
                 //Because automapper is stupid.
@@ -74,7 +74,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
             return retCustomer;
         }
 
-        public async Task<Domain.Models.Customer> UpdateCustomerAsync(UpdateCustomer command)
+        public async Task<Domain.Models.Customer> UpdateCustomerAsync(UpdateCustomer command, bool import = false)
         {
             Domain.Models.Customer retCustomer = null;
 
@@ -85,7 +85,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 throw new DomainException($"{nameof(Domain.Models.Customer)} not found with ID: {command.CustomerId}");
             }
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.CustomerApproval) || import)
             {
                 var customer = _mapper.Map(command, curCustomer);
                 _unitOfWork.Customers.Update(curCustomer);
@@ -246,12 +246,12 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 {
                     if (record.Id.HasValue && record.Id.Value > 0)
                     {
-                        var ret = await UpdateCustomerAsync(_mapper.Map<UpdateCustomer>(record));
+                        var ret = await UpdateCustomerAsync(_mapper.Map<UpdateCustomer>(record), true);
                         customers.Add(ret);
                     }
                     else
                     {
-                        var ret = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record));
+                        var ret = await CreateCustomerAsync(_mapper.Map<CreateCustomer>(record),true);
                         customers.Add(ret);
                     }
                 }

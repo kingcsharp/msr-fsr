@@ -41,6 +41,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.SecondarContactUserId, opts => opts.MapFrom(src => src.SecondaryContactUserId))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Domain.Models.CustomerImportItem, CreateCustomer>();
+            CreateMap<Domain.Models.CustomerImportItem, UpdateCustomer>()
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Id));
 
             #endregion
 
@@ -64,6 +67,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<SensorItem, Domain.Models.SensorItemModel>().ReverseMap();
+            CreateMap<Domain.Models.LocationImportItem, CreateLocation>();
+            CreateMap<Domain.Models.LocationImportItem, UpdateLocation>();
             #endregion
 
             CreateMap<TimeZone, Domain.Models.TimeZone>().ReverseMap();

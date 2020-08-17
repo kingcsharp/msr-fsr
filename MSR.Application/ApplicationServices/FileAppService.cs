@@ -117,7 +117,7 @@ namespace MSR.Application.ApplicationServices
 
             //await _bus.SendMessage(envelope);
 
-            return CommandResponse.SuccessCommand;
+            return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>)null);
         }
     }
 }

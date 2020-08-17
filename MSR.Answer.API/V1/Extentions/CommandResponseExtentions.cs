@@ -63,8 +63,7 @@ namespace MSR.Answer.API.V1.Extentions
             var result = ValidateCommandResponse(commandResponse);
             return result ?? new OkObjectResult(new ImportAuditActionResult<TResult>
             {
-                Object = ((ICommandResponse<(TResult ImportedData, IEnumerable<ImportError> ImportErrors)>)commandResponse).Data.ImportedData,
-                ImportErrors = ((ICommandResponse<(TResult ImportedData, IEnumerable<ImportError> ImportErrors)>)commandResponse).Data.ImportErrors,
+                ImportErrors = ((ICommandResponse<IEnumerable<ImportError>>)commandResponse).Data,
                 SuccessMessage = message
             });
         }

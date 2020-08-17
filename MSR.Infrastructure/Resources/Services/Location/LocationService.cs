@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Helpers;
+using System;
 
 namespace MSR.Infrastructure.Resources.Services.Location
 {
@@ -65,12 +66,13 @@ namespace MSR.Infrastructure.Resources.Services.Location
             return ret;
         }
 
-        public async Task<LocationModel> CreateLocationAsync(CreateLocation command)
+        public async Task<LocationModel> CreateLocationAsync(CreateLocation command, bool import = false)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
             LocationModel retLocation;
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval))
+            //Import is used here because if they are importing the data, it doesn't go through approvals.
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval) || import)
             {
                 var location = _mapper.Map<EntityFramework.Entities.Location>(command);
                 location.IsActive = true;
@@ -96,7 +98,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             return retLocation;
         } 
 
-        public async Task<LocationModel> UpdateLocationAsync(UpdateLocation command)
+        public async Task<LocationModel> UpdateLocationAsync(UpdateLocation command, bool import = false)
         {
             var curLocation = await _unitOfWork.Locations.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
@@ -107,7 +109,8 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
             LocationModel retLocation;
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval))
+            //Import is used here because if they are importing the data, it doesn't go through approvals.
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval) || import)
             {
                 var location = _mapper.Map(command,curLocation);
                 
@@ -197,16 +200,16 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 {
                     if (record.Id.HasValue && record.Id.Value > 0)
                     {
-                        var ret = await UpdateLocationAsync(_mapper.Map<UpdateLocation>(record));
+                        var ret = await UpdateLocationAsync(_mapper.Map<UpdateLocation>(record),true);
                         locations.Add(ret);
                     }
                     else
                     {
-                        var ret = await CreateLocationAsync(_mapper.Map<CreateLocation>(record));
+                        var ret = await CreateLocationAsync(_mapper.Map<CreateLocation>(record), true);
                         locations.Add(ret);
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
                     //If we get an error on a single import dump it and keep going. 
                 }

@@ -69,12 +69,12 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("Import")]
-        [SwaggerResponse(typeof(ImportAuditActionResult<IEnumerable<object>>))]
+        [SwaggerResponse(typeof(ImportAuditActionResult<IEnumerable<ImportError>>))]
         public async Task<IActionResult> ImportFile([FromBody, Required] ImportRequest request)
         {
             var command = request.ToImportFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToImportOkObjectResponse<IEnumerable<object>>("Data Imported Successfully");
+            return ret.ToImportOkObjectResponse<IEnumerable<ImportError>>("Data Validated and awaiting import.  System will notify you when complete.");
         }
 
         [HttpDelete]
