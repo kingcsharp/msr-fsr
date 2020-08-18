@@ -118,6 +118,10 @@
               </div>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
+              <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
+                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
+                                    [datatable]="dt">
+                                </multiselect-wrapper>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
             </th>

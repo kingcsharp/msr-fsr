@@ -27,6 +27,7 @@ export class LocationsComponent implements OnInit {
   canDeleteLocation: boolean = false;
   canApproveLocation: boolean = false;
   menuItems = EnumMenuItem;
+  statusOptions: any[];
 
   constructor(private locationService: LocationService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -73,6 +74,18 @@ export class LocationsComponent implements OnInit {
       this.data.map((elem) => {
         elem.show = elem.status !== null;
       });
+
+      this.data.map((elem) => {
+        
+        if(elem.status === null){
+          elem.status = 'Approved';
+        }
+
+      });
+
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
       this.loading = false;
     }));
   }
