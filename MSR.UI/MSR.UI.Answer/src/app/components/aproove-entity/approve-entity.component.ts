@@ -54,13 +54,12 @@ export class ApproveEntityComponent implements OnInit {
     this._globals.showLoader(true);
     const ctrl = this;
     if (this.approve) {
-      
       let postPendingApprovalRequest = new PostPendingApprovalRequest();
       postPendingApprovalRequest.comments = this.comments;
       postPendingApprovalRequest.table = this.activityType;
       postPendingApprovalRequest.id = this.entityId;
 
-      this.workflowPendingApprovalService.workflowPendingApprovalPost( env.apiVersion, postPendingApprovalRequest)
+      this.workflowPendingApprovalService.workflowPendingApprovalPost(env.apiVersion, postPendingApprovalRequest)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.status = 'Approved';
           this.statusChange.emit(this.status);

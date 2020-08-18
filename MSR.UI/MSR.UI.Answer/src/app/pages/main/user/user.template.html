@@ -35,7 +35,6 @@
             <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
-
         <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
             [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
@@ -166,7 +165,7 @@
           {{user.supervisorName}}
         </td>
         <td>
-          <i *ngIf="canEditUsers" class="fa fa-edit pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
+          <i *ngIf="canEditUsers" class="far fa-edit pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
         </td>
       </tr>
     </ng-template>
@@ -177,8 +176,8 @@
     </ng-template>
   </p-table>
 </widget>
-<p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display" [appendTo]="'body'" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display" [appendTo]="'body'"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -258,15 +257,16 @@
               Roles
             </label>
             <div class="col-md-4 col-12">
-              <multiselect-wrapper-form [options]="allRoles" [(model)]="currUser.rolesSaved" [defaultLabelProperty]="'name'" [defaultLabel]="'Select Roles'">
+              <multiselect-wrapper-form [options]="allRoles" [(model)]="currUser.rolesSaved" defaultLabelProperty="name"
+                defaultLabel="Select Roles">
               </multiselect-wrapper-form>
             </div>
             <label class="form-control-label col-md-2 col-12 text-md-right" for="locations">
               Location
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body" [baseZIndex]="100002"
-                [(ngModel)]="currUser.locationId">
+              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body"
+                [baseZIndex]="100002" [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
           </div>
@@ -275,8 +275,8 @@
               Supervisor
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body" [baseZIndex]="100001"
-                [(ngModel)]="currUser.supervisorId">
+              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body"
+                [baseZIndex]="100001" [(ngModel)]="currUser.supervisorId">
               </p-dropdown>
             </div>
             <label for="createdOn" *ngIf="currUser.id !== undefined" class="col-md-2  col-form-label text-md-right">

@@ -394,6 +394,11 @@ namespace MSR.Answer.API.V1.Extentions
             return AutoMapperHelper.Mapper.Map<GetWorkOrder>(request);
         }
 
+        /// <summary>
+        /// Creates a collection of invoice commands for each InvoiceItem in the command.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static CreateIndividualInvoices ToCreateIndividualInvoicesCommand(this CreateInvoiceRequest request)
         {
             var createIndividualInvoices = new CreateIndividualInvoices()
@@ -405,15 +410,15 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 var inv = new CreateOneInvoice()
                 {
-                    CustomerId = request.CustomerId,
+                    CustomerId = request.CustomerId.GetValueOrDefault(),
                     Description = request.Description,
                     InvoiceClass = request.InvoiceClass,
                     InvoiceDate = request.InvoiceDate,
                     TaxPercentage = request.TaxPercentage,
                     InvoiceItems = new List<CreateUpdateInvoiceItem>() {
                             new CreateUpdateInvoiceItem() {
-                                PurchaseOrderId = item.PurchaseOrderId,
-                                WorkOrderId  = item.WorkOrderId
+                                PurchaseOrderId = item.PurchaseOrderId.GetValueOrDefault(),
+                                WorkOrderId  = item.WorkOrderId.GetValueOrDefault()
                             }
                         }
                 };
@@ -426,63 +431,38 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static CreateOneInvoice ToCreateOneInvoiceCommand(this CreateInvoiceRequest request)
         {
-            return new CreateOneInvoice()
-            {
-                CustomerId = request.CustomerId,
-                Description = request.Description,
-                InvoiceClass = request.InvoiceClass,
-                InvoiceDate = request.InvoiceDate,
-                TaxPercentage = request.TaxPercentage,
-                InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
-                {
-                    PurchaseOrderId = x.PurchaseOrderId,
-                    WorkOrderId = x.WorkOrderId
-                }).ToList()
-            };
+            return AutoMapperHelper.Mapper.Map<CreateOneInvoice>(request);
         }
 
         public static GetInvoices ToGetInvoicesCommand(this GetInvoicesRequest request)
         {
-            return new GetInvoices()
-            {
-                Id = request.Id,
-                CustomerId = request.CustomerId.GetValueOrDefault(0),
-                InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
-                Total = request.Total,
-                Description = request.Description,
-                StatusId = request.StatusId
-            };
+            return AutoMapperHelper.Mapper.Map<GetInvoices>(request);
+        }
+
+        public static GetInvoicesGridView ToGetInvoicesGridViewCommand(this GetInvoicesRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetInvoicesGridView>(request);
         }
 
         public static UpdateInvoice ToUpdateInvoiceCommand(this UpdateInvoiceRequest request)
         {
             return new UpdateInvoice()
             {
-                Id = request.Id,
+                Id = request.Id.GetValueOrDefault(0),
                 Description = request.Description,
                 InvoiceDate = request.InvoiceDate,
                 TaxPercentage = request.TaxPercentage,
                 InvoiceItems = request.InvoiceItems?.Select(x => new CreateUpdateInvoiceItem()
                 {
-                    PurchaseOrderId = x.PurchaseOrderId,
-                    WorkOrderId = x.WorkOrderId
+                    Id = x.Id.GetValueOrDefault(0)
                 }).ToList()
             };
         }
 
         public static DownloadAsIIFInvoices ToDownloadCommand(this DownloadInvoicesRequest request)
         {
-            return new DownloadAsIIFInvoices()
-            {
-                CustomerId = request.CustomerId,
-                InvoiceDate = request.InvoiceDate.GetValueOrDefault(DateTime.MinValue),
-                Total = request.Total,
-                Description = request.Description,
-                StatusId = request.StatusId
-            };
+            return AutoMapperHelper.Mapper.Map<DownloadAsIIFInvoices>(request);
         }
-
-
 
         public static RemoveMenuRoleMap ToRemoveMenuRoleMapCommand(this DeleteMenuRoleMapRequest request)
         {

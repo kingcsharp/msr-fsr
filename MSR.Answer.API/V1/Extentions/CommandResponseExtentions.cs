@@ -92,7 +92,7 @@ namespace MSR.Answer.API.V1.Extentions
                     return HandleDomainException(domainException);
                 }
 
-                return InternalServerError(commandResponse.ResponseError.Exception.Message);
+                return InternalServerError(commandResponse.ResponseError.Exception.ToString());
             }
 
             return null;

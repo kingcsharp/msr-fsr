@@ -2,8 +2,8 @@
 {
     public class CreateUpdateInvoiceItem
     {
-        public int PurchaseOrderId { get; set; }
-
+        public int Id { get; set; }
         public int WorkOrderId { get; set; }
+        public int PurchaseOrderId { get; set; }
     }
 }

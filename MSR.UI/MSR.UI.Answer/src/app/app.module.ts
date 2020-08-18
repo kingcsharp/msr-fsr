@@ -17,14 +17,16 @@ import { AppGuard } from './app.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
+
 import { CommonGrid } from './models/lib/CommonGrid';
 import { environment } from '../environments/environment';
 
 
 import * as $ from 'jquery';
 import {
-  UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService,
-  WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService, FileService
+  UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
+  WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
+  FileService, InvoiceService, WorkOrderService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -70,6 +72,9 @@ const APP_PROVIDERS = [
     PartService,
     FileService,
     UserService,
+    InvoiceService,
+    CustomerService,
+    WorkOrderService,
     {
       provide: API_BASE_URL,
       useValue: environment.url

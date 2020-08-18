@@ -144,6 +144,18 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
+        public virtual void UpdateAndSaveChanges(TEntity entityToUpdate)
+        {
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
+            SaveChanges();
+        }
+
+        public virtual async Task UpdateAndSaveChangesAsync(TEntity entityToUpdate)
+        {
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
+            await SaveChangesAsync();
+        }
+
         public virtual void ApplyCurrentValues(TEntity entityToUpdate, TEntity updatedEntity)
         {
             _context.Entry(entityToUpdate).CurrentValues.SetValues(updatedEntity);
