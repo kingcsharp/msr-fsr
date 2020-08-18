@@ -22,8 +22,8 @@
               class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
               + Add
             </button>
-            <csv-import [showButton]="canAddCustomer" [menuItem]="menuItems.CustomersDepartments" title="Import Customers"
-              (onUpload)="uploadParts($event)" fileName="CustomersSample.csv"></csv-import>
+            <csv-import [showButton]="canAddCustomer" [menuItem]="menuItems.CustomersDepartments"
+              title="Import Customers" (onUpload)="uploadParts($event)" fileName="CustomersSample.csv"></csv-import>
             <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
               [gridVersion]="gridVersion" data-cy="usergrid-options" [hidden]="false">
             </grid-options>
@@ -91,23 +91,13 @@
                   (click)="commonGrid.filter(dt,'location')"></i>
               </div>
             </th>
-            <th [hidden]="!commonGrid.isVisibleCol('primaryContact',gridSettings)">
-              <div class="position-relative">
-                <input id="primaryContact" pInputText type="text" tooltip="Search by Primary Contact"
-                  (input)="dt.filter($event.target.value, 'primaryContact', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['primaryContact']?.value">
-                <i *ngIf="dt.filters['primaryContact']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'primaryContact')"></i>
-              </div>
+            <th grid-input-filter [dt]="dt" searchField="primaryContactUser.fullName"
+              [hidden]="!commonGrid.isVisibleCol('primaryContactUser.fullName',gridSettings)"
+              [gridSettings]="gridSettings">
             </th>
-            <th [hidden]="!commonGrid.isVisibleCol('secondaryContact',gridSettings)">
-              <div class="position-relative">
-                <input id="secondaryContact" pInputText type="text" tooltip="Search by Secondary Contact"
-                  (input)="dt.filter($event.target.value, 'secondaryContact', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['secondaryContact']?.value">
-                <i *ngIf="dt.filters['secondaryContact']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'secondaryContact')"></i>
-              </div>
+            <th grid-input-filter [dt]="dt" searchField="secondaryContactUser.fullName"
+              [hidden]="!commonGrid.isVisibleCol('secondaryContactUser.fullName',gridSettings)"
+              [gridSettings]="gridSettings">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('isActive',gridSettings)">
               <div class="position-relative">
@@ -118,22 +108,13 @@
                   (click)="commonGrid.filter(dt,'isActive')"></i>
               </div>
             </th>
-            <th [hidden]="!commonGrid.isVisibleCol('createdBy',gridSettings)">
-              <div class="position-relative">
-                <input id="createdBy" pInputText type="text" tooltip="Search by Created By"
-                  (input)="dt.filter($event.target.value, 'createdBy', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['createdBy']?.value">
-                <i *ngIf="dt.filters['createdBy']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'createdBy')"></i>
-              </div>
+            <th grid-input-filter [dt]="dt" searchField="created.fullName"
+              [hidden]="!commonGrid.isVisibleCol('created.fullName',gridSettings)" [gridSettings]="gridSettings">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)">
-              <div class="position-relative">
-                <input id="createdOn" pInputText type="text" tooltip="Search by Created On"
-                  (input)="dt.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['createdOn']?.value">
-                <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'createdOn')"></i>
+              <div class="position-relative" tooltip="Search by Created On">
+                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
+                </pcalendar-wrapper>
               </div>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
@@ -165,18 +146,16 @@
             <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)" *ngIf="customer.location !== undefined">
               {{customer.location?.name}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('primaryContact', gridSettings)">
-              {{ customer.primaryContactUser?.firstName}}
-              {{ customer.primaryContactUser?.lastName}}
+            <td [hidden]="!commonGrid.isVisibleCol('primaryContactUser.fullName', gridSettings)">
+              {{customer.primaryContactUser?.fullName}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('secondaryContact', gridSettings)">
-              {{customer.secondaryContactUser?.firstName}}
-              {{customer.secondaryContactUser?.lastName}}
+            <td [hidden]="!commonGrid.isVisibleCol('secondaryContactUser.fullName', gridSettings)">
+              {{customer.secondaryContactUser?.fullName}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('isActive', gridSettings)">
               {{customer.isActive}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)">
+            <td [hidden]="!commonGrid.isVisibleCol('created.fullName', gridSettings)">
               {{customer.created?.fullName}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">

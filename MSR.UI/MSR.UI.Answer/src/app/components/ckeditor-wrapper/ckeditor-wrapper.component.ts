@@ -67,7 +67,7 @@ export class CkeditorWrapperComponent implements OnInit {
       },
       simpleUpload: {
 
-        uploadUrl: 'https://localhost:44398/v1/file/help',
+        uploadUrl: env.API_BASE_URL + '/v1/file/help',
 
         withCredentials: true,
 
