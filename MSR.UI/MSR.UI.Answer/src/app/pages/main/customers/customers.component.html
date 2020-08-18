@@ -92,10 +92,12 @@
               </div>
             </th>
             <th grid-input-filter [dt]="dt" searchField="primaryContactUser.fullName"
-              [hidden]="!commonGrid.isVisibleCol('primaryContactUser.fullName',gridSettings)" [gridSettings]="gridSettings">
+              [hidden]="!commonGrid.isVisibleCol('primaryContactUser.fullName',gridSettings)"
+              [gridSettings]="gridSettings">
             </th>
             <th grid-input-filter [dt]="dt" searchField="secondaryContactUser.fullName"
-              [hidden]="!commonGrid.isVisibleCol('secondaryContactUser.fullName',gridSettings)" [gridSettings]="gridSettings">
+              [hidden]="!commonGrid.isVisibleCol('secondaryContactUser.fullName',gridSettings)"
+              [gridSettings]="gridSettings">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('isActive',gridSettings)">
               <div class="position-relative">
@@ -111,10 +113,10 @@
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)">
               <div class="position-relative" tooltip="Search by Created On">
-                  <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
-                  </pcalendar-wrapper>
+                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
+                </pcalendar-wrapper>
               </div>
-          </th>
+            </th>
             <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">

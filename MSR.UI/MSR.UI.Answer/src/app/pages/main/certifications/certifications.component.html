@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-6">
             <h1 class="page-title">
@@ -35,46 +35,31 @@
                         </th>
                     </tr>
                     <tr>
-                        <th [hidden]="!commonGrid.isVisibleCol('employeeName',gridSettings)">
-                            <div class="position-relative">
-                                <input id="employeeName" pInputText type="text" tooltip="Search by Employee Name"
-                                    (input)="dt.filter($event.target.value, 'employeeName', 'contains')"
-                                    class="ui-column-filter" [value]="dt.filters['employeeName']?.value">
-                                <i *ngIf="dt.filters['employeeName']?.value" class="fclear pi pi-times pointer"
-                                    (click)="commonGrid.filter(dt,'employeeName')"></i>
-                            </div>
+                        <th grid-input-filter [dt]="dt" searchField="employeeName"
+                            [hidden]="!commonGrid.isVisibleCol('employeeName',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('certificationName',gridSettings)">
-                            <div class="position-relative">
-                                <input id="certificationName" pInputText type="text" tooltip="Search by Begin Date"
-                                    (input)="dt.filter($event.target.value, 'certificationName', 'contains')"
-                                    class="ui-column-filter" [value]="dt.filters['certificationName']?.value">
-                                <i *ngIf="dt.filters['certificationName']?.value" class="fclear pi pi-times pointer"
-                                    (click)="commonGrid.filter(dt,'certificationName')"></i>
-                            </div>
+                        <th grid-input-filter [dt]="dt" searchField="certificationName"
+                            [hidden]="!commonGrid.isVisibleCol('certificationName',gridSettings)" [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('certificationFromDate',gridSettings)">
-                            <div class="position-relative">
-                                <input id="certificationFromDate" pInputText type="text" tooltip="Search by Begin Date"
-                                    (input)="dt.filter($event.target.value, 'certificationFromDate', 'contains')"
-                                    class="ui-column-filter" [value]="dt.filters['certificationFromDate']?.value">
-                                <i *ngIf="dt.filters['certificationFromDate']?.value" class="fclear pi pi-times pointer"
-                                    (click)="commonGrid.filter(dt,'certificationFromDate')"></i>
+                            <div class="position-relative" tooltip="Search by From Date">
+                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="certificationFromDate"
+                                    [datatable]="dt">
+                                </pcalendar-wrapper>
                             </div>
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('certificationToDate',gridSettings)">
-                            <div class="position-relative">
-                                <input id="certificationToDate" pInputText type="text" tooltip="Search by End Date"
-                                    (input)="dt.filter($event.target.value, 'certificationToDate', 'contains')"
-                                    class="ui-column-filter" [value]="dt.filters['certificationToDate']?.value">
-                                <i *ngIf="dt.filters['certificationToDate']?.value" class="fclear pi pi-times pointer"
-                                    (click)="commonGrid.filter(dt,'certificationToDate')"></i>
+                            <div class="position-relative" tooltip="Search by To Date">
+                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="certificationToDate"
+                                    [datatable]="dt">
+                                </pcalendar-wrapper>
                             </div>
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
                             <div class="position-relative">
-                                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions" [filterId]="'status'"
-                                [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+                                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
+                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
+                                    [datatable]="dt">
                                 </multiselect-wrapper>
                             </div>
                         </th>
@@ -101,7 +86,7 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="8" style="text-align:left">No Help Pages to Display</td>
+                        <td colspan="8" style="text-align:left">No Certifications to Display</td>
                     </tr>
                 </ng-template>
             </p-table>
