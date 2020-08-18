@@ -1,0 +1,224 @@
+<div class="container-fluid">
+  <h1 class="page-title mb-5">
+    New Purchase - Purchase Order Details
+  </h1>
+
+  <widget>
+    <form
+      *ngIf="getPurchaseOrderFlag && purchaseOrderData"
+      class="py-4"
+    >
+      <div class="row mx-0">
+        <div class="col-md-8 col-12">
+          <div class="form-group row">
+            <label
+              for="CustomerName"
+              class="col-md-4 text-right"
+            >
+              Customer Name :
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.customerName"
+                placeholder="Customer Name"
+                type="text"
+                class="form-control input-transparent"
+                name="CustomerName"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="POName"
+              class="col-md-4 text-right"
+            >
+              PO Name :
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.name"
+                placeholder="PO Name"
+                type="text"
+                class="form-control input-transparent"
+                name="POName"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="RefCustPO"
+              class="col-md-4 text-right"
+            >
+              Reference Cust PO #:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.referencePo"
+                placeholder="Reference Customer PO # (typically a blanket PO)"
+                type="text"
+                class="form-control input-transparent"
+                name="RefCustPO"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="RefCustPO"
+              class="col-md-4 text-right"
+            >
+              Cust Ref# / MTTN:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.customerRef"
+                type="text"
+                class="form-control input-transparent"
+                name="CustRefNum"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="OpenDate" class="col-md-4 text-right">
+              Open Date:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.openDate | date :'short'"
+                type="text"
+                class="form-control input-transparent"
+                name="OpenDate"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="ClosedDate" class="col-md-4 text-right">
+              Close Date:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.closeDate | date :'short'"
+                type="text"
+                class="form-control input-transparent"
+                name="ClosedDate"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="TotalPurchaseLimit"
+              class="col-md-4 text-right"
+            >
+              Maximum Amount to Charge:
+            </label>
+            <div class="col-md-8 input-group input-group-transparent">
+              <span class="input-group-addon bg-secondary">$</span>
+              <input
+                [value]="purchaseOrderData.totalPurchaseLimit | currency"
+                type="text"
+                class="form-control input-transparent"
+                name="TotalPurchaseLimit"
+                readonly
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="page-title my-4 px-3">
+        Available Purchase Items
+      </h2>
+
+      <div class="row mx-0">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th style="width:50%;">Product</th>
+              <th style="width:10%;">Purchase Qty</th>
+              <th><div id="show-hide">Work Order Creation</div></th>
+            </tr>
+            <tr *ngFor="let product of purchaseProducts; index as i">
+              <td>
+                <input
+                  class="form-control input-transparent"
+                  name="ProductPo[{{i}}].Name"
+                  readonly
+                  type="text"
+                  [value]="product.name"
+                >
+              </td>
+              <td>
+                <input
+                  [(ngModel)]="purchaseProducts[i].qty"
+                  class="form-control input-transparent"
+                  name="ProductPo[{{i}}].Qty"
+                  type="number"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </td>
+              <td>
+                <div
+                  class="d-flex align-items-center justify-content-start"
+                  [class.hide]="product.qty < 2"
+                >
+                  <p-selectButton
+                    [options]="selectButtonOptions"
+                    [(ngModel)]="purchaseProducts[i].groupWO"
+                    name="ProductPo[{{i}}].groupWO"
+                  >
+                  </p-selectButton>
+                  <label class="px-3">Group Quantity on One WO</label>
+                </div>
+
+                <div
+                  class="d-flex align-items-center justify-content-start"
+                  [class.hide]="!product.groupWO"
+                >
+                  <p-selectButton
+                    [options]="selectButtonOptions"
+                    [(ngModel)]="purchaseProducts[i].serializeIndividually"
+                    name="ProductPo[{{i}}].serializeIndividually"
+                    class="ml-1"
+                  >
+                  </p-selectButton>
+                  <label class="px-3">Serialize Parts Individually</label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row mx-0 my-3">
+        <button
+          class="btn btn-success action-button"
+          title=""
+          tooltip="Create Purchase and Continue"
+          (click)="goToNextStep()"
+        >
+          <i class="fa fa-arrow-circle-right"></i>
+          Next
+        </button>
+        <button
+          class="btn btn-warning action-button ml-2"
+          tooltip="Cancel Purchase and Return to PO List"
+        >
+          <i class="fa fa-arrow-circle-left"></i>
+          Cancel Purchase
+        </button>
+      </div>
+    </form>
+  </widget>
+</div>

@@ -25,6 +25,8 @@ import { ProductDefinitionComponent } from './product-definition/product-definit
 import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.component';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { PurchaseOrderCreateComponent } from './purchase-order-create/purchase-order-create.component';
+import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
+import {SelectButtonModule} from 'primeng/selectbutton';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -33,11 +35,19 @@ export const routes = [
   { path: 'product-edit', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'},
-  { path: 'purchaseorder-create', component: PurchaseOrderCreateComponent, pathMatch: 'full'}
+  { path: 'purchaseorder-create', component: PurchaseOrderCreateComponent, pathMatch: 'full'},
+  { path: 'purchase-create', component: PurchaseCreateComponent, pathMatch: 'full'}
 ];
 
 @NgModule({
-  declarations: [QuotesComponent, QuoteCreateComponent, ProductDefinitionComponent, PurchaseOrdersComponent, PurchaseOrderCreateComponent],
+  declarations: [
+    QuotesComponent,
+    QuoteCreateComponent,
+    ProductDefinitionComponent,
+    PurchaseOrdersComponent,
+    PurchaseOrderCreateComponent,
+    PurchaseCreateComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -60,7 +70,8 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    SelectButtonModule
   ],
   providers: []
 })
