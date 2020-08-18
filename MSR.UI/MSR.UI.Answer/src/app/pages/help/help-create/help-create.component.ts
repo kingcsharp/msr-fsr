@@ -80,7 +80,10 @@ export class HelpCreateComponent implements OnInit {
 
           this.helpPageToEdit = response.object[0] as HelpPage;
           this.helpPageToEdit.roles.forEach(role => {
-            this.selectedRoles.push(role);
+
+            let selectedRole = this.availableRoles.find(s => s.id === role.id);
+
+            this.selectedRoles.push(selectedRole);
           });
         }));
 
