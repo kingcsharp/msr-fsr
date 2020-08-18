@@ -56,6 +56,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost("Help")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         [SwaggerResponse(typeof(UploadResponse))]
         public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest request)
         {

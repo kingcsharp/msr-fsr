@@ -661,68 +661,6 @@ export class FileService {
         return _observableOf<AuditActionResult>(<any>null);
     }
 
-    help(version: string, name: string | null | undefined, contentType: string | null | undefined, fileName: string | null | undefined, upload: FileParameter[] | null | undefined): Observable<UploadResponse> {
-        let url_ = this.baseUrl + "/v{version}/File/Help";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = new FormData();
-        if (name !== null && name !== undefined)
-            content_.append("Name", name.toString());
-        if (contentType !== null && contentType !== undefined)
-            content_.append("ContentType", contentType.toString());
-        if (fileName !== null && fileName !== undefined)
-            content_.append("FileName", fileName.toString());
-        if (upload !== null && upload !== undefined)
-            upload.forEach(item_ => content_.append("Upload", item_.data, item_.fileName ? item_.fileName : "Upload") );
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processHelp(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processHelp(<any>response_);
-                } catch (e) {
-                    return <Observable<UploadResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<UploadResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processHelp(response: HttpResponseBase): Observable<UploadResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UploadResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<UploadResponse>(<any>null);
-    }
-
     import(version: string, request: ImportRequest): Observable<ImportAuditActionResultOfIEnumerableOfImportError> {
         let url_ = this.baseUrl + "/v{version}/File/Import";
         if (version === undefined || version === null)
@@ -6593,42 +6531,6 @@ export interface ICreateFileRequest {
     name?: string | undefined;
     base64String?: string | undefined;
     contentType?: string | undefined;
-}
-
-export class UploadResponse implements IUploadResponse {
-    url?: string | undefined;
-
-    constructor(data?: IUploadResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.url = _data["url"];
-        }
-    }
-
-    static fromJS(data: any): UploadResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new UploadResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["url"] = this.url;
-        return data; 
-    }
-}
-
-export interface IUploadResponse {
-    url?: string | undefined;
 }
 
 export class AuditActionResultOfIEnumerableOfImportError extends AuditActionResult implements IAuditActionResultOfIEnumerableOfImportError {
