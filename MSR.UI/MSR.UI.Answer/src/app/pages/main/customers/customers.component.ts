@@ -27,7 +27,7 @@ export class CustomersComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   approvalTables = EnumApprovalTables;
   menuItems = EnumMenuItem;
-
+  statusOptions: any[];
 
   constructor(private customerService: CustomerService, private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -69,6 +69,17 @@ export class CustomersComponent implements OnInit {
     this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.data = response.object;
+
+      this.data.map((elem) => {
+        if (elem.status === null) {
+          elem.status = 'Approved';
+        }
+
+      });
+
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
 
       this.loading = false;
 

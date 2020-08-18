@@ -1,7 +1,10 @@
 <div class="container">
     <div class="row">
         <h1 class="page-title">
-            Create Customer
+            <i class="far fa-edit mx-2" *ngIf="customer.id !== 0"></i>
+            <i class="fas fa-plus mx-2" *ngIf="customer.id === 0"></i>
+            <span *ngIf="customer.id === 0">Create Customers</span>
+            <span *ngIf="customer.id !== 0">Edit Customers</span>
         </h1>
     </div>
     <div class="row" *ngIf="customer != null">

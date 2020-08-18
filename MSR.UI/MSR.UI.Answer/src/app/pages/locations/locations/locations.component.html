@@ -144,6 +144,10 @@
               [hidden]="!commonGrid.isVisibleCol('address2',gridSettings)" [gridSettings]="gridSettings">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
+              <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
+                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
+                                    [datatable]="dt">
+                                </multiselect-wrapper>
 
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
@@ -200,11 +204,8 @@
             <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
               {{location.address2}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status != null">
+            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
               {{location.status}}
-            </td>
-            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status == null">
-              Approved
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
               <i *ngIf="canEditLocation" class="fa fa-cog pointer" tooltip="Edit Location" data-cy="edit-button"
@@ -219,7 +220,7 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="8" style="text-align:left">No Help Pages to Display</td>
+            <td colspan="8" style="text-align:left">No Locations to Display</td>
           </tr>
         </ng-template>
       </p-table>
