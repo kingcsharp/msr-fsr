@@ -23,14 +23,12 @@
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Title of Help Page"
                     placeholder="">
             </div>
-            <div class="form-group" *ngIf="helpPageToEdit.friendlyURL !== undefined">
+            <div class="form-group" *ngIf="helpPageToEdit !== undefined">
                 <label for="friendlyurl" class="col-form-label text-left">
                     Friendly Url
                 </label>
-                <p-dropdown placeholder="Select FriendlyUrl" name="friendlyurl" [options]="urls" showClear="true"
-                    appendTo="body" data-cy="friendlyurl-dropdown" [baseZIndex]="100002"
-                    [(ngModel)]="helpPageToEdit.friendlyURL">
-                </p-dropdown>
+                <p-dropdown  name="friendlyurl" [options]="urls" showClear="true" [(ngModel)]="helpPageToEdit.friendlyURL" editable="false" 
+                placeholder="Select a Friendly Url"></p-dropdown>
             </div>
             <div class="form-group">
                 <label for="articlecontent" class="col-form-label text-left">

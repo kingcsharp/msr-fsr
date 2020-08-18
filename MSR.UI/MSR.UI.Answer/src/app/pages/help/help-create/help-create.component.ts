@@ -33,7 +33,7 @@ export class HelpCreateComponent implements OnInit {
 
   ngOnInit(): void {
 
-
+    this.globals.showLoader(true);
     this.roleService.role(env.apiVersion).subscribe(response => {
       this.availableRoles = this.availableRoles.concat(response.object);
 
@@ -45,6 +45,7 @@ export class HelpCreateComponent implements OnInit {
 
   loadFriendlyUrls() {
 
+    this.globals.showLoader(true);
     this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
@@ -59,6 +60,11 @@ export class HelpCreateComponent implements OnInit {
         }
 
       });
+
+      if(this.helpPageToEditId !== 0){
+        this.urls.push({ label: this.helpPageToEdit.friendlyURL, value: this.helpPageToEdit.friendlyURL });
+      }
+
   }));
 
   }
@@ -69,6 +75,7 @@ export class HelpCreateComponent implements OnInit {
       this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);
       if (this.helpPageToEditId !== 0) {
 
+        this.globals.showLoader(true);
         this.helpService.helpGet(this.helpPageToEditId, null, env.apiVersion).subscribe(responseHandler((response) => {
 
           this.helpPageToEdit = response.object[0] as HelpPage;
