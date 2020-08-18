@@ -26,33 +26,33 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet()]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureType>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureTypeRequest>>))]
         public async Task<IActionResult> GetProcedureType(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureType() {
                 Id = id
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureType>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureTypeRequest>>();
         }
 
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureType>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureTypeRequest>))]
         public async Task<IActionResult> AddProcedureType(CreateProcedureTypeRequest newproc)
         {
             var command = newproc.ToCreateProcedureTypeCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureType>();
+            return ret.ToOkObjectResponse<ProcedureTypeRequest>();
         }
 
         [HttpPatch]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureType>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureTypeRequest>))]
         public async Task<IActionResult> UpdateProcedureType(UpdateProcedureTypeRequest newproc)
         {
             var command = newproc.ToUpdateProcedureTypeCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureType>();
+            return ret.ToOkObjectResponse<ProcedureTypeRequest>();
         }
     }
 }

@@ -1,0 +1,303 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using System.Text;
+
+namespace MSR.Answer.API.V1.Models
+{
+    /// <summary>
+    ///
+    /// </summary>
+    [DataContract]
+    public partial class ProcedureStepRequest : IEquatable<ProcedureStepRequest>
+    {
+        public ProcedureStepRequest() { }
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id")]
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ProcedureId
+        /// </summary>
+        [DataMember(Name="procedureId")]
+        public int ProcedureId { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Title
+        /// </summary>
+        [DataMember(Name="title")]
+        public string Title { get; set; }
+        /// <summary>
+        /// Gets or Sets StepText
+        /// </summary>
+        [DataMember(Name="stepText")]
+        public string StepText { get; set; }
+        public int? GoToStepId { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Duration
+        /// </summary>
+        [DataMember(Name="duration")]
+        public double Duration { get; set; }
+
+        /// <summary>
+        /// Gets or Sets DurationType
+        /// </summary>
+        [DataMember(Name="durationType")]
+        public string DurationType { get; set; }
+
+        /// <summary>
+        /// Gets or Sets PrintOrder
+        /// </summary>
+        [DataMember(Name="printOrder")]
+        public int PrintOrder { get; set; }
+
+        /// <summary>
+        /// Gets or Sets PredecessorStepId
+        /// </summary>
+        [DataMember(Name="predecessorStepId")]
+        public int? PredecessorStepId { get; set; }
+
+        /// <summary>
+        /// Gets or Sets LaborTime
+        /// </summary>
+        [DataMember(Name="laborTime")]
+        public int? LaborTime { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReplacementCost
+        /// </summary>
+        [DataMember(Name="replacementCost")]
+        public decimal? ReplacementCost { get; set; }
+
+        /// <summary>
+        /// Gets or Sets UtilizationTime
+        /// </summary>
+        [DataMember(Name="utilization")]
+        public float? Utilization { get; set; }
+
+        /// <summary>
+        /// Gets or Sets EquipmentTime
+        /// </summary>
+        [DataMember(Name="equipmentTime")]
+        public double? EquipmentTime { get; set; }
+
+        /// <summary>
+        /// Gets or Sets UsefulLife
+        /// </summary>
+        [DataMember(Name="usefulLife")]
+        public int? UsefulLife { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceFiles
+        /// </summary>
+        [DataMember(Name="referenceFiles")]
+        public List<FileRequest> ReferenceFiles { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Roles
+        /// </summary>
+        [DataMember(Name="roles")]
+        public string Roles { get; set; }
+
+        /// <summary>
+        /// Returns the string presentation of the object
+        /// </summary>
+        /// <returns>String presentation of the object</returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append("class ProcedureStep {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  ProcedureId: ").Append(ProcedureId).Append("\n");
+            sb.Append("  Title: ").Append(Title).Append("\n");
+            sb.Append("  StepText: ").Append(StepText).Append("\n");
+            sb.Append("  Duration: ").Append(Duration).Append("\n");
+            sb.Append("  DurationType: ").Append(DurationType).Append("\n");
+            sb.Append("  PrintOrder: ").Append(PrintOrder).Append("\n");
+            sb.Append("  PredecessorStepId: ").Append(PredecessorStepId).Append("\n");
+            sb.Append("  LaborTime: ").Append(LaborTime).Append("\n");
+            sb.Append("  EquipmentTime: ").Append(EquipmentTime).Append("\n");
+            sb.Append("  ReplacementCost: ").Append(ReplacementCost).Append("\n");
+            sb.Append("  Utilization: ").Append(Utilization).Append("\n");
+            sb.Append("  UsefulLife: ").Append(UsefulLife).Append("\n");
+            sb.Append("  ReferenceFiles: ").Append(ReferenceFiles).Append("\n");
+            sb.Append("  Roles: ").Append(Roles).Append("\n");
+            sb.Append("}\n");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns the JSON string presentation of the object
+        /// </summary>
+        /// <returns>JSON string presentation of the object</returns>
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+
+        /// <summary>
+        /// Returns true if objects are equal
+        /// </summary>
+        /// <param name="obj">Object to be compared</param>
+        /// <returns>Boolean</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((ProcedureStepRequest)obj);
+        }
+
+        /// <summary>
+        /// Returns true if ProcedureStep instances are equal
+        /// </summary>
+        /// <param name="other">Instance of ProcedureStep to be compared</param>
+        /// <returns>Boolean</returns>
+        public bool Equals(ProcedureStepRequest other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return
+                (
+                    Id == other.Id ||
+                    Id != null &&
+                    Id.Equals(other.Id)
+                ) &&
+                (
+                    ProcedureId == other.ProcedureId ||
+                    ProcedureId != null &&
+                    ProcedureId.Equals(other.ProcedureId)
+                ) &&
+                (
+                    Title == other.Title ||
+                    Title != null &&
+                    Title.Equals(other.Title)
+                ) &&
+                (
+                    StepText == other.StepText ||
+                    StepText != null &&
+                    StepText.Equals(other.StepText)
+                ) &&
+                (
+                    Duration == other.Duration ||
+                    Duration != null &&
+                    Duration.Equals(other.Duration)
+                ) &&
+                (
+                    DurationType == other.DurationType ||
+                    DurationType != null &&
+                    DurationType.Equals(other.DurationType)
+                ) &&
+                (
+                    PrintOrder == other.PrintOrder ||
+                    PrintOrder != null &&
+                    PrintOrder.Equals(other.PrintOrder)
+                ) &&
+                (
+                    PredecessorStepId == other.PredecessorStepId ||
+                    PredecessorStepId != null &&
+                    PredecessorStepId.Equals(other.PredecessorStepId)
+                ) &&
+                (
+                    LaborTime == other.LaborTime ||
+                    LaborTime != null &&
+                    LaborTime.Equals(other.LaborTime)
+                ) &&
+                (
+                    EquipmentTime == other.EquipmentTime ||
+                    EquipmentTime != null &&
+                    EquipmentTime.Equals(other.EquipmentTime)
+                ) &&
+                (
+                    ReplacementCost == other.ReplacementCost ||
+                    ReplacementCost != null &&
+                    ReplacementCost.Equals(other.ReplacementCost)
+                ) &&
+                (
+                    Utilization == other.Utilization ||
+                    Utilization != null &&
+                    Utilization.Equals(other.Utilization)
+                ) &&
+                (
+                    UsefulLife == other.UsefulLife ||
+                    UsefulLife != null &&
+                    UsefulLife.Equals(other.UsefulLife)
+                ) &&
+                (
+                    ReferenceFiles == other.ReferenceFiles ||
+                    ReferenceFiles != null &&
+                    ReferenceFiles.SequenceEqual(other.ReferenceFiles)
+                ) &&
+                (
+                    Roles == other.Roles ||
+                    Roles != null &&
+                    Roles.SequenceEqual(other.Roles)
+                );
+        }
+
+        /// <summary>
+        /// Gets the hash code
+        /// </summary>
+        /// <returns>Hash code</returns>
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                var hashCode = 41;
+                // Suitable nullity checks etc, of course :)
+                    if (Id != null)
+                    hashCode = hashCode * 59 + Id.GetHashCode();
+                    if (ProcedureId != null)
+                    hashCode = hashCode * 59 + ProcedureId.GetHashCode();
+                    if (Title != null)
+                    hashCode = hashCode * 59 + Title.GetHashCode();
+                    if (StepText != null)
+                    hashCode = hashCode * 59 + StepText.GetHashCode();
+                    if (Duration != null)
+                    hashCode = hashCode * 59 + Duration.GetHashCode();
+                    if (DurationType != null)
+                    hashCode = hashCode * 59 + DurationType.GetHashCode();
+                    if (PrintOrder != null)
+                    hashCode = hashCode * 59 + PrintOrder.GetHashCode();
+                    if (PredecessorStepId != null)
+                    hashCode = hashCode * 59 + PredecessorStepId.GetHashCode();
+                    if (LaborTime != null)
+                    hashCode = hashCode * 59 + LaborTime.GetHashCode();
+                    if (EquipmentTime != null)
+                    hashCode = hashCode * 59 + EquipmentTime.GetHashCode();
+                    if (ReplacementCost != null)
+                    hashCode = hashCode * 59 + ReplacementCost.GetHashCode();
+                    if (Utilization != null)
+                    hashCode = hashCode * 59 + Utilization.GetHashCode();
+                    if (UsefulLife != null)
+                    hashCode = hashCode * 59 + UsefulLife.GetHashCode();
+                    if (ReferenceFiles != null)
+                    hashCode = hashCode * 59 + ReferenceFiles.GetHashCode();
+                    if (Roles != null)
+                    hashCode = hashCode * 59 + Roles.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        #region Operators
+        #pragma warning disable 1591
+
+        public static bool operator ==(ProcedureStepRequest left, ProcedureStepRequest right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ProcedureStepRequest left, ProcedureStepRequest right)
+        {
+            return !Equals(left, right);
+        }
+
+        #pragma warning restore 1591
+        #endregion Operators
+    }
+}

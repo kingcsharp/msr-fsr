@@ -26,33 +26,33 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet()]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepMonitor>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepMonitorRequest>>))]
         public async Task<IActionResult> GetProcedureStepMonitor(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureStepMonitor() {
                 procedureStepMonitorId = id
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureStepMonitor>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureStepMonitorRequest>>();
         }
 
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitorRequest>))]
         public async Task<IActionResult> AddProcedureStepMonitor(CreateProcedureStepMonitorRequest newproc)
         {
             var command = newproc.ToCreateProcedureStepMonitorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepMonitor>();
+            return ret.ToOkObjectResponse<ProcedureStepMonitorRequest>();
         }
 
         [HttpPatch]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitorRequest>))]
         public async Task<IActionResult> UpdateProcedureStepMonitor(UpdateProcedureStepMonitorRequest newproc)
         {
             var command = newproc.ToUpdateProcedureStepMonitorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepMonitor>();
+            return ret.ToOkObjectResponse<ProcedureStepMonitorRequest>();
         }
 
         [HttpGet("definition")]
