@@ -22,8 +22,7 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 
         public RoleServiceTestSetup()
         {
-            var fake = new Bogus.Faker();
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockUnitOfWork = DatabaseFake.DatabaseFakeSetup();
             var mockIRepositoryMenuRole = new Mock<IRepository<MenuRole>>();
             var mockIRepositoryMenuRolePermission = new Mock<IRepository<MenuRolePermission>>();
             var mockIRepositoryRole = new Mock<IRepository<Role>>();

@@ -1,6 +1,6 @@
-﻿namespace MSR.Domain.Models
+namespace MSR.Domain.Models
 {
-    public class Status
+    public class ProcedureStepTypeModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

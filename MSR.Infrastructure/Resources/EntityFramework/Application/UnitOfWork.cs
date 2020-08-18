@@ -61,6 +61,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Invoice> _invoices;
         private IRepository<InvoiceItem> _invoiceItems;
         private IRepository<WorkOrder> _workOrders;
+        private IRepository<WorkOrderPart> _workOrderParts;
+        private IRepository<WorkOrderTask> _workOrderTasks;
 
         private IRepository<File> _files;
         private IRepository<FileEntityMap> _fileEntityMap;
@@ -118,7 +120,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Invoice> Invoices { get { return _invoices ??= new EFRepository<Invoice>(Context); } }
         public IRepository<InvoiceItem> InvoiceItems { get { return _invoiceItems ??= new EFRepository<InvoiceItem>(Context); } }
         public IRepository<WorkOrder> WorkOrders { get { return _workOrders ??= new EFRepository<WorkOrder>(Context); } }
-
+        public IRepository<WorkOrderPart> WorkOrderParts { get { return _workOrderParts ??= new EFRepository<WorkOrderPart>(Context); } }
+        public IRepository<WorkOrderTask> WorkOrderTasks { get { return _workOrderTasks ??= new EFRepository<WorkOrderTask>(Context); } }
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
         public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
