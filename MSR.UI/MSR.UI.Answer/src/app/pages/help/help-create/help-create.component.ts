@@ -23,7 +23,7 @@ export class HelpCreateComponent implements OnInit {
   availableRoles: Role[] = new Array<Role>();
   selectedRoles: Role[] = new Array<Role>();
   helpPageToEditId: number = 0;
-  helpPageToEdit: HelpPage;
+  helpPageToEdit: any;
 
   menuItems: any;
   urls: Array<SelectItem> = new Array<SelectItem>();
@@ -33,6 +33,38 @@ export class HelpCreateComponent implements OnInit {
 
   ngOnInit(): void {
 
+
+    this.roleService.role(env.apiVersion).subscribe(response => {
+      this.availableRoles = this.availableRoles.concat(response.object);
+
+      this.loadHelpPage();
+
+    });
+
+  }
+
+  loadFriendlyUrls(){
+
+    this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
+
+      let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
+
+      this.generateAllUrlPathsRegistered();
+      this.friendlyUrlOptions.forEach( friendlyUrlOption => {
+
+        if ( friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
+
+          this.urls.push({ label: friendlyUrlOption, value: friendlyUrlOption });
+
+        }
+
+      });
+  }));
+
+  }
+
+  loadHelpPage(){
+
     this.activatedRoute.queryParams.subscribe(params => {
       this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);
       if (this.helpPageToEditId !== 0) {
@@ -40,38 +72,19 @@ export class HelpCreateComponent implements OnInit {
         this.helpService.helpGet(this.helpPageToEditId, null, env.apiVersion).subscribe(responseHandler((response) => {
 
           this.helpPageToEdit = response.object[0] as HelpPage;
-
           this.helpPageToEdit.roles.forEach(role => {
             this.selectedRoles.push(role);
-
           });
         }));
 
       } else {
 
         this.helpPageToEdit = new HelpPage();
+        this.helpPageToEdit.content = '';
       }
+
+      this.loadFriendlyUrls();
     });
-
-    this.roleService.role(env.apiVersion).subscribe(response => {
-      this.availableRoles = this.availableRoles.concat(response.object);
-    });
-
-    this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
-
-        let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
-
-        this.generateAllUrlPathsRegistered();
-        this.friendlyUrlOptions.forEach( friendlyUrlOption => {
-
-          if ( friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
-
-            this.urls.push({ label: friendlyUrlOption, value: friendlyUrlOption });
-
-          }
-
-        });
-    }));
 
   }
 
