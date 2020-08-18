@@ -47,7 +47,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<WorkOrderPartRequest, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTaskRequest, WorkOrderTaskModel>().ReverseMap();
             CreateMap<DeleteMenuRoleMapRequest, RemoveMenuRoleMap>();
-            CreateMap<File, FileModel>().ReverseMap();
+            CreateMap<FileRequest, FileModel>().ReverseMap();
             CreateMap<CreateCustomerRequest, CreateCustomer>();
             CreateMap<UpdateCustomerRequest, UpdateCustomer>();
             CreateMap<CreateFileRequest, CreateFile>();
