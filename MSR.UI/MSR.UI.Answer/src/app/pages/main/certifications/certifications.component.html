@@ -10,7 +10,7 @@
             <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
         </div>
     </div>
-    <div class="row">
+ </div>
         <widget>
             <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
                 [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
@@ -86,10 +86,9 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="8" style="text-align:left">No Certifications to Display</td>
+                        <td colspan="5" style="text-align:left">No Certifications to Display</td>
                     </tr>
                 </ng-template>
             </p-table>
         </widget>
-    </div>
-</div>
+   
