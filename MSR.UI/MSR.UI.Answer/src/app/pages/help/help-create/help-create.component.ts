@@ -43,7 +43,7 @@ export class HelpCreateComponent implements OnInit {
 
   }
 
-  loadFriendlyUrls(){
+  loadFriendlyUrls() {
 
     this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
@@ -63,7 +63,7 @@ export class HelpCreateComponent implements OnInit {
 
   }
 
-  loadHelpPage(){
+  loadHelpPage() {
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.helpPageToEditId = params['id'] == null ? 0 : Number(params['id']);

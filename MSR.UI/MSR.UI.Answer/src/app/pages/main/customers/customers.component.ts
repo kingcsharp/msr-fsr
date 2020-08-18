@@ -71,8 +71,7 @@ export class CustomersComponent implements OnInit {
       this.data = response.object;
 
       this.data.map((elem) => {
-        
-        if(elem.status === null){
+        if (elem.status === null) {
           elem.status = 'Approved';
         }
 

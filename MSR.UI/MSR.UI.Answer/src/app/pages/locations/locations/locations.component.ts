@@ -76,9 +76,8 @@ export class LocationsComponent implements OnInit {
       });
 
       this.data.map((elem) => {
-        
-        if(elem.status === null){
-          elem.status = 'Approved';
+        if (elem.status === null ) {
+          elem.status = 'Approved' ;
         }
 
       });
