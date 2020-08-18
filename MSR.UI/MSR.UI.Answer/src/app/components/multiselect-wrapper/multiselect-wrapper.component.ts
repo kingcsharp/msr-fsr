@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../models/lib/Utils';
 
 @Component({
   selector: 'multiselect-wrapper',
-  templateUrl: './multiselect-wrapper.component.html',
-  styleUrls: ['./multiselect-wrapper.component.scss']
+  templateUrl: './multiselect-wrapper.component.html'
 })
 export class MultiselectWrapperComponent implements OnInit {
   selectedColumns: Array<any>;
@@ -18,19 +18,29 @@ export class MultiselectWrapperComponent implements OnInit {
   @Input() defaultText: string;
   @Input() defaultTextTooltip: string;
   @Input() datatable: any;
+  @Input() defaultId: string;
   @Input() reset: any;
   @Input() filterProp: string;
   @Input() multipleValues: boolean;
+  currentOptions: any = [];
+  basicOptions: any;
+  savedOptions: any;
   constructor() {
   }
 
   ngOnInit(): void {
     const ctrl = this;
+    this.selectedColumns = [];
+    this.basicOptions = {
+      name: this.filterProp || 'name',
+      id: this.defaultId || 'id'
+    };
+    this.savedOptions = this.options;
     FilterUtils['multipleValuesFilter' + this.multiselectName] = (value, filter): boolean => {
       let found = false;
       filter.forEach(fElement => {
         value.forEach(vElement => {
-          if (fElement === vElement[ctrl.filterProp]) {
+          if (fElement[ctrl.basicOptions.id] === vElement[ctrl.basicOptions.id]) {
             found = true;
             return;
           }
@@ -38,7 +48,8 @@ export class MultiselectWrapperComponent implements OnInit {
       });
       return found;
     };
-    this.selectedColumns = [];
+    
+
     this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
     const sub1 = this.datatable.onFilter.subscribe((elem) => {
       if (elem.filters[this.filterId] === undefined) {
@@ -53,6 +64,41 @@ export class MultiselectWrapperComponent implements OnInit {
     });
     this.subscriptions.push(sub1);
     this.subscriptions.push(sub2);
+  }
+
+  ngDoCheck() {
+    const ctrl = this;
+    const change = this.options.length !== this.savedOptions.length;
+    if (change) {
+      this.options.map((item) => {
+        if (this.multipleValues) {
+          item[this.filterId].forEach(element => {
+            let length = this.currentOptions.length;
+            let found = false;
+            while (length--) {
+              const existingItem = this.currentOptions[length];
+              if (existingItem.value.id === element[ctrl.basicOptions.id]) {
+                found = true;
+                length = 0;
+              }
+            }
+            if (!found) {
+              this.currentOptions.push({
+                label: element[ctrl.basicOptions.name],
+                value: {
+                  id: element[ctrl.basicOptions.id],
+                  name: element[ctrl.basicOptions.name]
+                }
+              });
+            }
+          });
+        }
+        else {
+          this.currentOptions.push({ label: item[ctrl.basicOptions.name], value: { id: item[ctrl.basicOptions.id], name: item[ctrl.basicOptions.name] } });
+        }
+      });
+      this.currentOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
+    }
   }
 
   ngOnDestroy() {

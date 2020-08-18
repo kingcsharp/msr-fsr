@@ -15,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
-import { UrlHandlingStrategy } from '@angular/router';
 import { Observable } from 'rxjs';
 
 declare let jQuery: any;
@@ -96,7 +95,7 @@ export class InvoiceComponent implements OnInit {
     { label: 'No', value: false }];
 
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Invoices);
-    
+
     this.getInvoices();
     this.getLocations();
     this.getCustomers();

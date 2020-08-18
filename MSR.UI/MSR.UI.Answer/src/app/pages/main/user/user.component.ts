@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
 
 declare let jQuery: any;
 
@@ -64,6 +65,7 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.data = [];
     this.currUser = new User();
     this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elem.nativeElement.tagName.toLowerCase();
@@ -139,21 +141,11 @@ export class UserComponent implements OnInit {
 
   updateUsersData(usersData) {
     const ctrl = this;
-    ctrl.data = usersData.map((x) => {
+    usersData.forEach((x)  => {
       const userIndex = ctrl.allUsers.findIndex(z => z.value === x.id);
       if (userIndex < 0) {
         ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });
       }
-      x.rolesSaved = x.roles.map(u => u.id);
-      const roles = [];
-      x.roles.forEach((role) => {
-        roles.push(role.name);
-        if (ctrl.roles.findIndex(z => z.value === role.name) === -1) {
-          ctrl.roles.push({ label: role.name, value: role.name });
-        }
-      });
-      x.rolesStr = roles.join(',');
-      return x;
     });
     ctrl.allUsers.sort((a, b) => (a.label > b.label) ? 1 : -1);
   }
@@ -208,10 +200,6 @@ export class UserComponent implements OnInit {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method: Observable<IAuditActionResultOfUser> = null;
       this.globals.showLoader(true);
-      this.currUser.roles = [];
-      this.currUser.rolesSaved.map(x => {
-        this.currUser.roles.push(new Role(ctrl.backendRoles.find(r => r.id === x)));
-      });
 
       if (this.currUser.id === undefined) {
         method = this.userService.userPost(env.apiVersion, this.currUser);
@@ -244,7 +232,7 @@ export class UserComponent implements OnInit {
       ret.firstName = '';
       return ret;
     } else {
-      return new User(user);
+      return copyObj(user);
     }
   }
 
