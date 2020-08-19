@@ -10,6 +10,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
+using MSR.Domain.Views;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -24,13 +25,55 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        
+
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<Role>>))]
         [HasPrivilegeApi("RoleModulePermission", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> GetRoles()
         {
             var ret = await _dispatcher.DispatchAsync(new GetRoles());
             return ret.ToOkObjectResponse<ICollection<Role>>();
+        }
+
+        [HttpGet("Roles"), SwaggerResponse(typeof(AuditActionResult<ICollection<RoleView>>))]
+        [HasPrivilegeApi("Roles", EnumPrivilege.CanRead)]
+        public async Task<IActionResult> Get()
+        {
+            return new OkObjectResult(new AuditActionResult<ICollection<RoleView>>()
+            {
+                Object = new List<RoleView>()
+            });
+        }
+
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<RoleView>))]
+        [HasPrivilegeApi("Roles", EnumPrivilege.CanCreate)]
+        public async Task<IActionResult> Post(CreateRoleRequest request)
+        {
+            return new OkObjectResult(new AuditActionResult<RoleView>()
+            {
+                SuccessMessage = "Role Successfully Created",
+                Object = new RoleView()
+            });
+        }
+
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<RoleView>))]
+        [HasPrivilegeApi("Roles", EnumPrivilege.CanEdit)]
+        public async Task<IActionResult> Patch(UpdateRoleRequest request)
+        {
+            return new OkObjectResult(new AuditActionResult<RoleView>()
+            {
+                SuccessMessage = "Role Successfully Updated",
+                Object = new RoleView()
+            });
+        }
+
+        [HttpDelete, SwaggerResponse(typeof(AuditActionResult<Role>))]
+        [HasPrivilegeApi("Roles", EnumPrivilege.CanDelete)]
+        public async Task<IActionResult> Delete()
+        {
+            return new OkObjectResult(new AuditActionResult()
+            {
+                SuccessMessage = "Role Successfully Removed"
+            });
         }
     }
 }

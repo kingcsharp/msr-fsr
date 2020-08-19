@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UtilsModule } from '../../layout/utils/utils.module';
 import { LiveTileModule } from '../../components/tile/tile.module';
 import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
@@ -17,7 +16,6 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
-import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RoleassignmentsComponent } from './roleassignments/roleassignments.component';
@@ -50,12 +48,9 @@ export const routes = [
     RouterModule.forChild(routes),
     WidgetModule,
     ProgressbarModule.forRoot(),
-    // TrendModule,
-    CheckboxModule,
     MultiSelectModule,
     BsDropdownModule.forRoot(),
     DropdownModule,
-    TooltipModule.forRoot(),
     FormsModule,
     InputSwitchModule,
     TextMaskModule,

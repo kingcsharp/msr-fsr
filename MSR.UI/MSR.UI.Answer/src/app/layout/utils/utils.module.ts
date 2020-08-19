@@ -18,9 +18,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { CheckboxModule } from 'primeng/checkbox';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
 import { MultiselectWrapperFormComponent } from '../../../app/components/multiselect-wrapper-form/multiselect-wrapper-form.component';
-
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component';
@@ -39,12 +39,12 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    GridOptionsComponent,
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
-    GridInputFilterComponent
+    GridInputFilterComponent,
+    GridOptionsComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -52,13 +52,20 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    GridOptionsComponent,
     FileUploadModule,
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
-    GridInputFilterComponent
+    GridInputFilterComponent,
+    FileUploadModule,
+    TooltipModule,
+    CheckboxModule,
+    FormsModule,
+    MultiSelectModule,
+    DialogModule,
+    CalendarModule,
+    GridOptionsComponent
   ],
   imports: [
     CommonModule,
@@ -67,7 +74,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     MultiSelectModule,
     DialogModule,
     FileUploadModule,
-    TooltipModule,
+    CheckboxModule,
+    TooltipModule.forRoot(),
     NgxDocViewerModule
   ]
 })
