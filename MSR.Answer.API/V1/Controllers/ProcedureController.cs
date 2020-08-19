@@ -68,7 +68,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpDelete]
-        [Route("/v{version}/Procedure/{id}")]
+        [Route("/Procedure/{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
         public virtual IActionResult ProcedureDeactivateProcedure([FromRoute][Required]int? id)
         {
@@ -91,7 +91,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpDelete]
-        [Route("/Robert5/msr-api/v1/v{version}/Procedure/{id}/step/{stepId}")]
+        [Route("/Procedure/{id}/step/{stepId}")]
         [SwaggerResponse(typeof(AuditActionResult))]
         public virtual IActionResult ProcedureDeactivateProcedureStep([FromRoute][Required]int? id, [FromRoute][Required]int? stepId, [FromRoute][Required]string version)
         {
@@ -113,7 +113,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [Route("/v{version}/Procedure")]
+        [Route("/Procedure")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureRequest>>))]
         public async Task<IActionResult> ProcedureGetProcedure(int? id)
@@ -150,7 +150,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPatch]
-        [Route("/v{version}/Procedure")]
+        [Route("/Procedure")]
         [SwaggerResponse(typeof(AuditActionResultOfProcedure))]
         public async Task<IActionResult> ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest newproc)
         {
@@ -166,8 +166,8 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <param name="version"></param>
         /// <response code="404"></response>
-        [HttpPatch("{id}/step")]
-        [Route("/v{version}/Procedure/{id}/step")]
+        [HttpPatch]
+        [Route("/Procedure/{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
         public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest newstep)
