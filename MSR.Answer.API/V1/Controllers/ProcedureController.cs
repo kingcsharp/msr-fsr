@@ -24,10 +24,97 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet()]
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="version"></param>
+        /// <response code="200"></response>
+        [HttpPost]
+        [Route("/v{version}/Procedure")]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
+        public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest body)
+        {
+            var command = newproc.ToCreateProcedureCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProcedureRequest>();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="id"></param>
+        /// <param name="version"></param>
+        /// <response code="200"></response>
+        [HttpPost("{id}/step")]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
+        public async Task<IActionResult> ProcedureAddProcedureStep(int id, CreateProcedureStepRequest newstep)
+        {
+            var command = newstep.ToCreateProcedureStepCommand();
+            command.procedureId = id;
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProcedureStepRequest>();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="version"></param>
+        /// <response code="200"></response>
+        [HttpDelete]
+        [Route("/Robert5/msr-api/v1/v{version}/Procedure/{id}")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public virtual IActionResult ProcedureDeactivateProcedure([FromRoute][Required]int? id, [FromRoute][Required]string version)
+        {
+            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // return StatusCode(200, default(AuditActionResult));
+            string exampleJson = null;
+            exampleJson = "{\n  \"errorMessages\" : [ {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  }, {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  } ],\n  \"hasValidationErrors\" : true,\n  \"hasErrors\" : true,\n  \"id\" : 6,\n  \"successMessage\" : \"successMessage\"\n}";
+
+                        var example = exampleJson != null
+                        ? JsonConvert.DeserializeObject<AuditActionResult>(exampleJson)
+                        : default(AuditActionResult);            //TODO: Change the data returned
+            return new ObjectResult(example);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="stepId"></param>
+        /// <param name="version"></param>
+        /// <response code="200"></response>
+        [HttpDelete]
+        [Route("/Robert5/msr-api/v1/v{version}/Procedure/{id}/step/{stepId}")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public virtual IActionResult ProcedureDeactivateProcedureStep([FromRoute][Required]int? id, [FromRoute][Required]int? stepId, [FromRoute][Required]string version)
+        {
+            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
+            // return StatusCode(200, default(AuditActionResult));
+            string exampleJson = null;
+            exampleJson = "{\n  \"errorMessages\" : [ {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  }, {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  } ],\n  \"hasValidationErrors\" : true,\n  \"hasErrors\" : true,\n  \"id\" : 6,\n  \"successMessage\" : \"successMessage\"\n}";
+
+                        var example = exampleJson != null
+                        ? JsonConvert.DeserializeObject<AuditActionResult>(exampleJson)
+                        : default(AuditActionResult);            //TODO: Change the data returned
+            return new ObjectResult(example);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        [HttpGet]
+        [Route("/v{version}/Procedure")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureRequest>>))]
-        public async Task<IActionResult> GetProcedure(int? id)
+        public async Task<IActionResult> ProcedureGetProcedure(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedure() {
                 procedureID = id
@@ -35,26 +122,13 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<ProcedureRequest>>();
         }
 
-        [HttpPost]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
-        public async Task<IActionResult> AddProcedure(CreateProcedureRequest newproc)
-        {
-            var command = newproc.ToCreateProcedureCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureRequest>();
-        }
-
-        [HttpPatch]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
-        public async Task<IActionResult> UpdateProcedure(UpdateProcedureRequest newproc)
-        {
-            var command = newproc.ToUpdateProcedureCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureRequest>();
-        }
-
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="version"></param>
+        /// <param name="stepid"></param>
+        /// <response code="404"></response>
         [HttpGet("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepRequest>>))]
@@ -67,18 +141,32 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<ProcedureStepRequest>>();
         }
 
-        [HttpPost("{id}/step")]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
-        public async Task<IActionResult> AddProcedureStep(int id, CreateProcedureStepRequest newstep)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="version"></param>
+        /// <response code="200"></response>
+        [HttpPatch]
+        [Route("/v{version}/Procedure")]
+        [ValidateModelState]
+        [SwaggerResponse(typeof(AuditActionResultOfProcedure))]
+        public virtual IActionResult ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest body, [FromRoute][Required]string version)
         {
-            var command = newstep.ToCreateProcedureStepCommand();
-            command.procedureId = id;
+            var command = newproc.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepRequest>();
+            return ret.ToOkObjectResponse<ProcedureRequest>();
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="id"></param>
+        /// <param name="version"></param>
+        /// <response code="404"></response>
         [HttpPatch("{id}/step")]
+        [Route("/v{version}/Procedure/{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
         public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest newstep)
