@@ -16,7 +16,11 @@ namespace MSR.Answer.API
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                        .UseStartup<Startup>()
+                        // https://devblogs.microsoft.com/dotnet/announcing-ef-core-2-0-preview-1/#upgrading-tooling-packages
+                        .UseDefaultServiceProvider(options =>
+                            options.ValidateScopes = false);
                 });
     }
 }
