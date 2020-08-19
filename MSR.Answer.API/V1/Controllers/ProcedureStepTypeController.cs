@@ -12,14 +12,16 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using NSwag.Annotations;
 using MSR.Answer.API.V1.Models;
+using MSR.Answer.API.Attributes;
 
 namespace MSR.Answer.API.V1.Controllers
 { 
     /// <summary>
     /// 
     /// </summary>
-    [ApiController]
-    public class ProcedureStepTypeApiController : ControllerBase
+    [ApiVersion("1.0")]
+    [VersionedRoute("[controller]")]
+    public class ProcedureStepTypeApiController : BaseApiController
     { 
         /// <summary>
         /// 
@@ -28,7 +30,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [Route("/v{version}/ProcedureStepType")]
+        [Route("/ProcedureStepType")]
         [SwaggerResponse(typeof(AuditActionResultOfICollectionOfProcedureStepType))]
         public virtual IActionResult ProcedureStepTypeGetProcedureStepType([FromRoute][Required]string version, [FromQuery]int? id)
         { 

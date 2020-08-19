@@ -18,8 +18,9 @@ namespace MSR.Answer.API.V1.Controllers
     /// <summary>
     ///
     /// </summary>
-    [ApiController]
-    public class ProcedureTypeController : ControllerBase
+    [ApiVersion("1.0")]
+    [VersionedRoute("[controller]")]
+    public class ProcedureTypeController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
 
