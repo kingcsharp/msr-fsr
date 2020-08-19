@@ -57,6 +57,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Document> _documents;
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
+        private IRepository<Purchase> _purchases;
         private IRepository<PartSubPartMap> _partSubPartMap;
         private IRepository<Invoice> _invoices;
         private IRepository<InvoiceItem> _invoiceItems;
@@ -67,6 +68,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<File> _files;
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
+        private IRepository<Sensor> _sensor;
         private IRepository<Quote> _quotes;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
@@ -74,6 +76,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }
         public IRepository<PurchaseOrder> PurchaseOrders { get { return _purchaseOrders ?? (_purchaseOrders = new EFRepository<PurchaseOrder>(Context)); } }
+        public IRepository<Purchase> Purchases { get { return _purchases ?? (_purchases = new EFRepository<Purchase>(Context)); } }
         public IRepository<User> Users { get { return _users ??= new EFRepository<User>(Context); } }
         public IRepository<Customer> Customers { get { return _customers ??= new EFRepository<Customer>(Context); } }
         public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ??= new EFRepository<CustomerApproval>(Context); } }
@@ -124,6 +127,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkOrderTask> WorkOrderTasks { get { return _workOrderTasks ??= new EFRepository<WorkOrderTask>(Context); } }
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
+        public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
 
         #endregion Repositories
@@ -134,6 +138,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         }
 
         public AnswerContext Context { get; }
+
 
         public void Dispose()
         {
@@ -156,9 +161,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             {
                 await Context.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                var data = ex.Message;
+                throw;
             }
         }
 

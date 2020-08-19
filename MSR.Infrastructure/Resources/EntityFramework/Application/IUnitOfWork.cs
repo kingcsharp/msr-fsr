@@ -55,6 +55,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<MonitorListItem> MonitorListItems { get; }
         IRepository<Document> Documents { get; }
         IRepository<Product> Products { get; }
+        IRepository<Purchase> Purchases { get; }
         IRepository<PurchaseOrder> PurchaseOrders { get; }
         IRepository<PartSubPartMap> PartSubPartMaps { get ; }
         IRepository<Invoice> Invoices { get; }
@@ -66,6 +67,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<FileEntityMap> FileEntityMap { get; }
 
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
+        IRepository<Sensor> Sensors { get; }
+
         IRepository<Quote> Quotes { get; }
 
         void SaveChanges();

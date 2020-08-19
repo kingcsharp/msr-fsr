@@ -52,9 +52,9 @@ export class HelpComponent implements OnInit {
   getHelpPages() {
 
     this.globals.showLoader(true);
-    this.helpService.helpGet(null,null, env.apiVersion).subscribe(responseHandler(response => {
+    this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler(response => {
       this.data = new Array<HelpPage>();
-      
+
       response.object.forEach(helpPage => {
         this.data.push(helpPage);
       });
@@ -87,7 +87,7 @@ export class HelpComponent implements OnInit {
     this.globals.showLoader(true);
     this.helpService.helpDelete(this.helpPageToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.helpPageToDelete.id);
+      const index: number = this.data.map(function (e) { return e.id; }).indexOf(this.helpPageToDelete.id);
       this.data.splice(index, 1);
 
     }));

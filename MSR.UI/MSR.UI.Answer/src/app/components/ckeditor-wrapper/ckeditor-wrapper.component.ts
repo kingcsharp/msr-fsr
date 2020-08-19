@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import * as ClassicEditor from '../../lib/ckeditor/ckeditor';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import { environment as env } from '../../../environments/environment';
 
 @Component({
   selector: 'ckeditor-wrapper',
@@ -11,23 +12,49 @@ export class CkeditorWrapperComponent implements OnInit {
 
   public Editor = ClassicEditor;
   public config: any;
-  @Input() editorcontent:string;
+  @Input() editorcontent: string;
   @Output() editorContentChange = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
+
+    let options = new Array<string>();
+    ClassicEditor.builtinPlugins.map(plugin => {
+
+      options.push(plugin.pluginName);
+
+    });
     this.config = {
+      fontColor: {
+        colors: [
+          {
+            color: 'hsl(0, 0%, 0%)',
+            label: 'Black',
+            default: true
+          },
+          {
+            color: 'hsl(0, 0%, 30%)',
+            label: 'Dim grey'
+          },
+          {
+            color: 'hsl(0, 0%, 60%)',
+            label: 'Grey'
+          },
+          {
+            color: 'hsl(0, 0%, 90%)',
+            label: 'Light grey'
+          },
+          {
+            color: 'hsl(0, 0%, 100%)',
+            label: 'White',
+            hasBorder: true
+          }
+        ]
+      },
       toolbar: {
         items: [
-          'bold',
-          'italic',
-          'link',
-          'bulletedList',
-          'numberedList',
-          'imageUpload',
-          'blockQuote',
-          'undo',
-          'redo'
+          'BlockQuote', 'Bold', 'CKFinder', 'FontBackgroundColor', 'FontColor', 'FontFamily', 'FontSize', 'Heading', 'Highlight', 'HorizontalLine',
+           'ImageUpload', 'Indent', 'Italic', 'Link', 'PageBreak', 'RemoveFormat', 'Strikethrough', 'Subscript', 'Superscript'
         ]
       },
       image: {
@@ -39,24 +66,22 @@ export class CkeditorWrapperComponent implements OnInit {
         ]
       },
       simpleUpload: {
-        // The URL that the images are uploaded to.
-        uploadUrl: 'http://example.com',
 
-        // Enable the XMLHttpRequest.withCredentials property.
-        withCredentials: false,
+        uploadUrl: env.API_BASE_URL + '/v1/file/help',
 
-        // Headers sent along with the XMLHttpRequest to the upload server.
-        //headers: {
-        //  'X-CSRF-TOKEN': 'CSFR-Token',
-        //  Authorization: 'Bearer <JSON Web Token>'
-        //}
+        withCredentials: true,
+
+         headers: {
+          'X-CSRF-TOKEN': 'CSFR-Token',
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+         }
       },
-      // This value must be kept in sync with the language defined in webpack.config.js.
+
       language: 'en'
     };
   }
 
-  editorContentChanged(){
+  editorContentChanged() {
     this.editorContentChange.emit(this.editorcontent);
   }
 

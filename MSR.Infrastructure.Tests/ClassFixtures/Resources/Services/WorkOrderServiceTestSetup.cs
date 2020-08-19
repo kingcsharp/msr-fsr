@@ -23,8 +23,26 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
         {
             var mockUnitOfWork = DatabaseFake.DatabaseFakeSetup();
 
+            //
+            // Purchases
+            //
+            var purchases = new Mock<IRepository<Purchase>>();
+            var purchasesList = new List<Purchase>() {
+                WorkOrderFixture.PlainPurchase
+            };
+            var purchasesMock = purchasesList.AsQueryable().BuildMock();
+            purchases.Setup(m => m.Query()).Returns(purchasesMock.Object);
+            purchases.Setup(m => m.FirstOrDefaultAsync(It.IsAny<bool>(),
+                It.IsAny<Expression<Func<Purchase, bool>>>())
+            ).Returns(Task.FromResult(purchasesList[0]));
+            mockUnitOfWork.SetupGet(m => m.Purchases)
+                .Returns(purchases.Object);
+
+            //
+            // WorkOrders
+            //
             var workOrders = new Mock<IRepository<WorkOrder>>();
-            var workOrdersList = new List<WorkOrder>() { 
+            var workOrdersList = new List<WorkOrder>() {
                 WorkOrderFixture.PlainWorkOrder
             };
             var workOrdersMock = workOrdersList.AsQueryable().BuildMock();
@@ -34,6 +52,7 @@ namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
             ).Returns(Task.FromResult(workOrdersList[0]));
             mockUnitOfWork.SetupGet(m => m.WorkOrders)
                 .Returns(workOrders.Object);
+
 
             CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) => { return true; };
             CurrentUser.GetId = () => { return 1; };

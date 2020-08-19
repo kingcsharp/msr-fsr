@@ -5,7 +5,10 @@ import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
-import { EnumApprovalTables } from '../../models/enums/privileges';
+import { EnumApprovalTables, EnumPrivilege } from '../../models/enums/privileges';
+import { AllowedActions } from './AllowedActions';
+
+
 
 
 
@@ -64,6 +67,33 @@ export class Globals {
         }
         const ret = privileges.indexOf(privilege) > -1;
         return ret;
+    }
+
+    getCalendarDefault() {
+        const en = {
+            firstDayOfWeek: 0,
+            dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            today: 'Today',
+            clear: 'Clear',
+            dateFormat: 'yyy-mm-dd'
+        };
+        return en;
+    }
+
+    getEnumPrivileges(controllerEnum): AllowedActions {
+        const allowedActions = new AllowedActions({
+            canCreate: this.hasPrivilege(controllerEnum, EnumPrivilege.CanCreate),
+            canActivate: this.hasPrivilege(controllerEnum, EnumPrivilege.CanActivate),
+            canDelete: this.hasPrivilege(controllerEnum, EnumPrivilege.CanDelete),
+            canEdit: this.hasPrivilege(controllerEnum, EnumPrivilege.CanEdit),
+            canRead: this.hasPrivilege(controllerEnum, EnumPrivilege.CanRead)
+        });
+
+        return allowedActions;
     }
 
     hasActivityPrivilegeByTableName(tableName, privilege) {

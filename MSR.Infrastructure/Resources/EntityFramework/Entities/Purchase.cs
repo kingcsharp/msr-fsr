@@ -19,6 +19,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(50)]
         public string CustomerPurchaseNumber { get; set; }
 
+        public int CustomerLineNumber { get; set; }
+
         public int LocationId { get; set; }
 
         public int Qty { get; set; }
@@ -27,6 +29,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public decimal PurchasePrice { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+
+        [ForeignKey("LocationId")]
         public virtual Location Location { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using MSR.Infrastructure.Tests.ClassFixtures.Resources.Services;
 using MSR.Infrastructure.Tests.TestFixtures;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -37,6 +38,12 @@ namespace MSR.Infrastructure.Tests.Resources.Services
                 WorkOrderFixture.AllWorkOrders
             );
             response.Should().HaveCount(1);
+            response.First()
+                .Purchase
+                .CustomerPurchaseNumber
+                .Should().Be(
+                    WorkOrderFixture.PlainPurchase.CustomerPurchaseNumber
+                );
         }
 
         [Fact]

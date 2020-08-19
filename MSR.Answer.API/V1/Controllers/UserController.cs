@@ -12,6 +12,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using NSwag.Annotations;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
@@ -49,7 +50,16 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse<User>();
         }
-                                           
+                       
+        [HttpGetAttribute("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
+        public async Task<IActionResult> GetTrainingCertificationData([FromQuery]GetTrainingCertificationRequest request)
+        {
+            var command = new GetTrainingCertification { Id = request.UserId };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<IEnumerable<TrainingCertificationView>>();
+
+        }
+
         [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(Invoice))]
-    public partial class Invoice: TrackableEntity
+    public class Invoice: TrackableEntity
     {
         public Invoice()
         {
@@ -20,8 +20,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int StatusId { get; set; }
 
+        [ForeignKey("StatusId")]
+        public virtual Status Status { get; set; }
+
         [Required]
         public int CustomerId { get; set; }
+
+        [ForeignKey("CustomerId")]
+        public virtual Customer Customer { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -45,7 +51,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public decimal Total { get; set; }
 
         public virtual ICollection<InvoiceItem> InvoiceItems { get; set; }
-
-        public virtual Status Status { get; set; }
     }
 }

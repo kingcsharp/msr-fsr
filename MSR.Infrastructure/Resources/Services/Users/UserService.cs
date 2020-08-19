@@ -14,6 +14,7 @@ using MSR.Domain.Helpers;
 using MSR.Infrastructure.Helpers.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using MSR.Domain.Views;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -433,6 +434,25 @@ namespace MSR.Infrastructure.Resources.Services.Users
             var retUser = _mapper.Map<Domain.Models.User>(user);
 
             return retUser;
+        }
+
+        public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
+        {
+            var userRoles = _unitOfWork.UserRoles.Query();
+ 
+            if (command.Id.HasValue)
+            {
+                 userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
+            }
+
+            return userRoles.Include(i => i.User).Include(i => i.Role).Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value).Select(i => new TrainingCertificationView()
+            {
+                CertificationFromDate = i.CertificationFromDate,
+                CertificationToDate = i.CertificationToDate,
+                EmployeeName = i.User.GetFullName(),
+                Status = (i.CertificationToDate.HasValue ? DateTime.Compare(i.CertificationToDate.Value, DateTime.UtcNow) <= 0 ? "Expired" : "Active" : "Active"),
+                CertificationName = i.Role.Name
+            }).AsEnumerable();
         }
     }
 }

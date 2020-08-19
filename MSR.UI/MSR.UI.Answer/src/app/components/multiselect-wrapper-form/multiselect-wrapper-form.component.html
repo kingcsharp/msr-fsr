@@ -1,12 +1,14 @@
 <p-multiSelect name="{{multiselectName}}" [options]="currentOptions" [(ngModel)]="selectedObjs.items" appendTo="body"
     (onChange)="updateModelVal()">
     <ng-template let-items pTemplate="selectedItems">
-        <div *ngIf="items!==undefined && items!==null && items.length>0 && items.length<4">
+        <div *ngIf="items!==undefined && items!==null && items.length>0 && items.length<basicOptions.limit">
             <div *ngFor="let val of items" class="ui-multiselected-item-token ui-corner-all">
                 {{val.name}}
+                <i class="fal fa-times-circle" (click)="removeItem(val)" tooltip="Remove Item" data-cy="remove-dropdown-item"></i>
             </div>
         </div>
-        <div *ngIf="items!==undefined && items!==null && items.length>3">{{items.length}} items selected </div>
+        <div *ngIf="items!==undefined && items!==null && items.length>(basicOptions.limit-1)">{{items.length}} items
+            selected </div>
         <div *ngIf="!items || items.length === 0">{{defaultLabel}}</div>
     </ng-template>
 </p-multiSelect>

@@ -1,7 +1,10 @@
 <div class="container">
     <div class="row">
         <h1 class="page-title">
-            Create Customer
+            <i class="far fa-edit mx-2" *ngIf="customer.id !== 0"></i>
+            <i class="fas fa-plus mx-2" *ngIf="customer.id === 0"></i>
+            <span *ngIf="customer.id === 0">Create Customers</span>
+            <span *ngIf="customer.id !== 0">Edit Customers</span>
         </h1>
     </div>
     <div class="row" *ngIf="customer != null">
@@ -13,7 +16,7 @@
                 <input type="text" id="name" name="name" [(ngModel)]="customer.name"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Name"
-                    placeholder="" data-cy="title-input">
+                    placeholder="" data-cy="name-input">
             </div>
             <div class="form-group">
                 <label for="customernumber" class="col-form-label text-left">
@@ -22,7 +25,7 @@
                 <input type="text" id="customernumber" name="customernumber" [(ngModel)]="customer.customerNumber"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Customer Number"
-                    placeholder="" data-cy="title-input">
+                    placeholder="" data-cy="customernumber-input">
             </div>
             <div class="form-group" *ngIf="locationOptions != null && locationOptions.length != 0">
                 <label class="col-form-label text-left" for="location">
@@ -30,7 +33,7 @@
                 </label>
                 <div class="col-12">
                     <p-dropdown placeholder="Select Location" name="location" [options]="locationOptions" showClear="true" optionLabel="name" appendTo="body"
-                        [baseZIndex]="100001" [(ngModel)]="selectedLocation">
+                        [baseZIndex]="100001" [(ngModel)]="selectedLocation" data-cy="location-dropdown">
                     </p-dropdown>
                 </div>
             </div>
@@ -39,7 +42,7 @@
                     Primary Contact
                 </label>
                 <div class="col-12 text-left">  
-                    <p-dropdown placeholder="Select Primary Contact" name="primaryContact" [options]="allUsers" showClear="true" [(ngModel)]="selectedPrimaryContactId">
+                    <p-dropdown placeholder="Select Primary Contact" name="primaryContact" [options]="allUsers" showClear="true" [(ngModel)]="selectedPrimaryContactId"  data-cy="primarycontact-dropdown">
                     </p-dropdown>
                 </div>
             </div>
@@ -48,7 +51,7 @@
                     Secondary Contact
                 </label>
                 <div class="col-12">
-                    <p-dropdown placeholder="Select Secondary Contact" name="secondaryContact" [options]="allUsers" showClear="true" [(ngModel)]="selectedSecondaryContactId">
+                    <p-dropdown placeholder="Select Secondary Contact" name="secondaryContact" [options]="allUsers" showClear="true" [(ngModel)]="selectedSecondaryContactId"  data-cy="secondarycontact-dropdown">
                     </p-dropdown>
                 </div>
             </div>
@@ -59,7 +62,7 @@
                 <input type="text" id="address" name="address" [(ngModel)]="customer.address"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Address"
-                    placeholder="" data-cy="title-input">
+                    placeholder="" data-cy="address-input">
             </div>
             <div class="form-group">
                 <label for="phone" class="col-form-label text-left">
@@ -68,13 +71,13 @@
                 <input type="text" id="addr ess" name="address" [(ngModel)]="customer.phone"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Phone"
-                    placeholder="" data-cy="title-input">
+                    placeholder="" data-cy="phone-input">
             </div>
         </form>
     </div>
-    <div class="row">
-        <button type="button" class="btn btn-primary m-2" (click)="saveCustomer()" *ngIf="customer.id == 0">Save</button>
-        <button type="button" class="btn btn-primary m-2" (click)="updateCustomer()" *ngIf="customer.id != 0">Update</button>
+    <div class="row" *ngIf="customer !== null">
+        <button type="button" class="btn btn-primary m-2" (click)="saveCustomer()" *ngIf="customer.id == 0" data-cy="save-button">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateCustomer()" *ngIf="customer.id != 0" data-cy="update-button">Update</button>
         <button type="button" class="btn btn-warning m-2" [routerLink]="['../customers']">Cancel</button>
     </div>
 </div>

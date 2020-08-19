@@ -52,6 +52,13 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateCustomerRequest, UpdateCustomer>();
             CreateMap<CreateFileRequest, CreateFile>();
             CreateMap<UploadFileRequest, UploadFile>();
+            CreateMap<GetInvoicesRequest, GetInvoicesGridView>();
+            CreateMap<GetInvoicesRequest, GetInvoices>();
+            CreateMap<DownloadInvoicesRequest, DownloadAsIIFInvoices>();
+            CreateMap<CreateInvoiceRequest, CreateOneInvoice>();
+            CreateMap<CreateInvoiceItemRequest, CreateUpdateInvoiceItem>();
+            CreateMap<ImportRequest, ImportFile>();
+            CreateMap<GetSensorRequest, GetSensor>();
             CreateMap<CreateQuoteRequest, CreateQuote>();
         }
     }
