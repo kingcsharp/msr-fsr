@@ -47,6 +47,10 @@ export class PurchaseCreateComponent implements OnInit {
     this.step++;
   }
 
+  generateArray(n: number): number[] {
+    return Array(n);
+  }
+
 }
 
 // Temp model
