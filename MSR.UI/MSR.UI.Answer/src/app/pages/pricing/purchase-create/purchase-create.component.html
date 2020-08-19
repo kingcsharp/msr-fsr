@@ -221,149 +221,154 @@
               <th>Ext Price</th>
             </tr>
 
-            <ng-container *ngFor="let product of purchaseProducts; index as i">
-              <ng-container *ngIf="product.groupWO">
-                <tr>
-                  <td>
-                    <input
-                      class="form-control input-transparent"
-                      name="OrderItems[{{i}}].PROD_SHOW_NAME"
-                      readonly
-                      type="text"
-                      value="Rex cd Kit 633016422(515256)"
-                    >
-                  </td>
-                  <td>
-                    <input
-                      class="form-control input-transparent disable"
-                      name="OrderItems[{{i}}].CUST_LINE_ITEM"
-                      type="text"
-                      value=""
-                    >
-                  </td>
-                  <td>
-                    <input
-                      class="form-control input-transparent disable"
-                      name="OrderItems[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER" type="text"
-                      value=""
-                    >
-                  </td>
-                  <td>
-                    <div class="form-group row mx-0">
-                      <p-calendar
-                        name="OrderItems[{{i}}].DUE_DATE"
-                        showIcon="true"
-                        styleClass="input-group input-group-transparent"
-                        inputStyleClass="form-control input-transparent"
-                      >
-                      </p-calendar>
-                    </div>
-                  </td>
-                  <td>
-                    <input
-                      [value]="purchaseProducts[i].qty"
-                      class="form-control input-transparent disable"
-                      name="OrderItems[{{i}}].QTY"
-                      readonly
-                      type="text"
-                    >
-                  </td>
-                  <td>
-                    <div class="input-group input-group-transparent">
-                      <span class="input-group-addon bg-secondary">$</span>
-                      <input
-                        class="form-control input-transparent"
-                        name="OrderItems[{{i}}].UNIT_PRICE"
-                        readonly
-                        type="text"
-                      >
-                    </div>
-                  </td>
-                  <td>
-                    <div class="input-group input-group-transparent">
-                      <span class="input-group-addon bg-secondary">$</span>
-                      <input
-                        class="form-control input-transparent"
-                        name="OrderItems[{{i}}].EXT_PRICE"
-                        readonly
-                        type="text"
-                      >
-                    </div>
-                  </td>
-                </tr>
-              </ng-container>
+            <tr *ngFor="let purchaseItem of purchaseItems; index as i">
+              <td>
+                <input
+                  [value]="purchaseItem.productName"
+                  class="form-control input-transparent"
+                  name="purchaseItems[{{i}}].PROD_SHOW_NAME"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [(ngModel)]="purchaseItems[i].custLineItem"
+                  class="form-control input-transparent disable"
+                  name="purchaseItem[{{i}}].CUST_LINE_ITEM"
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [(ngModel)]="purchaseItems[i].materialTransferTicketNo"
+                  class="form-control input-transparent disable"
+                  name="purchaseItem[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER" type="text"
+                >
+              </td>
+              <td>
+                <div class="form-group row mx-0">
+                  <p-calendar
+                    [(ngModel)]="purchaseItems[i].dueDate"
+                    name="purchaseItem[{{i}}].DUE_DATE"
+                    showIcon="true"
+                    styleClass="input-group input-group-transparent"
+                    inputStyleClass="form-control input-transparent"
+                  >
+                  </p-calendar>
+                </div>
+              </td>
+              <td>
+                <input
+                  [value]="purchaseItem.qty"
+                  class="form-control input-transparent disable"
+                  name="purchaseItem[{{i}}].QTY"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <div class="input-group input-group-transparent">
+                  <span class="input-group-addon bg-secondary">$</span>
+                  <input
+                    [value]="purchaseItem.unitPrice"
+                    class="form-control input-transparent"
+                    name="purchaseItem[{{i}}].UNIT_PRICE"
+                    readonly
+                    type="text"
+                  >
+                </div>
+              </td>
+              <td>
+                <div class="input-group input-group-transparent">
+                  <span class="input-group-addon bg-secondary">$</span>
+                  <input
+                    [value]="purchaseItem.extPrice"
+                    class="form-control input-transparent"
+                    name="purchaseItem[{{i}}].EXT_PRICE"
+                    readonly
+                    type="text"
+                  >
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
 
-              <ng-container *ngIf="!product.groupWO">
-                <tr *ngFor="let item of generateArray(product.qty); index as j">
-                  <td>
-                    <input
-                      class="form-control input-transparent"
-                      name="OrderItems[{{i}}][{{j}}].PROD_SHOW_NAME"
-                      readonly
-                      type="text"
-                      value="Rex cd Kit 633016422(515256)"
-                    >
-                  </td>
-                  <td>
-                    <input
-                      class="form-control input-transparent disable"
-                      name="OrderItems[{{i}}][{{j}}].CUST_LINE_ITEM"
-                      type="text"
-                      value=""
-                    >
-                  </td>
-                  <td>
-                    <input
-                      class="form-control input-transparent disable"
-                      name="OrderItems[{{i}}][{{j}}].MATERIAL_TRANSFER_TICKET_NUMBER" type="text"
-                      value=""
-                    >
-                  </td>
-                  <td>
-                    <div class="form-group row mx-0">
-                      <p-calendar
-                        name="OrderItems[{{i}}][{{j}}].DUE_DATE"
-                        showIcon="true"
-                        styleClass="input-group input-group-transparent"
-                        inputStyleClass="form-control input-transparent"
-                      >
-                      </p-calendar>
-                    </div>
-                  </td>
-                  <td>
-                    <input
-                      class="form-control input-transparent disable"
-                      name="OrderItems[{{i}}][{{j}}].QTY"
-                      readonly
-                      type="text"
-                      value="1"
-                    >
-                  </td>
-                  <td>
-                    <div class="input-group input-group-transparent">
-                      <span class="input-group-addon bg-secondary">$</span>
-                      <input
-                        class="form-control input-transparent"
-                        name="OrderItems[{{i}}][{{j}}].UNIT_PRICE"
-                        readonly
-                        type="text"
-                      >
-                    </div>
-                  </td>
-                  <td>
-                    <div class="input-group input-group-transparent">
-                      <span class="input-group-addon bg-secondary">$</span>
-                      <input
-                        class="form-control input-transparent"
-                        name="OrderItems[{{i}}][{{j}}].EXT_PRICE"
-                        readonly
-                        type="text"
-                      >
-                    </div>
-                  </td>
-                </tr>
-              </ng-container>
-            </ng-container>
+      <ng-container *ngIf="step === 2">
+        <h2 class="page-title my-4 px-3">
+          Purchase Serialize Parts
+        </h2>
+
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th>Cust Line #</th>
+              <th>Serial / Kit Number</th>
+              <th>Quantity</th>
+              <th>Site</th>
+              <th>Part</th>
+              <th>Procedure</th>
+            </tr>
+
+            <tr *ngFor="let purchaseSerializeItem of purchaseSerializeItems; index as i">
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.custLineItem"
+                  class="form-control input-transparent disable"
+                  name="purchaseSerializeItem[{{i}}].CUST_LINE_ITEM"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [(ngModel)]="purchaseSerializeItems[i].serialKitNo"
+                  class="form-control input-transparent disable"
+                  name="purchaseSerializeItem[{{i}}].SERIAL_KIT_NUMBER"
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.qty"
+                  class="form-control input-transparent"
+                  name="purchaseSerializeItem[{{i}}].QTY"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <p-dropdown
+                  placeholder="Select Site"
+                  name="purchaseSerializeItem[{{i}}].SITE"
+                  [options]="siteData"
+                  appendTo="body"
+                  [baseZIndex]="100001"
+                  required
+                >
+                </p-dropdown>
+              </td>
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.part"
+                  class="form-control input-transparent"
+                  name="purchaseSerializeItem[{{i}}].PART_NAME"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.procedure"
+                  class="form-control input-transparent"
+                  name="purchaseSerializeItem[{{i}}].PROCEDURE_NAME"
+                  readonly
+                  type="text"
+                >
+              </td>
+            </tr>
           </tbody>
         </table>
       </ng-container>

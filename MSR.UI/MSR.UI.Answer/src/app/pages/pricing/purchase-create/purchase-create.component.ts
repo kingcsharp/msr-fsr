@@ -9,6 +9,19 @@ export class PurchaseCreateComponent implements OnInit {
   purchaseOrderData: PurchaseOrder;
   getPurchaseOrderFlag: boolean = false;
   purchaseProducts: any[] = [];
+  purchaseItems: PurchaseItem[] = [];
+  purchaseSerializeItems: any[] = [];
+  siteData = [
+    {
+      label: 'Site 1',
+      value: 1566
+    },
+    {
+      label: 'Site 2',
+      value: 1574
+    }
+  ];
+
   step: number;
   selectButtonOptions = [
     {
@@ -44,7 +57,65 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   goToNextStep() {
-    this.step++;
+    if (this.step === 0) {
+      this.purchaseItems = [];
+      this.purchaseProducts.map(product => {
+        if (product.groupWO) {
+          this.purchaseItems.push(new PurchaseItem({
+            productName: product.name,
+            custLineItem: null,
+            materialTransferTicketNo: null,
+            dueDate: null,
+            qty: product.qty,
+            unitPrice: product.price,
+            extPrice: product.qty * product.price,
+            groupWO: product.groupWO,
+            serializeIndividually: product.serializeIndividually
+          }));
+        } else {
+          for (let i=0; i<product.qty; i++) {
+            this.purchaseItems.push(new PurchaseItem({
+              productName: product.name,
+              custLineItem: null,
+              materialTransferTicketNo: null,
+              dueDate: null,
+              qty: 1,
+              unitPrice: product.price,
+              extPrice: product.price,
+              groupWO: product.groupWO,
+              serializeIndividually: product.serializeIndividually
+            }));
+          }
+        }
+      });
+      this.step = 1;
+    } else if (this.step === 1) {
+      this.purchaseSerializeItems = [];
+      this.purchaseItems.map(item => {
+        if (item.serializeIndividually) {
+          this.purchaseSerializeItems.push({
+            custLineItem: item.custLineItem,
+            serialKitNo: null,
+            qty: item.qty,
+            site: null,
+            part: null,
+            procedure: null
+          });
+        } else {
+          for (let i=0; i<item.qty; i++) {
+            this.purchaseSerializeItems.push({
+              custLineItem: item.custLineItem,
+              serialKitNo: null,
+              qty: 1,
+              site: null,
+              part: null,
+              procedure: null
+            })
+          }
+        }
+      });
+      this.step = 2;
+    }
   }
 
   generateArray(n: number): number[] {
@@ -101,6 +172,40 @@ class PurchaseOrder implements IPurchaseOrder {
     }
   }
 }
+
+interface IPurchaseItem {
+  productName: string;
+  custLineItem: string;
+  materialTransferTicketNo: string;
+  dueDate: Date;
+  qty: number;
+  unitPrice: number;
+  extPrice: number;
+  groupWO: boolean;
+  serializeIndividually: boolean;
+}
+
+class PurchaseItem implements IPurchaseItem {
+  productName: string;
+  custLineItem: string;
+  materialTransferTicketNo: string;
+  dueDate: Date;
+  qty: number;
+  unitPrice: number;
+  extPrice: number;
+  groupWO: boolean;
+  serializeIndividually: boolean;
+
+  constructor(data?: IPurchaseItem) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+}
+
 
 const mockPO = new PurchaseOrder({
   id: 516481,
