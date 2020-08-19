@@ -11,6 +11,7 @@ export class PurchaseCreateComponent implements OnInit {
   purchaseProducts: any[] = [];
   purchaseItems: PurchaseItem[] = [];
   purchaseSerializeItems: any[] = [];
+  serialNumberModal: boolean = false;
   siteData = [
     {
       label: 'Site 1',
@@ -115,7 +116,17 @@ export class PurchaseCreateComponent implements OnInit {
         }
       });
       this.step = 2;
+    } else {
+      this.showSerialNumberModal();
     }
+  }
+
+  showSerialNumberModal() {
+    this.serialNumberModal = true;
+  }
+
+  closeSerialNumberModal() {
+    this.serialNumberModal = false;
   }
 
   generateArray(n: number): number[] {

@@ -394,3 +394,55 @@
     </form>
   </widget>
 </div>
+
+<p-dialog
+  header="Serial Numbers checked that has been used for a different Part Number previously!"
+  [(visible)]="serialNumberModal"
+  [appendTo]="'body'"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '50vw'}"
+  data-cy="purchase-order-header"
+>
+  <section
+  class="widget mrg-btm-sm"
+  widget
+  >
+    <header class="mb-4">
+      <h5>Details</h5>
+    </header>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <th>Serial Number</th>
+          <th>Customer Part Number</th>
+          <th>Part Description</th>
+        </tr>
+        <tr>
+          <td>Serial Number1</td>
+          <td>Customer Part Number1</td>
+          <td>Part Description1</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row mx-0 mt-4 mb-3 justify-content-end">
+      <button
+        type="submit"
+        class="btn btn-success width-100 mr-2"
+        role="button"
+        data-cy="save-button"
+      >
+        Continue
+      </button>
+      <button
+        type="button"
+        class="btn btn-warning width-100"
+        role="button"
+        (click)="closeSerialNumberModal()"
+      >
+        Cancel
+      </button>
+    </div>
+  </section>
+</p-dialog>
