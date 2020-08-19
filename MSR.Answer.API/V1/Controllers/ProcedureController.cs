@@ -7,8 +7,10 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using Newtonsoft.Json;
 using NSwag.Annotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -34,7 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
         [Route("/v{version}/Procedure")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
-        public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest body)
+        public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest newproc)
         {
             var command = newproc.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
@@ -66,9 +68,9 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpDelete]
-        [Route("/Robert5/msr-api/v1/v{version}/Procedure/{id}")]
+        [Route("/v{version}/Procedure/{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public virtual IActionResult ProcedureDeactivateProcedure([FromRoute][Required]int? id, [FromRoute][Required]string version)
+        public virtual IActionResult ProcedureDeactivateProcedure([FromRoute][Required]int? id)
         {
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(AuditActionResult));
@@ -149,9 +151,8 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [Route("/v{version}/Procedure")]
-        [ValidateModelState]
         [SwaggerResponse(typeof(AuditActionResultOfProcedure))]
-        public virtual IActionResult ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest body, [FromRoute][Required]string version)
+        public async Task<IActionResult> ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest newproc)
         {
             var command = newproc.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);

@@ -7,8 +7,10 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using Newtonsoft.Json;
 using NSwag.Annotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -47,9 +49,9 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpDelete]
-        [Route("/Robert5/msr-api/v1/v{version}/ProcedureStepMonitor/{id}")]
+        [Route("/v{version}/ProcedureStepMonitor/{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public virtual IActionResult ProcedureStepMonitorDeactivateProcedureStepMonitor([FromRoute][Required]int? id, [FromRoute][Required]string version)
+        public virtual IActionResult ProcedureStepMonitorDeactivateProcedureStepMonitor([FromRoute][Required]int? id)
         {
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(AuditActionResult));

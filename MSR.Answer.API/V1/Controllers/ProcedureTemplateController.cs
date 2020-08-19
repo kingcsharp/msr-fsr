@@ -10,11 +10,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using IO.Swagger.Attributes;
-using IO.Swagger.Models;
 using NSwag.Annotations;
+using MSR.Answer.API.V1.Models;
 
-namespace IO.Swagger.Controllers
+namespace MSR.Answer.API.V1.Controllers
 {
     /// <summary>
     ///
@@ -30,9 +29,8 @@ namespace IO.Swagger.Controllers
         /// <response code="200"></response>
         [HttpPost]
         [Route("/v{version}/ProcedureTemplate")]
-        [ValidateModelState]
         [SwaggerResponse(typeof(AuditActionResultOfProcedureTemplate))]
-        public virtual IActionResult ProcedureTemplateCreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body, [FromRoute][Required]string version)
+        public virtual IActionResult ProcedureTemplateCreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body)
         {
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(AuditActionResultOfProcedureTemplate));
@@ -75,8 +73,6 @@ namespace IO.Swagger.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [Route("/v{version}/ProcedureTemplate")]
-        [ValidateModelState]
-        [SwaggerOperation("ProcedureTemplateGetProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResultOfICollectionOfProcedureTemplate))]
         public virtual IActionResult ProcedureTemplateGetProcedureTemplate([FromRoute][Required]string version, [FromQuery]int? id)
         {
@@ -99,8 +95,6 @@ namespace IO.Swagger.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [Route("/v{version}/ProcedureTemplate")]
-        [ValidateModelState]
-        [SwaggerOperation("ProcedureTemplateUpdateProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResultOfProcedureTemplate))]
         public virtual IActionResult ProcedureTemplateUpdateProcedureTemplate([FromBody]UpdateProcedureTemplateRequest body, [FromRoute][Required]string version)
         {

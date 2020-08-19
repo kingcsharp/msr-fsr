@@ -11,13 +11,10 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using IO.Swagger.Attributes;
-
-using Microsoft.AspNetCore.Authorization;
-using IO.Swagger.Models;
 using NSwag.Annotations;
+using MSR.Answer.API.V1.Models;
 
-namespace IO.Swagger.Controllers
+namespace MSR.Answer.API.V1.Controllers
 { 
 
     /// <summary>

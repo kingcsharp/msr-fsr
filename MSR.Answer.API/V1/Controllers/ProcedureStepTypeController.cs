@@ -10,11 +10,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using IO.Swagger.Attributes;
-using IO.Swagger.Models;
 using NSwag.Annotations;
+using MSR.Answer.API.V1.Models;
 
-namespace IO.Swagger.Controllers
+namespace MSR.Answer.API.V1.Controllers
 { 
     /// <summary>
     /// 
@@ -30,8 +29,6 @@ namespace IO.Swagger.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [Route("/v{version}/ProcedureStepType")]
-        [ValidateModelState]
-        [SwaggerOperation("ProcedureStepTypeGetProcedureStepType")]
         [SwaggerResponse(typeof(AuditActionResultOfICollectionOfProcedureStepType))]
         public virtual IActionResult ProcedureStepTypeGetProcedureStepType([FromRoute][Required]string version, [FromQuery]int? id)
         { 
