@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -11,6 +7,6 @@ namespace MSR.Answer.API.V1.Models
         public string Name { get; set; }
         public string ContentType { get; set; }
         public string FileName { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFileCollection Upload { get; set; }
     }
 }

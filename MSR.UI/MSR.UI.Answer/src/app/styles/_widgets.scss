@@ -1347,7 +1347,6 @@ body .ui-multiselect-panel .ui-multiselect-header .ui-multiselect-close {
   margin: 0 0.286em 0 0;
   display: inline-block;
   vertical-align: middle;
-  height: 1.857em;
 }
 
 .ui-multiselected-item-token {
@@ -1901,6 +1900,26 @@ input.parsley-error {
   }
 }
 
+.formTbl {
+  p-paginator p-dropdown {
+    float: left;
+  }
+  .ui-table-thead th input {
+    background-color: #1d232a;
+  }
+}
+
+cdk-virtual-scroll-viewport {
+  background: #323c48;
+}
+
+body .ui-table.formTbl {
+  .ng-star-inserted:last-child th input,
+  .ui-table-tbody > tr:nth-child(odd) {
+    background-color: #1d232a;
+  }
+}
+
 .ui-fileupload.ui-widget {
   min-width: 300px;
 }
@@ -1999,4 +2018,9 @@ body .ui-fileupload .ui-fileupload-content {
 
 p-dialog {
   text-align: left;
+}
+
+body .ui-inputtext {
+  color: #ffffff;
+  background: #1d232a;
 }

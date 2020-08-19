@@ -40,8 +40,5 @@ export class ColumnsSaved implements IColumnsSaved {
         data['visible'] = this.visible;
         return data;
     }
-
-
-
-
 }
+

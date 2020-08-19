@@ -1,0 +1,279 @@
+{
+	"info": {
+		"_postman_id": "6ac67bc9-e1bf-4cf6-8013-eec5e50a3f43",
+		"name": "Answer3-WorkOrder",
+		"description": "REST API Answer 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "v{version}/Work Order",
+			"item": [
+				{
+					"name": "Work Order Get Work Order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "Copy this into the value field: Bearer {token}",
+								"key": "Authorization",
+								"value": ""
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v{{version}}/WorkOrder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"WorkOrder"
+							],
+							"query": [
+								{
+									"key": "Id",
+									"value": "<integer>",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/v{{version}}/WorkOrder?Id=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v{{version}}",
+										"WorkOrder"
+									],
+									"query": [
+										{
+											"key": "Id",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"successMessage\": \"eu reprehenderit dolor sed\",\n \"errorMessages\": [\n  {\n   \"number\": 92940111,\n   \"message\": \"exercitation dolor\",\n   \"isValidationMessage\": true\n  },\n  {\n   \"number\": 66576693,\n   \"message\": \"in\",\n   \"isValidationMessage\": true\n  }\n ],\n \"id\": -69716910,\n \"hasErrors\": true,\n \"hasValidationErrors\": false,\n \"object\": [\n  {\n   \"id\": -1753080,\n   \"purchaseId\": 85038899,\n   \"productId\": 21982070,\n   \"price\": 79130785.4984161,\n   \"scheduledStartDate\": \"et culpa magna fugiat eu\",\n   \"scheduledEndDate\": \"fugiat nisi ipsum\",\n   \"actualStartDate\": \"laborum sed\",\n   \"actualEndDate\": \"occ\",\n   \"hasNCR\": false,\n   \"locationId\": 2416291,\n   \"location\": {\n    \"oldId\": 14506654,\n    \"name\": \"est sunt enim magna non\",\n    \"address1\": \"Ut veniam\",\n    \"address2\": \"ex reprehenderit cillum in\",\n    \"city\": \"occaecat veniam velit in\",\n    \"state\": \"amet consequat\",\n    \"postalCode\": \"veniam\",\n    \"country\": \"in sint dolor\",\n    \"phone\": \"sed consequat exercitation et\",\n    \"parentId\": -87144225,\n    \"internalAddress\": \"reprehenderit consequat\",\n    \"invoiceClass\": \"ut adipisicing mollit dolore\",\n    \"timeZone\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"status\": \"dolor dolor qui laborum\"\n   },\n   \"product\": {\n    \"name\": \"culpa et commodo\",\n    \"revision\": 45655736,\n    \"customerId\": -37081572,\n    \"customerRequirementId\": -96539754,\n    \"procedureId\": 23713723,\n    \"partId\": 30613188,\n    \"equipmentCost\": -38582286.13617709,\n    \"materialCost\": -66941390.68043259,\n    \"salesTax\": 4722371.029354557,\n    \"totalSalePrice\": 87945892.88350189,\n    \"cycleTime\": -22737386,\n    \"workOrders\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     }\n    ]\n   },\n   \"purchase\": {\n    \"id\": -4662320,\n    \"purchaseOrderId\": -43890181,\n    \"purchaseOrderProductId\": 93321195,\n    \"customerPurchaseNumber\": \"sunt commodo\",\n    \"locationId\": 38375901,\n    \"qty\": -15468457,\n    \"purchasePrice\": 200284.12316390872,\n    \"workOrders\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     }\n    ]\n   },\n   \"workOrderParts\": [\n    {\n     \"workOrderId\": -10941806,\n     \"partId\": -52096126,\n     \"parentId\": -43077710,\n     \"serialNumber\": \"tempor eu\",\n     \"part\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"children\": [\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      },\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      }\n     ],\n     \"parent\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    },\n    {\n     \"workOrderId\": -58782769,\n     \"partId\": -28873634,\n     \"parentId\": -85729831,\n     \"serialNumber\": \"veniam\",\n     \"part\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"children\": [\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      },\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      }\n     ],\n     \"parent\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    }\n   ],\n   \"workOrderTasks\": [\n    {\n     \"workOrderId\": -28206217,\n     \"procedureStepId\": 71318478,\n     \"procedureStepTypeId\": -94414505,\n     \"statusId\": 86499657,\n     \"taskStepOrder\": 43699140,\n     \"assignedTo\": 13035441,\n     \"assignedToUser\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"totalTaskTime\": 32242678.133486718,\n     \"taskIsRunning\": true,\n     \"taskRunningSince\": \"reprehenderit nisi aliquip aute\",\n     \"procedureStep\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"procedureStepType\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"status\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"workOrderTaskMonitors\": [\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n     ]\n    },\n    {\n     \"workOrderId\": -22819992,\n     \"procedureStepId\": 62786989,\n     \"procedureStepTypeId\": 30146219,\n     \"statusId\": 19700512,\n     \"taskStepOrder\": 50750832,\n     \"assignedTo\": -92034647,\n     \"assignedToUser\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"totalTaskTime\": -22135051.86151141,\n     \"taskIsRunning\": true,\n     \"taskRunningSince\": \"proident Excepteur\",\n     \"procedureStep\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"procedureStepType\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"status\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"workOrderTaskMonitors\": [\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n     ]\n    }\n   ]\n  },\n  {\n   \"id\": 53403233,\n   \"purchaseId\": 17863827,\n   \"productId\": -69327033,\n   \"price\": 93482308.05385733,\n   \"scheduledStartDate\": \"non elit ad\",\n   \"scheduledEndDate\": \"irure ad Ut ut\",\n   \"actualStartDate\": \"veniam nostrud voluptate in\",\n   \"actualEndDate\": \"veniam aliquip et dolore\",\n   \"hasNCR\": false,\n   \"locationId\": -69598629,\n   \"location\": {\n    \"oldId\": -83843919,\n    \"name\": \"consequat sed tempor pariatur\",\n    \"address1\": \"qui Lorem do enim\",\n    \"address2\": \"incididunt velit nostrud enim\",\n    \"city\": \"exercitation e\",\n    \"state\": \"ullamco aute\",\n    \"postalCode\": \"nostrud esse aliqua et\",\n    \"country\": \"nisi esse\",\n    \"phone\": \"sit esse id magna\",\n    \"parentId\": -54357244,\n    \"internalAddress\": \"in cillum incididunt\",\n    \"invoiceClass\": \"nisi quis consequat ad sint\",\n    \"timeZone\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"status\": \"esse eu commodo laboris\"\n   },\n   \"product\": {\n    \"name\": \"nulla cupidatat sunt tempor\",\n    \"revision\": 15817387,\n    \"customerId\": -61898939,\n    \"customerRequirementId\": -90150211,\n    \"procedureId\": 60992678,\n    \"partId\": -82093471,\n    \"equipmentCost\": -69768529.67547348,\n    \"materialCost\": -66391853.24929722,\n    \"salesTax\": 28899116.5833067,\n    \"totalSalePrice\": 26023224.560532212,\n    \"cycleTime\": -59271910,\n    \"workOrders\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     }\n    ]\n   },\n   \"purchase\": {\n    \"id\": 66124311,\n    \"purchaseOrderId\": 11880780,\n    \"purchaseOrderProductId\": 37243307,\n    \"customerPurchaseNumber\": \"sunt nulla qui et\",\n    \"locationId\": 51246072,\n    \"qty\": -59363571,\n    \"purchasePrice\": 47341586.25589529,\n    \"workOrders\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     }\n    ]\n   },\n   \"workOrderParts\": [\n    {\n     \"workOrderId\": 22419528,\n     \"partId\": -23991861,\n     \"parentId\": -15457836,\n     \"serialNumber\": \"anim ut cillum aliqua\",\n     \"part\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"children\": [\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      },\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      }\n     ],\n     \"parent\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    },\n    {\n     \"workOrderId\": -18275386,\n     \"partId\": -94400777,\n     \"parentId\": -42165308,\n     \"serialNumber\": \"fugiat mollit\",\n     \"part\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"children\": [\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      },\n      {\n       \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n      }\n     ],\n     \"parent\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    }\n   ],\n   \"workOrderTasks\": [\n    {\n     \"workOrderId\": -77334157,\n     \"procedureStepId\": -83708529,\n     \"procedureStepTypeId\": 32060298,\n     \"statusId\": 14947470,\n     \"taskStepOrder\": -14314449,\n     \"assignedTo\": -14439849,\n     \"assignedToUser\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"totalTaskTime\": 76443182.41414294,\n     \"taskIsRunning\": true,\n     \"taskRunningSince\": \"in do officia\",\n     \"procedureStep\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"procedureStepType\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"status\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"workOrderTaskMonitors\": [\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n     ]\n    },\n    {\n     \"workOrderId\": -80798,\n     \"procedureStepId\": -30674380,\n     \"procedureStepTypeId\": 23753098,\n     \"statusId\": -83480747,\n     \"taskStepOrder\": -60425767,\n     \"assignedTo\": -89276342,\n     \"assignedToUser\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"totalTaskTime\": 83844966.03499651,\n     \"taskIsRunning\": false,\n     \"taskRunningSince\": \"Ut minim\",\n     \"procedureStep\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"procedureStepType\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"status\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     \"workOrder\": {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n     },\n     \"workOrderTaskMonitors\": [\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      {\n       \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n     ]\n    }\n   ]\n  }\n ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Work Order Add Work Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "Copy this into the value field: Bearer {token}",
+								"key": "Authorization",
+								"value": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"purchaseId\": \"<integer>\",\n    \"productId\": \"<integer>\",\n    \"price\": \"<decimal>\",\n    \"scheduledStartDate\": \"<dateTime>\",\n    \"scheduledEndDate\": \"<dateTime>\",\n    \"hasNCR\": \"<boolean>\",\n    \"locationId\": \"<integer>\",\n    \"workOrderParts\": [\n        {\n            \"workOrderId\": \"<integer>\",\n            \"partId\": \"<integer>\",\n            \"parentId\": \"<integer>\",\n            \"serialNumber\": \"<string>\",\n            \"part\": {\n                \"name\": \"<string>\",\n                \"partNumber\": \"<string>\",\n                \"oemPartNumber\": \"<string>\",\n                \"nickName\": \"<string>\",\n                \"isActive\": \"<boolean>\",\n                \"maximumCycles\": \"<integer>\",\n                \"createSubParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"comment\": \"<string>\",\n                \"files\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"workOrder\": {\n                \"purchaseId\": \"<integer>\",\n                \"productId\": \"<integer>\",\n                \"price\": \"<decimal>\",\n                \"scheduledStartDate\": \"<dateTime>\",\n                \"scheduledEndDate\": \"<dateTime>\",\n                \"hasNCR\": \"<boolean>\",\n                \"locationId\": \"<integer>\",\n                \"workOrderParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"workOrderTasks\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"children\": [\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                },\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                }\n            ],\n            \"parent\": {\n                \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n            }\n        },\n        {\n            \"workOrderId\": \"<integer>\",\n            \"partId\": \"<integer>\",\n            \"parentId\": \"<integer>\",\n            \"serialNumber\": \"<string>\",\n            \"part\": {\n                \"name\": \"<string>\",\n                \"partNumber\": \"<string>\",\n                \"oemPartNumber\": \"<string>\",\n                \"nickName\": \"<string>\",\n                \"isActive\": \"<boolean>\",\n                \"maximumCycles\": \"<integer>\",\n                \"createSubParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"comment\": \"<string>\",\n                \"files\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"workOrder\": {\n                \"purchaseId\": \"<integer>\",\n                \"productId\": \"<integer>\",\n                \"price\": \"<decimal>\",\n                \"scheduledStartDate\": \"<dateTime>\",\n                \"scheduledEndDate\": \"<dateTime>\",\n                \"hasNCR\": \"<boolean>\",\n                \"locationId\": \"<integer>\",\n                \"workOrderParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"workOrderTasks\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"children\": [\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                },\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                }\n            ],\n            \"parent\": {\n                \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n            }\n        }\n    ],\n    \"workOrderTasks\": [\n        {\n            \"workOrderId\": \"<integer>\",\n            \"procedureStepId\": \"<integer>\",\n            \"procedureStepTypeId\": \"<integer>\",\n            \"statusId\": \"<integer>\",\n            \"taskStepOrder\": \"<integer>\",\n            \"assignedTo\": \"<integer>\",\n            \"userId\": \"<integer>\",\n            \"totalTaskTime\": \"<decimal>\",\n            \"taskIsRunning\": \"<boolean>\",\n            \"taskRunningSince\": \"<dateTime>\",\n            \"workOrderTaskMonitors\": [\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                },\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                }\n            ]\n        },\n        {\n            \"workOrderId\": \"<integer>\",\n            \"procedureStepId\": \"<integer>\",\n            \"procedureStepTypeId\": \"<integer>\",\n            \"statusId\": \"<integer>\",\n            \"taskStepOrder\": \"<integer>\",\n            \"assignedTo\": \"<integer>\",\n            \"userId\": \"<integer>\",\n            \"totalTaskTime\": \"<decimal>\",\n            \"taskIsRunning\": \"<boolean>\",\n            \"taskRunningSince\": \"<dateTime>\",\n            \"workOrderTaskMonitors\": [\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                },\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                }\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v{{version}}/WorkOrder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"WorkOrder"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"purchaseId\": \"<integer>\",\n    \"productId\": \"<integer>\",\n    \"price\": \"<decimal>\",\n    \"scheduledStartDate\": \"<dateTime>\",\n    \"scheduledEndDate\": \"<dateTime>\",\n    \"hasNCR\": \"<boolean>\",\n    \"locationId\": \"<integer>\",\n    \"workOrderParts\": [\n        {\n            \"workOrderId\": \"<integer>\",\n            \"partId\": \"<integer>\",\n            \"parentId\": \"<integer>\",\n            \"serialNumber\": \"<string>\",\n            \"part\": {\n                \"name\": \"<string>\",\n                \"partNumber\": \"<string>\",\n                \"oemPartNumber\": \"<string>\",\n                \"nickName\": \"<string>\",\n                \"isActive\": \"<boolean>\",\n                \"maximumCycles\": \"<integer>\",\n                \"createSubParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"comment\": \"<string>\",\n                \"files\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"workOrder\": {\n                \"purchaseId\": \"<integer>\",\n                \"productId\": \"<integer>\",\n                \"price\": \"<decimal>\",\n                \"scheduledStartDate\": \"<dateTime>\",\n                \"scheduledEndDate\": \"<dateTime>\",\n                \"hasNCR\": \"<boolean>\",\n                \"locationId\": \"<integer>\",\n                \"workOrderParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"workOrderTasks\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"children\": [\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                },\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                }\n            ],\n            \"parent\": {\n                \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n            }\n        },\n        {\n            \"workOrderId\": \"<integer>\",\n            \"partId\": \"<integer>\",\n            \"parentId\": \"<integer>\",\n            \"serialNumber\": \"<string>\",\n            \"part\": {\n                \"name\": \"<string>\",\n                \"partNumber\": \"<string>\",\n                \"oemPartNumber\": \"<string>\",\n                \"nickName\": \"<string>\",\n                \"isActive\": \"<boolean>\",\n                \"maximumCycles\": \"<integer>\",\n                \"createSubParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"comment\": \"<string>\",\n                \"files\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"workOrder\": {\n                \"purchaseId\": \"<integer>\",\n                \"productId\": \"<integer>\",\n                \"price\": \"<decimal>\",\n                \"scheduledStartDate\": \"<dateTime>\",\n                \"scheduledEndDate\": \"<dateTime>\",\n                \"hasNCR\": \"<boolean>\",\n                \"locationId\": \"<integer>\",\n                \"workOrderParts\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"workOrderTasks\": [\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    },\n                    {\n                        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                    }\n                ],\n                \"id\": \"<integer>\"\n            },\n            \"children\": [\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                },\n                {\n                    \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n                }\n            ],\n            \"parent\": {\n                \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartRequest detected>\"\n            }\n        }\n    ],\n    \"workOrderTasks\": [\n        {\n            \"workOrderId\": \"<integer>\",\n            \"procedureStepId\": \"<integer>\",\n            \"procedureStepTypeId\": \"<integer>\",\n            \"statusId\": \"<integer>\",\n            \"taskStepOrder\": \"<integer>\",\n            \"assignedTo\": \"<integer>\",\n            \"userId\": \"<integer>\",\n            \"totalTaskTime\": \"<decimal>\",\n            \"taskIsRunning\": \"<boolean>\",\n            \"taskRunningSince\": \"<dateTime>\",\n            \"workOrderTaskMonitors\": [\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                },\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                }\n            ]\n        },\n        {\n            \"workOrderId\": \"<integer>\",\n            \"procedureStepId\": \"<integer>\",\n            \"procedureStepTypeId\": \"<integer>\",\n            \"statusId\": \"<integer>\",\n            \"taskStepOrder\": \"<integer>\",\n            \"assignedTo\": \"<integer>\",\n            \"userId\": \"<integer>\",\n            \"totalTaskTime\": \"<decimal>\",\n            \"taskIsRunning\": \"<boolean>\",\n            \"taskRunningSince\": \"<dateTime>\",\n            \"workOrderTaskMonitors\": [\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                },\n                {\n                    \"workOrderTaskId\": \"<integer>\",\n                    \"workOrderTask\": {\n                        \"value\": \"<Circular reference to #/components/schemas/WorkOrderTaskRequest detected>\"\n                    },\n                    \"procedureMonitorId\": \"<integer>\",\n                    \"numVal\": \"<integer>\",\n                    \"textVal\": \"<string>\",\n                    \"multiVal\": \"<string>\",\n                    \"sensorMappingId\": \"<integer>\",\n                    \"comment\": \"<string>\"\n                }\n            ]\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v{{version}}/WorkOrder",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v{{version}}",
+										"WorkOrder"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"successMessage\": \"enim esse labore ullamco\",\n \"errorMessages\": [\n  {\n   \"number\": 34389308,\n   \"message\": \"esse do culpa dolore\",\n   \"isValidationMessage\": false\n  },\n  {\n   \"number\": 26751435,\n   \"message\": \"quis deser\",\n   \"isValidationMessage\": true\n  }\n ],\n \"id\": 56585422,\n \"hasErrors\": false,\n \"hasValidationErrors\": true,\n \"object\": {\n  \"id\": 31029745,\n  \"purchaseId\": 24082733,\n  \"productId\": 74000748,\n  \"price\": -92428482.8109407,\n  \"scheduledStartDate\": \"ex e\",\n  \"scheduledEndDate\": \"quis enim anim\",\n  \"actualStartDate\": \"sit\",\n  \"actualEndDate\": \"id culpa officia aute\",\n  \"hasNCR\": false,\n  \"locationId\": -1324906,\n  \"location\": {\n   \"oldId\": 44474244,\n   \"name\": \"mollit\",\n   \"address1\": \"adipisicing consequat occaecat\",\n   \"address2\": \"enim commodo aliqua dolor eiusmod\",\n   \"city\": \"in nisi\",\n   \"state\": \"ipsum in nostrud in\",\n   \"postalCode\": \"nulla occaecat et labore\",\n   \"country\": \"consequat commodo in culpa\",\n   \"phone\": \"sed deserunt veniam ut ea\",\n   \"parentId\": -18331817,\n   \"internalAddress\": \"labore cillum Ut nulla\",\n   \"invoiceClass\": \"ex cupidatat laboris\",\n   \"timeZone\": {\n    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n   },\n   \"status\": \"est Ut pariatur\"\n  },\n  \"product\": {\n   \"name\": \"nulla esse mollit\",\n   \"revision\": -74373194,\n   \"customerId\": -61623666,\n   \"customerRequirementId\": 93786894,\n   \"procedureId\": 11089293,\n   \"partId\": 14707082,\n   \"equipmentCost\": -80562216.53353158,\n   \"materialCost\": 4932230.054346934,\n   \"salesTax\": -52468601.776416525,\n   \"totalSalePrice\": -87910079.73212302,\n   \"cycleTime\": -80460596,\n   \"workOrders\": [\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    }\n   ]\n  },\n  \"purchase\": {\n   \"id\": 75309275,\n   \"purchaseOrderId\": -31851396,\n   \"purchaseOrderProductId\": -19526903,\n   \"customerPurchaseNumber\": \"amet dolor id\",\n   \"locationId\": -72558641,\n   \"qty\": -84544245,\n   \"purchasePrice\": -19624028.608900443,\n   \"workOrders\": [\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    }\n   ]\n  },\n  \"workOrderParts\": [\n   {\n    \"workOrderId\": 23540958,\n    \"partId\": 62538372,\n    \"parentId\": 90548098,\n    \"serialNumber\": \"culpa ipsum\",\n    \"part\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"children\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    ],\n    \"parent\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n    }\n   },\n   {\n    \"workOrderId\": 470254,\n    \"partId\": 714748,\n    \"parentId\": 16711413,\n    \"serialNumber\": \"ut quis mollit tempor\",\n    \"part\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"children\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    ],\n    \"parent\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n    }\n   }\n  ],\n  \"workOrderTasks\": [\n   {\n    \"workOrderId\": -56857996,\n    \"procedureStepId\": 24361785,\n    \"procedureStepTypeId\": 84892623,\n    \"statusId\": 75446016,\n    \"taskStepOrder\": 53117137,\n    \"assignedTo\": 50637999,\n    \"assignedToUser\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"totalTaskTime\": -19244826.366735607,\n    \"taskIsRunning\": true,\n    \"taskRunningSince\": \"elit id\",\n    \"procedureStep\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"procedureStepType\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"status\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"workOrderTaskMonitors\": [\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     }\n    ]\n   },\n   {\n    \"workOrderId\": 45180747,\n    \"procedureStepId\": 24680816,\n    \"procedureStepTypeId\": 69727224,\n    \"statusId\": -53966233,\n    \"taskStepOrder\": 32161916,\n    \"assignedTo\": -8858651,\n    \"assignedToUser\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"totalTaskTime\": -14451312.861900419,\n    \"taskIsRunning\": true,\n    \"taskRunningSince\": \"l\",\n    \"procedureStep\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"procedureStepType\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"status\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"workOrderTaskMonitors\": [\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     }\n    ]\n   }\n  ]\n }\n}"
+						}
+					]
+				},
+				{
+					"name": "Work Order Update Work Order",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"description": "Copy this into the value field: Bearer {token}",
+								"key": "Authorization",
+								"value": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"purchaseId\": \"<integer>\",\n    \"productId\": \"<integer>\",\n    \"price\": \"<decimal>\",\n    \"scheduledStartDate\": \"<dateTime>\",\n    \"scheduledEndDate\": \"<dateTime>\",\n    \"hasNCR\": \"<boolean>\",\n    \"locationId\": \"<integer>\",\n    \"workOrderParts\": [\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n    ],\n    \"workOrderTasks\": [\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n    ],\n    \"id\": \"<integer>\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v{{version}}/WorkOrder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"WorkOrder"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Response",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"purchaseId\": \"<integer>\",\n    \"productId\": \"<integer>\",\n    \"price\": \"<decimal>\",\n    \"scheduledStartDate\": \"<dateTime>\",\n    \"scheduledEndDate\": \"<dateTime>\",\n    \"hasNCR\": \"<boolean>\",\n    \"locationId\": \"<integer>\",\n    \"workOrderParts\": [\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n    ],\n    \"workOrderTasks\": [\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n    ],\n    \"id\": \"<integer>\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v{{version}}/WorkOrder",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v{{version}}",
+										"WorkOrder"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"successMessage\": \"enim esse labore ullamco\",\n \"errorMessages\": [\n  {\n   \"number\": 34389308,\n   \"message\": \"esse do culpa dolore\",\n   \"isValidationMessage\": false\n  },\n  {\n   \"number\": 26751435,\n   \"message\": \"quis deser\",\n   \"isValidationMessage\": true\n  }\n ],\n \"id\": 56585422,\n \"hasErrors\": false,\n \"hasValidationErrors\": true,\n \"object\": {\n  \"id\": 31029745,\n  \"purchaseId\": 24082733,\n  \"productId\": 74000748,\n  \"price\": -92428482.8109407,\n  \"scheduledStartDate\": \"ex e\",\n  \"scheduledEndDate\": \"quis enim anim\",\n  \"actualStartDate\": \"sit\",\n  \"actualEndDate\": \"id culpa officia aute\",\n  \"hasNCR\": false,\n  \"locationId\": -1324906,\n  \"location\": {\n   \"oldId\": 44474244,\n   \"name\": \"mollit\",\n   \"address1\": \"adipisicing consequat occaecat\",\n   \"address2\": \"enim commodo aliqua dolor eiusmod\",\n   \"city\": \"in nisi\",\n   \"state\": \"ipsum in nostrud in\",\n   \"postalCode\": \"nulla occaecat et labore\",\n   \"country\": \"consequat commodo in culpa\",\n   \"phone\": \"sed deserunt veniam ut ea\",\n   \"parentId\": -18331817,\n   \"internalAddress\": \"labore cillum Ut nulla\",\n   \"invoiceClass\": \"ex cupidatat laboris\",\n   \"timeZone\": {\n    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n   },\n   \"status\": \"est Ut pariatur\"\n  },\n  \"product\": {\n   \"name\": \"nulla esse mollit\",\n   \"revision\": -74373194,\n   \"customerId\": -61623666,\n   \"customerRequirementId\": 93786894,\n   \"procedureId\": 11089293,\n   \"partId\": 14707082,\n   \"equipmentCost\": -80562216.53353158,\n   \"materialCost\": 4932230.054346934,\n   \"salesTax\": -52468601.776416525,\n   \"totalSalePrice\": -87910079.73212302,\n   \"cycleTime\": -80460596,\n   \"workOrders\": [\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    }\n   ]\n  },\n  \"purchase\": {\n   \"id\": 75309275,\n   \"purchaseOrderId\": -31851396,\n   \"purchaseOrderProductId\": -19526903,\n   \"customerPurchaseNumber\": \"amet dolor id\",\n   \"locationId\": -72558641,\n   \"qty\": -84544245,\n   \"purchasePrice\": -19624028.608900443,\n   \"workOrders\": [\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    }\n   ]\n  },\n  \"workOrderParts\": [\n   {\n    \"workOrderId\": 23540958,\n    \"partId\": 62538372,\n    \"parentId\": 90548098,\n    \"serialNumber\": \"culpa ipsum\",\n    \"part\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"children\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    ],\n    \"parent\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n    }\n   },\n   {\n    \"workOrderId\": 470254,\n    \"partId\": 714748,\n    \"parentId\": 16711413,\n    \"serialNumber\": \"ut quis mollit tempor\",\n    \"part\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"children\": [\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     },\n     {\n      \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n     }\n    ],\n    \"parent\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderPartModel detected>\"\n    }\n   }\n  ],\n  \"workOrderTasks\": [\n   {\n    \"workOrderId\": -56857996,\n    \"procedureStepId\": 24361785,\n    \"procedureStepTypeId\": 84892623,\n    \"statusId\": 75446016,\n    \"taskStepOrder\": 53117137,\n    \"assignedTo\": 50637999,\n    \"assignedToUser\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"totalTaskTime\": -19244826.366735607,\n    \"taskIsRunning\": true,\n    \"taskRunningSince\": \"elit id\",\n    \"procedureStep\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"procedureStepType\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"status\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"workOrderTaskMonitors\": [\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     }\n    ]\n   },\n   {\n    \"workOrderId\": 45180747,\n    \"procedureStepId\": 24680816,\n    \"procedureStepTypeId\": 69727224,\n    \"statusId\": -53966233,\n    \"taskStepOrder\": 32161916,\n    \"assignedTo\": -8858651,\n    \"assignedToUser\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"totalTaskTime\": -14451312.861900419,\n    \"taskIsRunning\": true,\n    \"taskRunningSince\": \"l\",\n    \"procedureStep\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"procedureStepType\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"status\": {\n     \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"workOrder\": {\n     \"value\": \"<Circular reference to #/components/schemas/WorkOrderModel detected>\"\n    },\n    \"workOrderTaskMonitors\": [\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     },\n     {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n     }\n    ]\n   }\n  ]\n }\n}"
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{btoken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2e8b3ce7-6004-49ca-b758-6e84d9b5ded2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6c0a3328-5ef3-4770-989d-721c0c79665a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a2ec7168-6b6d-412e-85b6-54f00bf351cc",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "85a1a22c-dd25-4c71-b661-ef9bd195480f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "fb70e503-7b12-41d1-9249-64296e86e84b",
+			"key": "baseUrl",
+			"value": "https://localhost:44398"
+		},
+		{
+			"id": "aa374ff7-5644-4201-a7ff-7981d11d4933",
+			"key": "version",
+			"value": "1"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

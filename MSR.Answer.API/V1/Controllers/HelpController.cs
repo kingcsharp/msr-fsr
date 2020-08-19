@@ -28,7 +28,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet(), HasPrivilegeApi("HelpPages",EnumPrivilege.CanRead)]
+        [HttpGet, HasPrivilegeApi("HelpPages",EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<IEnumerable<HelpPage>>))]
         public async Task<IActionResult> GetHelpPages([FromQuery] GetHelpPageRequest request)
         {

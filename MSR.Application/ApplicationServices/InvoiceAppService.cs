@@ -5,6 +5,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace MSR.Application.ApplicationServices
     public class InvoiceAppService :
         ICommandHandler<GetInvoice>,
         ICommandHandler<GetInvoices>,
+        ICommandHandler<GetInvoicesGridView>,
         ICommandHandler<CreateOneInvoice>,
         ICommandHandler<CreateIndividualInvoices>,
         ICommandHandler<UpdateInvoice>,
@@ -43,38 +45,45 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<IEnumerable<InvoiceModel>>(ret);
         }
 
+        public async Task<ICommandResponse> HandleAsync(GetInvoicesGridView command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _invoiceService.GetInvoicesAsync(command);
+            return new CommandResponse<IEnumerable<InvoiceView>>(ret);
+        }
+
         public async Task<ICommandResponse> HandleAsync(CreateOneInvoice command, CancellationToken cancellationToken = default)
         {
             var ret = await _invoiceService.CreateInvoiceAsync(command);
-            return new CommandResponse<InvoiceModel>(ret);
+            return new CommandResponse<InvoiceView>(ret);
         }
+
         public async Task<ICommandResponse> HandleAsync(CreateIndividualInvoices command, CancellationToken cancellationToken = default)
         {
             var ret = await _invoiceService.CreateInvoicesAsync(command);
-            return new CommandResponse<IEnumerable<InvoiceModel>>(ret);
+            return new CommandResponse<IEnumerable<InvoiceView>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateInvoice command, CancellationToken cancellationToken = default)
         {
             var ret = await _invoiceService.UpdateInvoiceAsync(command);
-            return new CommandResponse<InvoiceModel>(ret);
+            return new CommandResponse<InvoiceView>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DownloadAsIIFInvoices command, CancellationToken cancellationToken = default)
         {
-            var retInvoices = await _invoiceService.GetInvoicesAsync(_mapper.Map<GetInvoices>(command));
+            var invoices = await _invoiceService.GetInvoicesAsync(_mapper.Map<GetInvoices>(command));
 
             var format = "iif";
 
-            var retIifData = await _quickBooksService.FormatAsync(new FormatQuickbooks()
+            var iifData = await _quickBooksService.FormatAsync(new FormatQuickbooks()
             {
-                Invoices = retInvoices,
+                Invoices = invoices,
                 FormatType = format
             });
 
             var retArchive = await _quickBooksService.ArchiveInvoicesAsync(new ArchiveQuickbooksInvoices()
             {
-                FormattedInvoices = retIifData,
+                FormattedInvoices = iifData,
                 FormatType = format
             });
 

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
@@ -24,179 +26,149 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             _mapper = mapper;
         }
 
-        public async Task<Domain.Models.InvoiceModel> CreateInvoiceAsync(CreateOneInvoice command)
+        public async Task<InvoiceView> CreateInvoiceAsync(CreateOneInvoice command)
         {
-            var invoice = _mapper.Map<Invoice>(command);
-
-            // Unused by required by the model
-            invoice.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
-
             if (command.InvoiceItems?.Count == 0)
             {
                 throw new DomainException($"{nameof(Domain.Models.InvoiceModel)} must contain at least one WorkOrder");
             }
 
-            // Verifying WorkOrder and PurchaseOrder IDs
-            invoice.InvoiceItems.ToList().ForEach(item =>
-            {
-                item.WorkOrder = _unitOfWork.WorkOrders.Query().FirstOrDefault(x => x.Id == item.WorkOrderId);
+            var invoice = _mapper.Map<Invoice>(command);
 
-                if (item.WorkOrder is null)
-                {
-                    throw new DomainException($"WorkOrder not found", DomainError.NotFound);
-                }
+            // Unused by required by the model
+            invoice.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
 
-                item.PurchaseOrder = _unitOfWork.PurchaseOrders.Query().FirstOrDefault(x => x.Id == item.PurchaseOrderId);
-
-                if (item.PurchaseOrder is null)
-                {
-                    throw new DomainException($"PurchaseOrder not found", DomainError.NotFound);
-                }
-            });
-
-            // Getting parent InvoiceClass from Location
-            var locationInvoiceClass = invoice.InvoiceItems.FirstOrDefault().WorkOrder.Purchase?.Location?.InvoiceClass;
-
-            // Create temporary InvoiceNumber based on Invoice Id
-            invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}";
-
-            // Calculate Subtotal and Total
-            InvoiceCalculateTotals(invoice);
-
-            // Save the new Invoice
-            await _unitOfWork.Invoices.AddAsync(invoice);
-            await _unitOfWork.SaveChangesAsync();
+            invoice = await SaveInvoiceAsync(invoice, command.InvoiceItems);
 
             // Retreive saved Invoice
-            var retInvoice = _mapper.Map<Domain.Models.InvoiceModel>(invoice);
-
-            invoice.InvoiceNumber = $"{retInvoice.InvoiceNumber}-{retInvoice.Id}";
-            retInvoice.InvoiceNumber = invoice.InvoiceNumber;
-
-            // Update Invoice with InvoiceNumber
-            _unitOfWork.Invoices.Update(invoice);
-
-            await _unitOfWork.SaveChangesAsync();
+            var retInvoice = _mapper.Map<InvoiceView>(invoice);
 
             return retInvoice;
         }
 
-        private void InvoiceCalculateTotals(Invoice invoice)
+        /// <summary>
+        /// Saves the <paramref name="invoice"/> into the Invoice repository. InvoiceItem is processed based on <paramref name="invoiceItems"/> command by creating or updating it in the repository and assigning the WorkOrder and PurscheOrder from the command
+        /// </summary>
+        /// <param name="invoice"></param>
+        /// <param name="invoiceItems"></param>
+        /// <returns></returns>
+        private async Task<Invoice> SaveInvoiceAsync(Invoice invoice, IEnumerable<CreateUpdateInvoiceItem> invoiceItems)
+        {
+            // Load InvoiceItems properties
+            invoice.InvoiceItems = invoice.InvoiceItems.Select(curItem =>
+                 _unitOfWork.InvoiceItems.Query()
+                                         .Include(ii => ii.WorkOrder)
+                                         .ThenInclude(wo => wo.Purchase)
+                                         .ThenInclude(p => p.Location)
+                                         .Include(ii => ii.PurchaseOrder)
+                                         .Where(ii => (ii.WorkOrderId == curItem.WorkOrderId &&
+                                                                ii.PurchaseOrderId == curItem.PurchaseOrderId) ||
+                                                                ii.InvoiceId == curItem.InvoiceId)
+                                         .SingleOrDefault())
+                .ToList()
+                .Select(ii => ii ?? new InvoiceItem())
+                .ToList();
+
+            invoiceItems.ToList().ForEach(cii =>
+            {
+                invoice.InvoiceItems.ToList().ForEach(iii =>
+                {
+                    if (!invoice.InvoiceItems.Any(i => iii.WorkOrderId == cii.WorkOrderId &&
+                                                        iii.PurchaseOrderId == cii.PurchaseOrderId))
+                    {
+                        iii.WorkOrderId = cii.WorkOrderId;
+                        iii.PurchaseOrderId = cii.PurchaseOrderId;
+                    }
+
+                });
+            });
+
+            // Create temporary InvoiceNumber based on Invoice Id
+            invoice.InvoiceNumber = $"{DateTime.Now:yy}";
+
+            // Save the new Invoice
+            await _unitOfWork.Invoices.AddAndSaveChangesAsync(invoice);
+
+            var invoiceDb = _unitOfWork.Invoices.Query()
+                                         .Include(i => i.Customer)
+                                         .Include(i => i.InvoiceItems)
+                                         .ThenInclude(i => i.WorkOrder)
+                                         .ThenInclude(wo => wo.Purchase)
+                                         .ThenInclude(p => p.Location)
+                                         .Include(i => i.InvoiceItems)
+                                         .ThenInclude(i => i.PurchaseOrder)
+                                         .SingleOrDefault(i => i.Id == invoice.Id);
+
+            // Getting parent InvoiceClass from Location
+            var locationInvoiceClass = invoiceDb.InvoiceItems.FirstOrDefault().WorkOrder?.Purchase?.Location?.InvoiceClass;
+
+            // Update InvoiceNumber using the new Invoice ID
+            invoiceDb.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}-{invoiceDb.Id}";
+
+            // Calculate Subtotal and Total based on WorkOrders
+            CalculateTotals(invoiceDb);
+
+            // Update Invoice with the new InvoiceNumber
+            await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoiceDb);
+
+            return invoiceDb;
+        }
+
+        private void CalculateTotals(Invoice invoice)
         {
             invoice.Subtotal = invoice.InvoiceItems.Sum(x => x.WorkOrder.Price);
             invoice.Total = (decimal)((invoice.Subtotal + (invoice.Subtotal * invoice.TaxPercentage / 100)));
         }
 
-        public async Task<IEnumerable<Domain.Models.InvoiceModel>> CreateInvoicesAsync(CreateIndividualInvoices command)
+        public async Task<IEnumerable<InvoiceView>> CreateInvoicesAsync(CreateIndividualInvoices command)
         {
-            var invoices = new List<Invoice>();
-            var retInvoices = new List<Domain.Models.InvoiceModel>();
+            var retInvoices = new List<InvoiceView>();
 
             var statusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
 
-            command.Invoices?.ToList().ForEach(async invoiceCommand =>
+            // Enumerate all invoices command, create a separate Invoice entry per command
+            foreach (var invoiceCommand in command.Invoices)
             {
                 var invoice = _mapper.Map<Invoice>(invoiceCommand);
 
-                // Unused by required by the model
                 invoice.StatusId = statusId;
 
-                if (invoiceCommand.InvoiceItems?.Count == 0)
-                {
-                    throw new DomainException($"{nameof(Domain.Models.InvoiceModel)} must contain at least one WorkOrder");
-                }
+                var invoiceDb = await SaveInvoiceAsync(invoice, invoiceCommand.InvoiceItems);
 
-                // Verifying WorkOrder and PurchaseOrder IDs
-                invoice.InvoiceItems.ToList().ForEach(item =>
-                {
-                    item.WorkOrder = _unitOfWork.WorkOrders.Query().FirstOrDefault(x => x.Id == item.WorkOrderId);
+                var retInvoice = _mapper.Map<InvoiceView>(invoiceDb);
 
-                    if (item.WorkOrder is null)
-                    {
-                        throw new DomainException($"WorkOrder not found", DomainError.NotFound);
-                    }
-
-                    item.PurchaseOrder = _unitOfWork.PurchaseOrders.Query().FirstOrDefault(x => x.Id == item.PurchaseOrderId);
-
-                    if (item.PurchaseOrder is null)
-                    {
-                        throw new DomainException($"PurchaseOrder not found", DomainError.NotFound);
-                    }
-                });
-
-                // Getting parent InvoiceClass from Location
-                var locationInvoiceClass = invoice.InvoiceItems.FirstOrDefault().WorkOrder.Purchase?.Location?.InvoiceClass;
-
-                // Create temporary InvoiceNumber based on Invoice Id
-                invoice.InvoiceNumber = $"{locationInvoiceClass}-{DateTime.Now:yy}";
-
-                // Save the new Invoice
-                await _unitOfWork.Invoices.AddAsync(invoice);
-
-                invoices.Add(invoice);
-            });
-
-            if (invoices.Count > 0)
-            {
-                await _unitOfWork.SaveChangesAsync();
-
-                invoices.ForEach(invoice =>
-                {
-                    // Retreive saved Invoice
-                    var retInvoice = _mapper.Map<Domain.Models.InvoiceModel>(invoice);
-
-                    invoice.InvoiceNumber = $"{retInvoice.InvoiceNumber}-{retInvoice.Id}";
-                    retInvoice.InvoiceNumber = invoice.InvoiceNumber;
-
-                    // Update Invoice with InvoiceNumber
-                    _unitOfWork.Invoices.Update(invoice);
-
-                    retInvoices.Add(retInvoice);
-                });
-
-                await _unitOfWork.SaveChangesAsync();
+                retInvoices.Add(retInvoice);
             }
 
             return retInvoices;
         }
 
-        public async Task<Domain.Models.InvoiceModel> UpdateInvoiceAsync(UpdateInvoice command)
+        public async Task<InvoiceView> UpdateInvoiceAsync(UpdateInvoice command)
         {
-            var curInvoice = await _unitOfWork.Invoices.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            // Retreive invoice to update
+            var invoice = await _unitOfWork.Invoices
+                                .Query()
+                                .Include(i => i.InvoiceItems)
+                                .FirstOrDefaultAsync(i => i.Id == command.Id);
 
-            if (curInvoice is null)
+            if (invoice is null)
             {
                 throw new DomainException($"{nameof(Domain.Models.InvoiceModel)} not found with ID: {command.Id}");
             }
 
-            command.InvoiceItems?.ToList().ForEach(invoiceItem =>
-            {
-                if (!_unitOfWork.WorkOrders.Exists(x => x.Id == invoiceItem.WorkOrderId))
-                {
-                    throw new DomainException($"WorkOrder not found", DomainError.NotFound);
-                }
+            // Clear all InvoiceItems (WorkOrders or PurscheOrders)
+            invoice.InvoiceItems.Clear();
 
-                if (!_unitOfWork.PurchaseOrders.Exists(x => x.Id == invoiceItem.PurchaseOrderId))
-                {
-                    throw new DomainException($"PurchaseOrder not found", DomainError.NotFound);
-                }
-            });
+            // Update invoice details and items
+            UpdateInvoiceDetails(invoice, command);
 
-            curInvoice.InvoiceItems.ToList().ForEach(invoiceItem => _unitOfWork.InvoiceItems.Delete(false, invoiceItem, true));
+            // Update invoice totals
+            CalculateTotals(invoice);
 
-            UpdateInvoiceRecord(curInvoice, command);
+            // Save invoice changes
+            await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoice);
 
-            _unitOfWork.Invoices.Update(curInvoice);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            var retInvoice = _mapper.Map<Domain.Models.InvoiceModel>(curInvoice);
-
-            InvoiceCalculateTotals(curInvoice);
-
-            _unitOfWork.Invoices.Update(curInvoice);
-
-            await _unitOfWork.SaveChangesAsync();
+            var retInvoice = _mapper.Map<InvoiceView>(invoice);
 
             return retInvoice;
         }
@@ -215,58 +187,105 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<IEnumerable<Domain.Models.InvoiceModel>> GetInvoicesAsync(GetInvoices command)
         {
-            var InvoiceList = new List<Domain.Models.InvoiceModel>();
-            var Invoices = _unitOfWork.Invoices.Query();
+            var invoiceList = new List<Domain.Models.InvoiceModel>();
 
-            if (command.Id > 0)
+            var invoices = GetFilteredInvoices(command);
+
+            foreach (var invoice in await invoices.ToListAsync())
             {
-                Invoices = Invoices.Where(i => i.Id == command.Id);
+                invoiceList.Add(_mapper.Map<Domain.Models.InvoiceModel>(invoice));
             }
-            if (command.CustomerId > 0)
+
+            return invoiceList.AsEnumerable();
+        }
+
+        private IQueryable<Invoice> GetFilteredInvoices(GetInvoices command)
+        {
+            var invoices = _unitOfWork.Invoices.Query()
+                                                .Include(i => i.Customer)
+                                                .Include(i => i.Status)
+                                                .Include(i => i.InvoiceItems).ThenInclude(ii => ii.PurchaseOrder)
+                                                .Include(i => i.InvoiceItems).ThenInclude(ii => ii.WorkOrder).ThenInclude(wo => wo.Purchase)
+                                                .AsQueryable();
+
+            if (command.Id.HasValue)
             {
-                Invoices = Invoices.Where(i => i.CustomerId == command.CustomerId);
+                invoices = invoices.Where(i => i.Id == command.Id);
             }
-            if (!string.IsNullOrEmpty(command.InvoiceNumber))
+            if (!string.IsNullOrEmpty(command.CustomerName))
             {
-                Invoices = Invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
+                invoices = invoices.Where(i => i.Customer.Name.ToLower().Contains(command.CustomerName.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(command.Description))
             {
-                Invoices = Invoices.Where(i => i.Description == command.Description);
+                invoices = invoices.Where(i => i.Description.Contains(command.Description));
             }
-            if (command.InvoiceDate > DateTime.MinValue)
+            if (!string.IsNullOrEmpty(command.InvoiceNumber))
             {
-                Invoices = Invoices.Where(i => i.InvoiceDate == command.InvoiceDate);
+                invoices = invoices.Where(i => i.InvoiceNumber == command.InvoiceNumber);
             }
-            if (command.Total.HasValue)
+            if (command.DueDate.HasValue)
             {
-                Invoices = Invoices.Where(i => i.Total == command.Total);
+                invoices = invoices.Where(i => i.InvoiceDate == command.DueDate);
+            }
+            if (command.CreatedOn.HasValue)
+            {
+                invoices = invoices.Where(i => i.CreatedOn == command.CreatedOn);
+            }
+            if (!string.IsNullOrEmpty(command.CreatedByName))
+            {
+                invoices = invoices.Where(i => i.Customer.Created.FirstName.ToLower().Contains(command.CreatedByName.ToLower()) || i.Customer.Created.LastName.ToLower().Contains(command.CreatedByName.ToLower()));
+            }
+            if (command.LastUpdatedOn.HasValue)
+            {
+                invoices = invoices.Where(i => i.LastUpdatedOn == command.LastUpdatedOn);
+            }
+            if (!string.IsNullOrEmpty(command.LastUpdatedByName))
+            {
+                invoices = invoices.Where(i => i.Customer.Created.FirstName.ToLower().Contains(command.LastUpdatedByName.ToLower()) || i.Customer.Created.LastName.ToLower().Contains(command.LastUpdatedByName.ToLower()));
+            }
+            if (command.Amount.HasValue)
+            {
+                invoices = invoices.Where(i => i.Total == command.Amount);
             }
             if (command.StatusId.HasValue)
             {
-                Invoices = Invoices.Where(i => i.StatusId == command.StatusId);
+                invoices = invoices.Where(i => i.StatusId == command.StatusId);
             }
 
-            foreach (var Invoice in Invoices.ToList())
-            {
-                InvoiceList.Add(_mapper.Map<Domain.Models.InvoiceModel>(Invoice));
-            }
-
-            return InvoiceList.AsEnumerable();
+            return invoices;
         }
 
-        private void UpdateInvoiceRecord(Invoice curInvoice, UpdateInvoice command)
+        public async Task<IEnumerable<InvoiceView>> GetInvoicesAsync(GetInvoicesGridView command)
         {
-            curInvoice.Description = command.Description ?? curInvoice.Description;
-            curInvoice.InvoiceDate = command.InvoiceDate > DateTime.MinValue ? command.InvoiceDate : curInvoice.InvoiceDate;
-            curInvoice.InvoiceItems = command.InvoiceItems?.Select(x => new InvoiceItem()
+            var invoiceList = new List<InvoiceView>();
+
+            var invoices = GetFilteredInvoices(command);
+
+            foreach (var invoice in await invoices.ToListAsync())
             {
-                WorkOrderId = x.WorkOrderId,
-                WorkOrder = _unitOfWork.WorkOrders.Query().FirstOrDefault(wo => wo.Id == x.WorkOrderId),
-                PurchaseOrderId = x.PurchaseOrderId,
-                PurchaseOrder = _unitOfWork.PurchaseOrders.Query().FirstOrDefault(po => po.Id == x.PurchaseOrderId)
-            }).ToList();
-            curInvoice.TaxPercentage = command.TaxPercentage ?? curInvoice.TaxPercentage;
+                invoiceList.Add(_mapper.Map<InvoiceView>(invoice));
+            }
+
+            return invoiceList.AsEnumerable();
+        }
+
+        /// <summary>
+        /// Update Invoice Details based on REQ365
+        /// </summary>
+        /// <param name="invoice"></param>
+        /// <param name="command"></param>
+        private void UpdateInvoiceDetails(Invoice invoice, UpdateInvoice command)
+        {
+            invoice.Description = command.Description ?? invoice.Description;
+            invoice.InvoiceDate = command.InvoiceDate > DateTime.MinValue ? command.InvoiceDate : invoice.InvoiceDate;
+            invoice.InvoiceItems = command.InvoiceItems.Select(x =>
+                    _unitOfWork.InvoiceItems.Query()
+                                            .Include(ii => ii.WorkOrder)
+                                            .Include(ii => ii.PurchaseOrder)
+                                            .First(ii => ii.Id == x.Id)
+            ).ToList();
+            invoice.TaxPercentage = command.TaxPercentage ?? invoice.TaxPercentage;
         }
     }
 }

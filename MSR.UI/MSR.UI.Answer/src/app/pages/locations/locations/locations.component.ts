@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class LocationsComponent implements OnInit {
 
-  data: Array<LocationModel>;
+  data: Array<any>;
   approvalTables = EnumApprovalTables;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
@@ -26,8 +26,10 @@ export class LocationsComponent implements OnInit {
   canEditLocation: boolean = false;
   canDeleteLocation: boolean = false;
   canApproveLocation: boolean = false;
+  menuItems = EnumMenuItem;
+  statusOptions: any[];
 
-  constructor(private locationService: LocationService,private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private locationService: LocationService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -36,7 +38,7 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'internalAddress', label: 'Internal Address', visible: true }),
-      new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
+      new ColumnsSaved({ id: 'created.fullName', label: 'Created By', visible: true }),
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'address1', label: 'Address 1', visible: false }),
       new ColumnsSaved({ id: 'city', label: 'City', visible: false }),
@@ -44,7 +46,7 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'postalcode', label: 'Postalcode', visible: false }),
       new ColumnsSaved({ id: 'country', label: 'Country', visible: false }),
       new ColumnsSaved({ id: 'phone', label: 'Phone', visible: false }),
-      new ColumnsSaved({ id: 'parentId', label: 'Parent', visible: false }),
+      new ColumnsSaved({ id: 'parent.name', label: 'Parent', visible: false }),
       new ColumnsSaved({ id: 'timezone', label: 'Timezone', visible: false }),
       new ColumnsSaved({ id: 'address2', label: 'Address 2', visible: false }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
@@ -57,7 +59,7 @@ export class LocationsComponent implements OnInit {
     this.canApproveLocation = this.hasPrivilege(this.privileges.CanApprove);
     this.getLocations();
 
-    
+
 
   }
 
@@ -65,39 +67,58 @@ export class LocationsComponent implements OnInit {
     return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
-  getLocations(){
+  getLocations() {
     this.globals.showLoader(true);
-    this.locationService.locationGet(null,null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = response.object;
+      this.data.map((elem) => {
+        elem.show = elem.status !== null;
+      });
+
+      this.data.map((elem) => {
+        if (elem.status === null ) {
+          elem.status = 'Approved' ;
+        }
+
+      });
+
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
       this.loading = false;
     }));
   }
 
-  getParentName(parentId):string{
+  getParentName(parentId): string {
 
-    return this.data.filter(s => s.id == parentId)[0].name;
+    return this.data.filter(s => s.id === parentId)[0].name;
 
   }
 
-  openConfirmDeleteDialog(location: LocationModel){
+  openConfirmDeleteDialog(location: LocationModel) {
 
     this.locationToDelete = location;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(location: LocationModel){
+  closeConfirmDeleteDialog(location: LocationModel) {
     this.locationToDelete = null;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  deleteLocation(){
+  deleteLocation() {
 
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     this.globals.showLoader(true);
     this.locationService.locationDelete(this.locationToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.locationToDelete.id);
-      this.data.splice(index, 1);
+      this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler( (locationGetResponse) => {
+        this.data.length = 0;
+        this.data = locationGetResponse.object;
+        this.data.map((elem) => {
+          elem.show = elem.status !== null;
+        });
+      }));
 
     }));
 

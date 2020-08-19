@@ -8,6 +8,7 @@ namespace MSR.Domain.Models
         public int PurchaseOrderId { get; set; }
         public int PurchaseOrderProductId { get; set; }
         public string CustomerPurchaseNumber { get; set; }
+        public int CustomerLineNumber { get; set; }
         public int LocationId { get; set; }
         public int Qty { get; set; }
         public decimal PurchasePrice { get; set; }

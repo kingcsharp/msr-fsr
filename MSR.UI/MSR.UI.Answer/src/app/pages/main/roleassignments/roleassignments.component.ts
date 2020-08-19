@@ -3,7 +3,7 @@ import { MenuModel } from '../../../models/menu-model';
 import { RoleModel } from '../../../models/role-model';
 import { UpdatePermissionsEventModel } from '../../../models/update-permission-event-model';
 import { PermissionModel } from '../../../models/permission-model';
-import { MenuService,MenuItem, RoleService, Role, Permission, CreateMenuRoleMapRequest, UpdateMenuRoleMapRequest } from '../../../services/api.client.generated';
+import { MenuService, MenuItem, RoleService, Role, Permission, CreateMenuRoleMapRequest, UpdateMenuRoleMapRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
@@ -19,15 +19,15 @@ export class RoleassignmentsComponent implements OnInit {
   menuModules: MenuModel[];
   originalMenuModules: MenuModel[];
 
-  selectedMenuModule:MenuModel;
+  selectedMenuModule: MenuModel;
 
-  selectedRoleModule:RoleModel;
+  selectedRoleModule: RoleModel;
 
-  errorUpdatingPermissions:boolean = false;
-  pendingPermissionsUpdate:boolean = false;
+  errorUpdatingPermissions: boolean = false;
+  pendingPermissionsUpdate: boolean = false;
 
-  pendingPermissions:UpdatePermissionsEventModel[] = new Array<UpdatePermissionsEventModel>();
- 
+  pendingPermissions: UpdatePermissionsEventModel[] = new Array<UpdatePermissionsEventModel>();
+
   constructor(private menuService: MenuService, private roleService: RoleService, public globals: Globals) {
   }
 
@@ -37,27 +37,27 @@ export class RoleassignmentsComponent implements OnInit {
 
   }
 
-  getMenuItems(){
-
+  getMenuItems() {
+    this.globals.showLoader(true);
     this.menuService.menu(env.apiVersion).subscribe(responseHandler((response) => {
 
-        let menuItems = response.object;
-        this.globals.showLoader(true);
-        this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {
+      let menuItems = response.object;
+      this.globals.showLoader(true);
+      this.roleService.role(env.apiVersion).subscribe(responseHandler((roleResponse) => {
 
-            let roles = response.object;
+        let roles = roleResponse.object;
 
-            this.adaptMenuItemsAndRolesToMenuModels(menuItems, roles);
-            this.menuModules = [...this.originalMenuModules];
-        }));
+        this.adaptMenuItemsAndRolesToMenuModels(menuItems, roles);
+        this.menuModules = [...this.originalMenuModules];
+      }));
 
     }));
 
   }
 
-  adaptMenuItemsAndRolesToMenuModels(menuItems: Array<MenuItem>, roles:Array<Role>){
+  adaptMenuItemsAndRolesToMenuModels(menuItems: Array<MenuItem>, roles: Array<Role>) {
 
-    this.originalMenuModules = new Array<MenuModel>()
+    this.originalMenuModules = new Array<MenuModel>();
 
     menuItems.forEach(menuItem => {
       let menuModel = new MenuModel();
@@ -71,12 +71,12 @@ export class RoleassignmentsComponent implements OnInit {
         roleModel.name = role.name;
         roleModel.value = menuItem.roles.find(s => s.id === role.id) != null ? true : false;
 
-        if(roleModel.value){
-          
+        if (roleModel.value) {
+
           let permissions;
-          if(menuItem.roles.find(s => s.id === role.id).permissions != null){
+          if (menuItem.roles.find(s => s.id === role.id).permissions != null) {
             permissions = menuItem.roles.find(s => s.id === role.id).permissions;
-          }else{
+          } else {
             permissions = new Permission();
             permissions.canRead = false;
             permissions.canCreate = false;
@@ -86,150 +86,150 @@ export class RoleassignmentsComponent implements OnInit {
             permissions.canDelete = false;
           }
           let inheritedPermissions = menuItem.roles.find(s => s.id === role.id).inheritedPermissions;
-          
+
 
           let canActivatePermissionModel = new PermissionModel();
           canActivatePermissionModel.inheritedPermission = inheritedPermissions.canActivate;
           canActivatePermissionModel.value = permissions.canActivate;
-          canActivatePermissionModel.name = "Activate";
+          canActivatePermissionModel.name = 'Activate';
           roleModel.permissions.push(canActivatePermissionModel);
 
           let canApprovePermissionModel = new PermissionModel();
           canApprovePermissionModel.inheritedPermission = inheritedPermissions.canApprove;
           canApprovePermissionModel.value = permissions.canApprove;
-          canApprovePermissionModel.name = "Approve";
+          canApprovePermissionModel.name = 'Approve';
           roleModel.permissions.push(canApprovePermissionModel);
 
           let canCreatePermissionModel = new PermissionModel();
           canCreatePermissionModel.inheritedPermission = inheritedPermissions.canCreate;
           canCreatePermissionModel.value = permissions.canCreate;
-          canCreatePermissionModel.name = "Create";
+          canCreatePermissionModel.name = 'Create';
           roleModel.permissions.push(canCreatePermissionModel);
 
           let canDeletePermissionModel = new PermissionModel();
           canDeletePermissionModel.inheritedPermission = inheritedPermissions.canDelete;
           canDeletePermissionModel.value = permissions.canDelete;
-          canDeletePermissionModel.name = "Delete";
+          canDeletePermissionModel.name = 'Delete';
           roleModel.permissions.push(canDeletePermissionModel);
 
           let canEditPermissionModel = new PermissionModel();
           canEditPermissionModel.inheritedPermission = inheritedPermissions.canEdit;
           canEditPermissionModel.value = permissions.canEdit;
-          canEditPermissionModel.name = "Edit";
+          canEditPermissionModel.name = 'Edit';
           roleModel.permissions.push(canEditPermissionModel);
 
           let canReadPermissionModel = new PermissionModel();
           canReadPermissionModel.inheritedPermission = inheritedPermissions.canRead;
           canReadPermissionModel.value = permissions.canRead;
-          canReadPermissionModel.name = "Read";
+          canReadPermissionModel.name = 'Read';
           roleModel.permissions.push(canReadPermissionModel);
 
-        }else{
+        } else {
 
           let canActivatePermissionModel = new PermissionModel();
           canActivatePermissionModel.inheritedPermission = false;
           canActivatePermissionModel.value = false;
-          canActivatePermissionModel.name = "Activate";
+          canActivatePermissionModel.name = 'Activate';
           roleModel.permissions.push(canActivatePermissionModel);
 
           let canApprovePermissionModel = new PermissionModel();
           canApprovePermissionModel.inheritedPermission = false;
           canApprovePermissionModel.value = false;
-          canApprovePermissionModel.name = "Approve";
+          canApprovePermissionModel.name = 'Approve';
           roleModel.permissions.push(canApprovePermissionModel);
 
           let canCreatePermissionModel = new PermissionModel();
           canCreatePermissionModel.inheritedPermission = false;
           canCreatePermissionModel.value = false;
-          canCreatePermissionModel.name = "Create";
+          canCreatePermissionModel.name = 'Create';
           roleModel.permissions.push(canCreatePermissionModel);
 
           let canDeletePermissionModel = new PermissionModel();
           canDeletePermissionModel.inheritedPermission = false;
           canDeletePermissionModel.value = false;
-          canDeletePermissionModel.name = "Delete";
+          canDeletePermissionModel.name = 'Delete';
           roleModel.permissions.push(canDeletePermissionModel);
 
           let canEditPermissionModel = new PermissionModel();
           canEditPermissionModel.inheritedPermission = false;
           canEditPermissionModel.value = false;
-          canEditPermissionModel.name = "Edit";
+          canEditPermissionModel.name = 'Edit';
           roleModel.permissions.push(canEditPermissionModel);
 
           let canReadPermissionModel = new PermissionModel();
           canReadPermissionModel.inheritedPermission = false;
           canReadPermissionModel.value = false;
-          canReadPermissionModel.name = "Read";
+          canReadPermissionModel.name = 'Read';
           roleModel.permissions.push(canReadPermissionModel);
 
         }
-        
+
 
         menuModel.roles.push(roleModel);
       });
 
-      
+
       this.originalMenuModules.push(menuModel);
     });
 
   }
 
-  selectMenuModule(menuModule:MenuModel){
+  selectMenuModule(menuModule: MenuModel) {
     this.selectedMenuModule = menuModule;
   }
 
-  editRolePermissions(roleModule:RoleModel){
+  editRolePermissions(roleModule: RoleModel) {
     this.selectedRoleModule = roleModule;
   }
 
-  roleChanged(event:Event, menuModule:MenuModel, roleModule:RoleModel){
+  roleChanged(event: Event, menuModule: MenuModel, roleModule: RoleModel) {
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
 
-    if(roleModule.value){
+    if (roleModule.value) {
       this.pendingPermissions.push({
-        menuModule:menuModule,
-        roleModule:roleModule,
-        permissionModule:null,
-        event:'add'
+        menuModule: menuModule,
+        roleModule: roleModule,
+        permissionModule: null,
+        event: 'add'
       } as UpdatePermissionsEventModel);
 
       this.selectedRoleModule = roleModule;
-    }else{
+    } else {
       this.pendingPermissions.push({
-        menuModule:menuModule,
-        roleModule:roleModule,
-        permissionModule:null,
-        event:'remove'
+        menuModule: menuModule,
+        roleModule: roleModule,
+        permissionModule: null,
+        event: 'remove'
       } as UpdatePermissionsEventModel);
 
       this.selectedRoleModule = null;
     }
   }
 
-  permissionChanged(event:Event, menuModule:MenuModel, roleModule:RoleModel, permissionModule:PermissionModel){
+  permissionChanged(event: Event, menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
     permissionModule.value = !permissionModule.value;
     this.pendingPermissionsUpdate = true;
 
-    if(permissionModule.value){
+    if (permissionModule.value) {
       this.pendingPermissions.push({
-        menuModule:menuModule,
-        roleModule:roleModule,
-        permissionModule:permissionModule,
-        event:'add'
+        menuModule: menuModule,
+        roleModule: roleModule,
+        permissionModule: permissionModule,
+        event: 'add'
       } as UpdatePermissionsEventModel);
 
-    }else{
+    } else {
       this.pendingPermissions.push({
-        menuModule:menuModule,
-        roleModule:roleModule,
-        permissionModule:permissionModule,
-        event:'remove'
+        menuModule: menuModule,
+        roleModule: roleModule,
+        permissionModule: permissionModule,
+        event: 'remove'
       } as UpdatePermissionsEventModel);
     }
   }
 
-  clearPendingChanges(){
+  clearPendingChanges() {
 
     this.pendingPermissions.length = 0;
     this.menuModules = this.originalMenuModules;
@@ -240,45 +240,45 @@ export class RoleassignmentsComponent implements OnInit {
 
   }
 
-  savePendingChanges(){
+  savePendingChanges() {
 
-    this.pendingPermissions.forEach(pendingPermission =>{
+    this.pendingPermissions.forEach(pendingPermission => {
 
       this.globals.showLoader(true);
-      if(pendingPermission.permissionModule == null){
-        
-        if(pendingPermission.event === 'add'){
+      if (pendingPermission.permissionModule == null) {
+
+        if (pendingPermission.event === 'add') {
 
           let createMenuRoleMapRequest = new CreateMenuRoleMapRequest();
           createMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
           createMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
-  
-          this.menuService.rolePost(env.apiVersion,createMenuRoleMapRequest).subscribe(responseHandler((response) => {
+
+          this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
 
           }));
 
-        }else{
+        } else {
 
-          this.menuService.roleDelete(pendingPermission.menuModule.id,pendingPermission.roleModule.id,env.apiVersion).subscribe(responseHandler((response) => {
-  
+          this.menuService.roleDelete(pendingPermission.menuModule.id, pendingPermission.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
+
           }));
 
         }
 
-      }else{
+      } else {
 
-          let updateMenuRoleMapRequest = new UpdateMenuRoleMapRequest();
-          updateMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
-          updateMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
-          updateMenuRoleMapRequest.canActivate = pendingPermission.roleModule.permissions.find(s => s.name === "Activate").value;
-          updateMenuRoleMapRequest.canApprove = pendingPermission.roleModule.permissions.find(s => s.name === "Approve").value;
-          updateMenuRoleMapRequest.canCreate = pendingPermission.roleModule.permissions.find(s => s.name === "Create").value;
-          updateMenuRoleMapRequest.canDelete = pendingPermission.roleModule.permissions.find(s => s.name === "Delete").value;
-          updateMenuRoleMapRequest.canEdit = pendingPermission.roleModule.permissions.find(s => s.name === "Edit").value;
-          updateMenuRoleMapRequest.canRead = pendingPermission.roleModule.permissions.find(s => s.name === "Read").value;
-          this.menuService.rolePatch(env.apiVersion,updateMenuRoleMapRequest).subscribe(responseHandler((response) => {
+        let updateMenuRoleMapRequest = new UpdateMenuRoleMapRequest();
+        updateMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
+        updateMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
+        updateMenuRoleMapRequest.canActivate = pendingPermission.roleModule.permissions.find(s => s.name === 'Activate').value;
+        updateMenuRoleMapRequest.canApprove = pendingPermission.roleModule.permissions.find(s => s.name === 'Approve').value;
+        updateMenuRoleMapRequest.canCreate = pendingPermission.roleModule.permissions.find(s => s.name === 'Create').value;
+        updateMenuRoleMapRequest.canDelete = pendingPermission.roleModule.permissions.find(s => s.name === 'Delete').value;
+        updateMenuRoleMapRequest.canEdit = pendingPermission.roleModule.permissions.find(s => s.name === 'Edit').value;
+        updateMenuRoleMapRequest.canRead = pendingPermission.roleModule.permissions.find(s => s.name === 'Read').value;
+        this.menuService.rolePatch(env.apiVersion, updateMenuRoleMapRequest).subscribe(responseHandler((response) => {
 
-          }));
+        }));
 
       }
 

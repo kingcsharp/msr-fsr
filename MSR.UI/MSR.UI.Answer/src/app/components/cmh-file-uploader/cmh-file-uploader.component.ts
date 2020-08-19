@@ -22,11 +22,6 @@ import { INFERRED_TYPE } from '@angular/compiler/src/output/output_ast';
 export class CmhFileUploaderComponent implements OnInit {
   uploadedFiles: any = [];
   showLi: boolean = false;
-
-  // [showUploadButton]="false" [showCancelButton]="false" multiple="multiple"
-  //   accept="accept" maxFileSize="1000000000"
-
-
   constructor(private fileService: FileService, private globals: Globals) {
 
   }
@@ -41,8 +36,8 @@ export class CmhFileUploaderComponent implements OnInit {
   @Input() accept: string;
   @Input() chooseLabel: string;
   ngOnInit(): void {
-    if (this.chooseLabel === "" || this.chooseLabel === undefined) {
-      this.chooseLabel = "Select Files";
+    if (this.chooseLabel === '' || this.chooseLabel === undefined) {
+      this.chooseLabel = 'Select Files';
     }
 
     if (this.files.length > 0) {

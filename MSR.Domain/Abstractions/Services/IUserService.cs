@@ -1,5 +1,6 @@
 ﻿using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,5 +18,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<User> CreateUserRoleAsync(CreateUserRole command);
         Task UpdateUserRoleAsync(UpdateUserRole command);
         Task DeleteUserRoleAsync(DeleteUserRole command);
+        Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command);
     }
 }

@@ -5,14 +5,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 using NSwag.Annotations;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 
@@ -31,39 +30,39 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceModel>>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceView>>))]
         public async Task<IActionResult> GetInvoices([FromQuery] GetInvoicesRequest filters)
         {
-            var getInvoices = filters.ToGetInvoicesCommand();
-            var ret = await _dispatcher.DispatchAsync(getInvoices);
-            return ret.ToOkObjectResponse<IEnumerable<InvoiceModel>>();
+            var getInvoicesGridView = filters.ToGetInvoicesGridViewCommand();
+            var ret = await _dispatcher.DispatchAsync(getInvoicesGridView);
+            return ret.ToOkObjectResponse<IEnumerable<InvoiceView>>();
         }
 
         [HttpPost("CreateOneInvoice"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<InvoiceModel>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<InvoiceView>))]
         public async Task<IActionResult> CreateOneInvoice([FromBody, Required] CreateInvoiceRequest request)
         {
             var createOneInvoice = request.ToCreateOneInvoiceCommand();
             var ret = await _dispatcher.DispatchAsync(createOneInvoice);
-            return ret.ToOkObjectResponse<InvoiceModel>();
+            return ret.ToOkObjectResponse<InvoiceView>("Invoice has been successfully created.");
         }
 
         [HttpPost("CreateIndividualInvoices"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        [SwaggerResponse(HttpStatusCode.Created, typeof(AuditActionResult<IEnumerable<InvoiceModel>>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceView>>))]
         public async Task<IActionResult> CreateIndividualInvoices([FromBody, Required] CreateInvoiceRequest request)
         {
             var createIndividualInvoices = request.ToCreateIndividualInvoicesCommand();
             var ret = await _dispatcher.DispatchAsync(createIndividualInvoices);
-            return ret.ToOkObjectResponse<IEnumerable<InvoiceModel>>();
+            return ret.ToOkObjectResponse<IEnumerable<InvoiceView>>("Invoice has been successfully created.");
         }
 
         [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
-        [SwaggerResponse(HttpStatusCode.NoContent, typeof(AuditActionResult))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<InvoiceView>))]
         public async Task<IActionResult> UpdateInvoice([FromBody, Required] UpdateInvoiceRequest request)
         {
             var updateInvoice = request.ToUpdateInvoiceCommand();
             var ret = await _dispatcher.DispatchAsync(updateInvoice);
-            return ret.ToOkObjectResponse("Invoice has been successfully updated.");
+            return ret.ToOkObjectResponse<InvoiceView>("Invoice has been successfully updated.");
         }
 
         [HttpGet("Download"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]

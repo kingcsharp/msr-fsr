@@ -17,9 +17,9 @@ namespace MSR.Domain.Commanding
             _logger = logger;
         }
 
-        public async Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class,ICommand
+        public async Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, ICommand
         {
-            if(command == null)
+            if (command == null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
@@ -27,13 +27,14 @@ namespace MSR.Domain.Commanding
             {
                 var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
 
-                if (handler == null) {
+                if (handler == null)
+                {
                     throw new Exception($"No service for {command}");
                 }
 
                 return await (handler as ICommandHandler<TCommand>).HandleAsync(command, cancellationToken);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return CommandResponse.Error(ex);
             }

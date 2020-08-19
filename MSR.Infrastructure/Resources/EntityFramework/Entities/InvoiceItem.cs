@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
@@ -5,14 +6,22 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(InvoiceItem))]
     public partial class InvoiceItem: TrackableEntity
     {
-        public int InvoiceId { get; set; }
+        [Required]
+        public int? InvoiceId { get; set; }
 
-        public int PurchaseOrderId { get; set; }
-
-        public int WorkOrderId { get; set; }
-
+        [ForeignKey("InvoiceId")]
         public virtual Invoice Invoice { get; set; }
-        public virtual WorkOrder WorkOrder { get; set; }
+
+        [Required]
+        public int? PurchaseOrderId { get; set; }
+
+        [ForeignKey("PurchaseOrderId")]
         public virtual PurchaseOrder PurchaseOrder { get; set; }
+
+        [Required]
+        public int? WorkOrderId { get; set; }
+
+        [ForeignKey("WorkOrderId")]
+        public virtual WorkOrder WorkOrder { get; set; }
     }
 }

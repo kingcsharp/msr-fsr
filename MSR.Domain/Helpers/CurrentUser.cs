@@ -9,5 +9,6 @@ namespace MSR.Domain.Helpers
         public static Func<EnumApprovalTables, bool> CanApproveActivity;
         public static Func<EnumApprovalTables, bool> CanReadActivity;
         public static Func<EnumMenuItem, EnumPrivilege, bool> HasPrivilege;
+        public static Func<string> TokenString;
     }
 }

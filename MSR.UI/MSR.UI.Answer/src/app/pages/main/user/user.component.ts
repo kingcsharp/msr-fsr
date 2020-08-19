@@ -115,7 +115,7 @@ export class UserComponent implements OnInit {
     if (ctrl.getLocationsFlag) {
       return ctrl.locations;
     }
-    this.locationService.locationGet(null,null, env.apiVersion)
+    this.locationService.locationGet(null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
@@ -131,6 +131,7 @@ export class UserComponent implements OnInit {
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
         this.data = response.object;
         this.updateUsersData(this.data);
       }));
