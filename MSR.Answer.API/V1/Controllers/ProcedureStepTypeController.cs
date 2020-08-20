@@ -33,7 +33,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [Route("/ProcedureStepType")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepType>>))]
         public async Task<IActionResult> GetProcedureStepType([FromQuery]int? id)
         { 

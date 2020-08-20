@@ -40,7 +40,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpPost]
-        [Route("/Procedure")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
         public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest body)
@@ -73,7 +72,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpDelete]
-        [Route("/Procedure/{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> ProcedureDeactivateProcedure([FromRoute][Required]int? id)
         {
@@ -84,12 +82,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// Deactivate Procedure Step
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="stepId"></param>
+        /// <param name="stepid"></param>
         /// <response code="200"></response>
-        [HttpDelete]
-        [Route("/Procedure/{id}/step/{stepId}")]
+        [HttpDelete("{id}/step/{stepid}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureDeactivateProcedureStep([FromRoute][Required]int? id, [FromRoute][Required]int? stepId)
+        public async Task<IActionResult> ProcedureDeactivateProcedureStep([FromRoute][Required]int? id, [FromRoute][Required]int? stepid)
         {
             throw new NotImplementedException();
         }
@@ -100,7 +97,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [Route("/Procedure")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureRequest>>))]
         public async Task<IActionResult> ProcedureGetProcedure(int? id)
@@ -135,7 +131,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPatch]
-        [Route("/Procedure")]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
         public async Task<IActionResult> ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest body)
         {
@@ -150,8 +145,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="body"></param>
         /// <param name="id"></param>
         /// <response code="200"></response>
-        [HttpPatch]
-        [Route("/Procedure/{id}/step")]
+        [HttpPatch("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
         public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest body)

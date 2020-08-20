@@ -53,8 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200"></response>
-        [HttpDelete]
-        [Route("/ProcedureStepMonitor/{id}")]
+        [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> ProcedureStepMonitorDeactivateProcedureStepMonitor([FromRoute][Required]int? id)
         {

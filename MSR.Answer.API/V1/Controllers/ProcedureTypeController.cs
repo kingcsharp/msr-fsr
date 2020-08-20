@@ -53,8 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200"></response>
-        [HttpDelete]
-        [Route("/ProcedureType/{id}")]
+        [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
         public virtual IActionResult DeleteProcedureType([FromRoute][Required]int? id)
         {

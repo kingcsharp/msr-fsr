@@ -24,7 +24,7 @@ namespace MSR.Answer.API.V1.Controllers
     /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class MonitorApiController : BaseApiController
+    public class MonitorController : BaseApiController
     { 
         /// <summary>
         /// 
@@ -33,9 +33,8 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [Route("/v{version}/Monitor")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Monitor>>))]
-        public virtual IActionResult MonitorGetMonitor([FromRoute][Required]string version, [FromQuery]int? id)
+        public virtual IActionResult MonitorGetMonitor([FromQuery]int? id)
         { 
             throw new NotImplementedException();
         }

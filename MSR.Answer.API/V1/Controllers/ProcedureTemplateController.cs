@@ -32,7 +32,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPost]
-        [Route("/ProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureTemplate>))]
         public async Task<IActionResult> CreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body)
         {
@@ -45,7 +44,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpDelete]
-        [Route("/ProcedureTemplate/{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
         public virtual IActionResult DeleteProcedureTemplate([FromRoute][Required]int? id)
         {
@@ -58,7 +56,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [Route("/ProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureTemplate>>))]
         public virtual IActionResult ProcedureTemplateGetProcedureTemplate([FromQuery]int? id)
         {
@@ -71,7 +68,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPatch]
-        [Route("/ProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureTemplate>))]
         public async Task<IActionResult> UpdateProcedureTemplate([FromBody]UpdateProcedureTemplateRequest body)
         {
