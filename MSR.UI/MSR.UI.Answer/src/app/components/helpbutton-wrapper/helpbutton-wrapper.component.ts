@@ -16,6 +16,7 @@ export class HelpbuttonWrapperComponent implements OnInit {
   helpMenuUrl: string;
   display: boolean = false;
   helpContent: string;
+  modalTitle: string;
 
   constructor(private router: Router, private globals: Globals, private helpService: HelpService) { }
 
@@ -27,6 +28,7 @@ export class HelpbuttonWrapperComponent implements OnInit {
 
       if ( response.object.length !== 0 ) {
         this.helpContent = response.object[0].content;
+        this.modalTitle = response.object[0].title;
         this.canViewHelpPage = true;
       } else {
         this.canViewHelpPage = false;

@@ -23,7 +23,8 @@
               + Add
             </button>
             <csv-import [showButton]="canAddLocation" [menuItem]="menuItems.Locations" title="Import Locations"
-              (onUpload)="uploadParts($event)" fileName="LocationsSample.csv" *ngIf="menuItems !== undefined"></csv-import>
+              (onUpload)="uploadParts($event)" fileName="LocationsSample.csv" *ngIf="menuItems !== undefined">
+            </csv-import>
             <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
               [gridVersion]="gridVersion" data-cy="locations-options" [hidden]="false">
             </grid-options>
@@ -64,22 +65,13 @@
                   (click)="commonGrid.filter(dt,'internalAddress')"></i>
               </div>
             </th>
-            <th [hidden]="!commonGrid.isVisibleCol('createdBy',gridSettings)">
-              <div class="position-relative">
-                <input id="createdBy" pInputText type="text" tooltip="Search by Title"
-                  (input)="dt.filter($event.target.value, 'createdBy', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['createdBy']?.value">
-                <i *ngIf="dt.filters['createdBy']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'createdBy')"></i>
-              </div>
+            <th grid-input-filter [dt]="dt" searchField="created.fullName"
+              [hidden]="!commonGrid.isVisibleCol('created.fullName',gridSettings)" [gridSettings]="gridSettings">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)">
-              <div class="position-relative">
-                <input id="createdOn" pInputText type="text" tooltip="Search by Title"
-                  (input)="dt.filter($event.target.value, 'createdOn', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['createdOn']?.value">
-                <i *ngIf="dt.filters['createdOn']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'createdOn')"></i>
+              <div class="position-relative" tooltip="Search by Created On">
+                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
+                </pcalendar-wrapper>
               </div>
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('address1',gridSettings)">
@@ -136,6 +128,9 @@
                   (click)="commonGrid.filter(dt,'phone')"></i>
               </div>
             </th>
+            <th grid-input-filter [dt]="dt" searchField="parent.name"
+              [hidden]="!commonGrid.isVisibleCol('parent.name',gridSettings)" [gridSettings]="gridSettings">
+            </th>
             <th [hidden]="!commonGrid.isVisibleCol('timezone',gridSettings)">
               <div class="position-relative">
                 <input id="timezone" pInputText type="text" tooltip="Search by Title"
@@ -145,17 +140,15 @@
                   (click)="commonGrid.filter(dt,'timezone')"></i>
               </div>
             </th>
-            <th [hidden]="!commonGrid.isVisibleCol('address2',gridSettings)">
-              <div class="position-relative">
-                <input id="address2" pInputText type="text" tooltip="Search by Title"
-                  (input)="dt.filter($event.target.value, 'address2', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['address2']?.value">
-                <i *ngIf="dt.filters['address2']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'address2')"></i>
-              </div>
+            <th grid-input-filter [dt]="dt" searchField="address2"
+              [hidden]="!commonGrid.isVisibleCol('address2',gridSettings)" [gridSettings]="gridSettings">
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
-              
+              <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
+                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
+                                    [datatable]="dt">
+                                </multiselect-wrapper>
+
             </th>
             <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)">
 
@@ -173,10 +166,12 @@
             <td [hidden]="!commonGrid.isVisibleCol('internalAddress', gridSettings)">
               {{location.internalAddress}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)" *ngIf="location.created !== undefined">
+            <td [hidden]="!commonGrid.isVisibleCol('created.fullName', gridSettings)"
+              *ngIf="location.created !== undefined">
               {{location.created.fullName}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('createdBy', gridSettings)" *ngIf="location.created === undefined">
+            <td [hidden]="!commonGrid.isVisibleCol('created.fullName', gridSettings)"
+              *ngIf="location.created === undefined">
 
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
@@ -200,11 +195,8 @@
             <td [hidden]="!commonGrid.isVisibleCol('phone', gridSettings)">
               {{location.phone}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent != null">
-              {{ location.parent.name }}
-            </td>
-            <td [hidden]="!commonGrid.isVisibleCol('parentId', gridSettings)" *ngIf="location.parent == null">
-
+            <td [hidden]="!commonGrid.isVisibleCol('parent.name', gridSettings)">
+              {{ location.parent?.name }}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('timezone', gridSettings)">
               {{location.timezone}}
@@ -212,11 +204,8 @@
             <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
               {{location.address2}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status != null">
+            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
               {{location.status}}
-            </td>
-            <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="location.status == null">
-              Approved
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
               <i *ngIf="canEditLocation" class="fa fa-cog pointer" tooltip="Edit Location" data-cy="edit-button"
@@ -231,7 +220,7 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="8" style="text-align:left">No Help Pages to Display</td>
+            <td colspan="8" style="text-align:left">No Locations to Display</td>
           </tr>
         </ng-template>
       </p-table>

@@ -27,7 +27,7 @@ export class CustomersComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   approvalTables = EnumApprovalTables;
   menuItems = EnumMenuItem;
-
+  statusOptions: any[];
 
   constructor(private customerService: CustomerService, private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -41,10 +41,10 @@ export class CustomersComponent implements OnInit {
       new ColumnsSaved({ id: 'address', label: 'Address', visible: true }),
       new ColumnsSaved({ id: 'phone', label: 'Phone', visible: true }),
       new ColumnsSaved({ id: 'location', label: 'Location', visible: true }),
-      new ColumnsSaved({ id: 'primaryContact', label: 'Primary Contact', visible: true }),
-      new ColumnsSaved({ id: 'secondaryContact', label: 'Secondary Contact', visible: true }),
+      new ColumnsSaved({ id: 'primaryContactUser.fullName', label: 'Primary Contact', visible: true }),
+      new ColumnsSaved({ id: 'secondaryContactUser.fullName', label: 'Secondary Contact', visible: true }),
       new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
-      new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
+      new ColumnsSaved({ id: 'created.fullName', label: 'Created By', visible: true }),
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
@@ -69,6 +69,17 @@ export class CustomersComponent implements OnInit {
     this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       this.data = response.object;
+
+      this.data.map((elem) => {
+        if (elem.status === null) {
+          elem.status = 'Approved';
+        }
+
+      });
+
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
 
       this.loading = false;
 

@@ -5,9 +5,9 @@ import 'jquery-flot/jquery.flot.selection.js';
 import 'jquery-flot/jquery.flot.resize.js';
 import 'flot.dashes/jquery.flot.dashes';
 import 'jquery.animate-number/jquery.animateNumber.js';
-import 'jQuery-Mapael/js/jquery.mapael.js';
-import 'jQuery-Mapael/js/maps/usa_states';
-import 'jQuery-Mapael/js/maps/world_countries.js';
+//import 'jQuery-Mapael/js/jquery.mapael.js';
+//import 'jQuery-Mapael/js/maps/usa_states';
+//import 'jQuery-Mapael/js/maps/world_countries.js';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';

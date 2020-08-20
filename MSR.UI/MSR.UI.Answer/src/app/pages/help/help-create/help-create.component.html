@@ -1,17 +1,17 @@
 <div class="container">
-    <div class="row" *ngIf="helpPageToEdit != null">
+    <div class="row" *ngIf="helpPageToEdit !== undefined">
         <div class="col-6">
-          <h1 class="page-title">
-            <i class="far fa-edit mx-2" *ngIf="helpPageToEdit.id != 0"></i>
-            <i class="fas fa-plus mx-2" *ngIf="helpPageToEdit.id == 0"></i>
-            <span *ngIf="helpPageToEdit.id == 0">Create Help Page</span>
-            <span *ngIf="helpPageToEdit.id != 0">Edit Help Page</span>
-          </h1>
+            <h1 class="page-title">
+                <i class="far fa-edit mx-2" *ngIf="helpPageToEdit.id !== undefined"></i>
+                <i class="fas fa-plus mx-2" *ngIf="helpPageToEdit.id === undefined"></i>
+                <span *ngIf="helpPageToEdit.id === undefined">Create Help Page</span>
+                <span *ngIf="helpPageToEdit.id !== undefined">Edit Help Page</span>
+            </h1>
         </div>
         <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
-          <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+            <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
         </div>
-      </div>
+    </div>
     <div class="row" *ngIf="helpPageToEdit != null">
         <form class="col-12">
             <div class="form-group">
@@ -23,28 +23,26 @@
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Title of Help Page"
                     placeholder="">
             </div>
-            <div class="form-group">
+            <div class="form-group" *ngIf="helpPageToEdit !== undefined">
                 <label for="friendlyurl" class="col-form-label text-left">
                     Friendly Url
                 </label>
-            <div class="col-12">
-                <p-dropdown placeholder="Select Url" name="friendlyurl" [options]="urls" showClear="true" appendTo="body" data-cy="friendlyurl-dropdown"
-                    [(ngModel)]="helpPageToEdit.friendlyURL">
-                </p-dropdown>
-            </div>
+                <p-dropdown  name="friendlyurl" [options]="urls" showClear="true" [(ngModel)]="helpPageToEdit.friendlyURL" editable="false" 
+                placeholder="Select a Friendly Url"></p-dropdown>
             </div>
             <div class="form-group">
                 <label for="articlecontent" class="col-form-label text-left">
                     Article Content
                 </label>
-                <ckeditor-wrapper [editorcontent]="helpPageToEdit.content" (editorContentChange)="helpPageToEdit.content = $event"></ckeditor-wrapper>
+                <ckeditor-wrapper [editorcontent]="helpPageToEdit.content"
+                    (editorContentChange)="helpPageToEdit.content = $event"></ckeditor-wrapper>
             </div>
             <div class="form-group">
                 <label for="roles" class="col-form-label text-left">
                     Roles
                 </label>
-                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles" optionLabel="name" data-cy="roles-multiselect"
-                    [itemSize]="15" [baseZIndex]="100002" appendTo="body">
+                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles" optionLabel="name"
+                    data-cy="roles-multiselect">
                     <ng-template let-value pTemplate="selectedItems">
                         <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">
                             <span>{{val.name}}</span>
@@ -56,8 +54,10 @@
         </form>
     </div>
     <div class="row">
-        <button type="button" class="btn btn-primary m-2" (click)="saveHelpPage()" *ngIf="helpPageToEditId == 0" data-cy="save-button">Save</button>
-        <button type="button" class="btn btn-primary m-2" (click)="updateHelpPage()" *ngIf="helpPageToEditId != 0" data-cy="update-button">Update</button>
+        <button type="button" class="btn btn-primary m-2" (click)="saveHelpPage()" *ngIf="helpPageToEditId == 0"
+            data-cy="save-button">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateHelpPage()" *ngIf="helpPageToEditId != 0"
+            data-cy="update-button">Update</button>
         <button type="button" class="btn btn-warning m-2" [routerLink]="['../help']">Cancel</button>
     </div>
 </div>
