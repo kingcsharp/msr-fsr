@@ -1,1 +1,43 @@
-<p>proceduretype works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+          <h1 class="page-title">
+            <i class="far fa-edit mx-2" *ngIf="procedureType.id !== 0"></i>
+            <i class="fas fa-plus mx-2" *ngIf="procedureType.id === 0"></i>
+            <span *ngIf="procedureType.id !== 0">Edit Procedure Type</span>
+            <span *ngIf="procedureType.id === 0">Create Procedure Type</span>
+          </h1>
+        </div>
+      </div>
+    <div class="row">
+        <form class="col-12">
+            <div class="form-group">
+                <label for="name" class="col-form-label text-left">
+                    Name
+                </label>
+                <input type="text" name="name" [(ngModel)]="procedureType.name" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="Name of Procedure Type"
+                    data-cy="name-input">
+            </div>
+            <div class="form-group">
+                <label for="majorgroup" class="col-form-label text-left">
+                    Major Group
+                </label>
+                <div class="col-12">
+                    <p-dropdown placeholder="Select Major Group" name="majorgroup" [options]="availableTypes"
+                        showClear="true" [(ngModel)]="procedureType.type" data-cy="majorgroup-dropdown">
+                    </p-dropdown>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-primary m-2" (click)="saveProcedureType()" *ngIf="procedureType.id === 0"
+            data-cy="save-button">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateProcedureType()" *ngIf="procedureType.id !== 0"
+            data-cy="update-button">Update</button>
+        <button type="button" class="btn btn-warning m-2" [routerLink]="['../proceduretypes']"
+            data-cy="cancel-button">Cancel</button>
+    </div>
+</div>

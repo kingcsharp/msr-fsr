@@ -34,6 +34,9 @@ export const routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    UtilsModule,
+    DropdownModule,
+    FormsModule
   ]
 })
 export class ProceduresModule { static routes = routes;}
