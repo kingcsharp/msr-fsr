@@ -9,12 +9,11 @@
  */
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 using NSwag.Annotations;
 using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.Attributes;
 using System;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Controllers
 { 
@@ -33,7 +32,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<Monitor>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<MonitorModel>>))]
         public virtual IActionResult MonitorGetMonitor([FromQuery]int? id)
         { 
             throw new NotImplementedException();

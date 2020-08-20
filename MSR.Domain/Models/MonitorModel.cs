@@ -15,13 +15,13 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using MSR.Domain.Models;
 
-namespace MSR.Answer.API.V1.Models
+namespace MSR.Domain.Models
 { 
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
-    public partial class Monitor : IEquatable<Monitor>
+    public partial class MonitorModel : IEquatable<MonitorModel>
     { 
         /// <summary>
         /// Gets or Sets Id
@@ -78,7 +78,7 @@ namespace MSR.Answer.API.V1.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Monitor {\n");
+            sb.Append("class MonitorModel {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  MonitorType: ").Append(MonitorType).Append("\n");
@@ -109,15 +109,15 @@ namespace MSR.Answer.API.V1.Models
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Monitor)obj);
+            return obj.GetType() == GetType() && Equals((MonitorModel)obj);
         }
 
         /// <summary>
-        /// Returns true if Monitor instances are equal
+        /// Returns true if MonitorModel instances are equal
         /// </summary>
-        /// <param name="other">Instance of Monitor to be compared</param>
+        /// <param name="other">Instance of MonitorModel to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Monitor other)
+        public bool Equals(MonitorModel other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -198,12 +198,12 @@ namespace MSR.Answer.API.V1.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(Monitor left, Monitor right)
+        public static bool operator ==(MonitorModel left, MonitorModel right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Monitor left, Monitor right)
+        public static bool operator !=(MonitorModel left, MonitorModel right)
         {
             return !Equals(left, right);
         }
