@@ -98,13 +98,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureRequest>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
         public async Task<IActionResult> ProcedureGetProcedure(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedure() {
                 procedureID = id
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureRequest>>();
+            return ret.ToOkObjectResponse<ICollection<Procedure>>();
         }
 
         /// <summary>
@@ -115,14 +115,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepRequest>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStep>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureStep() {
                 procedureId = id,
                 stepId = stepid
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureStepRequest>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureStep>>();
         }
 
         /// <summary>
