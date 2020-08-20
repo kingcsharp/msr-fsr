@@ -13,102 +13,68 @@ using System.ComponentModel.DataAnnotations;
 using NSwag.Annotations;
 using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.Attributes;
+using System;
+using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
     /// <summary>
-    ///
+    /// Procedure template API
     /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class ProcedureTemplateApiController : BaseApiController
+    public class ProcedureTemplateController : BaseApiController
     {
         /// <summary>
-        ///
+        /// Create a procedure template
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPost]
         [Route("/ProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResultOfProcedureTemplate))]
-        public virtual IActionResult ProcedureTemplateCreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body)
+        public async Task<IActionResult> CreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfProcedureTemplate));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResultOfProcedureTemplate>(exampleJson)
-                        : default(AuditActionResultOfProcedureTemplate);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        ///
+        /// Delete a procedure template
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpDelete]
         [Route("/ProcedureTemplate/{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public virtual IActionResult ProcedureTemplateDeactivateProcedureTemplate([FromRoute][Required]int? id, [FromRoute][Required]string version)
+        public virtual IActionResult DeleteProcedureTemplate([FromRoute][Required]int? id)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResult));
-            string exampleJson = null;
-            exampleJson = "{\n  \"errorMessages\" : [ {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  }, {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  } ],\n  \"hasValidationErrors\" : true,\n  \"hasErrors\" : true,\n  \"id\" : 6,\n  \"successMessage\" : \"successMessage\"\n}";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult>(exampleJson)
-                        : default(AuditActionResult);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        ///
+        /// Get a procedure template
         /// </summary>
-        /// <param name="version"></param>
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
         [Route("/ProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResultOfICollectionOfProcedureTemplate))]
-        public virtual IActionResult ProcedureTemplateGetProcedureTemplate([FromRoute][Required]string version, [FromQuery]int? id)
+        public virtual IActionResult ProcedureTemplateGetProcedureTemplate([FromQuery]int? id)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfICollectionOfProcedureTemplate));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResultOfICollectionOfProcedureTemplate>(exampleJson)
-                        : default(AuditActionResultOfICollectionOfProcedureTemplate);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        ///
+        /// Update a procedure template
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPatch]
         [Route("/ProcedureTemplate")]
         [SwaggerResponse(typeof(AuditActionResultOfProcedureTemplate))]
-        public virtual IActionResult ProcedureTemplateUpdateProcedureTemplate([FromBody]UpdateProcedureTemplateRequest body, [FromRoute][Required]string version)
+        public async Task<IActionResult> UpdateProcedureTemplate([FromBody]UpdateProcedureTemplateRequest body)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfProcedureTemplate));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResultOfProcedureTemplate>(exampleJson)
-                        : default(AuditActionResultOfProcedureTemplate);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            throw new NotImplementedException();
         }
     }
 }

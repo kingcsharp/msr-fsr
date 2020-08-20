@@ -9,6 +9,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 namespace MSR.Answer.API.V1.Controllers
 {
     /// <summary>
-    ///
+    /// Procedure Type API
     /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
@@ -24,53 +25,45 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private ICommandDispatcher _dispatcher;
 
+        /// <summary>
+        /// Procedure type controller constructor
+        /// </summary>
         public ProcedureTypeController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
 
         /// <summary>
-        ///
+        /// Add a procedure type
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureTypeRequest>))]
-        public async Task<IActionResult> AddProcedureType(CreateProcedureTypeRequest newproc)
+        public async Task<IActionResult> AddProcedureType(CreateProcedureTypeRequest body)
         {
-            var command = newproc.ToCreateProcedureTypeCommand();
+            var command = body.ToCreateProcedureTypeCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureTypeRequest>();
         }
 
         /// <summary>
-        ///
+        /// Delete a procedure type
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpDelete]
-        [Route("/Robert5/msr-api/v1/v{version}/ProcedureType/{id}")]
+        [Route("/ProcedureType/{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public virtual IActionResult ProcedureTypeDeactivateProcedureType([FromRoute][Required]int? id)
+        public virtual IActionResult DeleteProcedureType([FromRoute][Required]int? id)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResult));
-            string exampleJson = null;
-            exampleJson = "{\n  \"errorMessages\" : [ {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  }, {\n    \"number\" : 0,\n    \"message\" : \"message\",\n    \"isValidationMessage\" : true\n  } ],\n  \"hasValidationErrors\" : true,\n  \"hasErrors\" : true,\n  \"id\" : 6,\n  \"successMessage\" : \"successMessage\"\n}";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult>(exampleJson)
-                        : default(AuditActionResult);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        ///
+        /// Get one or all procedure types
         /// </summary>
-        /// <param name="version"></param>
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
@@ -85,17 +78,16 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Update a procedure type
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPatch]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureTypeRequest>))]
-        public async Task<IActionResult> UpdateProcedureType(UpdateProcedureTypeRequest newproc)
+        public async Task<IActionResult> UpdateProcedureType(UpdateProcedureTypeRequest body)
         {
-            var command = newproc.ToUpdateProcedureTypeCommand();
+            var command = body.ToUpdateProcedureTypeCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureTypeRequest>();
         }

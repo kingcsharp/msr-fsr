@@ -6,12 +6,21 @@ using System.Text;
 
 namespace MSR.Answer.API.V1.Models
 {
+    /// <summary>
+    /// Base class for an API call with a typed result
+    /// </summary>
     public class AuditActionResult<T> : AuditActionResult
     {
+        /// <summary>
+        /// Construct AuditActionResult with no error
+        /// </summary>
         public AuditActionResult() : base()
         {
         }
 
+        /// <summary>
+        /// Construct AuditActionResult with error string
+        /// </summary>
         public AuditActionResult(string errorMessage) : base(errorMessage)
         {
         }
@@ -27,13 +36,28 @@ namespace MSR.Answer.API.V1.Models
         public T Object { get; set; }
     }
 
+    /// <summary>
+    /// Base class for an API call with a non-typed result
+    /// </summary>
     public class AuditActionResult
     {
+        /// <summary>
+        /// Gets or Sets SuccessMessage
+        /// </summary>
         public string SuccessMessage { get; set; }
+        /// <summary>
+        /// Gets or Sets ErrorMessages
+        /// </summary>
         public List<ErrorMessage> ErrorMessages { get; private set; }
 
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Default Constructor for AuditActionResult
+        /// </summary>
         public AuditActionResult()
         {
             ErrorMessages = new List<ErrorMessage>();
@@ -51,6 +75,9 @@ namespace MSR.Answer.API.V1.Models
             };
         }
 
+        /// <summary>
+        /// True if any error messages exist
+        /// </summary>
         public bool HasErrors
         {
             get

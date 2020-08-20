@@ -13,18 +13,20 @@ using System.ComponentModel.DataAnnotations;
 using NSwag.Annotations;
 using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.Attributes;
+using System;
+using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 { 
     /// <summary>
-    /// 
+    /// Procedure step type API
     /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class ProcedureStepTypeApiController : BaseApiController
+    public class ProcedureStepTypeController : BaseApiController
     { 
         /// <summary>
-        /// 
+        /// Get procedure step type
         /// </summary>
         /// <param name="version"></param>
         /// <param name="id"></param>
@@ -32,17 +34,9 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet]
         [Route("/ProcedureStepType")]
         [SwaggerResponse(typeof(AuditActionResultOfICollectionOfProcedureStepType))]
-        public virtual IActionResult ProcedureStepTypeGetProcedureStepType([FromRoute][Required]string version, [FromQuery]int? id)
+        public async Task<IActionResult> GetProcedureStepType([FromQuery]int? id)
         { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfICollectionOfProcedureStepType));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResultOfICollectionOfProcedureStepType>(exampleJson)
-                        : default(AuditActionResultOfICollectionOfProcedureStepType);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            throw new NotImplementedException();
         }
     }
 }

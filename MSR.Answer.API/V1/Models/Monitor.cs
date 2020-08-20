@@ -13,6 +13,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Models
 { 
@@ -68,7 +69,7 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets WorkerName
         /// </summary>
         [DataMember(Name="workerName")]
-        public List<UserRequest> WorkerName { get; set; }
+        public List<User> WorkerName { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
