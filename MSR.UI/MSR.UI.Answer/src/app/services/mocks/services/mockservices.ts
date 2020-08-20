@@ -21,11 +21,17 @@ export class MockServices {
 
     }
 
+    procedureTypesDelete(id: number) {
+
+        alert("Success delete placeholder for Web API with id: " + id);
+
+    }
+
     procedureTypesGet(id: number | null | undefined) {
 
         let procedureTypes = new Array<ProcedureTypeMock>()
 
-        if (id !== null || id !== undefined) {
+        if (id !== null && id !== undefined) {
 
             let procedureType = new ProcedureTypeMock();
             procedureType.id = id;
@@ -42,6 +48,8 @@ export class MockServices {
                 procedureType.id = index;
                 procedureType.name = 'Name ' + index;
                 procedureType.type = 'Operate';
+                procedureType.revision = index;
+                procedureType.status = 'Approved';
                 procedureTypes.push(procedureType);
 
             }

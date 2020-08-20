@@ -36,7 +36,11 @@ export const routes = [
     RouterModule.forChild(routes),
     UtilsModule,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    TableModule,
+    NewWidgetModule,
+    MultiSelectModule,
+    DialogModule
   ]
 })
 export class ProceduresModule { static routes = routes;}
