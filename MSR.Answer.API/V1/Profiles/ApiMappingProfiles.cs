@@ -2,6 +2,8 @@
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using System;
+using System.Configuration;
 
 namespace MSR.Answer.API.V1.Profiles
 {
@@ -23,14 +25,20 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreatePartRequest, CreatePart>()
             .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
             CreateMap<UpdatePartRequest, UpdatePart>()
-                .ForMember(dest=>dest.SubParts, opts => opts.MapFrom(src=>src.CreateSubParts));
+                .ForMember(dest=>dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();
-            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
-            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
-            CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>();
-            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>();
+            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>()
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>()
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>()
+                .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
+                .ForMember(dest => dest.MonitorTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)))
+                .ForMember(dest => dest.InputTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)));
+            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>()
+                .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling));
             CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>();
             CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>();
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();

@@ -41,12 +41,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
         public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest body)
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureRequest>();
+            return ret.ToOkObjectResponse<Procedure>();
         }
 
         /// <summary>
@@ -57,13 +57,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
         public async Task<IActionResult> ProcedureAddProcedureStep(int id, CreateProcedureStepRequest body)
         {
             var command = body.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepRequest>();
+            return ret.ToOkObjectResponse<ProcedureStep>();
         }
 
         /// <summary>

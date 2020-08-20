@@ -18,6 +18,12 @@ namespace MSR.Answer.API.V1.Models
         public int Id { get; set; }
 
         /// <summary>
+        /// Gets or Sets MonitorType
+        /// </summary>
+        [DataMember(Name = "monitorType")]
+        public string MonitorType { get; set; }
+
+        /// <summary>
         /// Gets or Sets InputType
         /// </summary>
         [DataMember(Name="inputType")]

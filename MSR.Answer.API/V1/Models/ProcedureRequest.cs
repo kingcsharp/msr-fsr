@@ -145,7 +145,6 @@ namespace MSR.Answer.API.V1.Models
             return
                 (
                     Id == other.Id ||
-                    Id != null &&
                     Id.Equals(other.Id)
                 ) &&
                 (
@@ -170,7 +169,6 @@ namespace MSR.Answer.API.V1.Models
                 ) &&
                 (
                     Revision == other.Revision ||
-                    Revision != null &&
                     Revision.Equals(other.Revision)
                 ) &&
                 (
@@ -180,7 +178,6 @@ namespace MSR.Answer.API.V1.Models
                 ) &&
                 (
                     Duration == other.Duration ||
-                    Duration != null &&
                     Duration.Equals(other.Duration)
                 ) &&
                 (

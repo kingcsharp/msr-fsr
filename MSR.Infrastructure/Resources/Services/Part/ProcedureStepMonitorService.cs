@@ -40,7 +40,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepMonitor>(x)).OrderBy(x => x.Description).ToList();
             return result;
         }
-        public async Task<Domain.Models.ProcedureStepMonitor> CreateProcedureStepMonitorAsync(CreateProcedureStepMonitor command)
+        public async Task<MSR.Domain.Models.ProcedureStepMonitor> CreateProcedureStepMonitorAsync(CreateProcedureStepMonitor command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepMonitor ret;

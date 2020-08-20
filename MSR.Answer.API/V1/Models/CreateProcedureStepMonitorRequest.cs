@@ -27,6 +27,18 @@ namespace MSR.Answer.API.V1.Models
         public string InputType { get; set; }
 
         /// <summary>
+        /// Gets or Sets MonitorType
+        /// </summary>
+        [DataMember(Name="monitorType")]
+        public string MonitorType { get; set; }
+
+        /// <summary>
+        /// Gets or Sets the procedure step ID
+        /// </summary>
+        [DataMember(Name="procedureStepId")]
+        public int ProcedureStepId { get; set; }
+
+        /// <summary>
         /// Gets or Sets ShouldBe
         /// </summary>
         [DataMember(Name="shouldBe")]
