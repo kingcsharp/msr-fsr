@@ -48,8 +48,7 @@ export class MultiselectWrapperComponent implements OnInit {
       });
       return found;
     };
-    
-
+    this.pushOptions();
     this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
     const sub1 = this.datatable.onFilter.subscribe((elem) => {
       if (elem.filters[this.filterId] === undefined) {
@@ -67,38 +66,63 @@ export class MultiselectWrapperComponent implements OnInit {
   }
 
   ngDoCheck() {
-    const ctrl = this;
     const change = this.options.length !== this.savedOptions.length;
     if (change) {
-      this.options.map((item) => {
-        if (this.multipleValues) {
-          item[this.filterId].forEach(element => {
-            let length = this.currentOptions.length;
-            let found = false;
-            while (length--) {
-              const existingItem = this.currentOptions[length];
-              if (existingItem.value.id === element[ctrl.basicOptions.id]) {
-                found = true;
-                length = 0;
-              }
-            }
-            if (!found) {
-              this.currentOptions.push({
-                label: element[ctrl.basicOptions.name],
-                value: {
-                  id: element[ctrl.basicOptions.id],
-                  name: element[ctrl.basicOptions.name]
-                }
-              });
-            }
-          });
-        }
-        else {
-          this.currentOptions.push({ label: item[ctrl.basicOptions.name], value: { id: item[ctrl.basicOptions.id], name: item[ctrl.basicOptions.name] } });
-        }
-      });
+      this.pushOptions();
       this.currentOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
     }
+  }
+
+  pushOptions() {
+    const ctrl = this;
+    this.options.map((item) => {
+      if (this.multipleValues) {
+        item[this.filterId].forEach(element => {
+          let length = this.currentOptions.length;
+          let found = false;
+          while (length--) {
+            const existingItem = this.currentOptions[length];
+            if (existingItem.value.id === element[ctrl.basicOptions.id]) {
+              found = true;
+              length = 0;
+            }
+          }
+          if (!found) {
+            this.currentOptions.push({
+              label: element[ctrl.basicOptions.name],
+              value: {
+                id: element[ctrl.basicOptions.id],
+                name: element[ctrl.basicOptions.name]
+              }
+            });
+          }
+        });
+      }
+      else {
+        this.currentOptions.push({
+          label: this.getLabel(item),
+          value: this.getValue(item)
+        });
+      }
+    });
+  }
+
+  getLabel(item) {
+    if (this.filterProp === undefined) {
+      if (item.label !== undefined) {
+        return item.label;
+      }
+    }
+    return item[this.basicOptions.name]
+  }
+
+  getValue(item) {
+    if (this.defaultId === undefined) {
+      if (item.value !== undefined) {
+        return item.value;
+      }
+    }
+    return item[this.basicOptions.id];
   }
 
   ngOnDestroy() {

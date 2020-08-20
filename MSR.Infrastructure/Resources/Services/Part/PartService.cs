@@ -43,7 +43,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
-                parts = await _unitOfWork.Parts.Query().Include(x => x.Subparts).ToListAsync();
+                parts = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Take(10).ToListAsync();
             }
             var result = parts.Select(x => _mapper.Map<PartModel>(x)).OrderBy(x => x.Name).ToList();
             return result;

@@ -29,16 +29,23 @@
     <div class="router-component" #routerComponent>
       <router-outlet></router-outlet>
     </div>
-    <p-dialog header="Support Ticket" styleClass="supportticket-modal" [(visible)]="supportTicketModalDisplayed" [dismissableMask]="true" [appendTo]="body" [baseZIndex]="100001" [modal]='true'>
-      <iframe src="https://forms.raleyapps.com/form/render/a2c61d66-33a1-4627-8b61-e355e6bbe69b/q1ka1ap45z" data-cy="jirasupportticket" frameborder="0" style="width: 850px; height: 555px;" scrolling="auto"></iframe>
+    <p-dialog header="Support Ticket" styleClass="supportticket-modal" [(visible)]="supportTicketModalDisplayed"
+      [dismissableMask]="true" [appendTo]="body" [baseZIndex]="100001" [modal]='true'>
+      <iframe src="https://forms.raleyapps.com/form/render/a2c61d66-33a1-4627-8b61-e355e6bbe69b/q1ka1ap45z"
+        data-cy="jirasupportticket" frameborder="0" style="width: 850px; height: 555px;" scrolling="auto"></iframe>
       <p-footer>
         <div class="pull-right">
-          <button type="button" data-cy="close-btn" (click)="supportTicketModalDisplayed = !supportTicketModalDisplayed" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          <button type="button" data-cy="close-btn" (click)="supportTicketModalDisplayed = !supportTicketModalDisplayed"
+            class="btn btn-outline-inverse width-100 mb-xs" role="button">
             Close
           </button>
         </div>
-      </p-footer>
+      </p-footer> 
     </p-dialog>
+
+    <approval-comment (closed)="globals.onCloseApproval" [modalData]="globals.modalData">
+    </approval-comment>
+
     <footer class="content-footer">
       © 2016-{{ currDate |  date:'yyyy' }} MSR-FSR. All Rights Reserved.
     </footer>

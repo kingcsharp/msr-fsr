@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { LocationService, LocationModel } from '../../../services/api.client.generated';
+import { LocationService, LocationModel, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -100,7 +100,7 @@ export class LocationsComponent implements OnInit {
     this.globals.showLoader(true);
     this.locationService.locationDelete(this.locationToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler( (locationGetResponse) => {
+      this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
         this.data.length = 0;
         this.data = locationGetResponse.object;
         this.data.map((elem) => {

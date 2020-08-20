@@ -1,11 +1,11 @@
 import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  PartService, FileService, FileModel, EntityModel
+  PartService, FileService, FileModel, EntityModel, EnumMenuItem
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
-import { EnumPrivilege, EnumMenuItem } from '../../models/enums/privileges';
+import { EnumPrivilege } from '../../models/enums/privileges';
 import { responseHandler } from '../../utils/responseHandler';
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../models/lib/ColumnsSaved';

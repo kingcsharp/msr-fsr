@@ -1,12 +1,12 @@
 import { Component, OnInit, ElementRef, AbstractType } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService,
+  InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService, EnumMenuItem,
   UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
