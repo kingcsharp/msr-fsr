@@ -86,6 +86,9 @@ namespace MSR.Answer.API.V1.Models
             }
         }
 
+        /// <summary>
+        /// True if any validation error messages exist
+        /// </summary>
         public bool HasValidationErrors
         {
             get
@@ -94,27 +97,45 @@ namespace MSR.Answer.API.V1.Models
             }
         }
 
+        /// <summary>
+        /// True if the error number exists
+        /// </summary>
         public bool HasTheErrorNumber(int number)
         {
             return ErrorMessages.Any(x => x.Number == number);
         }
 
+        /// <summary>
+        /// Add an error message
+        /// </summary>
         public void AddError(int number, string message)
         {
             ErrorMessages.Add(new ErrorMessage(number, message, null, false));
         }
 
+        /// <summary>
+        /// Add an error message with an exception
+        /// </summary>
         public void AddError(int number, string message, Exception exception)
         {
             ErrorMessages.Add(new ErrorMessage(number, message, exception, false));
         }
 
+        /// <summary>
+        /// Add an error message with an exception
+        /// </summary>
         public void AddError(string message, Exception exception)
         {
             ErrorMessages.Add(new ErrorMessage(0, message, exception, false));
         }
 
-        //Doesnt display error to client, client will see Error has occurred
+        /// <summary>
+        /// Add an error message string.
+        /// </summary>
+        /// <description>
+        /// Doesn't display error to client, client will only
+        /// see "Error has occurred".
+        /// </description>
         public void AddError(string message)
         {
             ErrorMessages.Add(new ErrorMessage(0, message, null, false));

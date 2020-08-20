@@ -16,9 +16,6 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="id")]
         public int Id { get; set; }
-        public int ProcedureStepId { get; set; }
-        public int MonitorTypeId { get; set; }
-        public int InputTypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets InputType
@@ -49,13 +46,6 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="description")]
         public string Description { get; set; }
-        public int? MonitorListId { get; set; }
-        public double? HighTarget { get; set; }
-        public double? LowTarget { get; set; }
-        public double? Target { get; set; }
-        public string FailAction { get; set; }
-        public int SensorMappingId { get; set; }
-        public bool? SendNCREmail { get; set; }
 
         /// <summary>
         /// Gets or Sets SendEmailNotification
@@ -116,7 +106,6 @@ namespace MSR.Answer.API.V1.Models
             return
                 (
                     Id == other.Id ||
-                    Id != null &&
                     Id.Equals(other.Id)
                 ) &&
                 (
@@ -161,7 +150,6 @@ namespace MSR.Answer.API.V1.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Id != null)
                     hashCode = hashCode * 59 + Id.GetHashCode();
                     if (InputType != null)
                     hashCode = hashCode * 59 + InputType.GetHashCode();

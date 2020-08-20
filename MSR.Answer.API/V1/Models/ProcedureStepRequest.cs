@@ -36,7 +36,6 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="stepText")]
         public string StepText { get; set; }
-        public int? GoToStepId { get; set; }
 
         /// <summary>
         /// Gets or Sets Duration
@@ -77,14 +76,14 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets UtilizationTime
         /// </summary>
-        [DataMember(Name="utilization")]
-        public float? Utilization { get; set; }
+        [DataMember(Name="utilizationTime")]
+        public float? UtilizationTime { get; set; }
 
         /// <summary>
         /// Gets or Sets EquipmentTime
         /// </summary>
         [DataMember(Name="equipmentTime")]
-        public double? EquipmentTime { get; set; }
+        public int? EquipmentTime { get; set; }
 
         /// <summary>
         /// Gets or Sets UsefulLife
@@ -102,7 +101,7 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets Roles
         /// </summary>
         [DataMember(Name="roles")]
-        public string Roles { get; set; }
+        public List<RoleRequest> Roles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -123,7 +122,7 @@ namespace MSR.Answer.API.V1.Models
             sb.Append("  LaborTime: ").Append(LaborTime).Append("\n");
             sb.Append("  EquipmentTime: ").Append(EquipmentTime).Append("\n");
             sb.Append("  ReplacementCost: ").Append(ReplacementCost).Append("\n");
-            sb.Append("  Utilization: ").Append(Utilization).Append("\n");
+            sb.Append("  UtilizationTime: ").Append(UtilizationTime).Append("\n");
             sb.Append("  UsefulLife: ").Append(UsefulLife).Append("\n");
             sb.Append("  ReferenceFiles: ").Append(ReferenceFiles).Append("\n");
             sb.Append("  Roles: ").Append(Roles).Append("\n");
@@ -219,9 +218,9 @@ namespace MSR.Answer.API.V1.Models
                     ReplacementCost.Equals(other.ReplacementCost)
                 ) &&
                 (
-                    Utilization == other.Utilization ||
-                    Utilization != null &&
-                    Utilization.Equals(other.Utilization)
+                    UtilizationTime == other.UtilizationTime ||
+                    UtilizationTime != null &&
+                    UtilizationTime.Equals(other.UtilizationTime)
                 ) &&
                 (
                     UsefulLife == other.UsefulLife ||
@@ -272,8 +271,8 @@ namespace MSR.Answer.API.V1.Models
                     hashCode = hashCode * 59 + EquipmentTime.GetHashCode();
                     if (ReplacementCost != null)
                     hashCode = hashCode * 59 + ReplacementCost.GetHashCode();
-                    if (Utilization != null)
-                    hashCode = hashCode * 59 + Utilization.GetHashCode();
+                    if (UtilizationTime != null)
+                    hashCode = hashCode * 59 + UtilizationTime.GetHashCode();
                     if (UsefulLife != null)
                     hashCode = hashCode * 59 + UsefulLife.GetHashCode();
                     if (ReferenceFiles != null)
