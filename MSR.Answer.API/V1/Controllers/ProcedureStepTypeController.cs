@@ -15,6 +15,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.Attributes;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MSR.Answer.API.V1.Controllers
 { 
@@ -33,7 +34,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [Route("/ProcedureStepType")]
-        [SwaggerResponse(typeof(AuditActionResultOfICollectionOfProcedureStepType))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepType>>))]
         public async Task<IActionResult> GetProcedureStepType([FromQuery]int? id)
         { 
             throw new NotImplementedException();

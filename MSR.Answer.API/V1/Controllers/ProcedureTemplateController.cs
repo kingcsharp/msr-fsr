@@ -15,6 +15,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.Attributes;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -32,7 +33,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost]
         [Route("/ProcedureTemplate")]
-        [SwaggerResponse(typeof(AuditActionResultOfProcedureTemplate))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureTemplate>))]
         public async Task<IActionResult> CreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body)
         {
             throw new NotImplementedException();
@@ -58,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [Route("/ProcedureTemplate")]
-        [SwaggerResponse(typeof(AuditActionResultOfICollectionOfProcedureTemplate))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureTemplate>>))]
         public virtual IActionResult ProcedureTemplateGetProcedureTemplate([FromQuery]int? id)
         {
             throw new NotImplementedException();
@@ -71,7 +72,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [Route("/ProcedureTemplate")]
-        [SwaggerResponse(typeof(AuditActionResultOfProcedureTemplate))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureTemplate>))]
         public async Task<IActionResult> UpdateProcedureTemplate([FromBody]UpdateProcedureTemplateRequest body)
         {
             throw new NotImplementedException();

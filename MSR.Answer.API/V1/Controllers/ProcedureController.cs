@@ -136,7 +136,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [Route("/Procedure")]
-        [SwaggerResponse(typeof(AuditActionResultOfProcedure))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
         public async Task<IActionResult> ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest body)
         {
             var command = body.ToUpdateProcedureCommand();

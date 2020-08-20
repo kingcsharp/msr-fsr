@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 using NSwag.Annotations;
 using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.Attributes;
+using System;
 
 namespace MSR.Answer.API.V1.Controllers
 { 
@@ -33,17 +34,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [Route("/v{version}/Monitor")]
-        [SwaggerResponse(typeof(AuditActionResultOfICollectionOfMonitor))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<Monitor>>))]
         public virtual IActionResult MonitorGetMonitor([FromRoute][Required]string version, [FromQuery]int? id)
         { 
-            var example = new AuditActionResultOfICollectionOfMonitor();
-            example.Object = new List<Monitor>(){
-                new Monitor() {
-                    Id = 1,
-                    Description = "alsdkjflaskdjf"
-                }
-            };
-            return new ObjectResult(example);
+            throw new NotImplementedException();
         }
     }
 }
