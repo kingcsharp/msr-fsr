@@ -27,6 +27,7 @@ export class LocationsComponent implements OnInit {
   canDeleteLocation: boolean = false;
   canApproveLocation: boolean = false;
   menuItems = EnumMenuItem;
+  statusOptions: any[];
 
   constructor(private locationService: LocationService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -37,7 +38,7 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'internalAddress', label: 'Internal Address', visible: true }),
-      new ColumnsSaved({ id: 'createdBy', label: 'Created By', visible: true }),
+      new ColumnsSaved({ id: 'created.fullName', label: 'Created By', visible: true }),
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'address1', label: 'Address 1', visible: false }),
       new ColumnsSaved({ id: 'city', label: 'City', visible: false }),
@@ -45,7 +46,7 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'postalcode', label: 'Postalcode', visible: false }),
       new ColumnsSaved({ id: 'country', label: 'Country', visible: false }),
       new ColumnsSaved({ id: 'phone', label: 'Phone', visible: false }),
-      new ColumnsSaved({ id: 'parentId', label: 'Parent', visible: false }),
+      new ColumnsSaved({ id: 'parent.name', label: 'Parent', visible: false }),
       new ColumnsSaved({ id: 'timezone', label: 'Timezone', visible: false }),
       new ColumnsSaved({ id: 'address2', label: 'Address 2', visible: false }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
@@ -73,6 +74,17 @@ export class LocationsComponent implements OnInit {
       this.data.map((elem) => {
         elem.show = elem.status !== null;
       });
+
+      this.data.map((elem) => {
+        if (elem.status === null ) {
+          elem.status = 'Approved' ;
+        }
+
+      });
+
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
       this.loading = false;
     }));
   }

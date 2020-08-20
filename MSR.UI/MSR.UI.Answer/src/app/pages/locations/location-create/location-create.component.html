@@ -1,7 +1,10 @@
 <div class="container">
     <div class="row">
         <h1 class="page-title">
-            Create Location
+            <i class="far fa-edit mx-2" *ngIf="locationToEditId !==  0"></i>
+            <i class="fas fa-plus mx-2" *ngIf="locationToEditId ===  0"></i>
+            <span *ngIf="locationToEditId ===  0">Create Location</span>
+            <span *ngIf="locationToEditId !==  0">Edit Locations</span>
         </h1>
     </div>
     <div class="row" *ngIf="locationToEdit != null">
@@ -20,8 +23,10 @@
                     Parent Location
                 </label>
                 <div class="col-12">
-                    <p-dropdown placeholder="Select Parent Location" name="country" [options]="parentLocationOptions" showClear="true" optionLabel="name" appendTo="body"
-                        [baseZIndex]="100001" [(ngModel)]="selectedParentLocation" data-cy="parentlocation-dropdown" (onChange)="parentSelected($event)">
+                    <p-dropdown placeholder="Select Parent Location" name="country" [options]="parentLocationOptions"
+                        showClear="true" optionLabel="name" appendTo="body" [baseZIndex]="100001"
+                        [(ngModel)]="selectedParentLocation" data-cy="parentlocation-dropdown"
+                        (onChange)="parentSelected($event)">
                     </p-dropdown>
                 </div>
             </div>
@@ -108,8 +113,9 @@
                 <label for="sensors" class="col-form-label text-left">
                     Sensors
                 </label>
-                <p-multiSelect name="sensors" [options]="sensorOptions" [(ngModel)]="selectedSensors" optionLabel="sensorName" data-cy="sensors-multiselect"
-                    [itemSize]="15" [baseZIndex]="100002" appendTo="body">
+                <p-multiSelect name="sensors" [options]="sensorOptions" [(ngModel)]="selectedSensors"
+                    optionLabel="sensorName" data-cy="sensors-multiselect" [itemSize]="15" [baseZIndex]="100002"
+                    appendTo="body">
                     <ng-template let-value pTemplate="selectedItems">
                         <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">
                             <span>{{val.sensorName}}</span>
@@ -121,10 +127,11 @@
         </form>
     </div>
     <div class="row" *ngIf="locationToEditId !== null">
-        <button type="button" class="btn btn-primary m-2" (click)="saveLocation()"
-            *ngIf="locationToEditId ===  0" data-cy="save-button">Save</button>
-        <button type="button" class="btn btn-primary m-2" (click)="updateLocation()"
-            *ngIf="locationToEditId !==  0" data-cy="update-button">Update</button>
-        <button type="button" class="btn btn-warning m-2" [routerLink]="['../locations']"  data-cy="cancel-button">Cancel</button>
+        <button type="button" class="btn btn-primary m-2" (click)="saveLocation()" *ngIf="locationToEditId ===  0"
+            data-cy="save-button">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="updateLocation()" *ngIf="locationToEditId !==  0"
+            data-cy="update-button">Update</button>
+        <button type="button" class="btn btn-warning m-2" [routerLink]="['../locations']"
+            data-cy="cancel-button">Cancel</button>
     </div>
 </div>

@@ -39,9 +39,9 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet("{id}/Sensor"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<SensorModel>>))]
         [HasPrivilegeApi("Locations", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> GetSensorsForLocation([FromRoute] int Id)
+        public async Task<IActionResult> GetSensorsForLocation([FromRoute] int id)
         {
-            var command = new GetSensorsForLocation() { LocationId = Id };
+            var command = new GetSensorsForLocation() { LocationId = id };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<IEnumerable<SensorModel>>();
 

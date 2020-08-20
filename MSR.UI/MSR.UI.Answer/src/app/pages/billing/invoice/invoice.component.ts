@@ -95,7 +95,6 @@ export class InvoiceComponent implements OnInit {
     { label: 'No', value: false }];
 
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.Invoices);
-
     this.getInvoices();
     this.getLocations();
     this.getCustomers();
