@@ -90,5 +90,10 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return ret;
 
         }
+
+        public async Task<bool> DeleteProcedureTypeAsync(DeleteProcedureType command)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

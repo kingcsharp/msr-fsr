@@ -12,6 +12,7 @@ namespace MSR.Application.ApplicationServices
     public class ProcedureTypeAppService :
         ICommandHandler<GetProcedureType>,
         ICommandHandler<CreateProcedureType>,
+        ICommandHandler<DeleteProcedureType>,
         ICommandHandler<UpdateProcedureType>
     {
         private readonly IProcedureTypeService _procedureService;
@@ -35,6 +36,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _procedureService.UpdateProcedureTypeAsync(command);
             return new CommandResponse<ProcedureType>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteProcedureType command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.DeleteProcedureTypeAsync(command);
+            return new CommandResponse<bool>(ret);
         }
     }
 }

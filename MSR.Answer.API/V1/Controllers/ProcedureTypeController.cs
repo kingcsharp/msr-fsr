@@ -55,9 +55,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public virtual IActionResult DeleteProcedureType([FromRoute][Required]int? id)
+        public async Task<IActionResult> DeleteProcedureType([FromRoute][Required]int id)
         {
-            throw new NotImplementedException();
+            var command = new DeleteProcedureType() { id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProcedureTypeRequest>();
         }
 
         /// <summary>
