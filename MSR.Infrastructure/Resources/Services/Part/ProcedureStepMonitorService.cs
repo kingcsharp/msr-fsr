@@ -9,6 +9,7 @@ using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +25,31 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<MonitorModel> GetMonitorModelAsync(GetMonitorModel command)
+        {
+            var procsteps = await GetProcedureStepMonitorAsync(new GetProcedureStepMonitor(){
+                procedureStepMonitorId = command.procedureStepMonitorId
+            });
+
+            if (procsteps == null || procsteps.Count == 0) {
+                // shouldn't happen because GetProcedureStepMonitorAsync throws first
+                throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
+            }
+
+            Domain.Models.ProcedureStepMonitor procstepmon = procsteps.First();
+
+            var ret = new MonitorModel() {
+                Id = procstepmon.Id,
+                Description = procstepmon.Description,
+                MonitorType = procstepmon.MonitorType,
+                Result = procstepmon.TargetValue
+            };
+
+            // TODO: get serial and recorded result
+
+            return ret;
         }
 
         public async Task<ICollection<Domain.Models.ProcedureStepMonitor>> GetProcedureStepMonitorAsync(GetProcedureStepMonitor command)

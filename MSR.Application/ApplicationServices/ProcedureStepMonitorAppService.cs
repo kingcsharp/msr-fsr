@@ -13,6 +13,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetProcedureStepMonitor>,
         ICommandHandler<GetProcedureStepMonitorDefinition>,
         ICommandHandler<CreateProcedureStepMonitor>,
+        ICommandHandler<GetMonitorModel>,
         ICommandHandler<UpdateProcedureStepMonitor>
     {
         private readonly IProcedureStepMonitorService _procedureService;
@@ -42,6 +43,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _procedureService.GetProcedureStepMonitorDefinitionAsync(command);
             return new CommandResponse<ProcedureStepMonitorDefinition>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetMonitorModel command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.GetMonitorModelAsync(command);
+            return new CommandResponse<MonitorModel>(ret);
         }
     }
 }
