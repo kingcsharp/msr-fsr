@@ -93,9 +93,9 @@ namespace MSR.Answer.API.V1.Controllers
             });
         }
 
-        [HttpDelete, SwaggerResponse(typeof(AuditActionResult<Role>))]
+        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult<Role>))]
         [HasPrivilegeApi("Roles", EnumPrivilege.CanDelete)]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(int id)
         {
             return new OkObjectResult(new AuditActionResult()
             {
