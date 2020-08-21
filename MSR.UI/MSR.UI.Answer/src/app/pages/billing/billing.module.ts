@@ -18,15 +18,18 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { PurchasesComponent } from './purchases/purchases.component';
 
 export const routes = [
   { path: '', redirectTo: 'invoices', pathMatch: 'prefix' },
   { path: 'invoices', component: InvoiceComponent, pathMatch: 'full' },
+  { path: 'purchases', component: PurchasesComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
   declarations: [
-    InvoiceComponent
+    InvoiceComponent,
+    PurchasesComponent
   ],
   imports: [
     UtilsModule,

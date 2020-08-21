@@ -19,6 +19,21 @@ export class PurchasesComponent implements OnInit {
   gridSettings: ColumnsSaved[];
   gridVersion: string;
   data: any;
+  purchaseOrderStatus: any[] = [
+    {
+      label: 'All',
+      value: 'All'
+    },
+    {
+      label: 'Open',
+      value: 'Open'
+    },
+    {
+      label: 'Closed',
+      value: 'Closed'
+    }
+  ];
+  canCreate: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -29,8 +44,15 @@ export class PurchasesComponent implements OnInit {
   ngOnInit(): void {
     this.gridVersion = '1.0.0';
     this.gridStorageId = 'quotesGrid' + this.elem.nativeElement.tagName.toLowerCase();
-    this.gridSettings = [];
+    this.gridSettings = [
+      new ColumnsSaved({ id: 'purchaseNumber', label: 'Purchase Number', visible: true }),
+      new ColumnsSaved({ id: 'custRefNumber', label: 'Cust Ref Number', visible: true }),
+      new ColumnsSaved({ id: 'orderDescription', label: 'Order Description', visible: true }),
+      new ColumnsSaved({ id: 'purchaseStatus', label: 'Purchase Status', visible: true }),
+      new ColumnsSaved({ id: 'createdDate', label: 'Created Date', visible: true })
+    ];
     this.getPurchases();
+    this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
   }
 
   getPurchases() {
@@ -39,6 +61,10 @@ export class PurchasesComponent implements OnInit {
 
   hasPrivilege(privName) {
     return this.globals.hasPrivilege(EnumMenuItem.QuotesProducts, privName);
+  }
+
+  onClickViewPurchase(purchase: PurchaseModel) {
+    //TODO: view purchase detail
   }
 
 }
@@ -82,7 +108,7 @@ const demoData = [
     approvalStatus: 'approved'
   }),
   new PurchaseModel({
-    id: 516481,
+    id: 516482,
     custRefNo: 'PO1590779276',
     orderDescription: 'refcustponum1223334444',
     createdDate: new Date(),

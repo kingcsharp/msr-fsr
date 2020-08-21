@@ -27,7 +27,6 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { PurchaseOrderCreateComponent } from './purchase-order-create/purchase-order-create.component';
 import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
 import {SelectButtonModule} from 'primeng/selectbutton';
-import { PurchasesComponent } from './purchases/purchases.component';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -38,7 +37,6 @@ export const routes = [
   { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'},
   { path: 'purchaseorder-create', component: PurchaseOrderCreateComponent, pathMatch: 'full'},
   { path: 'purchase-create', component: PurchaseCreateComponent, pathMatch: 'full'},
-  { path: 'purchases', component: PurchasesComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
@@ -49,7 +47,6 @@ export const routes = [
     PurchaseOrdersComponent,
     PurchaseOrderCreateComponent,
     PurchaseCreateComponent,
-    PurchasesComponent
   ],
   imports: [
     CommonModule,

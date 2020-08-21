@@ -1,0 +1,185 @@
+<div class="container-fluid">
+  <h1 class="page-title mb-5">
+    <i class="icon fa fa-usd"></i>
+    Purchases
+  </h1>
+
+  <widget>
+    <p-table
+    #dt
+    [value]="data"
+    dataKey="id"
+    styleClass="ui-table-customers"
+    [rowHover]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50,100]"
+    [paginator]="true"
+    currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0"
+    stateStorage="local"
+    stateKey="{{gridStorageId}}"
+  >
+    <ng-template pTemplate="caption">
+      <div class="text-right">
+        <button
+          *ngIf="canCreate"
+          [routerLink]="['../purchase-create']"
+          class="btn btn-success width-100 mb-xs sm-mrg"
+          role="button"
+          data-cy="add-button"
+        >
+          + Add
+        </button>
+        <grid-options
+          [(defaultColumns)]="gridSettings"
+          [gridStorageId]="gridStorageId"
+          [ptable]="dt"
+          [gridVersion]="gridVersion" data-cy="usergrid-options"
+        >
+        </grid-options>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="display: none;"></th>
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+          data-cy="usertable-header">
+          {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+        </th>
+        <th data-cy="usertable-header">Action</th>
+      </tr>
+      <tr>
+        <th
+          [hidden]="!cg.isVisibleCol('purchaseNumber',gridSettings)"
+        >
+          <div class="position-relative">
+            <input
+              pInputText
+              type="text"
+              tooltip="Search by Purchase Number"
+              (input)="dt.filter($event.target.value, 'purchaseNumber', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['purchaseNumber']?.value"
+            >
+            <i
+              *ngIf="dt.filters['purchaseNumber']?.value"
+              class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'purchaseNumber')"
+            ></i>
+          </div>
+        </th>
+        <th
+          [hidden]="!cg.isVisibleCol('custRefNumber',gridSettings)"
+        >
+          <div class="position-relative">
+            <input
+              pInputText
+              type="text"
+              tooltip="Search by Customer Reference Number"
+              data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'custRefNumber', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['custRefNumber']?.value"
+            >
+            <i
+              *ngIf="dt.filters['custRefNumber']?.value"
+              class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'custRefNumber')"
+            ></i>
+          </div>
+        </th>
+        <th
+          [hidden]="!cg.isVisibleCol('orderDescription',gridSettings)"
+        >
+          <div class="position-relative">
+            <input
+              pInputText
+              type="text"
+              tooltip="Search by Order Description"
+              data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'orderDescription', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['orderDescription']?.value"
+            >
+            <i
+              *ngIf="dt.filters['orderDescription']?.value"
+              class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'orderDescription')"
+            ></i>
+          </div>
+        </th>
+        <th
+          [hidden]="!cg.isVisibleCol('purchaseStatus', gridSettings)"
+        >
+          <multiselect-wrapper
+            [gridStorageId]="gridStorageId"
+            [options]="purchaseOrderStatus"
+            [filterId]="'purchaseStatus'"
+            [defaultText]="'Select Status'"
+            [defaultTextTooltip]="'Search by Purchase Status'"
+            [datatable]="dt"
+          >
+          </multiselect-wrapper>
+        </th>
+        <th
+          [hidden]="!cg.isVisibleCol('createdDate',gridSettings)"
+        >
+          <div
+            class="position-relative"
+            tooltip="Search by Created Date"
+          >
+            <pcalendar-wrapper
+              [gridStorageId]="gridStorageId"
+              [filterId]="'createdDate'"
+              [datatable]="dt"
+            >
+            </pcalendar-wrapper>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-purcahsemodel>
+      <tr class="ui-selectable-row">
+        <td
+          [hidden]="!cg.isVisibleCol('purchaseNumber', gridSettings)"
+        >
+          {{purcahsemodel.id}}
+        </td>
+        <td
+          class="text-capitalize"
+          [hidden]="!cg.isVisibleCol('custRefNumber',gridSettings)"
+        >
+          {{purcahsemodel.custRefNo}}
+        </td>
+        <td
+          [hidden]="!cg.isVisibleCol('orderDescription',gridSettings)"
+        >
+          {{purcahsemodel.orderDescription}}
+        </td>
+        <td
+          [hidden]="!cg.isVisibleCol('purchaseStatus',gridSettings)"
+        >
+          {{purcahsemodel.purchaseStatus}}
+        </td>
+        <td
+          [hidden]="!cg.isVisibleCol('createdDate',gridSettings)"
+        >
+          {{purcahsemodel.createdDate | date :'short' }}
+        </td>
+        <td>
+          <i
+            class="fa fa-eye pointer"
+            tooltip="View Details"
+            data-cy="purchaseRow"
+            (click)="onClickViewPurchase(purcahsemodel)"
+          >
+          </i>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" style="text-align:left">No Purchase found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  </widget>
+</div>
