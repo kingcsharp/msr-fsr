@@ -105,7 +105,7 @@ export class UserComponent implements OnInit {
 
   getRoles() {
     const ctrl = this;
-    this.roleService.role(env.apiVersion).pipe(take(1))
+    this.roleService.roles(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.allRoles = response.object;
         ctrl.backendRoles = response.object;

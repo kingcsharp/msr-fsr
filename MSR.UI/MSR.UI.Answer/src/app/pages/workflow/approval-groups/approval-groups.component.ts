@@ -135,7 +135,7 @@ export class ApprovalGroupsComponent implements OnInit {
 
   getRoles() {
     const ctrl = this;
-    this.roleService.role(env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           ctrl.allRoles.push({ label: x.name, value: x.id });

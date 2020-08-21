@@ -232,6 +232,57 @@ export class AccountService {
         }
         return _observableOf<void>(<any>null);
     }
+
+    resetmypassword(version: string, request: ResetMyPasswordRequest): Observable<void> {
+        let url_ = this.baseUrl + "/v{version}/Account/resetmypassword";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processResetmypassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processResetmypassword(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processResetmypassword(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -1563,7 +1614,7 @@ export class LocationService {
         let url_ = this.baseUrl + "/v{version}/Location/{id}/Sensor";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{Id}", encodeURIComponent("" + id));
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -3232,7 +3283,7 @@ export class RoleService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    role(version: string): Observable<AuditActionResultOfICollectionOfRole> {
+    roleGet(version: string): Observable<AuditActionResultOfICollectionOfRole> {
         let url_ = this.baseUrl + "/v{version}/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3248,11 +3299,11 @@ export class RoleService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRole(response_);
+            return this.processRoleGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRole(<any>response_);
+                    return this.processRoleGet(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfICollectionOfRole>><any>_observableThrow(e);
                 }
@@ -3261,7 +3312,7 @@ export class RoleService {
         }));
     }
 
-    protected processRole(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRole> {
+    protected processRoleGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRole> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3281,6 +3332,221 @@ export class RoleService {
             }));
         }
         return _observableOf<AuditActionResultOfICollectionOfRole>(<any>null);
+    }
+
+    rolePost(version: string, request: CreateRoleRequest): Observable<AuditActionResultOfRoleView> {
+        let url_ = this.baseUrl + "/v{version}/Role";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResultOfRoleView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfRoleView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfRoleView>(<any>null);
+    }
+
+    rolePatch(version: string, request: UpdateRoleRequest): Observable<AuditActionResultOfRoleView> {
+        let url_ = this.baseUrl + "/v{version}/Role";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRolePatch(response: HttpResponseBase): Observable<AuditActionResultOfRoleView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfRoleView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfRoleView>(<any>null);
+    }
+
+    roles(version: string): Observable<AuditActionResultOfICollectionOfRoleView> {
+        let url_ = this.baseUrl + "/v{version}/Role/Roles";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRoles(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRoles(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfRoleView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfRoleView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRoles(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRoleView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfRoleView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfRoleView>(<any>null);
+    }
+
+    roleDelete(id: number, version: string): Observable<AuditActionResultOfRole> {
+        let url_ = this.baseUrl + "/v{version}/Role/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRoleDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRoleDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfRole>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfRole>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRoleDelete(response: HttpResponseBase): Observable<AuditActionResultOfRole> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfRole.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfRole>(<any>null);
     }
 }
 
@@ -5346,6 +5612,46 @@ export class ResetPasswordRequest implements IResetPasswordRequest {
 export interface IResetPasswordRequest {
     token: string;
     newPassword: string;
+}
+
+export class ResetMyPasswordRequest implements IResetMyPasswordRequest {
+    newPassword!: string;
+    oldPassword!: string;
+
+    constructor(data?: IResetMyPasswordRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newPassword = _data["newPassword"];
+            this.oldPassword = _data["oldPassword"];
+        }
+    }
+
+    static fromJS(data: any): ResetMyPasswordRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResetMyPasswordRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newPassword"] = this.newPassword;
+        data["oldPassword"] = this.oldPassword;
+        return data; 
+    }
+}
+
+export interface IResetMyPasswordRequest {
+    newPassword: string;
+    oldPassword: string;
 }
 
 export class AuditActionResultOfIEnumerableOfCustomer extends AuditActionResult implements IAuditActionResultOfIEnumerableOfCustomer {
@@ -9829,6 +10135,251 @@ export class AuditActionResultOfICollectionOfRole extends AuditActionResult impl
 
 export interface IAuditActionResultOfICollectionOfRole extends IAuditActionResult {
     object?: Role[] | undefined;
+}
+
+export class AuditActionResultOfICollectionOfRoleView extends AuditActionResult implements IAuditActionResultOfICollectionOfRoleView {
+    object?: RoleView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfRoleView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(RoleView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfRoleView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfRoleView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfRoleView extends IAuditActionResult {
+    object?: RoleView[] | undefined;
+}
+
+export class RoleView extends CreatableModel implements IRoleView {
+    name?: string | undefined;
+    isCertificationRole?: boolean | undefined;
+    parentRoles?: RoleView[] | undefined;
+    hasAssignedUsers?: boolean;
+
+    constructor(data?: IRoleView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.isCertificationRole = _data["isCertificationRole"];
+            if (Array.isArray(_data["parentRoles"])) {
+                this.parentRoles = [] as any;
+                for (let item of _data["parentRoles"])
+                    this.parentRoles!.push(RoleView.fromJS(item));
+            }
+            this.hasAssignedUsers = _data["hasAssignedUsers"];
+        }
+    }
+
+    static fromJS(data: any): RoleView {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["isCertificationRole"] = this.isCertificationRole;
+        if (Array.isArray(this.parentRoles)) {
+            data["parentRoles"] = [];
+            for (let item of this.parentRoles)
+                data["parentRoles"].push(item.toJSON());
+        }
+        data["hasAssignedUsers"] = this.hasAssignedUsers;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IRoleView extends ICreatableModel {
+    name?: string | undefined;
+    isCertificationRole?: boolean | undefined;
+    parentRoles?: RoleView[] | undefined;
+    hasAssignedUsers?: boolean;
+}
+
+export class AuditActionResultOfRoleView extends AuditActionResult implements IAuditActionResultOfRoleView {
+    object?: RoleView | undefined;
+
+    constructor(data?: IAuditActionResultOfRoleView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? RoleView.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfRoleView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfRoleView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfRoleView extends IAuditActionResult {
+    object?: RoleView | undefined;
+}
+
+export class CreateRoleRequest implements ICreateRoleRequest {
+    name?: string | undefined;
+    isCertificationRole?: boolean;
+    parentRoleIds?: number[] | undefined;
+
+    constructor(data?: ICreateRoleRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.isCertificationRole = _data["isCertificationRole"];
+            if (Array.isArray(_data["parentRoleIds"])) {
+                this.parentRoleIds = [] as any;
+                for (let item of _data["parentRoleIds"])
+                    this.parentRoleIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateRoleRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRoleRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["isCertificationRole"] = this.isCertificationRole;
+        if (Array.isArray(this.parentRoleIds)) {
+            data["parentRoleIds"] = [];
+            for (let item of this.parentRoleIds)
+                data["parentRoleIds"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface ICreateRoleRequest {
+    name?: string | undefined;
+    isCertificationRole?: boolean;
+    parentRoleIds?: number[] | undefined;
+}
+
+export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleRequest {
+    id?: number;
+
+    constructor(data?: IUpdateRoleRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateRoleRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRoleRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdateRoleRequest extends ICreateRoleRequest {
+    id?: number;
+}
+
+export class AuditActionResultOfRole extends AuditActionResult implements IAuditActionResultOfRole {
+    object?: Role | undefined;
+
+    constructor(data?: IAuditActionResultOfRole) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? Role.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfRole {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfRole();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfRole extends IAuditActionResult {
+    object?: Role | undefined;
 }
 
 export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {

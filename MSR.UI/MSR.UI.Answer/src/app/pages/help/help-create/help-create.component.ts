@@ -34,7 +34,7 @@ export class HelpCreateComponent implements OnInit {
   ngOnInit(): void {
 
     this.globals.showLoader(true);
-    this.roleService.role(env.apiVersion).subscribe(response => {
+    this.roleService.roleGet(env.apiVersion).subscribe(response => {
       this.availableRoles = this.availableRoles.concat(response.object);
 
       this.loadHelpPage();
