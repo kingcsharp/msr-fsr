@@ -92,7 +92,6 @@ export class MockServices {
             procedureTemplate.status = 'Approved';
             procedureTemplate.text = 'Loreum Ipsum dum';
             procedureTemplate.title = 'Procedure Template ' + id;
-            procedureTemplate.procedureStepTypeId = 1;
             procedureTemplate.baseStartOnCounter = false;
             procedureTemplate.comments = 'Loreum Ipsum dum itum lom si nam';
             procedureTemplate.estimatedStepDuration = 4;
@@ -100,12 +99,81 @@ export class MockServices {
             procedureTemplate.procedureStepId = undefined;
             procedureTemplate.procedureStepTypeId = 2;
             procedureTemplate.referenceDocuments = undefined;
-            procedureTemplate.referenceFiles = new Array();
-            procedureTemplate.referenceProcedures = [1,3,5,2];
+            procedureTemplate.referenceFiles = [{
+                "fileId": 197,
+                "entityId": 8965,
+                "name": "aaa.docx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "fileURL": ""
+            },
+            {
+                "fileId": 198,
+                "entityId": 8965,
+                "name": "lavarropasS.pdf",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/pdf",
+                "fileURL": ""
+            },
+            {
+                "fileId": 199,
+                "entityId": 8965,
+                "name": "xlsAlecTest.xlsx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "fileURL": ""
+            },
+            {
+                "fileId": 200,
+                "entityId": 8965,
+                "name": "alec.jpg",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "image/jpeg",
+                "fileURL": ""
+            },
+            {
+                "fileId": 201,
+                "entityId": 8965,
+                "name": "cmh.PNG",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "image/png",
+                "fileURL": ""
+            },
+            {
+                "fileId": 202,
+                "entityId": 8965,
+                "name": "casos practico.pptx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "fileURL": ""
+            },
+            {
+                "fileId": 203,
+                "entityId": 8965,
+                "name": "aa.docx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "fileURL": ""
+            },
+            {
+                "fileId": 204,
+                "entityId": 8965,
+                "name": "TimeZoneShit.PNG",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "image/png",
+                "fileURL": ""
+            }];
+            procedureTemplate.referenceProcedures = [1, 3, 5, 2];
             procedureTemplate.replacementCost = 22;
             procedureTemplate.roles = this.roleGet().slice(0, 3);
-            procedureTemplate.text = 'Some random sample text';
-            procedureTemplate.title = 'Sample Procedure Step';
             procedureTemplate.usefulLife = 4;
             procedureTemplate.utilization = 87.99;
             procedureTemplates.push(procedureTemplate);
@@ -117,10 +185,95 @@ export class MockServices {
                 let procedureTemplate = new ProcedureTemplate();
                 procedureTemplate.id = index;
                 procedureTemplate.isRelatedToAProduct = false;
-                procedureTemplate.revision = index;
+                procedureTemplate.revision = 1;
                 procedureTemplate.status = 'Approved';
                 procedureTemplate.text = 'Loreum Ipsum dum' + index;
                 procedureTemplate.title = 'Procedure Template ' + index;
+                procedureTemplate.procedureStepTypeId = 1;
+                procedureTemplate.baseStartOnCounter = false;
+                procedureTemplate.comments = 'Loreum Ipsum dum itum lom si nam';
+                procedureTemplate.estimatedStepDuration = 4;
+                procedureTemplate.numberOfQuestionsToUse = 5;
+                procedureTemplate.procedureStepId = undefined;
+                procedureTemplate.procedureStepTypeId = 2;
+                procedureTemplate.referenceDocuments = undefined;
+                procedureTemplate.referenceFiles = [{
+                    "fileId": 197,
+                    "entityId": 8965,
+                    "name": "aaa.docx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 198,
+                    "entityId": 8965,
+                    "name": "lavarropasS.pdf",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/pdf",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 199,
+                    "entityId": 8965,
+                    "name": "xlsAlecTest.xlsx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 200,
+                    "entityId": 8965,
+                    "name": "alec.jpg",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "image/jpeg",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 201,
+                    "entityId": 8965,
+                    "name": "cmh.PNG",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "image/png",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 202,
+                    "entityId": 8965,
+                    "name": "casos practico.pptx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 203,
+                    "entityId": 8965,
+                    "name": "aa.docx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 204,
+                    "entityId": 8965,
+                    "name": "TimeZoneShit.PNG",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "image/png",
+                    "fileURL": ""
+                }];
+                procedureTemplate.referenceProcedures = [1, 3, 5, 2];
+                procedureTemplate.replacementCost = 22;
+                procedureTemplate.roles = this.roleGet().slice(0, 3);
+                procedureTemplate.usefulLife = 4;
+                procedureTemplate.utilization = 87.99;
                 procedureTemplates.push(procedureTemplate);
 
             }
@@ -159,12 +312,12 @@ export class MockServices {
                 let procedure = new Procedure();
                 procedure.id = index;
                 procedure.comment = 'Loreum Ipsum' + index;
-                procedure.createdByDepartmentName = 'Department Test ' + index +' Name';
+                procedure.createdByDepartmentName = 'Department Test ' + index + ' Name';
                 procedure.creatorCompany = 'Name of Creator Company';
                 procedure.duration = 3;
                 procedure.durationType = 'SYS_MINUTES';
                 procedure.isRelatedToAProduct = true;
-                procedure.name = 'Procedure Step A'+ index;
+                procedure.name = 'Procedure Step A' + index;
                 procedure.procedureType = this.procedureTypesGet(2)[0];
                 procedure.referenceFiles = new Array<any>();
                 procedure.revision = index;
@@ -198,7 +351,7 @@ export class MockServices {
 
     }
 
-    monitorsGet(id: number | null | undefined){
+    monitorsGet(id: number | null | undefined) {
 
         let monitors = new Array<Monitor>()
 
