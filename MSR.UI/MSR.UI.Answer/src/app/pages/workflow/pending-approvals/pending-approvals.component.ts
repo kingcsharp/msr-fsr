@@ -2,11 +2,11 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { Globals } from '../../../models/lib/globals';
 import {
   WorkflowService, WorkflowModel, PostPendingApprovalRequest,
-  WorkflowGroupService, WorkflowStageService, WorkflowPendingApprovalService
+  WorkflowGroupService, WorkflowStageService, WorkflowPendingApprovalService, EnumApprovalTables
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege, EnumApprovalTables } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';

@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
   UserService, User, IAuditActionResultOfUser, LocationService
-  , UpdateUserRequest, RoleService, Role
+  , UpdateUserRequest, RoleService, Role, EnumMenuItem
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -141,7 +141,7 @@ export class UserComponent implements OnInit {
 
   updateUsersData(usersData) {
     const ctrl = this;
-    usersData.forEach((x)  => {
+    usersData.forEach((x) => {
       const userIndex = ctrl.allUsers.findIndex(z => z.value === x.id);
       if (userIndex < 0) {
         ctrl.allUsers.push({ label: x.firstName + ' ' + x.lastName, value: x.id });

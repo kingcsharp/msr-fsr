@@ -1,0 +1,39 @@
+<p-dialog class="text-left" header="Approval comment" [(visible)]="modalData.showModal" [style]="{width: '21vw'}">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" novalidate="novalidate" (ngSubmit)="commentSubmit()">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    Please enter approval comment
+                </h5>
+            </header>
+            <div class="widget-body">
+                <fieldset>
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <textarea rows="6" cols="150" type="text" id="comments" name="comments"
+                                [(ngModel)]="comment" data-validate="parsley" data-parsley-trigger="change"
+                                data-parsley-minlength="3" data-parsley-required="true"
+                                class="form-control input-transparent" tooltip="Min length 3 characters"
+                                placeholder="Comments" data-cy="approval-comment-input"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                    data-cy="approval-save-button">
+                    Save
+                </button>
+                <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Cancel
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

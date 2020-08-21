@@ -13,6 +13,7 @@ import { Sidebar } from './sidebar/sidebar.component';
 import { Navbar } from './navbar/navbar.component';
 import { BlockUIModule } from 'primeng/blockui';
 import { DialogModule } from 'primeng/dialog';
+import { ApprovalCommentComponent } from '../components/approval-comment/approval-comment.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,7 @@ import { DialogModule } from 'primeng/dialog';
     UtilsModule,
     DialogModule
   ],
-  declarations: [Layout, Sidebar, Navbar]
+  declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent]
 })
 export class LayoutModule {
 }
