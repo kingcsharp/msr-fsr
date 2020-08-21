@@ -66,7 +66,7 @@ export class MultiselectWrapperComponent implements OnInit {
   }
 
   ngDoCheck() {
-    const change = this.options.length !== this.savedOptions.length;
+    const change = this.options !== undefined && this.savedOptions !== undefined && this.options.length !== this.savedOptions.length;
     if (change) {
       this.pushOptions();
       this.currentOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
@@ -74,6 +74,9 @@ export class MultiselectWrapperComponent implements OnInit {
   }
 
   pushOptions() {
+    if (this.options === undefined) {
+      return;
+    }
     const ctrl = this;
     this.options.map((item) => {
       if (this.multipleValues) {
