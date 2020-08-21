@@ -66,8 +66,16 @@ export class MultiselectWrapperComponent implements OnInit {
   }
 
   ngDoCheck() {
-    const change = this.options !== undefined && this.savedOptions !== undefined && this.options.length !== this.savedOptions.length;
-    if (change) {
+    let changed = false;
+    if (this.options === undefined && this.savedOptions === undefined) {
+      return;
+    }
+    if (this.options !== undefined && this.savedOptions === undefined) {
+      changed = true;
+      this.savedOptions = this.options;
+    }
+    const lengthChange = this.options.length !== this.savedOptions.length;
+    if (changed || lengthChange) {
       this.pushOptions();
       this.currentOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
     }
