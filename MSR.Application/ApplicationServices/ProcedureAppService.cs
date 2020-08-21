@@ -16,6 +16,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetProcedureStep>,
         ICommandHandler<UpdateProcedureStep>,
         ICommandHandler<DeleteProcedure>,
+        ICommandHandler<DeleteProcedureStep>,
         ICommandHandler<UpdateProcedure>
     {
         private readonly IProcedureService _procedureService;
@@ -59,6 +60,12 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(DeleteProcedure command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.DeleteProcedureAsync(command);
+            return new CommandResponse<bool>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteProcedureStep command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.DeleteProcedureStepAsync(command);
             return new CommandResponse<bool>(ret);
         }
     }

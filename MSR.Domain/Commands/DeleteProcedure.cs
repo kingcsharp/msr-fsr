@@ -4,6 +4,6 @@ namespace MSR.Domain.Commands
 {
     public class DeleteProcedure : Command
     {
-        public int? procedureID;
+        public int procedureID;
     }
 }

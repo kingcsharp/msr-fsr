@@ -180,9 +180,24 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.procedureID);
             if(current is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
+                throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
             }
             _unitOfWork.Procedures.Delete(false, current);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteProcedureStepAsync(DeleteProcedureStep command)
+        {
+            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
+                i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
+            );
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
+            }
+            _unitOfWork.ProcedureSteps.Delete(false, current);
             await _unitOfWork.SaveChangesAsync();
 
             return true;

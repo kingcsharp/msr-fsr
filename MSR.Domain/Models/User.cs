@@ -263,7 +263,6 @@ namespace MSR.Domain.Models
                 ) &&
                 (
                     LocationId == other.LocationId ||
-                    LocationId != null &&
                     LocationId.Equals(other.LocationId)
                 ) &&
                 (
