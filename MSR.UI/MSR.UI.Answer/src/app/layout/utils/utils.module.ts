@@ -20,7 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
 import { MultiselectWrapperFormComponent } from '../../../app/components/multiselect-wrapper-form/multiselect-wrapper-form.component';
-
+import { CheckboxModule } from 'primeng/checkbox';
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component';
@@ -58,7 +58,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
-    GridInputFilterComponent
+    GridInputFilterComponent,
+    CheckboxModule
   ],
   imports: [
     CommonModule,
@@ -68,7 +69,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     DialogModule,
     FileUploadModule,
     TooltipModule,
-    NgxDocViewerModule
+    NgxDocViewerModule,
+    CheckboxModule
   ]
 })
 export class UtilsModule {

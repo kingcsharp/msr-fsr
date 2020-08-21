@@ -10,11 +10,10 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { DropdownModule } from 'primeng/dropdown';
-import { GridOptionsComponent } from '../../components/grid-options/grid-options.component';
-import { MultiselectWrapperComponent } from '../../components/multiselect-wrapper/multiselect-wrapper.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
+import { UtilsModule } from '../../../app/layout/utils/utils.module';
 
 export const routes = [
   { path: '', redirectTo: 'help', pathMatch: 'full' },
@@ -23,8 +22,8 @@ export const routes = [
 ];
 
 @NgModule({
-  declarations: [HelpComponent, HelpCreateComponent, GridOptionsComponent,
-    MultiselectWrapperComponent, CkeditorWrapperComponent, HelpbuttonWrapperComponent],
+  declarations: [HelpComponent, HelpCreateComponent,
+    CkeditorWrapperComponent, HelpbuttonWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -35,7 +34,8 @@ export const routes = [
     TableModule,
     NewWidgetModule,
     DropdownModule,
-    CKEditorModule
+    CKEditorModule,
+    UtilsModule
   ]
 })
 export class HelpModule {

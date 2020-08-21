@@ -25,6 +25,7 @@ export class MultiselectWrapperComponent implements OnInit {
   currentOptions: any = [];
   basicOptions: any;
   savedOptions: any;
+  isOldFilter: boolean = false;
   constructor() {
   }
 
@@ -40,7 +41,12 @@ export class MultiselectWrapperComponent implements OnInit {
       let found = false;
       filter.forEach(fElement => {
         value.forEach(vElement => {
-          if (fElement[ctrl.basicOptions.id] === vElement[ctrl.basicOptions.id]) {
+          if (ctrl.isOldFilter) {
+            if(fElement === vElement[ctrl.filterProp]){
+              found = true;
+              return;
+            }
+          } else if (fElement[ctrl.basicOptions.id] === vElement[ctrl.basicOptions.id]) {
             found = true;
             return;
           }
@@ -66,21 +72,64 @@ export class MultiselectWrapperComponent implements OnInit {
   }
 
   ngDoCheck() {
-    const change = this.options !== undefined && this.savedOptions !== undefined && this.options.length !== this.savedOptions.length;
-    if (change) {
+    let changed = false;
+    if (this.options === undefined && this.savedOptions === undefined) {
+      return;
+    }
+    if (this.options !== undefined && this.savedOptions === undefined) {
+      changed = true;
+      this.savedOptions = this.options;
+    }
+    const lengthChange = this.options.length !== this.savedOptions.length;
+    if (changed || lengthChange) {
       this.pushOptions();
       this.currentOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
     }
   }
 
+  // dataAlreadyParsed(data) {
+  //   if (data[0].label !== undefined && data[0].value !== undefined) {
+  //     data.map((element) => {
+  //       this.currentOptions.push({
+  //         label: element.label,
+  //         value: {
+  //           id: element.value,
+  //           name: element.label
+  //         }
+  //       })
+  //     });
+
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  dataAlreadyParsed(data) {
+    if (data[0].label !== undefined && data[0].value !== undefined) {
+      this.isOldFilter = true;
+      return true;
+    }
+    return false;
+  }
+
   pushOptions() {
+    const ctrl = this;
+
     if (this.options === undefined) {
       return;
     }
-    const ctrl = this;
+
+    // if (this.dataAlreadyParsed(this.options)) {
+    //   return;
+    // }
+
     this.options.map((item) => {
-      if (this.multipleValues) {
-        item[this.filterId].forEach(element => {
+      if (this.multipleValues && !this.dataAlreadyParsed(ctrl.options)) {
+        let filterItem = item[this.filterId];
+        if (filterItem == undefined) {
+          filterItem = item;
+        }
+        filterItem.forEach(element => {
           let length = this.currentOptions.length;
           let found = false;
           while (length--) {
@@ -111,10 +160,8 @@ export class MultiselectWrapperComponent implements OnInit {
   }
 
   getLabel(item) {
-    if (this.filterProp === undefined) {
-      if (item.label !== undefined) {
-        return item.label;
-      }
+    if (item.label !== undefined) {
+      return item.label;
     }
     return item[this.basicOptions.name]
   }
