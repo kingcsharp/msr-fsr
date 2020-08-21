@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -182,8 +183,12 @@ namespace MSR.Infrastructure.Resources.Services.Role
             {
                 throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
             }
-            _unitOfWork.Procedures.Delete(false, current);
-            await _unitOfWork.SaveChangesAsync();
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.Procedures.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.Procedure)} uid {CurrentUser.GetId()}");
+            }
 
             return true;
         }
@@ -197,8 +202,12 @@ namespace MSR.Infrastructure.Resources.Services.Role
             {
                 throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
             }
-            _unitOfWork.ProcedureSteps.Delete(false, current);
-            await _unitOfWork.SaveChangesAsync();
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.ProcedureSteps.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStep)} uid {CurrentUser.GetId()}");
+            }
 
             return true;
         }
