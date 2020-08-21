@@ -109,7 +109,7 @@ export class TemplateComponent implements OnInit {
     createProcedureTemplateRequest.utilization = this.procedureTemplate.utilization;
 
     this.mockServices.procedureTemplatePost(createProcedureTemplateRequest);
-    this.router.navigate(['app/procedures/procedures']);
+    this.router.navigate(['app/procedures/proceduretemplates']);
 
   }
 
@@ -133,7 +133,7 @@ export class TemplateComponent implements OnInit {
     updateProcedureTemplateRequest.utilization = this.procedureTemplate.utilization;
 
     this.mockServices.procedureTemplatePost(updateProcedureTemplateRequest);
-    this.router.navigate(['app/procedures/procedures']);
+    this.router.navigate(['app/procedures/proceduretemplates']);
 
 
   }
