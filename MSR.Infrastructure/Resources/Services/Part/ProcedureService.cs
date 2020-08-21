@@ -174,5 +174,18 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return ret;
         }
+
+        public async Task<bool> DeleteProcedureAsync(DeleteProcedure command)
+        {
+            var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.procedureID);
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
+            }
+            _unitOfWork.Procedures.Delete(false, current);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

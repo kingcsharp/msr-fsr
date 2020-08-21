@@ -13,5 +13,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<ProcedureStep>> GetProcedureStepAsync(GetProcedureStep command);
         Task<ProcedureStep> CreateProcedureStepAsync(CreateProcedureStep command);
         Task<ProcedureStep> UpdateProcedureStepAsync(UpdateProcedureStep command);
+        Task<bool> DeleteProcedureAsync(DeleteProcedure command);
     }
 }

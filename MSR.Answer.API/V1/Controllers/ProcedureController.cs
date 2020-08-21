@@ -71,11 +71,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200"></response>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureDeactivateProcedure([FromRoute][Required]int? id)
+        public async Task<IActionResult> ProcedureDeleteProcedure([FromRoute][Required]int id)
         {
-            throw new NotImplementedException();
+            var command = new DeleteProcedure(){ procedureID = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse();
         }
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpDelete("{id}/step/{stepid}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureDeactivateProcedureStep([FromRoute][Required]int? id, [FromRoute][Required]int? stepid)
+        public async Task<IActionResult> ProcedureDeleteProcedureStep([FromRoute][Required]int? id, [FromRoute][Required]int? stepid)
         {
             throw new NotImplementedException();
         }
