@@ -41,6 +41,17 @@ namespace MSR.Answer.API.V1.Controllers
             return new OkObjectResult(new AuditActionResult<ICollection<RoleView>>()
             {
                 Object = new List<RoleView>()
+                {
+                    new RoleView()
+                    {
+                        Created = new User(){FirstName = "Pedro",LastName = "John"},
+                        HasAssignedUsers = false,
+                        Id = 1,
+                        IsCertificationRole = true,
+                        Name = "SuperPotatoe",
+                        ParentRoles = null
+                    }
+                }
             });
         }
 
@@ -52,6 +63,14 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 SuccessMessage = "Role Successfully Created",
                 Object = new RoleView()
+                {
+                    Created = new User() { FirstName = "Pedro", LastName = "John" },
+                    HasAssignedUsers = false,
+                    Id = 1,
+                    IsCertificationRole = true,
+                    Name = "SuperPotatoe",
+                    ParentRoles = null
+                }
             });
         }
 
@@ -63,6 +82,14 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 SuccessMessage = "Role Successfully Updated",
                 Object = new RoleView()
+                {
+                    Created = new User() { FirstName = "Pedro", LastName = "John" },
+                    HasAssignedUsers = false,
+                    Id = 1,
+                    IsCertificationRole = true,
+                    Name = "SuperPotatoe",
+                    ParentRoles = null
+                }
             });
         }
 

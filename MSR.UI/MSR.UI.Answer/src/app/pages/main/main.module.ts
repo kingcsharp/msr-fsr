@@ -24,6 +24,8 @@ import { CustomersComponent } from './customers/customers.component';
 import { CustomerCreateComponent } from './customer-create/customer-create.component';
 import { CertificationsComponent } from './certifications/certifications.component';
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
+import { RoleComponent } from './role/role.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -41,7 +43,9 @@ export const routes = [
     CustomersComponent,
     CustomerCreateComponent,
     CertificationsComponent,
-    HelpbuttonWrapperComponent
+    HelpbuttonWrapperComponent,
+    RoleComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,

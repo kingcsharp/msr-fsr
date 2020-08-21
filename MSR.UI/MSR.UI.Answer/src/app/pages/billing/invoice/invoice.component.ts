@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, AbstractType } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService,
