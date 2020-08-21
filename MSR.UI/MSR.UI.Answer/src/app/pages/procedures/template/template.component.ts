@@ -10,6 +10,7 @@ import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 
+
 @Component({
   selector: 'app-template',
   templateUrl: './template.component.html',
@@ -25,7 +26,7 @@ export class TemplateComponent implements OnInit {
   availableProceduresForReference: Array<SelectItem>;
   availableRoles: Array<SelectItem>;
   selectedRoles: Array<number> = new Array<number>();
-
+  
   constructor(private route: ActivatedRoute, private mockServices:MockServices, public elementReference: ElementRef, public roleService: RoleService, private router: Router) { }
 
   ngOnInit(): void {

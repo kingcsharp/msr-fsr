@@ -8,6 +8,8 @@ import { UpdateProcedureTemplateRequest } from '../models/updateProcedureTemplat
 import { Procedure } from '../models/procedure';
 import { Role } from '../models/role';
 import { Monitor } from '../models/monitor';
+import { CreateProcedureRequest } from '../models/createProcedureRequest';
+import { UpdateProcedureRequest } from '../models/updateProcedureRequest';
 
 @Injectable()
 export class MockServices {
@@ -284,6 +286,25 @@ export class MockServices {
 
     }
 
+    procedurePost(createProcedureRequest: CreateProcedureRequest){
+
+        alert("Success create placeholder for Web API");
+
+    }
+
+    procedurePatch(updateProcedureRequest: UpdateProcedureRequest){
+
+        alert("Success update placeholder for Web API");
+
+    }
+
+    procedureDelete(id: number){
+
+        alert("Success delete placeholder for Web API with id: " + id);
+
+    }
+
+
     procedureGet(id: number | null | undefined) {
 
         let procedures = new Array<Procedure>()
@@ -300,7 +321,78 @@ export class MockServices {
             procedure.isRelatedToAProduct = true;
             procedure.name = 'Procedure Step A';
             procedure.procedureType = this.procedureTypesGet(2)[0];
-            procedure.referenceFiles = new Array<any>();;
+            procedure.referenceFiles = [{
+                "fileId": 197,
+                "entityId": 8965,
+                "name": "aaa.docx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "fileURL": ""
+            },
+            {
+                "fileId": 198,
+                "entityId": 8965,
+                "name": "lavarropasS.pdf",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/pdf",
+                "fileURL": ""
+            },
+            {
+                "fileId": 199,
+                "entityId": 8965,
+                "name": "xlsAlecTest.xlsx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "fileURL": ""
+            },
+            {
+                "fileId": 200,
+                "entityId": 8965,
+                "name": "alec.jpg",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "image/jpeg",
+                "fileURL": ""
+            },
+            {
+                "fileId": 201,
+                "entityId": 8965,
+                "name": "cmh.PNG",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "image/png",
+                "fileURL": ""
+            },
+            {
+                "fileId": 202,
+                "entityId": 8965,
+                "name": "casos practico.pptx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "fileURL": ""
+            },
+            {
+                "fileId": 203,
+                "entityId": 8965,
+                "name": "aa.docx",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "fileURL": ""
+            },
+            {
+                "fileId": 204,
+                "entityId": 8965,
+                "name": "TimeZoneShit.PNG",
+                "base64String": null,
+                "fileContents": null,
+                "contentType": "image/png",
+                "fileURL": ""
+            }];
             procedure.revision = 1;
             procedure.roles = this.roleGet().slice(0, 5);
             procedures.push(procedure);
@@ -319,7 +411,78 @@ export class MockServices {
                 procedure.isRelatedToAProduct = true;
                 procedure.name = 'Procedure Step A' + index;
                 procedure.procedureType = this.procedureTypesGet(2)[0];
-                procedure.referenceFiles = new Array<any>();
+                procedure.referenceFiles = [{
+                    "fileId": 197,
+                    "entityId": 8965,
+                    "name": "aaa.docx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 198,
+                    "entityId": 8965,
+                    "name": "lavarropasS.pdf",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/pdf",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 199,
+                    "entityId": 8965,
+                    "name": "xlsAlecTest.xlsx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 200,
+                    "entityId": 8965,
+                    "name": "alec.jpg",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "image/jpeg",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 201,
+                    "entityId": 8965,
+                    "name": "cmh.PNG",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "image/png",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 202,
+                    "entityId": 8965,
+                    "name": "casos practico.pptx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 203,
+                    "entityId": 8965,
+                    "name": "aa.docx",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "fileURL": ""
+                },
+                {
+                    "fileId": 204,
+                    "entityId": 8965,
+                    "name": "TimeZoneShit.PNG",
+                    "base64String": null,
+                    "fileContents": null,
+                    "contentType": "image/png",
+                    "fileURL": ""
+                }];
                 procedure.revision = index;
                 procedure.roles = this.roleGet().slice(0, 3);
 
