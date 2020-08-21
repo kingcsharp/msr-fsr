@@ -9,11 +9,16 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { EnumMenuItem } from './enumMenuItem';
+import { MenuGroup } from './menuGroup';
 
-export class ProcedureTypeMock { 
-    id?: number;
+export class MenuItem { 
+    url?: string;
     name?: string;
-    type?: string;
-    revision?: number;
-    status?: string;
+    info?: string;
+    icon?: string;
+    orderNumber?: number;
+    menuGroup?: MenuGroup;
+    permissions?: Array<number>;
+    enumMenuItem?: EnumMenuItem;
 }

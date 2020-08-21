@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 
-export class ProcedureTypeMock { 
-    id?: number;
+export class MenuGroup { 
+    url?: string;
     name?: string;
-    type?: string;
-    revision?: number;
-    status?: string;
+    info?: string;
+    icon?: string;
+    orderNumber?: number;
 }

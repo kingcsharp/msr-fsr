@@ -9,11 +9,11 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { MenuItem } from './menuItem';
 
-export class ProcedureTypeMock { 
+export class Role { 
     id?: number;
     name?: string;
-    type?: string;
-    revision?: number;
-    status?: string;
+    isCertificationRole?: boolean;
+    menus?: Array<MenuItem>;
 }

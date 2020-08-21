@@ -1,5 +1,5 @@
-import { Component, OnInit, ElementRef,Directive } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { CreateProcedureTypeRequest } from '../../../services/mocks/models/createProcedureTypeRequest'
 import { UpdateProcedureTypeRequest } from '../../../services/mocks/models/updateProcedureTypeRequest'
@@ -17,7 +17,7 @@ export class ProceduretypeComponent implements OnInit {
   procedureType: ProcedureTypeMock = new ProcedureTypeMock();
   availableTypes: Array<SelectItem>
 
-  constructor( private route: ActivatedRoute, private mockServices:MockServices, public elementReference: ElementRef) {
+  constructor( private route: ActivatedRoute, private mockServices:MockServices, public elementReference: ElementRef, private router: Router) {
 
   }
 
@@ -55,7 +55,7 @@ export class ProceduretypeComponent implements OnInit {
     createProcedureTypeRequest.majorGroup = this.procedureType.type;
 
     this.mockServices.procedureTypesPost(createProcedureTypeRequest);
-
+    this.router.navigate(['app/procedures/proceduretypes']);
   }
 
 
@@ -67,7 +67,7 @@ export class ProceduretypeComponent implements OnInit {
     updateProcedureTypeRequest.majorGroup = this.procedureType.type;
 
     this.mockServices.procedureTypesPatch(updateProcedureTypeRequest);
-
+    this.router.navigate(['app/procedures/proceduretypes']);
   }
 
 }

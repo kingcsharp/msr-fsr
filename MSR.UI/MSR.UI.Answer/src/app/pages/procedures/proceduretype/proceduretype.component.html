@@ -2,10 +2,10 @@
     <div class="row">
         <div class="col-12">
           <h1 class="page-title">
-            <i class="far fa-edit mx-2" *ngIf="procedureType.id !== 0"></i>
-            <i class="fas fa-plus mx-2" *ngIf="procedureType.id === 0"></i>
-            <span *ngIf="procedureType.id !== 0">Edit Procedure Type</span>
-            <span *ngIf="procedureType.id === 0">Create Procedure Type</span>
+            <i class="far fa-edit mx-2" *ngIf="procedureType?.id !== 0"></i>
+            <i class="fas fa-plus mx-2" *ngIf="procedureType?.id === 0"></i>
+            <span *ngIf="procedureType?.id !== 0">Edit Procedure Type</span>
+            <span *ngIf="procedureType?.id === 0">Create Procedure Type</span>
           </h1>
         </div>
       </div>

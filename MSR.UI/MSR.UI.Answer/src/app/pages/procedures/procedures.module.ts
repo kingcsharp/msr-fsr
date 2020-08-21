@@ -14,6 +14,8 @@ import { ProceduretypesComponent } from './proceduretypes/proceduretypes.compone
 import { ProcedureComponent } from './procedure/procedure.component';
 import { ProceduretypeComponent } from './proceduretype/proceduretype.component';
 import { TemplateComponent } from './template/template.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -24,13 +26,14 @@ export const routes = [
   { path: 'procedure-edit', component: ProcedureComponent, pathMatch: 'full' },
   { path: 'proceduretype-create', component: ProceduretypeComponent, pathMatch: 'full' },
   { path: 'proceduretype-edit', component: ProceduretypeComponent, pathMatch: 'full' },
-  { path: 'proceduretemplates-create', component: TemplateComponent, pathMatch: 'full' },
-  { path: 'proceduretemplates-edit', component: TemplateComponent, pathMatch: 'full' }
+  { path: 'proceduretemplate-create', component: TemplateComponent, pathMatch: 'full' },
+  { path: 'proceduretemplate-edit', component: TemplateComponent, pathMatch: 'full' }
 ];
 
 
 @NgModule({
-  declarations: [ProceduresComponent, TemplatesComponent, ProceduretypesComponent, ProcedureComponent, ProceduretypeComponent, TemplateComponent],
+  declarations: [ProceduresComponent, TemplatesComponent, ProceduretypesComponent, ProcedureComponent, 
+    ProceduretypeComponent, TemplateComponent, CkeditorWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -40,7 +43,8 @@ export const routes = [
     TableModule,
     NewWidgetModule,
     MultiSelectModule,
-    DialogModule
+    DialogModule,
+    CKEditorModule
   ]
 })
 export class ProceduresModule { static routes = routes;}
