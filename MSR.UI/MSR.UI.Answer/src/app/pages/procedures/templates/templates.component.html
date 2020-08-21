@@ -1,1 +1,118 @@
-<p>templates works!</p>
+<div class="container-flex">
+    <div class="row">
+        <div class="col-6">
+            <h1 class="page-title">
+                <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+                {{globals.activeMenu.name}}
+            </h1>
+        </div>
+        <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+            <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+        </div>
+    </div>
+    <div class="row">
+        <widget>
+            <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+                [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+                [rowsPerPageOptions]="[10,25,50,100]"  [loading]="loading"  [paginator]="true"  [filterDelay]="0"
+                stateStorage="local"  stateKey="{{gridStorageId}}">
+                <ng-template pTemplate="caption">
+                    <div class="text-right">
+                        <button *ngIf="canAdd" [routerLink]="['../proceduretemplate-create']"
+                            class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+                            + Add
+                        </button>
+                        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+                            [gridVersion]="gridVersion"  data-cy="usergrid-options"  [hidden]="false">
+                        </grid-options>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+                            data-cy="proceduretemplate-header">
+                            {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label !== 'Actions' && col.label !== 'Reference Files'"></p-sortIcon>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th grid-input-filter [dt]="dt" searchField="id"
+                            [hidden]="!commonGrid.isVisibleCol('id',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="title"
+                            [hidden]="!commonGrid.isVisibleCol('title',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="text"
+                            [hidden]="!commonGrid.isVisibleCol('text',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="revision"
+                            [hidden]="!commonGrid.isVisibleCol('revision',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
+                            <div class="position-relative">
+                                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
+                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
+                                    [datatable]="dt">
+                                </multiselect-wrapper>
+                            </div>
+                        </th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-model>
+                    <tr class="ui-selectable-row">
+                        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
+                            {{model.id}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('title', gridSettings)">
+                            {{model.title}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('text', gridSettings)">
+                            {{model.text}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('revision', gridSettings)">
+                            {{model.revision}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
+                            {{model.status}}
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Procedure Template"
+                                data-cy="edit-button" [routerLink]="['../proceduretemplate-edit']"
+                                [queryParams]="{id: model.id}"></i>
+                            <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Procedure Template"
+                                data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6" style="text-align:left">No Procedure Templates to display</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </widget>
+    </div>
+</div>
+<p-dialog header="Confirm Delete Procedure Template" [(visible)]="showConfirmDeleteDialog" [appendTo]="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      Are you sure you want to Delete this Procedure Template?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="delete()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
