@@ -34,13 +34,13 @@
           <div class="position-relative">
             <input id="id" pInputText type="text" tooltip="Search by Id"
               (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['id']?.value">
+              [value]="dt.filters['id']?.value" data-cy="id-grid">
             <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Name" data-cy="searchbypartnr-grid"
+            <input pInputText type="text" tooltip="Search by Name" data-cy="name-grid"
               (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
               [value]="dt.filters['name']?.value">
             <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
@@ -48,7 +48,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('partNumber',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Part Number" data-cy="searchbypartnr-grid"
+            <input pInputText type="text" tooltip="Search by Part Number" data-cy="partNumber-grid"
               (input)="dt.filter($event.target.value, 'partNumber', 'contains')" class="ui-column-filter"
               [value]="dt.filters['partNumber']?.value">
             <i *ngIf="dt.filters['partNumber']?.value" class="fclear pi pi-times pointer"
@@ -57,26 +57,26 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('oemPartNumber',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by OEM Part Number" data-cy="searchbypartnr-grid"
+            <input pInputText type="text" tooltip="Search by OEM Part Number" data-cy="oemPartNumber-grid"
               (input)="dt.filter($event.target.value, 'oemPartNumber', 'contains')" class="ui-column-filter"
               [value]="dt.filters['oemPartNumber']?.value">
             <i *ngIf="dt.filters['oemPartNumber']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'oemPartNumber')"></i>
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('isKit',gridSettings)">
-          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isKitStatus" [filterId]="'isKit'"
-            [defaultText]="'Select Is Kit'" [defaultTextTooltip]="''" [datatable]="dt">
+        <th [hidden]="!cg.isVisibleCol('isKit',gridSettings)" data-cy="isKit-grid">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isKitStatus" filterId="isKit"
+            defaultText="Select Is Kit" defaultTextTooltip="" [datatable]="dt">
           </multiselect-wrapper>
         </th>
-        <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
-          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isActive" [filterId]="'isActive'"
-            [defaultText]="'Select Is Active'" [defaultTextTooltip]="''" [datatable]="dt">
+        <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)" data-cy="isActive-grid">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isActive" filterId="isActive"
+            defaultText="Select Is Active" defaultTextTooltip="" [datatable]="dt">
           </multiselect-wrapper>
         </th>
         <th [hidden]="!cg.isVisibleCol('maximumCycles',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by maximumCycles" data-cy="searchbypartnr-grid"
+            <input pInputText type="text" tooltip="Search by maximumCycles" data-cy="maximumCycles-grid"
               (input)="dt.filter($event.target.value, 'maximumCycles', 'contains')" class="ui-column-filter"
               [value]="dt.filters['maximumCycles']?.value">
             <i *ngIf="dt.filters['maximumCycles']?.value" class="fclear pi pi-times pointer"
@@ -88,14 +88,14 @@
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          <div class="position-relative" tooltip="Search by Created Date">
+          <div class="position-relative" tooltip="Search by Created Date" data-cy="createdOn-grid">
             <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
             </pcalendar-wrapper>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           <div class="position-relative">
-            <input id="createdByName" pInputText type="text" tooltip="Search by Name"
+            <input id="createdByName" pInputText type="text" tooltip="Search by Name" data-cy="createdByName-grid"
               (input)="dt.filter($event.target.value, 'createdByName', 'contains')" class="ui-column-filter"
               [value]="dt.filters['createdByName']?.value">
             <i *ngIf="dt.filters['createdByName']?.value" class="fclear pi pi-times pointer"
@@ -103,7 +103,7 @@
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-          <div class="position-relative" tooltip="Search by Last Updated On Date">
+          <div class="position-relative" tooltip="Search by Last Updated On Date" data-cy="lastUpdatedOn-grid">
             <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'" [datatable]="dt">
             </pcalendar-wrapper>
           </div>
@@ -111,8 +111,8 @@
         <th [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
           <div class="position-relative">
             <input id="lastUpdatedByName" pInputText type="text" tooltip="Search by Name"
-              (input)="dt.filter($event.target.value, 'lastUpdatedByName', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['lastUpdatedByName']?.value">
+              data-cy="lastUpdatedByName-grid" (input)="dt.filter($event.target.value, 'lastUpdatedByName', 'contains')"
+              class="ui-column-filter" [value]="dt.filters['lastUpdatedByName']?.value">
             <i *ngIf="dt.filters['lastUpdatedByName']?.value" class="fclear pi pi-times pointer"
               (click)="cg.filter(dt,'lastUpdatedByName')"></i>
           </div>
@@ -121,7 +121,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-partmodel>
-      <tr class="ui-selectable-row">
+      <tr class="ui-selectable-row" data-cy="row">
         <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
           {{partmodel.id}}
         </td>
@@ -270,8 +270,7 @@
               Files
             </label>
             <cmh-file-uploader class="col-md-10" *ngIf="currPart.files !==undefined" [menuItem]="menuItems.Parts"
-            multiple="multiple"  
-            [(files)]="currPart.files">
+              multiple="multiple" [(files)]="currPart.files">
             </cmh-file-uploader>
           </div>
         </fieldset>
@@ -291,7 +290,7 @@
           </legend>
           <div class="form-group row partTbl">
             <widget>
-              <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers"
+              <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers modal-grid"
                 [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
                 [paginator]="true"
                 currentPageReportTemplate="Showing {first}-{last} of {{currPart.createSubParts.length}}"
@@ -312,7 +311,7 @@
                     <td>
                       <p-dropdown placeholder="Select Sub Part" name="allpartsDropdown" [options]="allParts"
                         [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
-                        itemSize="30" [ngModelOptions]="{standalone: true}"></p-dropdown>
+                        itemSize="30" [ngModelOptions]="{standalone: true}" data-cy="subpartitem-modal"></p-dropdown>
                     </td>
                     <td class="text-capitalize">
                       <input type="number" name="partQty" [(ngModel)]="partmodel.qty" data-validate="parsley"
