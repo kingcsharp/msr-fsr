@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MonitorsComponent } from './monitors/monitors.component';
 import { RouterModule } from '@angular/router';
+import { MonitorsComponent } from './monitors/monitors.component';
+import { UtilsModule } from '../../layout/utils/utils.module';
+import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { NewWidgetModule } from '../../layout/new-widget/widget.module';;
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -10,10 +15,14 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [],
+  declarations: [MonitorsComponent, HelpbuttonWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    UtilsModule,
+    DialogModule,
+    TableModule,
+    NewWidgetModule
   ]
 })
 export class MonitorsModule { static routes = routes; }

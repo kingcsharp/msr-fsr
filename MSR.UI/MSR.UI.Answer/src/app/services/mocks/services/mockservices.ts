@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ModuleWithComponentFactories } from '@angular/core';
 import { CreateProcedureTypeRequest } from '../models/createProcedureTypeRequest';
 import { UpdateProcedureTypeRequest } from '../models/updateProcedureTypeRequest';
 import { ProcedureTypeMock } from '../models/ProcedureTypeMock';
@@ -7,6 +7,7 @@ import { CreateProcedureTemplateRequest } from '../models/createProcedureTemplat
 import { UpdateProcedureTemplateRequest } from '../models/updateProcedureTemplateRequest';
 import { Procedure } from '../models/procedure';
 import { Role } from '../models/role';
+import { Monitor } from '../models/monitor';
 
 @Injectable()
 export class MockServices {
@@ -195,5 +196,29 @@ export class MockServices {
 
         return roles;
 
+    }
+
+    monitorsGet(id: number | null | undefined){
+
+        let monitors = new Array<Monitor>()
+
+        for (let index = 1; index < 75; index++) {
+
+            let monitor = new Monitor();
+            monitor.id = index;
+            monitor.description = 'Loreum Ipsum desca' + index;
+            monitor.monitorType = 'Monitor Type' + index;
+            monitor.passing = true;
+            monitor.result = 'Sample Result text';
+            monitor.serialNumber = index + '132' + index;
+            monitor.taskCompleted = new Date();
+            monitor.workerName = 'John Doe';
+
+            monitors.push(monitor);
+
+
+        }
+
+        return monitors;
     }
 }
