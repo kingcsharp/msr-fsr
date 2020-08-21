@@ -7,8 +7,14 @@ using System.Configuration;
 
 namespace MSR.Answer.API.V1.Profiles
 {
+    /// <summary>
+    ///
+    /// </summary>
     public class ApiMappingProfiles: Profile
     {
+        /// <summary>
+        ///
+        /// </summary>
         public ApiMappingProfiles()
         {
             CreateMap<GetLocationRequest, GetLocations>();
