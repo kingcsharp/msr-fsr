@@ -10,6 +10,7 @@ import { RoleService, Role } from '../../../services/api.client.generated'
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
+import { Globals } from '../../../models/lib/globals';
 
 @Component({
   selector: 'app-procedure',
@@ -27,10 +28,12 @@ export class ProcedureComponent implements OnInit {
   selectedRoles: Array<number> = new Array<number>();
   durationTypeOptions: Array<SelectItem>;
 
-  constructor(private route: ActivatedRoute, private mockServices: MockServices, public elementReference: ElementRef, private router: Router, private roleService: RoleService) { }
+  constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef, 
+    private router: Router, private roleService: RoleService) { }
 
   ngOnInit(): void {
 
+    this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
 
     this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {

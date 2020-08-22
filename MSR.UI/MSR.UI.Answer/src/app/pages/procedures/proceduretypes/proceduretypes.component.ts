@@ -48,7 +48,7 @@ export class ProceduretypesComponent implements OnInit {
     this.canDelete = this.hasPrivilege(this.privileges.CanActivate);
     this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
 
-    this.getProcedureTypes()
+    this.getProcedureTypes();
   }
 
   getProcedureTypes(){
