@@ -44,8 +44,6 @@ export class ProceduretypeComponent implements OnInit {
   
       });
       
-
-
   }
 
   saveProcedureType(){

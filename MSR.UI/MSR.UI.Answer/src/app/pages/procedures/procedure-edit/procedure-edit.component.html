@@ -1,1 +1,212 @@
-<p>procedure-edit works!</p>
+<div class="container-flex">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="far fa-edit mx-2"></i>
+                <span>Edit Procedure</span>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <form class="col-12">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="proceduretype" class="col-form-label text-left">
+                            Procedure Type
+                        </label>
+                        <div class="col-12">
+                            <p-dropdown placeholder="Select Major Group" name="proceduretype"
+                                [options]="availableProcedureTypes" showClear="true" [(ngModel)]="selectedProcedureType"
+                                data-cy="majorgroup-dropdown">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="col-form-label text-left">
+                            Name
+                        </label>
+                        <input type="text" name="name" [(ngModel)]="procedure.name" data-validate="parsley"
+                            data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                            class="form-control input-transparent" tooltip="Name of Procedure" data-cy="name-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="roles" class="col-form-label text-left">
+                            Roles
+                        </label>
+                        <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles"
+                            data-cy="roles-multiselect">
+                        </p-multiSelect>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration" class="col-form-label text-left">
+                            Estimated Procedure Time
+                        </label>
+                        <input type="number" name="duration" [(ngModel)]="procedure.duration" data-validate="parsley"
+                            data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                            class="form-control input-transparent" tooltip="Duration of Procedure"
+                            data-cy="duration-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="durationType" class="col-form-label text-left">
+                            Duration Type
+                        </label>
+                        <div class="col-12">
+                            <p-dropdown placeholder="Select Duration Type" name="durationType"
+                                [options]="durationTypeOptions" showClear="true" [(ngModel)]="procedure.durationType"
+                                data-cy="majorgroup-dropdown">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment" class="col-form-label text-left">
+                            Comments
+                        </label>
+                        <ckeditor-wrapper [editorcontent]="procedure.comment"
+                            (editorContentChange)="procedure.comment = $event"></ckeditor-wrapper>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="referencefiles" class="col-form-label text-left">
+                            Reference Files
+                        </label>
+                        <cmh-file-uploader name="referencefiles" class="col-12"
+                            *ngIf="procedure.referenceFiles !== undefined" [menuItem]="menuItems.Templates"
+                            multiple="multiple" [(files)]="procedure.referenceFiles">
+                        </cmh-file-uploader>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="page-title">
+                        <span>Steps</span>
+                    </h1>
+                </div>
+                <div class="col-12">
+                    <div class="d-flex flex-row" *ngFor="let procedureStep of procedureSteps;">
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="col-form-label text-left">
+                                        Step Number: {{ procedureStep.printOrder}}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12 d-flex flex-row">
+                                    <label for="title" class="col-form-label text-left col-3">
+                                        Title
+                                    </label>
+                                    <input type="text" name="title" [(ngModel)]="procedureStep.title"
+                                        data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-9"
+                                        tooltip="Title of Procedure Step" data-cy="title-input">
+                                </div>
+                                <div class="form-group col-12 d-flex flex-row">
+                                    <label for="text" class="col-form-label text-left col-3">
+                                        Text
+                                    </label>
+                                    <input type="text" name="text" [(ngModel)]="procedureStep.text"
+                                        data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-9"
+                                        tooltip="Text of Procedure Step" data-cy="text-input">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-6 d-flex flex-row">
+                                    <label for="labortime" class="col-form-label text-left col-6">
+                                        Labor Time
+                                    </label>
+                                    <input type="text" name="labortime" [(ngModel)]="procedureStep.laborTime"
+                                        data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-6 ml-2"
+                                        tooltip="Labor Time of Procedure Step" data-cy="labortime-input">
+                                </div>
+                                <div class="form-group col-6 d-flex flex-row">
+                                    <label for="equipmenttime" class="col-form-label text-left col-6">
+                                        Equipment Time
+                                    </label>
+                                    <input type="text" name="equipmenttime" [(ngModel)]="procedureStep.equipmentTime"
+                                        data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent  col-6"
+                                        tooltip="Equipment Time of Procedure Step" data-cy="equipmenttime-input">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-4 d-flex flex-row">
+                                    <label for="replacementcost" class="col-form-label text-left col-9">
+                                        Replacement Cost
+                                    </label>
+                                    <input type="text" name="replacementcost"
+                                        [(ngModel)]="procedureStep.replacementCost" data-validate="parsley"
+                                        data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-3 ml-3"
+                                        tooltip="Replacement Cost of Procedure Step" data-cy="replacementcost-input">
+                                </div>
+                                <div class="form-group col-4 d-flex flex-row">
+                                    <label for="utilizationtime" class="col-form-label text-left col-9">
+                                        Utilization Time
+                                    </label>
+                                    <input type="text" name="utilizationtime"
+                                        [(ngModel)]="procedureStep.utilizationTime" data-validate="parsley"
+                                        data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-3"
+                                        tooltip="Utilization Time of Procedure Step" data-cy="utilizationtime-input">
+                                </div>
+                                <div class="form-group col-4 d-flex flex-rowp">
+                                    <label for="usefullife" class="col-form-label text-left col-9">
+                                        Useful Life
+                                    </label>
+                                    <input type="text" name="usefullife" [(ngModel)]="procedureStep.usefulLife"
+                                        data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-3"
+                                        tooltip="Useful Life of Procedure Step" data-cy="usefullife-input">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-12 d-flex flex-row">
+                                    <label for="proceduresteptype" class="col-form-label text-left col-3">
+                                        Procedure Step Type
+                                    </label>
+                                    <div class="col-9 px-0">
+                                        <p-dropdown placeholder="Select Procedure Step Type" name="proceduresteptype"
+                                            [options]="procedureStepTypeOptions" showClear="true"
+                                            [(ngModel)]="procedureStep.procedureStepTypeId"
+                                            data-cy="procedurestepyype-dropdown">
+                                        </p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <button type="button" class="btn btn-primary m-2" (click)="updateProcedureType()"
+                                    data-cy="update-button">Update</button>
+                                <button type="button" class="btn btn-warning m-2"
+                                    data-cy="cancel-button">Cancel</button>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="referencefiles" class="col-form-label text-left">
+                                    Reference Files
+                                </label>
+                                <cmh-file-uploader name="referencefiles" class="col-12"
+                                    *ngIf="procedureStep.referenceFiles !== undefined" [menuItem]="menuItems.Templates"
+                                    multiple="multiple" [(files)]="procedureStep.referenceFiles">
+                                </cmh-file-uploader>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            Monitors Component goes here
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

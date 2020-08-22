@@ -366,33 +366,6 @@ export class MockServices {
                 "fileContents": null,
                 "contentType": "image/png",
                 "fileURL": ""
-            },
-            {
-                "fileId": 202,
-                "entityId": 8965,
-                "name": "casos practico.pptx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                "fileURL": ""
-            },
-            {
-                "fileId": 203,
-                "entityId": 8965,
-                "name": "aa.docx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "fileURL": ""
-            },
-            {
-                "fileId": 204,
-                "entityId": 8965,
-                "name": "TimeZoneShit.PNG",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "image/png",
-                "fileURL": ""
             }];
             procedure.revision = 1;
             procedure.roles = this.roleGet().slice(0, 5);
@@ -551,7 +524,7 @@ export class MockServices {
             procedureStep.predecessorStepId = undefined;
             procedureStep.printOrder = 1;
             procedureStep.procedureId = 1; // TODO: This might change
-            procedureStep.referenceFiles = this.getReferennceFiles();
+            procedureStep.referenceFiles = this.getReferennceFiles().slice(0, 3);
             procedureStep.replacementCost = 5.00;
             procedureStep.roles = this.roleGet().slice(0, 3);
             procedureStep.text = 'Loreum Ipsum';
@@ -573,7 +546,7 @@ export class MockServices {
                 procedureStep.predecessorStepId = undefined;
                 procedureStep.printOrder = 1;
                 procedureStep.procedureId = 1; // TODO: This might change
-                procedureStep.referenceFiles = this.getReferennceFiles();
+                procedureStep.referenceFiles = this.getReferennceFiles().slice(0, 3);
                 procedureStep.replacementCost = 5.00;
                 procedureStep.roles = this.roleGet().slice(0, 3);
                 procedureStep.text = 'Loreum Ipsum' + index;
