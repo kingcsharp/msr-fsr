@@ -3,7 +3,7 @@ import { Globals } from '../../../models/lib/globals';
 import {
   WorkflowService, WorkflowModel, WorkflowStageMapModel, WorkflowActivityMapModel,
   AuditActionResultOfWorkflowModel, CreateWorkflowRequest, UpdateWorkflowRequest, WorkflowActivityModel,
-  WorkflowGroupService, WorkflowStageService,EnumMenuItem
+  WorkflowGroupService, WorkflowStageService, EnumMenuItem
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -14,6 +14,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, forkJoin, of } from 'rxjs';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
 declare let jQuery: any;
 
 @Component({
@@ -95,6 +96,7 @@ export class ApprovalWorkflowComponent implements OnInit {
     const ctrl = this;
     return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        // ctrl.allStages = response.object;
         response.object.map((x) => {
           ctrl.allStages.push({ label: x.name, value: x.id });
         });
@@ -194,7 +196,7 @@ export class ApprovalWorkflowComponent implements OnInit {
       ret.isActive = true;
       return ret;
     } else {
-      return workflow;
+      return copyObj(workflow);
     }
   }
 

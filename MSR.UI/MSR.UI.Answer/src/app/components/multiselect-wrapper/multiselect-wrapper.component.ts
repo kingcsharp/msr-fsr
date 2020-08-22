@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../models/lib/Utils';
 
 @Component({
   selector: 'multiselect-wrapper',
@@ -42,7 +41,7 @@ export class MultiselectWrapperComponent implements OnInit {
       filter.forEach(fElement => {
         value.forEach(vElement => {
           if (ctrl.isOldFilter) {
-            if(fElement === vElement[ctrl.filterProp]){
+            if (fElement === vElement[ctrl.filterProp]) {
               found = true;
               return;
             }
