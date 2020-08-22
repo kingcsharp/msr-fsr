@@ -46,16 +46,21 @@ export class GridOptionsComponent implements OnInit {
       return { id: elem.id, name: elem.label, visible: elem.visible };
     });
 
-    this.viewToSave = new ViewSaved({
-      version: this.gridVersion, isDefault: false, gridId: this.gridStorageId
-    });
+    this.viewToSave = this.getNewView();
 
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
+  }
+
+  getNewView() {
+    return new ViewSaved({
+      version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, viewName: ''
+    });
   }
 
   onClick(event) {
     if (!this._eref.nativeElement.contains(event.target)) {
       this.columnDropdown = false;
+      this.viewToSave = this.getNewView();
     }
   }
 
@@ -192,6 +197,7 @@ export class GridOptionsComponent implements OnInit {
     Object.assign(savedView, this.viewToSave);
     this.cg.addView(savedView);
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
+    this.viewToSave = this.getNewView();
   }
 
   public stopEvent(event) {
