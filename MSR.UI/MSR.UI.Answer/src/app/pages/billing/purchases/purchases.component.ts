@@ -19,6 +19,8 @@ export class PurchasesComponent implements OnInit {
   gridSettings: ColumnsSaved[];
   gridVersion: string;
   data: any;
+  currentPurchase: PurchaseModel;
+  display: boolean =  false;
   purchaseOrderStatus: any[] = [
     {
       label: 'All',
@@ -52,6 +54,7 @@ export class PurchasesComponent implements OnInit {
       new ColumnsSaved({ id: 'createdDate', label: 'Created Date', visible: true })
     ];
     this.getPurchases();
+    this.currentPurchase = null;
     this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
   }
 
@@ -65,8 +68,28 @@ export class PurchasesComponent implements OnInit {
 
   onClickViewPurchase(purchase: PurchaseModel) {
     //TODO: view purchase detail
+
+    this.currentPurchase = purchase;
+    console.log('____', this.currentPurchase);
+    this.display = true;
   }
 
+  onClickCloseDialog() {
+    this.display = false;
+    this.currentPurchase = null;
+  }
+}
+
+interface PurchaseItemModel {
+  id: number;
+  description: string;
+  account: string;
+  custLine: string;
+  materialTransferTicketNo: string;
+  dueDate: Date;
+  qty: number;
+  unitPrice: number;
+  extPrice: number;
 }
 
 interface IPurchaseModel {
@@ -76,6 +99,7 @@ interface IPurchaseModel {
   purchaseStatus: string;
   createdDate: Date;
   approvalStatus: string;
+  purchaseItems: PurchaseItemModel[];
 }
 
 class PurchaseModel implements IPurchaseModel {
@@ -85,6 +109,7 @@ class PurchaseModel implements IPurchaseModel {
   purchaseStatus: string;
   createdDate: Date;
   approvalStatus: string;
+  purchaseItems: PurchaseItemModel[];
 
 
   constructor(data?: IPurchaseModel) {
@@ -105,7 +130,20 @@ const demoData = [
     orderDescription: 'refcustponum1223334444',
     createdDate: new Date(),
     purchaseStatus: 'All',
-    approvalStatus: 'approved'
+    approvalStatus: 'approved',
+    purchaseItems: [
+      {
+        id: 12301,
+        description: 'description',
+        account: 'account',
+        custLine: 'line',
+        materialTransferTicketNo: '12301',
+        dueDate: new Date(),
+        qty: 1,
+        unitPrice: 123,
+        extPrice: 123,
+      }
+    ]
   }),
   new PurchaseModel({
     id: 516482,
@@ -113,6 +151,19 @@ const demoData = [
     orderDescription: 'refcustponum1223334444',
     createdDate: new Date(),
     purchaseStatus: 'All',
-    approvalStatus: 'approved'
+    approvalStatus: 'approved',
+    purchaseItems: [
+      {
+        id: 12301,
+        description: 'description',
+        account: 'account',
+        custLine: 'line',
+        materialTransferTicketNo: '12301',
+        dueDate: new Date(),
+        qty: 1,
+        unitPrice: 123,
+        extPrice: 123,
+      }
+    ]
   })
 ]

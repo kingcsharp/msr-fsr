@@ -183,3 +183,134 @@
   </p-table>
   </widget>
 </div>
+<p-dialog
+  header="View Purchase Detail"
+  [(visible)]="display"
+  [appendTo]="'body'"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '80vw'}"
+  data-cy="purchase-detail-modal"
+>
+
+
+  <h2 class="page-title my-4 px-3">
+    Purchase Items
+  </h2>
+
+  <widget>
+    <table *ngIf="currentPurchase" class="table table-bordered">
+      <tbody>
+        <tr>
+          <th>Purchase Item Id</th>
+          <th>Description</th>
+          <th>Account</th>
+          <th>Cust Line</th>
+          <th>Material Transfer #</th>
+          <th>Due Date</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Ext Price</th>
+        </tr>
+
+        <tr *ngFor="let purchaseItem of currentPurchase.purchaseItems; index as i">
+          <td>
+            <input
+              [value]="purchaseItem.id"
+              class="form-control input-transparent"
+              readonly
+              type="text"
+            >
+          </td>
+          <td>
+            <input
+              [value]="purchaseItem.description"
+              class="form-control input-transparent"
+              readonly
+              type="text"
+            >
+          </td>
+          <td>
+            <input
+              [value]="purchaseItem.account"
+              class="form-control input-transparent"
+              readonly
+              type="text"
+            >
+          </td>
+          <td>
+            <input
+              [value]="purchaseItem.custLine"
+              class="form-control input-transparent"
+              readonly
+              type="text"
+            >
+          </td>
+          <td>
+            <input
+              [value]="purchaseItem.materialTransferTicketNo"
+              class="form-control input-transparent"
+              readonly
+              type="text"
+            >
+          </td>
+          <td>
+            <div class="form-group row mx-0">
+              <p-calendar
+                [(ngModel)]="purchaseItem.dueDate"
+                name="purchaseItem[{{i}}].DUE_DATE"
+                showIcon="true"
+                styleClass="input-group input-group-transparent"
+                inputStyleClass="form-control input-transparent"
+              >
+              </p-calendar>
+            </div>
+          </td>
+          <td>
+            <input
+              [value]="purchaseItem.qty"
+              class="form-control input-transparent"
+              readonly
+              type="text"
+            >
+          </td>
+          <td>
+            <div class="input-group input-group-transparent">
+              <span class="input-group-addon bg-secondary">$</span>
+              <input
+                [value]="purchaseItem.unitPrice"
+                class="form-control input-transparent"
+                readonly
+                type="text"
+              >
+            </div>
+          </td>
+          <td>
+            <div class="input-group input-group-transparent">
+              <span class="input-group-addon bg-secondary">$</span>
+              <input
+                [value]="purchaseItem.extPrice"
+                class="form-control input-transparent"
+                readonly
+                type="text"
+              >
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </widget>
+
+  <p-footer>
+    <div class="pull-right">
+      <button
+        type="button"
+        (click)="onClickCloseDialog()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+      >
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
