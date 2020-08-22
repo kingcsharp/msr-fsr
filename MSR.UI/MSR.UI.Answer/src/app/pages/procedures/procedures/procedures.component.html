@@ -86,6 +86,8 @@
                                 [queryParams]="{id: model.id}"></i>
                             <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Procedure Type"
                                 data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
+                            <i class="fal fa-eye pointer" tooltip="View Procedure Summary and Steps"
+                                [routerLink]="['../procedure-view']" [queryParams]="{id: model.id}" data-cy="view-button"></i>
                         </td>
                     </tr>
                 </ng-template>

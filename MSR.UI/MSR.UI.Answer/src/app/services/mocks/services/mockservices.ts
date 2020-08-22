@@ -10,6 +10,7 @@ import { Role } from '../models/role';
 import { Monitor } from '../models/monitor';
 import { CreateProcedureRequest } from '../models/createProcedureRequest';
 import { UpdateProcedureRequest } from '../models/updateProcedureRequest';
+import { ProcedureStep } from '../models/procedureStep';
 
 @Injectable()
 export class MockServices {
@@ -286,19 +287,19 @@ export class MockServices {
 
     }
 
-    procedurePost(createProcedureRequest: CreateProcedureRequest){
+    procedurePost(createProcedureRequest: CreateProcedureRequest) {
 
         alert("Success create placeholder for Web API");
 
     }
 
-    procedurePatch(updateProcedureRequest: UpdateProcedureRequest){
+    procedurePatch(updateProcedureRequest: UpdateProcedureRequest) {
 
         alert("Success update placeholder for Web API");
 
     }
 
-    procedureDelete(id: number){
+    procedureDelete(id: number) {
 
         alert("Success delete placeholder for Web API with id: " + id);
 
@@ -536,5 +537,134 @@ export class MockServices {
         }
 
         return monitors;
+    }
+
+    procedureStepGet(id: number | null | undefined) {
+
+        let procedureSteps = new Array<ProcedureStep>()
+
+        if (id !== null && id !== undefined) {
+
+            let procedureStep = new ProcedureStep();
+            procedureStep.id = id;
+            procedureStep.laborTime = 32;
+            procedureStep.predecessorStepId = undefined;
+            procedureStep.printOrder = 1;
+            procedureStep.procedureId = 1; // TODO: This might change
+            procedureStep.referenceFiles = this.getReferennceFiles();
+            procedureStep.replacementCost = 5.00;
+            procedureStep.roles = this.roleGet().slice(0, 3);
+            procedureStep.text = 'Loreum Ipsum';
+            procedureStep.title = 'Sample Title for Procedure';
+            procedureStep.usefulLife = 10;
+            procedureStep.utilizationTime = 8;
+            procedureStep.duration = 10;
+            procedureStep.durationType = 'SYS_MINUTES';
+            procedureStep.equipmentTime = 3;
+            procedureSteps.push(procedureStep);
+
+        } else {
+
+            for (let index = 1; index < 75; index++) {
+
+                let procedureStep = new ProcedureStep();
+                procedureStep.id = index;
+                procedureStep.laborTime = 32 + index;
+                procedureStep.predecessorStepId = undefined;
+                procedureStep.printOrder = 1;
+                procedureStep.procedureId = 1; // TODO: This might change
+                procedureStep.referenceFiles = this.getReferennceFiles();
+                procedureStep.replacementCost = 5.00;
+                procedureStep.roles = this.roleGet().slice(0, 3);
+                procedureStep.text = 'Loreum Ipsum' + index;
+                procedureStep.title = 'Sample Title for Procedure' + index;
+                procedureStep.usefulLife = 10 + index;
+                procedureStep.utilizationTime = 8 + index;
+                procedureStep.duration = index;
+                procedureStep.durationType = 'SYS_MINUTES';
+                procedureStep.equipmentTime = index;
+
+                procedureSteps.push(procedureStep);
+
+            }
+
+        }
+
+        return procedureSteps;
+    }
+
+    getReferennceFiles() {
+        return [{
+            "fileId": 197,
+            "entityId": 8965,
+            "name": "aaa.docx",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "fileURL": ""
+        },
+        {
+            "fileId": 198,
+            "entityId": 8965,
+            "name": "lavarropasS.pdf",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "application/pdf",
+            "fileURL": ""
+        },
+        {
+            "fileId": 199,
+            "entityId": 8965,
+            "name": "xlsAlecTest.xlsx",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "fileURL": ""
+        },
+        {
+            "fileId": 200,
+            "entityId": 8965,
+            "name": "alec.jpg",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "image/jpeg",
+            "fileURL": ""
+        },
+        {
+            "fileId": 201,
+            "entityId": 8965,
+            "name": "cmh.PNG",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "image/png",
+            "fileURL": ""
+        },
+        {
+            "fileId": 202,
+            "entityId": 8965,
+            "name": "casos practico.pptx",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "fileURL": ""
+        },
+        {
+            "fileId": 203,
+            "entityId": 8965,
+            "name": "aa.docx",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "fileURL": ""
+        },
+        {
+            "fileId": 204,
+            "entityId": 8965,
+            "name": "TimeZoneShit.PNG",
+            "base64String": null,
+            "fileContents": null,
+            "contentType": "image/png",
+            "fileURL": ""
+        }];
     }
 }
