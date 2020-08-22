@@ -77,7 +77,13 @@ export class ProcedureComponent implements OnInit {
   save(){
 
     let createProcedureRequest = new CreateProcedureRequest();
-
+    createProcedureRequest.comments = this.procedure.comment;
+    createProcedureRequest.duration = this.procedure.duration;
+    createProcedureRequest.durationType = this.procedure.durationType;
+    createProcedureRequest.name = this.procedure.name;
+    createProcedureRequest.procedureTypeId = this.selectedProcedureType !== undefined ? undefined : Number(this.selectedProcedureType);
+    createProcedureRequest.referenceFiles = this.procedure.referenceFiles;
+    createProcedureRequest.roleIds = this.selectedRoles.map(s => s);
     this.mockServices.procedurePost(createProcedureRequest);
     this.router.navigate(['app/procedures/procedures']);
 
@@ -86,8 +92,7 @@ export class ProcedureComponent implements OnInit {
   update(){
 
     let updateProcedureRequest = new UpdateProcedureRequest();
-
-
+    // TODO: Add with Edit Procedure
     this.mockServices.procedurePatch(updateProcedureRequest);
     this.router.navigate(['app/procedures/procedures']);
 
