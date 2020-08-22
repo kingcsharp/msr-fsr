@@ -13,12 +13,12 @@ import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
-  selector: 'app-procedure',
-  templateUrl: './procedure.component.html',
-  styleUrls: ['./procedure.component.scss'],
+  selector: 'app-procedure-create',
+  templateUrl: './procedure-create.component.html',
+  styleUrls: ['./procedure-create.component.scss'],
   providers: [MockServices]
 })
-export class ProcedureComponent implements OnInit {
+export class ProcedureCreateComponent implements OnInit {
 
   procedure: Procedure = new Procedure();
   availableProcedureTypes: Array<SelectItem>;
@@ -42,38 +42,10 @@ export class ProcedureComponent implements OnInit {
 
       this.availableProcedureTypes = this.mockServices.procedureTypesGet(null).map(s => ({ label: s.name, value: s.id }));
 
-      this.setProcedureForEditOrCreate();
-
-    }))
-
-  }
-
-  setProcedureForEditOrCreate() {
-
-    this.route.queryParams.subscribe(params => {
-
-      this.procedure.id = params['id'] == null ? 0 : Number(params['id']);
-
-      if (this.procedure.id !== 0) {
-
-        let procedure = this.mockServices.procedureGet(this.procedure.id);
-
-        this.procedure = procedure[0];
-        this.selectedProcedureType = this.availableProcedureTypes.find(s => s.value === this.procedure.procedureType.id).value;
-
-        this.procedure.roles.forEach(role => {
-
-          this.selectedRoles.push(this.availableRoles.find(s => s.value === role.id).value);
-
-        });
-      } else {
-
-        this.procedure.comment = '';
+      this.procedure.comment = '';
         this.procedure.referenceFiles = [];
 
-      }
-
-    });
+    }))
 
   }
 
@@ -84,19 +56,10 @@ export class ProcedureComponent implements OnInit {
     createProcedureRequest.duration = this.procedure.duration;
     createProcedureRequest.durationType = this.procedure.durationType;
     createProcedureRequest.name = this.procedure.name;
-    createProcedureRequest.procedureTypeId = this.selectedProcedureType !== undefined ? undefined : Number(this.selectedProcedureType);
+    createProcedureRequest.procedureTypeId = this.selectedProcedureType === undefined ? undefined : Number(this.selectedProcedureType);
     createProcedureRequest.referenceFiles = this.procedure.referenceFiles;
     createProcedureRequest.roleIds = this.selectedRoles.map(s => s);
     this.mockServices.procedurePost(createProcedureRequest);
-    this.router.navigate(['app/procedures/procedures']);
-
-  }
-
-  update(){
-
-    let updateProcedureRequest = new UpdateProcedureRequest();
-    // TODO: Add with Edit Procedure
-    this.mockServices.procedurePatch(updateProcedureRequest);
     this.router.navigate(['app/procedures/procedures']);
 
   }
