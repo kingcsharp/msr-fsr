@@ -46,7 +46,7 @@ namespace MSR.Answer.API.Filters
 
             if (menuItemPrivileges is null)
             {
-                context.Result = new BadRequestResult();
+                context.Result = new UnauthorizedResult();
                 return;
             }
 
