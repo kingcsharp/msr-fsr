@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { QuotesComponent } from './quotes/quotes.component';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
@@ -27,10 +26,11 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { PurchaseOrderCreateComponent } from './purchase-order-create/purchase-order-create.component';
 import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import { QuotesProductsComponent } from './quotes-products/quotes-products.component';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
-  { path: 'products', component:QuotesComponent, pathMatch: 'full' },
+  { path: 'products', component:QuotesProductsComponent, pathMatch: 'full' },
   { path: 'quote-create', component: QuoteCreateComponent, pathMatch: 'full'},
   { path: 'product-edit', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'},
@@ -41,12 +41,12 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    QuotesComponent,
     QuoteCreateComponent,
     ProductDefinitionComponent,
     PurchaseOrdersComponent,
     PurchaseOrderCreateComponent,
     PurchaseCreateComponent,
+    QuotesProductsComponent,
   ],
   imports: [
     CommonModule,

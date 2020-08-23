@@ -8,11 +8,11 @@ import { AllowedActions } from '../../../models/lib/AllowedActions';
 import { EnumMenuItem } from '../../../services/api.client.generated';
 
 @Component({
-  selector: 'app-quotes',
-  templateUrl: './quotes.component.html',
-  styleUrls: ['./quotes.component.scss']
+  selector: 'app-quotes-products',
+  templateUrl: './quotes-products.component.html',
+  styleUrls: ['./quotes-products.component.scss']
 })
-export class QuotesComponent implements OnInit {
+export class QuotesProductsComponent implements OnInit {
   privileges = EnumPrivilege;
   menuItems = EnumMenuItem;
   defaultView: ViewSaved;
