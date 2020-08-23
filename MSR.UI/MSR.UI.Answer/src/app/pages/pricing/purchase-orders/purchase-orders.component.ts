@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import {ConfirmationService} from 'primeng/api';
+import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { EnumMenuItem } from '../../../services/api.client.generated';
 
 declare let jQuery: any;
 
@@ -24,9 +26,8 @@ export class PurchaseOrdersComponent implements OnInit {
   gridSettings: ColumnsSaved[];
   gridVersion: string;
   data: any;
-  canCreate: boolean = false;
-  canDelete: boolean = false;
-  canEdit: boolean = false;
+  purchasePrivileges: AllowedActions;
+  purchaseOrderPrivileges: AllowedActions;
   purchaseOrderStatus: any[];
   display: boolean = false;
   currentPO: PurchaseOrder;
@@ -60,19 +61,14 @@ export class PurchaseOrdersComponent implements OnInit {
       new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true })
     ];
-    this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDelete = this.hasPrivilege(this.privileges.CanDelete);
-    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
+    this.purchasePrivileges = this.globals.getEnumPrivileges(this.menuItems.Purchases);
+    this.purchaseOrderPrivileges = this.globals.getEnumPrivileges(this.menuItems.PurchaseOrders);
     this.data = [];
     this.getPurchaseOrders();
     this.purchaseOrderStatus = purchaseOrderStatus;
     this.getCustomers();
     this.currentPO = new PurchaseOrder();
     this.getProducts();
-  }
-
-  hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.QuotesProducts, privName);
   }
 
   getPurchaseOrders() {

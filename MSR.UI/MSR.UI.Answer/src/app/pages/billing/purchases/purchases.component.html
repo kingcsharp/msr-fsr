@@ -22,7 +22,7 @@
     <ng-template pTemplate="caption">
       <div class="text-right">
         <button
-          *ngIf="canCreate"
+          *ngIf="purchaseOrderPrivileges.canCreate"
           [routerLink]="['../purchase-create']"
           class="btn btn-success width-100 mb-xs sm-mrg"
           role="button"
@@ -166,6 +166,7 @@
         </td>
         <td>
           <i
+            *ngIf="purchasePrivileges.canRead"
             class="fa fa-eye pointer"
             tooltip="View Details"
             data-cy="purchaseRow"

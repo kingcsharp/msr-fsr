@@ -20,14 +20,14 @@
 	>
 		<ng-template pTemplate="caption">
 			<div class="text-right">
-				<button *ngIf="canCreate"
+				<button *ngIf="userPrivileges.canCreate"
           class="btn btn-success width-100 mb-xs sm-mrg"
 					role="button"
           data-cy="add-button"
           [routerLink]="['../quote-create']"
 				>+ Add</button>
 
-        <csv-import [showButton]="canCreate" [menuItem]="menuItems.QuotesProducts" title="Import Sub Parts" (onUpload)="onClickImportQuote($event)"></csv-import>
+        <csv-import [showButton]="userPrivileges.canCreate" [menuItem]="menuItems.QuotesProducts" title="Import Sub Parts" (onUpload)="onClickImportQuote($event)"></csv-import>
 
 				<grid-options
 					[(defaultColumns)]="gridSettings"
@@ -219,10 +219,10 @@
           {{quoteproductmodel.lastUpdatedBy}}
         </td>
         <td>
-					<i *ngIf="!quoteproductmodel.isProduct && canCreate" class="far fa-play pointer" tooltip="Start Quote" data-cy="startRow" (click)="onClickStartQuote(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
-					<i *ngIf="!quoteproductmodel.isProduct && canDelete" class="far fa-trash-alt pointer" tooltip="Delete Quote" data-cy="deleteRow" (click)="onClickDeleteQuote(quoteproductmodel.id)"></i>
-          <i *ngIf="quoteproductmodel.isProduct && canEdit" class="fa fa-edit pointer" tooltip="Edit Product" data-cy="editRow" (click)="onClickEditProduct(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
-          <i *ngIf="quoteproductmodel.isProduct && canView" class="fa fa-eye pointer" tooltip="View Product" data-cy="viewRow" (click)="onClickViewProduct(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
+					<i *ngIf="!quoteproductmodel.isProduct && userPrivileges.canCreate" class="far fa-play pointer" tooltip="Start Quote" data-cy="startRow" (click)="onClickStartQuote(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
+					<i *ngIf="!quoteproductmodel.isProduct && userPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete Quote" data-cy="deleteRow" (click)="onClickDeleteQuote(quoteproductmodel.id)"></i>
+          <i *ngIf="quoteproductmodel.isProduct && userPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit Product" data-cy="editRow" (click)="onClickEditProduct(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
+          <i *ngIf="quoteproductmodel.isProduct && userPrivileges.canRead" class="fa fa-eye pointer" tooltip="View Product" data-cy="viewRow" (click)="onClickViewProduct(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
         </td>
 			</tr>
 		</ng-template>

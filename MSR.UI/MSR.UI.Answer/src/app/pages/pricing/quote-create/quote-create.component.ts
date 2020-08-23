@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
+import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { EnumMenuItem } from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-quote-create',
@@ -8,8 +10,6 @@ import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
   styleUrls: ['./quote-create.component.scss']
 })
 export class QuoteCreateComponent implements OnInit {
-  privileges = EnumPrivilege;
-  menuItems = EnumMenuItem;
   data: QuoteModel;
 
   constructor(

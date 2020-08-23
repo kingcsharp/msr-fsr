@@ -1,9 +1,11 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
+import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { EnumMenuItem } from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-purchases',
@@ -11,7 +13,6 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
   styleUrls: ['./purchases.component.scss']
 })
 export class PurchasesComponent implements OnInit {
-
   privileges = EnumPrivilege;
   menuItems = EnumMenuItem;
   defaultView: ViewSaved;
@@ -20,6 +21,8 @@ export class PurchasesComponent implements OnInit {
   gridVersion: string;
   data: any;
   currentPurchase: PurchaseModel;
+  purchasePrivileges: AllowedActions;
+  purchaseOrderPrivileges: AllowedActions;
   display: boolean =  false;
   purchaseOrderStatus: any[] = [
     {
@@ -35,7 +38,6 @@ export class PurchasesComponent implements OnInit {
       value: 'Closed'
     }
   ];
-  canCreate: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -53,17 +55,14 @@ export class PurchasesComponent implements OnInit {
       new ColumnsSaved({ id: 'purchaseStatus', label: 'Purchase Status', visible: true }),
       new ColumnsSaved({ id: 'createdDate', label: 'Created Date', visible: true })
     ];
+    this.purchasePrivileges = this.globals.getEnumPrivileges(this.menuItems.Purchases);
+    this.purchaseOrderPrivileges = this.globals.getEnumPrivileges(this.menuItems.PurchaseOrders);
     this.getPurchases();
     this.currentPurchase = null;
-    this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
   }
 
   getPurchases() {
     this.data = demoData;
-  }
-
-  hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.QuotesProducts, privName);
   }
 
   onClickViewPurchase(purchase: PurchaseModel) {

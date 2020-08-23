@@ -9,7 +9,6 @@ import {
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';

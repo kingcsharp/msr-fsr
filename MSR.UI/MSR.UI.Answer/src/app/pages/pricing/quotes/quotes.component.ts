@@ -1,9 +1,11 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
+import { AllowedActions } from '../../../models/lib/AllowedActions';
+import { EnumMenuItem } from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-quotes',
@@ -18,10 +20,7 @@ export class QuotesComponent implements OnInit {
   gridSettings: ColumnsSaved[];
   gridVersion: string;
   data: any;
-  canCreate: boolean = false;
-  canDelete: boolean = false;
-  canEdit: boolean = false;
-  canView: boolean = false;
+  userPrivileges: AllowedActions;
 
   constructor(
     public globals: Globals,
@@ -49,17 +48,10 @@ export class QuotesComponent implements OnInit {
       new ColumnsSaved({ id: 'lastUpdateOn', label: 'LastUpdateOn', visible: false }),
       new ColumnsSaved({ id: 'lastUpdatedBy', label: 'LastUpdated By', visible: false })
     ];
-    this.canCreate = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDelete = this.hasPrivilege(this.privileges.CanDelete);
-    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
-    this.canView = this.hasPrivilege(this.privileges.CanRead);
+    this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.QuotesProducts);
 
     this.data = []
     this.getQuotesProducts();
-  }
-
-  hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.QuotesProducts, privName);
   }
 
   getQuotesProducts() {

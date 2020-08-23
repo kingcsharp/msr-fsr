@@ -21,7 +21,7 @@
     <ng-template pTemplate="caption">
       <div class="text-right">
         <button
-          *ngIf="canCreate"
+          *ngIf="purchaseOrderPrivileges.canCreate"
           [routerLink]="['../purchaseorder-create']"
           class="btn btn-success width-100 mb-xs sm-mrg"
           role="button"
@@ -348,7 +348,7 @@
         </td>
         <td>
           <i
-            *ngIf="canCreate"
+            *ngIf="purchasePrivileges.canCreate"
             class="fa fa-dollar pointer"
             tooltip="Purchase"
             data-cy="purchaseRow"
@@ -356,7 +356,7 @@
           >
           </i>
           <i
-            *ngIf="canEdit && purcahseordermodel.status !== 'Closed'"
+            *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-edit pointer"
             tooltip="Edit"
             data-cy="editRow"
@@ -364,7 +364,7 @@
           >
           </i>
           <i
-            *ngIf="canEdit && purcahseordermodel.status !== 'Closed'"
+            *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-close pointer"
             tooltip="Close"
             data-cy="closeRow"
@@ -372,7 +372,7 @@
           >
           </i>
           <i
-            *ngIf="canDelete"
+            *ngIf="purchaseOrderPrivileges.canDelete"
             class="far fa-trash-alt pointer"
             tooltip="Delete"
             data-cy="deleteRow"
