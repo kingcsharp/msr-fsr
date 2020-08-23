@@ -27,7 +27,13 @@
           [routerLink]="['../quote-create']"
 				>+ Add</button>
 
-        <csv-import [showButton]="userPrivileges.canCreate" [menuItem]="menuItems.QuotesProducts" title="Import Sub Parts" (onUpload)="onClickImportQuote($event)"></csv-import>
+        <csv-import
+          [showButton]="userPrivileges.canCreate"
+          [menuItem]="menuItems.QuotesProducts"
+          title="Import Quotes"
+          (onUpload)="onClickImportQuote($event)"
+          data-cy="import-button"
+        ></csv-import>
 
 				<grid-options
 					[(defaultColumns)]="gridSettings"
@@ -46,126 +52,258 @@
 					[hidden]="!col.visible"
 					[pSortableColumn]="col.id"
 					data-cy="usertable-header"
-				>{{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+        >
+          {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
 				</th>
 				<th data-cy="usertable-header">Actions</th>
 				<th style="display: none;"></th>
 			</tr>
 			<tr>
         <th [hidden]="!cg.isVisibleCol('submittedDate',gridSettings)">
-          <div class="position-relative" tooltip="Search by Submitted Date">
-            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'submittedDate'" [datatable]="dt">
+          <div
+            class="position-relative"
+            tooltip="Search by Submitted Date"
+          >
+            <pcalendar-wrapper
+              [gridStorageId]="gridStorageId"
+              [filterId]="'submittedDate'"
+              [datatable]="dt"
+            >
             </pcalendar-wrapper>
           </div>
         </th>
 				<th [hidden]="!cg.isVisibleCol('company',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Company" data-cy="searchbypartnr-grid"
+            <input
+              pInputText
+              type="text"
+              tooltip="Search by Company"
+              data-cy="searchbycompany-grid"
               (input)="dt.filter($event.target.value, 'company', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['company']?.value">
-            <i *ngIf="dt.filters['company']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'company')"></i>
+              [value]="dt.filters['company']?.value"
+            >
+              <i
+                *ngIf="dt.filters['company']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'company')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('submittedBy',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Submitted By" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'submittedBy', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['submittedBy']?.value">
-            <i *ngIf="dt.filters['submittedBy']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'submittedBy')"></i>
+            <input
+              pInputText type="text"
+              tooltip="Search by Submitted By"
+              data-cy="searchbysubmittedby-grid"
+              (input)="dt.filter($event.target.value, 'submittedBy', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['submittedBy']?.value"
+            >
+              <i
+                *ngIf="dt.filters['submittedBy']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'submittedBy')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('partKitNo',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Part/Kit Number" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'partKitNo', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['partKitNo']?.value">
-            <i *ngIf="dt.filters['partKitNo']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'partKitNo')"></i>
+            <input
+              pInputText type="text"
+              tooltip="Search by Part/Kit Number" data-cy="searchbypartkitno-grid"
+              (input)="dt.filter($event.target.value, 'partKitNo', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['partKitNo']?.value"
+            >
+              <i
+                *ngIf="dt.filters['partKitNo']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'partKitNo')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('procedureName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Procedure Name" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'procedureName', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['procedureName']?.value">
-            <i *ngIf="dt.filters['procedureName']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'procedureName')"></i>
+            <input
+              pInputText type="text"
+              tooltip="Search by Procedure Name" data-cy="searchbyprocedure-grid"
+              (input)="dt.filter($event.target.value, 'procedureName', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['procedureName']?.value"
+            >
+              <i
+                *ngIf="dt.filters['procedureName']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'procedureName')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('productName',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Product Name" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'productName', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['productName']?.value">
-            <i *ngIf="dt.filters['productName']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'productName')"></i>
+            <input
+              pInputText type="text"
+              tooltip="Search by Product Name"
+              data-cy="searchbyproduct-grid"
+              (input)="dt.filter($event.target.value, 'productName', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['productName']?.value"
+            >
+              <i
+                *ngIf="dt.filters['productName']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'productName')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('representative',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Representative" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'representative', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['representative']?.value">
-            <i *ngIf="dt.filters['representative']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'representative')"></i>
+            <input
+              pInputText type="text"
+              tooltip="Search by Representative"
+              data-cy="searchbyrepresentative-grid"
+              (input)="dt.filter($event.target.value, 'representative', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['representative']?.value"
+            >
+              <i
+                *ngIf="dt.filters['representative']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'representative')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('revision',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="number" tooltip="Search by Revision" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'revision', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['revision']?.value">
-            <i *ngIf="dt.filters['revision']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'revision')"></i>
+            <input
+              pInputText type="number"
+              tooltip="Search by Revision"
+              data-cy="searchbyrevision-grid"
+              (input)="dt.filter($event.target.value, 'revision', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['revision']?.value"
+            >
+              <i
+                *ngIf="dt.filters['revision']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'revision')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('equipmentCost',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="number" tooltip="Search by Equipment Cost" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'equipmentCost', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['equipmentCost']?.value">
-            <i *ngIf="dt.filters['equipmentCost']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'equipmentCost')"></i>
+            <input
+              pInputText type="number"
+              tooltip="Search by Equipment Cost" data-cy="searchbyequipmentcost-grid"
+              (input)="dt.filter($event.target.value, 'equipmentCost', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['equipmentCost']?.value"
+            >
+              <i
+                *ngIf="dt.filters['equipmentCost']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'equipmentCost')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('materialCost',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="number" tooltip="Search by Material Cost" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'materialCost', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['materialCost']?.value">
-            <i *ngIf="dt.filters['materialCost']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'materialCost')"></i>
+            <input
+              pInputText type="number"
+              tooltip="Search by Material Cost"
+              data-cy="searchbymaterialcost-grid"
+              (input)="dt.filter($event.target.value, 'materialCost', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['materialCost']?.value"
+            >
+              <i
+                *ngIf="dt.filters['materialCost']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'materialCost')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('salesTax',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="number" tooltip="Search by Sales Tax" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'salesTax', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['salesTax']?.value">
-            <i *ngIf="dt.filters['salesTax']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'salesTax')"></i>
+            <input
+              pInputText
+              type="number"
+              tooltip="Search by Sales Tax"
+              data-cy="searchbysalestax-grid"
+              (input)="dt.filter($event.target.value, 'salesTax', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['salesTax']?.value"
+            >
+              <i
+                *ngIf="dt.filters['salesTax']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'salesTax')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('totalPrice',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by Total Price" data-cy="searchbypartnr-grid"
+            <input
+              pInputText
+              type="text"
+              tooltip="Search by Total Price"
+              data-cy="searchbytotalprice-grid"
               (input)="dt.filter($event.target.value, 'totalPrice', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['totalPrice']?.value">
-            <i *ngIf="dt.filters['totalPrice']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'totalPrice')"></i>
+              [value]="dt.filters['totalPrice']?.value"
+            >
+              <i
+                *ngIf="dt.filters['totalPrice']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'totalPrice')"
+              ></i>
           </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('cycleTime',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="number" tooltip="Search by Cycle Time" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'cycleTime', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['cycleTime']?.value">
-            <i *ngIf="dt.filters['cycleTime']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'cycleTime')"></i>
+            <input
+              pInputText
+              type="number"
+              tooltip="Search by Cycle Time"
+              data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'cycleTime', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['cycleTime']?.value"
+            >
+              <i
+                *ngIf="dt.filters['cycleTime']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'cycleTime')"
+              ></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('lastUpdateOn',gridSettings)">
-          <div class="position-relative" tooltip="Search by LastUpdate On">
-            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdateOn'" [datatable]="dt">
+          <div
+            class="position-relative"
+            tooltip="Search by LastUpdate On"
+          >
+            <pcalendar-wrapper
+              [gridStorageId]="gridStorageId"
+              [filterId]="'lastUpdateOn'"
+              [datatable]="dt"
+            >
             </pcalendar-wrapper>
           </div>
         </th>
 				<th [hidden]="!cg.isVisibleCol('lastUpdatedBy',gridSettings)">
           <div class="position-relative">
-            <input pInputText type="text" tooltip="Search by LastUpdated By" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'lastUpdatedBy', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['lastUpdatedBy']?.value">
-            <i *ngIf="dt.filters['lastUpdatedBy']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'lastUpdatedBy')"></i>
+            <input
+              pInputText
+              type="text"
+              tooltip="Search by LastUpdated By"
+              data-cy="searchbylastupdatedby-grid"
+              (input)="dt.filter($event.target.value, 'lastUpdatedBy', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['lastUpdatedBy']?.value"
+            >
+              <i
+                *ngIf="dt.filters['lastUpdatedBy']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'lastUpdatedBy')"
+              ></i>
           </div>
 				</th>
 				<th></th>
@@ -198,16 +336,16 @@
           {{quoteproductmodel.revision}}
 				</td>
         <td [hidden]="!cg.isVisibleCol('equipmentCost',gridSettings)">
-          {{quoteproductmodel.equipmentCost }}
+          {{ quoteproductmodel.equipmentCost | currency}}
 				</td>
 				<td [hidden]="!cg.isVisibleCol('materialCost',gridSettings)">
-          {{quoteproductmodel.materialCost }}
+          {{ quoteproductmodel.materialCost | currency }}
 				</td>
 				<td [hidden]="!cg.isVisibleCol('salesTax', gridSettings)">
           {{quoteproductmodel.salesTax}}
 				</td>
 				<td [hidden]="!cg.isVisibleCol('totalPrice', gridSettings)">
-          {{quoteproductmodel.totalPrice}}
+          {{ quoteproductmodel.totalPrice | currency}}
 				</td>
 				<td [hidden]="!cg.isVisibleCol('cycleTime', gridSettings)">
           {{quoteproductmodel.cycleTime}}
@@ -216,13 +354,36 @@
           {{quoteproductmodel.lastUpdateOn | date :'shortDate'}}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedBy', gridSettings)">
-          {{quoteproductmodel.lastUpdatedBy}}
+          {{quoteproductmodel.lastUpdated ? quoteproductmodel.lastUpdated.userName : ''}}
         </td>
         <td>
-					<i *ngIf="!quoteproductmodel.isProduct && userPrivileges.canCreate" class="far fa-play pointer" tooltip="Start Quote" data-cy="startRow" (click)="onClickStartQuote(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
-					<i *ngIf="!quoteproductmodel.isProduct && userPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete Quote" data-cy="deleteRow" (click)="onClickDeleteQuote(quoteproductmodel.id)"></i>
-          <i *ngIf="quoteproductmodel.isProduct && userPrivileges.canEdit" class="fa fa-edit pointer" tooltip="Edit Product" data-cy="editRow" (click)="onClickEditProduct(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
-          <i *ngIf="quoteproductmodel.isProduct && userPrivileges.canRead" class="fa fa-eye pointer" tooltip="View Product" data-cy="viewRow" (click)="onClickViewProduct(quoteproductmodel.id)" [routerLink]="['../product-edit']"></i>
+          <i
+            *ngIf="!quoteproductmodel.isProduct && userPrivileges.canCreate"
+            class="far fa-play pointer"
+            tooltip="Start Quote"
+            data-cy="startRow"
+            [routerLink]="['../product-create', {id: quoteproductmodel.id}]"
+          ></i>
+          <i
+            *ngIf="!quoteproductmodel.isProduct && quoteproductmodel.isDeletable && userPrivileges.canDelete"
+            class="far fa-trash-alt pointer"
+            tooltip="Delete Quote"
+            data-cy="deleteRow"
+            (click)="onClickDeleteQuote(quoteproductmodel.id)"
+          ></i>
+          <i
+            *ngIf="quoteproductmodel.isProduct && userPrivileges.canEdit"
+            class="fa fa-edit pointer"
+            tooltip="Edit Product"
+            data-cy="editRow"
+            [routerLink]="['../product-edit', {id: quoteproductmodel.id}]"
+          ></i>
+          <i
+            *ngIf="quoteproductmodel.isProduct && userPrivileges.canRead" class="fa fa-eye pointer"
+            tooltip="View Product"
+            data-cy="viewRow"
+            [routerLink]="['../product-view', {id: quoteproductmodel.id}]"
+          ></i>
         </td>
 			</tr>
 		</ng-template>
@@ -233,3 +394,13 @@
     </ng-template>
 	</p-table>
 </widget>
+
+<p-confirmDialog
+  #cd
+  header="Confirmation"
+  icon="pi pi-exclamation-triangle"
+  acceptLabel="Yes"
+  rejectLabel="No"
+  position="top"
+>
+</p-confirmDialog>

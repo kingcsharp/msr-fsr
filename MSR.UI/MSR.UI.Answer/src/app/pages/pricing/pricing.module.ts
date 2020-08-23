@@ -32,6 +32,8 @@ export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
   { path: 'products', component:QuotesProductsComponent, pathMatch: 'full' },
   { path: 'quote-create', component: QuoteCreateComponent, pathMatch: 'full'},
+  { path: 'product-create', component: ProductDefinitionComponent, pathMatch: 'full'},
+  { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'product-edit', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'product-view', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'},
