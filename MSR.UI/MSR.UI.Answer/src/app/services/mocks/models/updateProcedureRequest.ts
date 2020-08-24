@@ -11,6 +11,7 @@
  */
 
 export class UpdateProcedureRequest { 
+    id: number;
     name: string;
     procedureTypeId?: number;
     comments?: string;

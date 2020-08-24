@@ -14,6 +14,8 @@ import { ProcedureStep } from '../models/procedureStep';
 import { CreateProcedureStepMonitorRequest } from '../models/createProcedureStepMonitorRequest';
 import { UpdateProcedureStepMonitorRequest } from '../models/updateProcedureStepMonitorRequest';
 import { ProcedureStepMonitor } from '../models/procedureStepMonitor';
+import { CreateProcedureStepRequest } from '../models/createProcedureStepRequest';
+import { UpdateProcedureStepRequest } from '../models/updateProcedureStepRequest';
 
 @Injectable()
 export class MockServices {
@@ -559,6 +561,18 @@ export class MockServices {
 
 
         return monitors;
+    }
+
+    procedureStepPost(createProcedureStepRequest: CreateProcedureStepRequest){
+        alert("Success create placeholder for Web API");
+    }
+
+    procedureStepPatch(updateProcedureStepRequest: UpdateProcedureStepRequest){
+        alert("Success update placeholder for Web API");
+    }
+
+    procedureStepDelete(id: number | null | undefined){
+        alert("Success delete placeholder for Web API with id: " + id);
     }
 
     procedureStepGet(id: number | null | undefined) {
