@@ -153,7 +153,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             if (invoice is null)
             {
-                throw new DomainException($"{nameof(Domain.Models.InvoiceModel)} not found with ID: {command.Id}");
+                throw new DomainException($"{nameof(Invoice)} not found with ID: {command.Id}");
             }
 
             // Clear all InvoiceItems (WorkOrders or PurscheOrders)
