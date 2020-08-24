@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    [Table(nameof(Quote))]
     public class Quote : Entity
     {
         [Required]
