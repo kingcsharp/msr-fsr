@@ -63,7 +63,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ISensorService, SensorService>();
             services.AddScoped<IImportValidatorFactory, ImportValidatorFactory>();
-            services.AddScoped<S3FileHandler>();
+            services.AddTransient<S3FileHandler>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IQuoteService, QuoteService>();
 

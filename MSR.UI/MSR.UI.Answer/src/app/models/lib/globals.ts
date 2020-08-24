@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
-import { MenuItem, EnumMenuItem } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem, EnumApprovalTables } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
-import { EnumApprovalTables, EnumPrivilege } from '../../models/enums/privileges';
+import { EnumPrivilege } from '../../models/enums/privileges';
 import { AllowedActions } from './AllowedActions';
-
-
-
-
+import { Observable, Observer, BehaviorSubject, Subject } from 'rxjs';
+import { ModalData } from './ModalData';
+import { resolve } from 'dns';
 
 @Injectable()
 export class Globals {
@@ -21,11 +20,38 @@ export class Globals {
     activeMenu: MenuItem = new MenuItem();
     user;
     views: Array<ViewSaved>;
+    showApprovalModal: boolean = false;
+    comment: string;
+    showComment: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    modalData: ModalData = {
+        showModal: false,
+        comment: new Subject<string>()
+    }
 
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
         this.setActiveMenuItem(router);
         this.loader = true;
+    }
+
+    async showApprovalCommentModal(approvalEntity: any, activityType: EnumApprovalTables) {
+        if (this.hasActivityPrivilege(activityType, EnumPrivilege.CanApprove)) {
+            this.modalData.showModal = true;
+            this.modalData.comment = new Subject<string>();
+            return this.modalData.comment.asObservable().toPromise().then((comment) => {
+                if (comment === null || comment === "" || comment === undefined) {
+                    this.toastr.error('Can not save without adding a comment.');
+                    throw new Error();
+                }
+                approvalEntity.comment = comment;
+                return;
+            });
+        }
+        else {
+            return new Promise((resolve) => {
+                return resolve();
+            });
+        }
     }
 
     setActiveMenuItem(router) {
@@ -106,7 +132,7 @@ export class Globals {
         return ret;
     }
 
-    hasActivityPrivilege(activityEnumVal, privilege) {
+    hasActivityPrivilege(activityEnumVal: EnumApprovalTables, privilege) {
         const privileges = this.user.approvalPrivileges[activityEnumVal];
         if (privileges === undefined) {
             return false;

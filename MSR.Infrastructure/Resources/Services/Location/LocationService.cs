@@ -205,16 +205,9 @@ namespace MSR.Infrastructure.Resources.Services.Location
             {
                 try
                 {
-                    if (record.Id.HasValue && record.Id.Value > 0)
-                    {
-                        var ret = await UpdateLocationAsync(_mapper.Map<UpdateLocation>(record),true);
-                        locations.Add(ret);
-                    }
-                    else
-                    {
-                        var ret = await CreateLocationAsync(_mapper.Map<CreateLocation>(record), true);
-                        locations.Add(ret);
-                    }
+                    
+                    var ret = await CreateLocationAsync(_mapper.Map<CreateLocation>(record), true);
+                    locations.Add(ret);
                 }
                 catch(Exception ex)
                 {

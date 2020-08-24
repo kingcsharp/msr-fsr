@@ -7,5 +7,6 @@
         public string AWSSecretKey { get; set; }
         public string AWSURL { get; set; }
         public string HelpbucketName { get; set; }
+        public string HelpAWSURL { get; set; }
     }
 }

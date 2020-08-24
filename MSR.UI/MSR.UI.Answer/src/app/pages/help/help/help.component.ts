@@ -1,12 +1,12 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { HelpService, RoleService, Role, HelpPage } from '../../../services/api.client.generated';
+import { HelpService, RoleService, Role, HelpPage, EnumMenuItem } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({

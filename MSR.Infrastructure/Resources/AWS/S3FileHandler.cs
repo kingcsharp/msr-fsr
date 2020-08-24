@@ -47,9 +47,10 @@ namespace MSR.Infrastructure.Resources.AWS
             return $"{uniqueName}";
         }
 
-        public Task<string> UploadHelpFile(FileModel file)
+        public async Task<string> UploadHelpFile(FileModel file)
         {
-            return Upload(file.FileContents,file.ContentType, _s3Information.HelpbucketName, file.Name);
+            var fileName = await Upload(file.FileContents,file.ContentType, _s3Information.HelpbucketName, file.Name);
+            return $"{_s3Information.HelpAWSURL}{fileName}";
         }
 
         public string GetURL(string key, int expiresInSeconds)
@@ -81,8 +82,7 @@ namespace MSR.Infrastructure.Resources.AWS
                 throw new DomainException($"Attempt to Upload File: {name} to S3 failed.");
             }
 
-            return $"{_s3Information.AWSURL}/{bucketName}/{name}"; 
-
+            return $"{name}"; 
         }
 
     }
