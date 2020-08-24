@@ -20,4 +20,9 @@ export class Monitor {
     taskCompleted?: Date;
     serialNumber?: string;
     workerName?: string;
+    inputType?: string;
+    shouldBe?: string;
+    targetValue?: string;
+    faultHandling?: string;
+    sendEmailNotification?: boolean;
 }

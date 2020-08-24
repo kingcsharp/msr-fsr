@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Procedure } from '../../../services/mocks/models/procedure'
 import { ProcedureStep } from '../../../services/mocks/models/procedureStep'
 import { SelectItem } from 'primeng/api';
-import { EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { RoleService, Role } from '../../../services/api.client.generated'
 import { environment as env } from '../../../../environments/environment';
@@ -10,6 +10,8 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Monitor } from '../../../services/mocks/models/monitor';
+import {ProcedureStepMonitor} from '../../../services/mocks/models/procedureStepMonitor';
 
 @Component({
   selector: 'app-procedure-edit',
@@ -19,8 +21,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ProcedureEditComponent implements OnInit {
 
+  privileges = EnumPrivilege;
   procedure: Procedure = new Procedure();
-  procedureSteps: Array<ProcedureStep>;
+  procedureSteps: Array<any>;
   availableProcedureTypes: Array<SelectItem>;
   selectedProcedureType: string;
   menuItems = EnumMenuItem;
@@ -28,15 +31,61 @@ export class ProcedureEditComponent implements OnInit {
   selectedRoles: Array<number> = new Array<number>();
   durationTypeOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
-  
+  canEdit: boolean = false;
+  canDelete: boolean = false;
+  showConfirmDeleteMonitorDialog: boolean = false;
+  monitorToDelete: any;
+  procedureStepToRemoveMonitorFrom: any;
+  showEditMonitorDialog: boolean = false;
+  monitorToEdit: ProcedureStepMonitor;
+  monitorTypeOptions: Array<SelectItem>;
+  inputTypeOptions: Array<SelectItem>;
+  faultHandlingOptions: Array<SelectItem>;
+  shouldBeOptions: Array<SelectItem>;
+  listSource: Array<SelectItem>;
+
   constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef, 
     private router: Router, private roleService: RoleService) { }
 
   ngOnInit(): void {
 
+    this.canDelete = this.hasPrivilege(this.privileges.CanActivate);
+    this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
+
+    this.monitorTypeOptions = [
+      {label:'Equipment', value:'Equipment'},
+      {label:'Number', value:'Number'},
+      {label:'Yes or No', value:'Yes or No'},
+      {label:'Text', value:'Text'},
+      {label:'Pass or Fail', value:'Pass or Fail'},
+      {label:'Select', value:'Select'},
+    ];
+
+    this.inputTypeOptions = [
+      {label:'Manual', value:'Manual'},
+      {label:'QR Code', value:'QR Code'},
+      {label:'Sensor', value:'Sensor'}
+    ]
+
     this.procedureStepTypeOptions = [
       {label:'Procedure Step Type A', value:1},
       {label:'Procedure Step Type B', value:2}
+    ];
+
+    this.faultHandlingOptions = [
+      {label:'RECORD AND CONTINUE', value:'RECORD AND CONTINUE'},
+      {label:'STOP UNTIL FAULT CLEARED', value:'STOP UNTIL FAULT CLEARED'}
+    ];
+
+    this.shouldBeOptions = [
+      {label:'EQUAL', value:'EQUAL'},
+      {label:'ABOVE', value:'ABOVE'},
+      {label:'BELOW', value:'BELOW'},
+      {label:'BETWEEN', value:'BETWEEN'}
+    ];
+
+    this.listSource = [
+      {label:'NCR Category', value:'NCR Category'}
     ]
 
     this.globals.showLoader(true);
@@ -62,6 +111,9 @@ export class ProcedureEditComponent implements OnInit {
           this.procedure = procedures[0];
 
           this.procedureSteps = this.mockServices.procedureStepGet(null).slice(0,3);
+          this.procedureSteps.forEach(procedureStep => {
+            procedureStep.monitors = this.mockServices.procedureStepMonitorsGet(null).slice(0,10);
+          });
 
         } else {
 
@@ -75,4 +127,43 @@ export class ProcedureEditComponent implements OnInit {
 
   }
 
+  hasPrivilege(privName) {
+    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
+  }
+
+  openConfirmDeleteMonitorDialog(procedureStep, monitor) {
+
+    this.procedureStepToRemoveMonitorFrom = procedureStep
+    this.monitorToDelete = monitor;
+    this.showConfirmDeleteMonitorDialog = !this.showConfirmDeleteMonitorDialog;
+  }
+
+  closeConfirmDeleteMonitorDialog() {
+    this.showConfirmDeleteMonitorDialog = !this.showConfirmDeleteMonitorDialog;
+  }
+
+  deleteMonitor(){
+    let indexOfMonitor = this.procedureStepToRemoveMonitorFrom.monitors.findIndex( s => s.id === this.monitorToDelete.id);
+    this.procedureStepToRemoveMonitorFrom.monitors.splice(indexOfMonitor,1);
+    this.mockServices.procedureStepMonitorsDelete(this.monitorToDelete.id);
+    this.showConfirmDeleteMonitorDialog = !this.showConfirmDeleteMonitorDialog;
+  }
+
+  openEditMonitorDialog(monitor: ProcedureStepMonitor){
+    this.monitorToEdit = monitor;
+    this.monitorToEdit.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling).value;
+    this.monitorToEdit.type = this.monitorTypeOptions.find(s => s.value === monitor.type).value;
+    this.monitorToEdit.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType).value;
+    this.monitorToEdit.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe).value;
+    this.showEditMonitorDialog = !this.showEditMonitorDialog;
+  }
+
+  closeEditMonitorDialog(){
+    this.showEditMonitorDialog = !this.showEditMonitorDialog;
+  }
+
+  updateMonitor(){
+    this.mockServices.procedureStepMonitorsPatch(this.monitorToEdit);
+    this.showEditMonitorDialog = !this.showEditMonitorDialog;
+  }
 }

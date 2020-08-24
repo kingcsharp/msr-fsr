@@ -11,11 +11,13 @@
  */
 
 export class ProcedureStepMonitor { 
-    id?: string;
+    id?: number;
     inputType?: string;
     shouldBe?: string;
     targetValue?: string;
     faultHandling?: string;
     description?: string;
     sendEmailNotification?: boolean;
+    listSource: string;
+    type: string;
 }

@@ -65,6 +65,11 @@
                         <ckeditor-wrapper [editorcontent]="procedure.comment"
                             (editorContentChange)="procedure.comment = $event"></ckeditor-wrapper>
                     </div>
+                    <div class="row">
+                        <button type="button" class="btn btn-primary m-2" (click)="updateProcedureType()"
+                            data-cy="update-button">Update</button>
+                        <button type="button" class="btn btn-warning m-2" data-cy="cancel-button">Cancel</button>
+                    </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
@@ -201,8 +206,34 @@
                                 </cmh-file-uploader>
                             </div>
                         </div>
-                        <div class="col-4">
-                            Monitors Component goes here
+                        <div class="col-4 monitorstable-column">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Input Type</th>
+                                        <th>Input Target</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let procedureStepMonitor of procedureStep.monitors;">
+                                        <td>{{ procedureStepMonitor.type }}</td>
+                                        <td>{{ procedureStepMonitor.description }}</td>
+                                        <td>{{ procedureStepMonitor.inputType }}</td>
+                                        <td>{{ procedureStepMonitor.targetValue }}</td>
+                                        <td>
+                                            <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Monitor"
+                                                data-cy="edit-button"
+                                                (click)="openEditMonitorDialog(procedureStepMonitor)"></i>
+                                            <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Monitore"
+                                                data-cy="delete-button"
+                                                (click)="openConfirmDeleteMonitorDialog(procedureStep, procedureStepMonitor)"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -210,3 +241,121 @@
         </form>
     </div>
 </div>
+<p-dialog header="Confirm Delete Monitor" [(visible)]="showConfirmDeleteMonitorDialog" [appendTo]="body"
+    [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <div class="container">
+        <div class="row">
+            Are you sure you want to Delete this Monitor?
+        </div>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="deleteMonitor()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="confirmdelete-button">
+                Delete
+            </button>
+            <button type="button" (click)="closeConfirmDeleteMonitorDialog()"
+                class="btn btn-outline-inverse width-100 mb-xs" role="button">
+                Cancel
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+<p-dialog header="Edit Monitor" [(visible)]="showEditMonitorDialog" [appendTo]="body" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <div class="container">
+        <div class="row" *ngIf="monitorToEdit !== undefined">
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="monitortype" class="col-form-label text-left col-3">
+                    Monitor Type
+                </label>
+                <div class="col-12 px-0">
+                    <p-dropdown placeholder="Select Monitor Type" name="monitortype" [options]="monitorTypeOptions"
+                        showClear="true" [(ngModel)]="monitorToEdit.type">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="inputtype" class="col-form-label text-left col-3">
+                    Input Type
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptions"
+                        showClear="true" [(ngModel)]="monitorToEdit.inputType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.type === 'Select'">
+                <label for="listsource" class="col-form-label text-left col-3">
+                    List Source
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select List Source" name="listsource"
+                        [options]="listSource" showClear="true" [(ngModel)]="monitorToEdit.listSource">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.type === 'Number' || monitorToEdit.type === 'Pass or Fail'">
+                <label for="shouldbe" class="col-form-label text-left col-3">
+                    Should Be
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Should Be" name="shouldbe"
+                        [options]="shouldBeOptions" showClear="true" [(ngModel)]="monitorToEdit.shouldBe">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.type !== 'Select' && monitorToEdit.type !== 'Pass or Fail'">
+                <label for="targetvalue" class="col-form-label text-left col-3">
+                    Target Value
+                </label>
+                <input type="text" name="targetvalue" [(ngModel)]="monitorToEdit.targetValue" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="Target Value"
+                    data-cy="targetvalue-input">
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="faulthandling" class="col-form-label text-left col-3">
+                    Fault Handling
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
+                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="monitorToEdit.faultHandling">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="description" class="col-form-label text-left col-3">
+                    Description
+                </label>
+                <ckeditor-wrapper [editorcontent]="monitorToEdit.description" class="col-9 px-0"
+                    (editorContentChange)="monitorToEdit.description = $event"></ckeditor-wrapper>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label class="col-3 col-form-label text-md-right">
+                    Send Email Notification
+                </label>
+                <div class="col-9 px-0 ">
+                    <div class="display-inline-block isActive">
+                        <label class="form-check-label" for="sendemailnotification" class="switch">
+                            <input class="form-check-input" [(ngModel)]="monitorToEdit.sendEmailNotification"
+                                name="sendemailnotification" type="checkbox" class="ios" checked
+                                id="sendemailnotification" /><i data-cy="sendemailnotification-checkbox"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="button" (click)="updateMonitor()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button">
+                Update</button>
+            <button type="button" (click)="closeEditMonitorDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button">
+                Cancel
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>

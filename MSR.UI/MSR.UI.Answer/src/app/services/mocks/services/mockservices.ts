@@ -11,6 +11,9 @@ import { Monitor } from '../models/monitor';
 import { CreateProcedureRequest } from '../models/createProcedureRequest';
 import { UpdateProcedureRequest } from '../models/updateProcedureRequest';
 import { ProcedureStep } from '../models/procedureStep';
+import { CreateProcedureStepMonitorRequest } from '../models/createProcedureStepMonitorRequest';
+import { UpdateProcedureStepMonitorRequest } from '../models/updateProcedureStepMonitorRequest';
+import { ProcedureStepMonitor } from '../models/procedureStepMonitor';
 
 @Injectable()
 export class MockServices {
@@ -488,26 +491,72 @@ export class MockServices {
 
     }
 
+    monitorsPost(createProcedureStepMonitorRequest: CreateProcedureStepMonitorRequest){
+
+        alert("Success create placeholder for Web API");
+
+    }
+
+    monitorsPatch(updateProcedureStepMonitorRequest: UpdateProcedureStepMonitorRequest){
+
+        alert("Success update placeholder for Web API");
+        
+    }
+    
+    monitorsDelete(id: number | null | undefined){
+
+        alert("Success delete placeholder for Web API with id: " + id);
+
+    }
+
     monitorsGet(id: number | null | undefined) {
 
         let monitors = new Array<Monitor>()
 
-        for (let index = 1; index < 75; index++) {
+        if (id !== null && id !== undefined) {
 
             let monitor = new Monitor();
-            monitor.id = index;
-            monitor.description = 'Loreum Ipsum desca' + index;
-            monitor.monitorType = 'Monitor Type' + index;
+            monitor.id = id;
+            monitor.description = 'Loreum Ipsum desca' + id;
+            monitor.monitorType = 'Monitor Type' + id;
             monitor.passing = true;
             monitor.result = 'Sample Result text';
-            monitor.serialNumber = index + '132' + index;
+            monitor.serialNumber = id + '132' + id;
             monitor.taskCompleted = new Date();
             monitor.workerName = 'John Doe';
-
+            monitor.inputType = 'Text';
+            monitor.shouldBe = 'Yes';
+            monitor.targetValue = 'Yes';
+            monitor.faultHandling = 'Loreum';
+            monitor.sendEmailNotification = true;
             monitors.push(monitor);
 
+        } else {
+
+            for (let index = 1; index < 75; index++) {
+
+                let monitor = new Monitor();
+                monitor.id = index;
+                monitor.description = 'Loreum Ipsum desca' + index;
+                monitor.monitorType = 'Monitor Type' + index;
+                monitor.passing = true;
+                monitor.result = 'Sample Result text';
+                monitor.serialNumber = index + '132' + index;
+                monitor.taskCompleted = new Date();
+                monitor.workerName = 'John Doe';
+                monitor.inputType = 'Text';
+                monitor.shouldBe = 'Yes';
+                monitor.targetValue = 'Yes';
+                monitor.faultHandling = 'Loreum';
+                monitor.sendEmailNotification = true;
+
+                monitors.push(monitor);
+    
+    
+            }
 
         }
+
 
         return monitors;
     }
@@ -639,5 +688,61 @@ export class MockServices {
             "contentType": "image/png",
             "fileURL": ""
         }];
+    }
+
+    procedureStepMonitorsPost(createProcedureStepMonitorRequest: CreateProcedureStepMonitorRequest){
+        alert("Success create placeholder for Web API");
+    }
+
+    procedureStepMonitorsPatch(updateProcedureStepMonitorRequest: UpdateProcedureStepMonitorRequest){
+        alert("Success create placeholder for Web API");
+    }
+
+    procedureStepMonitorsDelete(id: number | null | undefined){
+
+        alert("Success delete placeholder for Web API with id: " + id);
+
+    }
+
+    procedureStepMonitorsGet(id: number | null | undefined) {
+
+        let procedureStepMonitor = new Array<ProcedureStepMonitor>()
+
+        if (id !== null && id !== undefined) {
+
+            let monitor = new ProcedureStepMonitor();
+            monitor.id = id;
+            monitor.inputType = 'Manual';
+            monitor.type = 'Text';
+            monitor.shouldBe = 'EQUAL';
+            monitor.targetValue = 'Yes';
+            monitor.faultHandling = 'RECORD AND CONTINUE';
+            monitor.sendEmailNotification = true;
+            monitor.listSource = "NCR Category";
+            procedureStepMonitor.push(monitor);
+
+        } else {
+
+            for (let index = 1; index < 75; index++) {
+
+                let monitor = new ProcedureStepMonitor();
+                monitor.id = index;
+                monitor.description = 'Loreum Ipsum desca' + index;
+                monitor.inputType = 'Manual';
+                monitor.type = 'Text';
+                monitor.shouldBe = 'EQUAL';
+                monitor.targetValue = 'Yes';
+                monitor.faultHandling = 'RECORD AND CONTINUE';
+                monitor.sendEmailNotification = true;
+                monitor.listSource = "NCR Category";
+                procedureStepMonitor.push(monitor);
+    
+    
+            }
+
+        }
+
+
+        return procedureStepMonitor;
     }
 }
