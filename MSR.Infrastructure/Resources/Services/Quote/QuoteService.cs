@@ -94,7 +94,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
 
             _unitOfWork.Quotes.Delete(false, quote, true);
-            // This will call SaveChangesAsync
+            
             await _unitOfWork.SaveChangesAsync();
 
             var ret = _mapper.Map<QuoteModel>(quote);
