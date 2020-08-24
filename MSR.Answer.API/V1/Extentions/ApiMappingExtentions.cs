@@ -502,10 +502,6 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
 
-        public static GetQuotesProducts ToGetQuotesProductsRequestCommand(this GetQuotesProductsRequest request)
-        {
-            return new GetQuotesProducts();
-        }
 
         public static CreateQuote ToCreateQuoteCommand(this CreateQuoteRequest request)
         {
