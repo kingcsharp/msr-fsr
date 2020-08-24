@@ -42,6 +42,26 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return quoteList.AsEnumerable();
         }
 
+        public async Task<IEnumerable<QuoteModel>> GetQuoteAsync(int id)
+        {
+            var quoteList = new List<QuoteModel>();
+
+            var quotes = _unitOfWork.Quotes
+                            .Query()
+                            .Include(q => q.Product)
+                            .Include(q => q.Customer)
+                            .Include(q => q.Status)
+                            .Where(q => q.Id == id)
+                            .AsQueryable();
+
+            foreach (var quote in await quotes.ToListAsync())
+            {
+                quoteList.Add(_mapper.Map<QuoteModel>(quote));
+            }
+
+            return quoteList.AsEnumerable();
+        }
+
         public async Task<QuoteModel> CreateQuoteAsync(CreateQuote command)
         {
             var quote = _mapper.Map<Quote>(command);
@@ -62,18 +82,20 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<QuoteModel> DeleteQuoteAsync(DeleteQuote command)
         {
-            var current = await _unitOfWork.Quotes.Query().Where(x => x.Id == command.Id)
-                  .FirstOrDefaultAsync();
-            if (current is null)
+            var quote = await _unitOfWork.Quotes.Query()
+                                                    .Include(q => q.QuoteItems)
+                                                    .Where(x => x.Id == command.Id)
+                                                    .FirstOrDefaultAsync();
+            if (quote is null)
             {
                 throw new DomainException($"{nameof(Quote)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            _unitOfWork.Quotes.Delete(false, current, true);
+            _unitOfWork.Quotes.Delete(false, quote, true);
             // This will call SaveChangesAsync
             await _unitOfWork.SaveChangesAsync();
 
-            var ret = _mapper.Map<QuoteModel>(current);
+            var ret = _mapper.Map<QuoteModel>(quote);
             return ret;
         }
     }

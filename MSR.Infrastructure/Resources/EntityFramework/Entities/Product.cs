@@ -10,6 +10,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public Product()
         {
             WorkOrders = new HashSet<WorkOrder>();
+            Quotes = new HashSet<Quote>();
         }
 
         [Required]

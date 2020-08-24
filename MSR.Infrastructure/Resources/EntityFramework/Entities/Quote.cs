@@ -35,6 +35,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(50)]
         public string Representative { get; set; }
 
+        [StringLength(50)]
+        public string RepresentativeTitle { get; set; }
+
+        [StringLength(50)]
+        public string RepresentativeAddress { get; set; }
+
         public int StatusId { get; set; }
 
         [ForeignKey("StatusId")]
@@ -46,7 +52,24 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? ProductId { get; set; }
 
+        [StringLength(50)]
+        public string Contact { get; set; }
+
+        [StringLength(50)]
+        public string Title { get; set; }
+
+        [StringLength(50)]
+        public string Phone { get; set; }
+
+        [StringLength(50)]
+        public string Delivery { get; set; }
+
+        [StringLength(50)]
+        public string ProcessName { get; set; }
+
         [ForeignKey("ProductId")]
+
         public virtual Product Product { get; set; }
+        public virtual ICollection<QuoteItem> QuoteItems { get; set; }
     }
 }
