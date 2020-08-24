@@ -211,5 +211,23 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return true;
         }
+
+        public async Task<ICollection<Domain.Models.ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command)
+        {
+            List<ProcedureStepType> current;
+            
+            if (command.Id.HasValue) {
+                current = await _unitOfWork.ProcedureStepTypes.Query().Where(
+                    i => i.Id == command.Id
+                ).ToListAsync();
+            } else {
+                current = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
+            }
+            if(current is null || current.Count == 0)
+            {
+                throw new DomainException($"{nameof(ProcedureStepType)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+            return current.Select(x => _mapper.Map<Domain.Models.ProcedureStepTypeModel>(x)).ToList();
+        }
     }
 }
