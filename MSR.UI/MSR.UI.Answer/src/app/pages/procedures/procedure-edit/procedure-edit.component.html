@@ -181,10 +181,21 @@
                                     <div class="col-9 px-0">
                                         <p-dropdown placeholder="Select Procedure Step Type" name="proceduresteptype"
                                             [options]="procedureStepTypeOptions" showClear="true"
-                                            [(ngModel)]="procedureStep.procedureStepTypeId"
+                                            [(ngModel)]="procedureStep.selectedProcedureStepTypeId"
                                             data-cy="procedurestepyype-dropdown">
                                         </p-dropdown>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-12 d-flex flex-row">
+                                    <label for="roles" class="col-form-label text-left col-3">
+                                        Roles
+                                    </label>
+                                    <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="procedureStep.selectedRoles"
+                                        data-cy="roles-multiselect">
+                                    </p-multiSelect>
                                 </div>
                             </div>
 
@@ -206,34 +217,41 @@
                                 </cmh-file-uploader>
                             </div>
                         </div>
-                        <div class="col-4 monitorstable-column">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Description</th>
-                                        <th>Input Type</th>
-                                        <th>Input Target</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let procedureStepMonitor of procedureStep.monitors;">
-                                        <td>{{ procedureStepMonitor.type }}</td>
-                                        <td>{{ procedureStepMonitor.description }}</td>
-                                        <td>{{ procedureStepMonitor.inputType }}</td>
-                                        <td>{{ procedureStepMonitor.targetValue }}</td>
-                                        <td>
-                                            <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Monitor"
-                                                data-cy="edit-button"
-                                                (click)="openEditMonitorDialog(procedureStepMonitor)"></i>
-                                            <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Monitore"
-                                                data-cy="delete-button"
-                                                (click)="openConfirmDeleteMonitorDialog(procedureStep, procedureStepMonitor)"></i>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="col-4">
+                            <div class="row justify-content-end">
+                                <button *ngIf="canEdit" class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+                                    Add Monitor
+                                </button>
+                            </div>
+                            <div class="row monitorstable-column">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th>Input Type</th>
+                                            <th>Input Target</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let procedureStepMonitor of procedureStep.monitors;">
+                                            <td>{{ procedureStepMonitor.type }}</td>
+                                            <td>{{ procedureStepMonitor.description }}</td>
+                                            <td>{{ procedureStepMonitor.inputType }}</td>
+                                            <td>{{ procedureStepMonitor.targetValue }}</td>
+                                            <td>
+                                                <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Monitor"
+                                                    data-cy="edit-button"
+                                                    (click)="openEditMonitorDialog(procedureStepMonitor)"></i>
+                                                <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Monitore"
+                                                    data-cy="delete-button"
+                                                    (click)="openConfirmDeleteMonitorDialog(procedureStep, procedureStepMonitor)"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -113,6 +113,14 @@ export class ProcedureEditComponent implements OnInit {
           this.procedureSteps = this.mockServices.procedureStepGet(null).slice(0,3);
           this.procedureSteps.forEach(procedureStep => {
             procedureStep.monitors = this.mockServices.procedureStepMonitorsGet(null).slice(0,10);
+            procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId).value;
+            procedureStep.selectedRoles = new Array<number>();
+            procedureStep.roles.forEach(role => {
+
+              procedureStep.selectedRoles.push(this.availableRoles.find(s => s.value === role.id).value);
+
+            });
+            
           });
 
         } else {

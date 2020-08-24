@@ -27,4 +27,5 @@ export class ProcedureStep {
     usefulLife?: number;
     referenceFiles?: Array<any>;
     roles?: Array<Role>;
+    procedureStepTypeId: number;
 }

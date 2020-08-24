@@ -583,6 +583,7 @@ export class MockServices {
             procedureStep.duration = 10;
             procedureStep.durationType = 'SYS_MINUTES';
             procedureStep.equipmentTime = 3;
+            procedureStep.procedureStepTypeId = 1;
             procedureSteps.push(procedureStep);
 
         } else {
@@ -605,7 +606,7 @@ export class MockServices {
                 procedureStep.duration = index;
                 procedureStep.durationType = 'SYS_MINUTES';
                 procedureStep.equipmentTime = index;
-
+                procedureStep.procedureStepTypeId = 2;
                 procedureSteps.push(procedureStep);
 
             }
