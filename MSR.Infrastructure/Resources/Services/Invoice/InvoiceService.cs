@@ -245,6 +245,85 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             invoice.Total = (decimal)((invoice.Subtotal + (invoice.Subtotal * invoice.TaxPercentage / 100)));
         }
 
+        public async Task<IEnumerable<InvoiceView>> CreateInvoicesAsync(CreateIndividualInvoices command)
+        {
+            var retInvoices = new List<InvoiceView>();
+
+            var statusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == "Pending").Id;
+
+            // Enumerate all invoices command, create a separate Invoice entry per command
+            foreach (var invoiceCommand in command.Invoices)
+            {
+                var invoice = _mapper.Map<Invoice>(invoiceCommand);
+
+                invoice.StatusId = statusId;
+
+                var invoiceDb = await SaveInvoiceAsync(invoice, invoiceCommand.InvoiceItems);
+
+                var retInvoice = _mapper.Map<InvoiceView>(invoiceDb);
+
+                retInvoices.Add(retInvoice);
+            }
+
+            return retInvoices;
+        }
+
+        public async Task<InvoiceView> UpdateInvoiceAsync(UpdateInvoice command)
+        {
+            // Retreive invoice to update
+            var invoice = await _unitOfWork.Invoices
+                                .Query()
+                                .Include(i => i.InvoiceItems)
+                                .FirstOrDefaultAsync(i => i.Id == command.Id);
+
+            if (invoice is null)
+            {
+                throw new DomainException($"{nameof(Invoice)} not found with ID: {command.Id}");
+            }
+
+            // Clear all InvoiceItems (WorkOrders or PurscheOrders)
+            invoice.InvoiceItems.Clear();
+
+            // Update invoice details and items
+            UpdateInvoiceDetails(invoice, command);
+
+            // Update invoice totals
+            CalculateTotals(invoice);
+
+            // Save invoice changes
+            await _unitOfWork.Invoices.UpdateAndSaveChangesAsync(invoice);
+
+            var retInvoice = _mapper.Map<InvoiceView>(invoice);
+
+            return retInvoice;
+        }
+
+        public async Task<Domain.Models.InvoiceModel> GetInvoiceAsync(int id)
+        {
+            var Invoice = await _unitOfWork.Invoices.FirstOrDefaultAsync(false, i => i.Id == id);
+
+            if (Invoice is null)
+            {
+                throw new DomainException($"{nameof(Domain.Models.InvoiceModel)} does not exist with {nameof(id)}: {id}");
+            }
+
+            return _mapper.Map<Domain.Models.InvoiceModel>(Invoice);
+        }
+
+        public async Task<IEnumerable<Domain.Models.InvoiceModel>> GetInvoicesAsync(GetInvoices command)
+        {
+            var invoiceList = new List<Domain.Models.InvoiceModel>();
+
+            var invoices = GetFilteredInvoices(command);
+
+            foreach (var invoice in await invoices.ToListAsync())
+            {
+                invoiceList.Add(_mapper.Map<Domain.Models.InvoiceModel>(invoice));
+            }
+
+            return invoiceList.AsEnumerable();
+        }
+
         private IQueryable<Invoice> GetFilteredInvoices(GetInvoices command)
         {
             var invoices = _unitOfWork.Invoices.Query()
