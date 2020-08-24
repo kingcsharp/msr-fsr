@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class QuoteProductAppService :
-        ICommandHandler<GetQuotesProductsGridView>
+        ICommandHandler<GetQuotesProducts>
     {
         private readonly IQuoteService _quoteService;
         private readonly IProductService _productService;
@@ -26,7 +26,7 @@ namespace MSR.Application.ApplicationServices
             _mapper = mapper;
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetQuotesProductsGridView command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetQuotesProducts command, CancellationToken cancellationToken = default)
         {
             var quotes = await _quoteService.GetQuotesAsync();
             var products = await _productService.GetProductsAsync();

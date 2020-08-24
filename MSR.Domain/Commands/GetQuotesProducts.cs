@@ -2,7 +2,7 @@
 
 namespace MSR.Domain.Commands
 {
-    public class GetQuotesProductsGridView : Command
+    public class GetQuotesProducts : Command
     {
     }
 }
