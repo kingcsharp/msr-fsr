@@ -12,6 +12,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
+using System.Net;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -28,7 +29,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<IEnumerable<QuotesProductsView>>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<QuotesProductsView>>))]
         public async Task<IActionResult> Get([FromQuery] GetQuotesProductsGridViewRequest filters)
         {
             var getQuotesProductsGridView = filters.ToGetQuotesProductsRequestCommand();
@@ -36,21 +37,29 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<IEnumerable<QuotesProductsView>>();
         }
 
-
         /// <summary>
-        /// Creates a Quote based on the <paramref name="newQuote"/> request.
+        /// Creates a Quote based on the <paramref name="quote"/> request.
         /// </summary>
-        /// <param name="newQuote"></param>
+        /// <param name="quote"></param>
         /// <permission>CanCreate Privilege required</permission>
         /// <returns>Quote DTO</returns>
-        [HttpPost]
+        [HttpPost("Quote")]
         [HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<QuoteModel>))]
-        public async Task<IActionResult> Post([FromBody, Required] CreateQuoteRequest newQuote)
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<QuoteModel>))]
+        public async Task<IActionResult> CreateQuote([FromBody, Required] CreateQuoteRequest quote)
         {
-            var command = newQuote.ToCreateQuoteCommand();
+            var command = quote.ToCreateQuoteCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<QuoteModel>("Quote was successfully added.");
+        }
+
+        [HttpGet("Quote"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<QuoteModel>>))]
+        public async Task<IActionResult> GetQuote([FromQuery] GetQuoteRequest filters)
+        {
+            var getQuote = filters.ToGetQuotesCommand();
+            var ret = await _dispatcher.DispatchAsync(getQuote);
+            return ret.ToOkObjectResponse<IEnumerable<QuoteModel>>();
         }
 
         /// <summary>
@@ -59,10 +68,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <permission>CanDelete Privilege required</permission>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("Quote/{id}")]
         [HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanDelete)]
-        [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult))]
+        public async Task<IActionResult> DeleteQuote([FromRoute] int id)
         {
             var command = new DeleteQuote()
             {
@@ -70,6 +79,40 @@ namespace MSR.Answer.API.V1.Controllers
             };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<QuoteModel>("Quote was successfully deleted.");
+        }
+
+        /// <summary>
+        /// Creates a Product based on the <paramref name="product"/> request.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <permission>CanCreate Privilege required</permission>
+        /// <returns>Product DTO</returns>
+        [HttpPost("Product")]
+        [HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ProductModel>))]
+        public async Task<IActionResult> CreateProduct([FromBody, Required] CreateProductRequest product)
+        {
+            var command = product.ToCreateProductCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProductModel>("Product was successfully added.");
+        }
+
+        [HttpGet("Product"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<ProductModel>>))]
+        public async Task<IActionResult> GetProduct([FromQuery] GetProductRequest filters)
+        {
+            var getProduct = filters.ToGetProductCommand();
+            var ret = await _dispatcher.DispatchAsync(getProduct);
+            return ret.ToOkObjectResponse<IEnumerable<ProductModel>>();
+        }
+
+        [HttpPatch("Product"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ProductModel>))]
+        public async Task<IActionResult> UpdateProduct([FromBody, Required] UpdateProductRequest request)
+        {
+            var updateProduct = request.ToUpdateProductCommand();
+            var ret = await _dispatcher.DispatchAsync(updateProduct);
+            return ret.ToOkObjectResponse<ProductModel>("Product has been successfully updated.");
         }
     }
 }

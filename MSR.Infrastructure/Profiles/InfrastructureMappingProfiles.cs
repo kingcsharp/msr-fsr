@@ -228,11 +228,15 @@ namespace MSR.Infrastructure.Profiles
             
             #region Product
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
+            CreateMap<CreateProduct, Product>();
+            CreateMap<Domain.Models.ProductModel, Product>();
             #endregion
 
             #region Quote
             CreateMap<Quote, Domain.Models.QuoteModel>().ReverseMap();
-            CreateMap<CreateQuote, Quote>().ReverseMap();
+            CreateMap<QuoteItem, Domain.Models.QuoteItemModel>().ReverseMap();
+            CreateMap<CreateQuote, Quote>();
+            CreateMap<CreateQuoteItem, QuoteItem>();
             #endregion
 
             CreateMap<Domain.Models.ProductModel, Domain.Views.QuotesProductsView>()

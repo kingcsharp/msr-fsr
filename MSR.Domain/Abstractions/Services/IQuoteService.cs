@@ -14,6 +14,12 @@ namespace MSR.Domain.Abstractions.Services
         Task<IEnumerable<QuoteModel>> GetQuotesAsync();
 
         /// <summary>
+        /// Returns a Quote based on <paramref name="id"/>
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<QuoteModel>> GetQuoteAsync(int id);
+
+        /// <summary>
         /// Create a Quote using <paramref name="command"/>
         /// </summary>
         /// <param name="command"></param>

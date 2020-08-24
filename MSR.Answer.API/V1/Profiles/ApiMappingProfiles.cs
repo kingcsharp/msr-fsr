@@ -60,6 +60,12 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<ImportRequest, ImportFile>();
             CreateMap<GetSensorRequest, GetSensor>();
             CreateMap<CreateQuoteRequest, CreateQuote>();
+            CreateMap<CreateQuoteItemRequest, CreateQuoteItem>();
+            CreateMap<GetQuoteRequest, GetQuote>();
+            CreateMap<CreateProductRequest, CreateProduct>();
+            CreateMap<CreateProductStepItemRequest, CreateProductStepItem>();
+            CreateMap<GetProductRequest, GetProduct>();
+            CreateMap<UpdateProductRequest, UpdateProduct>();
         }
     }
 }
