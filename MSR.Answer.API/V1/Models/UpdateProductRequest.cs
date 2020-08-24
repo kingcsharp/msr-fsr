@@ -20,7 +20,5 @@ namespace MSR.Answer.API.V1.Models
         public decimal? SalesTax { get; set; }
         public decimal? TotalSalePrice { get; set; }
         public int? CycleTime { get; set; }
-
-        //public ICollection<UpdateInvoiceItemRequest> InvoiceItems { get; set; }
     }
 }
