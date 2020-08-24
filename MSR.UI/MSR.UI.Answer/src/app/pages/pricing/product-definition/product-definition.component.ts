@@ -13,6 +13,8 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Globals } from '../../../models/lib/globals';
+import { ActivatedRoute } from '@angular/router';
+import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
 
 @Component({
   selector: 'app-product-definition',
@@ -21,6 +23,9 @@ import { Globals } from '../../../models/lib/globals';
   providers: [CustomerService, ProcedureService]
 })
 export class ProductDefinitionComponent implements OnInit {
+  productPageModes = EnumProductPageModes;
+  mode: string = null;
+  id: number = null;
   showAllStepColumns: boolean = false;
   partsData: any[] = [];
   getPartsFlag: boolean = false;
@@ -42,15 +47,45 @@ export class ProductDefinitionComponent implements OnInit {
     private locationService: LocationService,
     private customerService: CustomerService,
     private procedureService: ProcedureService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.id = parseInt(params.get('id'), 10);
+      this.mode = params.get('mode');
+      switch(this.mode) {
+        case this.productPageModes.Create:
+          this.initPageCreateMode();
+          break;
+        case this.productPageModes.Edit:
+          this.initPageEditMode();
+          break;
+        case this.productPageModes.View:
+          this.initPageViewMode();
+          break;
+        default:
+          break;
+      }
+    });
     this.productData = new ProductModel;
     this.productData.procedureSteps = [];
     this.getLocations();
     this.getCustomers();
     this.getParts();
     this.getProcedures();
+  }
+
+  initPageCreateMode() {
+
+  }
+
+  initPageEditMode() {
+
+  }
+
+  initPageViewMode() {
+
   }
 
   getCustomers() {

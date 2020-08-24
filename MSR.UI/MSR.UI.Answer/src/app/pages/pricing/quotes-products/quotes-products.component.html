@@ -362,7 +362,7 @@
             class="far fa-play pointer"
             tooltip="Start Quote"
             data-cy="startRow"
-            [routerLink]="['../product-create', {id: quoteproductmodel.id}]"
+            [routerLink]="['../product', productPageModes.Create, quoteproductmodel.id]"
           ></i>
           <i
             *ngIf="!quoteproductmodel.isProduct && quoteproductmodel.isDeletable && userPrivileges.canDelete"
@@ -376,13 +376,13 @@
             class="fa fa-edit pointer"
             tooltip="Edit Product"
             data-cy="editRow"
-            [routerLink]="['../product-edit', {id: quoteproductmodel.id}]"
+            [routerLink]="['../product', productPageModes.Edit, quoteproductmodel.id]"
           ></i>
           <i
             *ngIf="quoteproductmodel.isProduct && userPrivileges.canRead" class="fa fa-eye pointer"
             tooltip="View Product"
             data-cy="viewRow"
-            [routerLink]="['../product-view', {id: quoteproductmodel.id}]"
+            [routerLink]="['../product', productPageModes.View , quoteproductmodel.id]"
           ></i>
         </td>
 			</tr>

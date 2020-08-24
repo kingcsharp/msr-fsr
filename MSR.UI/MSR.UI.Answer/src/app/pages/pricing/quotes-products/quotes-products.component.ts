@@ -8,6 +8,7 @@ import { AllowedActions } from '../../../models/lib/AllowedActions';
 import { EnumMenuItem } from '../../../services/api.client.generated';
 import { QuotesProductsView, quotesproductsData } from '../../../temp/mock-data';
 import {ConfirmationService} from 'primeng/api';
+import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
 
 @Component({
   selector: 'app-quotes-products',
@@ -16,6 +17,7 @@ import {ConfirmationService} from 'primeng/api';
   providers: [ConfirmationService]
 })
 export class QuotesProductsComponent implements OnInit {
+  productPageModes = EnumProductPageModes;
   privileges = EnumPrivilege;
   menuItems = EnumMenuItem;
   defaultView: ViewSaved;

@@ -2,7 +2,7 @@
   <div class="row mb-lg">
     <div class="col-12">
       <h1 class="page-title">
-        <span>New Product Definition</span>
+        <span>{{mode === productPageModes.Create ? 'New ' : ''}}Product Definition</span>
       </h1>
     </div>
   </div>
@@ -284,10 +284,19 @@
       <div class="row mx-0 my-4">
         <div class="col-md-12 d-flex justify-content-end">
           <!-- <span class="pull-right btn btn-primary" style="margin-left: 10px;" tooltip="Generates a Quote Preview" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span> -->
-          <button class="pull-right btn btn-success" style="margin-left: 10px;" tooltip="Saves and Sends Quoation to Client" (click)="onSubmit()">
+          <button
+            *ngIf="mode === productPageModes.Create && mode === productPageModes.Edit"
+            class="btn btn-success ml-2"
+            tooltip="Saves and Sends Quoation to Client"
+            (click)="onSubmit()"
+          >
             <i class="fa fa-send"></i> Save & Submit
           </button>
-          <a class="btn btn-warning back-step pull-right" tooltip="Back To Production Planning" style="margin-left: 10px;">Cancel</a>
+          <a
+            class="btn btn-warning ml-2"
+            tooltip="Back To Production Planning"
+            [routerLink]="['../../../products']"
+          >Cancel</a>
         </div>
       </div>
     </form>
