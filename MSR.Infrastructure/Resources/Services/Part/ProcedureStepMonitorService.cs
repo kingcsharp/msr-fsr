@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -140,6 +141,24 @@ namespace MSR.Infrastructure.Resources.Services.Role
             ret.ListItems = items.Select(x => _mapper.Map<ProcedureStepMonitorListItem>(x)).ToList();
 
             return ret;
+        }
+
+        public async Task<bool> DeleteMonitorModelAsync(DeleteProcedureStepMonitor command)
+        {
+            var current = await _unitOfWork.ProcedureStepMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Monitors, EnumPrivilege.CanDelete)) {
+                _unitOfWork.ProcedureStepMonitors.Delete(false, current);
+            } else {
+                throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
+            }
+
+            return true;
         }
     }
 }

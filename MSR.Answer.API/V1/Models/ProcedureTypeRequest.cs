@@ -92,7 +92,6 @@ namespace MSR.Answer.API.V1.Models
             return
                 (
                     Id == other.Id ||
-                    Id != null &&
                     Id.Equals(other.Id)
                 ) &&
                 (
@@ -127,7 +126,6 @@ namespace MSR.Answer.API.V1.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Id != null)
                     hashCode = hashCode * 59 + Id.GetHashCode();
                     if (Name != null)
                     hashCode = hashCode * 59 + Name.GetHashCode();
