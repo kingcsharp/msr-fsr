@@ -495,10 +495,17 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<ImportFile>(request);
         }
+<<<<<<< HEAD
             
         public static GetQuotesProductsGridView ToGetQuotesProductsRequestCommand(this GetQuotesProductsGridViewRequest request)
+=======
+
+        public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
+
+        public static GetQuotesProducts ToGetQuotesProductsRequestCommand(this GetQuotesProductsGridViewRequest request)
+>>>>>>> chore: rename command GetQuotesProductsGridView  to GetQuotesProducts
         {
-            return new GetQuotesProductsGridView();
+            return new GetQuotesProducts();
         }
 
         public static CreateQuote ToCreateQuoteCommand(this CreateQuoteRequest request)
