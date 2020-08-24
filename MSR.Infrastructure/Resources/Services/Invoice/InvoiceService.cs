@@ -37,7 +37,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var invoice = _mapper.Map<Invoice>(command);
 
             // Unused by required by the model
-            invoice.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == nameof(ApprovalStatus.Pending)).Id;
+            invoice.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == nameof(ApprovalStatusEnum.Pending)).Id;
 
             invoice = await SaveInvoiceAsync(invoice, command.InvoiceItems);
 
@@ -51,7 +51,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             var retInvoices = new List<InvoiceView>();
 
-            var statusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == nameof(ApprovalStatus.Pending)).Id;
+            var statusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == nameof(ApprovalStatusEnum.Pending)).Id;
 
             // Enumerate all invoices command, create a separate Invoice entry per command
             foreach (var invoiceCommand in command.Invoices)

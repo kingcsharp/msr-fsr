@@ -45,7 +45,7 @@ export class MultiselectWrapperComponent implements OnInit {
               found = true;
               return;
             }
-          } else if (fElement[ctrl.basicOptions.id] === vElement[ctrl.basicOptions.id]) {
+          } else if (fElement.id === vElement[ctrl.basicOptions.id]) {
             found = true;
             return;
           }
@@ -86,23 +86,6 @@ export class MultiselectWrapperComponent implements OnInit {
     }
   }
 
-  // dataAlreadyParsed(data) {
-  //   if (data[0].label !== undefined && data[0].value !== undefined) {
-  //     data.map((element) => {
-  //       this.currentOptions.push({
-  //         label: element.label,
-  //         value: {
-  //           id: element.value,
-  //           name: element.label
-  //         }
-  //       })
-  //     });
-
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
   dataAlreadyParsed(data) {
     if (data[0].label !== undefined && data[0].value !== undefined) {
       this.isOldFilter = true;
@@ -117,10 +100,6 @@ export class MultiselectWrapperComponent implements OnInit {
     if (this.options === undefined) {
       return;
     }
-
-    // if (this.dataAlreadyParsed(this.options)) {
-    //   return;
-    // }
 
     this.options.map((item) => {
       if (this.multipleValues && !this.dataAlreadyParsed(ctrl.options)) {

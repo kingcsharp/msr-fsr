@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Services\Workflow\WorkflowService.cs~RF9453c85.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Resources\AWS\Abstractions\" />
     <Folder Include="Resources\Email\Abstrations\" />
   </ItemGroup>

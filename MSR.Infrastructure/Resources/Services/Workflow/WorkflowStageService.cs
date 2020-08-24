@@ -49,7 +49,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<WorkflowStageModel> UpdateWorkFlowStageAsync(UpdateWorkflowStageModel command)
         {
-            var efWorkFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            var efWorkFlow = await _unitOfWork.WorkflowStages.Query().Include(x=>x.Group).FirstOrDefaultAsync(x => x.Id == command.Id);
 
             if (efWorkFlow == null)
             {
