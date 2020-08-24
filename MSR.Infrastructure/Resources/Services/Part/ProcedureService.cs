@@ -215,7 +215,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command)
         {
             List<ProcedureStepType> current;
-            
+
             if (command.Id.HasValue) {
                 current = await _unitOfWork.ProcedureStepTypes.Query().Where(
                     i => i.Id == command.Id
