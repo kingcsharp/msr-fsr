@@ -36,8 +36,8 @@
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
-          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
-            [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" filterId="isActive"
+          defaultText="Select Status" defaultTextTooltip="" [datatable]="dt">
           </multiselect-wrapper>
         </th>
         <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
@@ -50,9 +50,9 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('groupRoles',gridSettings)">
           <div class="position-relative">
-            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="roles" [filterId]="'groupRoles'"
-              [defaultText]="'Select Group Roles'" [filterProp]="'name'" [multipleValues]="true"
-              [defaultTextTooltip]="''" [datatable]="dt">
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="roles" filterId="groupRoles"
+              defaultText="Select Group Roles" filterProp="name" [multipleValues]="true" defaultTextTooltip=""
+              [datatable]="dt">
             </multiselect-wrapper>
           </div>
         </th>
@@ -127,7 +127,8 @@
         <td>
           <i *ngIf="canEditGroups" class="far fa-edit pointer" tooltip="Edit Workflow Group" data-cy="editRow"
             (click)="showDialog(workflowGroup)"></i>
-          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow Group" data-cy="deleteRow" (click)="removeRow(workflowGroup)"></i>
+          <i class="far fa-trash-alt pointer" tooltip="Delete Workflow Group" data-cy="deleteRow"
+            (click)="removeRow(workflowGroup)"></i>
         </td>
       </tr>
     </ng-template>
@@ -169,8 +170,8 @@
               Stage Member People
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role2" [options]="users" data-cy="users-multiselect" [(ngModel)]="currWorkflowGroup.usersSaved" [itemSize]="15"
-                appendTo="body">
+              <p-multiSelect name="role2" [options]="users" data-cy="users-multiselect"
+                [(ngModel)]="currWorkflowGroup.usersSaved" [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Users">Select Users</div>
                 </ng-template>
@@ -182,8 +183,8 @@
               Group Roles
             </label>
             <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allRoles" data-cy="roles-multiselect" [(ngModel)]="currWorkflowGroup.rolesSaved" [itemSize]="15"
-                appendTo="body">
+              <p-multiSelect name="role" [options]="allRoles" data-cy="roles-multiselect"
+                [(ngModel)]="currWorkflowGroup.rolesSaved" [itemSize]="15" appendTo="body">
                 <ng-template pTemplate="selectedItems">
                   <div tooltip="Select Roles">Select Roles</div>
                 </ng-template>
