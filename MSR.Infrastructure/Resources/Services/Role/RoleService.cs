@@ -25,7 +25,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var result = new List<Domain.Models.Role>();
             var roles = await _unitOfWork.Roles.Query().Include(i => i.Menus).ThenInclude(i => i.MenuRolePermission)
                                                        .Include(i => i.Menus).ThenInclude(i => i.MenuItem).ThenInclude(i => i.MenuGroup)
-                                                       .Include(i => i.ChildRoles).ThenInclude(i => i.ChildRole).ThenInclude(i => i.Menus).ThenInclude(i => i.MenuRolePermission).ToListAsync();
+                                                       //.Include(i => i.ChildRoles).ThenInclude(i => i.ChildRole).ThenInclude(i => i.Menus).ThenInclude(i => i.MenuRolePermission)
+                                                       .ToListAsync();
             foreach (var role in roles)
             {
                 var domRole = _mapper.Map<Domain.Models.Role>(role);

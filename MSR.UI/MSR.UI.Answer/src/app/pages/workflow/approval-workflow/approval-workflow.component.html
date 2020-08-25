@@ -182,7 +182,7 @@
             <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
               Member Stages
             </label>
-            <div class="col-md-10 col-12">
+            <div class="col-md-10 col-12" data-cy="form-memberStages">
               <multiselect-wrapper-form [options]="allStages" [limit]="30" [(model)]="currWorkflow.memberStages"
                 defaultLabelProperty="workflowStageName" defaultId="workflowStageId" defaultLabel="Select Member Stages">
               </multiselect-wrapper-form>
@@ -192,7 +192,7 @@
             <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
               Applicable Activities
             </label>
-            <div class="col-md-10 col-12">
+            <div class="col-md-10 col-12" data-cy="form-activityMaps">
               <multiselect-wrapper-form [options]="allActivities" [limit]="30" [(model)]="currWorkflow.activityMaps"
                 defaultLabelProperty="workflowActivityName" defaultId="workflowActivityId" defaultLabel="Select Activities">
               </multiselect-wrapper-form>
