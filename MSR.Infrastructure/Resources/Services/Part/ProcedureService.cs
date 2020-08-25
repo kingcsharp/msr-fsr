@@ -30,12 +30,19 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             List<EntityFramework.Entities.Procedure> procedures;
             if (command.procedureID.HasValue) {
-                procedures = await _unitOfWork.Procedures.Query().Where(x => x.Id == command.procedureID.Value).ToListAsync();
+                procedures = await _unitOfWork.Procedures
+                    .Query()
+                    .Where(x => x.Id == command.procedureID.Value)
+                    .Include(x => x.ProcedureType)
+                    .ToListAsync();
                 if (procedures.Count == 0) {
                     throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
                 }
             } else {
-                procedures = await _unitOfWork.Procedures.Query().ToListAsync();
+                procedures = await _unitOfWork.Procedures
+                    .Query()
+                    .Include(x => x.ProcedureType)
+                    .ToListAsync();
             }
             var result = procedures.Select(x => _mapper.Map<Domain.Models.Procedure>(x)).OrderBy(x => x.Name).ToList();
             return result;

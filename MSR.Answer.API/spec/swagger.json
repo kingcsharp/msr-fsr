@@ -2064,7 +2064,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 2
             },
             "x-position": 1
           },
