@@ -6778,6 +6778,10 @@
               "$ref": "#/components/schemas/FileRequest"
             }
           }
+        },
+        "example": {
+            "name": "PROC1598387581",
+            "comments": "This here is a comment Tue, Aug 25, 2020  1:33:18 PM"
         }
       },
       "AuditActionResultOfProcedureStep": {

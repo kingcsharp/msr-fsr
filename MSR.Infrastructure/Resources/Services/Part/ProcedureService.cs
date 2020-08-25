@@ -50,8 +50,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 Procedure procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                _unitOfWork.Procedures.Add(procedure);
+                var created = _unitOfWork.Procedures.Add(procedure);
                 await _unitOfWork.SaveChangesAsync();
+
+                // The API return expects the procedure type object to be loaded.
+                created.Context.Entry(procedure).Reference(x => x.ProcedureType).Load();
 
                 ret = _mapper.Map<Domain.Models.Procedure>(procedure);
             }

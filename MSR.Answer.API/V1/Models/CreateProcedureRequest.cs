@@ -35,8 +35,9 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets ProcedureTypeId
         /// </summary>
         /// <example>1</example>
+        [Required]
         [DataMember(Name="procedureTypeId")]
-        public int? ProcedureTypeId { get; set; }
+        public int ProcedureTypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets Comments
