@@ -135,12 +135,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPatch]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
         public async Task<IActionResult> ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest body)
         {
             var command = body.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureRequest>();
+            return ret.ToOkObjectResponse<Procedure>();
         }
 
         /// <summary>

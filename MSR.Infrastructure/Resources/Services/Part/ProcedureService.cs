@@ -68,7 +68,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
         {
-            var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var current = await _unitOfWork.Procedures
+                .Query()
+                .Where(i => i.Id == command.Id)
+                .Include(x => x.ProcedureType)
+                .FirstOrDefaultAsync();
 
             if(current is null)
             {

@@ -2569,6 +2569,7 @@
         "tags": [
           "ProcedureStepTemplate"
         ],
+        "summary": "Get procedure step template by Id",
         "operationId": "ProcedureStepTemplate_GetProcedureStepTemplate",
         "parameters": [
           {
@@ -2577,7 +2578,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 7
             },
             "x-position": 1
           },
@@ -2586,7 +2588,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2608,6 +2611,7 @@
         "tags": [
           "ProcedureStepTemplate"
         ],
+        "summary": "Add procedure step template",
         "operationId": "ProcedureStepTemplate_AddProcedureStepTemplate",
         "parameters": [
           {
@@ -2650,6 +2654,7 @@
         "tags": [
           "ProcedureStepTemplate"
         ],
+        "summary": "Update procedure step template",
         "operationId": "ProcedureStepTemplate_UpdateProcedureStepTemplate",
         "parameters": [
           {
@@ -2703,7 +2708,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 1
             },
             "x-position": 1
           },
@@ -2712,7 +2718,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2978,7 +2985,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureTypeRequest"
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureType"
                 }
               }
             }
@@ -7254,6 +7261,12 @@
           "durationType"
         ],
         "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Gets or Sets the Id",
+            "format": "int32",
+            "example": 3
+          },
           "name": {
             "type": "string",
             "description": "Gets or Sets Name",
