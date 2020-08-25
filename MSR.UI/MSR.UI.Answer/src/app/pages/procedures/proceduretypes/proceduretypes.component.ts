@@ -7,12 +7,12 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { ProcedureTypeMock } from '../../../services/mocks/models/ProcedureTypeMock';
-
+import { ProcedureType, ProcedureTypeService} from '../../../services/api.client.generated';
 @Component({
   selector: 'app-proceduretypes',
   templateUrl: './proceduretypes.component.html',
   styleUrls: ['./proceduretypes.component.scss'],
-  providers: [MockServices]
+  providers: [MockServices, ProcedureTypeService]
 })
 export class ProceduretypesComponent implements OnInit {
 
@@ -29,7 +29,7 @@ export class ProceduretypesComponent implements OnInit {
   statusOptions: any[];
   showConfirmDeleteDialog: boolean = false;
   procedureTypeToDelete: ProcedureTypeMock;
-  constructor(private mockService: MockServices, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private procedureTypeService: ProcedureTypeService, private mockService: MockServices, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -53,11 +53,16 @@ export class ProceduretypesComponent implements OnInit {
 
   getProcedureTypes() {
 
-    this.data = this.mockService.procedureTypesGet(null);
-    this.statusOptions = this.data.filter(
-      (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-    ).map(x => ({ label: x.status, value: x.status }));
-    this.loading = false;
+    this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
+
+      this.data = response.object;
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
+      this.loading = false;
+
+    }));
+
   }
 
   hasPrivilege(privName) {
