@@ -1,1 +1,182 @@
-<p>profile works!</p>
+<h1 class="page-title">
+    <i class="fad fa-user"></i>
+    User Profile
+</h1>
+<widget>
+    <section class="widget mrg-btm-sm" widget>
+        <header>
+            <h5>
+                <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                </span>
+                User Details
+            </h5>
+        </header>
+        <div class="widget-body">
+            <fieldset>
+                <legend>
+                </legend>
+                <div class="form-group row">
+                    <label for="firstName" class="col-md-2 col-form-label text-md-right">
+                        First Name:
+                    </label>
+                    <div class="col-md-4 ">
+                        <label class="col-form-label">{{user.firstName}}</label>
+                    </div>
+                    <label for="lastName" class="col-md-2  col-form-label text-md-right">
+                        Last Name:
+                    </label>
+                    <div class="col-md-4 ">
+                        <label class="col-form-label">{{user.lastName}}</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="form-control-label col-md-2 col-12 text-md-right" for="email">
+                        E-mail:
+                    </label>
+                    <div class="col-md-4 col-12">
+                        <label class="col-form-label">{{user.email}}</label>
+                    </div>
+                    <label for="userName" class="col-md-2  col-form-label text-md-right">
+                        Username:
+                    </label>
+                    <div class="col-md-4 ">
+                        <label class="col-form-label">{{user.userName}}</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="title" class="col-md-2  col-form-label text-md-right">
+                        Title:
+                    </label>
+                    <div class="col-md-4 ">
+                        <label class="col-form-label">{{user.title}}</label>
+                    </div>
+                    <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
+                        Phone:
+                    </label>
+                    <div class="col-md-4 col-12">
+                        <label class="col-form-label">{{user.phone}}</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+                        Supervisor:
+                    </label>
+                    <div class="col-md-4 ">
+                        <label class="col-form-label">{{user.supervisorName}}</label>
+                    </div>
+                    <label for="createdOn" *ngIf="user.id !== undefined" class="col-md-2  col-form-label text-md-right">
+                        Created On:
+                    </label>
+                    <div class="col-md-4" *ngIf="user.id !== undefined">
+                        <label class="col-form-label">{{user.createdOn | date :'short'}}</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2  col-form-label text-md-right">
+                        Is Active:
+                    </label>
+                    <div class="col-md-4 ">
+                        <div class="display-inline-block isActive">
+                            <label class="col-form-label">{{user.isActive?'Yes':'No'}}</label>
+                        </div>
+                    </div>
+                    <label class="col-md-2  col-form-label text-md-right">
+                        Is Answer User:
+                    </label>
+                    <div class="col-md-4 ">
+                        <div class="display-inline-block isAnswerUser">
+                            <label class="col-form-label">{{user.isAnswerUser?'Yes':'No'}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                        Roles:
+                    </label>
+                    <div class="col-md-10 col-12">
+                        <span *ngFor="let item of user.roles"
+                            class="badge mr-xs badge-secondary ng-star-inserted">{{item.name}}</span>
+                    </div>
+                    <label class="form-control-label col-md-2 col-12 text-md-right" for="locations">
+                        Location:
+                    </label>
+                    <div class="col-md-4 col-12">
+                        <label class="col-form-label">{{user.locationName}}</label>
+                    </div>
+
+                </div>
+            </fieldset>
+        </div>
+    </section>
+</widget>
+<widget>
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="submitPwChange()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    Change Password
+                </h5>
+            </header>
+            <div class="widget-body">
+                <fieldset>
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <label for="oldPassword" class="col-md-2 col-form-label text-md-right">
+                            Current Password
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="text" id="oldPassword" name="oldPassword" [(ngModel)]="userPwObj.oldPassword"
+                                data-validate="parsley"
+                                data-parsley-required="true" class="form-control input-transparent"
+                                tooltip="Min length 3 characters" placeholder="Current Password" data-cy="oldPassword-input">
+                        </div>
+                        <label for="confirmpassword" class="col-md-2 col-form-label text-md-right">
+                            Confirm Password
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="text" id="confirmpassword" name="confirmpassword"
+                                [(ngModel)]="userPwObj.confirmpassword" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                                data-parsley-minlength="8"
+                                data-parsley-required-message="Please enter your new password."
+                                data-parsley-uppercase="1" data-parsley-lowercase="1" data-parsley-number="1"
+                                data-parsley-special="1"
+                                 class="form-control input-transparent"
+                                tooltip="Min length 3 characters" placeholder="Confirm Password"
+                                data-cy="confirmpassword-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newpassword" class="col-md-2 col-form-label text-md-right">
+                            New Password
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="text" id="newpassword" name="newpassword" [(ngModel)]="userPwObj.newpassword"
+                                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                data-parsley-required="true" 
+                                data-parsley-minlength="8"
+                                data-parsley-required-message="Please re-enter your new password."
+                                data-parsley-equalto="#confirmpassword"
+                                class="form-control input-transparent"
+                                tooltip="Min length 3 characters" placeholder="New Password"
+                                data-cy="newpassword-input">
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+            <p-footer>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                        data-cy="save-button">
+                        Save
+                    </button>
+                </div>
+            </p-footer>
+        </section>
+    </form>
+</widget>

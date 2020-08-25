@@ -69,7 +69,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch("resetmypassword")]
-        [SwaggerResponse(System.Net.HttpStatusCode.NoContent, typeof(void))]
+        [SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(void))]
         public async Task<IActionResult> ResetMyPassword([FromBody, Required] ResetMyPasswordRequest request)
         {
             return new OkObjectResult(new AuditActionResult()

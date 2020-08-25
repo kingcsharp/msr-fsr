@@ -33,7 +33,9 @@ export const routes = [
   { path: 'roleassignments', component: RoleassignmentsComponent, pathMatch: 'full' },
   { path: 'customers', component: CustomersComponent, pathMatch: 'full' },
   { path: 'customer-create', component: CustomerCreateComponent, pathMatch: 'full' },
-  { path: 'training', component: CertificationsComponent, pathMatch: 'full' }
+  { path: 'training', component: CertificationsComponent, pathMatch: 'full' },
+  { path: 'roles', component: RoleComponent, pathMatch: 'full' },
+  { path: 'profile', component: ProfileComponent, pathMatch: 'full' }
 ];
 
 @NgModule({

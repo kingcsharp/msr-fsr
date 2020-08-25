@@ -9,7 +9,6 @@ import { EnumPrivilege } from '../../models/enums/privileges';
 import { AllowedActions } from './AllowedActions';
 import { Observable, Observer, BehaviorSubject, Subject } from 'rxjs';
 import { ModalData } from './ModalData';
-import { resolve } from 'dns';
 
 @Injectable()
 export class Globals {
