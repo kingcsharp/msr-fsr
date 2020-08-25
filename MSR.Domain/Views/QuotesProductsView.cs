@@ -12,7 +12,9 @@ namespace MSR.Domain.Views
         public string SubmittedBy { get; set; }
         public string PartKitNo { get; set; }
         public string ProcedureName { get; set; }
+
         public string ProductName { get; set; }
+        public string Representative { get; set; }
         public int Revision { get; set; }
         public decimal EquipmentCost { get; set; }
         public decimal MaterialCost { get; set; }

@@ -247,7 +247,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
 
-            CreateMap<Domain.Models.QuoteModel, Domain.Views.QuotesProductsView>()
+            CreateMap<Domain.Models.QuoteModel, QuotesProductsView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.SubmittedBy.FullName))
