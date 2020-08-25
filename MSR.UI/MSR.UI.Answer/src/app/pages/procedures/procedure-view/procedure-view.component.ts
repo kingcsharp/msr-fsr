@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Procedure } from '../../../services/mocks/models/procedure';
-import { ProcedureStep } from '../../../services/mocks/models/procedureStep';
-import { MockServices } from '../../../services/mocks/services/mockservices';
 import { ActivatedRoute } from '@angular/router';
+import { Procedure, ProcedureService, ProcedureStep } from '../../../services/api.client.generated';
+import { responseHandler } from '../../../utils/responseHandler';
+import { environment as env } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-procedure-view',
   templateUrl: './procedure-view.component.html',
   styleUrls: ['./procedure-view.component.scss'],
-  providers: [MockServices]
+  providers: [ProcedureService]
 })
 export class ProcedureViewComponent implements OnInit {
 
   procedure: Procedure = new Procedure();
   procedureSteps: Array<ProcedureStep>;
 
-  constructor(private mockServices: MockServices, private route: ActivatedRoute) { }
+  constructor(private procedureService: ProcedureService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
@@ -25,15 +25,18 @@ export class ProcedureViewComponent implements OnInit {
 
       if (this.procedure.id !== 0) {
 
-        let procedures = this.mockServices.procedureGet(this.procedure.id);
+        this.procedureService.procedureGet(this.procedure.id, env.apiVersion).subscribe(responseHandler((response) => {
+            this.procedure = response.object[0];
 
-        this.procedure = procedures[0];
+            this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((stepGetResponse) => {
+              this.procedureSteps = stepGetResponse.object;
+            }));
 
-        this.procedureSteps = this.mockServices.procedureStepGet(null).slice(1, 4);
+        }));
+
       }
 
     });
-
 
   }
 

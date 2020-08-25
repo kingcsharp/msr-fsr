@@ -5,7 +5,7 @@ import { EnumMenuItem } from '../../../models/enums/privileges';
 import { RoleService, Role } from '../../../services/api.client.generated';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
-import { Procedure, ProcedureService, CreateProcedureRequest, ProcedureTypeService, ProcedureType} from '../../../services/api.client.generated';
+import { Procedure, ProcedureService, CreateProcedureRequest, ProcedureTypeService} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 
