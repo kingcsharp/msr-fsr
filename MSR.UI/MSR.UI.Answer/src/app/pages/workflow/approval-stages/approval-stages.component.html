@@ -174,7 +174,7 @@
             <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
               Stage Member Group
             </label>
-            <div class="col-md-10 col-12">
+            <div class="col-md-10 col-12" data-cy="form-groups">
               <multiselect-wrapper-form [options]="workflowGroups" [limit]="30" [(model)]="currWorkflowStage.groups"
                 defaultId="workflowGroupId" defaultLabel="Select Workflow Groups">
               </multiselect-wrapper-form>
