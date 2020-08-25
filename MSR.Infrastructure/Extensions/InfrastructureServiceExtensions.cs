@@ -25,6 +25,7 @@ using MSR.Domain.Abstractions;
 using MSR.Infrastructure.Factories;
 using MSR.Infrastructure.Resources.AWS;
 using MSR.Infrastructure.Resources.Services.Sensor;
+using MSR.Infrastructure.Resources.Services.Timezone;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -37,7 +38,6 @@ namespace MSR.Infrastructure.Extensions
             services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseSqlServer(dbConfig.ConnectionString).EnableDetailedErrors().EnableSensitiveDataLogging());
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IUserService, UserService>();
@@ -64,6 +64,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ISensorService, SensorService>();
             services.AddScoped<IImportValidatorFactory, ImportValidatorFactory>();
             services.AddTransient<S3FileHandler>();
+            services.AddScoped<ITimezoneService, TimezoneService>();
 
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
