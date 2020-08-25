@@ -5,12 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    [Table(nameof(Quote))]
-    public class Quote
+    public class Quote : Entity
     {
-        [Required]
-        public int Id { get; set; }
-
         [Required]
         public DateTime SubmittedDate { get; set; }
 

@@ -69,6 +69,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
         private IRepository<Sensor> _sensor;
+        private IRepository<Quote> _quotes;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
@@ -127,6 +128,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
         public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
+        public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
 
         #endregion Repositories
 

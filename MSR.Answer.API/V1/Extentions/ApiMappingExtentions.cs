@@ -495,10 +495,6 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<ImportFile>(request);
         }
-<<<<<<< HEAD
-            
-        public static GetQuotesProductsGridView ToGetQuotesProductsRequestCommand(this GetQuotesProductsGridViewRequest request)
-=======
 
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
 
@@ -527,6 +523,5 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProduct>(request);
         }
-        public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
     }
 }

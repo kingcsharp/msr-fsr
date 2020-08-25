@@ -59,6 +59,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<File> File { get; set; }
         public DbSet<FileEntityMap> FileEntityMap { get; set; }
         public DbSet<Sensor> SensorItem { get; set; }
+        public DbSet<Quote> Quote { get; set; }
 
 
 

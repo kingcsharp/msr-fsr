@@ -21,11 +21,20 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int CustomerId { get; set; }
 
-        public int? CustomerRequirementId { get; set; }
+        [ForeignKey("CustomerId")]
+        public virtual Customer Customer { get; set; }
 
+        public int? CustomerRequirementId { get; set; }
+        
         public int ProcedureId { get; set; }
 
+        [ForeignKey("ProcedureId")]
+        public virtual Procedure Procedure { get; set; }
+
         public int PartId { get; set; }
+
+        [ForeignKey("PartId")]
+        public virtual Part Part { get; set; }
 
         [Column(TypeName = "money")]
         public decimal EquipmentCost { get; set; }

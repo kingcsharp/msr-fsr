@@ -81,9 +81,11 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZone>().ReverseMap();
-            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
-            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
            
+            CreateMap<GetLocations, Location>();
+            CreateMap<User, UserApproval>();
+
+            CreateMap<GetLocations, Location>();
 
             CreateMap<Role, Domain.Models.Role>()
                 .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
@@ -98,6 +100,7 @@ namespace MSR.Infrastructure.Profiles
 
             #region Invoice
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
+            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
             CreateMap<Invoice, InvoiceView>()
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Total))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
@@ -222,10 +225,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
-
-            CreateMap<UploadFile, Domain.Models.FileModel>()
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
-
+            
             #region Product
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
             CreateMap<CreateProduct, Product>();
@@ -253,7 +253,10 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.SubmittedBy.FullName))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Product.Procedure.Name))
                 .ForMember(dest => dest.IsDeletable, opt => opt.MapFrom(src => !src.ProductId.HasValue));
-                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Product.Procedure.Name));
+            
+            CreateMap<UploadFile, Domain.Models.FileModel>()
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
+
         }
 
         private int? GetLocationId(Invoice src)

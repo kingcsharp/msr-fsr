@@ -27,7 +27,6 @@ namespace MSR.Domain.Models
         public string CustomerRequirementJson { get; set; }
         public int? ProductId { get; set; }
         public virtual ProductModel Product { get; set; }
-        public int Revision { get; set; }
         public ICollection<QuoteItemModel> QuoteItems { get; set; }
     }
 }

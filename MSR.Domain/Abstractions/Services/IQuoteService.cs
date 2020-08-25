@@ -7,6 +7,10 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IQuoteService
     {
+        /// <summary>
+        /// Returns all Quotes
+        /// </summary>
+        /// <returns></returns>
         Task<IEnumerable<QuoteModel>> GetQuotesAsync();
 
         /// <summary>
