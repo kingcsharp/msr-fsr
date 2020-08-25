@@ -11,6 +11,7 @@ namespace MSR.Application.ApplicationServices
 {
     public class ProcedureStepTemplateAppService :
         ICommandHandler<GetProcedureStepTemplate>,
+        ICommandHandler<DeleteProcedureStepTemplate>,
         ICommandHandler<CreateProcedureStepTemplate>,
         ICommandHandler<UpdateProcedureStepTemplate>
     {
@@ -44,6 +45,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _procedureService.UpdateProcedureStepTemplateAsync(command);
             return new CommandResponse<ProcedureStepTemplateModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteProcedureStepTemplate command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.DeleteProcedureStepTemplateAsync(command);
+            return new CommandResponse<bool>(ret);
         }
     }
 }

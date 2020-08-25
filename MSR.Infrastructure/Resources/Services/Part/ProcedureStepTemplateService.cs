@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -117,6 +118,23 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return ret;
 
+        }
+
+        public async Task<bool> DeleteProcedureStepTemplateAsync(DeleteProcedureStepTemplate command)
+        {
+            var current = await _unitOfWork.ProcedureStepTemplates.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepTemplate)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.ProcedureStepTemplates.Delete(false, current);
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplateModel)} uid {CurrentUser.GetId()}");
+            }
+            return true;
         }
     }
 }
