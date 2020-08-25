@@ -1,22 +1,19 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreateProcedureRequest } from '../../../services/mocks/models/createProcedureRequest';
-import { UpdateProcedureRequest } from '../../../services/mocks/models/updateProcedureRequest';
-import { Procedure } from '../../../services/mocks/models/procedure';
-import { MockServices } from '../../../services/mocks/services/mockservices';
 import { SelectItem } from 'primeng/api';
 import { EnumMenuItem } from '../../../models/enums/privileges';
 import { RoleService, Role } from '../../../services/api.client.generated';
-import { environment as env } from '../../../../environments/environment';
-import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
+import { Procedure, ProcedureService, CreateProcedureRequest, ProcedureTypeService, ProcedureType} from '../../../services/api.client.generated';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
 
 @Component({
   selector: 'app-procedure-create',
   templateUrl: './procedure-create.component.html',
   styleUrls: ['./procedure-create.component.scss'],
-  providers: [MockServices]
+  providers: [ ProcedureService, ProcedureTypeService]
 })
 export class ProcedureCreateComponent implements OnInit {
 
@@ -28,8 +25,8 @@ export class ProcedureCreateComponent implements OnInit {
   selectedRoles: Array<number> = new Array<number>();
   durationTypeOptions: Array<SelectItem>;
 
-  constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef,
-    private router: Router, private roleService: RoleService) { }
+  constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
+    private router: Router, private roleService: RoleService, private procedureService: ProcedureService, private procedureTypeService: ProcedureTypeService) { }
 
   ngOnInit(): void {
 
@@ -40,10 +37,12 @@ export class ProcedureCreateComponent implements OnInit {
 
       this.availableRoles = response.object.map(s => ({ label: s.name, value: s.id }));
 
-      this.availableProcedureTypes = this.mockServices.procedureTypesGet(null).map(s => ({ label: s.name, value: s.id }));
+      this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler((response) => {
+        this.availableProcedureTypes = response.object.map(s => ({ label: s.name, value: s.id }));
+      }));
 
       this.procedure.comment = '';
-        this.procedure.referenceFiles = [];
+      this.procedure.referenceFiles = [];
 
     }));
 
@@ -59,8 +58,13 @@ export class ProcedureCreateComponent implements OnInit {
     createProcedureRequest.procedureTypeId = this.selectedProcedureType === undefined ? undefined : Number(this.selectedProcedureType);
     createProcedureRequest.referenceFiles = this.procedure.referenceFiles;
     createProcedureRequest.roleIds = this.selectedRoles.map(s => s);
-    this.mockServices.procedurePost(createProcedureRequest);
-    this.router.navigate(['app/procedures/procedures']);
+
+    this.procedureService.procedurePost(env.apiVersion, createProcedureRequest).subscribe(responseHandler((response) => {
+
+      this.router.navigate(['app/procedures/procedures']);
+
+    }));
+    
 
   }
 
