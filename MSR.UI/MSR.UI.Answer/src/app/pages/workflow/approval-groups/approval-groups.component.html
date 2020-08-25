@@ -183,7 +183,7 @@
             <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
               Group Roles
             </label>
-            <div class="col-md-10 col-12">
+            <div class="col-md-10 col-12" data-cy="form-groupRoles">
               <multiselect-wrapper-form [options]="allRoles" [limit]="30" [(model)]="currWorkflowGroup.groupRoles"
                 defaultId="roleId" defaultLabel="Select Roles">
               </multiselect-wrapper-form>
@@ -193,7 +193,7 @@
             <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
               Stage Member People
             </label>
-            <div class="col-md-10 col-12">
+            <div class="col-md-10 col-12" data-cy="form-groupUsers">
               <multiselect-wrapper-form [options]="users" [limit]="30" [(model)]="currWorkflowGroup.groupUsers"
                 defaultId="userId" defaultLabel="Select Users">
               </multiselect-wrapper-form>
