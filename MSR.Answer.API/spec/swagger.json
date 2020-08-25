@@ -7930,6 +7930,352 @@
           }
         }
       },
+      "AuditActionResultOfICollectionOfProcedureStepTypeModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ProcedureStepTypeModel"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ProcedureStepTypeModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateProcedureTemplateRequest": {
+        "type": "object",
+        "description": " ",
+        "additionalProperties": true,
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Gets or Sets Title",
+            "nullable": true
+          },
+          "baseStartOnCounter": {
+            "type": "boolean",
+            "description": "Gets or Sets BaseStartOnCounter",
+            "nullable": true
+          },
+          "estimatedStepDuration": {
+            "type": "integer",
+            "description": "Gets or Sets EstimatedStepDuration",
+            "format": "int32",
+            "nullable": true
+          },
+          "replacementCost": {
+            "type": "number",
+            "description": "Gets or Sets ReplacementCost",
+            "format": "double",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "description": "Gets or Sets Utilization",
+            "format": "double",
+            "nullable": true
+          },
+          "usefulLife": {
+            "type": "number",
+            "description": "Gets or Sets UsefulLife",
+            "format": "decimal",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "description": "Gets or Sets Text",
+            "nullable": true
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "description": "Gets or Sets ProcedureStepId",
+            "format": "int32",
+            "nullable": true
+          },
+          "numberOfQuestionsToUse": {
+            "type": "integer",
+            "description": "Gets or Sets NumberOfQuestionsToUse",
+            "format": "int32",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "description": "Gets or Sets Comments",
+            "nullable": true
+          },
+          "referenceProcedures": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceProcedures",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "referenceDocuments": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceDocuments",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "referenceFiles": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceFiles",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FileRequest"
+            }
+          },
+          "roles": {
+            "type": "array",
+            "description": "Gets or Sets Roles",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RoleRequest"
+            }
+          }
+        }
+      },
+      "UpdateProcedureTemplateRequest": {
+        "type": "object",
+        "description": " ",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Gets or Sets Id",
+            "format": "int32",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "Gets or Sets Title",
+            "nullable": true
+          },
+          "baseStartOnCounter": {
+            "type": "boolean",
+            "description": "Gets or Sets BaseStartOnCounter",
+            "nullable": true
+          },
+          "estimatedStepDuration": {
+            "type": "integer",
+            "description": "Gets or Sets EstimatedStepDuration",
+            "format": "int32",
+            "nullable": true
+          },
+          "replacementCost": {
+            "type": "number",
+            "description": "Gets or Sets ReplacementCost",
+            "format": "double",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "description": "Gets or Sets Utilization",
+            "format": "double",
+            "nullable": true
+          },
+          "usefulLife": {
+            "type": "number",
+            "description": "Gets or Sets UsefulLife",
+            "format": "decimal",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "description": "Gets or Sets Text",
+            "nullable": true
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "description": "Gets or Sets ProcedureStepId",
+            "format": "int32",
+            "nullable": true
+          },
+          "numberOfQuestionsToUse": {
+            "type": "integer",
+            "description": "Gets or Sets NumberOfQuestionsToUse",
+            "format": "int32",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "description": "Gets or Sets Comments",
+            "nullable": true
+          },
+          "referenceProcedures": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceProcedures",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "referenceDocuments": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceDocuments",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "referenceFiles": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceFiles",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FileRequest"
+            }
+          },
+          "roles": {
+            "type": "array",
+            "description": "Gets or Sets Roles",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RoleRequest"
+            }
+          }
+        }
+      },
+      "AuditActionResultOfProcedureTypeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureTypeRequest"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CreateProcedureTypeRequest": {
+        "type": "object",
+        "description": " ",
+        "additionalProperties": true,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Gets or Sets Name",
+            "minLength": 1
+          },
+          "majorGroup": {
+            "type": "string",
+            "description": "Gets or Sets MajorGroup",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfICollectionOfProcedureTypeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ProcedureTypeRequest"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UpdateProcedureTypeRequest": {
+        "type": "object",
+        "description": " ",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Gets or Sets Id",
+            "format": "int32",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Gets or Sets Name",
+            "nullable": true
+          },
+          "majorGroup": {
+            "type": "string",
+            "description": "Gets or Sets MajorGroup",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfICollectionOfRole": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        ]
+      },
       "AuditActionResultOfICollectionOfUser": {
         "allOf": [
           {
@@ -7937,6 +8283,7 @@
           },
           {
             "type": "object",
+            "description": "Base class for an API call with a typed result",
             "additionalProperties": true,
             "properties": {
               "object": {
@@ -7949,6 +8296,77 @@
             }
           }
         ]
+      },
+      "AuditActionResultOfUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/User"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AuditActionResultOfIEnumerableOfTrainingCertificationView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/TrainingCertificationView"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "TrainingCertificationView": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "employeeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "certificationFromDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "certificationToDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "certificationName": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       },
       "CreateUserRequest": {
         "type": "object",
@@ -8034,47 +8452,6 @@
             "isActive": false
         }
       },
-      "AuditActionResultOfICollectionOfRole": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuditActionResult"
-          },
-          {
-            "type": "object",
-            "additionalProperties": true,
-            "properties": {
-              "object": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Role"
-                }
-              }
-            }
-          }
-        ]
-      },
-      "AuditActionResultOfUser": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuditActionResult"
-          },
-          {
-            "type": "object",
-            "additionalProperties": true,
-            "properties": {
-              "object": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/User"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
       "UpdateUserRequest": {
         "allOf": [
           {
@@ -8156,6 +8533,869 @@
           "certificationToDate": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfICollectionOfPendingApprovalModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/PendingApprovalModel"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "PendingApprovalModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "workflowName": {
+            "type": "string",
+            "nullable": true
+          },
+          "activityType": {
+            "type": "string",
+            "nullable": true
+          },
+          "workflowId": {
+            "type": "string",
+            "nullable": true
+          },
+          "workflowCreatedByName": {
+            "type": "string",
+            "nullable": true
+          },
+          "workflowGroupName": {
+            "type": "string",
+            "nullable": true
+          },
+          "workflowGroupId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdByName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "EnumApprovalTables": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "CustomerApproval",
+          "DocumentApproval",
+          "LocationApproval",
+          "PartApproval",
+          "ProcedureApproval",
+          "ProductApproval",
+          "PurchaseOrderApproval",
+          "UserApproval",
+          "All"
+        ],
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "AuditActionResultOfPendingApprovalPopoverModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PendingApprovalPopoverModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "PendingApprovalPopoverModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "rows": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AuditActionResultOfPendingApprovalModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PendingApprovalModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "PostPendingApprovalRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "table": {
+            "$ref": "#/components/schemas/EnumApprovalTables"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfICollectionOfWorkOrderModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/WorkOrderModel"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WorkOrderModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purchaseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "scheduledStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actualStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "actualEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hasNCR": {
+            "type": "boolean"
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "location": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LocationModel"
+              }
+            ]
+          },
+          "product": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProductModel"
+              }
+            ]
+          },
+          "purchase": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PurchaseModel"
+              }
+            ]
+          },
+          "workOrderParts": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderPartModel"
+            }
+          },
+          "workOrderTasks": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderTaskModel"
+            }
+          }
+        }
+      },
+      "ProductModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerRequirementId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "procedureId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "partId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "equipmentCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "materialCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "salesTax": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "totalSalePrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "cycleTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "workOrders": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderModel"
+            }
+          }
+        }
+      },
+      "PurchaseModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purchaseOrderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purchaseOrderProductId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerPurchaseNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerLineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purchasePrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "workOrders": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderModel"
+            }
+          }
+        }
+      },
+      "WorkOrderPartModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "partId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "part": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PartModel"
+              }
+            ]
+          },
+          "workOrder": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderModel"
+              }
+            ]
+          },
+          "children": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderPartModel"
+            }
+          },
+          "parent": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderPartModel"
+              }
+            ]
+          }
+        }
+      },
+      "WorkOrderTaskModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "procedureStepTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "taskStepOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "assignedTo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "assignedToUser": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ]
+          },
+          "totalTaskTime": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "taskIsRunning": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "taskRunningSince": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "procedureStep": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProcedureStep"
+              }
+            ]
+          },
+          "procedureStepType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProcedureStepTypeModel"
+              }
+            ]
+          },
+          "status": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StatusModel"
+              }
+            ]
+          },
+          "workOrder": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderModel"
+              }
+            ]
+          },
+          "workOrderTaskMonitors": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderTaskMonitorModel"
+            }
+          }
+        }
+      },
+      "StatusModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "WorkOrderTaskMonitorModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderTaskId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workOrderTask": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderTaskModel"
+              }
+            ]
+          },
+          "procedureMonitorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numVal": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "textVal": {
+            "type": "string",
+            "nullable": true
+          },
+          "multiVal": {
+            "type": "string",
+            "nullable": true
+          },
+          "sensorMappingId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfWorkOrderModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/WorkOrderModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CreateWorkOrderRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "purchaseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "scheduledStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "hasNCR": {
+            "type": "boolean"
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workOrderParts": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderPartRequest"
+            }
+          },
+          "workOrderTasks": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderTaskRequest"
+            }
+          }
+        }
+      },
+      "WorkOrderPartRequest": {
+        "type": "object",
+        "description": " ",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "partId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "parentId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": " ",
+            "nullable": true
+          },
+          "part": {
+            "description": " ",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UpdatePartRequest"
+              }
+            ]
+          },
+          "workOrder": {
+            "description": " ",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UpdateWorkOrderRequest"
+              }
+            ]
+          },
+          "children": {
+            "type": "array",
+            "description": " ",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderPartRequest"
+            }
+          },
+          "parent": {
+            "description": " ",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderPartRequest"
+              }
+            ]
+          }
+        }
+      },
+      "UpdateWorkOrderRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateWorkOrderRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "WorkOrderTaskRequest": {
+        "type": "object",
+        "description": " ",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "procedureStepTypeId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "statusId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "taskStepOrder": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "assignedTo": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32",
+            "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalTaskTime": {
+            "type": "number",
+            "description": " ",
+            "format": "decimal",
+            "nullable": true
+          },
+          "taskIsRunning": {
+            "type": "boolean",
+            "description": " ",
+            "nullable": true
+          },
+          "taskRunningSince": {
+            "type": "string",
+            "description": " ",
+            "format": "date-time",
+            "nullable": true
+          },
+          "workOrderTaskMonitors": {
+            "type": "array",
+            "description": " ",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderTaskMonitorRequest"
+            }
+          }
+        }
+      },
+      "WorkOrderTaskMonitorRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderTaskId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "workOrderTask": {
+            "description": " ",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkOrderTaskRequest"
+              }
+            ]
+          },
+          "procedureMonitorId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "numVal": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32",
+            "nullable": true
+          },
+          "textVal": {
+            "type": "string",
+            "description": " ",
+            "nullable": true
+          },
+          "multiVal": {
+            "type": "string",
+            "description": " ",
+            "nullable": true
+          },
+          "sensorMappingId": {
+            "type": "integer",
+            "description": " ",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string",
+            "description": " ",
             "nullable": true
           }
         }
