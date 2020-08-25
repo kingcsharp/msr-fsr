@@ -4,7 +4,6 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
-import { ProcedureTemplate } from '../../../services/mocks/models/procedureTemplate';
 import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , ProcedureStepTemplateModel } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -58,6 +57,7 @@ export class TemplatesComponent implements OnInit {
 
   getProcedureTemplates() {
 
+    this.globals.showLoader(true);
     this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
         this.data = response.object;
         this.statusOptions = this.data.filter(
