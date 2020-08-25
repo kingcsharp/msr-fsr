@@ -5,14 +5,13 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
-import { MockServices } from '../../../services/mocks/services/mockservices';
-import { Procedure } from '../../../services/mocks/models/procedure';
+import { Procedure, ProcedureService} from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-procedures',
   templateUrl: './procedures.component.html',
   styleUrls: ['./procedures.component.scss'],
-  providers: [MockServices]
+  providers: [ProcedureService]
 })
 export class ProceduresComponent implements OnInit {
 
@@ -30,7 +29,7 @@ export class ProceduresComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   procedureToDelete: Procedure;
 
-  constructor(private mockService: MockServices, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private procedureService: ProcedureService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -56,8 +55,12 @@ export class ProceduresComponent implements OnInit {
 
   getProcedures() {
 
-    this.data = this.mockService.procedureGet(null);
-    this.loading = false;
+    this.globals.showLoader(true);
+    this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler((response) => {
+      this.data  = response.object;
+      this.loading = false;
+    }));
+
   }
 
   hasPrivilege(privName) {
@@ -77,8 +80,13 @@ export class ProceduresComponent implements OnInit {
 
   delete() {
 
-    this.mockService.procedureDelete(this.procedureToDelete.id);
-    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    this.globals.showLoader(true);
+    this.procedureService.procedureDelete(this.procedureToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+      this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    }, () => {
+      this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    }));
+
   }
 
 }

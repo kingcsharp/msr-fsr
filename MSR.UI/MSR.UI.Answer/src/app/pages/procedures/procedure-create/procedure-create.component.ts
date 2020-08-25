@@ -37,8 +37,8 @@ export class ProcedureCreateComponent implements OnInit {
 
       this.availableRoles = response.object.map(s => ({ label: s.name, value: s.id }));
 
-      this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler((response) => {
-        this.availableProcedureTypes = response.object.map(s => ({ label: s.name, value: s.id }));
+      this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler((procedureTypeGetResponse) => {
+        this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
       }));
 
       this.procedure.comment = '';
@@ -64,7 +64,7 @@ export class ProcedureCreateComponent implements OnInit {
       this.router.navigate(['app/procedures/procedures']);
 
     }));
-    
+
 
   }
 
