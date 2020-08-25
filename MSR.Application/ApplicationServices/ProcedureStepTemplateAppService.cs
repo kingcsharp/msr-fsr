@@ -24,17 +24,17 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetProcedureStepTemplateAsync(command);
-            return new CommandResponse<ICollection<ProcedureStepTemplate>>(ret);
+            return new CommandResponse<ICollection<ProcedureStepTemplateModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreateProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.CreateProcedureStepTemplateAsync(command);
-            return new CommandResponse<ProcedureStepTemplate>(ret);
+            return new CommandResponse<ProcedureStepTemplateModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(UpdateProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.UpdateProcedureStepTemplateAsync(command);
-            return new CommandResponse<ProcedureStepTemplate>(ret);
+            return new CommandResponse<ProcedureStepTemplateModel>(ret);
         }
     }
 }

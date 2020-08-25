@@ -9,6 +9,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using NSwag.Annotations;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -29,7 +30,8 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
         public async Task<IActionResult> GetProcedure(int? id)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedure() {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedure()
+            {
                 procedureID = id
             });
             return ret.ToOkObjectResponse<ICollection<Procedure>>();
@@ -57,36 +59,37 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStep>>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ICollection<ProcedureStepModel>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedureStep() {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedureStep()
+            {
                 procedureId = id,
                 stepId = stepid
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureStep>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureStepModel>>();
         }
 
         [HttpPost("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepModel>))]
         public async Task<IActionResult> AddProcedureStep(int id, CreateProcedureStepRequest newstep)
         {
             var command = newstep.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStep>();
+            return ret.ToOkObjectResponse<ProcedureStepModel>();
         }
 
         [HttpPatch("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepModel>))]
         public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest newstep)
         {
             var command = newstep.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStep>();
+            return ret.ToOkObjectResponse<ProcedureStepModel>();
         }
     }
 }
