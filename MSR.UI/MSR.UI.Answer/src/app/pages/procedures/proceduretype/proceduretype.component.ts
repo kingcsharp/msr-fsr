@@ -1,23 +1,25 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
-import { CreateProcedureTypeRequest } from '../../../services/mocks/models/createProcedureTypeRequest';
-import { UpdateProcedureTypeRequest } from '../../../services/mocks/models/updateProcedureTypeRequest';
-import { ProcedureTypeMock } from '../../../services/mocks/models/ProcedureTypeMock';
+//import { CreateProcedureTypeRequest } from '../../../services/mocks/models/createProcedureTypeRequest';
+//import { UpdateProcedureTypeRequest } from '../../../services/mocks/models/updateProcedureTypeRequest';
 import { MockServices } from '../../../services/mocks/services/mockservices';
+import { ProcedureType, ProcedureTypeService, CreateProcedureTypeRequest, UpdateProcedureTypeRequest} from '../../../services/api.client.generated';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
 
 @Component({
   selector: 'app-proceduretype',
   templateUrl: './proceduretype.component.html',
   styleUrls: ['./proceduretype.component.scss'],
-  providers: [MockServices]
+  providers: [MockServices, ProcedureTypeService]
 })
 export class ProceduretypeComponent implements OnInit {
 
-  procedureType: ProcedureTypeMock = new ProcedureTypeMock();
+  procedureType: ProcedureType = new ProcedureType();
   availableTypes: Array<SelectItem>;
 
-  constructor( private route: ActivatedRoute, private mockServices: MockServices, public elementReference: ElementRef, private router: Router) {
+  constructor(private procedureTypeService: ProcedureTypeService, private route: ActivatedRoute, private mockServices: MockServices, public elementReference: ElementRef, private router: Router) {
 
   }
 
@@ -37,9 +39,12 @@ export class ProceduretypeComponent implements OnInit {
 
         if (this.procedureType.id !== 0) {
 
-          let procedureTypes = this.mockServices.procedureTypesGet(this.procedureType.id);
+          this.procedureTypeService.procedureTypeGet(this.procedureType.id,env.apiVersion).subscribe(responseHandler((response) => {
 
-          this.procedureType = procedureTypes[0];
+            this.procedureType = response.object[0];
+
+          }));
+
         }
 
       });
@@ -50,10 +55,13 @@ export class ProceduretypeComponent implements OnInit {
 
     let createProcedureTypeRequest = new CreateProcedureTypeRequest();
     createProcedureTypeRequest.name = this.procedureType.name;
-    createProcedureTypeRequest.majorGroup = this.procedureType.type;
+    // TODO: Uncomment when type is added to ProcedureType
+    // createProcedureTypeRequest.majorGroup = this.procedureType.type;
 
-    this.mockServices.procedureTypesPost(createProcedureTypeRequest);
-    this.router.navigate(['app/procedures/proceduretypes']);
+    this.procedureTypeService.procedureTypePost(env.apiVersion, createProcedureTypeRequest).subscribe(responseHandler((response) => {
+      this.router.navigate(['app/procedures/proceduretypes']);
+    }));
+    
   }
 
 
@@ -62,10 +70,13 @@ export class ProceduretypeComponent implements OnInit {
     let updateProcedureTypeRequest = new UpdateProcedureTypeRequest();
     updateProcedureTypeRequest.id = this.procedureType.id;
     updateProcedureTypeRequest.name = this.procedureType.name;
-    updateProcedureTypeRequest.majorGroup = this.procedureType.type;
+    // TODO: Uncomment when type is added to ProcedureType
+    // updateProcedureTypeRequest.majorGroup = this.procedureType.type;
 
-    this.mockServices.procedureTypesPatch(updateProcedureTypeRequest);
-    this.router.navigate(['app/procedures/proceduretypes']);
+    this.procedureTypeService.procedureTypePatch(env.apiVersion, updateProcedureTypeRequest).subscribe(responseHandler((response) => {
+      this.router.navigate(['app/procedures/proceduretypes']);
+    }));
+
   }
 
 }
