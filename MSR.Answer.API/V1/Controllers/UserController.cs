@@ -18,6 +18,9 @@ using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 namespace MSR.Answer.API.V1.Controllers
 {
+    /// <summary>
+    ///
+    /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     public class UserController : BaseApiController
@@ -25,12 +28,22 @@ namespace MSR.Answer.API.V1.Controllers
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="dispatcher"></param>
         public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
         }
 
+        /// <summary>
+        /// Get Users
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required] GetUsersRequest request)
         {
@@ -41,6 +54,10 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<User>>();
         }
 
+        /// <summary>
+        /// Get logged in user data
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("LoggedInUser"), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> GetLoggedInUserData()
         {
@@ -51,6 +68,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>();
         }
                        
+        /// <summary>
+        /// Get training certificates
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGetAttribute("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
         public async Task<IActionResult> GetTrainingCertificationData([FromQuery]GetTrainingCertificationRequest request)
         {
@@ -60,6 +82,11 @@ namespace MSR.Answer.API.V1.Controllers
 
         }
 
+        /// <summary>
+        /// Create a new user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
@@ -70,6 +97,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>("User has been successfully created.");
         }
 
+        /// <summary>
+        /// Update a user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> UpdateUser([FromBody, Required] UpdateUserRequest request)
         {
@@ -79,6 +111,12 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>("User has been successfully updated.");
         }
 
+        /// <summary>
+        /// Delete a user
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        /// <example>2147483647</example>
         [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete), SwaggerResponse(typeof(void))]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
@@ -92,6 +130,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse("User has been Deactivated");
         }
 
+        /// <summary>
+        /// Assign role
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> AssignRoleToUser([FromBody, Required] CreateUserRoleRequest request)
@@ -101,6 +144,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>("Role assigned to user successfully");
         }
 
+        /// <summary>
+        /// Edit user role
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPatch("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> EditUserRole([FromBody, Required] UpdateUserRoleRequest request)
@@ -110,6 +158,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse("User Roles Updated");
         }
 
+        /// <summary>
+        /// Remove user role
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("/Role/{id}"), HasPrivilegeApi("Users",EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> RemoveUserRole(int id)
