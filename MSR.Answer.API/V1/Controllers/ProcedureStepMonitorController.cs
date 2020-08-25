@@ -40,12 +40,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitorRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
         public async Task<IActionResult> AddProcedureStepMonitor(CreateProcedureStepMonitorRequest body)
         {
             var command = body.ToCreateProcedureStepMonitorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepMonitorRequest>();
+            return ret.ToOkObjectResponse<ProcedureStepMonitor>();
         }
 
         /// <summary>
@@ -55,9 +55,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureStepMonitorDeactivateProcedureStepMonitor([FromRoute][Required]int? id)
+        public async Task<IActionResult> DeleteProcedureStepMonitor([FromRoute][Required]int id)
         {
-            throw new NotImplementedException();
+            var command = new DeleteProcedureStepMonitor() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<bool>();
         }
 
         /// <summary>

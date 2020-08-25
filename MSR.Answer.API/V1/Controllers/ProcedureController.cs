@@ -41,12 +41,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
         public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest body)
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureRequest>();
+            return ret.ToOkObjectResponse<Procedure>();
         }
 
         /// <summary>
@@ -57,13 +57,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
         public async Task<IActionResult> ProcedureAddProcedureStep(int id, CreateProcedureStepRequest body)
         {
             var command = body.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepRequest>();
+            return ret.ToOkObjectResponse<ProcedureStep>();
         }
 
         /// <summary>
@@ -71,11 +71,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200"></response>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureDeactivateProcedure([FromRoute][Required]int? id)
+        public async Task<IActionResult> ProcedureDeleteProcedure([FromRoute][Required]int id)
         {
-            throw new NotImplementedException();
+            var command = new DeleteProcedure(){ procedureID = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse();
         }
 
         /// <summary>
@@ -86,9 +88,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpDelete("{id}/step/{stepid}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureDeactivateProcedureStep([FromRoute][Required]int? id, [FromRoute][Required]int? stepid)
+        public async Task<IActionResult> ProcedureDeleteProcedureStep([FromRoute][Required]int id, [FromRoute][Required]int stepid)
         {
-            throw new NotImplementedException();
+            var command = new DeleteProcedureStep(){ procedureID = id, procedureStepID = stepid };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse();
         }
 
         /// <summary>
@@ -98,13 +102,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureRequest>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
         public async Task<IActionResult> ProcedureGetProcedure(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedure() {
                 procedureID = id
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureRequest>>();
+            return ret.ToOkObjectResponse<ICollection<Procedure>>();
         }
 
         /// <summary>
@@ -115,14 +119,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepRequest>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStep>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureStep() {
                 procedureId = id,
                 stepId = stepid
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureStepRequest>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureStep>>();
         }
 
         /// <summary>

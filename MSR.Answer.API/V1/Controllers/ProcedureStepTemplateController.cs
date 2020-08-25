@@ -26,33 +26,33 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet()]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepTemplate>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepTemplateModel>>))]
         public async Task<IActionResult> GetProcedureStepTemplate(int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureStepTemplate() {
                 Id = id
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureStepTemplate>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureStepTemplateModel>>();
         }
 
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplate>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplateModel>))]
         public async Task<IActionResult> AddProcedureStepTemplate(CreateProcedureStepTemplateRequest newproc)
         {
             var command = newproc.ToCreateProcedureStepTemplateCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepTemplate>();
+            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>();
         }
 
         [HttpPatch]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplate>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplateModel>))]
         public async Task<IActionResult> UpdateProcedureStepTemplate(UpdateProcedureStepTemplateRequest newproc)
         {
             var command = newproc.ToUpdateProcedureStepTemplateCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepTemplate>();
+            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>();
         }
     }
 }

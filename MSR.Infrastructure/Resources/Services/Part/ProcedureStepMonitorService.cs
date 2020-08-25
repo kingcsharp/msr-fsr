@@ -4,11 +4,13 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +28,31 @@ namespace MSR.Infrastructure.Resources.Services.Role
             _mapper = mapper;
         }
 
+        public async Task<MonitorModel> GetMonitorModelAsync(GetMonitorModel command)
+        {
+            var procsteps = await GetProcedureStepMonitorAsync(new GetProcedureStepMonitor(){
+                procedureStepMonitorId = command.procedureStepMonitorId
+            });
+
+            if (procsteps == null || procsteps.Count == 0) {
+                // shouldn't happen because GetProcedureStepMonitorAsync throws first
+                throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
+            }
+
+            Domain.Models.ProcedureStepMonitor procstepmon = procsteps.First();
+
+            var ret = new MonitorModel() {
+                Id = procstepmon.Id,
+                Description = procstepmon.Description,
+                MonitorType = procstepmon.MonitorType,
+                Result = procstepmon.TargetValue
+            };
+
+            // TODO: get serial and recorded result
+
+            return ret;
+        }
+
         public async Task<ICollection<Domain.Models.ProcedureStepMonitor>> GetProcedureStepMonitorAsync(GetProcedureStepMonitor command)
         {
             List<EntityFramework.Entities.ProcedureStepMonitor> procedures;
@@ -40,7 +67,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepMonitor>(x)).OrderBy(x => x.Description).ToList();
             return result;
         }
-        public async Task<Domain.Models.ProcedureStepMonitor> CreateProcedureStepMonitorAsync(CreateProcedureStepMonitor command)
+        public async Task<MSR.Domain.Models.ProcedureStepMonitor> CreateProcedureStepMonitorAsync(CreateProcedureStepMonitor command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepMonitor ret;
@@ -114,6 +141,24 @@ namespace MSR.Infrastructure.Resources.Services.Role
             ret.ListItems = items.Select(x => _mapper.Map<ProcedureStepMonitorListItem>(x)).ToList();
 
             return ret;
+        }
+
+        public async Task<bool> DeleteMonitorModelAsync(DeleteProcedureStepMonitor command)
+        {
+            var current = await _unitOfWork.ProcedureStepMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Monitors, EnumPrivilege.CanDelete)) {
+                _unitOfWork.ProcedureStepMonitors.Delete(false, current);
+            } else {
+                throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
+            }
+
+            return true;
         }
     }
 }

@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -173,6 +174,60 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
 
             return ret;
+        }
+
+        public async Task<bool> DeleteProcedureAsync(DeleteProcedure command)
+        {
+            var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.procedureID);
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
+            }
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.Procedures.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.Procedure)} uid {CurrentUser.GetId()}");
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteProcedureStepAsync(DeleteProcedureStep command)
+        {
+            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
+                i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
+            );
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
+            }
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.ProcedureSteps.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStep)} uid {CurrentUser.GetId()}");
+            }
+
+            return true;
+        }
+
+        public async Task<ICollection<Domain.Models.ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command)
+        {
+            List<ProcedureStepType> current;
+
+            if (command.Id.HasValue) {
+                current = await _unitOfWork.ProcedureStepTypes.Query().Where(
+                    i => i.Id == command.Id
+                ).ToListAsync();
+            } else {
+                current = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
+            }
+            if(current is null || current.Count == 0)
+            {
+                throw new DomainException($"{nameof(ProcedureStepType)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+            return current.Select(x => _mapper.Map<Domain.Models.ProcedureStepTypeModel>(x)).ToList();
         }
     }
 }

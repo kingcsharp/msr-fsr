@@ -15,15 +15,27 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
+    /// <summary>
+    ///
+    /// </summary>
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="dispatcher"></param>
         public PartController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         [HttpGet]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
@@ -35,6 +47,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<PartModel>>();
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="newpart"></param>
+        /// <returns></returns>
         [HttpPost]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<PartModel>))]
@@ -50,6 +67,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PartModel>(message);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="newpart"></param>
+        /// <returns></returns>
         [HttpPatch]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<PartModel>))]
@@ -65,6 +87,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PartModel>(message);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
@@ -77,6 +104,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PartModel>("Part was successfully removed.");
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         [HttpPost("import")]
         [HasPrivilegeApi("Parts", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
