@@ -7647,13 +7647,11 @@
         },
         "example" : {
             "procedureStepId": 3,
-            "title": "STEPTITLE1594442595",
-            "stepText": "STEPTEXT1594442595",
             "description": "DESC1594442595",
-            "failAction": "REJECT",
-            "monitorTypeId": 1,
-            "inputTypeId": 1,
-            "sensorMappingId": 1
+            "faultHandling": "REJECT",
+            "monitorType": "1",
+            "inputType": "1",
+            "targetValue": "LOOKSGOOD"
         }
       },
       "AuditActionResultOfICollectionOfProcedureStepMonitorRequest": {
