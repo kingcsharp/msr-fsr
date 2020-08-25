@@ -4,6 +4,17 @@ using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Linq;
+using MSR.Domain.Models;
+using Customer = MSR.Infrastructure.Resources.EntityFramework.Entities.Customer;
+using HelpPage = MSR.Infrastructure.Resources.EntityFramework.Entities.HelpPage;
+using MenuGroup = MSR.Infrastructure.Resources.EntityFramework.Entities.MenuGroup;
+using MenuItem = MSR.Infrastructure.Resources.EntityFramework.Entities.MenuItem;
+using Procedure = MSR.Infrastructure.Resources.EntityFramework.Entities.Procedure;
+using ProcedureStepMonitor = MSR.Infrastructure.Resources.EntityFramework.Entities.ProcedureStepMonitor;
+using ProcedureType = MSR.Infrastructure.Resources.EntityFramework.Entities.ProcedureType;
+using Role = MSR.Infrastructure.Resources.EntityFramework.Entities.Role;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
+using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -80,7 +91,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.LocationImportItem, UpdateLocation>();
             #endregion
 
-            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZone>().ReverseMap();
+            CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
            
