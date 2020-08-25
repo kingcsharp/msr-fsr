@@ -1,29 +1,24 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { Procedure } from '../../../services/mocks/models/procedure';
-import { ProcedureStep } from '../../../services/mocks/models/procedureStep';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DraggableItemService } from 'ngx-bootstrap/sortable';
 import { SelectItem } from 'primeng/api';
-import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
-import { MockServices } from '../../../services/mocks/services/mockservices';
-import { RoleService} from '../../../services/api.client.generated';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { RoleService, Procedure, ProcedureStep, ProcedureStepMonitor, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Monitor } from '../../../services/mocks/models/monitor';
-import { ProcedureStepMonitor } from '../../../services/mocks/models/procedureStepMonitor';
+import { MockServices } from '../../../services/mocks/services/mockservices';
 import { CreateProcedureStepMonitorRequest } from '../../../services/mocks/models/createProcedureStepMonitorRequest';
 import { UpdateProcedureStepRequest } from '../../../services/mocks/models/updateProcedureStepRequest';
 import { UpdateProcedureRequest } from '../../../services/mocks/models/updateProcedureRequest';
-import { ProcedureTemplate } from '../../../services/mocks/models/procedureTemplate';
 import { CreateProcedureStepRequest } from '../../../services/mocks/models/createProcedureStepRequest';
-import { DraggableItemService } from 'ngx-bootstrap/sortable';
 
 @Component({
   selector: 'app-procedure-edit',
   templateUrl: './procedure-edit.component.html',
   styleUrls: ['./procedure-edit.component.scss'],
-  providers: [MockServices, DraggableItemService ]
+  providers: [MockServices, DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService]
 })
 export class ProcedureEditComponent implements OnInit {
 
@@ -58,7 +53,8 @@ export class ProcedureEditComponent implements OnInit {
   selectedProcedureStepTemplate: number;
 
   constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef,
-    private router: Router, private roleService: RoleService) { }
+    private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService, 
+    private procedureService: ProcedureService, private procedureStepMonitorService:ProcedureStepMonitorService) { }
 
   ngOnInit(): void {
 
@@ -121,22 +117,30 @@ export class ProcedureEditComponent implements OnInit {
 
         if (this.procedure.id !== 0) {
 
-          let procedures = this.mockServices.procedureGet(this.procedure.id);
+          this.procedureService.procedureGet(this.procedure.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-          this.procedure = procedures[0];
+            this.procedure = response.object[0];
 
-          this.procedureSteps = this.mockServices.procedureStepGet(null).slice(0, 3);
-          this.procedureSteps.forEach(procedureStep => {
-            procedureStep.monitors = this.mockServices.procedureStepMonitorsGet(null).slice(0, 10);
-            procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId).value;
-            procedureStep.selectedRoles = new Array<number>();
-            procedureStep.roles.forEach(role => {
+            this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((response) => {
 
-              procedureStep.selectedRoles.push(this.availableRoles.find(s => s.value === role.id).value);
+              this.procedureSteps = response.object;
 
-            });
+              this.procedureSteps.forEach(procedureStep => {
 
-          });
+                procedureStep.monitors = this.mockServices.procedureStepMonitorsGet(null).slice(0, 10);
+                procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId).value;
+                procedureStep.selectedRoles = new Array<number>();
+                procedureStep.roles.forEach(role => {
+
+                  procedureStep.selectedRoles.push(this.availableRoles.find(s => s.value === role.id).value);
+
+                });
+
+              });
+
+            }));
+
+          }));
 
         } else {
 
@@ -175,7 +179,7 @@ export class ProcedureEditComponent implements OnInit {
   openEditMonitorDialog(monitor: ProcedureStepMonitor) {
     this.monitorToEdit = monitor;
     this.monitorToEdit.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling).value;
-    this.monitorToEdit.type = this.monitorTypeOptions.find(s => s.value === monitor.type).value;
+    this.monitorToEdit.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType).value;
     this.monitorToEdit.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType).value;
     this.monitorToEdit.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe).value;
     this.showEditMonitorDialog = !this.showEditMonitorDialog;
@@ -260,14 +264,14 @@ export class ProcedureEditComponent implements OnInit {
   updateProcedure(procedure: Procedure) {
 
     let updateProcedureRequest = new UpdateProcedureRequest();
-      updateProcedureRequest.id = procedure.id;
-      updateProcedureRequest.comments = procedure.comment;
-      updateProcedureRequest.duration = procedure.duration;
-      updateProcedureRequest.durationType = procedure.durationType;
-      updateProcedureRequest.name = procedure.name;
-      updateProcedureRequest.procedureTypeId = Number(this.selectedProcedureType);
-      updateProcedureRequest.referenceFiles = procedure.referenceFiles;
-      updateProcedureRequest.roleIds = this.selectedRoles;
+    updateProcedureRequest.id = procedure.id;
+    updateProcedureRequest.comments = procedure.comment;
+    updateProcedureRequest.duration = procedure.duration;
+    updateProcedureRequest.durationType = procedure.durationType;
+    updateProcedureRequest.name = procedure.name;
+    updateProcedureRequest.procedureTypeId = Number(this.selectedProcedureType);
+    updateProcedureRequest.referenceFiles = procedure.referenceFiles;
+    updateProcedureRequest.roleIds = this.selectedRoles;
 
     this.mockServices.procedurePatch(updateProcedureRequest);
   }
@@ -287,7 +291,7 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepToAdd.referenceFiles = [];
       procedureStepToAdd.replacementCost = 0;
       procedureStepToAdd.roles = [];
-      procedureStepToAdd.text = '';
+      procedureStepToAdd.stepText = '';
       procedureStepToAdd.title = '';
       procedureStepToAdd.usefulLife = 0;
       procedureStepToAdd.utilizationTime = 0;
@@ -296,25 +300,29 @@ export class ProcedureEditComponent implements OnInit {
 
     } else {
 
-      let procedureStepTemplateToAdd = this.mockServices.procedureTemplateGet(this.selectedProcedureStepTemplate)[0];
-      let procedureStepToAdd = new ProcedureStep();
-      procedureStepToAdd.id = 0;
-      procedureStepToAdd.duration = procedureStepTemplateToAdd.estimatedStepDuration;
-      procedureStepToAdd.durationType = '0';
-      procedureStepToAdd.laborTime = 0;
-      procedureStepToAdd.printOrder = this.procedureSteps.length;
-      procedureStepToAdd.procedureId = this.procedure.id;
-      procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles;
-      procedureStepToAdd.replacementCost = 0;
-      procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
-      procedureStepToAdd.text = procedureStepTemplateToAdd.text;
-      procedureStepToAdd.title = procedureStepTemplateToAdd.title;
-      procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
-      procedureStepToAdd.equipmentTime = 0;
-      procedureStepToAdd.utilizationTime = procedureStepTemplateToAdd.utilization;
-      this.procedureSteps.push(procedureStepToAdd);
-      this.selectedProcedureStepTemplate = undefined;
-      this.procedureSteps =  [...this.procedureSteps];
+      this.procedureTemplateService.procedureTemplateGet(this.selectedProcedureStepTemplate, env.apiVersion).subscribe(responseHandler((response) => {
+
+        let procedureStepTemplateToAdd = response.object[0];
+        let procedureStepToAdd = new ProcedureStep();
+        procedureStepToAdd.id = 0;
+        procedureStepToAdd.duration = procedureStepTemplateToAdd.estimatedStepDuration;
+        procedureStepToAdd.durationType = '0';
+        procedureStepToAdd.laborTime = 0;
+        procedureStepToAdd.printOrder = this.procedureSteps.length;
+        procedureStepToAdd.procedureId = this.procedure.id;
+        procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles;
+        procedureStepToAdd.replacementCost = 0;
+        procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
+        procedureStepToAdd.stepText = procedureStepTemplateToAdd.text;
+        procedureStepToAdd.title = procedureStepTemplateToAdd.title;
+        procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
+        procedureStepToAdd.equipmentTime = 0;
+        procedureStepToAdd.utilizationTime = procedureStepTemplateToAdd.utilization;
+        this.procedureSteps.push(procedureStepToAdd);
+        this.selectedProcedureStepTemplate = undefined;
+        this.procedureSteps = [...this.procedureSteps];
+      }));
+
     }
 
   }
@@ -343,7 +351,4 @@ export class ProcedureEditComponent implements OnInit {
 
   }
 
-  orderOfStepsChanged() {
-    console.log('Order Changed');
-  }
 }

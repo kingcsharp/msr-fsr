@@ -125,7 +125,7 @@
                                     <label for="text{{i}}" class="col-form-label text-left col-3">
                                         Text
                                     </label>
-                                    <input type="text" name="text{{i}}" [(ngModel)]="procedureStep.value.text"
+                                    <input type="text" name="text{{i}}" [(ngModel)]="procedureStep.value.stepText"
                                         data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                                         data-parsley-required="true" class="form-control input-transparent col-9"
                                         tooltip="Text of Procedure Step" data-cy="text-input">
@@ -249,7 +249,7 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let procedureStepMonitor of procedureStep.value.monitors;">
-                                            <td>{{ procedureStepMonitor.type }}</td>
+                                            <td>{{ procedureStepMonitor.monitorType }}</td>
                                             <td>{{ procedureStepMonitor.description }}</td>
                                             <td>{{ procedureStepMonitor.inputType }}</td>
                                             <td>{{ procedureStepMonitor.targetValue }}</td>
@@ -313,7 +313,7 @@
                 </label>
                 <div class="col-12 px-0">
                     <p-dropdown placeholder="Select Monitor Type" name="monitortype" [options]="monitorTypeOptions"
-                        showClear="true" [(ngModel)]="monitorToEdit.type">
+                        showClear="true" [(ngModel)]="monitorToEdit.monitorType">
                     </p-dropdown>
                 </div>
             </div>
