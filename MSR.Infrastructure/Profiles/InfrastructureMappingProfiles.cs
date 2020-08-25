@@ -152,7 +152,16 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStep, Domain.Models.ProcedureStep>()
                 .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization));
             CreateMap<ProcedureStepType, Domain.Models.ProcedureStepTypeModel>().ReverseMap();
-            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplateModel>();
+
+            // This mapping is correct according to the requirements
+            // https://cmhworks.testlodge.com/projects/30813/requirements/32475
+            // The fields are for procedure template, and commands for procedure
+            // step template, and "procedure template" does not exist in the DB.
+            // Likewise, in answer 2 there is no distinction.
+            // TODO: This might need to be revisited.
+            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplateModel>()
+                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
+
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, Domain.Models.WorkOrderModel>();
             CreateMap<CreateWorkOrder, WorkOrder>();

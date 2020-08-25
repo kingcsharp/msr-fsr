@@ -10,8 +10,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? SystemTaskId { get; set; }
         public double? LaborTime { get; set; }
         public double? EquipmentTime { get; set; }
-        public double? ReplacementCost { get; set; }
-        public double? Utilization { get; set; }
+        public decimal? ReplacementCost { get; set; }
+        public float? Utilization { get; set; }
         public int? UsefulLife { get; set; }
         public string Roles { get; set; }
         public string Comments { get; set; }
