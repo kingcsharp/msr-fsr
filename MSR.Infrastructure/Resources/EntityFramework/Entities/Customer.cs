@@ -30,6 +30,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual ICollection<Invoice> Invoices { get; set; }
 
-        public virtual ICollection<Quote> Quotes { get; set; }
     }
 }
