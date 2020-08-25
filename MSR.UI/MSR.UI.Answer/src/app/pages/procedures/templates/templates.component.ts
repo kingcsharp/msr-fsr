@@ -2,15 +2,18 @@ import { Component, OnInit,  ElementRef  } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { ProcedureTemplate } from '../../../services/mocks/models/procedureTemplate';
+import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , ProcedureStepTemplateModel } from '../../../services/api.client.generated';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
 
 @Component({
   selector: 'app-templates',
   templateUrl: './templates.component.html',
   styleUrls: ['./templates.component.scss'],
-  providers: [MockServices]
+  providers: [ProcedureStepTemplateService, ProcedureService, MockServices]
 })
 export class TemplatesComponent implements OnInit {
 
@@ -26,9 +29,10 @@ export class TemplatesComponent implements OnInit {
   menuItems = EnumMenuItem;
   statusOptions: any[];
   showConfirmDeleteDialog: boolean = false;
-  procedureTemplateToDelete: ProcedureTemplate;
+  procedureTemplateToDelete: ProcedureStepTemplateModel;
 
-  constructor(private mockService: MockServices, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private mockService: MockServices, private procedureStepTemplateService: ProcedureStepTemplateService, private procedureService: ProcedureService,
+    private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -54,11 +58,14 @@ export class TemplatesComponent implements OnInit {
 
   getProcedureTemplates() {
 
-    this.data = this.mockService.procedureTemplateGet(null);
-    this.statusOptions = this.data.filter(
-      (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-    ).map(x => ({ label: x.status, value: x.status }));
-    this.loading = false;
+    this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
+        this.data = response.object;
+        this.statusOptions = this.data.filter(
+          (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+        ).map(x => ({ label: x.status, value: x.status }));
+        this.loading = false;
+    }));
+
   }
 
   hasPrivilege(privName) {
