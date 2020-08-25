@@ -241,6 +241,14 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<UploadFile, Domain.Models.FileModel>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
+
+            CreateMap<File, Domain.Models.FileModel>()
+                .ForMember(dest => dest.FileId, opts => opts.MapFrom(src => src.Id));
+            CreateMap<FileEntityMap, Domain.Models.FileModel>()
+                .ForMember(dest => dest.FileId, opts => opts.MapFrom(src => src.FileObject.Id))
+                .ForMember(dest => dest.ContentType, opts => opts.MapFrom(src => src.FileObject.ContentType))
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileObject.Name))
+                .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL));
         }
 
         private int? GetLocationId(Invoice src)
