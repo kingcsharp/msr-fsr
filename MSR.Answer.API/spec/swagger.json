@@ -1796,7 +1796,7 @@
         "tags": [
           "Part"
         ],
-        "summary": "Get Part by Id",
+        "summary": "Get part by Id",
         "operationId": "Part_GetPart",
         "parameters": [
           {
@@ -1926,7 +1926,7 @@
         "tags": [
           "Part"
         ],
-        "summary": "Delete Part by Id",
+        "summary": "Delete part by Id",
         "operationId": "Part_DeletePart",
         "parameters": [
           {
@@ -1968,7 +1968,7 @@
         "tags": [
           "Part"
         ],
-        "summary": "Import Parts by CSV",
+        "summary": "Import parts by CSV",
         "operationId": "Part_ImportParts",
         "parameters": [
           {
@@ -2615,7 +2615,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2656,7 +2657,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2869,7 +2871,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -2878,13 +2881,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -2962,7 +2966,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2992,7 +2997,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -3037,7 +3043,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -3046,13 +3053,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -3077,7 +3085,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 1
           }
@@ -3128,7 +3137,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 3
           }
@@ -3152,6 +3162,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Get Users",
         "operationId": "User_GetUsers",
         "parameters": [
           {
@@ -6680,6 +6691,19 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -7878,6 +7902,12 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+            "title": "TESTTITLE1598384740",
+            "stepText": "TESTSTEPTEXT1598384740",
+            "comments": "here are some comments Tue, Aug 25, 2020 12:46:12 PM",
+            "roles": "1"
         }
       },
       "UpdateProcedureStepTemplateRequest": {
@@ -7934,6 +7964,11 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example" :{
+            "id": 7,
+            "title": "TITLE1598384384",
+            "stepText": "STEPTEXT1598384384"
         }
       },
       "AuditActionResultOfICollectionOfProcedureStepTypeModel": {
@@ -8217,7 +8252,7 @@
           }
         }
       },
-      "AuditActionResultOfICollectionOfProcedureTypeRequest": {
+      "AuditActionResultOfICollectionOfProcedureType": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -8231,8 +8266,30 @@
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "$ref": "#/components/schemas/ProcedureTypeRequest"
+                  "$ref": "#/components/schemas/ProcedureType"
                 }
+              }
+            }
+          }
+        ]
+      },
+      "AuditActionResultOfProcedureType": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureType"
+                  }
+                ]
               }
             }
           }
