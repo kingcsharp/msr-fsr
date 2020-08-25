@@ -16,6 +16,10 @@ using MSR.Answer.API.Attributes;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using MSR.Domain.Commands;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Answer.API.V1.Extentions;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -26,13 +30,24 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class ProcedureTemplateController : BaseApiController
     {
+        private ICommandDispatcher _dispatcher;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="dispatcher"></param>
+        public ProcedureTemplateController(ICommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
         /// <summary>
         /// Create a procedure template
         /// </summary>
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPost]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureTemplate>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplateModel>))]
         public async Task<IActionResult> CreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body)
         {
             throw new NotImplementedException();
@@ -56,10 +71,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureTemplate>>))]
-        public virtual IActionResult ProcedureTemplateGetProcedureTemplate([FromQuery]int? id)
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepTemplateModel>>))]
+        public async Task<IActionResult> GetProcedureTemplate([FromQuery]int? id)
         {
-            throw new NotImplementedException();
+            var command = new GetProcedureStepTemplate() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<ProcedureStepTemplateModel>>();
         }
 
         /// <summary>
@@ -68,7 +85,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPatch]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureTemplate>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplateModel>))]
         public async Task<IActionResult> UpdateProcedureTemplate([FromBody]UpdateProcedureTemplateRequest body)
         {
             throw new NotImplementedException();

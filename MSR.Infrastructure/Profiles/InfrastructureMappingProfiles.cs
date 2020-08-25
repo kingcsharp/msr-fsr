@@ -152,7 +152,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStep, Domain.Models.ProcedureStep>()
                 .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization));
             CreateMap<ProcedureStepType, Domain.Models.ProcedureStepTypeModel>().ReverseMap();
-            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate>();
+            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplateModel>();
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, Domain.Models.WorkOrderModel>();
             CreateMap<CreateWorkOrder, WorkOrder>();

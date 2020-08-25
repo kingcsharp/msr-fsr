@@ -24,7 +24,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             _mapper = mapper;
         }
 
-        public async Task<ICollection<Domain.Models.ProcedureStepTemplate>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command)
+        public async Task<ICollection<Domain.Models.ProcedureStepTemplateModel>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command)
         {
             List<EntityFramework.Entities.ProcedureStepTemplate> procedures;
             if (command.Id.HasValue) {
@@ -35,13 +35,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
             } else {
                 procedures = await _unitOfWork.ProcedureStepTemplates.Query().ToListAsync();
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepTemplate>(x)).OrderBy(x => x.Id).ToList();
+            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepTemplateModel>(x)).OrderBy(x => x.Id).ToList();
             return result;
         }
-        public async Task<Domain.Models.ProcedureStepTemplate> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command)
+        public async Task<Domain.Models.ProcedureStepTemplateModel> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStepTemplate ret;
+            Domain.Models.ProcedureStepTemplateModel ret;
 
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
@@ -51,16 +51,16 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.ProcedureStepTemplates.Add(procedure);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.ProcedureStepTemplate>(procedure);
+                ret = _mapper.Map<Domain.Models.ProcedureStepTemplateModel>(procedure);
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplate)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplateModel)} uid {user.Id}");
             }
 
             return ret;
         }
-        public async Task<Domain.Models.ProcedureStepTemplate> UpdateProcedureStepTemplateAsync(UpdateProcedureStepTemplate command)
+        public async Task<Domain.Models.ProcedureStepTemplateModel> UpdateProcedureStepTemplateAsync(UpdateProcedureStepTemplate command)
         {
             var current = await _unitOfWork.ProcedureStepTemplates.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
@@ -70,7 +70,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStepTemplate ret;
+            Domain.Models.ProcedureStepTemplateModel ret;
 
             if (user.CanApprove(EnumMenuItem.Monitors))
             {
@@ -80,11 +80,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                ret = _mapper.Map<Domain.Models.ProcedureStepTemplate>(procedure);
+                ret = _mapper.Map<Domain.Models.ProcedureStepTemplateModel>(procedure);
             }
             else
             {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplate)} uid {user.Id}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplateModel)} uid {user.Id}");
             }
 
             return ret;

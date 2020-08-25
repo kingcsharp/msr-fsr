@@ -14,6 +14,14 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<CreateProcedureStepTemplate>,
         ICommandHandler<UpdateProcedureStepTemplate>
     {
+        /// <summary>
+        /// Pointer to ProcedureStepTemplateServices
+        /// </summary>
+        /// <description>
+        /// NOTE: procedure template and procedure STEP template are the same
+        /// thing.  In the API it is "procedure template," in the database
+        /// it is "procedure step template."
+        /// </description>
         private readonly IProcedureStepTemplateService _procedureService;
 
         public ProcedureStepTemplateAppService(IProcedureStepTemplateService procedureService)
@@ -24,17 +32,17 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetProcedureStepTemplateAsync(command);
-            return new CommandResponse<ICollection<ProcedureStepTemplate>>(ret);
+            return new CommandResponse<ICollection<ProcedureStepTemplateModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(CreateProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.CreateProcedureStepTemplateAsync(command);
-            return new CommandResponse<ProcedureStepTemplate>(ret);
+            return new CommandResponse<ProcedureStepTemplateModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(UpdateProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.UpdateProcedureStepTemplateAsync(command);
-            return new CommandResponse<ProcedureStepTemplate>(ret);
+            return new CommandResponse<ProcedureStepTemplateModel>(ret);
         }
     }
 }
