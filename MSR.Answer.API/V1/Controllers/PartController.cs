@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
-    [ApiVersion("1.0")]
-    [VersionedRoute("[controller]")]
     /// <summary>
     ///
     /// </summary>
+    [ApiVersion("1.0")]
+    [VersionedRoute("[controller]")]
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
@@ -32,7 +32,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Get part by Id
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
@@ -48,7 +48,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Create part
         /// </summary>
         /// <param name="newpart"></param>
         /// <returns></returns>
@@ -68,7 +68,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Update part
         /// </summary>
         /// <param name="newpart"></param>
         /// <returns></returns>
@@ -88,7 +88,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Delete part by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -105,7 +105,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Import parts by CSV
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>

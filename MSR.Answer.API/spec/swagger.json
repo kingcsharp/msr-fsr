@@ -1796,7 +1796,7 @@
         "tags": [
           "Part"
         ],
-        "summary": " ",
+        "summary": "Get Part by Id",
         "operationId": "Part_GetPart",
         "parameters": [
           {
@@ -1838,7 +1838,7 @@
         "tags": [
           "Part"
         ],
-        "summary": " ",
+        "summary": "Create part",
         "operationId": "Part_AddPart",
         "parameters": [
           {
@@ -1881,7 +1881,7 @@
         "tags": [
           "Part"
         ],
-        "summary": " ",
+        "summary": "Update part",
         "operationId": "Part_UpdatePart",
         "parameters": [
           {
@@ -1926,7 +1926,7 @@
         "tags": [
           "Part"
         ],
-        "summary": " ",
+        "summary": "Delete Part by Id",
         "operationId": "Part_DeletePart",
         "parameters": [
           {
@@ -1968,7 +1968,7 @@
         "tags": [
           "Part"
         ],
-        "summary": " ",
+        "summary": "Import Parts by CSV",
         "operationId": "Part_ImportParts",
         "parameters": [
           {
@@ -4526,6 +4526,7 @@
       "Exception": {
         "type": "object",
         "additionalProperties": true,
+        "nullable": true,
         "properties": {
           "StackTrace": {
             "type": "string",
@@ -6551,7 +6552,12 @@
               }
             }
           }
-        ]
+        ],
+        "example": {
+          "id": 2,
+          "name": "TESTNAME1598380612",
+          "partNumber": "TESTNUMBER1598380612"
+        }
       },
       "ImportPartsRequest": {
         "type": "object",
@@ -9821,6 +9827,7 @@
             "items": {
               "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
             }
+          }
         },
         "example": {
             "name": "CreateWorkflowGroupRequest-8faf6491cf88817e",
