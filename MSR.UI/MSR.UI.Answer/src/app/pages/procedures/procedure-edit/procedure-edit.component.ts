@@ -17,12 +17,13 @@ import { UpdateProcedureStepRequest } from '../../../services/mocks/models/updat
 import { UpdateProcedureRequest } from '../../../services/mocks/models/updateProcedureRequest';
 import { ProcedureTemplate } from '../../../services/mocks/models/procedureTemplate';
 import { CreateProcedureStepRequest } from '../../../services/mocks/models/createProcedureStepRequest';
+import { DraggableItemService } from 'ngx-bootstrap/sortable';
 
 @Component({
   selector: 'app-procedure-edit',
   templateUrl: './procedure-edit.component.html',
   styleUrls: ['./procedure-edit.component.scss'],
-  providers: [MockServices]
+  providers: [MockServices, DraggableItemService ]
 })
 export class ProcedureEditComponent implements OnInit {
 
@@ -340,5 +341,9 @@ export class ProcedureEditComponent implements OnInit {
     this.mockServices.procedureStepPost(createProcedureStepRequest);
     procedureStep.id = 100;
 
+  }
+
+  orderOfStepsChanged(){
+    console.log('Order Changed');
   }
 }

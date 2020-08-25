@@ -18,6 +18,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { ProcedureViewComponent } from './procedure-view/procedure-view.component';
 import { ProcedureEditComponent } from './procedure-edit/procedure-edit.component';
+import { SortableModule } from 'ngx-bootstrap/sortable';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -47,7 +48,8 @@ export const routes = [
     NewWidgetModule,
     MultiSelectModule,
     DialogModule,
-    CKEditorModule
+    CKEditorModule,
+    SortableModule
   ]
 })
 export class ProceduresModule { static routes = routes;}

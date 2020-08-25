@@ -608,7 +608,7 @@ export class MockServices {
                 procedureStep.id = index;
                 procedureStep.laborTime = 32 + index;
                 procedureStep.predecessorStepId = undefined;
-                procedureStep.printOrder = 1;
+                procedureStep.printOrder = index;
                 procedureStep.procedureId = 1; // TODO: This might change
                 procedureStep.referenceFiles = this.getReferennceFiles().slice(0, 3);
                 procedureStep.replacementCost = 5.00;
