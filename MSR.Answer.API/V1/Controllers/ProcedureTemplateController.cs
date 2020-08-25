@@ -50,7 +50,9 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplateModel>))]
         public async Task<IActionResult> CreateProcedureTemplate([FromBody]CreateProcedureTemplateRequest body)
         {
-            throw new NotImplementedException();
+            var command = body.ToCreateProcedureStepTemplate();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>();
         }
 
         /// <summary>

@@ -819,5 +819,13 @@ namespace MSR.Answer.API.V1.Extentions
         /// <param name="request"></param>
         /// <returns></returns>
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static CreateProcedureStepTemplate ToCreateProcedureStepTemplate(this CreateProcedureTemplateRequest request) =>
+            AutoMapperHelper.Mapper.Map<CreateProcedureStepTemplate>(request);
     }
 }

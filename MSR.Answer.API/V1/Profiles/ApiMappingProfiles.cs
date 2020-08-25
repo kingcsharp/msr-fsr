@@ -4,6 +4,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System;
 using System.Configuration;
+using System.Linq;
 
 namespace MSR.Answer.API.V1.Profiles
 {
@@ -47,6 +48,10 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling));
             CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>();
             CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>();
+            CreateMap<CreateProcedureTemplateRequest, CreateProcedureStepTemplate>()
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles.Select(y => y.Id).ToList())))
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<UpdateProcedureTemplateRequest, UpdateProcedureStepTemplate>();
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();
             CreateMap<CreateWorkOrderRequest, CreateWorkOrder>().ReverseMap();
