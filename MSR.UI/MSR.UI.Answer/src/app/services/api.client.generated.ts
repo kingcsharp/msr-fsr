@@ -2472,7 +2472,7 @@ export class ProcedureService {
         return _observableOf<AuditActionResultOfProcedure>(<any>null);
     }
 
-    stepGet(id: number, stepid: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStep> {
+    stepGet(id: number, stepid: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepModel> {
         let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2499,14 +2499,14 @@ export class ProcedureService {
                 try {
                     return this.processStepGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfProcedureStep>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfProcedureStepModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfProcedureStep>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfProcedureStepModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processStepGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStep> {
+    protected processStepGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStepModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2517,7 +2517,7 @@ export class ProcedureService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfProcedureStep.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfProcedureStepModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2525,10 +2525,10 @@ export class ProcedureService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfProcedureStep>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfProcedureStepModel>(<any>null);
     }
 
-    stepPost(id: number, version: string, newstep: CreateProcedureStepRequest): Observable<AuditActionResultOfProcedureStep> {
+    stepPost(id: number, version: string, newstep: CreateProcedureStepRequest): Observable<AuditActionResultOfProcedureStepModel> {
         let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2557,14 +2557,14 @@ export class ProcedureService {
                 try {
                     return this.processStepPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfProcedureStepModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfProcedureStepModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processStepPost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStep> {
+    protected processStepPost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2575,7 +2575,7 @@ export class ProcedureService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfProcedureStep.fromJS(resultData200);
+            result200 = AuditActionResultOfProcedureStepModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2583,10 +2583,10 @@ export class ProcedureService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfProcedureStep>(<any>null);
+        return _observableOf<AuditActionResultOfProcedureStepModel>(<any>null);
     }
 
-    stepPatch(id: number, version: string, newstep: UpdateProcedureStepRequest): Observable<AuditActionResultOfProcedureStep> {
+    stepPatch(id: number, version: string, newstep: UpdateProcedureStepRequest): Observable<AuditActionResultOfProcedureStepModel> {
         let url_ = this.baseUrl + "/v{version}/Procedure/{id}/step";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2615,14 +2615,14 @@ export class ProcedureService {
                 try {
                     return this.processStepPatch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfProcedureStepModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfProcedureStep>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfProcedureStepModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processStepPatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStep> {
+    protected processStepPatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2633,7 +2633,7 @@ export class ProcedureService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfProcedureStep.fromJS(resultData200);
+            result200 = AuditActionResultOfProcedureStepModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2641,7 +2641,7 @@ export class ProcedureService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfProcedureStep>(<any>null);
+        return _observableOf<AuditActionResultOfProcedureStepModel>(<any>null);
     }
 }
 
@@ -2882,7 +2882,7 @@ export class ProcedureStepTemplateService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    procedureStepTemplateGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplate> {
+    procedureStepTemplateGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2906,14 +2906,14 @@ export class ProcedureStepTemplateService {
                 try {
                     return this.processProcedureStepTemplateGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfProcedureStepTemplate>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfProcedureStepTemplate>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcedureStepTemplateGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStepTemplate> {
+    protected processProcedureStepTemplateGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStepTemplateModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2924,7 +2924,7 @@ export class ProcedureStepTemplateService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfProcedureStepTemplate.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfProcedureStepTemplateModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2932,10 +2932,10 @@ export class ProcedureStepTemplateService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfProcedureStepTemplate>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfProcedureStepTemplateModel>(<any>null);
     }
 
-    procedureStepTemplatePost(version: string, newproc: CreateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplate> {
+    procedureStepTemplatePost(version: string, newproc: CreateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2961,14 +2961,14 @@ export class ProcedureStepTemplateService {
                 try {
                     return this.processProcedureStepTemplatePost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfProcedureStepTemplateModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfProcedureStepTemplateModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcedureStepTemplatePost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepTemplate> {
+    protected processProcedureStepTemplatePost(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2979,7 +2979,7 @@ export class ProcedureStepTemplateService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfProcedureStepTemplate.fromJS(resultData200);
+            result200 = AuditActionResultOfProcedureStepTemplateModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2987,10 +2987,10 @@ export class ProcedureStepTemplateService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfProcedureStepTemplate>(<any>null);
+        return _observableOf<AuditActionResultOfProcedureStepTemplateModel>(<any>null);
     }
 
-    procedureStepTemplatePatch(version: string, newproc: UpdateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplate> {
+    procedureStepTemplatePatch(version: string, newproc: UpdateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3016,14 +3016,14 @@ export class ProcedureStepTemplateService {
                 try {
                     return this.processProcedureStepTemplatePatch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfProcedureStepTemplateModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfProcedureStepTemplate>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfProcedureStepTemplateModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcedureStepTemplatePatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepTemplate> {
+    protected processProcedureStepTemplatePatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3034,7 +3034,7 @@ export class ProcedureStepTemplateService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfProcedureStepTemplate.fromJS(resultData200);
+            result200 = AuditActionResultOfProcedureStepTemplateModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3042,7 +3042,7 @@ export class ProcedureStepTemplateService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfProcedureStepTemplate>(<any>null);
+        return _observableOf<AuditActionResultOfProcedureStepTemplateModel>(<any>null);
     }
 }
 
@@ -8533,10 +8533,10 @@ export interface IUpdateProcedureRequest {
     durationType?: string | undefined;
 }
 
-export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStep {
-    object?: ProcedureStep[] | undefined;
+export class AuditActionResultOfICollectionOfProcedureStepModel extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepModel {
+    object?: ProcedureStepModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfProcedureStep) {
+    constructor(data?: IAuditActionResultOfICollectionOfProcedureStepModel) {
         super(data);
     }
 
@@ -8546,14 +8546,14 @@ export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionRe
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(ProcedureStep.fromJS(item));
+                    this.object!.push(ProcedureStepModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStep {
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStepModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfProcedureStep();
+        let result = new AuditActionResultOfICollectionOfProcedureStepModel();
         result.init(data);
         return result;
     }
@@ -8570,11 +8570,11 @@ export class AuditActionResultOfICollectionOfProcedureStep extends AuditActionRe
     }
 }
 
-export interface IAuditActionResultOfICollectionOfProcedureStep extends IAuditActionResult {
-    object?: ProcedureStep[] | undefined;
+export interface IAuditActionResultOfICollectionOfProcedureStepModel extends IAuditActionResult {
+    object?: ProcedureStepModel[] | undefined;
 }
 
-export class ProcedureStep implements IProcedureStep {
+export class ProcedureStepModel implements IProcedureStepModel {
     id?: number;
     procedureId?: number;
     title?: string | undefined;
@@ -8583,12 +8583,14 @@ export class ProcedureStep implements IProcedureStep {
     duration?: number;
     durationType?: string | undefined;
     printOrder?: number;
+    laborTime?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
+    usefulLife?: number | undefined;
     equipmentTime?: number | undefined;
     roles?: string | undefined;
 
-    constructor(data?: IProcedureStep) {
+    constructor(data?: IProcedureStepModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -8607,16 +8609,18 @@ export class ProcedureStep implements IProcedureStep {
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
             this.printOrder = _data["printOrder"];
+            this.laborTime = _data["laborTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
             this.equipmentTime = _data["equipmentTime"];
             this.roles = _data["roles"];
         }
     }
 
-    static fromJS(data: any): ProcedureStep {
+    static fromJS(data: any): ProcedureStepModel {
         data = typeof data === 'object' ? data : {};
-        let result = new ProcedureStep();
+        let result = new ProcedureStepModel();
         result.init(data);
         return result;
     }
@@ -8631,15 +8635,17 @@ export class ProcedureStep implements IProcedureStep {
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
         data["printOrder"] = this.printOrder;
+        data["laborTime"] = this.laborTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
         data["equipmentTime"] = this.equipmentTime;
         data["roles"] = this.roles;
         return data; 
     }
 }
 
-export interface IProcedureStep {
+export interface IProcedureStepModel {
     id?: number;
     procedureId?: number;
     title?: string | undefined;
@@ -8648,29 +8654,31 @@ export interface IProcedureStep {
     duration?: number;
     durationType?: string | undefined;
     printOrder?: number;
+    laborTime?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
+    usefulLife?: number | undefined;
     equipmentTime?: number | undefined;
     roles?: string | undefined;
 }
 
-export class AuditActionResultOfProcedureStep extends AuditActionResult implements IAuditActionResultOfProcedureStep {
-    object?: ProcedureStep | undefined;
+export class AuditActionResultOfProcedureStepModel extends AuditActionResult implements IAuditActionResultOfProcedureStepModel {
+    object?: ProcedureStepModel | undefined;
 
-    constructor(data?: IAuditActionResultOfProcedureStep) {
+    constructor(data?: IAuditActionResultOfProcedureStepModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? ProcedureStep.fromJS(_data["object"]) : <any>undefined;
+            this.object = _data["object"] ? ProcedureStepModel.fromJS(_data["object"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfProcedureStep {
+    static fromJS(data: any): AuditActionResultOfProcedureStepModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfProcedureStep();
+        let result = new AuditActionResultOfProcedureStepModel();
         result.init(data);
         return result;
     }
@@ -8683,8 +8691,8 @@ export class AuditActionResultOfProcedureStep extends AuditActionResult implemen
     }
 }
 
-export interface IAuditActionResultOfProcedureStep extends IAuditActionResult {
-    object?: ProcedureStep | undefined;
+export interface IAuditActionResultOfProcedureStepModel extends IAuditActionResult {
+    object?: ProcedureStepModel | undefined;
 }
 
 export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
@@ -9342,10 +9350,10 @@ export interface IProcedureStepMonitorListItem {
     listName?: string | undefined;
 }
 
-export class AuditActionResultOfICollectionOfProcedureStepTemplate extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepTemplate {
-    object?: ProcedureStepTemplate[] | undefined;
+export class AuditActionResultOfICollectionOfProcedureStepTemplateModel extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepTemplateModel {
+    object?: ProcedureStepTemplateModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfProcedureStepTemplate) {
+    constructor(data?: IAuditActionResultOfICollectionOfProcedureStepTemplateModel) {
         super(data);
     }
 
@@ -9355,14 +9363,14 @@ export class AuditActionResultOfICollectionOfProcedureStepTemplate extends Audit
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(ProcedureStepTemplate.fromJS(item));
+                    this.object!.push(ProcedureStepTemplateModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStepTemplate {
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStepTemplateModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfProcedureStepTemplate();
+        let result = new AuditActionResultOfICollectionOfProcedureStepTemplateModel();
         result.init(data);
         return result;
     }
@@ -9379,14 +9387,20 @@ export class AuditActionResultOfICollectionOfProcedureStepTemplate extends Audit
     }
 }
 
-export interface IAuditActionResultOfICollectionOfProcedureStepTemplate extends IAuditActionResult {
-    object?: ProcedureStepTemplate[] | undefined;
+export interface IAuditActionResultOfICollectionOfProcedureStepTemplateModel extends IAuditActionResult {
+    object?: ProcedureStepTemplateModel[] | undefined;
 }
 
-export class ProcedureStepTemplate implements IProcedureStepTemplate {
+export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
     id?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    laborTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
 
-    constructor(data?: IProcedureStepTemplate) {
+    constructor(data?: IProcedureStepTemplateModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -9398,12 +9412,18 @@ export class ProcedureStepTemplate implements IProcedureStepTemplate {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.title = _data["title"];
+            this.stepText = _data["stepText"];
+            this.laborTime = _data["laborTime"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
         }
     }
 
-    static fromJS(data: any): ProcedureStepTemplate {
+    static fromJS(data: any): ProcedureStepTemplateModel {
         data = typeof data === 'object' ? data : {};
-        let result = new ProcedureStepTemplate();
+        let result = new ProcedureStepTemplateModel();
         result.init(data);
         return result;
     }
@@ -9411,31 +9431,43 @@ export class ProcedureStepTemplate implements IProcedureStepTemplate {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["title"] = this.title;
+        data["stepText"] = this.stepText;
+        data["laborTime"] = this.laborTime;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
         return data; 
     }
 }
 
-export interface IProcedureStepTemplate {
+export interface IProcedureStepTemplateModel {
     id?: number;
+    title?: string | undefined;
+    stepText?: string | undefined;
+    laborTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
 }
 
-export class AuditActionResultOfProcedureStepTemplate extends AuditActionResult implements IAuditActionResultOfProcedureStepTemplate {
-    object?: ProcedureStepTemplate | undefined;
+export class AuditActionResultOfProcedureStepTemplateModel extends AuditActionResult implements IAuditActionResultOfProcedureStepTemplateModel {
+    object?: ProcedureStepTemplateModel | undefined;
 
-    constructor(data?: IAuditActionResultOfProcedureStepTemplate) {
+    constructor(data?: IAuditActionResultOfProcedureStepTemplateModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? ProcedureStepTemplate.fromJS(_data["object"]) : <any>undefined;
+            this.object = _data["object"] ? ProcedureStepTemplateModel.fromJS(_data["object"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfProcedureStepTemplate {
+    static fromJS(data: any): AuditActionResultOfProcedureStepTemplateModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfProcedureStepTemplate();
+        let result = new AuditActionResultOfProcedureStepTemplateModel();
         result.init(data);
         return result;
     }
@@ -9448,8 +9480,8 @@ export class AuditActionResultOfProcedureStepTemplate extends AuditActionResult 
     }
 }
 
-export interface IAuditActionResultOfProcedureStepTemplate extends IAuditActionResult {
-    object?: ProcedureStepTemplate | undefined;
+export interface IAuditActionResultOfProcedureStepTemplateModel extends IAuditActionResult {
+    object?: ProcedureStepTemplateModel | undefined;
 }
 
 export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepTemplateRequest {
@@ -10926,7 +10958,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
     taskRunningSince?: Date | undefined;
-    procedureStep?: ProcedureStep | undefined;
+    procedureStep?: ProcedureStepModel | undefined;
     procedureStepType?: ProcedureStepTypeModel | undefined;
     status?: StatusModel | undefined;
     workOrder?: WorkOrderModel | undefined;
@@ -10953,7 +10985,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             this.totalTaskTime = _data["totalTaskTime"];
             this.taskIsRunning = _data["taskIsRunning"];
             this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
-            this.procedureStep = _data["procedureStep"] ? ProcedureStep.fromJS(_data["procedureStep"]) : <any>undefined;
+            this.procedureStep = _data["procedureStep"] ? ProcedureStepModel.fromJS(_data["procedureStep"]) : <any>undefined;
             this.procedureStepType = _data["procedureStepType"] ? ProcedureStepTypeModel.fromJS(_data["procedureStepType"]) : <any>undefined;
             this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
             this.workOrder = _data["workOrder"] ? WorkOrderModel.fromJS(_data["workOrder"]) : <any>undefined;
@@ -11008,7 +11040,7 @@ export interface IWorkOrderTaskModel {
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
     taskRunningSince?: Date | undefined;
-    procedureStep?: ProcedureStep | undefined;
+    procedureStep?: ProcedureStepModel | undefined;
     procedureStepType?: ProcedureStepTypeModel | undefined;
     status?: StatusModel | undefined;
     workOrder?: WorkOrderModel | undefined;

@@ -165,7 +165,6 @@ export class MultiselectWrapperComponent implements OnInit {
     if (filters === undefined || filters.value.length === 0) {
       return;
     }
-    debugger;
     options.forEach(element => {
       if (filters.value.indexOf(element.value) > -1) {
         this.selectedColumns.push(element.value);
