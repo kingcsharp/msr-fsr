@@ -24,6 +24,9 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.LocationId));
             CreateMap<CreateUserRoleRequest, CreateUserRole>();
             CreateMap<UpdateUserRoleRequest, UpdateUserRole>();
+            CreateMap<RoleRequest, Role>()
+                .ForMember(dest => dest.Menus, opts => opts.Ignore()); // <- FIXME
+            CreateMap<MenuItemRequest, MenuItem>();
             CreateMap<CreateHelpPageRequest, CreateHelpPage>();
             CreateMap<CreateHelpPageRoleRequest, CreateHelpPageRole>();
             CreateMap<UpdateHelpPageRequest, UpdateHelpPage>();

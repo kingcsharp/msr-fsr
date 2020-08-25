@@ -827,5 +827,13 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static CreateProcedureStepTemplate ToCreateProcedureStepTemplate(this CreateProcedureTemplateRequest request) =>
             AutoMapperHelper.Mapper.Map<CreateProcedureStepTemplate>(request);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static UpdateProcedureStepTemplate ToUpdateProcedureStepTemplate(this UpdateProcedureTemplateRequest request) =>
+            AutoMapperHelper.Mapper.Map<UpdateProcedureStepTemplate>(request);
     }
 }
