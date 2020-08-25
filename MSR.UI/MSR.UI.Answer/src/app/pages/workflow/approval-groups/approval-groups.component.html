@@ -140,7 +140,7 @@
   </p-table>
 </widget>
 
-<p-dialog header="{{ currWorkflowGroup.id === undefined ?'Create Workflow Group':'Edit Workflow Group'}}"
+<p-dialog *ngIf="display" header="{{ currWorkflowGroup.id === undefined ?'Create Workflow Group':'Edit Workflow Group'}}"
   [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
@@ -166,30 +166,6 @@
                 class="form-control input-transparent" tooltip="Min length 3 characters"
                 placeholder="Approval Group Name" data-cy="name-input">
             </div>
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
-              Stage Member People
-            </label>
-            <div class="col-md-4 col-12">
-              <p-multiSelect name="role2" [options]="users" data-cy="users-multiselect"
-                [(ngModel)]="currWorkflowGroup.usersSaved" [itemSize]="15" appendTo="body">
-                <ng-template pTemplate="selectedItems">
-                  <div tooltip="Select Users">Select Users</div>
-                </ng-template>
-              </p-multiSelect>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
-              Group Roles
-            </label>
-            <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allRoles" data-cy="roles-multiselect"
-                [(ngModel)]="currWorkflowGroup.rolesSaved" [itemSize]="15" appendTo="body">
-                <ng-template pTemplate="selectedItems">
-                  <div tooltip="Select Roles">Select Roles</div>
-                </ng-template>
-              </p-multiSelect>
-            </div>
             <label class="col-md-2  col-form-label text-md-right">
               Is Active
             </label>
@@ -201,6 +177,26 @@
                   <i data-cy="isactive-checkbox"></i>
                 </label>
               </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Group Roles
+            </label>
+            <div class="col-md-10 col-12">
+              <multiselect-wrapper-form [options]="allRoles" [limit]="30" [(model)]="currWorkflowGroup.groupRoles"
+                defaultId="roleId" defaultLabel="Select Roles">
+              </multiselect-wrapper-form>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+              Stage Member People
+            </label>
+            <div class="col-md-10 col-12">
+              <multiselect-wrapper-form [options]="users" [limit]="30" [(model)]="currWorkflowGroup.groupUsers"
+                defaultId="userId" defaultLabel="Select Users">
+              </multiselect-wrapper-form>
             </div>
           </div>
         </fieldset>

@@ -104,7 +104,7 @@ namespace MSR.Domain.Models
 
         private static string SetBoolValue(string propertyName, bool oldValue)
         {
-            return oldValue ? ("Is" + propertyName) : ("Is Not" + propertyName);
+            return oldValue ? ("Is " + propertyName) : ("Is Not " + propertyName);
         }
 
     }

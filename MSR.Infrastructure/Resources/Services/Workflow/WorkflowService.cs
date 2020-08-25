@@ -214,8 +214,6 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 _unitOfWork.WorkflowActivityMaps.Delete(false, item, true);
             }
 
-            await _unitOfWork.SaveChangesAsync();
-
             efWorkFlow.Name = command.Name;
             efWorkFlow.IsActive = command.IsActive;
 

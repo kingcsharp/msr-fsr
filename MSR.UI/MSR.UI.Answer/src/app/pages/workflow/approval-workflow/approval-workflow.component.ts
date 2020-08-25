@@ -220,11 +220,11 @@ export class ApprovalWorkflowComponent implements OnInit {
       const activityMaps = [];
 
       this.currWorkflow.memberStages.forEach(x => {
-        memberStages.push(new WorkflowStageMapModel({ workflowStageId: x.id, workflowId: this.currWorkflow.id }));
+        memberStages.push(new WorkflowStageMapModel({ workflowStageId: x.workflowStageId, workflowId: this.currWorkflow.id }));
       });
 
       this.currWorkflow.activityMaps.forEach(x => {
-        activityMaps.push(new WorkflowActivityMapModel({ workflowActivityId: x.id, workflowId: this.currWorkflow.id }));
+        activityMaps.push(new WorkflowActivityMapModel({ workflowActivityId: x.workflowActivityId, workflowId: this.currWorkflow.id }));
       });
 
       if (this.currWorkflow.id === undefined) {
