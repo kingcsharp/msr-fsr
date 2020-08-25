@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core'
 import { Globals } from '../../../models/lib/globals';
 import {
   WorkflowGroupService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, UserService, WorkflowGroupUserMapModel,
-  Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest,EnumMenuItem
+  Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest, EnumMenuItem
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -13,6 +13,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
 declare let jQuery: any;
 
 @Component({
@@ -45,7 +46,7 @@ export class ApprovalGroupsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currWorkflowGroup = new WorkflowGroupModel();
+    this.currWorkflowGroup = this.getWorkflowGroup(undefined);
     this.gridStorageId = 'workflowGroupGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'isActive', label: 'Active', visible: true }),
@@ -76,16 +77,16 @@ export class ApprovalGroupsComponent implements OnInit {
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((elem) => {
-          ctrl.users.push({ label: elem.firstName + ' ' + elem.lastName, value: elem.id });
+          ctrl.users.push({ name: elem.firstName + ' ' + elem.lastName, userId: elem.id });
         });
       }));
   }
 
   getWorkflowGroups() {
-    // const ctrl = this;
     this.globals.showLoader(true);
     this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
         this.data = response.object;
         this.mapData();
       }));
@@ -107,19 +108,10 @@ export class ApprovalGroupsComponent implements OnInit {
 
   updateRolesUsersSavedForItem(elem: any) {
     const ctrl = this;
-    elem.rolesSaved = [];
-    elem.usersSaved = [];
     elem.groupRoles.forEach(role => {
       const foundRole = ctrl.backendRoles.find(r => r.id === role.roleId);
       if (foundRole !== undefined) {
         role.name = foundRole.name;
-        elem.rolesSaved.push(role.roleId);
-      }
-    });
-    elem.groupUsers.forEach(user => {
-      const foundUser = ctrl.users.find(r => r.value === user.id);
-      if (foundUser !== undefined) {
-        elem.usersSaved.push(foundUser.value);
       }
     });
   }
@@ -138,7 +130,7 @@ export class ApprovalGroupsComponent implements OnInit {
     this.roleService.role(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          ctrl.allRoles.push({ label: x.name, value: x.id });
+          ctrl.allRoles.push({ name: x.name, roleId: x.id });
         });
         ctrl.backendRoles = response.object;
         ctrl.getBackendRoles = true;
@@ -150,8 +142,8 @@ export class ApprovalGroupsComponent implements OnInit {
   }
 
   showDialog(workflowGroup: WorkflowGroupModel) {
-    this.display = true;
     this.currWorkflowGroup = this.getWorkflowGroup(workflowGroup);
+    this.display = true;
   }
 
   clseDialog() {
@@ -164,9 +156,11 @@ export class ApprovalGroupsComponent implements OnInit {
       let ret = new WorkflowGroupModel();
       ret.name = '';
       ret.isActive = true;
+      ret.groupRoles = [];
+      ret.groupUsers = [];
       return ret;
     } else {
-      return workflowGroup;
+      return copyObj(workflowGroup);
     }
   }
 
@@ -204,41 +198,44 @@ export class ApprovalGroupsComponent implements OnInit {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method: Observable<AuditActionResultOfWorkflowGroupModel> = null;
       this.globals.showLoader(true);
-      this.currWorkflowGroup.groupRoles = [];
-      this.currWorkflowGroup.groupUsers = [];
-      this.currWorkflowGroup.rolesSaved.forEach(x => {
-        const role = ctrl.backendRoles.find(r => r.id === x);
-        this.currWorkflowGroup.groupRoles
-          .push(new WorkflowGroupRoleMapModel({ roleId: x, name: role.name, workflowGroupId: this.currWorkflowGroup.id }));
+      const groupRoles = [];
+      const groupUsers = [];
+
+      this.currWorkflowGroup.groupRoles.forEach(x => {
+        groupRoles.push(new WorkflowGroupRoleMapModel({ roleId: x.roleId, workflowGroupId: this.currWorkflowGroup.id }));
       });
 
-      this.currWorkflowGroup.usersSaved.forEach(x => {
-        this.currWorkflowGroup.groupUsers
-          .push(new WorkflowGroupUserMapModel({ userId: x, workflowGroupId: this.currWorkflowGroup.id }));
+      this.currWorkflowGroup.groupUsers.forEach(x => {
+        groupUsers.push(new WorkflowGroupUserMapModel({ userId: x.userId, workflowGroupId: this.currWorkflowGroup.id }));
       });
 
       if (this.currWorkflowGroup.id === undefined) {
         const createWorkflow = new CreateWorkflowGroupRequest({
-          name: this.currWorkflowGroup.name, users: this.currWorkflowGroup.groupUsers,
-          roles: this.currWorkflowGroup.groupRoles, isActive: this.currWorkflowGroup.isActive
+          name: this.currWorkflowGroup.name, users: groupUsers,
+          roles: groupRoles, isActive: this.currWorkflowGroup.isActive
         });
         method = this.workflowGroupService.workflowGroupPost(env.apiVersion, createWorkflow);
       } else {
         const updateWorkflow = new UpdateWorkflowGroupRequest({
           id: this.currWorkflowGroup.id,
-          name: this.currWorkflowGroup.name, roles: this.currWorkflowGroup.groupRoles,
-          isActive: this.currWorkflowGroup.isActive, users: this.currWorkflowGroup.groupUsers
+          name: this.currWorkflowGroup.name, roles: groupRoles,
+          isActive: this.currWorkflowGroup.isActive, users: groupUsers
         });
         method = this.workflowGroupService.workflowGroupPatch(env.apiVersion, updateWorkflow);
       }
-      this.globals.showLoader(true);
+
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
           if (ctrl.currWorkflowGroup.id === undefined) {
-            this.updateRolesUsersSavedForItem(resp.object);
-            this.addToGridRolesDropdown(resp.object.groupRoles);
             ctrl.data.push(resp.object);
+          } else {
+            const index = ctrl.data.findIndex(x => x.id === ctrl.currWorkflowGroup.id);
+            ctrl.data.splice(index, 1);
+            ctrl.data.splice(index, 0, resp.object);
           }
+          this.updateRolesUsersSavedForItem(resp.object);
+          this.addToGridRolesDropdown(resp.object.groupRoles);
+
           ctrl.clseDialog();
         }
       }, () => {

@@ -1,7 +1,7 @@
 
 import { ColumnsSaved } from '../../../src/app/models/lib/ColumnsSaved';
 
-describe('Invoice Functionality', () => {
+describe('Parts Functionality', () => {
     it('TC73_AddPart', () => {
         cy.server();
         cy.route({

@@ -88,13 +88,15 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Role, Domain.Models.Role>()
                 .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
 
-            /*Workflow*/
+
+            #region Workflow
             CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
-
             CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>();
             CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>();
+            #endregion
+
 
             #region Invoice
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
