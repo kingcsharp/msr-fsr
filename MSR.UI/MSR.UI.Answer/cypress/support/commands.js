@@ -97,10 +97,11 @@ Cypress.Commands.add("checkWebConsoleTracking", () => {
 Cypress.Commands.add("showDropdownTrackableModel", (cyGridName) => {
     cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').click();
     cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').find('.ui-multiselect-items-wrapper').scrollTo('bottom');
-    cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Created On').click();
-    cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Created By').click();
     cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Updated On').click();
     cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Updated By').click();
+    cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Created On').click();
+    cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').find('.ui-multiselect-items-wrapper').contains('Created By').click();
+    
     cy.get(`[data-cy=${cyGridName}]`).find('.gridDropdown').click();
 });
 
@@ -108,6 +109,13 @@ Cypress.Commands.add("multiselectClick", (cyproperty, containsName) => {
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').click();
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').find('input[type=text]:last').type(containsName);
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').find('.ui-multiselect-items-wrapper').contains(containsName).click();
+    cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').click();
+});
+
+Cypress.Commands.add("multiselectFormClick", (cyproperty, containsName) => {
+    cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').click();
+    cy.get(`.ui-multiselect-filter-container`).find('input').type(containsName);
+    cy.get(`.ui-multiselect-items-wrapper`).find('.ui-multiselect-item').find('span').contains(containsName).click();
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').click();
 });
 

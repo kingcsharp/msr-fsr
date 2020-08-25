@@ -3,7 +3,7 @@ import { Globals } from '../../../models/lib/globals';
 import {
   WorkflowService, WorkflowModel, WorkflowStageMapModel, WorkflowActivityMapModel,
   AuditActionResultOfWorkflowModel, CreateWorkflowRequest, UpdateWorkflowRequest, WorkflowActivityModel,
-  WorkflowGroupService, WorkflowStageService,EnumMenuItem
+  WorkflowGroupService, WorkflowStageService, EnumMenuItem
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -14,6 +14,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, forkJoin, of } from 'rxjs';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
 declare let jQuery: any;
 
 @Component({
@@ -75,19 +76,20 @@ export class ApprovalWorkflowComponent implements OnInit {
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
 
+    this.getWorkflows();
     this.getWorkflowStageDropdown();
     this.getWorkflowActivityDropdown();
-    this.getWorkflows();
   }
 
   getWorkflowActivityDropdown() {
     const ctrl = this;
     return this.workflowService.activity(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.object.map((x) => {
-          ctrl.allActivities.push({ label: x.name, value: x.id });
+        ctrl.allActivities = response.object.map((x) => {
+          x.workflowActivityId = x.id;
+          x.workflowActivityName = x.name;
+          return x;
         });
-        this.getAllActivities = true;
       }));
   }
 
@@ -95,26 +97,21 @@ export class ApprovalWorkflowComponent implements OnInit {
     const ctrl = this;
     return this.workflowStageService.workflowStageGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.object.map((x) => {
-          ctrl.allStages.push({ label: x.name, value: x.id });
+        ctrl.allStages = response.object.map((x) => {
+          x.workflowStageId = x.id;
+          x.workflowStageName = x.name;
+          return x;
         });
-        this.getstagesDr = true;
       }));
   }
 
   getWorkflows() {
     const ctrl = this;
     this.globals.showLoader(true);
-    this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
-        ctrl.data = response.object;
-        ctrl.data.map((elem) => {
-          this.updateStagesSavedForItem(elem);
-          this.updateActivitiesSavedForItem(elem);
-          return elem;
-        });
-      }));
+    this.workflowService.workflowGet(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
+      this.globals.showLoader(false);
+      ctrl.data = response.object;
+    }));
   }
 
   updateActivitiesSavedForItem(elem: any) {
@@ -192,9 +189,11 @@ export class ApprovalWorkflowComponent implements OnInit {
       let ret = new WorkflowModel();
       ret.name = '';
       ret.isActive = true;
+      ret.memberStages = [];
+      ret.activityMaps = [];
       return ret;
     } else {
-      return workflow;
+      return copyObj(workflow);
     }
   }
 
@@ -217,29 +216,28 @@ export class ApprovalWorkflowComponent implements OnInit {
       let method: Observable<AuditActionResultOfWorkflowModel> = null;
       this.globals.showLoader(true);
 
-      this.currWorkflow.memberStages = [];
-      this.currWorkflow.activityMaps = [];
-      this.currWorkflow.stagesSaved.forEach(x => {
-        this.currWorkflow.memberStages
-          .push(new WorkflowStageMapModel({ workflowStageId: x, workflowId: this.currWorkflow.id }));
+      const memberStages = [];
+      const activityMaps = [];
+
+      this.currWorkflow.memberStages.forEach(x => {
+        memberStages.push(new WorkflowStageMapModel({ workflowStageId: x.workflowStageId, workflowId: this.currWorkflow.id }));
       });
 
-      this.currWorkflow.activitiesSaved.forEach(x => {
-        this.currWorkflow.activityMaps
-          .push(new WorkflowActivityMapModel({ workflowActivityId: x, workflowId: this.currWorkflow.id }));
+      this.currWorkflow.activityMaps.forEach(x => {
+        activityMaps.push(new WorkflowActivityMapModel({ workflowActivityId: x.workflowActivityId, workflowId: this.currWorkflow.id }));
       });
 
       if (this.currWorkflow.id === undefined) {
         const createWorkflow = new CreateWorkflowRequest({
           name: this.currWorkflow.name, isActive: this.currWorkflow.isActive
-          , activityMaps: this.currWorkflow.activityMaps, memberStages: this.currWorkflow.memberStages
+          , activityMaps: activityMaps, memberStages: memberStages
         });
         method = this.workflowService.workflowPost(env.apiVersion, createWorkflow);
       } else {
         const updateWorkflow = new UpdateWorkflowRequest({
           id: this.currWorkflow.id,
           name: this.currWorkflow.name, isActive: this.currWorkflow.isActive
-          , activityMaps: this.currWorkflow.activityMaps, memberStages: this.currWorkflow.memberStages
+          , activityMaps: activityMaps, memberStages: memberStages
         });
         method = this.workflowService.workflowPatch(env.apiVersion, updateWorkflow);
       }
@@ -247,12 +245,11 @@ export class ApprovalWorkflowComponent implements OnInit {
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
           if (ctrl.currWorkflow.id === undefined) {
-            this.updateStagesSavedForItem(resp.object);
-            this.updateActivitiesSavedForItem(resp.object);
             ctrl.data.push(resp.object);
           } else {
-            this.updateStagesSavedForItem(this.currWorkflow);
-            this.updateActivitiesSavedForItem(this.currWorkflow);
+            const index = ctrl.data.findIndex(x => x.id === ctrl.currWorkflow.id);
+            ctrl.data.splice(index, 1);
+            ctrl.data.splice(index, 0, resp.object);
           }
           ctrl.clseDialog();
         }

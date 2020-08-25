@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(Workflow))]
-    public partial class Workflow : DeletableEntity
+    public class Workflow : DeletableEntity
     {
         public Workflow()
         {

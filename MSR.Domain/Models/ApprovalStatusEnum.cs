@@ -1,6 +1,6 @@
 ﻿namespace MSR.Domain.Models
 {
-    public enum ApprovalStatus
+    public enum ApprovalStatusEnum
     {
         Approved = 1,
         InProgress = 2,

@@ -12422,6 +12422,7 @@ export interface IWorkflowModel extends IDeletableModel {
 }
 
 export class WorkflowStageMapModel implements IWorkflowStageMapModel {
+    workflowStageName?: string | undefined;
     workflowId?: number;
     workflowStageId?: number;
 
@@ -12436,6 +12437,7 @@ export class WorkflowStageMapModel implements IWorkflowStageMapModel {
 
     init(_data?: any) {
         if (_data) {
+            this.workflowStageName = _data["workflowStageName"];
             this.workflowId = _data["workflowId"];
             this.workflowStageId = _data["workflowStageId"];
         }
@@ -12450,6 +12452,7 @@ export class WorkflowStageMapModel implements IWorkflowStageMapModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["workflowStageName"] = this.workflowStageName;
         data["workflowId"] = this.workflowId;
         data["workflowStageId"] = this.workflowStageId;
         return data; 
@@ -12457,11 +12460,13 @@ export class WorkflowStageMapModel implements IWorkflowStageMapModel {
 }
 
 export interface IWorkflowStageMapModel {
+    workflowStageName?: string | undefined;
     workflowId?: number;
     workflowStageId?: number;
 }
 
 export class WorkflowActivityMapModel implements IWorkflowActivityMapModel {
+    workflowActivityName?: string | undefined;
     workflowId?: number;
     workflowActivityId?: number;
 
@@ -12476,6 +12481,7 @@ export class WorkflowActivityMapModel implements IWorkflowActivityMapModel {
 
     init(_data?: any) {
         if (_data) {
+            this.workflowActivityName = _data["workflowActivityName"];
             this.workflowId = _data["workflowId"];
             this.workflowActivityId = _data["workflowActivityId"];
         }
@@ -12490,6 +12496,7 @@ export class WorkflowActivityMapModel implements IWorkflowActivityMapModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["workflowActivityName"] = this.workflowActivityName;
         data["workflowId"] = this.workflowId;
         data["workflowActivityId"] = this.workflowActivityId;
         return data; 
@@ -12497,6 +12504,7 @@ export class WorkflowActivityMapModel implements IWorkflowActivityMapModel {
 }
 
 export interface IWorkflowActivityMapModel {
+    workflowActivityName?: string | undefined;
     workflowId?: number;
     workflowActivityId?: number;
 }

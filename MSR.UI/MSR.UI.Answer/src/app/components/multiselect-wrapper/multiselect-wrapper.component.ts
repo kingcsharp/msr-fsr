@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../models/lib/Utils';
 
 @Component({
   selector: 'multiselect-wrapper',
@@ -24,7 +23,6 @@ export class MultiselectWrapperComponent implements OnInit {
   @Input() multipleValues: boolean;
   currentOptions: any = [];
   basicOptions: any;
-  savedOptions: any;
   isOldFilter: boolean = false;
   constructor() {
   }
@@ -36,21 +34,22 @@ export class MultiselectWrapperComponent implements OnInit {
       name: this.filterProp || 'name',
       id: this.defaultId || 'id'
     };
-    this.savedOptions = this.options;
     FilterUtils['multipleValuesFilter' + this.multiselectName] = (value, filter): boolean => {
       let found = false;
       filter.forEach(fElement => {
-        value.forEach(vElement => {
-          if (ctrl.isOldFilter) {
-            if(fElement === vElement[ctrl.filterProp]){
+        if (value !== undefined) {
+          value.forEach(vElement => {
+            if (ctrl.isOldFilter) {
+              if (fElement === vElement[ctrl.filterProp]) {
+                found = true;
+                return;
+              }
+            } else if (fElement.id === vElement[ctrl.basicOptions.id]) {
               found = true;
               return;
             }
-          } else if (fElement[ctrl.basicOptions.id] === vElement[ctrl.basicOptions.id]) {
-            found = true;
-            return;
-          }
-        });
+          });
+        }
       });
       return found;
     };
@@ -72,37 +71,15 @@ export class MultiselectWrapperComponent implements OnInit {
   }
 
   ngDoCheck() {
-    let changed = false;
-    if (this.options === undefined && this.savedOptions === undefined) {
+    if (this.options === undefined) {
       return;
     }
-    if (this.options !== undefined && this.savedOptions === undefined) {
-      changed = true;
-      this.savedOptions = this.options;
-    }
-    const lengthChange = this.options.length !== this.savedOptions.length;
-    if (changed || lengthChange) {
+    const lengthChange = this.options.length !== this.currentOptions.length;
+    if (lengthChange) {
       this.pushOptions();
       this.currentOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
     }
   }
-
-  // dataAlreadyParsed(data) {
-  //   if (data[0].label !== undefined && data[0].value !== undefined) {
-  //     data.map((element) => {
-  //       this.currentOptions.push({
-  //         label: element.label,
-  //         value: {
-  //           id: element.value,
-  //           name: element.label
-  //         }
-  //       })
-  //     });
-
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   dataAlreadyParsed(data) {
     if (data[0].label !== undefined && data[0].value !== undefined) {
@@ -114,14 +91,9 @@ export class MultiselectWrapperComponent implements OnInit {
 
   pushOptions() {
     const ctrl = this;
-
     if (this.options === undefined) {
       return;
     }
-
-    // if (this.dataAlreadyParsed(this.options)) {
-    //   return;
-    // }
 
     this.options.map((item) => {
       if (this.multipleValues && !this.dataAlreadyParsed(ctrl.options)) {
@@ -157,6 +129,8 @@ export class MultiselectWrapperComponent implements OnInit {
         });
       }
     });
+
+    // this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
   }
 
   getLabel(item) {

@@ -2,7 +2,7 @@
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public class WorkflowActivityMap : TrackableEntity
+    public partial class WorkflowActivityMap : TrackableEntity
     {
         public int WorkflowId { get; set; }
         [ForeignKey("WorkflowId")]
