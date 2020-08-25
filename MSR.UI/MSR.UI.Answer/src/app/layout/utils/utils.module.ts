@@ -31,6 +31,8 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CsvImportComponent } from '../../../app/components/csv-import/csv-import.component';
 import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
+import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
+
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
-    GridInputFilterComponent
+    GridInputFilterComponent,
+    HelpbuttonWrapperComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -59,7 +62,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     CsvImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
-    CheckboxModule
+    CheckboxModule,
+    HelpbuttonWrapperComponent
   ],
   imports: [
     CommonModule,
