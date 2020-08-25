@@ -4,7 +4,7 @@ import { ProcedureStep } from '../../../services/mocks/models/procedureStep'
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
-import { RoleService, Role } from '../../../services/api.client.generated'
+import { RoleService} from '../../../services/api.client.generated'
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
@@ -15,6 +15,8 @@ import { ProcedureStepMonitor } from '../../../services/mocks/models/procedureSt
 import { CreateProcedureStepMonitorRequest } from '../../../services/mocks/models/createProcedureStepMonitorRequest';
 import { UpdateProcedureStepRequest } from '../../../services/mocks/models/updateProcedureStepRequest';
 import { UpdateProcedureRequest } from '../../../services/mocks/models/updateProcedureRequest';
+import { ProcedureTemplate } from '../../../services/mocks/models/procedureTemplate';
+import { CreateProcedureStepRequest } from '../../../services/mocks/models/createProcedureStepRequest';
 
 @Component({
   selector: 'app-procedure-edit',
@@ -51,6 +53,9 @@ export class ProcedureEditComponent implements OnInit {
   showAddMonitorDialog: boolean = false;
   showConfirmDeleteStepDialog: boolean = false;
   procedureStepToDelete: ProcedureStep;
+  availableProcedureStepTemplates: Array<SelectItem>;
+  selectedProcedureStepTemplate: number;
+
   constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService) { }
 
@@ -97,6 +102,8 @@ export class ProcedureEditComponent implements OnInit {
 
     this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
+
+    this.availableProcedureStepTemplates = this.mockServices.procedureTemplateGet(null).slice(0,10).map(s => ({ label: s.title, value: s.id }));
 
     this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {
 
@@ -262,5 +269,76 @@ export class ProcedureEditComponent implements OnInit {
       updateProcedureRequest.roleIds = this.selectedRoles;
 
     this.mockServices.procedurePatch(updateProcedureRequest);
+  }
+
+  addProcedureStep(){
+
+    if(this.selectedProcedureStepTemplate === undefined){
+
+      let procedureStepToAdd = new ProcedureStep();
+      procedureStepToAdd.id = 0;
+      procedureStepToAdd.duration = 0;
+      procedureStepToAdd.durationType = '0';
+      procedureStepToAdd.equipmentTime = 0;
+      procedureStepToAdd.laborTime = 0;
+      procedureStepToAdd.printOrder = this.procedureSteps.length;
+      procedureStepToAdd.procedureId = this.procedure.id;
+      procedureStepToAdd.referenceFiles = [];
+      procedureStepToAdd.replacementCost = 0;
+      procedureStepToAdd.roles = [];
+      procedureStepToAdd.text = '';
+      procedureStepToAdd.title = '';
+      procedureStepToAdd.usefulLife = 0;
+      procedureStepToAdd.utilizationTime = 0;
+      this.procedureSteps.push(procedureStepToAdd);
+      console.log(this.procedureSteps);
+
+    }else{
+
+      let procedureStepTemplateToAdd = this.mockServices.procedureTemplateGet(this.selectedProcedureStepTemplate)[0];
+      let procedureStepToAdd = new ProcedureStep();
+      procedureStepToAdd.id = 0;
+      procedureStepToAdd.duration = procedureStepTemplateToAdd.estimatedStepDuration;
+      procedureStepToAdd.durationType = '0';
+      procedureStepToAdd.laborTime = 0;
+      procedureStepToAdd.printOrder = this.procedureSteps.length;
+      procedureStepToAdd.procedureId = this.procedure.id;
+      procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles;
+      procedureStepToAdd.replacementCost = 0;
+      procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
+      procedureStepToAdd.text = procedureStepTemplateToAdd.text;
+      procedureStepToAdd.title = procedureStepTemplateToAdd.title;
+      procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
+      procedureStepToAdd.equipmentTime = 0;
+      procedureStepToAdd.utilizationTime = procedureStepTemplateToAdd.utilization;
+      this.procedureSteps.push(procedureStepToAdd);
+      this.selectedProcedureStepTemplate = undefined;
+      this.procedureSteps =  [...this.procedureSteps];
+    }
+
+  }
+
+  saveProcedureStep(procedureStep: any){
+
+    let createProcedureStepRequest = new CreateProcedureStepRequest();
+    createProcedureStepRequest.duration = procedureStep.duration;
+    createProcedureStepRequest.durationType = procedureStep.durationType;
+    createProcedureStepRequest.equipmentTime = procedureStep.equipmentTime;
+    createProcedureStepRequest.laborTime = procedureStep.laborTime;
+    createProcedureStepRequest.predecessorStepId = procedureStep.predecessorStepId;
+    createProcedureStepRequest.printOrder = procedureStep.printOrder;
+    createProcedureStepRequest.procedureId = procedureStep.procedureId;
+    createProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
+    createProcedureStepRequest.replacementCost = procedureStep.replacementCost
+    createProcedureStepRequest.roles = procedureStep.selectedRoles;
+    createProcedureStepRequest.text = procedureStep.text;
+    createProcedureStepRequest.title = procedureStep.title;
+    createProcedureStepRequest.usefulLife = procedureStep.usefulLife;
+    createProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
+    createProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
+
+    this.mockServices.procedureStepPost(createProcedureStepRequest);
+    procedureStep.id = 100;
+
   }
 }
