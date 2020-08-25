@@ -22,19 +22,19 @@ export class ProcedureViewComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
 
       this.procedure.id = params['id'] == null ? 0 : Number(params['id']);
-      
-      if(this.procedure.id !== 0){
+
+      if (this.procedure.id !== 0) {
 
         let procedures = this.mockServices.procedureGet(this.procedure.id);
 
         this.procedure = procedures[0];
 
-        this.procedureSteps = this.mockServices.procedureStepGet(null).slice(1,4);
+        this.procedureSteps = this.mockServices.procedureStepGet(null).slice(1, 4);
       }
 
     });
 
-    
+
   }
 
 }

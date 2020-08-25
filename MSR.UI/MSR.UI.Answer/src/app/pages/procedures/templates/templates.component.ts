@@ -33,7 +33,7 @@ export class TemplatesComponent implements OnInit {
   ngOnInit(): void {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-    
+
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'title', label: 'Title', visible: true }),
@@ -48,11 +48,11 @@ export class TemplatesComponent implements OnInit {
     this.canDelete = this.hasPrivilege(this.privileges.CanActivate);
     this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
 
-    this.getProcedureTemplates()
+    this.getProcedureTemplates();
 
   }
 
-  getProcedureTemplates(){
+  getProcedureTemplates() {
 
     this.data = this.mockService.procedureTemplateGet(null);
     this.statusOptions = this.data.filter(
@@ -76,7 +76,7 @@ export class TemplatesComponent implements OnInit {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  delete(){
+  delete() {
 
     this.mockService.procedureTemplateDelete(this.procedureTemplateToDelete.id);
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;

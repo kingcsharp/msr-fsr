@@ -252,13 +252,13 @@ export class LookUpItems {
         ];
     }
 
-    public DurationType(){
+    public DurationType() {
         return [
             { label: 'SYS_SECONDS', value: 'SYS_SECONDS' },
             { label: 'SYS_MINUTES', value: 'SYS_MINUTES' },
             { label: 'SYS_HOURS', value: 'SYS_HOURS' },
             { label: 'SYS_DAYS', value: 'SYS_DAYS' },
             { label: 'SYS_WEEKS', value: 'SYS_WEEKS' }
-        ]
+        ];
     }
 }

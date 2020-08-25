@@ -2,7 +2,7 @@ import { Injectable, ModuleWithComponentFactories } from '@angular/core';
 import { CreateProcedureTypeRequest } from '../models/createProcedureTypeRequest';
 import { UpdateProcedureTypeRequest } from '../models/updateProcedureTypeRequest';
 import { ProcedureTypeMock } from '../models/ProcedureTypeMock';
-import { ProcedureTemplate } from '../models/procedureTemplate'
+import { ProcedureTemplate } from '../models/procedureTemplate';
 import { CreateProcedureTemplateRequest } from '../models/createProcedureTemplateRequest';
 import { UpdateProcedureTemplateRequest } from '../models/updateProcedureTemplateRequest';
 import { Procedure } from '../models/procedure';
@@ -23,24 +23,24 @@ export class MockServices {
 
     procedureTypesPost(createProcedureTypeRequest: CreateProcedureTypeRequest) {
 
-        alert("Success create placeholder for Web API");
+        alert('Success create placeholder for Web API');
     }
 
     procedureTypesPatch(updateProcedureTypeRequest: UpdateProcedureTypeRequest) {
 
-        alert("Success update placeholder for Web API");
+        alert('Success update placeholder for Web API');
 
     }
 
     procedureTypesDelete(id: number) {
 
-        alert("Success delete placeholder for Web API with id: " + id);
+        alert('Success delete placeholder for Web API with id: ' + id);
 
     }
 
     procedureTypesGet(id: number | null | undefined) {
 
-        let procedureTypes = new Array<ProcedureTypeMock>()
+        let procedureTypes = new Array<ProcedureTypeMock>();
 
         if (id !== null && id !== undefined) {
 
@@ -72,25 +72,25 @@ export class MockServices {
 
     procedureTemplatePost(createProcedureTemplateRequest: CreateProcedureTemplateRequest) {
 
-        alert("Success create placeholder for Web API");
+        alert('Success create placeholder for Web API');
 
     }
 
     procedureTemplatePatch(updateProcedureTemplateRequest: UpdateProcedureTemplateRequest) {
 
-        alert("Success update placeholder for Web API");
+        alert('Success update placeholder for Web API');
 
     }
 
     procedureTemplateDelete(id: number) {
 
-        alert("Success delete placeholder for Web API with id: " + id);
+        alert('Success delete placeholder for Web API with id: ' + id);
 
     }
 
     procedureTemplateGet(id: number | null | undefined) {
 
-        let procedureTemplates = new Array<ProcedureTemplate>()
+        let procedureTemplates = new Array<ProcedureTemplate>();
 
         if (id !== null && id !== undefined) {
 
@@ -108,76 +108,76 @@ export class MockServices {
             procedureTemplate.procedureStepTypeId = 2;
             procedureTemplate.referenceDocuments = undefined;
             procedureTemplate.referenceFiles = [{
-                "fileId": 197,
-                "entityId": 8965,
-                "name": "aaa.docx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "fileURL": ""
+                'fileId': 197,
+                'entityId': 8965,
+                'name': 'aaa.docx',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'fileURL': ''
             },
             {
-                "fileId": 198,
-                "entityId": 8965,
-                "name": "lavarropasS.pdf",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/pdf",
-                "fileURL": ""
+                'fileId': 198,
+                'entityId': 8965,
+                'name': 'lavarropasS.pdf',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/pdf',
+                'fileURL': ''
             },
             {
-                "fileId": 199,
-                "entityId": 8965,
-                "name": "xlsAlecTest.xlsx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "fileURL": ""
+                'fileId': 199,
+                'entityId': 8965,
+                'name': 'xlsAlecTest.xlsx',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'fileURL': ''
             },
             {
-                "fileId": 200,
-                "entityId": 8965,
-                "name": "alec.jpg",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "image/jpeg",
-                "fileURL": ""
+                'fileId': 200,
+                'entityId': 8965,
+                'name': 'alec.jpg',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'image/jpeg',
+                'fileURL': ''
             },
             {
-                "fileId": 201,
-                "entityId": 8965,
-                "name": "cmh.PNG",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "image/png",
-                "fileURL": ""
+                'fileId': 201,
+                'entityId': 8965,
+                'name': 'cmh.PNG',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'image/png',
+                'fileURL': ''
             },
             {
-                "fileId": 202,
-                "entityId": 8965,
-                "name": "casos practico.pptx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                "fileURL": ""
+                'fileId': 202,
+                'entityId': 8965,
+                'name': 'casos practico.pptx',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'fileURL': ''
             },
             {
-                "fileId": 203,
-                "entityId": 8965,
-                "name": "aa.docx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "fileURL": ""
+                'fileId': 203,
+                'entityId': 8965,
+                'name': 'aa.docx',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'fileURL': ''
             },
             {
-                "fileId": 204,
-                "entityId": 8965,
-                "name": "TimeZoneShit.PNG",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "image/png",
-                "fileURL": ""
+                'fileId': 204,
+                'entityId': 8965,
+                'name': 'TimeZoneShit.PNG',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'image/png',
+                'fileURL': ''
             }];
             procedureTemplate.referenceProcedures = [1, 3, 5, 2];
             procedureTemplate.replacementCost = 22;
@@ -206,76 +206,76 @@ export class MockServices {
                 procedureTemplate.procedureStepTypeId = 2;
                 procedureTemplate.referenceDocuments = undefined;
                 procedureTemplate.referenceFiles = [{
-                    "fileId": 197,
-                    "entityId": 8965,
-                    "name": "aaa.docx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "fileURL": ""
+                    'fileId': 197,
+                    'entityId': 8965,
+                    'name': 'aaa.docx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 198,
-                    "entityId": 8965,
-                    "name": "lavarropasS.pdf",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/pdf",
-                    "fileURL": ""
+                    'fileId': 198,
+                    'entityId': 8965,
+                    'name': 'lavarropasS.pdf',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/pdf',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 199,
-                    "entityId": 8965,
-                    "name": "xlsAlecTest.xlsx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "fileURL": ""
+                    'fileId': 199,
+                    'entityId': 8965,
+                    'name': 'xlsAlecTest.xlsx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 200,
-                    "entityId": 8965,
-                    "name": "alec.jpg",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "image/jpeg",
-                    "fileURL": ""
+                    'fileId': 200,
+                    'entityId': 8965,
+                    'name': 'alec.jpg',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'image/jpeg',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 201,
-                    "entityId": 8965,
-                    "name": "cmh.PNG",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "image/png",
-                    "fileURL": ""
+                    'fileId': 201,
+                    'entityId': 8965,
+                    'name': 'cmh.PNG',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'image/png',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 202,
-                    "entityId": 8965,
-                    "name": "casos practico.pptx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                    "fileURL": ""
+                    'fileId': 202,
+                    'entityId': 8965,
+                    'name': 'casos practico.pptx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 203,
-                    "entityId": 8965,
-                    "name": "aa.docx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "fileURL": ""
+                    'fileId': 203,
+                    'entityId': 8965,
+                    'name': 'aa.docx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 204,
-                    "entityId": 8965,
-                    "name": "TimeZoneShit.PNG",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "image/png",
-                    "fileURL": ""
+                    'fileId': 204,
+                    'entityId': 8965,
+                    'name': 'TimeZoneShit.PNG',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'image/png',
+                    'fileURL': ''
                 }];
                 procedureTemplate.referenceProcedures = [1, 3, 5, 2];
                 procedureTemplate.replacementCost = 22;
@@ -294,26 +294,26 @@ export class MockServices {
 
     procedurePost(createProcedureRequest: CreateProcedureRequest) {
 
-        alert("Success create placeholder for Web API");
+        alert('Success create placeholder for Web API');
 
     }
 
     procedurePatch(updateProcedureRequest: UpdateProcedureRequest) {
 
-        alert("Success update placeholder for Web API");
+        alert('Success update placeholder for Web API');
 
     }
 
     procedureDelete(id: number) {
 
-        alert("Success delete placeholder for Web API with id: " + id);
+        alert('Success delete placeholder for Web API with id: ' + id);
 
     }
 
 
     procedureGet(id: number | null | undefined) {
 
-        let procedures = new Array<Procedure>()
+        let procedures = new Array<Procedure>();
 
         if (id !== null && id !== undefined) {
 
@@ -328,49 +328,49 @@ export class MockServices {
             procedure.name = 'Procedure Step A';
             procedure.procedureType = this.procedureTypesGet(2)[0];
             procedure.referenceFiles = [{
-                "fileId": 197,
-                "entityId": 8965,
-                "name": "aaa.docx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "fileURL": ""
+                'fileId': 197,
+                'entityId': 8965,
+                'name': 'aaa.docx',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'fileURL': ''
             },
             {
-                "fileId": 198,
-                "entityId": 8965,
-                "name": "lavarropasS.pdf",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/pdf",
-                "fileURL": ""
+                'fileId': 198,
+                'entityId': 8965,
+                'name': 'lavarropasS.pdf',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/pdf',
+                'fileURL': ''
             },
             {
-                "fileId": 199,
-                "entityId": 8965,
-                "name": "xlsAlecTest.xlsx",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "fileURL": ""
+                'fileId': 199,
+                'entityId': 8965,
+                'name': 'xlsAlecTest.xlsx',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'fileURL': ''
             },
             {
-                "fileId": 200,
-                "entityId": 8965,
-                "name": "alec.jpg",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "image/jpeg",
-                "fileURL": ""
+                'fileId': 200,
+                'entityId': 8965,
+                'name': 'alec.jpg',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'image/jpeg',
+                'fileURL': ''
             },
             {
-                "fileId": 201,
-                "entityId": 8965,
-                "name": "cmh.PNG",
-                "base64String": null,
-                "fileContents": null,
-                "contentType": "image/png",
-                "fileURL": ""
+                'fileId': 201,
+                'entityId': 8965,
+                'name': 'cmh.PNG',
+                'base64String': null,
+                'fileContents': null,
+                'contentType': 'image/png',
+                'fileURL': ''
             }];
             procedure.revision = 1;
             procedure.roles = this.roleGet().slice(0, 5);
@@ -391,76 +391,76 @@ export class MockServices {
                 procedure.name = 'Procedure Step A' + index;
                 procedure.procedureType = this.procedureTypesGet(2)[0];
                 procedure.referenceFiles = [{
-                    "fileId": 197,
-                    "entityId": 8965,
-                    "name": "aaa.docx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "fileURL": ""
+                    'fileId': 197,
+                    'entityId': 8965,
+                    'name': 'aaa.docx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 198,
-                    "entityId": 8965,
-                    "name": "lavarropasS.pdf",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/pdf",
-                    "fileURL": ""
+                    'fileId': 198,
+                    'entityId': 8965,
+                    'name': 'lavarropasS.pdf',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/pdf',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 199,
-                    "entityId": 8965,
-                    "name": "xlsAlecTest.xlsx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "fileURL": ""
+                    'fileId': 199,
+                    'entityId': 8965,
+                    'name': 'xlsAlecTest.xlsx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 200,
-                    "entityId": 8965,
-                    "name": "alec.jpg",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "image/jpeg",
-                    "fileURL": ""
+                    'fileId': 200,
+                    'entityId': 8965,
+                    'name': 'alec.jpg',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'image/jpeg',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 201,
-                    "entityId": 8965,
-                    "name": "cmh.PNG",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "image/png",
-                    "fileURL": ""
+                    'fileId': 201,
+                    'entityId': 8965,
+                    'name': 'cmh.PNG',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'image/png',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 202,
-                    "entityId": 8965,
-                    "name": "casos practico.pptx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                    "fileURL": ""
+                    'fileId': 202,
+                    'entityId': 8965,
+                    'name': 'casos practico.pptx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 203,
-                    "entityId": 8965,
-                    "name": "aa.docx",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "fileURL": ""
+                    'fileId': 203,
+                    'entityId': 8965,
+                    'name': 'aa.docx',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'fileURL': ''
                 },
                 {
-                    "fileId": 204,
-                    "entityId": 8965,
-                    "name": "TimeZoneShit.PNG",
-                    "base64String": null,
-                    "fileContents": null,
-                    "contentType": "image/png",
-                    "fileURL": ""
+                    'fileId': 204,
+                    'entityId': 8965,
+                    'name': 'TimeZoneShit.PNG',
+                    'base64String': null,
+                    'fileContents': null,
+                    'contentType': 'image/png',
+                    'fileURL': ''
                 }];
                 procedure.revision = index;
                 procedure.roles = this.roleGet().slice(0, 3);
@@ -493,27 +493,27 @@ export class MockServices {
 
     }
 
-    monitorsPost(createProcedureStepMonitorRequest: CreateProcedureStepMonitorRequest){
+    monitorsPost(createProcedureStepMonitorRequest: CreateProcedureStepMonitorRequest) {
 
-        alert("Success create placeholder for Web API");
+        alert('Success create placeholder for Web API');
 
     }
 
-    monitorsPatch(updateProcedureStepMonitorRequest: UpdateProcedureStepMonitorRequest){
+    monitorsPatch(updateProcedureStepMonitorRequest: UpdateProcedureStepMonitorRequest) {
 
-        alert("Success update placeholder for Web API");
-        
+        alert('Success update placeholder for Web API');
+
     }
-    
-    monitorsDelete(id: number | null | undefined){
 
-        alert("Success delete placeholder for Web API with id: " + id);
+    monitorsDelete(id: number | null | undefined) {
+
+        alert('Success delete placeholder for Web API with id: ' + id);
 
     }
 
     monitorsGet(id: number | null | undefined) {
 
-        let monitors = new Array<Monitor>()
+        let monitors = new Array<Monitor>();
 
         if (id !== null && id !== undefined) {
 
@@ -553,8 +553,8 @@ export class MockServices {
                 monitor.sendEmailNotification = true;
 
                 monitors.push(monitor);
-    
-    
+
+
             }
 
         }
@@ -563,21 +563,21 @@ export class MockServices {
         return monitors;
     }
 
-    procedureStepPost(createProcedureStepRequest: CreateProcedureStepRequest){
-        alert("Success create placeholder for Web API");
+    procedureStepPost(createProcedureStepRequest: CreateProcedureStepRequest) {
+        alert('Success create placeholder for Web API');
     }
 
-    procedureStepPatch(updateProcedureStepRequest: UpdateProcedureStepRequest){
-        alert("Success update placeholder for Web API");
+    procedureStepPatch(updateProcedureStepRequest: UpdateProcedureStepRequest) {
+        alert('Success update placeholder for Web API');
     }
 
-    procedureStepDelete(id: number | null | undefined){
-        alert("Success delete placeholder for Web API with id: " + id);
+    procedureStepDelete(id: number | null | undefined) {
+        alert('Success delete placeholder for Web API with id: ' + id);
     }
 
     procedureStepGet(id: number | null | undefined) {
 
-        let procedureSteps = new Array<ProcedureStep>()
+        let procedureSteps = new Array<ProcedureStep>();
 
         if (id !== null && id !== undefined) {
 
@@ -632,96 +632,96 @@ export class MockServices {
 
     getReferennceFiles() {
         return [{
-            "fileId": 197,
-            "entityId": 8965,
-            "name": "aaa.docx",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "fileURL": ""
+            'fileId': 197,
+            'entityId': 8965,
+            'name': 'aaa.docx',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'fileURL': ''
         },
         {
-            "fileId": 198,
-            "entityId": 8965,
-            "name": "lavarropasS.pdf",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "application/pdf",
-            "fileURL": ""
+            'fileId': 198,
+            'entityId': 8965,
+            'name': 'lavarropasS.pdf',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'application/pdf',
+            'fileURL': ''
         },
         {
-            "fileId": 199,
-            "entityId": 8965,
-            "name": "xlsAlecTest.xlsx",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "fileURL": ""
+            'fileId': 199,
+            'entityId': 8965,
+            'name': 'xlsAlecTest.xlsx',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'fileURL': ''
         },
         {
-            "fileId": 200,
-            "entityId": 8965,
-            "name": "alec.jpg",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "image/jpeg",
-            "fileURL": ""
+            'fileId': 200,
+            'entityId': 8965,
+            'name': 'alec.jpg',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'image/jpeg',
+            'fileURL': ''
         },
         {
-            "fileId": 201,
-            "entityId": 8965,
-            "name": "cmh.PNG",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "image/png",
-            "fileURL": ""
+            'fileId': 201,
+            'entityId': 8965,
+            'name': 'cmh.PNG',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'image/png',
+            'fileURL': ''
         },
         {
-            "fileId": 202,
-            "entityId": 8965,
-            "name": "casos practico.pptx",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            "fileURL": ""
+            'fileId': 202,
+            'entityId': 8965,
+            'name': 'casos practico.pptx',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'fileURL': ''
         },
         {
-            "fileId": 203,
-            "entityId": 8965,
-            "name": "aa.docx",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "fileURL": ""
+            'fileId': 203,
+            'entityId': 8965,
+            'name': 'aa.docx',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'fileURL': ''
         },
         {
-            "fileId": 204,
-            "entityId": 8965,
-            "name": "TimeZoneShit.PNG",
-            "base64String": null,
-            "fileContents": null,
-            "contentType": "image/png",
-            "fileURL": ""
+            'fileId': 204,
+            'entityId': 8965,
+            'name': 'TimeZoneShit.PNG',
+            'base64String': null,
+            'fileContents': null,
+            'contentType': 'image/png',
+            'fileURL': ''
         }];
     }
 
-    procedureStepMonitorsPost(createProcedureStepMonitorRequest: CreateProcedureStepMonitorRequest){
-        alert("Success create placeholder for Web API");
+    procedureStepMonitorsPost(createProcedureStepMonitorRequest: CreateProcedureStepMonitorRequest) {
+        alert('Success create placeholder for Web API');
     }
 
-    procedureStepMonitorsPatch(updateProcedureStepMonitorRequest: UpdateProcedureStepMonitorRequest){
-        alert("Success create placeholder for Web API");
+    procedureStepMonitorsPatch(updateProcedureStepMonitorRequest: UpdateProcedureStepMonitorRequest) {
+        alert('Success create placeholder for Web API');
     }
 
-    procedureStepMonitorsDelete(id: number | null | undefined){
+    procedureStepMonitorsDelete(id: number | null | undefined) {
 
-        alert("Success delete placeholder for Web API with id: " + id);
+        alert('Success delete placeholder for Web API with id: ' + id);
 
     }
 
     procedureStepMonitorsGet(id: number | null | undefined) {
 
-        let procedureStepMonitor = new Array<ProcedureStepMonitor>()
+        let procedureStepMonitor = new Array<ProcedureStepMonitor>();
 
         if (id !== null && id !== undefined) {
 
@@ -733,7 +733,7 @@ export class MockServices {
             monitor.targetValue = 'Yes';
             monitor.faultHandling = 'RECORD AND CONTINUE';
             monitor.sendEmailNotification = true;
-            monitor.listSource = "NCR Category";
+            monitor.listSource = 'NCR Category';
             procedureStepMonitor.push(monitor);
 
         } else {
@@ -749,10 +749,10 @@ export class MockServices {
                 monitor.targetValue = 'Yes';
                 monitor.faultHandling = 'RECORD AND CONTINUE';
                 monitor.sendEmailNotification = true;
-                monitor.listSource = "NCR Category";
+                monitor.listSource = 'NCR Category';
                 procedureStepMonitor.push(monitor);
-    
-    
+
+
             }
 
         }

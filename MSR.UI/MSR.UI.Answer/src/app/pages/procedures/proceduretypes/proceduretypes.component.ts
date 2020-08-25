@@ -34,7 +34,7 @@ export class ProceduretypesComponent implements OnInit {
   ngOnInit(): void {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-    
+
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
@@ -51,7 +51,7 @@ export class ProceduretypesComponent implements OnInit {
     this.getProcedureTypes();
   }
 
-  getProcedureTypes(){
+  getProcedureTypes() {
 
     this.data = this.mockService.procedureTypesGet(null);
     this.statusOptions = this.data.filter(
@@ -75,7 +75,7 @@ export class ProceduretypesComponent implements OnInit {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  delete(){
+  delete() {
 
     this.mockService.procedureTypesDelete(this.procedureTypeToDelete.id);
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;

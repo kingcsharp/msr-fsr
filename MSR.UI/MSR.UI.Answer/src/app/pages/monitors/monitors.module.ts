@@ -6,7 +6,7 @@ import { UtilsModule } from '../../layout/utils/utils.module';
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
-import { NewWidgetModule } from '../../layout/new-widget/widget.module';;
+import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },

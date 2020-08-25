@@ -1,12 +1,12 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreateProcedureRequest } from '../../../services/mocks/models/createProcedureRequest'
-import { UpdateProcedureRequest } from '../../../services/mocks/models/updateProcedureRequest'
-import { Procedure } from '../../../services/mocks/models/procedure'
+import { CreateProcedureRequest } from '../../../services/mocks/models/createProcedureRequest';
+import { UpdateProcedureRequest } from '../../../services/mocks/models/updateProcedureRequest';
+import { Procedure } from '../../../services/mocks/models/procedure';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { SelectItem } from 'primeng/api';
 import { EnumMenuItem } from '../../../models/enums/privileges';
-import { RoleService, Role } from '../../../services/api.client.generated'
+import { RoleService, Role } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
@@ -28,7 +28,7 @@ export class ProcedureCreateComponent implements OnInit {
   selectedRoles: Array<number> = new Array<number>();
   durationTypeOptions: Array<SelectItem>;
 
-  constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef, 
+  constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService) { }
 
   ngOnInit(): void {
@@ -45,11 +45,11 @@ export class ProcedureCreateComponent implements OnInit {
       this.procedure.comment = '';
         this.procedure.referenceFiles = [];
 
-    }))
+    }));
 
   }
 
-  save(){
+  save() {
 
     let createProcedureRequest = new CreateProcedureRequest();
     createProcedureRequest.comments = this.procedure.comment;

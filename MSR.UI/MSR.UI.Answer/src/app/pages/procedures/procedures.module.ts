@@ -36,7 +36,7 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [ProceduresComponent, TemplatesComponent, ProceduretypesComponent, ProcedureCreateComponent, 
+  declarations: [ProceduresComponent, TemplatesComponent, ProceduretypesComponent, ProcedureCreateComponent,
     ProceduretypeComponent, TemplateComponent, CkeditorWrapperComponent, ProcedureViewComponent, ProcedureEditComponent],
   imports: [
     CommonModule,
@@ -52,4 +52,4 @@ export const routes = [
     SortableModule
   ]
 })
-export class ProceduresModule { static routes = routes;}
+export class ProceduresModule { static routes = routes; }

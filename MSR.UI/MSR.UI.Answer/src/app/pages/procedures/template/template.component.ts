@@ -5,7 +5,7 @@ import { CreateProcedureTemplateRequest } from '../../../services/mocks/models/c
 import { UpdateProcedureTemplateRequest } from '../../../services/mocks/models/updateProcedureTemplateRequest';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { SelectItem } from 'primeng/api';
-import { RoleService, Role } from '../../../services/api.client.generated'
+import { RoleService, Role } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
@@ -20,26 +20,26 @@ import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
 export class TemplateComponent implements OnInit {
 
   menuItems = EnumMenuItem;
-  procedureTemplate:ProcedureTemplate = new ProcedureTemplate();
+  procedureTemplate: ProcedureTemplate = new ProcedureTemplate();
   baseStartOnCounterOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
   availableProceduresForReference: Array<SelectItem>;
   availableRoles: Array<SelectItem>;
   selectedRoles: Array<number> = new Array<number>();
-  
-  constructor(private route: ActivatedRoute, private mockServices:MockServices, public elementReference: ElementRef, public roleService: RoleService, private router: Router) { }
+
+  constructor(private route: ActivatedRoute, private mockServices: MockServices, public elementReference: ElementRef, public roleService: RoleService, private router: Router) { }
 
   ngOnInit(): void {
 
     this.baseStartOnCounterOptions = [
-      {label:'Yes', value:true},
-      {label:'No', value:false}
+      {label: 'Yes', value: true},
+      {label: 'No', value: false}
     ];
 
     this.procedureStepTypeOptions = [
-      {label:'Procedure Step Type A', value:1},
-      {label:'Procedure Step Type B', value:2}
-    ]
+      {label: 'Procedure Step Type A', value: 1},
+      {label: 'Procedure Step Type B', value: 2}
+    ];
 
     this.procedureTemplate.text = '';
     this.procedureTemplate.comments = '';
@@ -47,35 +47,35 @@ export class TemplateComponent implements OnInit {
 
     this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.availableRoles = response.object.map(s => ({label: s.name, value:s.id}));
+      this.availableRoles = response.object.map(s => ({label: s.name, value: s.id}));
 
       this.setProcedureTemplateForEditOrCreate();
 
-    }))
+    }));
 
 
 
   }
 
-  setProcedureTemplateForEditOrCreate(){
+  setProcedureTemplateForEditOrCreate() {
 
     let proceduresForReference = this.mockServices.procedureGet(null);
 
-    this.availableProceduresForReference = proceduresForReference.map(s => ({label: s.name, value:s.id}));
+    this.availableProceduresForReference = proceduresForReference.map(s => ({label: s.name, value: s.id}));
 
     this.route.queryParams.subscribe(params => {
 
       this.procedureTemplate.id = params['id'] == null ? 0 : Number(params['id']);
 
-      if(this.procedureTemplate.id !== 0){
+      if (this.procedureTemplate.id !== 0) {
 
         let procedureTemplates = this.mockServices.procedureTemplateGet(this.procedureTemplate.id);
 
         this.procedureTemplate = procedureTemplates[0];
-        
+
         procedureTemplates[0].referenceProcedures.forEach(id => {
 
-          this.procedureTemplate.referenceProcedures.push(this.availableProceduresForReference.find(s => s.value === id).value); 
+          this.procedureTemplate.referenceProcedures.push(this.availableProceduresForReference.find(s => s.value === id).value);
 
         });
 
@@ -90,7 +90,7 @@ export class TemplateComponent implements OnInit {
 
   }
 
-  save(){
+  save() {
 
     let createProcedureTemplateRequest = new CreateProcedureTemplateRequest();
     createProcedureTemplateRequest.baseStartOnCounter = this.procedureTemplate.baseStartOnCounter;
@@ -114,7 +114,7 @@ export class TemplateComponent implements OnInit {
 
   }
 
-  update(){
+  update() {
 
     let updateProcedureTemplateRequest = new UpdateProcedureTemplateRequest();
     updateProcedureTemplateRequest.baseStartOnCounter = this.procedureTemplate.baseStartOnCounter;

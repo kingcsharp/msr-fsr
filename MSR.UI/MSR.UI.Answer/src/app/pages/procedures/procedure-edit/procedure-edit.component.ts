@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { Procedure } from '../../../services/mocks/models/procedure'
-import { ProcedureStep } from '../../../services/mocks/models/procedureStep'
+import { Procedure } from '../../../services/mocks/models/procedure';
+import { ProcedureStep } from '../../../services/mocks/models/procedureStep';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
-import { RoleService} from '../../../services/api.client.generated'
+import { RoleService} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
@@ -78,7 +78,7 @@ export class ProcedureEditComponent implements OnInit {
       { label: 'Manual', value: 'Manual' },
       { label: 'QR Code', value: 'QR Code' },
       { label: 'Sensor', value: 'Sensor' }
-    ]
+    ];
 
     this.procedureStepTypeOptions = [
       { label: 'Procedure Step Type A', value: 1 },
@@ -99,12 +99,12 @@ export class ProcedureEditComponent implements OnInit {
 
     this.listSource = [
       { label: 'NCR Category', value: 'NCR Category' }
-    ]
+    ];
 
     this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
 
-    this.availableProcedureStepTemplates = this.mockServices.procedureTemplateGet(null).slice(0,10).map(s => ({ label: s.title, value: s.id }));
+    this.availableProcedureStepTemplates = this.mockServices.procedureTemplateGet(null).slice(0, 10).map(s => ({ label: s.title, value: s.id }));
 
     this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {
 
@@ -146,7 +146,7 @@ export class ProcedureEditComponent implements OnInit {
 
       });
 
-    }))
+    }));
 
   }
 
@@ -156,7 +156,7 @@ export class ProcedureEditComponent implements OnInit {
 
   openConfirmDeleteMonitorDialog(procedureStep, monitor) {
 
-    this.procedureStepToRemoveMonitorFrom = procedureStep
+    this.procedureStepToRemoveMonitorFrom = procedureStep;
     this.monitorToDelete = monitor;
     this.showConfirmDeleteMonitorDialog = !this.showConfirmDeleteMonitorDialog;
   }
@@ -209,7 +209,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepMonitorRequest.faultHandling = this.monitorToAdd.faultHandling;
     createProcedureStepMonitorRequest.description = this.monitorToAdd.description;
     createProcedureStepMonitorRequest.sendEmailNotification = this.monitorToAdd.sendEmailNotification;
-    this.mockServices.procedureStepMonitorsPost(createProcedureStepMonitorRequest)
+    this.mockServices.procedureStepMonitorsPost(createProcedureStepMonitorRequest);
 
     this.procedureStepToAddMonitorTo.monitors.push(this.monitorToAdd);
     this.showAddMonitorDialog = !this.showAddMonitorDialog;
@@ -246,7 +246,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.printOrder = procedureStep.printOrder;
     updateProcedureStepRequest.procedureId = procedureStep.procedureId;
     updateProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
-    updateProcedureStepRequest.replacementCost = procedureStep.replacementCost
+    updateProcedureStepRequest.replacementCost = procedureStep.replacementCost;
     updateProcedureStepRequest.roles = procedureStep.selectedRoles;
     updateProcedureStepRequest.text = procedureStep.text;
     updateProcedureStepRequest.title = procedureStep.title;
@@ -272,9 +272,9 @@ export class ProcedureEditComponent implements OnInit {
     this.mockServices.procedurePatch(updateProcedureRequest);
   }
 
-  addProcedureStep(){
+  addProcedureStep() {
 
-    if(this.selectedProcedureStepTemplate === undefined){
+    if (this.selectedProcedureStepTemplate === undefined) {
 
       let procedureStepToAdd = new ProcedureStep();
       procedureStepToAdd.id = 0;
@@ -294,7 +294,7 @@ export class ProcedureEditComponent implements OnInit {
       this.procedureSteps.push(procedureStepToAdd);
       console.log(this.procedureSteps);
 
-    }else{
+    } else {
 
       let procedureStepTemplateToAdd = this.mockServices.procedureTemplateGet(this.selectedProcedureStepTemplate)[0];
       let procedureStepToAdd = new ProcedureStep();
@@ -319,7 +319,7 @@ export class ProcedureEditComponent implements OnInit {
 
   }
 
-  saveProcedureStep(procedureStep: any){
+  saveProcedureStep(procedureStep: any) {
 
     let createProcedureStepRequest = new CreateProcedureStepRequest();
     createProcedureStepRequest.duration = procedureStep.duration;
@@ -330,7 +330,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepRequest.printOrder = procedureStep.printOrder;
     createProcedureStepRequest.procedureId = procedureStep.procedureId;
     createProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
-    createProcedureStepRequest.replacementCost = procedureStep.replacementCost
+    createProcedureStepRequest.replacementCost = procedureStep.replacementCost;
     createProcedureStepRequest.roles = procedureStep.selectedRoles;
     createProcedureStepRequest.text = procedureStep.text;
     createProcedureStepRequest.title = procedureStep.title;
@@ -343,7 +343,7 @@ export class ProcedureEditComponent implements OnInit {
 
   }
 
-  orderOfStepsChanged(){
+  orderOfStepsChanged() {
     console.log('Order Changed');
   }
 }

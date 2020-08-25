@@ -4,14 +4,14 @@ import { environment as env } from '../../../../environments/environment'
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
-import { MockServices } from '../../../services/mocks/services/mockservices';
+import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumApprovalTables, MonitorService, MonitorModel } from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-monitors',
   templateUrl: './monitors.component.html',
   styleUrls: ['./monitors.component.scss'],
-  providers: [MockServices]
+  providers: [MonitorService]
 })
 export class MonitorsComponent implements OnInit {
 
@@ -22,12 +22,11 @@ export class MonitorsComponent implements OnInit {
   loading: boolean = true;
   gridStorageId: string;
 
-  constructor(private mockService: MockServices, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, public monitorsService: MonitorService) { }
 
   ngOnInit(): void {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-    
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'description', label: 'Description', visible: true }),
@@ -39,13 +38,16 @@ export class MonitorsComponent implements OnInit {
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true })
       ];
 
-      this.getMonitors()
+      this.getMonitors();
   }
 
-  getMonitors(){
+  getMonitors() {
 
-    this.data = this.mockService.monitorsGet(null);
-    this.loading = false;
+    this.globals.showLoader(true);
+    this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler( (response) => {
+      this.data = response.object;
+      this.loading = false;
+    }));
   }
 
 }

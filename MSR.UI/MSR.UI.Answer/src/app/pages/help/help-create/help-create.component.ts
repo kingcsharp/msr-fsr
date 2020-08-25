@@ -61,7 +61,7 @@ export class HelpCreateComponent implements OnInit {
 
       });
 
-      if(this.helpPageToEditId !== 0){
+      if (this.helpPageToEditId !== 0) {
         this.urls.push({ label: this.helpPageToEdit.friendlyURL, value: this.helpPageToEdit.friendlyURL });
       }
 
