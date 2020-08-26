@@ -30,6 +30,7 @@ namespace MSR.Application.Extentions
             services.AddScoped<UserAppService>();
             services.AddScoped<WorkflowAppService>();
             services.AddScoped<EventServiceHandler>();
+            services.AddScoped<TimezoneAppService>();
 
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
