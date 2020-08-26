@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Procedure, ProcedureService, ProcedureStep } from '../../../services/api.client.generated';
+import { Procedure, ProcedureService, ProcedureStepModel } from '../../../services/api.client.generated';
 import { responseHandler } from '../../../utils/responseHandler';
 import { environment as env } from '../../../../environments/environment';
 
@@ -13,7 +13,7 @@ import { environment as env } from '../../../../environments/environment';
 export class ProcedureViewComponent implements OnInit {
 
   procedure: Procedure = new Procedure();
-  procedureSteps: Array<ProcedureStep>;
+  procedureSteps: Array<ProcedureStepModel>;
 
   constructor(private procedureService: ProcedureService, private route: ActivatedRoute) { }
 

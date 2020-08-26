@@ -121,8 +121,7 @@ export class MultiselectWrapperComponent implements OnInit {
             });
           }
         });
-      }
-      else {
+      } else {
         this.currentOptions.push({
           label: this.getLabel(item),
           value: this.getValue(item)
@@ -137,7 +136,7 @@ export class MultiselectWrapperComponent implements OnInit {
     if (item.label !== undefined) {
       return item.label;
     }
-    return item[this.basicOptions.name]
+    return item[this.basicOptions.name];
   }
 
   getValue(item) {

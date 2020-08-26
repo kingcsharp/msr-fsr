@@ -5,7 +5,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
-import { UserService, TrainingCertificationView,EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
+import { UserService, TrainingCertificationView, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-certifications',

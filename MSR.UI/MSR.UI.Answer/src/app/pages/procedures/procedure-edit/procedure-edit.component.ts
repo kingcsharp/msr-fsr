@@ -2,8 +2,8 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DraggableItemService } from 'ngx-bootstrap/sortable';
 import { SelectItem } from 'primeng/api';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
-import { RoleService, Procedure, ProcedureStep, ProcedureStepMonitor, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService } from '../../../services/api.client.generated';
+import { EnumPrivilege } from '../../../models/enums/privileges';
+import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService, EnumMenuItem } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
@@ -48,13 +48,13 @@ export class ProcedureEditComponent implements OnInit {
   procedureStepToAddMonitorTo: any;
   showAddMonitorDialog: boolean = false;
   showConfirmDeleteStepDialog: boolean = false;
-  procedureStepToDelete: ProcedureStep;
+  procedureStepToDelete: ProcedureStepModel;
   availableProcedureStepTemplates: Array<SelectItem>;
   selectedProcedureStepTemplate: number;
 
   constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef,
-    private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService, 
-    private procedureService: ProcedureService, private procedureStepMonitorService:ProcedureStepMonitorService) { }
+    private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
+    private procedureService: ProcedureService, private procedureStepMonitorService: ProcedureStepMonitorService) { }
 
   ngOnInit(): void {
 
@@ -117,13 +117,13 @@ export class ProcedureEditComponent implements OnInit {
 
         if (this.procedure.id !== 0) {
 
-          this.procedureService.procedureGet(this.procedure.id, env.apiVersion).subscribe(responseHandler((response) => {
+          this.procedureService.procedureGet(this.procedure.id, env.apiVersion).subscribe(responseHandler((procedrueGetResponse) => {
 
-            this.procedure = response.object[0];
+            this.procedure = procedrueGetResponse.object[0];
 
-            this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((response) => {
+            this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((setGetResponse) => {
 
-              this.procedureSteps = response.object;
+              this.procedureSteps = setGetResponse.object;
 
               this.procedureSteps.forEach(procedureStep => {
 
@@ -280,7 +280,7 @@ export class ProcedureEditComponent implements OnInit {
 
     if (this.selectedProcedureStepTemplate === undefined) {
 
-      let procedureStepToAdd = new ProcedureStep();
+      let procedureStepToAdd = new ProcedureStepModel();
       procedureStepToAdd.id = 0;
       procedureStepToAdd.duration = 0;
       procedureStepToAdd.durationType = '0';
@@ -303,7 +303,7 @@ export class ProcedureEditComponent implements OnInit {
       this.procedureTemplateService.procedureTemplateGet(this.selectedProcedureStepTemplate, env.apiVersion).subscribe(responseHandler((response) => {
 
         let procedureStepTemplateToAdd = response.object[0];
-        let procedureStepToAdd = new ProcedureStep();
+        let procedureStepToAdd = new ProcedureStepModel();
         procedureStepToAdd.id = 0;
         procedureStepToAdd.duration = procedureStepTemplateToAdd.estimatedStepDuration;
         procedureStepToAdd.durationType = '0';

@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
   selector: 'app-location-create',
   templateUrl: './location-create.component.html',
   styleUrls: ['./location-create.component.scss'],
-  providers: [SensorService,TimezoneService]
+  providers: [SensorService, TimezoneService]
 })
 export class LocationCreateComponent implements OnInit {
 
@@ -28,7 +28,7 @@ export class LocationCreateComponent implements OnInit {
   originalSensorsSelected: SensorModel[] = new Array<SensorModel>();
   timezonesAvailable: Array<SelectItem>;
   selectedTimezone: number;
-  constructor(private locationService: LocationService, private sensorService: SensorService, private route: ActivatedRoute, 
+  constructor(private locationService: LocationService, private sensorService: SensorService, private route: ActivatedRoute,
     public globals: Globals, private router: Router, private timezoneService: TimezoneService) { }
 
   ngOnInit(): void {
@@ -40,12 +40,12 @@ export class LocationCreateComponent implements OnInit {
 
       this.parentLocationOptions = response.object;
 
-      this.timezoneService.timezone(env.apiVersion).subscribe(responseHandler((response) => {
+      this.timezoneService.timezone(env.apiVersion).subscribe(responseHandler((timezoneResponse) => {
 
-        this.timezonesAvailable = response.object.map(s => ({ label: s.description, value: s.id }));
-        this.getLocationForEditorCreate(); 
+        this.timezonesAvailable = timezoneResponse.object.map(s => ({ label: s.description, value: s.id }));
+        this.getLocationForEditorCreate();
       }));
-           
+
 
     }));
 
@@ -53,7 +53,7 @@ export class LocationCreateComponent implements OnInit {
 
   }
 
-  getLocationForEditorCreate(){
+  getLocationForEditorCreate() {
 
     this.route.queryParams.subscribe(params => {
       this.locationToEditId = params['id'] == null ? 0 : Number(params['id']);
@@ -69,7 +69,7 @@ export class LocationCreateComponent implements OnInit {
             this.selectedParentLocation = this.parentLocationOptions.find(s => s.id === this.locationToEdit.id);
 
             this.globals.showLoader(true);
-            this.sensorService.sensor(null,this.locationToEdit.site, env.apiVersion).subscribe(responseHandler((locationResponse) => {
+            this.sensorService.sensor(null, this.locationToEdit.site, env.apiVersion).subscribe(responseHandler((locationResponse) => {
 
               this.selectedSensors = locationResponse.object;
               this.originalSensorsSelected = locationResponse.object;

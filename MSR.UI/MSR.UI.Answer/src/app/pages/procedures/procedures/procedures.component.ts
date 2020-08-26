@@ -4,8 +4,8 @@ import { environment as env } from '../../../../environments/environment'
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
-import { Procedure, ProcedureService} from '../../../services/api.client.generated';
+import { EnumPrivilege} from '../../../models/enums/privileges';
+import { Procedure, ProcedureService, EnumApprovalTables, EnumMenuItem} from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-procedures',
@@ -86,6 +86,15 @@ export class ProceduresComponent implements OnInit {
     }, () => {
       this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     }));
+
+  }
+
+  copyProcedure(procedure) {
+
+    this.data.length = 0;
+    this.loading = true;
+    this.getProcedures();
+
 
   }
 

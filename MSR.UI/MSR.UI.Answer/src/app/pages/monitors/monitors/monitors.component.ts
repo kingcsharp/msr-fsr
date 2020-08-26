@@ -4,7 +4,7 @@ import { environment as env } from '../../../../environments/environment'
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { EnumApprovalTables, MonitorService, MonitorModel } from '../../../services/api.client.generated';
 
 @Component({

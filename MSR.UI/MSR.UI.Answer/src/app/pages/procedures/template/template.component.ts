@@ -3,10 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { SelectItem } from 'primeng/api';
 import { RoleService, ProcedureStepTemplateService , ProcedureStepTemplateModel, CreateProcedureTemplateRequest,
-  UpdateProcedureTemplateRequest, ProcedureTemplateService, ProcedureService } from '../../../services/api.client.generated';
+  UpdateProcedureTemplateRequest, ProcedureTemplateService, ProcedureService, EnumMenuItem } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { EnumMenuItem } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({

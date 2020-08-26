@@ -2,9 +2,9 @@ import { Component, OnInit,  ElementRef  } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
-import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , ProcedureStepTemplateModel } from '../../../services/api.client.generated';
+import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , ProcedureStepTemplateModel, EnumMenuItem } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 

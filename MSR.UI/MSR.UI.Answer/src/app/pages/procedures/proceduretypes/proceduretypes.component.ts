@@ -4,10 +4,10 @@ import { environment as env } from '../../../../environments/environment'
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { ProcedureTypeMock } from '../../../services/mocks/models/ProcedureTypeMock';
-import { ProcedureType, ProcedureTypeService} from '../../../services/api.client.generated';
+import { ProcedureType, ProcedureTypeService, EnumApprovalTables, EnumMenuItem} from '../../../services/api.client.generated';
 @Component({
   selector: 'app-proceduretypes',
   templateUrl: './proceduretypes.component.html',

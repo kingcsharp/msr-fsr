@@ -1,8 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
-import { EnumMenuItem } from '../../../models/enums/privileges';
-import { RoleService, Role } from '../../../services/api.client.generated';
+import { RoleService, Role, EnumMenuItem } from '../../../services/api.client.generated';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
 import { Procedure, ProcedureService, CreateProcedureRequest, ProcedureTypeService} from '../../../services/api.client.generated';

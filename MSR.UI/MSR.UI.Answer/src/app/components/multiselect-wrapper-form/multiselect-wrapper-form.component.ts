@@ -75,7 +75,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
   }
 
   emptyArr(arr) {
-    if(arr===undefined){
+    if (arr === undefined) {
       return;
     }
     let length = arr.length;
