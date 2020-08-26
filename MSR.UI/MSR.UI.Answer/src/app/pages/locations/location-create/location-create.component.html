@@ -31,6 +31,17 @@
                 </div>
             </div>
             <div class="form-group" *ngIf="selectedParentLocation == undefined">
+                <label class="col-form-label text-left" for="timezone">
+                    Timezone
+                </label>
+                <div class="col-12">
+                    <p-dropdown placeholder="Select Timezone" name="timezone" [options]="timezonesAvailable"
+                        showClear="true"
+                        [(ngModel)]="selectedTimezone" data-cy="timezonesavailable-dropdown">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="selectedParentLocation == undefined">
                 <label for="address1" class="col-form-label text-left">
                     Address 1
                 </label>
@@ -68,7 +79,7 @@
                 <label for="postalcode" class="col-form-label text-left">
                     Postal Code
                 </label>
-                <input type="text" id="postalcode" name="postalcode" [(ngModel)]="locationToEdit.postalcode"
+                <input type="text" id="postalcode" name="postalcode" [(ngModel)]="locationToEdit.postalCode"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Postal Code"
                     placeholder="" data-cy="postalcode-input">
@@ -95,7 +106,7 @@
                 <label for="invoiceclass" class="col-form-label text-left">
                     Invoice Class
                 </label>
-                <input type="text" id="invoiceclass" name="invoiceclass" [(ngModel)]="locationToEdit.invoiceclass"
+                <input type="text" id="invoiceclass" name="invoiceclass" [(ngModel)]="locationToEdit.invoiceClass"
                     data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                     data-parsley-required="true" class="form-control input-transparent" tooltip="Invoice Class"
                     placeholder="" data-cy="invoiceclass-input">
@@ -105,7 +116,7 @@
                     Internal Address
                 </label>
                 <input type="text" id="internaladdress" name="internaladdress"
-                    [(ngModel)]="locationToEdit.internaladdress" data-validate="parsley" data-parsley-trigger="change"
+                    [(ngModel)]="locationToEdit.internalAddress" data-validate="parsley" data-parsley-trigger="change"
                     data-parsley-minlength="3" data-parsley-required="true" class="form-control input-transparent"
                     tooltip="Internal Address" placeholder="" data-cy="internaladdress-input">
             </div>

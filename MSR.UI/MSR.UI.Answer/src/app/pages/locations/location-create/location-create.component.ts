@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
   LocationService, LocationModel, CreateLocationRequest, ICreateLocationRequest,
-  UpdateLocationRequest, ILocationModel, SensorModel, SensorService
+  UpdateLocationRequest, ILocationModel, SensorModel, SensorService, TimeZoneModel, TimezoneService
 } from '../../../services/api.client.generated';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
   selector: 'app-location-create',
   templateUrl: './location-create.component.html',
   styleUrls: ['./location-create.component.scss'],
-  providers: [SensorService]
+  providers: [SensorService,TimezoneService]
 })
 export class LocationCreateComponent implements OnInit {
 
@@ -26,7 +26,10 @@ export class LocationCreateComponent implements OnInit {
   sensorOptions: SensorModel[] = new Array<SensorModel>();
   selectedSensors: SensorModel[] = new Array<SensorModel>();
   originalSensorsSelected: SensorModel[] = new Array<SensorModel>();
-  constructor(private locationService: LocationService, private sensorService: SensorService, private route: ActivatedRoute, public globals: Globals, private router: Router) { }
+  timezonesAvailable: Array<SelectItem>;
+  selectedTimezone: number;
+  constructor(private locationService: LocationService, private sensorService: SensorService, private route: ActivatedRoute, 
+    public globals: Globals, private router: Router, private timezoneService: TimezoneService) { }
 
   ngOnInit(): void {
 
@@ -37,40 +40,51 @@ export class LocationCreateComponent implements OnInit {
 
       this.parentLocationOptions = response.object;
 
-      this.route.queryParams.subscribe(params => {
-        this.locationToEditId = params['id'] == null ? 0 : Number(params['id']);
+      this.timezoneService.timezone(env.apiVersion).subscribe(responseHandler((response) => {
 
-        if (this.locationToEditId !== 0) {
-
-          this.globals.showLoader(true);
-          this.locationService.locationGet(null, this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
-
-            this.locationToEdit = locationGetResponse.object[0];
-            if (this.locationToEdit.parentId !== null) {
-
-              this.selectedParentLocation = this.parentLocationOptions.find(s => s.id === this.locationToEdit.id);
-
-              this.globals.showLoader(true);
-              this.locationService.sensorGet(this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationResponse) => {
-
-                this.selectedSensors = locationResponse.object;
-                this.originalSensorsSelected = locationResponse.object;
-              }));
-
-            }
-
-          }));
-
-        } else {
-          this.locationToEdit = new LocationModel();
-
-        }
-
-      });
+        this.timezonesAvailable = response.object.map(s => ({ label: s.description, value: s.id }));
+        this.getLocationForEditorCreate(); 
+      }));
+           
 
     }));
 
 
+
+  }
+
+  getLocationForEditorCreate(){
+
+    this.route.queryParams.subscribe(params => {
+      this.locationToEditId = params['id'] == null ? 0 : Number(params['id']);
+
+      if (this.locationToEditId !== 0) {
+
+        this.globals.showLoader(true);
+        this.locationService.locationGet(null, this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
+
+          this.locationToEdit = locationGetResponse.object[0];
+          if (this.locationToEdit.parentId !== null) {
+
+            this.selectedParentLocation = this.parentLocationOptions.find(s => s.id === this.locationToEdit.id);
+
+            this.globals.showLoader(true);
+            this.sensorService.sensor(null,this.locationToEdit.site, env.apiVersion).subscribe(responseHandler((locationResponse) => {
+
+              this.selectedSensors = locationResponse.object;
+              this.originalSensorsSelected = locationResponse.object;
+            }));
+
+          }
+
+        }));
+
+      } else {
+        this.locationToEdit = new LocationModel();
+
+      }
+
+    });
 
   }
 
@@ -92,7 +106,7 @@ export class LocationCreateComponent implements OnInit {
     updateLocationRequest.phone = this.locationToEdit.phone;
     updateLocationRequest.postalCode = this.locationToEdit.postalCode;
     updateLocationRequest.state = this.locationToEdit.state;
-
+    updateLocationRequest.timeZoneId = this.selectedTimezone;
     this.globals.showLoader(true);
     this.locationService.locationPatch(env.apiVersion, updateLocationRequest).subscribe(responseHandler((response) => {
 
@@ -163,7 +177,7 @@ export class LocationCreateComponent implements OnInit {
     createLocationRequest.phone = this.locationToEdit.phone;
     createLocationRequest.postalCode = this.locationToEdit.postalCode;
     createLocationRequest.state = this.locationToEdit.state;
-
+    createLocationRequest.timeZoneId = this.selectedTimezone;
     this.globals.showLoader(true);
     this.locationService.locationPost(env.apiVersion, createLocationRequest).subscribe(responseHandler((response) => {
 
@@ -195,7 +209,7 @@ export class LocationCreateComponent implements OnInit {
     if ($event.value === null) {
       this.selectedParentLocation = undefined;
     } else {
-      this.sensorService.sensor(null, $event.site, env.apiVersion).subscribe(responseHandler((response) => {
+      this.sensorService.sensor(null, $event.value.site, env.apiVersion).subscribe(responseHandler((response) => {
 
         this.sensorOptions.length = 0;
         this.sensorOptions.push(...response.object);
