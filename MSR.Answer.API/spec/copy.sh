@@ -14,3 +14,6 @@ patch -p0 < swagger-removebearer.patch || exit
 # diff -u swagger-work.json.orig swagger-work.json > swagger-removebearer.patch
 patch -p0 < swagger-addexamples.patch || exit
 # diff -u swagger-work.json.orig swagger-work.json > swagger-addexamples.patch
+
+# report difference
+diff -q swagger-work.json swagger.json
