@@ -223,7 +223,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.ProcedureSteps.Delete(false, current);
                 await _unitOfWork.SaveChangesAsync();
             } else {
-                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStep)} uid {CurrentUser.GetId()}");
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepModel)} uid {CurrentUser.GetId()}");
             }
 
             return true;

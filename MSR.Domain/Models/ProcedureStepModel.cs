@@ -11,7 +11,7 @@ namespace MSR.Domain.Models
     /// </summary>
     public class ProcedureStepModel
     {
-        public ProcedureStep() { }
+        public ProcedureStepModel() { }
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -93,7 +93,7 @@ namespace MSR.Domain.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class ProcedureStep {\n");
+            sb.Append("class ProcedureStepModel {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  ProcedureId: ").Append(ProcedureId).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
@@ -131,15 +131,15 @@ namespace MSR.Domain.Models
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ProcedureStep)obj);
+            return obj.GetType() == GetType() && Equals((ProcedureStepModel)obj);
         }
 
         /// <summary>
-        /// Returns true if ProcedureStep instances are equal
+        /// Returns true if ProcedureStepModel instances are equal
         /// </summary>
-        /// <param name="other">Instance of ProcedureStep to be compared</param>
+        /// <param name="other">Instance of ProcedureStepModel to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ProcedureStep other)
+        public bool Equals(ProcedureStepModel other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -261,12 +261,12 @@ namespace MSR.Domain.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(ProcedureStep left, ProcedureStep right)
+        public static bool operator ==(ProcedureStepModel left, ProcedureStepModel right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ProcedureStep left, ProcedureStep right)
+        public static bool operator !=(ProcedureStepModel left, ProcedureStepModel right)
         {
             return !Equals(left, right);
         }

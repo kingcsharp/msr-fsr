@@ -2189,7 +2189,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStep"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepModel"
                 }
               }
             }
@@ -2242,7 +2242,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureStep"
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureStepModel"
                 }
               }
             }
@@ -3173,6 +3173,37 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfSensorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Timezone": {
+      "get": {
+        "tags": [
+          "Timezone"
+        ],
+        "operationId": "Timezone_GetTimezones",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfTimeZoneModel"
                 }
               }
             }
@@ -5157,7 +5188,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/TimeZone"
+                    "$ref": "#/components/schemas/TimeZoneModel"
                   }
                 ]
               },
@@ -5174,7 +5205,7 @@
           }
         ]
       },
-      "TimeZone": {
+      "TimeZoneModel": {
         "type": "object",
         "additionalProperties": true,
         "properties": {
@@ -5189,14 +5220,6 @@
           "offset": {
             "type": "number",
             "format": "float"
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "useDalightSavings": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -6292,7 +6315,7 @@
           "canApprove": true
         }
       },
-      "AuditActionResultOfICollectionOfMonitorModel": {
+      "AuditActionResultOfMonitorModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -6303,11 +6326,12 @@
             "additionalProperties": true,
             "properties": {
               "object": {
-                "type": "array",
                 "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/MonitorModel"
-                }
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/MonitorModel"
+                  }
+                ]
               }
             }
           }
@@ -7120,7 +7144,7 @@
           }
         ]
       },
-      "AuditActionResultOfICollectionOfProcedureStep": {
+      "AuditActionResultOfICollectionOfProcedureStepModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -7134,7 +7158,7 @@
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "$ref": "#/components/schemas/ProcedureStep"
+                  "$ref": "#/components/schemas/ProcedureStepModel"
                 }
               }
             }
@@ -8119,6 +8143,27 @@
                 "nullable": true,
                 "items": {
                   "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AuditActionResultOfICollectionOfTimeZoneModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/TimeZoneModel"
                 }
               }
             }
@@ -9412,6 +9457,10 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
+          "workflowStageName": {
+            "type": "string",
+            "nullable": true
+          },
           "workflowId": {
             "type": "integer",
             "format": "int32"
@@ -9426,6 +9475,10 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
+          "workflowActivityName": {
+            "type": "string",
+            "nullable": true
+          },
           "workflowId": {
             "type": "integer",
             "format": "int32"

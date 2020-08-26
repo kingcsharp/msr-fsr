@@ -162,7 +162,7 @@ namespace MSR.Infrastructure.Profiles
 
             #region Procedure
             CreateMap<Procedure, Domain.Models.Procedure>();
-            CreateMap<ProcedureStep, Domain.Models.ProcedureStep>()
+            CreateMap<ProcedureStep, Domain.Models.ProcedureStepModel>()
                 .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization));
             CreateMap<ProcedureStepType, Domain.Models.ProcedureStepTypeModel>().ReverseMap();
 
