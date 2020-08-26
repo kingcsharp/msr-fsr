@@ -122,6 +122,11 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 throw new DomainException("User not found", DomainError.NotFound);
             }
 
+            if (!ValidatePassword(command.Password, out string error))
+            {
+                throw new DomainException(error, DomainError.Conflict);
+            }
+
             Domain.Helpers.CurrentUser.GetId = () => user.Id;
 
             _authenticationHelper.CreatePasswordHash(command.Password, out var hash, out var salt);
@@ -180,7 +185,12 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
             if (!_authenticationHelper.VerifyPasswordHash(command.OldPassword, user.PasswordHash, user.PasswordSalt))
             {
-                throw new DomainException("Current password is invalid", DomainError.NotFound);
+                throw new DomainException("Current password is invalid", DomainError.Conflict);
+            }
+
+            if (!ValidatePassword(command.NewPassword, out string error))
+            {
+                throw new DomainException(error, DomainError.Conflict);
             }
 
             _authenticationHelper.CreatePasswordHash(command.NewPassword, out var hash, out var salt);
@@ -315,6 +325,82 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
 
             return listEnumPrivilege.ToArray();
+        }
+
+        private bool ValidatePassword(string passwordText, out string error, int minimumLength = 8, int maximumLength = 12,
+            int minimumNumbers = 1, int minimumSpecialCharacters = 1, int minLetters = 1, int minLowerCase = 1, int minUpperCase = 1)
+        {
+            //Assumes that special characters are anything except upper and lower case letters and digits
+            //Assumes that ASCII is being used (not suitable for many languages)
+            error = "";
+            int letters = 0;
+            int digits = 0;
+            int lowerCase = 0;
+            int upperCase = 0;
+            int specialCharacters = 0;
+            //var error = "";
+            var allowPassword = true;
+
+            //Make sure there are enough total characters
+            if (passwordText.Length < minimumLength)
+            {
+                error += "You must have at least " + minimumLength + " characters in your password. ";
+                allowPassword = false;
+            }
+
+            //Make sure there are enough total characters
+            if (passwordText.Length > maximumLength)
+            {
+                error += "You must have no more than " + maximumLength + " characters in your password. ";
+                allowPassword = false;
+            }
+
+            foreach (var ch in passwordText)
+            {
+                if (char.IsLetter(ch)) letters++; //increment letters
+                if (char.IsDigit(ch)) digits++; //increment digits
+                if (char.IsLower(ch)) lowerCase++; //increment digits
+                if (char.IsUpper(ch)) upperCase++; //increment digits
+
+                //Test for only letters and numbers...
+                if (!((ch > 47 && ch < 58) || (ch > 64 && ch < 91) || (ch > 96 && ch < 123)))
+                {
+                    specialCharacters++;
+                }
+            }
+            if (lowerCase < minLowerCase)
+            {
+                error += "You must have at least " + minLetters + " lower case in your password.";
+                allowPassword = false;
+            }
+
+            if (upperCase < minUpperCase)
+            {
+                error += "You must have at least " + minLetters + " upper case in your password.";
+                allowPassword = false;
+            }
+
+            if (letters < minLetters)
+            {
+                error += "You must have at least " + minLetters + " letters in your password.";
+                allowPassword = false;
+            }
+
+            //Make sure there are enough digits
+            if (digits < minimumNumbers)
+            {
+                error += "You must have at least " + minimumNumbers + " numbers in your password.";
+                allowPassword = false;
+            }
+
+            //Make sure there are enough special characters -- !(a-zA-Z0-9)
+            if (specialCharacters < minimumSpecialCharacters)
+            {
+                error += "You must have at least " + minimumSpecialCharacters + " special characters (like @,$,%,#) in your password.";
+                allowPassword = false;
+            }
+
+            return allowPassword;
         }
     }
 }
