@@ -11,6 +11,7 @@ import {LocationsModule} from '../../locations/locations.module';
 import {MainModule} from '../../main/main.module';
 import {PartsModule} from '../../parts/parts.module';
 import { WorkflowModule} from '../../workflow/workflow.module';
+import { ProceduresModule} from '../../procedures/procedures.module';
 
 @Component({
   selector: 'app-help-create',
@@ -110,6 +111,8 @@ export class HelpCreateComponent implements OnInit {
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(partsPaths);
     let workflowPaths = PartsModule.routes.filter(s => s.path !== '').map(m => '/workflow/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(workflowPaths);
+    let proceduresPaths = ProceduresModule.routes.filter(s => s.path !== '').map(m => '/procedures/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(proceduresPaths);
   }
 
   getHelpPaths(): Array<string> {
@@ -134,7 +137,7 @@ export class HelpCreateComponent implements OnInit {
     this.globals.showLoader(true);
     this.helpService.helpPost(env.apiVersion, createHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
-        this.helpPageToEditId = response.object.id;
+        this.router.navigate(['app/help/help']);
       }
     }, (error) => {
     }));
@@ -156,7 +159,7 @@ export class HelpCreateComponent implements OnInit {
 
     this.helpService.helpPatch(env.apiVersion, updateHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
-        this.helpPageToEditId = response.object.id;
+        this.router.navigate(['app/help/help']);
       }
     }, (error) => {
     }));
