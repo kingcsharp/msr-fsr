@@ -7573,25 +7573,67 @@
             "type": "string",
             "nullable": true
           },
-          "revision": {
+          "systemTaskId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "status": {
-            "type": "string",
+          "laborTime": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
-          "isRelatedToAProduct": {
-            "type": "boolean",
-            "nullable": true
+          "referenceProcedures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
-          "referenceFiles": {
+          "referenceDocuments": {
             "type": "array",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/FileModel"
             }
+          },
+          "equipmentTime": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "usefulLife": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -7644,6 +7686,24 @@
             "format": "double",
             "nullable": true
           },
+          "referenceProcedures": {
+            "type": "array",
+            "description": "ReferenceProcedures",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "referenceDocuments": {
+            "type": "array",
+            "description": "ReferenceDocuments",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           "equipmentTime": {
             "type": "number",
             "description": "EquipmentTime",
@@ -7669,9 +7729,13 @@
             "nullable": true
           },
           "roles": {
-            "type": "string",
+            "type": "array",
             "description": "Role list",
-            "nullable": true
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           "comments": {
             "type": "string",
@@ -7718,6 +7782,24 @@
             "format": "double",
             "nullable": true
           },
+          "referenceProcedures": {
+            "type": "array",
+            "description": "ReferenceProcedures",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "referenceDocuments": {
+            "type": "array",
+            "description": "ReferenceDocuments",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           "equipmentTime": {
             "type": "number",
             "description": "EquipmentTime",
@@ -7743,9 +7825,13 @@
             "nullable": true
           },
           "roles": {
-            "type": "string",
+            "type": "array",
             "description": "Role list",
-            "nullable": true
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           "comments": {
             "type": "string",
