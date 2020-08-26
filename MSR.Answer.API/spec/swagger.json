@@ -7623,48 +7623,58 @@
         "properties": {
           "title": {
             "type": "string",
+            "description": "Title",
             "nullable": true
           },
           "stepText": {
             "type": "string",
+            "description": "StepText",
             "nullable": true
           },
-          "systemTaskId": {
+          "procedureStepTypeId": {
             "type": "integer",
+            "description": "ProcedureStepTypeId (SystemTaskId in the DB)",
             "format": "int32",
             "nullable": true
           },
           "laborTime": {
             "type": "number",
+            "description": "LaborTime",
             "format": "double",
             "nullable": true
           },
           "equipmentTime": {
             "type": "number",
+            "description": "EquipmentTime",
             "format": "double",
             "nullable": true
           },
           "replacementCost": {
             "type": "number",
+            "description": "ReplacementCost",
             "format": "double",
             "nullable": true
           },
           "utilization": {
             "type": "number",
+            "description": "Utilization Time",
             "format": "double",
             "nullable": true
           },
           "usefulLife": {
             "type": "integer",
+            "description": "UsefulLife",
             "format": "int32",
             "nullable": true
           },
           "roles": {
             "type": "string",
+            "description": "Role list",
             "nullable": true
           },
           "comments": {
             "type": "string",
+            "description": "Comments",
             "nullable": true
           }
         },
@@ -7681,52 +7691,63 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "ProcedureStepTemplate Id",
             "format": "int32"
           },
           "title": {
             "type": "string",
+            "description": "Title",
             "nullable": true
           },
           "stepText": {
             "type": "string",
+            "description": "StepText",
             "nullable": true
           },
-          "systemTaskId": {
+          "procedureStepTypeId": {
             "type": "integer",
+            "description": "ProcedureStepTypeId (SystemTaskId in the DB)",
             "format": "int32",
             "nullable": true
           },
           "laborTime": {
             "type": "number",
+            "description": "LaborTime",
             "format": "double",
             "nullable": true
           },
           "equipmentTime": {
             "type": "number",
+            "description": "EquipmentTime",
             "format": "double",
             "nullable": true
           },
           "replacementCost": {
             "type": "number",
+            "description": "ReplacementCost",
             "format": "double",
             "nullable": true
           },
           "utilization": {
             "type": "number",
+            "description": "Utilization Time",
             "format": "double",
             "nullable": true
           },
           "usefulLife": {
             "type": "integer",
+            "description": "UsefulLife",
             "format": "int32",
             "nullable": true
           },
           "roles": {
             "type": "string",
+            "description": "Role list",
             "nullable": true
           },
           "comments": {
             "type": "string",
+            "description": "Comments",
             "nullable": true
           }
         },

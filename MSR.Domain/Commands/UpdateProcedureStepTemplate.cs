@@ -50,9 +50,9 @@ namespace MSR.Domain.Commands
         public string Text { get; set; }
 
         /// <summary>
-        /// Gets or Sets ProcedureStepId
+        /// Gets or Sets SystemTaskId
         /// </summary>
-        public int? ProcedureStepId { get; set; }
+        public int? SystemTaskId { get; set; }
 
         /// <summary>
         /// Gets or Sets NumberOfQuestionsToUse
@@ -100,7 +100,6 @@ namespace MSR.Domain.Commands
             sb.Append("  Utilization: ").Append(Utilization).Append("\n");
             sb.Append("  UsefulLife: ").Append(UsefulLife).Append("\n");
             sb.Append("  Text: ").Append(Text).Append("\n");
-            sb.Append("  ProcedureStepId: ").Append(ProcedureStepId).Append("\n");
             sb.Append("  NumberOfQuestionsToUse: ").Append(NumberOfQuestionsToUse).Append("\n");
             sb.Append("  Comments: ").Append(Comments).Append("\n");
             sb.Append("  ReferenceProcedures: ").Append(ReferenceProcedures).Append("\n");
@@ -184,11 +183,6 @@ namespace MSR.Domain.Commands
                     Text.Equals(other.Text)
                 ) &&
                 (
-                    ProcedureStepId == other.ProcedureStepId ||
-                    ProcedureStepId != null &&
-                    ProcedureStepId.Equals(other.ProcedureStepId)
-                ) &&
-                (
                     NumberOfQuestionsToUse == other.NumberOfQuestionsToUse ||
                     NumberOfQuestionsToUse != null &&
                     NumberOfQuestionsToUse.Equals(other.NumberOfQuestionsToUse)
@@ -246,8 +240,6 @@ namespace MSR.Domain.Commands
                     hashCode = hashCode * 59 + UsefulLife.GetHashCode();
                     if (Text != null)
                     hashCode = hashCode * 59 + Text.GetHashCode();
-                    if (ProcedureStepId != null)
-                    hashCode = hashCode * 59 + ProcedureStepId.GetHashCode();
                     if (NumberOfQuestionsToUse != null)
                     hashCode = hashCode * 59 + NumberOfQuestionsToUse.GetHashCode();
                     if (Comments != null)
