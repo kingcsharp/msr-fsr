@@ -5968,6 +5968,7 @@ export class UserModel implements IUserModel {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
+    fileModel?: FileModel | undefined;
 
     constructor(data?: IUserModel) {
         if (data) {
@@ -6010,6 +6011,7 @@ export class UserModel implements IUserModel {
                 for (let item of _data["roles"])
                     this.roles!.push(Role.fromJS(item));
             }
+            this.fileModel = _data["fileModel"] ? FileModel.fromJS(_data["fileModel"]) : <any>undefined;
         }
     }
 
@@ -6052,6 +6054,7 @@ export class UserModel implements IUserModel {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        data["fileModel"] = this.fileModel ? this.fileModel.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -6083,6 +6086,7 @@ export interface IUserModel {
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
+    fileModel?: FileModel | undefined;
 }
 
 export class TimeZoneModel implements ITimeZoneModel {
@@ -6421,6 +6425,66 @@ export enum EnumMenuItem {
     Roles = 32,
 }
 
+export class FileModel implements IFileModel {
+    fileId?: number | undefined;
+    entityId?: number | undefined;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    fileContents?: string | undefined;
+    contentType?: string | undefined;
+    fileURL?: string | undefined;
+
+    constructor(data?: IFileModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileId = _data["fileId"];
+            this.entityId = _data["entityId"];
+            this.name = _data["name"];
+            this.base64String = _data["base64String"];
+            this.fileContents = _data["fileContents"];
+            this.contentType = _data["contentType"];
+            this.fileURL = _data["fileURL"];
+        }
+    }
+
+    static fromJS(data: any): FileModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileId"] = this.fileId;
+        data["entityId"] = this.entityId;
+        data["name"] = this.name;
+        data["base64String"] = this.base64String;
+        data["fileContents"] = this.fileContents;
+        data["contentType"] = this.contentType;
+        data["fileURL"] = this.fileURL;
+        return data; 
+    }
+}
+
+export interface IFileModel {
+    fileId?: number | undefined;
+    entityId?: number | undefined;
+    name?: string | undefined;
+    base64String?: string | undefined;
+    fileContents?: string | undefined;
+    contentType?: string | undefined;
+    fileURL?: string | undefined;
+}
+
 export class DeletableModel extends TrackableModel implements IDeletableModel {
     isActive?: boolean;
 
@@ -6747,66 +6811,6 @@ export class AuditActionResultOfICollectionOfFileModel extends AuditActionResult
 
 export interface IAuditActionResultOfICollectionOfFileModel extends IAuditActionResult {
     object?: FileModel[] | undefined;
-}
-
-export class FileModel implements IFileModel {
-    fileId?: number | undefined;
-    entityId?: number | undefined;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    fileContents?: string | undefined;
-    contentType?: string | undefined;
-    fileURL?: string | undefined;
-
-    constructor(data?: IFileModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.fileId = _data["fileId"];
-            this.entityId = _data["entityId"];
-            this.name = _data["name"];
-            this.base64String = _data["base64String"];
-            this.fileContents = _data["fileContents"];
-            this.contentType = _data["contentType"];
-            this.fileURL = _data["fileURL"];
-        }
-    }
-
-    static fromJS(data: any): FileModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new FileModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["fileId"] = this.fileId;
-        data["entityId"] = this.entityId;
-        data["name"] = this.name;
-        data["base64String"] = this.base64String;
-        data["fileContents"] = this.fileContents;
-        data["contentType"] = this.contentType;
-        data["fileURL"] = this.fileURL;
-        return data; 
-    }
-}
-
-export interface IFileModel {
-    fileId?: number | undefined;
-    entityId?: number | undefined;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    fileContents?: string | undefined;
-    contentType?: string | undefined;
-    fileURL?: string | undefined;
 }
 
 export class AuditActionResultOfFileModel extends AuditActionResult implements IAuditActionResultOfFileModel {
@@ -10695,6 +10699,7 @@ export class CreateUserRequest implements ICreateUserRequest {
     accessFailedCount?: number;
     timeZoneId?: number | undefined;
     roles?: Role[] | undefined;
+    file?: File | undefined;
 
     constructor(data?: ICreateUserRequest) {
         if (data) {
@@ -10728,6 +10733,7 @@ export class CreateUserRequest implements ICreateUserRequest {
                 for (let item of _data["roles"])
                     this.roles!.push(Role.fromJS(item));
             }
+            this.file = _data["file"] ? File.fromJS(_data["file"]) : <any>undefined;
         }
     }
 
@@ -10761,6 +10767,7 @@ export class CreateUserRequest implements ICreateUserRequest {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        data["file"] = this.file ? this.file.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -10783,6 +10790,7 @@ export interface ICreateUserRequest {
     accessFailedCount?: number;
     timeZoneId?: number | undefined;
     roles?: Role[] | undefined;
+    file?: File | undefined;
 }
 
 export class UpdateUserRequest extends CreateUserRequest implements IUpdateUserRequest {

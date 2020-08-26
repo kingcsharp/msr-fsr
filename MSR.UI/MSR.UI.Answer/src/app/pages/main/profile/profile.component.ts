@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserModel, UserService, AccountService, ResetMyPasswordRequest, TimeZoneModel, TimezoneService } from '../../../../app/services/api.client.generated';
+import { UserModel, UserService, AccountService, ResetMyPasswordRequest, TimeZoneModel, TimezoneService, EnumMenuItem, UpdateUserRequest, FileModel } from '../../../../app/services/api.client.generated';
 import { Globals } from '../../../models/lib/globals';
 import { environment as env } from '../../../../environments/environment';
 import { take } from 'rxjs/operators';
@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   parsleyInstance: any;
   allTimezones: Array<TimeZoneModel>;
   selectedTimezone: any;
+  menuItem: EnumMenuItem = EnumMenuItem.Users;
+  uploadedFiles: FileModel[] = [];
   constructor(public globals: Globals, private userService: UserService, private accountService: AccountService, private timezoneService: TimezoneService) {
 
   }
@@ -95,7 +97,7 @@ export class ProfileComponent implements OnInit {
       return ' (' + offset + ')';
     }
   }
-  // jQuery(jQuery('.parsleyjs')[1]).parsley().validate()
+
   submitPwChange() {
     this.resetParsleyjs(1);
     this.globals.showLoader(true);
@@ -104,11 +106,11 @@ export class ProfileComponent implements OnInit {
     if (jQuery(jQuery('.parsleyjs')[1]).parsley().isValid()) {
       console.log('valid')
       this.accountService.resetmypassword(env.apiVersion, this.userPwObj).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.userPwObj = new ResetMyPasswordRequest({ newPassword: '', oldPassword: '' });
-      }));
+        .subscribe(responseHandler(response => {
+          this.userPwObj = new ResetMyPasswordRequest({ newPassword: '', oldPassword: '' });
+        }));
     } else {
-      // this.globals.showLoader(false);
+      this.globals.showLoader(false);
     }
   }
 
@@ -119,7 +121,23 @@ export class ProfileComponent implements OnInit {
   }
 
   submitDetailsChange() {
-
+    let updateUserReq = new UpdateUserRequest();
+    Object.assign(updateUserReq, this.user);
+    if (this.uploadedFiles.length > 0) {
+      updateUserReq.file = this.uploadedFiles[0];
+    }
+    if (this.user.timeZone !== undefined) {
+      updateUserReq.timeZoneId = this.user.timeZone.id;
+    }
+    this.globals.showLoader(true);
+    this.userService.userPatch(env.apiVersion, updateUserReq)
+      .pipe(take(1)).subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
+        var user = this.globals.getCurrentUser();
+        user.timezone = this.user.timeZone;
+        user.file = this.user.fileModel;
+        this.globals.updateUser(user);
+      }));
   }
 
   getUser() {
@@ -128,6 +146,9 @@ export class ProfileComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.user = response.object[0];
+        if(this.user.fileModel !== undefined){
+          this.uploadedFiles.push(this.user.fileModel);
+        }
       }));
   }
 

@@ -155,6 +155,11 @@ export class Globals {
 
     updateUser(val) {
         this.user = val;
+        localStorage.setItem('user', JSON.stringify(val));
+    }
+
+    getCurrentUser(){
+        return this.user;
     }
 
     getLogin() {

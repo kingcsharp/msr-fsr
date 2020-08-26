@@ -36,5 +36,6 @@ namespace MSR.Domain.Models
         public DateTime CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public ICollection<Role> Roles { get; set; }
+        public FileModel FileModel { get; set; }
     }
 }

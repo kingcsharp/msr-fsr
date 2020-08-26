@@ -1,18 +1,13 @@
 import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  PartService, FileService, FileModel, EntityModel, EnumMenuItem
+  FileService, FileModel, EnumMenuItem
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
-import { EnumPrivilege } from '../../models/enums/privileges';
 import { responseHandler } from '../../utils/responseHandler';
-import { ViewSaved } from '../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../models/lib/CommonGrid';
-import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
-import { INFERRED_TYPE } from '@angular/compiler/src/output/output_ast';
+import { Utils } from 'ngx-bootstrap/utils';
+import { emptyArray } from '../../models/lib/Utils';
 
 @Component({
   selector: 'cmh-file-uploader',
@@ -73,6 +68,9 @@ export class CmhFileUploaderComponent implements OnInit {
 
   myUploader(event) {
     const ctrl = this;
+    if (ctrl.multiple !== "multiple") {
+      emptyArray(ctrl.files);
+    }
     for (let file of event.files) {
       if (ctrl.files.findIndex(x => x.name === file.name) === -1) {
         let fileReader = new FileReader();

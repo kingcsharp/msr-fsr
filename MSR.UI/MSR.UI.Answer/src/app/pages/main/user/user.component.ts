@@ -105,7 +105,7 @@ export class UserComponent implements OnInit {
 
   getRoles() {
     const ctrl = this;
-    this.roleService.roles(env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.allRoles = response.object;
         ctrl.backendRoles = response.object;
@@ -206,6 +206,9 @@ export class UserComponent implements OnInit {
       } else {
         let updateUserReq = new UpdateUserRequest();
         Object.assign(updateUserReq, this.currUser);
+        if (this.currUser.timeZone !== undefined) {
+          updateUserReq.timeZoneId = this.currUser.timeZone.id;
+        }
         method = this.userService.userPatch(env.apiVersion, updateUserReq);
       }
 

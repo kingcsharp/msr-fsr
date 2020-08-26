@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -91,8 +92,8 @@ namespace MSR.Answer.API.V1.Extentions
                 LockoutEnabled = request.LockoutEnabled,
                 AccessFailedCount = request.AccessFailedCount,
                 TimeZoneId = request.TimeZoneId,
-                Roles = request.Roles
-
+                Roles = request.Roles,
+                File = AutoMapperHelper.Mapper.Map<FileModel>(request.File)
             };
         }
 
@@ -241,7 +242,8 @@ namespace MSR.Answer.API.V1.Extentions
                 LockoutEnabled = request.LockoutEnabled,
                 AccessFailedCount = request.AccessFailedCount,
                 TimeZoneId = request.TimeZoneId,
-                Roles = request.Roles
+                Roles = request.Roles,
+                File = AutoMapperHelper.Mapper.Map<FileModel>(request.File)
             };
         }
 

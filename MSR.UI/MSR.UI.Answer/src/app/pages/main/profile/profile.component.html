@@ -113,11 +113,19 @@
                             Timezone:
                         </label>
                         <div class="col-md-4 col-12">
-                            <p-dropdown placeholder="Select Time Zone" dataKey="id"
-                                name="timezone" [options]="allTimezones" [(ngModel)]="user.timeZone"
-                                [virtualScroll]="true" optionLabel="description" appendTo="body" itemSize="30"
+                            <p-dropdown placeholder="Select Time Zone" dataKey="id" name="timezone"
+                                [options]="allTimezones" [(ngModel)]="user.timeZone" [virtualScroll]="true"
+                                optionLabel="description" appendTo="body" itemSize="30"
                                 [ngModelOptions]="{standalone: true}" data-cy="timezone-dropdown">
                             </p-dropdown>
+                        </div>
+                        <label class="col-md-2 col-form-label text-md-right">
+                            Select Avatar File
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <cmh-file-uploader class="col-md-10" [menuItem]="menuItem" [(files)]="uploadedFiles"
+                                accept=".jpeg,.img" chooseLabel="Select Avatar File of 34x34px">
+                            </cmh-file-uploader>
                         </div>
                     </div>
                     <p-footer>
@@ -129,7 +137,6 @@
                         </div>
                     </p-footer>
                 </fieldset>
-
             </div>
         </section>
     </form>
@@ -150,16 +157,15 @@
                     <legend>
                     </legend>
                     <div class="form-group row">
-
                         <label for="newPassword" class="col-md-2 col-form-label text-md-right">
                             New Password
                         </label>
                         <div class="col-md-4 ">
-                            <input type="password" id="newPassword" name="newPassword" [(ngModel)]="userPwObj.newPassword"
-                                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
-                                data-parsley-required="true" data-parsley-minlength="8" data-parsley-minlength="8"
-                                data-parsley-special="1" data-parsley-uppercase="1" data-parsley-lowercase="1"
-                                data-parsley-number="1"
+                            <input type="password" id="newPassword" name="newPassword"
+                                [(ngModel)]="userPwObj.newPassword" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                                data-parsley-minlength="8" data-parsley-minlength="8" data-parsley-special="1"
+                                data-parsley-uppercase="1" data-parsley-lowercase="1" data-parsley-number="1"
                                 data-parsley-required-message="Please re-enter your new password."
                                 data-parsley-equalto="#confirmpassword" class="form-control input-transparent"
                                 tooltip="Min length 3 characters" placeholder="New Password"
@@ -169,8 +175,8 @@
                             Current Password
                         </label>
                         <div class="col-md-4 ">
-                            <input type="password" id="oldPassword" name="oldPassword" [(ngModel)]="userPwObj.oldPassword"
-                                data-validate="parsley" data-parsley-required="true"
+                            <input type="password" id="oldPassword" name="oldPassword"
+                                [(ngModel)]="userPwObj.oldPassword" data-validate="parsley" data-parsley-required="true"
                                 class="form-control input-transparent" tooltip="Min length 3 characters"
                                 placeholder="Current Password" data-cy="oldPassword-input">
                         </div>

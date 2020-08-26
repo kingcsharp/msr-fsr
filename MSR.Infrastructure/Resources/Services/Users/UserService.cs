@@ -112,7 +112,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.UserModel> UpdateUserAsync(UpdateUser command)
         {
-            var efUser = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.Id);
+            var efUser = _unitOfWork.Users.Query().Include(x => x.Roles).FirstOrDefault(i => i.Id == command.Id);
 
             if (efUser == null)
             {
@@ -124,25 +124,16 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             foreach (var role in efUser.Roles)
             {
-                if (!command.Roles.Any(x => x.Id == role.RoleId))
-                {
-                    _unitOfWork.UserRoles.Delete(false, role);
-                }
-                else
-                {
-                    rolesToAdd.Add(role);
-                }
+                _unitOfWork.UserRoles.Delete(false, role);
             }
+
             var getRolesFromDb = _unitOfWork.Roles.Query().Where(x => command.Roles.Select(y => y.Id).Contains(x.Id)).ToList();
 
             foreach (var role in command.Roles)
             {
-                if (!efUser.Roles.Any(x => x.RoleId == role.Id))
-                {
-                    var userRoleAdd = new UserRole() { Role = getRolesFromDb.FirstOrDefault(x => x.Id == role.Id), UserId = efUser.Id };
-                    _unitOfWork.UserRoles.AttachAndInsert(userRoleAdd);
-                    rolesToAdd.Add(userRoleAdd);
-                }
+                var userRoleAdd = new UserRole() { Role = getRolesFromDb.FirstOrDefault(x => x.Id == role.Id), UserId = efUser.Id };
+                _unitOfWork.UserRoles.AttachAndInsert(userRoleAdd);
+                rolesToAdd.Add(userRoleAdd);
             }
 
             command.Roles = null;

@@ -6,7 +6,7 @@
           <i class="fa fa-search text-white"></i>
         </div> -->
         <!-- <input placeholder="Search..." type="text" class="input-transparent form-control"> -->
-      </div> 
+      </div>
     </div>
   </form>
   <ul class="nav navbar-nav">
@@ -19,13 +19,14 @@
       <a href tooltip="{{notificationCount+' new notifications'}}" class="nav-link dropdown-toggle"
         data-toggle="dropdown">
         <i class="fad fa-bell" [ngClass]="notificationCount>0?'btn-outline-danger':''"></i>
-        <span class="count"  data-cy="page-notificationcount">{{notificationCount}}</span>
+        <span class="count" data-cy="page-notificationcount">{{notificationCount}}</span>
       </a>
       <ul id="support-menu" class="dropdown-menu dropdown-menu-right support" role="menu">
         <li role="presentation">
           <a href="javascript:;" class="dropdown-item support-ticket ">
             <div class="picture">
-              <span class="badge" [ngClass]="{'badge-success': notificationCount==0, 'badge-danger': notificationCount>0}">{{notificationCount}}</span>
+              <span class="badge"
+                [ngClass]="{'badge-success': notificationCount==0, 'badge-danger': notificationCount>0}">{{notificationCount}}</span>
             </div>
             <div class="details">
               Notifications
@@ -55,12 +56,14 @@
     </li>
     <li class="divider"></li>
     <li class="nav-item dropdown d-sm-down-none">
-      <a href id="account" tooltip="Account" class="nav-link dropdown-toggle" data-toggle="dropdown">
-        <i class="fad fa-user"></i>
+      <a href="javascript:;" id="account" tooltip="Account" class="nav-link dropdown-toggle" data-toggle="dropdown">
+        <img *ngIf="globals.user.fileModel === undefined" width="34" src="assets/img/2.png" alt="">
+        <img *ngIf="globals.user.fileModel !== undefined" width="34" [src]="globals.user.fileModel.fileURL" alt="">
       </a>
       <ul id="account-menu" class="dropdown-menu dropdown-menu-right account" role="menu">
         <li role="presentation" class="account-picture">
-          <img src="assets/img/2.png" alt="">
+          <img *ngIf="globals.user.fileModel === undefined" width="34" src="assets/img/2.png" alt="">
+        <img *ngIf="globals.user.fileModel !== undefined" width="34" [src]="globals.user.fileModel.fileURL" alt="">
           {{globals.user.firstName + ' ' + globals.user.lastName}}
         </li>
         <li role="presentation">
@@ -77,7 +80,8 @@
       </a>
     </li>
     <li class="nav-item d-sm-down-none">
-      <a class="nav-link" (click)="logout()" tooltip="Logout" data-cy="logout-link"><i class="glyphicon glyphicon-off"></i></a>
+      <a class="nav-link" (click)="logout()" tooltip="Logout" data-cy="logout-link"><i
+          class="glyphicon glyphicon-off"></i></a>
     </li>
   </ul>
 </nav>
