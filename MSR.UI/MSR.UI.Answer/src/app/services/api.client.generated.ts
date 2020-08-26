@@ -2950,60 +2950,10 @@ export class ProcedureStepMonitorService {
         return _observableOf<AuditActionResultOfProcedureStepMonitor>(<any>null);
     }
 
-    procedureStepMonitorGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepMonitorRequest> {
-        let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor?";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (id !== undefined && id !== null)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processProcedureStepMonitorGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processProcedureStepMonitorGet(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfProcedureStepMonitorRequest>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResultOfICollectionOfProcedureStepMonitorRequest>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processProcedureStepMonitorGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStepMonitorRequest> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfProcedureStepMonitorRequest.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResultOfICollectionOfProcedureStepMonitorRequest>(<any>null);
-    }
-
-    procedureStepMonitorPatch(version: string, body: UpdateProcedureStepMonitorRequest): Observable<AuditActionResultOfProcedureStepMonitorRequest> {
+    /**
+     * Update procedure step monitor
+     */
+    procedureStepMonitorPatch(version: string, body: UpdateProcedureStepMonitorRequest): Observable<AuditActionResultOfProcedureStepMonitor> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3029,14 +2979,14 @@ export class ProcedureStepMonitorService {
                 try {
                     return this.processProcedureStepMonitorPatch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfProcedureStepMonitorRequest>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfProcedureStepMonitor>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfProcedureStepMonitorRequest>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfProcedureStepMonitor>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcedureStepMonitorPatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepMonitorRequest> {
+    protected processProcedureStepMonitorPatch(response: HttpResponseBase): Observable<AuditActionResultOfProcedureStepMonitor> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3047,7 +2997,7 @@ export class ProcedureStepMonitorService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfProcedureStepMonitorRequest.fromJS(resultData200);
+            result200 = AuditActionResultOfProcedureStepMonitor.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3055,9 +3005,12 @@ export class ProcedureStepMonitorService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfProcedureStepMonitorRequest>(<any>null);
+        return _observableOf<AuditActionResultOfProcedureStepMonitor>(<any>null);
     }
 
+    /**
+     * Delete procedure step monitor
+     */
     procedureStepMonitorDelete(id: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor/{id}";
         if (id === undefined || id === null)
@@ -3110,6 +3063,66 @@ export class ProcedureStepMonitorService {
             }));
         }
         return _observableOf<AuditActionResult>(<any>null);
+    }
+
+    /**
+     * Get monitors for a procedure step
+     * @param monitorId (optional) 
+     */
+    procedurestep(stepId: number, monitorId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfProcedureStepMonitor> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepMonitor/procedurestep/{stepId}?";
+        if (stepId === undefined || stepId === null)
+            throw new Error("The parameter 'stepId' must be defined.");
+        url_ = url_.replace("{stepId}", encodeURIComponent("" + stepId));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (monitorId !== undefined && monitorId !== null)
+            url_ += "monitorId=" + encodeURIComponent("" + monitorId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedurestep(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedurestep(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfProcedureStepMonitor>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfProcedureStepMonitor>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedurestep(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfProcedureStepMonitor> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfProcedureStepMonitor.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfProcedureStepMonitor>(<any>null);
     }
 }
 
@@ -10543,10 +10556,10 @@ export interface ICreateProcedureStepMonitorRequest {
 }
 
 /** Base class for an API call with a typed result */
-export class AuditActionResultOfICollectionOfProcedureStepMonitorRequest extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepMonitorRequest {
-    object?: ProcedureStepMonitorRequest[] | undefined;
+export class AuditActionResultOfICollectionOfProcedureStepMonitor extends AuditActionResult implements IAuditActionResultOfICollectionOfProcedureStepMonitor {
+    object?: ProcedureStepMonitor[] | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfProcedureStepMonitorRequest) {
+    constructor(data?: IAuditActionResultOfICollectionOfProcedureStepMonitor) {
         super(data);
     }
 
@@ -10556,14 +10569,14 @@ export class AuditActionResultOfICollectionOfProcedureStepMonitorRequest extends
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(ProcedureStepMonitorRequest.fromJS(item));
+                    this.object!.push(ProcedureStepMonitor.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStepMonitorRequest {
+    static fromJS(data: any): AuditActionResultOfICollectionOfProcedureStepMonitor {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfProcedureStepMonitorRequest();
+        let result = new AuditActionResultOfICollectionOfProcedureStepMonitor();
         result.init(data);
         return result;
     }
@@ -10581,129 +10594,14 @@ export class AuditActionResultOfICollectionOfProcedureStepMonitorRequest extends
 }
 
 /** Base class for an API call with a typed result */
-export interface IAuditActionResultOfICollectionOfProcedureStepMonitorRequest extends IAuditActionResult {
-    object?: ProcedureStepMonitorRequest[] | undefined;
-}
-
-/**  */
-export class ProcedureStepMonitorRequest implements IProcedureStepMonitorRequest {
-    /** Gets or Sets Id */
-    id?: number;
-    /** Gets or Sets MonitorType */
-    monitorType?: string | undefined;
-    /** Gets or Sets InputType */
-    inputType?: string | undefined;
-    /** Gets or Sets ShouldBe */
-    shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
-    /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
-    /** Gets or Sets Description */
-    description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
-
-    constructor(data?: IProcedureStepMonitorRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.monitorType = _data["monitorType"];
-            this.inputType = _data["inputType"];
-            this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
-            this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
-        }
-    }
-
-    static fromJS(data: any): ProcedureStepMonitorRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProcedureStepMonitorRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["monitorType"] = this.monitorType;
-        data["inputType"] = this.inputType;
-        data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
-        data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
-        return data; 
-    }
-}
-
-/**  */
-export interface IProcedureStepMonitorRequest {
-    /** Gets or Sets Id */
-    id?: number;
-    /** Gets or Sets MonitorType */
-    monitorType?: string | undefined;
-    /** Gets or Sets InputType */
-    inputType?: string | undefined;
-    /** Gets or Sets ShouldBe */
-    shouldBe?: string | undefined;
-    /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
-    /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
-    /** Gets or Sets Description */
-    description?: string | undefined;
-    /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
-}
-
-/** Base class for an API call with a typed result */
-export class AuditActionResultOfProcedureStepMonitorRequest extends AuditActionResult implements IAuditActionResultOfProcedureStepMonitorRequest {
-    object?: ProcedureStepMonitorRequest | undefined;
-
-    constructor(data?: IAuditActionResultOfProcedureStepMonitorRequest) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? ProcedureStepMonitorRequest.fromJS(_data["object"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfProcedureStepMonitorRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfProcedureStepMonitorRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-/** Base class for an API call with a typed result */
-export interface IAuditActionResultOfProcedureStepMonitorRequest extends IAuditActionResult {
-    object?: ProcedureStepMonitorRequest | undefined;
+export interface IAuditActionResultOfICollectionOfProcedureStepMonitor extends IAuditActionResult {
+    object?: ProcedureStepMonitor[] | undefined;
 }
 
 /**  */
 export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMonitorRequest {
+    /** Procedure step monitor Id */
+    id?: number;
     /** Gets or Sets InputType */
     inputType?: string | undefined;
     /** Gets or Sets ShouldBe */
@@ -10728,6 +10626,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.inputType = _data["inputType"];
             this.shouldBe = _data["shouldBe"];
             this.targetValue = _data["targetValue"];
@@ -10746,6 +10645,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["inputType"] = this.inputType;
         data["shouldBe"] = this.shouldBe;
         data["targetValue"] = this.targetValue;
@@ -10758,6 +10658,8 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
 
 /**  */
 export interface IUpdateProcedureStepMonitorRequest {
+    /** Procedure step monitor Id */
+    id?: number;
     /** Gets or Sets InputType */
     inputType?: string | undefined;
     /** Gets or Sets ShouldBe */

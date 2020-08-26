@@ -3,8 +3,8 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { MockServices } from '../../../services/mocks/services/mockservices';
-import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , ProcedureStepTemplateModel, EnumMenuItem } from '../../../services/api.client.generated';
+import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , ProcedureStepTemplateModel,
+  ProcedureTemplateService ,EnumMenuItem } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 
@@ -12,7 +12,7 @@ import { responseHandler } from '../../../utils/responseHandler';
   selector: 'app-templates',
   templateUrl: './templates.component.html',
   styleUrls: ['./templates.component.scss'],
-  providers: [ProcedureStepTemplateService, ProcedureService, MockServices]
+  providers: [ProcedureStepTemplateService, ProcedureService,ProcedureTemplateService]
 })
 export class TemplatesComponent implements OnInit {
 
@@ -30,8 +30,8 @@ export class TemplatesComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   procedureTemplateToDelete: ProcedureStepTemplateModel;
 
-  constructor(private mockService: MockServices, private procedureStepTemplateService: ProcedureStepTemplateService, private procedureService: ProcedureService,
-    private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, 
+    public globals: Globals, private procedureTemplateService: ProcedureTemplateService) { }
 
   ngOnInit(): void {
 
@@ -58,7 +58,7 @@ export class TemplatesComponent implements OnInit {
   getProcedureTemplates() {
 
     this.globals.showLoader(true);
-    this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
+    this.procedureTemplateService.procedureTemplateGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
         this.data = response.object;
         this.statusOptions = this.data.filter(
           (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
@@ -85,8 +85,10 @@ export class TemplatesComponent implements OnInit {
 
   delete() {
 
-    this.mockService.procedureTemplateDelete(this.procedureTemplateToDelete.id);
-    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    this.procedureTemplateService.procedureTemplateDelete(this.procedureTemplateToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+      this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    }));
+    
   }
 
 }

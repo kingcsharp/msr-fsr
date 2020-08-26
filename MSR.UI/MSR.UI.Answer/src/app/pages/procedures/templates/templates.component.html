@@ -83,7 +83,7 @@
                             <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Procedure Template"
                                 data-cy="edit-button" [routerLink]="['../proceduretemplate-edit']"
                                 [queryParams]="{id: model.id}"></i>
-                            <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Procedure Template"
+                            <i *ngIf="canDelete && model.isRelatedToAProduct === false" class="fa fa-trash pointer" tooltip="Delete Procedure Template"
                                 data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
                         </td>
                     </tr>
