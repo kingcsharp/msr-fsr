@@ -7,6 +7,7 @@ import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , Pr
   ProcedureTemplateService ,EnumMenuItem } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-templates',
@@ -26,7 +27,7 @@ export class TemplatesComponent implements OnInit {
   canEdit: boolean = false;
   canDelete: boolean = false;
   menuItems = EnumMenuItem;
-  statusOptions: any[];
+  statusOptions: Array<SelectItem>;
   showConfirmDeleteDialog: boolean = false;
   procedureTemplateToDelete: ProcedureStepTemplateModel;
 
@@ -60,6 +61,12 @@ export class TemplatesComponent implements OnInit {
     this.globals.showLoader(true);
     this.procedureTemplateService.procedureTemplateGet(null, env.apiVersion).subscribe(responseHandler( (response) => {
         this.data = response.object;
+        this.data.map((elem) => {
+          if (elem.status === null) {
+            elem.status = 'Approved';
+          }
+  
+        });
         this.statusOptions = this.data.filter(
           (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
         ).map(x => ({ label: x.status, value: x.status }));
