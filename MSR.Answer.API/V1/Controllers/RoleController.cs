@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -44,13 +45,94 @@ namespace MSR.Answer.API.V1.Controllers
                 {
                     new RoleView()
                     {
-                        Created = new UserModel(){FirstName = "Pedro",LastName = "John"},
+                        Created = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
+                        LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
                         HasAssignedUsers = false,
                         Id = 1,
                         IsCertificationRole = true,
                         Name = "SuperPotatoe",
-                        ParentRoles = null
-                    }
+                        ParentRoles = new List<RoleView>()
+                        {
+                            new RoleView()
+                            {
+                                Created = new UserModel(){FirstName = "Pedro2",LastName = "John2"},
+                                LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
+                                HasAssignedUsers = false,
+                                Id = 2,
+                                IsCertificationRole = true,
+                                Name = "SuperPotatoe2",
+                                ParentRoles = new List<RoleView>()
+                            },new RoleView()
+                            {
+                                Created = new UserModel(){FirstName = "Pedro4",LastName = "John4"},
+                                LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
+                                HasAssignedUsers = false,
+                                Id = 3,
+                                IsCertificationRole = true,
+                                Name = "SuperPotatoe4",
+                                ParentRoles = new List<RoleView>()
+                            },
+                            new RoleView()
+                            {
+                                Created = new UserModel(){FirstName = "Pedro",LastName = "John"},
+                                HasAssignedUsers = false,
+                                Id = 5,
+                                IsCertificationRole = true,
+                                Name = "SuperAdmin",
+                                ParentRoles = new List<RoleView>()
+                                {
+                                    new RoleView()
+                                    {
+                                        Created = new UserModel(){FirstName = "ABC",LastName = "OHG"},
+                                        HasAssignedUsers = false,
+                                        Id = 6,
+                                        IsCertificationRole = true,
+                                        Name = "Morungan",
+                                        ParentRoles = new List<RoleView>()
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new RoleView()
+                    {
+                        Created = new UserModel(){FirstName = "Pedro",LastName = "John"},
+                        HasAssignedUsers = false,
+                        Id = 5,
+                        IsCertificationRole = true,
+                        Name = "SuperAdmin",
+                        ParentRoles = new List<RoleView>()
+                        {
+                            new RoleView()
+                            {
+                                Created = new UserModel(){FirstName = "ABC",LastName = "OHG"},
+                                HasAssignedUsers = false,
+                                Id = 6,
+                                IsCertificationRole = true,
+                                Name = "Morungan",
+                                ParentRoles = new List<RoleView>()
+                            }
+                        }
+                    },
+                    new RoleView()
+                    {
+                        Created = new UserModel(){FirstName = "Pedro2",LastName = "John2"},
+                        LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
+                        HasAssignedUsers = false,
+                        Id = 2,
+                        IsCertificationRole = true,
+                        Name = "SuperPotatoe2",
+                        ParentRoles = new List<RoleView>()
+                    },new RoleView()
+                    {
+                        Created = new UserModel(){FirstName = "Pedro4",LastName = "John4"},
+                        LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
+                        HasAssignedUsers = false,
+                        Id = 3,
+                        IsCertificationRole = true,
+                        Name = "SuperPotatoe4",
+                        ParentRoles = new List<RoleView>()
+                    },
                 }
             });
         }
@@ -64,9 +146,9 @@ namespace MSR.Answer.API.V1.Controllers
                 SuccessMessage = "Role Successfully Created",
                 Object = new RoleView()
                 {
-                    Created = new UserModel() { FirstName = "Pedro", LastName = "John" },
+                    Created = new UserModel() { FirstName = "aaPedro", LastName = "Jaaaohn" },
                     HasAssignedUsers = false,
-                    Id = 1,
+                    Id = 8,
                     IsCertificationRole = true,
                     Name = "SuperPotatoe",
                     ParentRoles = null
@@ -83,12 +165,34 @@ namespace MSR.Answer.API.V1.Controllers
                 SuccessMessage = "Role Successfully Updated",
                 Object = new RoleView()
                 {
-                    Created = new UserModel() { FirstName = "Pedro", LastName = "John" },
+                    Created = new UserModel() { FirstName = "Pedrooo", LastName = "Johnooo", CreatedOn = DateTime.UtcNow },
+                    LastUpdated = new UserModel() { FirstName = "Pedro", LastName = "John", CreatedOn = DateTime.UtcNow },
                     HasAssignedUsers = false,
                     Id = 1,
                     IsCertificationRole = true,
                     Name = "SuperPotatoe",
-                    ParentRoles = null
+                    ParentRoles = new List<RoleView>()
+                    {
+                        new RoleView()
+                        {
+                            Created = new UserModel(){FirstName = "Pedro2",LastName = "John2"},
+                            LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
+                            HasAssignedUsers = false,
+                            Id = 2,
+                            IsCertificationRole = true,
+                            Name = "SuperPotatoe2",
+                            ParentRoles = null
+                        },new RoleView()
+                        {
+                            Created = new UserModel(){FirstName = "Pedro4",LastName = "John4"},
+                            LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
+                            HasAssignedUsers = false,
+                            Id = 3,
+                            IsCertificationRole = true,
+                            Name = "SuperPotatoe4",
+                            ParentRoles = null
+                        }
+                    }
                 }
             });
         }
