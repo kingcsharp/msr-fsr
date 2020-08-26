@@ -30,12 +30,19 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             List<EntityFramework.Entities.Procedure> procedures;
             if (command.procedureID.HasValue) {
-                procedures = await _unitOfWork.Procedures.Query().Where(x => x.Id == command.procedureID.Value).ToListAsync();
+                procedures = await _unitOfWork.Procedures
+                    .Query()
+                    .Where(x => x.Id == command.procedureID.Value)
+                    .Include(x => x.ProcedureType)
+                    .ToListAsync();
                 if (procedures.Count == 0) {
                     throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
                 }
             } else {
-                procedures = await _unitOfWork.Procedures.Query().ToListAsync();
+                procedures = await _unitOfWork.Procedures
+                    .Query()
+                    .Include(x => x.ProcedureType)
+                    .ToListAsync();
             }
             var result = procedures.Select(x => _mapper.Map<Domain.Models.Procedure>(x)).OrderBy(x => x.Name).ToList();
             return result;
@@ -50,8 +57,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 Procedure procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                _unitOfWork.Procedures.Add(procedure);
+                var created = _unitOfWork.Procedures.Add(procedure);
                 await _unitOfWork.SaveChangesAsync();
+
+                // The API return expects the procedure type object to be loaded.
+                created.Context.Entry(procedure).Reference(x => x.ProcedureType).Load();
 
                 ret = _mapper.Map<Domain.Models.Procedure>(procedure);
             }
@@ -68,7 +78,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
         {
-            var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var current = await _unitOfWork.Procedures
+                .Query()
+                .Where(i => i.Id == command.Id)
+                .Include(x => x.ProcedureType)
+                .FirstOrDefaultAsync();
 
             if(current is null)
             {
@@ -144,11 +158,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
         public async Task<Domain.Models.ProcedureStep> UpdateProcedureStepAsync(UpdateProcedureStep command)
         {
-            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i => i.Id == command.procedureStepId);
+            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i =>
+                i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
 
             if(current is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStep)} not found with ID: {command.procedureStepId}", DomainError.NotFound);
+                throw new DomainException($"{nameof(ProcedureStep)} not " +
+                    $"found with ID: {command.procedureId} / {command.procedureStepId}",
+                    DomainError.NotFound);
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();

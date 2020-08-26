@@ -46,6 +46,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>()
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
                 .ForMember(dest => dest.MonitorTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)))
+                .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue))
                 .ForMember(dest => dest.InputTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)));
             CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>()
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling));

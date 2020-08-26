@@ -36,7 +36,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             if (procsteps == null || procsteps.Count == 0) {
                 // shouldn't happen because GetProcedureStepMonitorAsync throws first
-                throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
+                throw new DomainException($"procedure ID {command.procedureStepMonitorId} not found", DomainError.NotFound);
             }
 
             Domain.Models.ProcedureStepMonitor procstepmon = procsteps.First();

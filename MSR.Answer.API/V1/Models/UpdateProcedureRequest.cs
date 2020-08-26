@@ -27,6 +27,13 @@ namespace MSR.Answer.API.V1.Models
     public partial class UpdateProcedureRequest : IEquatable<UpdateProcedureRequest>
     {
         /// <summary>
+        /// Gets or Sets the Id
+        /// </summary>
+        /// <example>3</example>
+        [DataMember(Name="Id")]
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [Required]
