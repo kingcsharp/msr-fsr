@@ -51,7 +51,7 @@ export class LocationCreateComponent implements OnInit {
               this.selectedParentLocation = this.parentLocationOptions.find(s => s.id === this.locationToEdit.id);
 
               this.globals.showLoader(true);
-              this.locationService.sensorGet(this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationResponse) => {
+              this.sensorService.sensor(null,this.locationToEdit.site, env.apiVersion).subscribe(responseHandler((locationResponse) => {
 
                 this.selectedSensors = locationResponse.object;
                 this.originalSensorsSelected = locationResponse.object;
@@ -195,7 +195,7 @@ export class LocationCreateComponent implements OnInit {
     if ($event.value === null) {
       this.selectedParentLocation = undefined;
     } else {
-      this.sensorService.sensor(null, $event.site, env.apiVersion).subscribe(responseHandler((response) => {
+      this.sensorService.sensor(null, $event.value.site, env.apiVersion).subscribe(responseHandler((response) => {
 
         this.sensorOptions.length = 0;
         this.sensorOptions.push(...response.object);
