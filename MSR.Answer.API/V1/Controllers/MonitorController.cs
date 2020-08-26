@@ -41,13 +41,16 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
+        /// Get data on a specific monitor
+        /// </summary>
+        /// <description>
         /// Get data on a specific monitor, including the serial # of
         /// the part and the result of the test.
-        /// </summary>
-        /// <param name="id">ProcedureSteMonitor ID</param>
+        /// </description>
+        /// <param name="id">ProcedureStepMonitor ID</param>
         /// <response code="200"></response>
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<MonitorModel>>))]
+        [SwaggerResponse(typeof(AuditActionResult<MonitorModel>))]
         public async Task<IActionResult> MonitorGetMonitor([FromQuery]int id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetMonitorModel(){

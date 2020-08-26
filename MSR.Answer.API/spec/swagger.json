@@ -1754,16 +1754,17 @@
         "tags": [
           "Monitor"
         ],
-        "summary": "Get data on a specific monitor, including the serial # of\nthe part and the result of the test.",
+        "summary": "Get data on a specific monitor",
         "operationId": "Monitor_MonitorGetMonitor",
         "parameters": [
           {
             "name": "id",
             "in": "query",
-            "description": "ProcedureSteMonitor ID",
+            "description": "ProcedureStepMonitor ID",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 3
             },
             "x-position": 1
           },
@@ -1772,7 +1773,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -1783,7 +1785,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfMonitorModel"
+                  "$ref": "#/components/schemas/AuditActionResultOfMonitorModel"
                 }
               }
             }
@@ -1935,7 +1937,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -1944,13 +1947,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -2955,7 +2959,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureTypeRequest"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureType"
                 }
               }
             }
@@ -3040,7 +3044,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureTypeRequest"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureType"
                 }
               }
             }
@@ -6732,6 +6736,7 @@
         "additionalProperties": true,
         "required": [
           "name",
+          "procedureTypeId",
           "durationType"
         ],
         "properties": {
@@ -7136,142 +7141,6 @@
           }
         ]
       },
-      "AuditActionResultOfProcedureRequest": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuditActionResult"
-          },
-          {
-            "type": "object",
-            "description": "Base class for an API call with a typed result",
-            "additionalProperties": true,
-            "properties": {
-              "object": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ProcedureRequest"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "ProcedureRequest": {
-        "type": "object",
-        "description": " ",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Gets or Sets Id",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "description": "Gets or Sets Name",
-            "nullable": true
-          },
-          "procedureTypeId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isRelatedToAProduct": {
-            "type": "boolean",
-            "description": "Gets or Sets IsRelatedToAProduct",
-            "nullable": true
-          },
-          "creatorCompany": {
-            "type": "string",
-            "description": "Gets or Sets CreatorCompany",
-            "nullable": true
-          },
-          "createdByDepartmentName": {
-            "type": "string",
-            "description": "Gets or Sets CreatedByDepartmentName",
-            "nullable": true
-          },
-          "revision": {
-            "type": "integer",
-            "description": "Gets or Sets Revision",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string",
-            "description": "Gets or Sets Comment",
-            "nullable": true
-          },
-          "duration": {
-            "type": "number",
-            "description": "Gets or Sets Duration",
-            "format": "double"
-          },
-          "durationType": {
-            "type": "string",
-            "description": "Gets or Sets DurationType",
-            "nullable": true
-          },
-          "procedureType": {
-            "description": "Gets or Sets ProcedureType",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProcedureTypeRequest"
-              }
-            ]
-          },
-          "referenceFiles": {
-            "type": "array",
-            "description": "Gets or Sets ReferenceFiles",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/FileRequest"
-            }
-          },
-          "roles": {
-            "type": "array",
-            "description": "Gets or Sets Roles",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/RoleRequest"
-            }
-          }
-        }
-      },
-      "ProcedureTypeRequest": {
-        "type": "object",
-        "description": " ",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Gets or Sets Id",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "description": "Gets or Sets Name",
-            "nullable": true
-          },
-          "type": {
-            "type": "string",
-            "description": "Gets or Sets Type",
-            "nullable": true
-          },
-          "revision": {
-            "type": "integer",
-            "description": "Gets or Sets Revision",
-            "format": "int32",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "description": "Gets or Sets Status",
-            "nullable": true
-          }
-        }
-      },
       "UpdateProcedureRequest": {
         "type": "object",
         "description": " ",
@@ -7342,127 +7211,16 @@
             "durationType": "DURTYPE"
         }
       },
-      "AuditActionResultOfProcedureStepRequest": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuditActionResult"
-          },
-          {
-            "type": "object",
-            "description": "Base class for an API call with a typed result",
-            "additionalProperties": true,
-            "properties": {
-              "object": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ProcedureStepRequest"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "ProcedureStepRequest": {
-        "type": "object",
-        "description": " ",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Gets or Sets Id",
-            "format": "int32"
-          },
-          "procedureId": {
-            "type": "integer",
-            "description": "Gets or Sets ProcedureId",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "description": "Gets or Sets Title",
-            "nullable": true
-          },
-          "stepText": {
-            "type": "string",
-            "description": "Gets or Sets StepText",
-            "nullable": true
-          },
-          "duration": {
-            "type": "number",
-            "description": "Gets or Sets Duration",
-            "format": "double"
-          },
-          "durationType": {
-            "type": "string",
-            "description": "Gets or Sets DurationType",
-            "nullable": true
-          },
-          "printOrder": {
-            "type": "integer",
-            "description": "Gets or Sets PrintOrder",
-            "format": "int32"
-          },
-          "predecessorStepId": {
-            "type": "integer",
-            "description": "Gets or Sets PredecessorStepId",
-            "format": "int32",
-            "nullable": true
-          },
-          "laborTime": {
-            "type": "integer",
-            "description": "Gets or Sets LaborTime",
-            "format": "int32",
-            "nullable": true
-          },
-          "replacementCost": {
-            "type": "number",
-            "description": "Gets or Sets ReplacementCost",
-            "format": "decimal",
-            "nullable": true
-          },
-          "utilizationTime": {
-            "type": "number",
-            "description": "Gets or Sets UtilizationTime",
-            "format": "float",
-            "nullable": true
-          },
-          "equipmentTime": {
-            "type": "integer",
-            "description": "Gets or Sets EquipmentTime",
-            "format": "int32",
-            "nullable": true
-          },
-          "usefulLife": {
-            "type": "integer",
-            "description": "Gets or Sets UsefulLife",
-            "format": "int32",
-            "nullable": true
-          },
-          "referenceFiles": {
-            "type": "array",
-            "description": "Gets or Sets ReferenceFiles",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/FileRequest"
-            }
-          },
-          "roles": {
-            "type": "array",
-            "description": "Gets or Sets Roles",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/RoleRequest"
-            }
-          }
-        }
-      },
       "UpdateProcedureStepRequest": {
         "type": "object",
         "description": " ",
         "additionalProperties": true,
         "properties": {
+          "procedureStepId": {
+            "type": "integer",
+            "description": "Procedure Step Id to update",
+            "format": "int32"
+          },
           "procedureId": {
             "type": "integer",
             "description": "Gets or Sets ProcedureId",
@@ -8252,7 +8010,7 @@
             "title": "UPDTITLE1598415399"
         }
       },
-      "AuditActionResultOfProcedureTypeRequest": {
+      "AuditActionResultOfProcedureType": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -8266,7 +8024,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/ProcedureTypeRequest"
+                    "$ref": "#/components/schemas/ProcedureType"
                   }
                 ]
               }
@@ -8314,28 +8072,6 @@
                 "items": {
                   "$ref": "#/components/schemas/ProcedureType"
                 }
-              }
-            }
-          }
-        ]
-      },
-      "AuditActionResultOfProcedureType": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuditActionResult"
-          },
-          {
-            "type": "object",
-            "description": "Base class for an API call with a typed result",
-            "additionalProperties": true,
-            "properties": {
-              "object": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ProcedureType"
-                  }
-                ]
               }
             }
           }
