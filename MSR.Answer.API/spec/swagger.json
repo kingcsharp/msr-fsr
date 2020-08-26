@@ -2305,7 +2305,7 @@
         "tags": [
           "Procedure"
         ],
-        "summary": "Deactivate Procedure",
+        "summary": "Delete Procedure",
         "operationId": "Procedure_ProcedureDeleteProcedure",
         "parameters": [
           {
@@ -2314,7 +2314,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -2323,13 +2324,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": 1
             },
             "x-position": 2
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -2347,7 +2349,7 @@
         "tags": [
           "Procedure"
         ],
-        "summary": "Deactivate Procedure Step",
+        "summary": "Delete Procedure Step",
         "operationId": "Procedure_ProcedureDeleteProcedureStep",
         "parameters": [
           {
@@ -2356,7 +2358,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 1
           },
@@ -2366,7 +2369,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 2147483647
             },
             "x-position": 2
           },
@@ -2375,13 +2379,14 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 3
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -2752,7 +2757,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2795,7 +2801,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 6
             },
             "x-position": 1
           },
@@ -2804,7 +2811,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2834,7 +2842,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -6782,7 +6791,9 @@
         },
         "example": {
             "name": "PROC1598387581",
-            "comments": "This here is a comment Tue, Aug 25, 2020  1:33:18 PM"
+            "comments": "This here is a comment Tue, Aug 25, 2020  1:33:18 PM",
+            "durationType": "hours",
+            "procedureTypeId": 1
         }
       },
       "AuditActionResultOfProcedureStep": {
@@ -8122,6 +8133,12 @@
               "$ref": "#/components/schemas/RoleRequest"
             }
           }
+        },
+        "example": {
+            "title": "PROCTEMP1598415724",
+            "comments": "Here is a comment from Tue, Aug 25, 2020  9:24:25 PM",
+            "text": "TEXT1598415724",
+            "roles": [ { "id": 1 } ]
         }
       },
       "UpdateProcedureTemplateRequest": {
@@ -8227,6 +8244,10 @@
               "$ref": "#/components/schemas/RoleRequest"
             }
           }
+        },
+        "example": {
+            "id": 6,
+            "title": "UPDTITLE1598415399"
         }
       },
       "AuditActionResultOfProcedureTypeRequest": {

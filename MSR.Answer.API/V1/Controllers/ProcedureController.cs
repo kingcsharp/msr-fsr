@@ -67,7 +67,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        /// Deactivate Procedure
+        /// Delete Procedure
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200"></response>
@@ -81,7 +81,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        /// Deactivate Procedure Step
+        /// Delete Procedure Step
         /// </summary>
         /// <param name="id"></param>
         /// <param name="stepid"></param>
