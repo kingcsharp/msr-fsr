@@ -23,6 +23,12 @@ namespace MSR.Answer.API.V1.Models
     public partial class UpdateProcedureStepRequest : IEquatable<UpdateProcedureStepRequest>
     {
         /// <summary>
+        /// Procedure Step Id to update
+        /// </summary>
+        [DataMember(Name="procedureStepId")]
+        public int ProcedureStepId { get; set; }
+
+        /// <summary>
         /// Gets or Sets ProcedureId
         /// </summary>
         [DataMember(Name="procedureId")]
@@ -114,6 +120,7 @@ namespace MSR.Answer.API.V1.Models
         {
             var sb = new StringBuilder();
             sb.Append("class UpdateProcedureStepRequest {\n");
+            sb.Append("  ProcedureStepId: ").Append(ProcedureStepId).Append("\n");
             sb.Append("  ProcedureId: ").Append(ProcedureId).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  Text: ").Append(Text).Append("\n");
@@ -168,6 +175,10 @@ namespace MSR.Answer.API.V1.Models
                     ProcedureId == other.ProcedureId ||
                     ProcedureId != null &&
                     ProcedureId.Equals(other.ProcedureId)
+                ) &&
+                (
+                    ProcedureStepId == other.ProcedureStepId ||
+                    ProcedureStepId.Equals(other.ProcedureStepId)
                 ) &&
                 (
                     Title == other.Title ||
@@ -248,6 +259,7 @@ namespace MSR.Answer.API.V1.Models
                 // Suitable nullity checks etc, of course :)
                     if (ProcedureId != null)
                     hashCode = hashCode * 59 + ProcedureId.GetHashCode();
+                    hashCode = hashCode * 59 + ProcedureStepId.GetHashCode();
                     if (Title != null)
                     hashCode = hashCode * 59 + Title.GetHashCode();
                     if (Text != null)

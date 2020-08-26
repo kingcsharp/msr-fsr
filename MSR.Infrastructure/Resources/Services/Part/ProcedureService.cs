@@ -158,11 +158,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
         public async Task<Domain.Models.ProcedureStep> UpdateProcedureStepAsync(UpdateProcedureStep command)
         {
-            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i => i.Id == command.procedureStepId);
+            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i =>
+                i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
 
             if(current is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStep)} not found with ID: {command.procedureStepId}", DomainError.NotFound);
+                throw new DomainException($"{nameof(ProcedureStep)} not " +
+                    $"found with ID: {command.procedureId} / {command.procedureStepId}",
+                    DomainError.NotFound);
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();

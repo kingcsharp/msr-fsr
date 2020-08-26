@@ -151,13 +151,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
         public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest body)
         {
             var command = body.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepRequest>();
+            return ret.ToOkObjectResponse<ProcedureStep>();
         }
     }
 }

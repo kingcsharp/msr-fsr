@@ -2259,7 +2259,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "example": 3
+              "example": 305
             },
             "x-position": 1
           },
@@ -2287,7 +2287,7 @@
           "x-position": 2
         },
         "responses": {
-          "404": {
+          "200": {
             "description": "",
             "content": {
               "application/json": {
@@ -7535,7 +7535,8 @@
           }
         },
         "example": {
-            "procedureStepId": 2147483647,
+            "procedureStepId": 3,
+            "procedureId": 305,
             "title": "NEWTITLE1594442279"
         }
       },
