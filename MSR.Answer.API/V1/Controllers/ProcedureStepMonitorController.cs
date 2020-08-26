@@ -49,7 +49,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Delete procedure step monitor
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200"></response>
@@ -63,34 +63,36 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Get monitors for a procedure step
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="monitorId"></param>
+        /// <param name="stepId"></param>
         /// <response code="200"></response>
-        [HttpGet]
+        [HttpGet("procedurestep/{stepId}")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepMonitorRequest>>))]
-        public async Task<IActionResult> GetProcedureStepMonitor(int? id)
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepMonitor>>))]
+        public async Task<IActionResult> GetProcedureStepMonitor([FromRoute]int stepId, int? monitorId)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureStepMonitor() {
-                procedureStepMonitorId = id
+                procedureStepId = stepId,
+                procedureStepMonitorId = monitorId
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureStepMonitorRequest>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureStepMonitor>>();
         }
 
         /// <summary>
-        ///
+        /// Update procedure step monitor
         /// </summary>
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPatch]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitorRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepMonitor>))]
         public async Task<IActionResult> UpdateProcedureStepMonitor(UpdateProcedureStepMonitorRequest body)
         {
             var command = body.ToUpdateProcedureStepMonitorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepMonitorRequest>();
+            return ret.ToOkObjectResponse<ProcedureStepMonitor>();
         }
     }
 }

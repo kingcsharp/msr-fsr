@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-08-26 09:09:05.453821200 -0700
-+++ swagger-work.json	2020-08-26 09:09:15.332961300 -0700
+--- swagger-work.json.orig	2020-08-26 09:31:19.262474000 -0700
++++ swagger-work.json	2020-08-26 09:31:26.412671300 -0700
 @@ -53,12 +53,7 @@
                }
              }
@@ -713,7 +713,7 @@
 +        }
        }
      },
-     "/v{version}/ProcedureStepMonitor/procedurestep/{stepid}": {
+     "/v{version}/ProcedureStepMonitor/procedurestep/{stepId}": {
 @@ -2805,12 +2550,7 @@
                }
              }

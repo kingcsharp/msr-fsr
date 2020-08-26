@@ -57,12 +57,23 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             List<EntityFramework.Entities.ProcedureStepMonitor> procedures;
             if (command.procedureStepMonitorId.HasValue) {
-                procedures = await _unitOfWork.ProcedureStepMonitors.Query().Where(x => x.Id == command.procedureStepMonitorId.Value).ToListAsync();
+                procedures = await _unitOfWork.ProcedureStepMonitors
+                    .Query()
+                    .Where(x => x.Id == command.procedureStepMonitorId.Value)
+                    .ToListAsync();
                 if (procedures.Count == 0) {
                     throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
                 }
+            } else if (command.procedureStepId.HasValue) {
+                procedures = await _unitOfWork.ProcedureStepMonitors
+                    .Query()
+                    .Where(x => x.ProcedureStepId == command.procedureStepId.Value)
+                    .ToListAsync();
+                // note that the return here can be an empty list
             } else {
-                procedures = await _unitOfWork.ProcedureStepMonitors.Query().ToListAsync();
+                procedures = await _unitOfWork.ProcedureStepMonitors
+                    .Query()
+                    .ToListAsync();
             }
             var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepMonitor>(x)).OrderBy(x => x.Description).ToList();
             return result;

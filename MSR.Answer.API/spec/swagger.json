@@ -2133,7 +2133,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureRequest"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedure"
                 }
               }
             }
@@ -2447,52 +2447,11 @@
           }
         }
       },
-      "get": {
-        "tags": [
-          "ProcedureStepMonitor"
-        ],
-        "summary": " ",
-        "operationId": "ProcedureStepMonitor_GetProcedureStepMonitor",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "version",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1"
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureStepMonitorRequest"
-                }
-              }
-            }
-          }
-        }
-      },
       "patch": {
         "tags": [
           "ProcedureStepMonitor"
         ],
-        "summary": " ",
+        "summary": "Update procedure step monitor",
         "operationId": "ProcedureStepMonitor_UpdateProcedureStepMonitor",
         "parameters": [
           {
@@ -2500,8 +2459,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "1"
+              "type": "string"
             },
             "x-position": 2
           }
@@ -2524,7 +2482,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepMonitorRequest"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepMonitor"
                 }
               }
             }
@@ -2537,7 +2495,7 @@
         "tags": [
           "ProcedureStepMonitor"
         ],
-        "summary": " ",
+        "summary": "Delete procedure step monitor",
         "operationId": "ProcedureStepMonitor_DeleteProcedureStepMonitor",
         "parameters": [
           {
@@ -2567,6 +2525,60 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/ProcedureStepMonitor/procedurestep/{stepId}": {
+      "get": {
+        "tags": [
+          "ProcedureStepMonitor"
+        ],
+        "summary": "Get monitors for a procedure step",
+        "operationId": "ProcedureStepMonitor_GetProcedureStepMonitor",
+        "parameters": [
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 3
+            },
+            "x-position": 1
+          },
+          {
+            "name": "monitorId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfProcedureStepMonitor"
                 }
               }
             }
@@ -6827,7 +6839,7 @@
             "procedureTypeId": 1
         }
       },
-      "AuditActionResultOfProcedureStep": {
+      "AuditActionResultOfProcedureStepModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -6841,7 +6853,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/ProcedureStep"
+                    "$ref": "#/components/schemas/ProcedureStepModel"
                   }
                 ]
               }
@@ -6849,7 +6861,7 @@
           }
         ]
       },
-      "ProcedureStep": {
+      "ProcedureStepModel": {
         "type": "object",
         "additionalProperties": true,
         "properties": {
@@ -7452,7 +7464,7 @@
             "targetValue": "LOOKSGOOD"
         }
       },
-      "AuditActionResultOfICollectionOfProcedureStepMonitorRequest": {
+      "AuditActionResultOfICollectionOfProcedureStepMonitor": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -7466,77 +7478,8 @@
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "$ref": "#/components/schemas/ProcedureStepMonitorRequest"
+                  "$ref": "#/components/schemas/ProcedureStepMonitor"
                 }
-              }
-            }
-          }
-        ]
-      },
-      "ProcedureStepMonitorRequest": {
-        "type": "object",
-        "description": " ",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Gets or Sets Id",
-            "format": "int32"
-          },
-          "monitorType": {
-            "type": "string",
-            "description": "Gets or Sets MonitorType",
-            "nullable": true
-          },
-          "inputType": {
-            "type": "string",
-            "description": "Gets or Sets InputType",
-            "nullable": true
-          },
-          "shouldBe": {
-            "type": "string",
-            "description": "Gets or Sets ShouldBe",
-            "nullable": true
-          },
-          "targetValue": {
-            "type": "string",
-            "description": "Gets or Sets TargetValue",
-            "nullable": true
-          },
-          "faultHandling": {
-            "type": "string",
-            "description": "Gets or Sets FaultHandling",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "description": "Gets or Sets Description",
-            "nullable": true
-          },
-          "sendEmailNotification": {
-            "type": "boolean",
-            "description": "Gets or Sets SendEmailNotification",
-            "nullable": true
-          }
-        }
-      },
-      "AuditActionResultOfProcedureStepMonitorRequest": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuditActionResult"
-          },
-          {
-            "type": "object",
-            "description": "Base class for an API call with a typed result",
-            "additionalProperties": true,
-            "properties": {
-              "object": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ProcedureStepMonitorRequest"
-                  }
-                ]
               }
             }
           }
@@ -8931,7 +8874,7 @@
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ProcedureStep"
+                "$ref": "#/components/schemas/ProcedureStepModel"
               }
             ]
           },
