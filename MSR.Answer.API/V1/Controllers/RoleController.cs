@@ -44,7 +44,7 @@ namespace MSR.Answer.API.V1.Controllers
                 {
                     new RoleView()
                     {
-                        Created = new User(){FirstName = "Pedro",LastName = "John"},
+                        Created = new UserModel(){FirstName = "Pedro",LastName = "John"},
                         HasAssignedUsers = false,
                         Id = 1,
                         IsCertificationRole = true,
@@ -64,7 +64,7 @@ namespace MSR.Answer.API.V1.Controllers
                 SuccessMessage = "Role Successfully Created",
                 Object = new RoleView()
                 {
-                    Created = new User() { FirstName = "Pedro", LastName = "John" },
+                    Created = new UserModel() { FirstName = "Pedro", LastName = "John" },
                     HasAssignedUsers = false,
                     Id = 1,
                     IsCertificationRole = true,
@@ -83,7 +83,7 @@ namespace MSR.Answer.API.V1.Controllers
                 SuccessMessage = "Role Successfully Updated",
                 Object = new RoleView()
                 {
-                    Created = new User() { FirstName = "Pedro", LastName = "John" },
+                    Created = new UserModel() { FirstName = "Pedro", LastName = "John" },
                     HasAssignedUsers = false,
                     Id = 1,
                     IsCertificationRole = true,

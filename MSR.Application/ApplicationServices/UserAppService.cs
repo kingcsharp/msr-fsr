@@ -31,13 +31,13 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetUsers command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.GetUsersAsync(command);
-            return new CommandResponse<ICollection<User>>(ret);
+            return new CommandResponse<ICollection<UserModel>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateUser command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.CreateUserAsync(command);
-            return new CommandResponse<User>(ret);
+            return new CommandResponse<UserModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeactivateUser command, CancellationToken cancellationToken = default)
@@ -49,13 +49,13 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdateUser command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.UpdateUserAsync(command);
-            return new CommandResponse<User>(ret);
+            return new CommandResponse<UserModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(GetLoggedInUserData command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.GetLoggedInUserData(command.UserId);
-            return new CommandResponse<User>(ret);
+            return new CommandResponse<UserModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateUserRole command, CancellationToken cancellationToken = default)

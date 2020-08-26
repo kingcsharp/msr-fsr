@@ -72,10 +72,11 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(void))]
         public async Task<IActionResult> ResetMyPassword([FromBody, Required] ResetMyPasswordRequest request)
         {
-            return new OkObjectResult(new AuditActionResult()
-            {
-                SuccessMessage = "Password Successfully Updated"
-            });
+            var command = request.ToResetMyPasswordCommand();
+
+            var result = await _dispatcher.DispatchAsync(command);
+
+            return result.ToOkObjectResponse("Password was successfully updated.");
         }
     }
 }

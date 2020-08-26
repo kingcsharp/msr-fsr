@@ -31,7 +31,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             _authenticationHelper = authenticationHelper;
         }
 
-        public async Task<Domain.Models.User> CreateUserAsync(CreateUser command)
+        public async Task<Domain.Models.UserModel> CreateUserAsync(CreateUser command)
         {
             var rolesToAdd = new List<UserRole>();
             List<EntityFramework.Entities.Role> getRolesFromDb;
@@ -90,7 +90,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 var data = ex.Message;
             }
 
-            var domainUser = _mapper.Map<Domain.Models.User>(efUser);
+            var domainUser = _mapper.Map<Domain.Models.UserModel>(efUser);
             SetRolesToUser(efUser, domainUser);
             domainUser.SupervisorName = efUser.Supervisor.GetFullName();
             domainUser.LocationName = efUser.Location.Name;
@@ -109,7 +109,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<Domain.Models.User> UpdateUserAsync(UpdateUser command)
+        public async Task<Domain.Models.UserModel> UpdateUserAsync(UpdateUser command)
         {
             var efUser = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.Id);
 
@@ -160,13 +160,13 @@ namespace MSR.Infrastructure.Resources.Services.Users
             _unitOfWork.Users.Update(efUser);
             await _unitOfWork.SaveChangesAsync();
 
-            var domainUser = _mapper.Map<Domain.Models.User>(efUser);
+            var domainUser = _mapper.Map<Domain.Models.UserModel>(efUser);
             SetRolesToUser(efUser, domainUser);
 
             return domainUser;
         }
 
-        public async Task<ICollection<Domain.Models.User>> GetUsersAsync(GetUsers command)
+        public async Task<ICollection<Domain.Models.UserModel>> GetUsersAsync(GetUsers command)
         {
             //This needs to be refactored to remove the dependency on EntityFramework Directly.
             var users = _unitOfWork.Users.Query();
@@ -211,13 +211,14 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 users = users.Where(i => i.Email == command.Email);
             }
 
-            var userList = new List<Domain.Models.User>();
+            var userList = new List<Domain.Models.UserModel>();
 
-            var usersTo = users.Include(x => x.Location).Include(x => x.Supervisor).Include(x => x.Roles).ThenInclude(x => x.Role).ToList();
+            var usersTo = await users.Include(x=>x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor)
+                .Include(x => x.Roles).ThenInclude(x => x.Role).ToListAsync();
 
             foreach (var user in usersTo)
             {
-                var userToAdd = _mapper.Map<Domain.Models.User>(user);
+                var userToAdd = _mapper.Map<Domain.Models.UserModel>(user);
                 userToAdd.SupervisorName = user?.Supervisor?.GetFullName();
                 SetRolesToUser(user, userToAdd);
                 userList.Add(userToAdd);
@@ -226,7 +227,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return userList;
         }
 
-        private static void SetRolesToUser(EntityFramework.Entities.User user, Domain.Models.User userToAdd)
+        private static void SetRolesToUser(EntityFramework.Entities.User user, Domain.Models.UserModel userToAdd)
         {
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
@@ -242,17 +243,17 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
         }
 
-        public async Task<Domain.Models.User> GetUserAsync(int Id)
+        public async Task<Domain.Models.UserModel> GetUserAsync(int Id)
         {
             var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == Id);
 
             if (user == null)
                 return null;
 
-            return _mapper.Map<Domain.Models.User>(user);
+            return _mapper.Map<Domain.Models.UserModel>(user);
         }
 
-        public async Task<Domain.Models.User> GetLoggedInUserData(int Id)
+        public async Task<Domain.Models.UserModel> GetLoggedInUserData(int Id)
         {
             var user = await _unitOfWork.Users.Query()
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
@@ -261,9 +262,9 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 .FirstOrDefaultAsync();
 
             if (user == null)
-                throw new DomainException($"{nameof(Domain.Models.User)} not found", DomainError.NotFound);
+                throw new DomainException($"{nameof(Domain.Models.UserModel)} not found", DomainError.NotFound);
 
-            var domainUser = _mapper.Map<Domain.Models.User>(user);
+            var domainUser = _mapper.Map<Domain.Models.UserModel>(user);
 
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
@@ -309,7 +310,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return domainUser;
         }
 
-        public async Task<Domain.Models.User> CreateUserRoleAsync(CreateUserRole command)
+        public async Task<Domain.Models.UserModel> CreateUserRoleAsync(CreateUserRole command)
         {
             var curUser = await _unitOfWork.GetLoggedInUserAsync();
             var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == command.UserId);
@@ -344,7 +345,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
                 await _unitOfWork.LogApprovalTransaction(userRole, userRole.Id);
 
-                return _mapper.Map<Domain.Models.User>(user);
+                return _mapper.Map<Domain.Models.UserModel>(user);
             }
 
             var userRoleApproval = new UserRoleApproval()
@@ -360,7 +361,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             _unitOfWork.UserRoleApprovals.Add(userRoleApproval);
             await _unitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<Domain.Models.User>(user);
+            return _mapper.Map<Domain.Models.UserModel>(user);
         }
 
         public async Task UpdateUserRoleAsync(UpdateUserRole command)
@@ -422,16 +423,16 @@ namespace MSR.Infrastructure.Resources.Services.Users
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<Domain.Models.User> GetUserById(int id)
+        public async Task<Domain.Models.UserModel> GetUserById(int id)
         {
             var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == id);
 
             if (user is null)
             {
-                return new Domain.Models.User();
+                return new Domain.Models.UserModel();
             }
 
-            var retUser = _mapper.Map<Domain.Models.User>(user);
+            var retUser = _mapper.Map<Domain.Models.UserModel>(user);
 
             return retUser;
         }

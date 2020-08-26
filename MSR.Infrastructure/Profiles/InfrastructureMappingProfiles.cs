@@ -12,7 +12,7 @@ namespace MSR.Infrastructure.Profiles
         public InfrastructureMappingProfiles()
         {
             #region User
-            CreateMap<User, Domain.Models.User>()
+            CreateMap<User, Domain.Models.UserModel>()
                 .ForMember(dest => dest.Roles, opts => opts.Ignore())
                 .ForMember(dest => dest.SupervisorName, opt => opt.MapFrom(src => src.Supervisor.GetFullName()))
                 .ReverseMap();

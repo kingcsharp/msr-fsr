@@ -169,6 +169,28 @@ namespace MSR.Infrastructure.Resources.Services.Account
             return exists;
         }
 
+        public async Task ResetMyPasswordAsync(ResetMyPassword command)
+        {
+            var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == CurrentUser.GetId());
+
+            if (user == null)
+            {
+                throw new DomainException("User not found", DomainError.NotFound);
+            }
+
+            if (!_authenticationHelper.VerifyPasswordHash(command.OldPassword, user.PasswordHash, user.PasswordSalt))
+            {
+                throw new DomainException("Current password is invalid", DomainError.NotFound);
+            }
+
+            _authenticationHelper.CreatePasswordHash(command.NewPassword, out var hash, out var salt);
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         private async Task<string> GetJWTToken(EntityFramework.Entities.User efUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

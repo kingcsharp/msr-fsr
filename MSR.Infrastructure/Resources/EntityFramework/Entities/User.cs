@@ -33,6 +33,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public bool LockoutEnabled { get; set; }
         public int? AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
+        [ForeignKey("TimeZoneId")]
+        public TimeZone TimeZone { get; set; }
+
         public virtual ICollection<UserRole> Roles { get; set; }
 
         public string GetFullName()

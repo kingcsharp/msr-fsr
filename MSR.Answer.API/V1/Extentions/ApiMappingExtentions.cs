@@ -27,6 +27,15 @@ namespace MSR.Answer.API.V1.Extentions
                 Token = request.Token,
                 Password = request.NewPassword
             };
+        }
+
+        public static ResetMyPassword ToResetMyPasswordCommand(this ResetMyPasswordRequest request)
+        {
+            return new ResetMyPassword()
+            {
+                NewPassword = request.NewPassword,
+                OldPassword = request.OldPassword
+            };
 
         }
 
