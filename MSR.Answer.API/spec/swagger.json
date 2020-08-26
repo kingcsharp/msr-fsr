@@ -6978,8 +6978,10 @@
         },
         "example": {
             "title": "TITLE1594442130",
-            "stepText": "TEXT1594442130",
-            "roles": "whatever"
+            "text": "TEXT1594442130",
+            "roles": [
+                { "id": 1 }
+            ]
         }
       },
       "RoleRequest": {
