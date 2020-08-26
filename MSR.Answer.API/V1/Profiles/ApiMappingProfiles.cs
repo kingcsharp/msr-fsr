@@ -59,8 +59,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>()
                 .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
                 .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
-            CreateMap<CreateProcedureTemplateRequest, CreateProcedureStepTemplate>()
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles.Select(y => y.Id).ToList())));
+            CreateMap<CreateProcedureTemplateRequest, CreateProcedureStepTemplate>();
             CreateMap<UpdateProcedureTemplateRequest, UpdateProcedureStepTemplate>();
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();

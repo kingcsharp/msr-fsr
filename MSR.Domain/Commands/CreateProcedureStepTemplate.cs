@@ -78,7 +78,7 @@ namespace MSR.Domain.Commands
         /// <summary>
         /// Gets or Sets Roles
         /// </summary>
-        public string Roles { get; set; }
+        public List<int> Roles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

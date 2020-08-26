@@ -12,6 +12,7 @@ cp ~/xfer/swagger.json swagger-work.json
 dos2unix swagger-work.json
 patch -p0 < swagger-removebearer.patch || exit
 # diff -u swagger-work.json.orig swagger-work.json > swagger-removebearer.patch
+cp swagger-work.json swagger-work.json.nobearer
 patch -p0 < swagger-addexamples.patch || exit
 # diff -u swagger-work.json.orig swagger-work.json > swagger-addexamples.patch
 

@@ -7619,6 +7619,7 @@
       },
       "CreateProcedureStepTemplateRequest": {
         "type": "object",
+        "description": " ",
         "additionalProperties": true,
         "properties": {
           "title": {
@@ -7687,6 +7688,7 @@
       },
       "UpdateProcedureStepTemplateRequest": {
         "type": "object",
+        "description": " ",
         "additionalProperties": true,
         "properties": {
           "id": {
@@ -7886,7 +7888,8 @@
             "description": "Gets or Sets Roles",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/RoleRequest"
+              "type": "integer",
+              "format": "int32"
             }
           }
         },
@@ -7894,7 +7897,7 @@
             "title": "PROCTEMP1598415724",
             "comments": "Here is a comment from Tue, Aug 25, 2020  9:24:25 PM",
             "text": "TEXT1598415724",
-            "roles": [ { "id": 1 } ]
+            "roles": [ 1 ]
         }
       },
       "UpdateProcedureTemplateRequest": {
@@ -7997,13 +8000,15 @@
             "description": "Gets or Sets Roles",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/RoleRequest"
+              "type": "integer",
+              "format": "int32"
             }
           }
         },
         "example": {
             "id": 6,
-            "title": "UPDTITLE1598415399"
+            "title": "UPDTITLE1598415399",
+            "roles": [ 1 ]
         }
       },
       "AuditActionResultOfProcedureType": {

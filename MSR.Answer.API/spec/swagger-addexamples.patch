@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-08-26 10:48:11.534842100 -0700
-+++ swagger-work.json	2020-08-26 10:48:15.637962800 -0700
+--- swagger-work.json.orig	2020-08-26 11:32:21.093299800 -0700
++++ swagger-work.json	2020-08-26 11:32:49.817306900 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -1078,7 +1078,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTemplateModel": {
-@@ -7523,6 +7677,12 @@
+@@ -7524,6 +7678,12 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1091,7 +1091,7 @@
          }
        },
        "UpdateProcedureStepTemplateRequest": {
-@@ -7590,6 +7750,11 @@
+@@ -7592,6 +7752,11 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1103,8 +1103,8 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTypeModel": {
-@@ -7724,6 +7889,12 @@
-               "$ref": "#/components/schemas/RoleRequest"
+@@ -7727,6 +7892,12 @@
+               "format": "int32"
              }
            }
 +        },
@@ -1112,22 +1112,23 @@
 +            "title": "PROCTEMP1598415724",
 +            "comments": "Here is a comment from Tue, Aug 25, 2020  9:24:25 PM",
 +            "text": "TEXT1598415724",
-+            "roles": [ { "id": 1 } ]
++            "roles": [ 1 ]
          }
        },
        "UpdateProcedureTemplateRequest": {
-@@ -7829,6 +8000,10 @@
-               "$ref": "#/components/schemas/RoleRequest"
+@@ -7833,6 +8004,11 @@
+               "format": "int32"
              }
            }
 +        },
 +        "example": {
 +            "id": 6,
-+            "title": "UPDTITLE1598415399"
++            "title": "UPDTITLE1598415399",
++            "roles": [ 1 ]
          }
        },
        "AuditActionResultOfProcedureType": {
-@@ -7871,6 +8046,10 @@
+@@ -7875,6 +8051,10 @@
              "description": "Gets or Sets MajorGroup",
              "nullable": true
            }
@@ -1138,7 +1139,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureType": {
-@@ -7915,6 +8094,10 @@
+@@ -7919,6 +8099,10 @@
              "description": "Gets or Sets MajorGroup",
              "nullable": true
            }
@@ -1149,7 +1150,7 @@
          }
        },
        "AuditActionResultOfICollectionOfRole": {
-@@ -8129,6 +8312,10 @@
+@@ -8133,6 +8317,10 @@
                "$ref": "#/components/schemas/Role"
              }
            }
@@ -1160,7 +1161,7 @@
          }
        },
        "UpdateUserRequest": {
-@@ -8149,7 +8336,11 @@
+@@ -8153,7 +8341,11 @@
                }
              }
            }
@@ -1173,7 +1174,7 @@
        },
        "CreateUserRoleRequest": {
          "type": "object",
-@@ -9505,6 +9696,14 @@
+@@ -9509,6 +9701,14 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1188,7 +1189,7 @@
          }
        },
        "UpdateWorkflowGroupRequest": {
-@@ -9525,7 +9724,16 @@
+@@ -9529,7 +9729,16 @@
                }
              }
            }
@@ -1206,7 +1207,7 @@
        },
        "AuditActionResultOfICollectionOfWorkflowStageModel": {
          "allOf": [
-@@ -9638,6 +9846,10 @@
+@@ -9642,6 +9851,10 @@
                "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
              }
            }
@@ -1217,7 +1218,7 @@
          }
        },
        "UpdateWorkflowStageRequest": {
-@@ -9658,7 +9870,12 @@
+@@ -9662,7 +9875,12 @@
                }
              }
            }
