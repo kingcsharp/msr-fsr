@@ -4,7 +4,7 @@ using MSR.Domain.Models.BaseModels;
 
 namespace MSR.Domain.Views
 {
-    public class RoleView: CreatableModel
+    public class RoleView: TrackableModel
     {
         public string Name { get; set; }
         public bool? IsCertificationRole { get; set; }
