@@ -43,6 +43,7 @@ namespace MSR.Infrastructure.Resources.Services
                     var document = await _unitOfWork.Documents.Query().FirstOrDefaultAsync(x => x.Id == documentApproval.DocumentId);
                     documentApproval.Status = status;
                     _mapper.Map(documentApproval, document);
+                    document.Revision++;
                     _unitOfWork.Documents.Update(document);
                     _unitOfWork.DocumentApprovals.Update(documentApproval);
                     _unitOfWork.SaveChanges();
@@ -50,18 +51,21 @@ namespace MSR.Infrastructure.Resources.Services
                     result = documentApproval;
                     break;
                 case EnumApprovalTables.LocationApproval:
-                    result = await ApproveLocation(command,status);
+                    result = await ApproveLocation(command, status);
                     break;
                 case EnumApprovalTables.PartApproval:
                     PartApproval partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
                     string data = partApproval.ApprovalJSON;
                     var dataObj = JsonConvert.DeserializeObject<UpdatePart>(data);
-                    if (partApproval.PartId.HasValue) {
+                    if (partApproval.PartId.HasValue)
+                    {
                         // approval for update
                         dataObj.Id = partApproval.PartId.Value;
                         await _partService.UpdatePartAsync(dataObj);
-                    } else {
+                    }
+                    else
+                    {
                         // approval for create
                         CreatePart createObj = JsonConvert.DeserializeObject<CreatePart>(data);
                         PartModel createResult = await _partService.CreatePartAsync(createObj);
@@ -84,6 +88,7 @@ namespace MSR.Infrastructure.Resources.Services
                     procedureApproval.Status = status;
                     _mapper.Map(procedureApproval, procedure);
                     _unitOfWork.ProcedureApprovals.Update(procedureApproval);
+                    procedure.Revision++;
                     _unitOfWork.Procedures.Update(procedure);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(procedureApproval, procedureApproval.Id, status.Name, command.Comments);
@@ -95,6 +100,7 @@ namespace MSR.Infrastructure.Resources.Services
                     productApproval.Status = status;
                     _mapper.Map(productApproval, product);
                     _unitOfWork.ProductApprovals.Update(productApproval);
+                    product.Revision++;
                     _unitOfWork.Products.Update(product);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(productApproval, productApproval.Id, status.Name, command.Comments);
@@ -106,6 +112,7 @@ namespace MSR.Infrastructure.Resources.Services
                     purchaseOrderApproval.Status = status;
                     _unitOfWork.PurchaseOrderApprovals.Update(purchaseOrderApproval);
                     _mapper.Map(purchaseOrderApproval, purchaseOrder);
+                    purchaseOrder.Revision = purchaseOrder.Revision == null ?  1 : purchaseOrder.Revision+1;
                     _unitOfWork.PurchaseOrders.Update(purchaseOrder);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(purchaseOrderApproval, purchaseOrderApproval.Id, status.Name, command.Comments);
