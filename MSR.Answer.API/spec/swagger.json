@@ -2931,7 +2931,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -2974,7 +2975,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 8
             },
             "x-position": 1
           },
@@ -8290,6 +8292,10 @@
             "description": "Gets or Sets MajorGroup",
             "nullable": true
           }
+        },
+        "example": {
+            "name": "PROCTYPE1598416853",
+            "majorGroup": "GROUP1598416853"
         }
       },
       "AuditActionResultOfICollectionOfProcedureType": {
@@ -8356,6 +8362,10 @@
             "description": "Gets or Sets MajorGroup",
             "nullable": true
           }
+        },
+        "example": {
+            "id": 8,
+            "name": "PROCTYPE1598416546"
         }
       },
       "AuditActionResultOfICollectionOfRole": {

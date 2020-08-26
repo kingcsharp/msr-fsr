@@ -40,12 +40,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureTypeRequest>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureType>))]
         public async Task<IActionResult> AddProcedureType(CreateProcedureTypeRequest body)
         {
             var command = body.ToCreateProcedureTypeCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureTypeRequest>();
+            return ret.ToOkObjectResponse<ProcedureType>();
         }
 
         /// <summary>
