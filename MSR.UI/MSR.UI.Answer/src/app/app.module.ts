@@ -26,7 +26,7 @@ import * as $ from 'jquery';
 import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
-  FileService, InvoiceService, WorkOrderService
+  FileService, InvoiceService, WorkOrderService, TimezoneService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -74,6 +74,7 @@ const APP_PROVIDERS = [
     UserService,
     InvoiceService,
     CustomerService,
+    TimezoneService,
     WorkOrderService,
     {
       provide: API_BASE_URL,

@@ -30,7 +30,7 @@ namespace MSR.Domain.Models
         public DateTime? LockoutEndDateUtc { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
-        //public TimeZone TimeZoneId { get; set; }
+        public TimeZoneModel TimeZone { get; set; }
         public DateTime LastUpdatedOn { get; set; }
         public int? LastUpdatedBy { get; set; }
         public DateTime CreatedOn { get; set; }

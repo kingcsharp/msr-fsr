@@ -71,7 +71,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Sensor> Sensors { get; }
         IRepository<TimeZone> Timezones { get; }
 
-
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

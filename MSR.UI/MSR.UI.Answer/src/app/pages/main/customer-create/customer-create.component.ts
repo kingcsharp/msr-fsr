@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CustomerService, Customer, CreateCustomerRequest, UpdateCustomerRequest, ICustomer, UserService, User, LocationService, LocationModel } from '../../../services/api.client.generated';
+import { CustomerService, Customer, CreateCustomerRequest, UpdateCustomerRequest, ICustomer, UserService, LocationService, LocationModel } from '../../../services/api.client.generated';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';

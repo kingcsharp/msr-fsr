@@ -272,7 +272,7 @@ export class AccountService {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 204) {
+        if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return _observableOf<void>(<any>null);
             }));
@@ -3618,6 +3618,69 @@ export class SensorService {
 }
 
 @Injectable()
+export class TimezoneService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    timezone(version: string): Observable<AuditActionResultOfICollectionOfTimeZoneModel> {
+        let url_ = this.baseUrl + "/v{version}/Timezone";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTimezone(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTimezone(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfTimeZoneModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfTimeZoneModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTimezone(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfTimeZoneModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfTimeZoneModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfTimeZoneModel>(<any>null);
+    }
+}
+
+@Injectable()
 export class UserService {
     private http: HttpClient;
     private baseUrl: string;
@@ -3628,7 +3691,7 @@ export class UserService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUser> {
+    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3666,14 +3729,14 @@ export class UserService {
                 try {
                     return this.processUserGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfUser>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfUserModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfICollectionOfUser>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfUserModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processUserGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfUser> {
+    protected processUserGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfUserModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3684,7 +3747,7 @@ export class UserService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfUser.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfUserModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3692,10 +3755,10 @@ export class UserService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfICollectionOfUser>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfUserModel>(<any>null);
     }
 
-    userPost(version: string, request: CreateUserRequest): Observable<AuditActionResultOfUser> {
+    userPost(version: string, request: CreateUserRequest): Observable<AuditActionResultOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3721,14 +3784,14 @@ export class UserService {
                 try {
                     return this.processUserPost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfUser>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfUserModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfUser>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfUserModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processUserPost(response: HttpResponseBase): Observable<AuditActionResultOfUser> {
+    protected processUserPost(response: HttpResponseBase): Observable<AuditActionResultOfUserModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3739,7 +3802,7 @@ export class UserService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfUser.fromJS(resultData200);
+            result200 = AuditActionResultOfUserModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3747,10 +3810,10 @@ export class UserService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfUser>(<any>null);
+        return _observableOf<AuditActionResultOfUserModel>(<any>null);
     }
 
-    userPatch(version: string, request: UpdateUserRequest): Observable<AuditActionResultOfUser> {
+    userPatch(version: string, request: UpdateUserRequest): Observable<AuditActionResultOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3776,14 +3839,14 @@ export class UserService {
                 try {
                     return this.processUserPatch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfUser>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfUserModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfUser>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfUserModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processUserPatch(response: HttpResponseBase): Observable<AuditActionResultOfUser> {
+    protected processUserPatch(response: HttpResponseBase): Observable<AuditActionResultOfUserModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3794,7 +3857,7 @@ export class UserService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfUser.fromJS(resultData200);
+            result200 = AuditActionResultOfUserModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3802,10 +3865,10 @@ export class UserService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfUser>(<any>null);
+        return _observableOf<AuditActionResultOfUserModel>(<any>null);
     }
 
-    loggedInUser(version: string): Observable<AuditActionResultOfUser> {
+    loggedInUser(version: string): Observable<AuditActionResultOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User/LoggedInUser";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3827,14 +3890,14 @@ export class UserService {
                 try {
                     return this.processLoggedInUser(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfUser>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfUserModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfUser>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfUserModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processLoggedInUser(response: HttpResponseBase): Observable<AuditActionResultOfUser> {
+    protected processLoggedInUser(response: HttpResponseBase): Observable<AuditActionResultOfUserModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3845,7 +3908,7 @@ export class UserService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfUser.fromJS(resultData200);
+            result200 = AuditActionResultOfUserModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3853,7 +3916,7 @@ export class UserService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfUser>(<any>null);
+        return _observableOf<AuditActionResultOfUserModel>(<any>null);
     }
 
     trainingCertification(userId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfTrainingCertificationView> {
@@ -5732,7 +5795,7 @@ export interface IEntityModel {
 export class CreatableModel extends EntityModel implements ICreatableModel {
     createdOn?: Date;
     createdBy?: number | undefined;
-    created?: User | undefined;
+    created?: UserModel | undefined;
 
     constructor(data?: ICreatableModel) {
         super(data);
@@ -5743,7 +5806,7 @@ export class CreatableModel extends EntityModel implements ICreatableModel {
         if (_data) {
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.createdBy = _data["createdBy"];
-            this.created = _data["created"] ? User.fromJS(_data["created"]) : <any>undefined;
+            this.created = _data["created"] ? UserModel.fromJS(_data["created"]) : <any>undefined;
         }
     }
 
@@ -5767,13 +5830,13 @@ export class CreatableModel extends EntityModel implements ICreatableModel {
 export interface ICreatableModel extends IEntityModel {
     createdOn?: Date;
     createdBy?: number | undefined;
-    created?: User | undefined;
+    created?: UserModel | undefined;
 }
 
 export abstract class TrackableModel extends CreatableModel implements ITrackableModel {
     lastUpdatedOn?: Date | undefined;
     lastUpdatedBy?: number | undefined;
-    lastUpdated?: User | undefined;
+    lastUpdated?: UserModel | undefined;
 
     constructor(data?: ITrackableModel) {
         super(data);
@@ -5784,7 +5847,7 @@ export abstract class TrackableModel extends CreatableModel implements ITrackabl
         if (_data) {
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             this.lastUpdatedBy = _data["lastUpdatedBy"];
-            this.lastUpdated = _data["lastUpdated"] ? User.fromJS(_data["lastUpdated"]) : <any>undefined;
+            this.lastUpdated = _data["lastUpdated"] ? UserModel.fromJS(_data["lastUpdated"]) : <any>undefined;
         }
     }
 
@@ -5806,7 +5869,7 @@ export abstract class TrackableModel extends CreatableModel implements ITrackabl
 export interface ITrackableModel extends ICreatableModel {
     lastUpdatedOn?: Date | undefined;
     lastUpdatedBy?: number | undefined;
-    lastUpdated?: User | undefined;
+    lastUpdated?: UserModel | undefined;
 }
 
 export class Customer extends TrackableModel implements ICustomer {
@@ -5814,8 +5877,8 @@ export class Customer extends TrackableModel implements ICustomer {
     name?: string | undefined;
     address?: string | undefined;
     phone?: string | undefined;
-    primaryContactUser?: User | undefined;
-    secondaryContactUser?: User | undefined;
+    primaryContactUser?: UserModel | undefined;
+    secondaryContactUser?: UserModel | undefined;
     location?: LocationModel | undefined;
     status?: string | undefined;
     isActive?: boolean;
@@ -5832,8 +5895,8 @@ export class Customer extends TrackableModel implements ICustomer {
             this.name = _data["name"];
             this.address = _data["address"];
             this.phone = _data["phone"];
-            this.primaryContactUser = _data["primaryContactUser"] ? User.fromJS(_data["primaryContactUser"]) : <any>undefined;
-            this.secondaryContactUser = _data["secondaryContactUser"] ? User.fromJS(_data["secondaryContactUser"]) : <any>undefined;
+            this.primaryContactUser = _data["primaryContactUser"] ? UserModel.fromJS(_data["primaryContactUser"]) : <any>undefined;
+            this.secondaryContactUser = _data["secondaryContactUser"] ? UserModel.fromJS(_data["secondaryContactUser"]) : <any>undefined;
             this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
             this.status = _data["status"];
             this.isActive = _data["isActive"];
@@ -5870,15 +5933,15 @@ export interface ICustomer extends ITrackableModel {
     name?: string | undefined;
     address?: string | undefined;
     phone?: string | undefined;
-    primaryContactUser?: User | undefined;
-    secondaryContactUser?: User | undefined;
+    primaryContactUser?: UserModel | undefined;
+    secondaryContactUser?: UserModel | undefined;
     location?: LocationModel | undefined;
     status?: string | undefined;
     isActive?: boolean;
     customerNumber?: string | undefined;
 }
 
-export class User implements IUser {
+export class UserModel implements IUserModel {
     id?: number;
     isActive?: boolean;
     userRoleId?: string | undefined;
@@ -5899,14 +5962,14 @@ export class User implements IUser {
     lockoutEndDateUtc?: Date | undefined;
     lockoutEnabled?: boolean;
     accessFailedCount?: number;
-    timeZoneId?: number;
+    timeZone?: TimeZoneModel | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedBy?: number | undefined;
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
 
-    constructor(data?: IUser) {
+    constructor(data?: IUserModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5937,7 +6000,7 @@ export class User implements IUser {
             this.lockoutEndDateUtc = _data["lockoutEndDateUtc"] ? new Date(_data["lockoutEndDateUtc"].toString()) : <any>undefined;
             this.lockoutEnabled = _data["lockoutEnabled"];
             this.accessFailedCount = _data["accessFailedCount"];
-            this.timeZoneId = _data["timeZoneId"];
+            this.timeZone = _data["timeZone"] ? TimeZoneModel.fromJS(_data["timeZone"]) : <any>undefined;
             this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             this.lastUpdatedBy = _data["lastUpdatedBy"];
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
@@ -5950,9 +6013,9 @@ export class User implements IUser {
         }
     }
 
-    static fromJS(data: any): User {
+    static fromJS(data: any): UserModel {
         data = typeof data === 'object' ? data : {};
-        let result = new User();
+        let result = new UserModel();
         result.init(data);
         return result;
     }
@@ -5979,7 +6042,7 @@ export class User implements IUser {
         data["lockoutEndDateUtc"] = this.lockoutEndDateUtc ? this.lockoutEndDateUtc.toISOString() : <any>undefined;
         data["lockoutEnabled"] = this.lockoutEnabled;
         data["accessFailedCount"] = this.accessFailedCount;
-        data["timeZoneId"] = this.timeZoneId;
+        data["timeZone"] = this.timeZone ? this.timeZone.toJSON() : <any>undefined;
         data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         data["lastUpdatedBy"] = this.lastUpdatedBy;
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
@@ -5993,7 +6056,7 @@ export class User implements IUser {
     }
 }
 
-export interface IUser {
+export interface IUserModel {
     id?: number;
     isActive?: boolean;
     userRoleId?: string | undefined;
@@ -6014,12 +6077,56 @@ export interface IUser {
     lockoutEndDateUtc?: Date | undefined;
     lockoutEnabled?: boolean;
     accessFailedCount?: number;
-    timeZoneId?: number;
+    timeZone?: TimeZoneModel | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedBy?: number | undefined;
     createdOn?: Date;
     createdBy?: number | undefined;
     roles?: Role[] | undefined;
+}
+
+export class TimeZoneModel implements ITimeZoneModel {
+    id?: number;
+    description?: string | undefined;
+    offset?: number;
+
+    constructor(data?: ITimeZoneModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.offset = _data["offset"];
+        }
+    }
+
+    static fromJS(data: any): TimeZoneModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimeZoneModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["offset"] = this.offset;
+        return data; 
+    }
+}
+
+export interface ITimeZoneModel {
+    id?: number;
+    description?: string | undefined;
+    offset?: number;
 }
 
 export class Role implements IRole {
@@ -6361,7 +6468,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
     parent?: LocationModel | undefined;
     internalAddress?: string | undefined;
     invoiceClass?: string | undefined;
-    timeZone?: TimeZone | undefined;
+    timeZone?: TimeZoneModel | undefined;
     status?: string | undefined;
     site?: number | undefined;
 
@@ -6385,7 +6492,7 @@ export class LocationModel extends DeletableModel implements ILocationModel {
             this.parent = _data["parent"] ? LocationModel.fromJS(_data["parent"]) : <any>undefined;
             this.internalAddress = _data["internalAddress"];
             this.invoiceClass = _data["invoiceClass"];
-            this.timeZone = _data["timeZone"] ? TimeZone.fromJS(_data["timeZone"]) : <any>undefined;
+            this.timeZone = _data["timeZone"] ? TimeZoneModel.fromJS(_data["timeZone"]) : <any>undefined;
             this.status = _data["status"];
             this.site = _data["site"];
         }
@@ -6435,61 +6542,9 @@ export interface ILocationModel extends IDeletableModel {
     parent?: LocationModel | undefined;
     internalAddress?: string | undefined;
     invoiceClass?: string | undefined;
-    timeZone?: TimeZone | undefined;
+    timeZone?: TimeZoneModel | undefined;
     status?: string | undefined;
     site?: number | undefined;
-}
-
-export class TimeZone implements ITimeZone {
-    id?: number;
-    description?: string | undefined;
-    offset?: number;
-    number?: number;
-    useDalightSavings?: number;
-
-    constructor(data?: ITimeZone) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.description = _data["description"];
-            this.offset = _data["offset"];
-            this.number = _data["number"];
-            this.useDalightSavings = _data["useDalightSavings"];
-        }
-    }
-
-    static fromJS(data: any): TimeZone {
-        data = typeof data === 'object' ? data : {};
-        let result = new TimeZone();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["description"] = this.description;
-        data["offset"] = this.offset;
-        data["number"] = this.number;
-        data["useDalightSavings"] = this.useDalightSavings;
-        return data; 
-    }
-}
-
-export interface ITimeZone {
-    id?: number;
-    description?: string | undefined;
-    offset?: number;
-    number?: number;
-    useDalightSavings?: number;
 }
 
 export class AuditActionResultOfCustomer extends AuditActionResult implements IAuditActionResultOfCustomer {
@@ -10414,10 +10469,10 @@ export interface IAuditActionResultOfRole extends IAuditActionResult {
     object?: Role | undefined;
 }
 
-export class AuditActionResultOfICollectionOfUser extends AuditActionResult implements IAuditActionResultOfICollectionOfUser {
-    object?: User[] | undefined;
+export class AuditActionResultOfICollectionOfTimeZoneModel extends AuditActionResult implements IAuditActionResultOfICollectionOfTimeZoneModel {
+    object?: TimeZoneModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfUser) {
+    constructor(data?: IAuditActionResultOfICollectionOfTimeZoneModel) {
         super(data);
     }
 
@@ -10427,14 +10482,14 @@ export class AuditActionResultOfICollectionOfUser extends AuditActionResult impl
             if (Array.isArray(_data["object"])) {
                 this.object = [] as any;
                 for (let item of _data["object"])
-                    this.object!.push(User.fromJS(item));
+                    this.object!.push(TimeZoneModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfUser {
+    static fromJS(data: any): AuditActionResultOfICollectionOfTimeZoneModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfUser();
+        let result = new AuditActionResultOfICollectionOfTimeZoneModel();
         result.init(data);
         return result;
     }
@@ -10451,27 +10506,68 @@ export class AuditActionResultOfICollectionOfUser extends AuditActionResult impl
     }
 }
 
-export interface IAuditActionResultOfICollectionOfUser extends IAuditActionResult {
-    object?: User[] | undefined;
+export interface IAuditActionResultOfICollectionOfTimeZoneModel extends IAuditActionResult {
+    object?: TimeZoneModel[] | undefined;
 }
 
-export class AuditActionResultOfUser extends AuditActionResult implements IAuditActionResultOfUser {
-    object?: User | undefined;
+export class AuditActionResultOfICollectionOfUserModel extends AuditActionResult implements IAuditActionResultOfICollectionOfUserModel {
+    object?: UserModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfUser) {
+    constructor(data?: IAuditActionResultOfICollectionOfUserModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? User.fromJS(_data["object"]) : <any>undefined;
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(UserModel.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfUser {
+    static fromJS(data: any): AuditActionResultOfICollectionOfUserModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfUser();
+        let result = new AuditActionResultOfICollectionOfUserModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfICollectionOfUserModel extends IAuditActionResult {
+    object?: UserModel[] | undefined;
+}
+
+export class AuditActionResultOfUserModel extends AuditActionResult implements IAuditActionResultOfUserModel {
+    object?: UserModel | undefined;
+
+    constructor(data?: IAuditActionResultOfUserModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? UserModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfUserModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfUserModel();
         result.init(data);
         return result;
     }
@@ -10484,8 +10580,8 @@ export class AuditActionResultOfUser extends AuditActionResult implements IAudit
     }
 }
 
-export interface IAuditActionResultOfUser extends IAuditActionResult {
-    object?: User | undefined;
+export interface IAuditActionResultOfUserModel extends IAuditActionResult {
+    object?: UserModel | undefined;
 }
 
 export class AuditActionResultOfIEnumerableOfTrainingCertificationView extends AuditActionResult implements IAuditActionResultOfIEnumerableOfTrainingCertificationView {
@@ -11505,7 +11601,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     statusId?: number;
     taskStepOrder?: number;
     assignedTo?: number | undefined;
-    assignedToUser?: User | undefined;
+    assignedToUser?: UserModel | undefined;
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
     taskRunningSince?: Date | undefined;
@@ -11532,7 +11628,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             this.statusId = _data["statusId"];
             this.taskStepOrder = _data["taskStepOrder"];
             this.assignedTo = _data["assignedTo"];
-            this.assignedToUser = _data["assignedToUser"] ? User.fromJS(_data["assignedToUser"]) : <any>undefined;
+            this.assignedToUser = _data["assignedToUser"] ? UserModel.fromJS(_data["assignedToUser"]) : <any>undefined;
             this.totalTaskTime = _data["totalTaskTime"];
             this.taskIsRunning = _data["taskIsRunning"];
             this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
@@ -11587,7 +11683,7 @@ export interface IWorkOrderTaskModel {
     statusId?: number;
     taskStepOrder?: number;
     assignedTo?: number | undefined;
-    assignedToUser?: User | undefined;
+    assignedToUser?: UserModel | undefined;
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
     taskRunningSince?: Date | undefined;

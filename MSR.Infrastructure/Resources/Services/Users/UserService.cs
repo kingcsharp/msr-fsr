@@ -45,7 +45,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
             command.Roles = null;
 
-            var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
+            var efUser = _mapper.Map<User>(command);
 
             if (efUser.EmailAlreadyExists(_unitOfWork))
             {
@@ -60,6 +60,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             //supervisor location
             efUser.Supervisor = _unitOfWork.Users.Query().FirstOrDefault(x => x.Id == command.SupervisorId);
             efUser.Location = _unitOfWork.Locations.Query().FirstOrDefault(x => x.Id == command.LocationId);
+            efUser.TimeZoneId = command.TimeZoneId;
 
             var password = _authenticationHelper.CreateRandomPassword();
             _authenticationHelper.CreatePasswordHash(password, out var hash, out var salt);
@@ -213,7 +214,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             var userList = new List<Domain.Models.UserModel>();
 
-            var usersTo = await users.Include(x=>x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor)
+            var usersTo = await users.Include(x => x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor)
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ToListAsync();
 
             foreach (var user in usersTo)
@@ -255,7 +256,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.UserModel> GetLoggedInUserData(int Id)
         {
-            var user = await _unitOfWork.Users.Query()
+            var user = await _unitOfWork.Users.Query().Include(x => x.TimeZone)
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
                 .ThenInclude(x => x.MenuItem).ThenInclude(x => x.MenuGroup)
                 .Where(x => x.Id == Id)

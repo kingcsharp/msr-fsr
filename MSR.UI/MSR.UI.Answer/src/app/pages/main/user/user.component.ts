@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
-  UserService, User, IAuditActionResultOfUser, LocationService
+  UserService, UserModel, IAuditActionResultOfUserModel, LocationService
   , UpdateUserRequest, RoleService, Role, EnumMenuItem
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
@@ -66,7 +66,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.data = [];
-    this.currUser = new User();
+    this.currUser = new UserModel();
     this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elem.nativeElement.tagName.toLowerCase();
     // SET DEFAULT VIEW COLS
@@ -158,7 +158,7 @@ export class UserComponent implements OnInit {
     return event.replace(/\D+/g, '');
   }
 
-  showDialog(user: User) {
+  showDialog(user: UserModel) {
     this.display = true;
     this.currUser = this.getUser(user);
   }
@@ -168,7 +168,7 @@ export class UserComponent implements OnInit {
     jQuery('.parsleyjs').parsley().reset();
   }
 
-  changeUserStatus(user: User) {
+  changeUserStatus(user: UserModel) {
     const ctrl = this;
     this.userService.userDelete(user.customerId, env.apiVersion).pipe(take(1)).subscribe(responseHandler(() => {
       ctrl.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
@@ -198,7 +198,7 @@ export class UserComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      let method: Observable<IAuditActionResultOfUser> = null;
+      let method: Observable<IAuditActionResultOfUserModel> = null;
       this.globals.showLoader(true);
 
       if (this.currUser.id === undefined) {
@@ -216,7 +216,7 @@ export class UserComponent implements OnInit {
             ctrl.data.splice(index, 1);
           }
 
-          ctrl.data.push(new User(resp.object));
+          ctrl.data.push(new UserModel(resp.object));
           this.updateUsersData(ctrl.data);
           ctrl.clseDialog();
         }
@@ -224,9 +224,9 @@ export class UserComponent implements OnInit {
     }
   }
 
-  getUser(user: User) {
+  getUser(user: UserModel) {
     if (user === undefined) {
-      let ret = new User();
+      let ret = new UserModel();
       ret.isActive = true;
       ret.isAnswerUser = true;
       ret.firstName = '';
@@ -235,5 +235,4 @@ export class UserComponent implements OnInit {
       return copyObj(user);
     }
   }
-
 }

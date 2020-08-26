@@ -46,7 +46,8 @@ import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/
     CsvImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
-    HelpbuttonWrapperComponent
+    HelpbuttonWrapperComponent,
+    GridOptionsComponent
   ],
   exports: [
     ProgressAnimateDirective,
