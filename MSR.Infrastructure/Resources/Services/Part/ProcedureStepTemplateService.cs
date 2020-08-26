@@ -93,7 +93,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             var current = await _unitOfWork.ProcedureStepTemplates.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepTemplate)} not found with ID: {command.Id}", DomainError.NotFound);
             }

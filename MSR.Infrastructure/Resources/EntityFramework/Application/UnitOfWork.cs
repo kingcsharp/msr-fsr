@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.EntityFramework.Repository;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
@@ -70,6 +71,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
         private IRepository<Sensor> _sensor;
+        private IRepository<TimeZone> _timezone;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
@@ -129,6 +131,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
         public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
+        public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
 
         #endregion Repositories
 

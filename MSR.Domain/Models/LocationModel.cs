@@ -17,7 +17,7 @@ namespace MSR.Domain.Models
         public LocationModel Parent { get; set; }
         public string InternalAddress { get; set; }
         public string InvoiceClass { get; set; }
-        public TimeZone TimeZone { get; set; }
+        public TimeZoneModel TimeZone { get; set; }
         public string Status { get; set; }
         public int? Site { get; set; }
     }

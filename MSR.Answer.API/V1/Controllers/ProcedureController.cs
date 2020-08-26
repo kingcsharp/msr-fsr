@@ -57,13 +57,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepModel>))]
         public async Task<IActionResult> ProcedureAddProcedureStep(int id, CreateProcedureStepRequest body)
         {
             var command = body.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStep>();
+            return ret.ToOkObjectResponse<ProcedureStepModel>();
         }
 
         /// <summary>
@@ -119,14 +119,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStep>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepModel>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
             var ret = await _dispatcher.DispatchAsync(new GetProcedureStep() {
                 procedureId = id,
                 stepId = stepid
             });
-            return ret.ToOkObjectResponse<ICollection<ProcedureStep>>();
+            return ret.ToOkObjectResponse<ICollection<ProcedureStepModel>>();
         }
 
         /// <summary>
@@ -151,13 +151,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStep>))]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepModel>))]
         public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest body)
         {
             var command = body.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStep>();
+            return ret.ToOkObjectResponse<ProcedureStepModel>();
         }
     }
 }

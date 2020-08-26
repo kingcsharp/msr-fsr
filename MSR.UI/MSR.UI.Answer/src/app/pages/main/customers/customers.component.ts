@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { CustomerService, Customer, UserService, User } from '../../../services/api.client.generated';
+import { CustomerService, Customer, UserService, User, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { EnumPrivilege, EnumMenuItem, EnumApprovalTables } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({

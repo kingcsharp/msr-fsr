@@ -426,7 +426,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
         {
             var user = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == id);
 
-            if(user is null)
+            if (user is null)
             {
                 return new Domain.Models.User();
             }
@@ -439,10 +439,10 @@ namespace MSR.Infrastructure.Resources.Services.Users
         public async Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command)
         {
             var userRoles = _unitOfWork.UserRoles.Query();
- 
+
             if (command.Id.HasValue)
             {
-                 userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
+                userRoles = userRoles.Where(i => i.UserId == command.Id.Value);
             }
 
             return userRoles.Include(i => i.User).Include(i => i.Role).Where(i => i.Role.IsCertificationRole.HasValue && i.Role.IsCertificationRole.Value).Select(i => new TrainingCertificationView()

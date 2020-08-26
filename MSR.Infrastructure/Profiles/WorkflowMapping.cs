@@ -28,8 +28,12 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ActivityMaps, opt => opt.MapFrom(src => src.ActivityMaps))
                 .ForMember(dest => dest.MemberStages, opt => opt.MapFrom(src => src.MemberStages));
 
-            CreateMap<WorkflowActivityMap, WorkflowActivityMapModel>();
-            CreateMap<WorkflowStageMap, WorkflowStageMapModel>();
+            CreateMap<WorkflowActivityMap, WorkflowActivityMapModel>()
+                .ForMember(dest => dest.WorkflowActivityName, opt => opt.MapFrom(src => src.WorkflowActivity.Name));
+
+            CreateMap<WorkflowStageMap, WorkflowStageMapModel>()
+                .ForMember(dest => dest.WorkflowStageName, opt => opt.MapFrom(src => src.WorkflowStage.Name));
+
             CreateMap<WorkflowActivity, WorkflowActivityModel>();
 
             CreateMap<ApprovalEntity, PendingApprovalModel>()

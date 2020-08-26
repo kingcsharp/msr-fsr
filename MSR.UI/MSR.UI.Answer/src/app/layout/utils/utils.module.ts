@@ -5,8 +5,13 @@ import 'jquery-flot/jquery.flot.selection.js';
 import 'jquery-flot/jquery.flot.resize.js';
 import 'flot.dashes/jquery.flot.dashes';
 import 'jquery.animate-number/jquery.animateNumber.js';
+//import 'jQuery-Mapael/js/jquery.mapael.js';
+//import 'jQuery-Mapael/js/maps/usa_states';
+//import 'jQuery-Mapael/js/maps/world_countries.js';
+
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { ProgressAnimateDirective } from './directives/progress-animate.directive';
 import { AnimateNumberDirective } from './directives/animate-number.directive';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -15,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
 import { MultiselectWrapperFormComponent } from '../../../app/components/multiselect-wrapper-form/multiselect-wrapper-form.component';
+import { CheckboxModule } from 'primeng/checkbox';
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component';
@@ -25,6 +31,8 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CsvImportComponent } from '../../../app/components/csv-import/csv-import.component';
 import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
+import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +46,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
-    GridInputFilterComponent
+    GridInputFilterComponent,
+    HelpbuttonWrapperComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -52,7 +61,9 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
-    GridInputFilterComponent
+    GridInputFilterComponent,
+    CheckboxModule,
+    HelpbuttonWrapperComponent
   ],
   imports: [
     CommonModule,
@@ -62,7 +73,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
     DialogModule,
     FileUploadModule,
     TooltipModule,
-    NgxDocViewerModule
+    NgxDocViewerModule,
+    CheckboxModule
   ]
 })
 export class UtilsModule {

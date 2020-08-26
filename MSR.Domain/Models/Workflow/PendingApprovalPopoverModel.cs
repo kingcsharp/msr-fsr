@@ -30,28 +30,30 @@ namespace MSR.Domain.Models
         {
             string oldVal;
             string newVal;
-            if (oldValue != newValue)
+            if (oldValue == newValue)
             {
-                if (!oldValue.HasValue)
-                {
-                    oldVal = "";
-                }
-                else
-                {
-                    oldVal = oldValue.Value.ToString("MM/dd/yy H:mm:ss zzz") + " UTC";
-
-                }
-                if (!newValue.HasValue)
-                {
-                    newVal = "";
-                }
-                else
-                {
-                    newVal = newValue.Value.ToString("MM/dd/yy H:mm:ss zzz") + " UTC";
-                }
-
-                this.Rows.Add($"{name}: {oldVal} To: {newVal}");
+                return;
             }
+
+            if (!oldValue.HasValue)
+            {
+                oldVal = "";
+            }
+            else
+            {
+                oldVal = oldValue.Value.ToString("MM/dd/yy H:mm:ss zzz") + " UTC";
+
+            }
+            if (!newValue.HasValue)
+            {
+                newVal = "";
+            }
+            else
+            {
+                newVal = newValue.Value.ToString("MM/dd/yy H:mm:ss zzz") + " UTC";
+            }
+
+            this.Rows.Add($"{name}: {oldVal} To: {newVal}");
         }
 
         public void AddRow(string name, int oldValue, int newValue)
@@ -98,12 +100,11 @@ namespace MSR.Domain.Models
             {
                 this.Rows.Add($"{propertyName}: {oldVal} To: {newVal}");
             }
-
         }
 
         private static string SetBoolValue(string propertyName, bool oldValue)
         {
-            return oldValue ? ("Is" + propertyName) : ("Is Not" + propertyName);
+            return oldValue ? ("Is " + propertyName) : ("Is Not " + propertyName);
         }
 
     }

@@ -4,6 +4,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
@@ -69,6 +70,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
 
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
         IRepository<Sensor> Sensors { get; }
+        IRepository<TimeZone> Timezones { get; }
 
 
         void SaveChanges();

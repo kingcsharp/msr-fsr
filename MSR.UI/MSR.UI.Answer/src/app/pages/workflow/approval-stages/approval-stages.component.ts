@@ -2,17 +2,19 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   WorkflowStageService, WorkflowStageModel, WorkflowGroupService, WorkflowGroupStageMapModel,
-  AuditActionResultOfWorkflowStageModel, CreateWorkflowStageRequest, UpdateWorkflowStageRequest
+  AuditActionResultOfWorkflowStageModel, CreateWorkflowStageRequest, UpdateWorkflowStageRequest, EnumMenuItem
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { AllowedActions } from '../../../../app/models/lib/AllowedActions';
 declare let jQuery: any;
 
 @Component({
@@ -36,6 +38,7 @@ export class ApprovalStagesComponent implements OnInit {
   statuses: any[];
   workflowGroups: any[] = [];
   getWorkflowGroupsDone: boolean = false;
+  userPrivileges: AllowedActions;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private workflowStageService: WorkflowStageService, private workflowGroupService: WorkflowGroupService) {
@@ -60,9 +63,8 @@ export class ApprovalStagesComponent implements OnInit {
     ];
     this.roles = [];
 
-    this.canAddStages = this.hasPrivilege(this.privileges.CanCreate);
-    this.canActivateStages = this.hasPrivilege(this.privileges.CanActivate);
-    this.canEditStages = this.hasPrivilege(this.privileges.CanEdit);
+    this.userPrivileges = this.globals.getEnumPrivileges(EnumMenuItem.ApprovalStages);
+
     this.getWorkflowStages();
     this.getWorkflowGroups();
   }
@@ -88,12 +90,10 @@ export class ApprovalStagesComponent implements OnInit {
     }
 
     ctrl.data.forEach(element => {
-      element.groupsSaved = [];
       element.groups.forEach(elem => {
-        const foundItem = ctrl.workflowGroups.find(r => r.value === elem.workflowGroupId);
+        const foundItem = ctrl.workflowGroups.find(r => r.workflowGroupId === elem.workflowGroupId);
         if (foundItem !== undefined) {
           elem.name = foundItem.label;
-          element.groupsSaved.push(foundItem.value);
         }
       });
     });
@@ -104,19 +104,15 @@ export class ApprovalStagesComponent implements OnInit {
     this.workflowGroupService.workflowGroupGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.forEach(element => {
-          ctrl.workflowGroups.push({ label: element.name, value: element.id });
+          ctrl.workflowGroups.push({ name: element.name, workflowGroupId: element.id });
         });
         this.getWorkflowGroupsDone = true;
       }));
   }
 
-  hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.ApprovalStages, privName);
-  }
-
   showDialog(workflowStage: WorkflowStageModel) {
-    this.display = true;
     this.currWorkflowStage = this.getWorkflowStage(workflowStage);
+    this.display = true;
   }
 
   clseDialog() {
@@ -132,7 +128,7 @@ export class ApprovalStagesComponent implements OnInit {
       ret.groups = [];
       return ret;
     } else {
-      return workflowStage;
+      return copyObj(workflowStage);
     }
   }
 
@@ -172,17 +168,17 @@ export class ApprovalStagesComponent implements OnInit {
       let method: Observable<AuditActionResultOfWorkflowStageModel> = null;
       this.globals.showLoader(true);
 
-      this.currWorkflowStage.groups = [];
-      this.currWorkflowStage.groupsSaved.forEach(x => {
-        this.currWorkflowStage.groups
-          .push(new WorkflowGroupStageMapModel({ workflowGroupId: x, workflowStageId: this.currWorkflowStage.id }));
+      const groups = [];
+      this.currWorkflowStage.groups.forEach(x => {
+        groups
+          .push(new WorkflowGroupStageMapModel({ workflowGroupId: x.workflowGroupId, workflowStageId: this.currWorkflowStage.id }));
       });
 
       if (this.currWorkflowStage.id === undefined) {
-        const createWorkflow = new CreateWorkflowStageRequest({ name: this.currWorkflowStage.name, isActive: this.currWorkflowStage.isActive, workflowGroupStageMapModel: this.currWorkflowStage.groups });
+        const createWorkflow = new CreateWorkflowStageRequest({ name: this.currWorkflowStage.name, isActive: this.currWorkflowStage.isActive, workflowGroupStageMapModel: groups });
         method = this.workflowStageService.workflowStagePost(env.apiVersion, createWorkflow);
       } else {
-        const updateWorkflow = new UpdateWorkflowStageRequest({ id: this.currWorkflowStage.id, name: this.currWorkflowStage.name, isActive: this.currWorkflowStage.isActive, workflowGroupStageMapModel: this.currWorkflowStage.groups });
+        const updateWorkflow = new UpdateWorkflowStageRequest({ id: this.currWorkflowStage.id, name: this.currWorkflowStage.name, isActive: this.currWorkflowStage.isActive, workflowGroupStageMapModel: groups });
         method = this.workflowStageService.workflowStagePatch(env.apiVersion, updateWorkflow);
       }
       this.globals.showLoader(true);
@@ -190,7 +186,13 @@ export class ApprovalStagesComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currWorkflowStage.id === undefined) {
             ctrl.data.push(resp.object);
+          } else {
+            const index = ctrl.data.findIndex(x => x.id === ctrl.currWorkflowStage.id);
+            ctrl.data.splice(index, 1);
+            ctrl.data.splice(index, 0, resp.object);
           }
+
+          this.setGroupsSaved();
           ctrl.clseDialog();
         }
       }, () => {

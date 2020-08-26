@@ -45,17 +45,17 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(CreateProcedureStep command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.CreateProcedureStepAsync(command);
-            return new CommandResponse<ProcedureStep>(ret);
+            return new CommandResponse<ProcedureStepModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(GetProcedureStep command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetProcedureStepAsync(command);
-            return new CommandResponse<ICollection<ProcedureStep>>(ret);
+            return new CommandResponse<ICollection<ProcedureStepModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(UpdateProcedureStep command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.UpdateProcedureStepAsync(command);
-            return new CommandResponse<ProcedureStep>(ret);
+            return new CommandResponse<ProcedureStepModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeleteProcedure command, CancellationToken cancellationToken = default)

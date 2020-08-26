@@ -9,7 +9,7 @@ namespace MSR.Domain.Models
     /// <summary>
     ///
     /// </summary>
-    public class ProcedureStep : IEquatable<ProcedureStep>
+    public class ProcedureStepModel
     {
         public ProcedureStep() { }
         /// <summary>
