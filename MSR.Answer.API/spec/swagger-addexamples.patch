@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-08-26 12:57:47.796054300 -0700
-+++ swagger-work.json	2020-08-26 12:58:29.268429000 -0700
+--- swagger-work.json.orig	2020-08-26 14:12:20.771387600 -0700
++++ swagger-work.json	2020-08-26 14:13:06.432989200 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -1087,7 +1087,7 @@
 +            "title": "TESTTITLE1598384740",
 +            "stepText": "TESTSTEPTEXT1598384740",
 +            "comments": "here are some comments Tue, Aug 25, 2020 12:46:12 PM",
-+            "roles": "1"
++            "roles": [ 1 ]
          }
        },
        "UpdateProcedureStepTemplateRequest": {

@@ -7747,7 +7747,7 @@
             "title": "TESTTITLE1598384740",
             "stepText": "TESTSTEPTEXT1598384740",
             "comments": "here are some comments Tue, Aug 25, 2020 12:46:12 PM",
-            "roles": "1"
+            "roles": [ 1 ]
         }
       },
       "UpdateProcedureStepTemplateRequest": {

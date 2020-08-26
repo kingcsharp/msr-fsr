@@ -32,16 +32,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public double? LaborTime { get; set; }
 
         /// <summary>
-        /// Gets or Sets ReferenceProcedures
-        /// </summary>
-        public List<int> ReferenceProcedures { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ReferenceDocuments
-        /// </summary>
-        public List<int> ReferenceDocuments { get; set; }
-
-        /// <summary>
         /// EquipmentTime
         /// </summary>
         public double? EquipmentTime { get; set; }
