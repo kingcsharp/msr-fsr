@@ -199,7 +199,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles.Select(y => y.Id).ToList())))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));

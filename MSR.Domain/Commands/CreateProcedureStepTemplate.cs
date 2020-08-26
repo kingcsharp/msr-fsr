@@ -16,14 +16,34 @@ namespace MSR.Domain.Commands
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or Sets BaseStartOnCounter
+        /// Gets or Sets Text, aka StepText
         /// </summary>
-        public bool? BaseStartOnCounter { get; set; }
+        public string Text { get; set; }
 
         /// <summary>
-        /// Gets or Sets EstimatedStepDuration
+        /// Gets or Sets SystemTaskId, aka ProcedureStepTypeId
         /// </summary>
-        public int? EstimatedStepDuration { get; set; }
+        public int? SystemTaskId { get; set; }
+
+        /// <summary>
+        /// LaborTime
+        /// </summary>
+        public double? LaborTime { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceProcedures
+        /// </summary>
+        public List<int> ReferenceProcedures { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceDocuments
+        /// </summary>
+        public List<int> ReferenceDocuments { get; set; }
+
+        /// <summary>
+        /// EquipmentTime
+        /// </summary>
+        public double? EquipmentTime { get; set; }
 
         /// <summary>
         /// Gets or Sets ReplacementCost
@@ -31,54 +51,24 @@ namespace MSR.Domain.Commands
         public double? ReplacementCost { get; set; }
 
         /// <summary>
-        /// Gets or Sets Utilization
+        /// Utilization Time
         /// </summary>
         public double? Utilization { get; set; }
 
         /// <summary>
         /// Gets or Sets UsefulLife
         /// </summary>
-        public decimal? UsefulLife { get; set; }
+        public int? UsefulLife { get; set; }
 
         /// <summary>
-        /// Gets or Sets Text
+        /// Role list
         /// </summary>
-        public string Text { get; set; }
-
-        /// <summary>
-        /// Gets or Sets SystemTaskId
-        /// </summary>
-        public int? SystemTaskId { get; set; }
-
-        /// <summary>
-        /// Gets or Sets NumberOfQuestionsToUse
-        /// </summary>
-        public int? NumberOfQuestionsToUse { get; set; }
+        public List<int> Roles { get; set; }
 
         /// <summary>
         /// Gets or Sets Comments
         /// </summary>
         public string Comments { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ReferenceProcedures
-        /// </summary>
-        public List<int?> ReferenceProcedures { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ReferenceDocuments
-        /// </summary>
-        public List<int?> ReferenceDocuments { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ReferenceFiles
-        /// </summary>
-        public List<FileModel> ReferenceFiles { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Roles
-        /// </summary>
-        public List<int> Roles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -89,17 +79,13 @@ namespace MSR.Domain.Commands
             var sb = new StringBuilder();
             sb.Append("class CreateProcedureStepTemplate {\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
-            sb.Append("  BaseStartOnCounter: ").Append(BaseStartOnCounter).Append("\n");
-            sb.Append("  EstimatedStepDuration: ").Append(EstimatedStepDuration).Append("\n");
             sb.Append("  ReplacementCost: ").Append(ReplacementCost).Append("\n");
             sb.Append("  Utilization: ").Append(Utilization).Append("\n");
             sb.Append("  UsefulLife: ").Append(UsefulLife).Append("\n");
             sb.Append("  Text: ").Append(Text).Append("\n");
-            sb.Append("  NumberOfQuestionsToUse: ").Append(NumberOfQuestionsToUse).Append("\n");
             sb.Append("  Comments: ").Append(Comments).Append("\n");
             sb.Append("  ReferenceProcedures: ").Append(ReferenceProcedures).Append("\n");
             sb.Append("  ReferenceDocuments: ").Append(ReferenceDocuments).Append("\n");
-            sb.Append("  ReferenceFiles: ").Append(ReferenceFiles).Append("\n");
             sb.Append("  Roles: ").Append(Roles).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -143,16 +129,6 @@ namespace MSR.Domain.Commands
                     Title.Equals(other.Title)
                 ) &&
                 (
-                    BaseStartOnCounter == other.BaseStartOnCounter ||
-                    BaseStartOnCounter != null &&
-                    BaseStartOnCounter.Equals(other.BaseStartOnCounter)
-                ) &&
-                (
-                    EstimatedStepDuration == other.EstimatedStepDuration ||
-                    EstimatedStepDuration != null &&
-                    EstimatedStepDuration.Equals(other.EstimatedStepDuration)
-                ) &&
-                (
                     ReplacementCost == other.ReplacementCost ||
                     ReplacementCost != null &&
                     ReplacementCost.Equals(other.ReplacementCost)
@@ -173,11 +149,6 @@ namespace MSR.Domain.Commands
                     Text.Equals(other.Text)
                 ) &&
                 (
-                    NumberOfQuestionsToUse == other.NumberOfQuestionsToUse ||
-                    NumberOfQuestionsToUse != null &&
-                    NumberOfQuestionsToUse.Equals(other.NumberOfQuestionsToUse)
-                ) &&
-                (
                     Comments == other.Comments ||
                     Comments != null &&
                     Comments.Equals(other.Comments)
@@ -191,11 +162,6 @@ namespace MSR.Domain.Commands
                     ReferenceDocuments == other.ReferenceDocuments ||
                     ReferenceDocuments != null &&
                     ReferenceDocuments.SequenceEqual(other.ReferenceDocuments)
-                ) &&
-                (
-                    ReferenceFiles == other.ReferenceFiles ||
-                    ReferenceFiles != null &&
-                    ReferenceFiles.SequenceEqual(other.ReferenceFiles)
                 ) &&
                 (
                     Roles == other.Roles ||
@@ -216,10 +182,6 @@ namespace MSR.Domain.Commands
                 // Suitable nullity checks etc, of course :)
                     if (Title != null)
                     hashCode = hashCode * 59 + Title.GetHashCode();
-                    if (BaseStartOnCounter != null)
-                    hashCode = hashCode * 59 + BaseStartOnCounter.GetHashCode();
-                    if (EstimatedStepDuration != null)
-                    hashCode = hashCode * 59 + EstimatedStepDuration.GetHashCode();
                     if (ReplacementCost != null)
                     hashCode = hashCode * 59 + ReplacementCost.GetHashCode();
                     if (Utilization != null)
@@ -228,16 +190,12 @@ namespace MSR.Domain.Commands
                     hashCode = hashCode * 59 + UsefulLife.GetHashCode();
                     if (Text != null)
                     hashCode = hashCode * 59 + Text.GetHashCode();
-                    if (NumberOfQuestionsToUse != null)
-                    hashCode = hashCode * 59 + NumberOfQuestionsToUse.GetHashCode();
                     if (Comments != null)
                     hashCode = hashCode * 59 + Comments.GetHashCode();
                     if (ReferenceProcedures != null)
                     hashCode = hashCode * 59 + ReferenceProcedures.GetHashCode();
                     if (ReferenceDocuments != null)
                     hashCode = hashCode * 59 + ReferenceDocuments.GetHashCode();
-                    if (ReferenceFiles != null)
-                    hashCode = hashCode * 59 + ReferenceFiles.GetHashCode();
                     if (Roles != null)
                     hashCode = hashCode * 59 + Roles.GetHashCode();
                 return hashCode;

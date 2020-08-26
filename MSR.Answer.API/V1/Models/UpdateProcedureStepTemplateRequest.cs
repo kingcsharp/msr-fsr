@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -38,6 +39,18 @@ namespace MSR.Answer.API.V1.Models
         public double? LaborTime { get; set; }
 
         /// <summary>
+        /// ReferenceProcedures
+        /// </summary>
+        [DataMember(Name="referenceProcedures ")]
+        public List<int> ReferenceProcedures { get; set; }
+
+        /// <summary>
+        /// ReferenceDocuments
+        /// </summary>
+        [DataMember(Name="referenceDocuments ")]
+        public List<int> ReferenceDocuments { get; set; }
+
+        /// <summary>
         /// EquipmentTime
         /// </summary>
         [DataMember(Name="equipmentTime")]
@@ -58,14 +71,14 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// UsefulLife
         /// </summary>
-        [DataMember(Name="UsefulLife")]
+        [DataMember(Name="usefulLife")]
         public int? UsefulLife { get; set; }
 
         /// <summary>
         /// Role list
         /// </summary>
         [DataMember(Name="roles")]
-        public string Roles { get; set; }
+        public List<int> Roles { get; set; }
 
         /// <summary>
         /// Comments

@@ -6,16 +6,70 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(ProcedureStepTemplate))]
     public partial class ProcedureStepTemplate : TrackableEntity
     {
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Title
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Text, aka StepText
+        /// </summary>
         public string StepText { get; set; }
+
+        /// <summary>
+        /// Gets or Sets SystemTaskId, aka ProcedureStepTypeId
+        /// </summary>
         public int? SystemTaskId { get; set; }
+
+        /// <summary>
+        /// LaborTime
+        /// </summary>
         public double? LaborTime { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceProcedures
+        /// </summary>
+        public List<int> ReferenceProcedures { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceDocuments
+        /// </summary>
+        public List<int> ReferenceDocuments { get; set; }
+
+        /// <summary>
+        /// EquipmentTime
+        /// </summary>
         public double? EquipmentTime { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReplacementCost
+        /// </summary>
         [Column(TypeName = "money")]
         public decimal? ReplacementCost { get; set; }
+
+        /// <summary>
+        /// Utilization Time
+        /// </summary>
         public float? Utilization { get; set; }
+
+        /// <summary>
+        /// Gets or Sets UsefulLife
+        /// </summary>
         public int? UsefulLife { get; set; }
+
+        /// <summary>
+        /// Role list
+        /// </summary>
         public string Roles { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Comments
+        /// </summary>
         public string Comments { get; set; }
 
         // TODO: There does not seem to be a way to include

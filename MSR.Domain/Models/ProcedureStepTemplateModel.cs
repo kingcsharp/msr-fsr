@@ -31,38 +31,68 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
-        [DataMember(Name="title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or Sets Text
+        /// Gets or Sets Text, aka StepText
         /// </summary>
-        [DataMember(Name="text")]
         public string Text { get; set; }
+
+        /// <summary>
+        /// Gets or Sets SystemTaskId, aka ProcedureStepTypeId
+        /// </summary>
+        public int? SystemTaskId { get; set; }
+
+        /// <summary>
+        /// LaborTime
+        /// </summary>
+        public double? LaborTime { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceProcedures
+        /// </summary>
+        public List<int> ReferenceProcedures { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceDocuments
+        /// </summary>
+        public List<FileModel> ReferenceDocuments { get; set; }
+
+        /// <summary>
+        /// EquipmentTime
+        /// </summary>
+        public double? EquipmentTime { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReplacementCost
+        /// </summary>
+        public double? ReplacementCost { get; set; }
+
+        /// <summary>
+        /// Utilization Time
+        /// </summary>
+        public float? Utilization { get; set; }
+
+        /// <summary>
+        /// Gets or Sets UsefulLife
+        /// </summary>
+        public int? UsefulLife { get; set; }
+
+        /// <summary>
+        /// Role list
+        /// </summary>
+        public List<int> Roles { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Comments
+        /// </summary>
+        public string Comments { get; set; }
 
         /// <summary>
         /// Gets or Sets Revision
         /// </summary>
         [DataMember(Name="revision")]
         public int? Revision { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Status
-        /// </summary>
-        [DataMember(Name="status")]
-        public string Status { get; set; }
-
-        /// <summary>
-        /// Gets or Sets IsRelatedToAProduct
-        /// </summary>
-        [DataMember(Name="isRelatedToAProduct")]
-        public bool? IsRelatedToAProduct { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ReferenceFiles
-        /// </summary>
-        [DataMember(Name="referenceFiles")]
-        public List<FileModel> ReferenceFiles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -76,9 +106,6 @@ namespace MSR.Domain.Models
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  Text: ").Append(Text).Append("\n");
             sb.Append("  Revision: ").Append(Revision).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
-            sb.Append("  IsRelatedToAProduct: ").Append(IsRelatedToAProduct).Append("\n");
-            sb.Append("  ReferenceFiles: ").Append(ReferenceFiles).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -134,21 +161,6 @@ namespace MSR.Domain.Models
                     Revision == other.Revision ||
                     Revision != null &&
                     Revision.Equals(other.Revision)
-                ) &&
-                (
-                    Status == other.Status ||
-                    Status != null &&
-                    Status.Equals(other.Status)
-                ) &&
-                (
-                    IsRelatedToAProduct == other.IsRelatedToAProduct ||
-                    IsRelatedToAProduct != null &&
-                    IsRelatedToAProduct.Equals(other.IsRelatedToAProduct)
-                ) &&
-                (
-                    ReferenceFiles == other.ReferenceFiles ||
-                    ReferenceFiles != null &&
-                    ReferenceFiles.SequenceEqual(other.ReferenceFiles)
                 );
         }
 
@@ -170,12 +182,6 @@ namespace MSR.Domain.Models
                     hashCode = hashCode * 59 + Text.GetHashCode();
                     if (Revision != null)
                     hashCode = hashCode * 59 + Revision.GetHashCode();
-                    if (Status != null)
-                    hashCode = hashCode * 59 + Status.GetHashCode();
-                    if (IsRelatedToAProduct != null)
-                    hashCode = hashCode * 59 + IsRelatedToAProduct.GetHashCode();
-                    if (ReferenceFiles != null)
-                    hashCode = hashCode * 59 + ReferenceFiles.GetHashCode();
                 return hashCode;
             }
         }
