@@ -2459,7 +2459,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -7492,6 +7493,11 @@
         "description": " ",
         "additionalProperties": true,
         "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Procedure step monitor Id",
+            "format": "int32"
+          },
           "inputType": {
             "type": "string",
             "description": "Gets or Sets InputType",
@@ -7525,8 +7531,8 @@
         },
         "example" : {
             "id": 3,
-            "title": "STEPTITLE1594442664",
-            "stepText": "STEPTEXT1594442664"
+            "description": "DESC1594442664",
+            "targetValue": "TARGET1594442664"
         }
       },
       "AuditActionResultOfICollectionOfProcedureStepTemplateModel": {

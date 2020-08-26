@@ -21,6 +21,12 @@ namespace MSR.Answer.API.V1.Models
     public partial class UpdateProcedureStepMonitorRequest : IEquatable<UpdateProcedureStepMonitorRequest>
     {
         /// <summary>
+        /// Procedure step monitor Id
+        /// </summary>
+        [DataMember(Name="id")]
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or Sets InputType
         /// </summary>
         [DataMember(Name="inputType")]
