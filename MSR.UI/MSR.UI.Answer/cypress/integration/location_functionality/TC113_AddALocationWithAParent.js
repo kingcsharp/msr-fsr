@@ -95,7 +95,6 @@ describe('Location Functionality', () => {
         cy.get('[data-cy=internaladdress-input]').type("CCBB3").should('have.value', "CCBB3")
         cy.get('[data-cy=save-button]').click()
         
-        cy.logout()
         cy.checkWebConsoleTracking();
 
     })

@@ -31,24 +31,7 @@ describe('Help Functionality', () => {
 
         cy.get('[data-cy=logout-link]', { timeout: 20000 }).url().should('include', '/people/people')
 
-        var menuBaseItemName = "Help";
-        var menuChildItemName = "Help Pages";
-
-        cy.get('#side-nav a.accordion-toggle>span', { timeout: maxTimeout }).each((elem) => {
-            if (Cypress.$(elem).text().trim().indexOf(menuBaseItemName) > -1) {
-                cy.wrap(elem.parent()).click();
-            }
-        });
-
-        cy.get('#Help li a span', { timeout: 2000 }).each((elem) => {
-            if (Cypress.$(elem).text().trim().indexOf(menuChildItemName) > -1) {
-                cy.wrap(elem).click();
-            }
-        });
-
-        cy.get(".ui-blockui-document", { timeout: 8000 }).should("not.be.visible");
-
-        cy.get('.page-title').contains(menuChildItemName).click();
+        cy.navigateToPage('Help','Help Pages')
 
         const idToDelete;
         cy.get('[data-cy=helppage-id]').first().invoke('text').then((text) => {
