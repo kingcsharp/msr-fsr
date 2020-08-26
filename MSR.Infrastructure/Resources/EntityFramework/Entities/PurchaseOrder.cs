@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(PurchaseOrder))]
-    public partial class PurchaseOrder: TrackableEntity
+    public class PurchaseOrder : TrackableEntity
     {
+        [Required]
+        public int CustomerId { get; set; }
+
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
@@ -19,6 +23,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(100)]
         public string ReferenceName { get; set; }
 
+        [Required]
         public DateTime OpenDate { get; set; }
 
         public DateTime? CloseDate { get; set; }
@@ -28,5 +33,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         [StringLength(100)]
         public string CustomerReference { get; set; }
+
+        [ForeignKey("CustomerId")]
+        public virtual Customer Customer { get; set; }
     }
 }

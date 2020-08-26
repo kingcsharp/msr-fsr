@@ -497,5 +497,15 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
+
+        public static GetPurchases ToGetPurchasesCommand(this GetPurchasesRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetPurchases>(request);
+        }
+
+        public static GetPurchaseOrder ToGetPurchaseOrderRequestCommand(this GetPurchaseOrderRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetPurchaseOrder>(request);
+        }
     }
 }

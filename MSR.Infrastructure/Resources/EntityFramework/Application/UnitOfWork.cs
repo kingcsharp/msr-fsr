@@ -57,6 +57,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Document> _documents;
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
+        private IRepository<PurchaseOrderProduct> _purchaseOrderProducts;
         private IRepository<Purchase> _purchases;
         private IRepository<PartSubPartMap> _partSubPartMap;
         private IRepository<Invoice> _invoices;
@@ -75,6 +76,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }
         public IRepository<PurchaseOrder> PurchaseOrders { get { return _purchaseOrders ?? (_purchaseOrders = new EFRepository<PurchaseOrder>(Context)); } }
+        public IRepository<PurchaseOrderProduct> PurchaseOrderProducts { get { return _purchaseOrderProducts ?? (_purchaseOrderProducts = new EFRepository<PurchaseOrderProduct>(Context)); } }
         public IRepository<Purchase> Purchases { get { return _purchases ?? (_purchases = new EFRepository<Purchase>(Context)); } }
         public IRepository<User> Users { get { return _users ??= new EFRepository<User>(Context); } }
         public IRepository<Customer> Customers { get { return _customers ??= new EFRepository<Customer>(Context); } }

@@ -19,24 +19,24 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class PurchaseController : BaseApiController
+    public class PurchaseOrderController : BaseApiController
     {
-        private const string privilegeApiName = "Purchase";
+        private const string privilegeApiName = "PurchaseOrder";
         private readonly ICommandDispatcher _dispatcher;
 
-        public PurchaseController(ICommandDispatcher dispatcher)
+        public PurchaseOrderController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
 
-        //[HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
-        //[SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseModel>>))]
-        //public async Task<IActionResult> GetPurchases([FromQuery] GetPurchasesRequest filters)
-        //{
-        //    var getPurchases = filters.ToGetPurchasesCommand();
-        //    var ret = await _dispatcher.DispatchAsync(getPurchases);
-        //    return ret.ToOkObjectResponse<IEnumerable<PurchaseModel>>();
-        //}
+        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderView>>))]
+        public async Task<IActionResult> GetPurchases([FromQuery] GetPurchaseOrderRequest filters)
+        {
+            var getPurchaseOrder = filters.ToGetPurchaseOrderRequestCommand();
+            var ret = await _dispatcher.DispatchAsync(getPurchaseOrder);
+            return ret.ToOkObjectResponse<IEnumerable<PurchaseOrderView>>();
+        }
 
         //[HttpPost, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
         //[SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseModel>))]

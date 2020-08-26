@@ -83,7 +83,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZone>().ReverseMap();
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
-           
+
 
             CreateMap<Role, Domain.Models.Role>()
                 .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
@@ -116,7 +116,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<HelpPage, Domain.Models.HelpPage>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());
 
-           
+
             CreateMap<UpdateMenuRoleMap, MenuRolePermission>()
                 .ForMember(dest => dest.Created, opts => opts.Ignore())
                 .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())
@@ -225,6 +225,24 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<UploadFile, Domain.Models.FileModel>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
+
+            //CreateMap<PurchaseOrder, Domain.Models.PurchaseOrderView>()
+            //    .ForMember(dest => dest.CustomerName, opts => opts.MapFrom(src => src.Customer.Name))
+            //    .ForMember(dest => dest.CustomerReferencePO, opts => opts.MapFrom(src => src.CustomerReference));
+            CreateMap<PurchaseOrderProduct, Domain.Models.PurchaseOrderView>()
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.PurchaseOrder.CustomerId))
+                .ForMember(dest => dest.CustomerName, opts => opts.MapFrom(src => src.PurchaseOrder.Customer.Name))
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.PurchaseOrder.Name))
+                .ForMember(dest => dest.CustomerReferencePO, opts => opts.MapFrom(src => src.PurchaseOrder.CustomerReference))
+                //.ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.PurchaseOrder.XXX))
+                .ForMember(dest => dest.OpenDate, opts => opts.MapFrom(src => src.PurchaseOrder.OpenDate))
+                .ForMember(dest => dest.CloseDate, opts => opts.MapFrom(src => src.PurchaseOrder.CloseDate))
+                //.ForMember(dest => dest.Location, opts => opts.MapFrom(src => src.PurchaseOrder.XXX))
+                //.ForMember(dest => dest.Products, opts => opts.MapFrom(src => src.Product))
+                ;
+
+            CreateMap<Product, Domain.Models.PurchaseOrderProductView>();
+
         }
 
         private int? GetLocationId(Invoice src)
