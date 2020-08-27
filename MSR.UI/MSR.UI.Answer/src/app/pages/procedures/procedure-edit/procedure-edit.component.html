@@ -16,7 +16,7 @@
                         </label>
                         <div class="col-12">
                             <p-dropdown placeholder="Select Major Group" name="proceduretype"
-                                [options]="availableProcedureTypes" showClear="true" [(ngModel)]="selectedProcedureType"
+                                [options]="availableProcedureTypes" showClear="true" [(ngModel)]="procedure.procedureTypeId"
                                 data-cy="majorgroup-dropdown">
                             </p-dropdown>
                         </div>
@@ -32,8 +32,8 @@
                     <div class="form-group">
                         <label for="roles" class="col-form-label text-left">
                             Roles
-                        </label>
-                        <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles"
+                        </label><br />
+                        <p-multiSelect name="roles" [options]="availableRoles" [(ngModel)]="selectedRoles"
                             data-cy="roles-multiselect">
                         </p-multiSelect>
                     </div>
