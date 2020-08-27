@@ -113,13 +113,13 @@
           <span *ngFor="let role of workflowGroup.groupRoles" class="badge mr-xs badge-secondary">{{role.name}}</span>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{workflowGroup.createdOn | date :'short' }}
+          {{workflowGroup.createdOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           {{workflowGroup.createdByName }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-          {{workflowGroup.lastUpdatedOn | date :'short' }}
+          {{workflowGroup.lastUpdatedOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
           {{workflowGroup.lastUpdatedByName }}

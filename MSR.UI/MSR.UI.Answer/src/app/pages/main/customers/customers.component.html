@@ -163,7 +163,7 @@
               {{customer.created?.fullName}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
-              {{customer.createdOn | date :'short'}}
+              {{customer.createdOn | userTimezone}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="customer.status != null">
               {{customer.status}}

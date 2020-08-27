@@ -9,7 +9,7 @@ import 'jquery.animate-number/jquery.animateNumber.js';
 //import 'jQuery-Mapael/js/maps/usa_states';
 //import 'jQuery-Mapael/js/maps/world_countries.js';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { ProgressAnimateDirective } from './directives/progress-animate.directive';
@@ -32,7 +32,7 @@ import { CsvImportComponent } from '../../../app/components/csv-import/csv-impor
 import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
-
+import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
 
 @NgModule({
   declarations: [
@@ -47,7 +47,8 @@ import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/
     CmhFileUploaderComponent,
     GridInputFilterComponent,
     HelpbuttonWrapperComponent,
-    GridOptionsComponent
+    GridOptionsComponent,
+    TimeZonePipe
   ],
   exports: [
     ProgressAnimateDirective,
@@ -69,7 +70,8 @@ import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/
     DialogModule,
     CalendarModule,
     GridOptionsComponent,
-    HelpbuttonWrapperComponent
+    HelpbuttonWrapperComponent,
+    TimeZonePipe
   ],
   imports: [
     CommonModule,
@@ -81,7 +83,8 @@ import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/
     CheckboxModule,
     TooltipModule.forRoot(),
     NgxDocViewerModule
-  ]
+  ],
+  providers: [DatePipe]
 })
 export class UtilsModule {
 }

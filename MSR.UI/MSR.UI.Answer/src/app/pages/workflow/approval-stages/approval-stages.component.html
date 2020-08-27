@@ -104,13 +104,13 @@
           {{workflowStage.name}}
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{workflowStage.createdOn | date :'short' }}
+          {{workflowStage.createdOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           {{workflowStage.createdByName }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-          {{workflowStage.lastUpdatedOn | date :'short' }}
+          {{workflowStage.lastUpdatedOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
           {{workflowStage.lastUpdatedByName }}

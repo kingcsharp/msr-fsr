@@ -72,7 +72,7 @@
                             Created On:
                         </label>
                         <div class="col-md-4" *ngIf="user.id !== undefined">
-                            <label class="col-form-label">{{user.createdOn | date :'short'}}</label>
+                            <label class="col-form-label">{{user.createdOn | userTimezone}}</label>
                         </div>
                     </div>
                     <div class="form-group row">

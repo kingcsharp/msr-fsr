@@ -83,13 +83,13 @@
                     <span *ngFor="let role of role.parentRoles" class="badge mr-xs badge-secondary">{{role.name}}</span>
                 </td>
                 <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-                    {{role.createdOn | date :'short' }}
+                    {{role.createdOn | userTimezone }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
                     {{role.created?.fullName }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-                    {{role.lastUpdatedOn | date :'short' }}
+                    {{role.lastUpdatedOn | userTimezone }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
                     {{role.lastUpdated?.fullName }}

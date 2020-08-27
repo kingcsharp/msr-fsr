@@ -96,16 +96,16 @@
                     {{invoiceModel.amount | currency }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('dueDate',gridSettings)">
-                    {{invoiceModel.dueDate | date :'short' }}
+                    {{invoiceModel.dueDate | userTimezone }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-                    {{invoiceModel.createdOn | date :'short' }}
+                    {{invoiceModel.createdOn | userTimezone }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
                     {{invoiceModel.createdByName }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-                    {{invoiceModel.lastUpdatedOn | date :'short' }}
+                    {{invoiceModel.lastUpdatedOn | userTimezone }}
                 </td>
                 <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
                     {{invoiceModel.lastUpdatedByName }}
@@ -307,7 +307,7 @@
                                 {{workOrderModel.product.name }}
                             </td>
                             <td [hidden]="!cg.isVisibleCol('actualEndDate',gridWoSettings)" class="text-capitalize">
-                                {{workOrderModel.actualEndDate | date :'short' }}
+                                {{workOrderModel.actualEndDate | userTimezone }}
                             </td>
                             <td [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)"
                                 class="text-capitalize">
