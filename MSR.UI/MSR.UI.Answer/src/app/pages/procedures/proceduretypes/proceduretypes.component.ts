@@ -5,14 +5,12 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { MockServices } from '../../../services/mocks/services/mockservices';
-import { ProcedureTypeMock } from '../../../services/mocks/models/ProcedureTypeMock';
 import { ProcedureType, ProcedureTypeService, EnumApprovalTables, EnumMenuItem} from '../../../services/api.client.generated';
 @Component({
   selector: 'app-proceduretypes',
   templateUrl: './proceduretypes.component.html',
   styleUrls: ['./proceduretypes.component.scss'],
-  providers: [MockServices, ProcedureTypeService]
+  providers: [ProcedureTypeService]
 })
 export class ProceduretypesComponent implements OnInit {
 
@@ -28,8 +26,8 @@ export class ProceduretypesComponent implements OnInit {
   menuItems = EnumMenuItem;
   statusOptions: any[];
   showConfirmDeleteDialog: boolean = false;
-  procedureTypeToDelete: ProcedureTypeMock;
-  constructor(private procedureTypeService: ProcedureTypeService, private mockService: MockServices, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  procedureTypeToDelete: ProcedureType;
+  constructor(private procedureTypeService: ProcedureTypeService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
 
@@ -82,7 +80,10 @@ export class ProceduretypesComponent implements OnInit {
 
   delete() {
 
-    this.mockService.procedureTypesDelete(this.procedureTypeToDelete.id);
-    this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    this.procedureTypeService.procedureTypeDelete(this.procedureTypeToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+      this.getProcedureTypes();
+      this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    }));
+
   }
 }

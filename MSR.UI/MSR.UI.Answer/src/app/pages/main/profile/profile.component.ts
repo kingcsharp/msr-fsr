@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
     Parsley.addValidator('uppercase', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        var uppercases = value.match(/[A-Z]/g) || [];
+        let uppercases = value.match(/[A-Z]/g) || [];
         return uppercases.length >= requirement;
       },
       messages: {
@@ -42,11 +42,11 @@ export class ProfileComponent implements OnInit {
       }
     });
 
-    //has lowercase
+    // has lowercase
     Parsley.addValidator('lowercase', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        var lowecases = value.match(/[a-z]/g) || [];
+        let lowecases = value.match(/[a-z]/g) || [];
         return lowecases.length >= requirement;
       },
       messages: {
@@ -54,11 +54,11 @@ export class ProfileComponent implements OnInit {
       }
     });
 
-    //has number
+    // has number
     Parsley.addValidator('number', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        var numbers = value.match(/[0-9]/g) || [];
+        let numbers = value.match(/[0-9]/g) || [];
         return numbers.length >= requirement;
       },
       messages: {
@@ -69,7 +69,7 @@ export class ProfileComponent implements OnInit {
     Parsley.addValidator('special', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        var specials = value.match(/[^a-zA-Z0-9]/g) || [];
+        let specials = value.match(/[^a-zA-Z0-9]/g) || [];
         return specials.length >= requirement;
       },
       messages: {
@@ -84,7 +84,7 @@ export class ProfileComponent implements OnInit {
         this.allTimezones = response.object.map((elem) => {
           elem.description = elem.description + this.parseOffset(elem.offset);
           return elem;
-        })
+        });
         this.allTimezones = this.allTimezones.sort((a, b) => (a.offset > b.offset) ? 1 : -1);
       }));
   }
@@ -92,8 +92,7 @@ export class ProfileComponent implements OnInit {
   parseOffset(offset) {
     if (offset > 0) {
       return ' (+' + offset + ')';
-    }
-    else {
+    } else {
       return ' (' + offset + ')';
     }
   }
@@ -104,7 +103,7 @@ export class ProfileComponent implements OnInit {
     jQuery(jQuery('.parsleyjs')[1]).parsley().validate();
     const ctrl = this;
     if (jQuery(jQuery('.parsleyjs')[1]).parsley().isValid()) {
-      console.log('valid')
+      console.log('valid');
       this.accountService.resetmypassword(env.apiVersion, this.userPwObj).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.userPwObj = new ResetMyPasswordRequest({ newPassword: '', oldPassword: '' });
@@ -133,7 +132,7 @@ export class ProfileComponent implements OnInit {
     this.userService.userPatch(env.apiVersion, updateUserReq)
       .pipe(take(1)).subscribe(responseHandler(response => {
         this.globals.showLoader(false);
-        var user = this.globals.getCurrentUser();
+        let user = this.globals.getCurrentUser();
         user.timezone = this.user.timeZone;
         user.file = this.user.fileModel;
         this.globals.updateUser(user);
@@ -146,7 +145,7 @@ export class ProfileComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.user = response.object[0];
-        if(this.user.fileModel !== undefined){
+        if (this.user.fileModel !== undefined) {
           this.uploadedFiles.push(this.user.fileModel);
         }
       }));

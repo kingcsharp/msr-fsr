@@ -168,9 +168,9 @@ export class Globals {
             return '';
         }
         const offset = this.user.timeZone.offset;
-        var intPart = Math.floor(offset).toString();
-        var fraction = Math.floor((offset - Math.floor(offset)) * 100) * 60 / 100;
-        var fractionPart = '';
+        let intPart = Math.floor(offset).toString();
+        let fraction = Math.floor((offset - Math.floor(offset)) * 100) * 60 / 100;
+        let fractionPart = '';
         if (fraction > 0) {
             fractionPart = ':' + fraction.toString();
             if (fraction.toString().length === 1) {

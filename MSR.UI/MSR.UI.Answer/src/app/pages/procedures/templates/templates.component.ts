@@ -4,7 +4,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { EnumApprovalTables, ProcedureStepTemplateService, ProcedureService , ProcedureStepTemplateModel,
-  ProcedureTemplateService ,EnumMenuItem } from '../../../services/api.client.generated';
+  ProcedureTemplateService , EnumMenuItem } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { SelectItem } from 'primeng/api';
@@ -13,7 +13,7 @@ import { SelectItem } from 'primeng/api';
   selector: 'app-templates',
   templateUrl: './templates.component.html',
   styleUrls: ['./templates.component.scss'],
-  providers: [ProcedureStepTemplateService, ProcedureService,ProcedureTemplateService]
+  providers: [ProcedureStepTemplateService, ProcedureService, ProcedureTemplateService]
 })
 export class TemplatesComponent implements OnInit {
 
@@ -31,7 +31,7 @@ export class TemplatesComponent implements OnInit {
   showConfirmDeleteDialog: boolean = false;
   procedureTemplateToDelete: ProcedureStepTemplateModel;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, 
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef,
     public globals: Globals, private procedureTemplateService: ProcedureTemplateService) { }
 
   ngOnInit(): void {
@@ -65,7 +65,7 @@ export class TemplatesComponent implements OnInit {
           if (elem.status === null) {
             elem.status = 'Approved';
           }
-  
+
         });
         this.statusOptions = this.data.filter(
           (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
@@ -94,8 +94,9 @@ export class TemplatesComponent implements OnInit {
 
     this.procedureTemplateService.procedureTemplateDelete(this.procedureTemplateToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
       this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+      this.getProcedureTemplates();
     }));
-    
+
   }
 
 }

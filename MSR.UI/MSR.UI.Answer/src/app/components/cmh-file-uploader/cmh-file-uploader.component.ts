@@ -68,7 +68,7 @@ export class CmhFileUploaderComponent implements OnInit {
 
   myUploader(event) {
     const ctrl = this;
-    if (ctrl.multiple !== "multiple") {
+    if (ctrl.multiple !== 'multiple') {
       emptyArray(ctrl.files);
     }
     for (let file of event.files) {

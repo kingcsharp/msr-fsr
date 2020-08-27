@@ -98,7 +98,7 @@ export class MultiselectWrapperComponent implements OnInit {
     this.options.map((item) => {
       if (this.multipleValues && !this.dataAlreadyParsed(ctrl.options)) {
         let filterItem = item[this.filterId];
-        if (filterItem == undefined) {
+        if (filterItem === undefined) {
           filterItem = item;
         }
         if (filterItem.length > 0) {
@@ -123,8 +123,7 @@ export class MultiselectWrapperComponent implements OnInit {
             }
           });
         }
-      }
-      else {
+      } else {
         this.currentOptions.push({
           label: this.getLabel(item),
           value: this.getValue(item)
