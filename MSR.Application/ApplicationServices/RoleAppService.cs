@@ -12,7 +12,8 @@ namespace MSR.Application.ApplicationServices
     public class RoleAppService :
         ICommandHandler<GetRoles>,
         ICommandHandler<CreateRole>,
-        ICommandHandler<UpdateRole>
+        ICommandHandler<UpdateRole>,
+        ICommandHandler<DeleteRole>
     {
         private readonly IRoleService _roleService;
 
@@ -37,6 +38,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _roleService.UpdateRoleAsync(command);
             return new CommandResponse<Role>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteRole command, CancellationToken cancellationToken = default)
+        {
+            await _roleService.DeleteRoleAsync(command);
+            return CommandResponse.SuccessCommand;
         }
     }
 }

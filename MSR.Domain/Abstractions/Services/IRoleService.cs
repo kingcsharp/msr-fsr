@@ -9,5 +9,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<Role>> GetRolesMapAsync(GetRoles command);
         Task<Role> CreateRoleAsync(CreateRole command);
         Task<Role> UpdateRoleAsync(UpdateRole command);
+        Task DeleteRoleAsync(DeleteRole command);
+
     }
 }

@@ -51,6 +51,36 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return _mapper.Map<Domain.Models.Role>(role);
         }
 
+        public async Task DeleteRoleAsync(DeleteRole command)
+        {
+            var inUse = _unitOfWork.UserRoles.Query().Any(i => i.RoleId == command.Id);
+            inUse |= _unitOfWork.WorkflowGroupRoleMaps.Query().Any(i => i.RoleId == command.Id);
+            inUse |= _unitOfWork.HelpPageRoles.Query().Any(i => i.RoleId == command.Id);
+
+            if (inUse)
+            {
+                throw new DomainException($"Role in Use.  Cannot be deleted", DomainError.Conflict);
+            }
+
+            var role = await _unitOfWork.Roles.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if (role is null)
+            {
+                throw new DomainException($"Role with ID: {command.Id} not found", DomainError.NotFound);
+            }
+
+            var maps = await _unitOfWork.RoleChildRoleMaps.Query().Where(i => i.ChildRoleId == command.Id || i.ParentRoleId == command.Id).ToListAsync();
+
+            foreach(var map in maps)
+            {
+                _unitOfWork.RoleChildRoleMaps.Delete(false, map);
+            }
+
+            _unitOfWork.Roles.Delete(false, role);
+            await _unitOfWork.SaveChangesAsync();   
+
+        }
+
         public async Task<ICollection<Domain.Models.Role>> GetRolesMapAsync(GetRoles command)
         {
             var result = new List<Domain.Models.Role>();

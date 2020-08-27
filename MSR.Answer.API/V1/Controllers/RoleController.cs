@@ -53,14 +53,12 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<Role>("Role successfully updated");
         }
 
-        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult<Role>))]
+        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult))]
         [HasPrivilegeApi("Roles", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> Delete(int id)
         {
-            return new OkObjectResult(new AuditActionResult()
-            {
-                SuccessMessage = "Role Successfully Removed"
-            });
+            var ret = await _dispatcher.DispatchAsync(new DeleteRole() { Id = id });
+            return ret.ToOkObjectResponse("Role successfully Deleted");
         }
     }
 }
