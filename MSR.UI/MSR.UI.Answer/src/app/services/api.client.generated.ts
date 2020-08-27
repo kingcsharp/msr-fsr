@@ -9345,7 +9345,7 @@ export class Procedure implements IProcedure {
     id?: number;
     name?: string | undefined;
     procedureTypeId?: number;
-    isRelatedToAProduct?: boolean | undefined;
+    isRelatedToAProduct?: boolean;
     creatorCompany?: string | undefined;
     createdByDepartmentName?: string | undefined;
     revision?: number;
@@ -9429,7 +9429,7 @@ export interface IProcedure {
     id?: number;
     name?: string | undefined;
     procedureTypeId?: number;
-    isRelatedToAProduct?: boolean | undefined;
+    isRelatedToAProduct?: boolean;
     creatorCompany?: string | undefined;
     createdByDepartmentName?: string | undefined;
     revision?: number;
@@ -9497,6 +9497,8 @@ export interface IProcedureType {
 export class CreateProcedureRequest implements ICreateProcedureRequest {
     /** Gets or Sets Name */
     name!: string;
+    /** Gets or Sets IsRelatedToAProduct */
+    isRelatedToAProduct?: boolean;
     /** Gets or Sets ProcedureTypeId */
     procedureTypeId!: number;
     /** Gets or Sets Comments */
@@ -9522,6 +9524,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
+            this.isRelatedToAProduct = _data["isRelatedToAProduct"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.comments = _data["comments"];
             if (Array.isArray(_data["roleIds"])) {
@@ -9549,6 +9552,7 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["isRelatedToAProduct"] = this.isRelatedToAProduct;
         data["procedureTypeId"] = this.procedureTypeId;
         data["comments"] = this.comments;
         if (Array.isArray(this.roleIds)) {
@@ -9571,6 +9575,8 @@ export class CreateProcedureRequest implements ICreateProcedureRequest {
 export interface ICreateProcedureRequest {
     /** Gets or Sets Name */
     name: string;
+    /** Gets or Sets IsRelatedToAProduct */
+    isRelatedToAProduct?: boolean;
     /** Gets or Sets ProcedureTypeId */
     procedureTypeId: number;
     /** Gets or Sets Comments */
@@ -9622,17 +9628,19 @@ export interface IAuditActionResultOfProcedureStepModel extends IAuditActionResu
 
 export class ProcedureStepModel implements IProcedureStepModel {
     id?: number;
-    procedureId?: number;
+    procedureId?: number | undefined;
     title?: string | undefined;
     stepText?: string | undefined;
-    duration?: number;
+    duration?: number | undefined;
     durationType?: string | undefined;
-    printOrder?: number;
+    procedureStepType?: string | undefined;
+    procedureStepTypeId?: string | undefined;
+    printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
+    equipmentTime?: number | undefined;
     replacementCost?: number | undefined;
     utilizationTime?: number | undefined;
-    equipmentTime?: number | undefined;
     usefulLife?: number | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
@@ -9654,12 +9662,14 @@ export class ProcedureStepModel implements IProcedureStepModel {
             this.stepText = _data["stepText"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
+            this.procedureStepType = _data["procedureStepType"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
+            this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilizationTime = _data["utilizationTime"];
-            this.equipmentTime = _data["equipmentTime"];
             this.usefulLife = _data["usefulLife"];
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
@@ -9689,12 +9699,14 @@ export class ProcedureStepModel implements IProcedureStepModel {
         data["stepText"] = this.stepText;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
+        data["procedureStepType"] = this.procedureStepType;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
+        data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilizationTime"] = this.utilizationTime;
-        data["equipmentTime"] = this.equipmentTime;
         data["usefulLife"] = this.usefulLife;
         if (Array.isArray(this.referenceFiles)) {
             data["referenceFiles"] = [];
@@ -9712,17 +9724,19 @@ export class ProcedureStepModel implements IProcedureStepModel {
 
 export interface IProcedureStepModel {
     id?: number;
-    procedureId?: number;
+    procedureId?: number | undefined;
     title?: string | undefined;
     stepText?: string | undefined;
-    duration?: number;
+    duration?: number | undefined;
     durationType?: string | undefined;
-    printOrder?: number;
+    procedureStepType?: string | undefined;
+    procedureStepTypeId?: string | undefined;
+    printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
+    equipmentTime?: number | undefined;
     replacementCost?: number | undefined;
     utilizationTime?: number | undefined;
-    equipmentTime?: number | undefined;
     usefulLife?: number | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
@@ -9740,6 +9754,8 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     duration?: number | undefined;
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
+    /** Procedure Step Type */
+    procedureStepType?: string | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -9775,6 +9791,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
+            this.procedureStepType = _data["procedureStepType"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -9809,6 +9826,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
+        data["procedureStepType"] = this.procedureStepType;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -9842,6 +9860,8 @@ export interface ICreateProcedureStepRequest {
     duration?: number | undefined;
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
+    /** Procedure Step Type */
+    procedureStepType?: string | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -10142,6 +10162,8 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
     id?: number;
     /** Gets or Sets Name */
     name!: string;
+    /** Gets or Sets IsRelatedToAProduct */
+    isRelatedToAProduct?: boolean;
     /** Gets or Sets ProcedureTypeId */
     procedureTypeId?: number | undefined;
     /** Gets or Sets Comments */
@@ -10168,6 +10190,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.isRelatedToAProduct = _data["isRelatedToAProduct"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.comments = _data["comments"];
             if (Array.isArray(_data["roleIds"])) {
@@ -10196,6 +10219,7 @@ export class UpdateProcedureRequest implements IUpdateProcedureRequest {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["isRelatedToAProduct"] = this.isRelatedToAProduct;
         data["procedureTypeId"] = this.procedureTypeId;
         data["comments"] = this.comments;
         if (Array.isArray(this.roleIds)) {
@@ -10220,6 +10244,8 @@ export interface IUpdateProcedureRequest {
     id?: number;
     /** Gets or Sets Name */
     name: string;
+    /** Gets or Sets IsRelatedToAProduct */
+    isRelatedToAProduct?: boolean;
     /** Gets or Sets ProcedureTypeId */
     procedureTypeId?: number | undefined;
     /** Gets or Sets Comments */
@@ -10248,6 +10274,8 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     duration?: number | undefined;
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
+    /** Procedure Step Type */
+    procedureStepType?: string | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -10284,6 +10312,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
+            this.procedureStepType = _data["procedureStepType"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -10319,6 +10348,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
+        data["procedureStepType"] = this.procedureStepType;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -10354,6 +10384,8 @@ export interface IUpdateProcedureStepRequest {
     duration?: number | undefined;
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
+    /** Procedure Step Type */
+    procedureStepType?: string | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -10721,10 +10753,17 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
     id?: number | undefined;
     title?: string | undefined;
     text?: string | undefined;
+    systemTaskId?: number | undefined;
+    laborTime?: number | undefined;
+    referenceProcedures?: number[] | undefined;
+    referenceDocuments?: FileModel[] | undefined;
+    equipmentTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    roles?: number[] | undefined;
+    comments?: string | undefined;
     revision?: number | undefined;
-    status?: string | undefined;
-    isRelatedToAProduct?: boolean | undefined;
-    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IProcedureStepTemplateModel) {
         if (data) {
@@ -10740,14 +10779,29 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
             this.id = _data["id"];
             this.title = _data["title"];
             this.text = _data["text"];
-            this.revision = _data["revision"];
-            this.status = _data["status"];
-            this.isRelatedToAProduct = _data["isRelatedToAProduct"];
-            if (Array.isArray(_data["referenceFiles"])) {
-                this.referenceFiles = [] as any;
-                for (let item of _data["referenceFiles"])
-                    this.referenceFiles!.push(FileModel.fromJS(item));
+            this.systemTaskId = _data["systemTaskId"];
+            this.laborTime = _data["laborTime"];
+            if (Array.isArray(_data["referenceProcedures"])) {
+                this.referenceProcedures = [] as any;
+                for (let item of _data["referenceProcedures"])
+                    this.referenceProcedures!.push(item);
             }
+            if (Array.isArray(_data["referenceDocuments"])) {
+                this.referenceDocuments = [] as any;
+                for (let item of _data["referenceDocuments"])
+                    this.referenceDocuments!.push(FileModel.fromJS(item));
+            }
+            this.equipmentTime = _data["equipmentTime"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
+            }
+            this.comments = _data["comments"];
+            this.revision = _data["revision"];
         }
     }
 
@@ -10763,14 +10817,29 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
         data["id"] = this.id;
         data["title"] = this.title;
         data["text"] = this.text;
-        data["revision"] = this.revision;
-        data["status"] = this.status;
-        data["isRelatedToAProduct"] = this.isRelatedToAProduct;
-        if (Array.isArray(this.referenceFiles)) {
-            data["referenceFiles"] = [];
-            for (let item of this.referenceFiles)
-                data["referenceFiles"].push(item.toJSON());
+        data["systemTaskId"] = this.systemTaskId;
+        data["laborTime"] = this.laborTime;
+        if (Array.isArray(this.referenceProcedures)) {
+            data["referenceProcedures"] = [];
+            for (let item of this.referenceProcedures)
+                data["referenceProcedures"].push(item);
         }
+        if (Array.isArray(this.referenceDocuments)) {
+            data["referenceDocuments"] = [];
+            for (let item of this.referenceDocuments)
+                data["referenceDocuments"].push(item.toJSON());
+        }
+        data["equipmentTime"] = this.equipmentTime;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        data["comments"] = this.comments;
+        data["revision"] = this.revision;
         return data; 
     }
 }
@@ -10779,10 +10848,17 @@ export interface IProcedureStepTemplateModel {
     id?: number | undefined;
     title?: string | undefined;
     text?: string | undefined;
+    systemTaskId?: number | undefined;
+    laborTime?: number | undefined;
+    referenceProcedures?: number[] | undefined;
+    referenceDocuments?: FileModel[] | undefined;
+    equipmentTime?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    roles?: number[] | undefined;
+    comments?: string | undefined;
     revision?: number | undefined;
-    status?: string | undefined;
-    isRelatedToAProduct?: boolean | undefined;
-    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -10820,16 +10896,31 @@ export interface IAuditActionResultOfProcedureStepTemplateModel extends IAuditAc
     object?: ProcedureStepTemplateModel | undefined;
 }
 
+/**  */
 export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepTemplateRequest {
+    /** Title */
     title?: string | undefined;
+    /** StepText */
     stepText?: string | undefined;
-    systemTaskId?: number | undefined;
+    /** ProcedureStepTypeId (SystemTaskId in the DB) */
+    procedureStepTypeId?: number | undefined;
+    /** LaborTime */
     laborTime?: number | undefined;
+    /** ReferenceProcedures */
+    referenceProcedures?: number[] | undefined;
+    /** ReferenceDocuments */
+    referenceDocuments?: number[] | undefined;
+    /** EquipmentTime */
     equipmentTime?: number | undefined;
+    /** ReplacementCost */
     replacementCost?: number | undefined;
+    /** Utilization Time */
     utilization?: number | undefined;
+    /** UsefulLife */
     usefulLife?: number | undefined;
-    roles?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** Comments */
     comments?: string | undefined;
 
     constructor(data?: ICreateProcedureStepTemplateRequest) {
@@ -10845,13 +10936,27 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
         if (_data) {
             this.title = _data["title"];
             this.stepText = _data["stepText"];
-            this.systemTaskId = _data["systemTaskId"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.laborTime = _data["laborTime"];
+            if (Array.isArray(_data["referenceProcedures"])) {
+                this.referenceProcedures = [] as any;
+                for (let item of _data["referenceProcedures"])
+                    this.referenceProcedures!.push(item);
+            }
+            if (Array.isArray(_data["referenceDocuments"])) {
+                this.referenceDocuments = [] as any;
+                for (let item of _data["referenceDocuments"])
+                    this.referenceDocuments!.push(item);
+            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
-            this.roles = _data["roles"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
+            }
             this.comments = _data["comments"];
         }
     }
@@ -10867,42 +10972,87 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["stepText"] = this.stepText;
-        data["systemTaskId"] = this.systemTaskId;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["laborTime"] = this.laborTime;
+        if (Array.isArray(this.referenceProcedures)) {
+            data["referenceProcedures"] = [];
+            for (let item of this.referenceProcedures)
+                data["referenceProcedures"].push(item);
+        }
+        if (Array.isArray(this.referenceDocuments)) {
+            data["referenceDocuments"] = [];
+            for (let item of this.referenceDocuments)
+                data["referenceDocuments"].push(item);
+        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
-        data["roles"] = this.roles;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
         data["comments"] = this.comments;
         return data; 
     }
 }
 
+/**  */
 export interface ICreateProcedureStepTemplateRequest {
+    /** Title */
     title?: string | undefined;
+    /** StepText */
     stepText?: string | undefined;
-    systemTaskId?: number | undefined;
+    /** ProcedureStepTypeId (SystemTaskId in the DB) */
+    procedureStepTypeId?: number | undefined;
+    /** LaborTime */
     laborTime?: number | undefined;
+    /** ReferenceProcedures */
+    referenceProcedures?: number[] | undefined;
+    /** ReferenceDocuments */
+    referenceDocuments?: number[] | undefined;
+    /** EquipmentTime */
     equipmentTime?: number | undefined;
+    /** ReplacementCost */
     replacementCost?: number | undefined;
+    /** Utilization Time */
     utilization?: number | undefined;
+    /** UsefulLife */
     usefulLife?: number | undefined;
-    roles?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** Comments */
     comments?: string | undefined;
 }
 
+/**  */
 export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepTemplateRequest {
+    /** ProcedureStepTemplate Id */
     id?: number;
+    /** Title */
     title?: string | undefined;
+    /** StepText */
     stepText?: string | undefined;
-    systemTaskId?: number | undefined;
+    /** ProcedureStepTypeId (SystemTaskId in the DB) */
+    procedureStepTypeId?: number | undefined;
+    /** LaborTime */
     laborTime?: number | undefined;
+    /** ReferenceProcedures */
+    referenceProcedures?: number[] | undefined;
+    /** ReferenceDocuments */
+    referenceDocuments?: number[] | undefined;
+    /** EquipmentTime */
     equipmentTime?: number | undefined;
+    /** ReplacementCost */
     replacementCost?: number | undefined;
+    /** Utilization Time */
     utilization?: number | undefined;
+    /** UsefulLife */
     usefulLife?: number | undefined;
-    roles?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** Comments */
     comments?: string | undefined;
 
     constructor(data?: IUpdateProcedureStepTemplateRequest) {
@@ -10919,13 +11069,27 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
             this.id = _data["id"];
             this.title = _data["title"];
             this.stepText = _data["stepText"];
-            this.systemTaskId = _data["systemTaskId"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.laborTime = _data["laborTime"];
+            if (Array.isArray(_data["referenceProcedures"])) {
+                this.referenceProcedures = [] as any;
+                for (let item of _data["referenceProcedures"])
+                    this.referenceProcedures!.push(item);
+            }
+            if (Array.isArray(_data["referenceDocuments"])) {
+                this.referenceDocuments = [] as any;
+                for (let item of _data["referenceDocuments"])
+                    this.referenceDocuments!.push(item);
+            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
-            this.roles = _data["roles"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
+            }
             this.comments = _data["comments"];
         }
     }
@@ -10942,29 +11106,59 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
         data["id"] = this.id;
         data["title"] = this.title;
         data["stepText"] = this.stepText;
-        data["systemTaskId"] = this.systemTaskId;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["laborTime"] = this.laborTime;
+        if (Array.isArray(this.referenceProcedures)) {
+            data["referenceProcedures"] = [];
+            for (let item of this.referenceProcedures)
+                data["referenceProcedures"].push(item);
+        }
+        if (Array.isArray(this.referenceDocuments)) {
+            data["referenceDocuments"] = [];
+            for (let item of this.referenceDocuments)
+                data["referenceDocuments"].push(item);
+        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
-        data["roles"] = this.roles;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
         data["comments"] = this.comments;
         return data; 
     }
 }
 
+/**  */
 export interface IUpdateProcedureStepTemplateRequest {
+    /** ProcedureStepTemplate Id */
     id?: number;
+    /** Title */
     title?: string | undefined;
+    /** StepText */
     stepText?: string | undefined;
-    systemTaskId?: number | undefined;
+    /** ProcedureStepTypeId (SystemTaskId in the DB) */
+    procedureStepTypeId?: number | undefined;
+    /** LaborTime */
     laborTime?: number | undefined;
+    /** ReferenceProcedures */
+    referenceProcedures?: number[] | undefined;
+    /** ReferenceDocuments */
+    referenceDocuments?: number[] | undefined;
+    /** EquipmentTime */
     equipmentTime?: number | undefined;
+    /** ReplacementCost */
     replacementCost?: number | undefined;
+    /** Utilization Time */
     utilization?: number | undefined;
+    /** UsefulLife */
     usefulLife?: number | undefined;
-    roles?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** Comments */
     comments?: string | undefined;
 }
 
@@ -11080,7 +11274,7 @@ export class CreateProcedureTemplateRequest implements ICreateProcedureTemplateR
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
     /** Gets or Sets Roles */
-    roles?: RoleRequest[] | undefined;
+    roles?: number[] | undefined;
 
     constructor(data?: ICreateProcedureTemplateRequest) {
         if (data) {
@@ -11121,7 +11315,7 @@ export class CreateProcedureTemplateRequest implements ICreateProcedureTemplateR
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
-                    this.roles!.push(RoleRequest.fromJS(item));
+                    this.roles!.push(item);
             }
         }
     }
@@ -11163,7 +11357,7 @@ export class CreateProcedureTemplateRequest implements ICreateProcedureTemplateR
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
-                data["roles"].push(item.toJSON());
+                data["roles"].push(item);
         }
         return data; 
     }
@@ -11198,7 +11392,7 @@ export interface ICreateProcedureTemplateRequest {
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
     /** Gets or Sets Roles */
-    roles?: RoleRequest[] | undefined;
+    roles?: number[] | undefined;
 }
 
 /**  */
@@ -11232,7 +11426,7 @@ export class UpdateProcedureTemplateRequest implements IUpdateProcedureTemplateR
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
     /** Gets or Sets Roles */
-    roles?: RoleRequest[] | undefined;
+    roles?: number[] | undefined;
 
     constructor(data?: IUpdateProcedureTemplateRequest) {
         if (data) {
@@ -11274,7 +11468,7 @@ export class UpdateProcedureTemplateRequest implements IUpdateProcedureTemplateR
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
-                    this.roles!.push(RoleRequest.fromJS(item));
+                    this.roles!.push(item);
             }
         }
     }
@@ -11317,7 +11511,7 @@ export class UpdateProcedureTemplateRequest implements IUpdateProcedureTemplateR
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
-                data["roles"].push(item.toJSON());
+                data["roles"].push(item);
         }
         return data; 
     }
@@ -11354,7 +11548,7 @@ export interface IUpdateProcedureTemplateRequest {
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
     /** Gets or Sets Roles */
-    roles?: RoleRequest[] | undefined;
+    roles?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

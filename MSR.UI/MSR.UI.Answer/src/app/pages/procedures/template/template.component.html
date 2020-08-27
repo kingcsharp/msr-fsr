@@ -26,26 +26,6 @@
                     class="form-control input-transparent" tooltip="Title of Procedure Template" data-cy="title-input">
             </div>
             <div class="form-group">
-                <label for="basestartoncounter" class="col-form-label text-left">
-                    Based on Start Counter
-                </label>
-                <div class="col-12">
-                    <p-dropdown placeholder="Select True or False" name="basestartoncounter"
-                        [options]="baseStartOnCounterOptions" showClear="true"
-                        [(ngModel)]="procedureTemplate.baseStartOnCounter" data-cy="basestartoncounter-dropdown">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="estimatedstepduration" class="col-form-label text-left">
-                    Estimated Step Duration
-                </label>
-                <input type="number" name="estimatedstepduration" [(ngModel)]="procedureTemplate.estimatedStepDuration"
-                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
-                    data-parsley-required="true" class="form-control input-transparent"
-                    tooltip="Estimated Step Duration" data-cy="estimatedstepduration-input">
-            </div>
-            <div class="form-group">
                 <label for="replacementcost" class="col-form-label text-left">
                     Replacement Cost
                 </label>
@@ -78,36 +58,6 @@
                 </label>
                 <ckeditor-wrapper [editorcontent]="procedureTemplate.text"
                     (editorContentChange)="procedureTemplate.text = $event"></ckeditor-wrapper>
-            </div>
-            <div class="form-group" *ngIf='procedureTemplate !== undefined'>
-                <label for="numberofquestionstouse" class="col-form-label text-left">
-                    Number of Questions to Use
-                </label>
-                <input type="number" name="numberofquestionstouse" [(ngModel)]="procedureTemplate.numberOfQuestionsToUse"
-                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
-                    data-parsley-required="true" class="form-control input-transparent" tooltip="Number of Questions to Use"
-                    data-cy="numberofquestionstouse-input">
-            </div>
-            <div class="form-group">
-                <label for="proceduresteptype" class="col-form-label text-left">
-                    Procedure Step Type
-                </label>
-                <div class="col-12">
-                    <p-dropdown placeholder="Select Procedure Step Type" name="proceduresteptype"
-                        [options]="procedureStepTypeOptions" showClear="true"
-                        [(ngModel)]="procedureTemplate.procedureStepTypeId" data-cy="procedurestepyype-dropdown">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="referenceprocedures" class="col-form-label text-left">
-                    Reference procedures
-                </label>
-                <div class="col-12">
-                    <p-multiSelect name="referenceprocedures" [options]="availableProceduresForReference"
-                        [(ngModel)]="procedureTemplate.referenceProcedures" data-cy="referenceprocedures-multiselect">
-                    </p-multiSelect>
-                </div>
             </div>
             <div class="form-group">
                 <label for="referencefiles" class="col-form-label text-left">
