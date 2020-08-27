@@ -938,8 +938,6 @@ body .ui-table {
   }
 }
 
-
-
 .ui-table-customers {
   // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
 
@@ -1123,7 +1121,7 @@ body .ui-table {
   }
 }
 
-.ui-table-customers.modal-grid>.ui-table-wrapper>table{
+.ui-table-customers.modal-grid > .ui-table-wrapper > table {
   table-layout: unset;
 }
 
@@ -2031,4 +2029,15 @@ p-dialog {
 body .ui-inputtext {
   color: #ffffff;
   background: #1d232a;
+}
+
+p-fileupload,
+cmh-file-uploader {
+  padding: 0 !important;
+}
+
+
+grid-options>div .ui-widget.ui-widget-content{
+  right: 0px!important;
+  left: inherit!important;
 }
