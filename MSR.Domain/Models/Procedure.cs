@@ -26,7 +26,8 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets IsRelatedToAProduct
         /// </summary>
-        public bool? IsRelatedToAProduct { get; set; }
+        /// TODO: this isn't connected to anything.
+        public bool IsRelatedToAProduct { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatorCompany

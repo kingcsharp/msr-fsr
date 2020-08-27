@@ -6684,8 +6684,7 @@
             "format": "int32"
           },
           "isRelatedToAProduct": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "creatorCompany": {
             "type": "string",
@@ -6784,6 +6783,10 @@
             "description": "Gets or Sets Name",
             "minLength": 1,
             "example": "NAME1598366448"
+          },
+          "isRelatedToAProduct": {
+            "type": "boolean",
+            "description": "Gets or Sets IsRelatedToAProduct"
           },
           "procedureTypeId": {
             "type": "integer",
@@ -7215,23 +7218,35 @@
           "name": {
             "type": "string",
             "description": "Gets or Sets Name",
-            "minLength": 1
+            "minLength": 1,
+            "example": "NAME1598366449"
+          },
+          "isRelatedToAProduct": {
+            "type": "boolean",
+            "description": "Gets or Sets IsRelatedToAProduct"
           },
           "procedureTypeId": {
             "type": "integer",
             "description": "Gets or Sets ProcedureTypeId",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "example": 1
           },
           "comments": {
             "type": "string",
             "description": "Gets or Sets Comments",
-            "nullable": true
+            "nullable": true,
+            "example": "A comment 1598366449"
           },
           "roleIds": {
             "type": "array",
             "description": "Gets or Sets RoleIds",
             "nullable": true,
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "format": "int32",
@@ -7242,12 +7257,14 @@
             "type": "number",
             "description": "Gets or Sets Duration",
             "format": "double",
-            "nullable": true
+            "nullable": true,
+            "example": 5.2
           },
           "durationType": {
             "type": "string",
             "description": "Gets or Sets DurationType",
-            "minLength": 1
+            "minLength": 1,
+            "example": "hours"
           },
           "referenceFiles": {
             "type": "array",

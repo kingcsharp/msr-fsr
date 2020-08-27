@@ -32,6 +32,12 @@ namespace MSR.Answer.API.V1.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or Sets IsRelatedToAProduct
+        /// </summary>
+        [DataMember(Name="isRelatedToAProduct")]
+        public bool IsRelatedToAProduct { get; set; }
+
+        /// <summary>
         /// Gets or Sets ProcedureTypeId
         /// </summary>
         /// <example>1</example>
