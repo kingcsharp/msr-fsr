@@ -3,22 +3,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DraggableItemService } from 'ngx-bootstrap/sortable';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest,
-ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, FileRequest } from '../../../services/api.client.generated';
+import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest,ProcedureStepTypeService,
+ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, 
+FileRequest, UpdateProcedureStepRequest, RoleRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
 import { MockServices } from '../../../services/mocks/services/mockservices';
 import { CreateProcedureStepMonitorRequest } from '../../../services/mocks/models/createProcedureStepMonitorRequest';
-import { UpdateProcedureStepRequest } from '../../../services/mocks/models/updateProcedureStepRequest';
 import { CreateProcedureStepRequest } from '../../../services/mocks/models/createProcedureStepRequest';
 
 @Component({
   selector: 'app-procedure-edit',
   templateUrl: './procedure-edit.component.html',
   styleUrls: ['./procedure-edit.component.scss'],
-  providers: [MockServices, DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService, ProcedureTypeService]
+  providers: [MockServices, DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService, 
+    ProcedureTypeService, ProcedureStepTypeService]
 })
 export class ProcedureEditComponent implements OnInit {
 
@@ -54,7 +55,7 @@ export class ProcedureEditComponent implements OnInit {
   constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
     private procedureService: ProcedureService, private procedureStepMonitorService: ProcedureStepMonitorService, 
-    private procedureTypeService: ProcedureTypeService) { }
+    private procedureStepTypeService: ProcedureStepTypeService, private procedureTypeService: ProcedureTypeService) { }
 
   ngOnInit(): void {
 
@@ -74,11 +75,6 @@ export class ProcedureEditComponent implements OnInit {
       { label: 'Manual', value: 'Manual' },
       { label: 'QR Code', value: 'QR Code' },
       { label: 'Sensor', value: 'Sensor' }
-    ];
-
-    this.procedureStepTypeOptions = [
-      { label: 'Procedure Step Type A', value: 1 },
-      { label: 'Procedure Step Type B', value: 2 }
     ];
 
     this.faultHandlingOptions = [
@@ -111,7 +107,13 @@ export class ProcedureEditComponent implements OnInit {
   
           this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
           
-          this.getProcedure();
+          this.procedureStepTypeService.procedureStepType(null, env.apiVersion).subscribe(responseHandler((procedureStepTypeResponse) => {
+            
+              this.procedureStepTypeOptions = procedureStepTypeResponse.object.map(s => ({ label: s.name, value: s.id }));
+
+              this.getProcedure();
+
+          }));
 
         });
         
@@ -158,6 +160,13 @@ export class ProcedureEditComponent implements OnInit {
     this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((setGetResponse) => {
 
       this.procedureSteps = setGetResponse.object;
+      this.procedureSteps.forEach( procedureStep => {
+
+        if(procedureStep.referenceFiles === undefined){
+          procedureStep.referenceFiles = [];
+        }
+
+      });
 
       this.getMonitors();
 
@@ -171,7 +180,12 @@ export class ProcedureEditComponent implements OnInit {
 
       this.procedureStepMonitorService.procedurestep(procedureStep.id,null,env.apiVersion).subscribe(responseHandler((procedureStepResponse) => {
 
-        procedureStep.monitors = procedureStepResponse.object;
+        if(procedureStepResponse.object.length === 0){
+          procedureStep.monitors = [];
+        }else{
+          procedureStep.monitors = procedureStepResponse.object;
+        }
+        
         procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId).value;
         procedureStep.selectedRoles = new Array<number>();
         procedureStep.roles.forEach(role => {
@@ -265,17 +279,18 @@ export class ProcedureEditComponent implements OnInit {
 
   deleteStep() {
 
-    this.mockServices.procedureStepDelete(this.procedureStepToDelete.id);
-    let procedureStepToDeleteIndex = this.procedureSteps.findIndex(s => s.id === this.procedureStepToDelete.id);
-    this.procedureSteps.splice(procedureStepToDeleteIndex, 1);
-    this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
+    this.procedureService.stepDelete(this.procedure.id, this.procedureStepToDelete.id,env.apiVersion).subscribe(responseHandler((response) => {
+      let procedureStepToDeleteIndex = this.procedureSteps.findIndex(s => s.id === this.procedureStepToDelete.id);
+      this.procedureSteps.splice(procedureStepToDeleteIndex, 1);
+      this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
+    }))
+
   }
 
   updateProcedureStep(procedureStep: any) {
 
     let updateProcedureStepRequest = new UpdateProcedureStepRequest();
-    updateProcedureStepRequest.duration = procedureStep.duration;
-    updateProcedureStepRequest.durationType = procedureStep.durationType;
+    updateProcedureStepRequest.procedureStepId = procedureStep.id;
     updateProcedureStepRequest.equipmentTime = procedureStep.equipmentTime;
     updateProcedureStepRequest.laborTime = procedureStep.laborTime;
     updateProcedureStepRequest.predecessorStepId = procedureStep.predecessorStepId;
@@ -283,13 +298,23 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.procedureId = procedureStep.procedureId;
     updateProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
     updateProcedureStepRequest.replacementCost = procedureStep.replacementCost;
-    updateProcedureStepRequest.roles = procedureStep.selectedRoles;
+    updateProcedureStepRequest.roles = new Array<RoleRequest>();
+    procedureStep.selectedRoles?.foreach(role => {
+      
+      let roleRequest = new RoleRequest();
+      roleRequest.id = role;
+
+      updateProcedureStepRequest.roles.push(roleRequest);
+
+    }); 
     updateProcedureStepRequest.text = procedureStep.text;
     updateProcedureStepRequest.title = procedureStep.title;
     updateProcedureStepRequest.usefulLife = procedureStep.usefulLife;
     updateProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
-    updateProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
-    this.mockServices.procedureStepPatch(updateProcedureStepRequest);
+    updateProcedureStepRequest.procedureStepType = procedureStep.selectedProcedureStepTypeId;
+    this.procedureService.stepPatch(updateProcedureStepRequest.procedureStepId,env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((response) => {
+
+    }));
 
   }
 
@@ -306,7 +331,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.roleIds = this.selectedRoles;
 
     this.procedureService.procedurePatch(env.apiVersion,updateProcedureRequest).subscribe((response) => {
-      
+
     })
   }
 
