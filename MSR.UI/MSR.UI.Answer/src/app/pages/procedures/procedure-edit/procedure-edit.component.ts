@@ -4,21 +4,19 @@ import { DraggableItemService } from 'ngx-bootstrap/sortable';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest,ProcedureStepTypeService,
-ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, 
-FileRequest, UpdateProcedureStepRequest, RoleRequest } from '../../../services/api.client.generated';
+ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, CreateProcedureStepMonitorRequest,
+FileRequest, UpdateProcedureStepRequest, RoleRequest, UpdateProcedureStepMonitorRequest,CreateProcedureStepRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
 import { MockServices } from '../../../services/mocks/services/mockservices';
-import { CreateProcedureStepMonitorRequest } from '../../../services/mocks/models/createProcedureStepMonitorRequest';
-import { CreateProcedureStepRequest } from '../../../services/mocks/models/createProcedureStepRequest';
 
 @Component({
   selector: 'app-procedure-edit',
   templateUrl: './procedure-edit.component.html',
   styleUrls: ['./procedure-edit.component.scss'],
-  providers: [MockServices, DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService, 
+  providers: [DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService, 
     ProcedureTypeService, ProcedureStepTypeService]
 })
 export class ProcedureEditComponent implements OnInit {
@@ -52,7 +50,7 @@ export class ProcedureEditComponent implements OnInit {
   availableProcedureStepTemplates: Array<SelectItem>;
   selectedProcedureStepTemplate: number;
 
-  constructor(private route: ActivatedRoute, private mockServices: MockServices, public globals: Globals, public elementReference: ElementRef,
+  constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
     private procedureService: ProcedureService, private procedureStepMonitorService: ProcedureStepMonitorService, 
     private procedureStepTypeService: ProcedureStepTypeService, private procedureTypeService: ProcedureTypeService) { }
@@ -216,10 +214,13 @@ export class ProcedureEditComponent implements OnInit {
   }
 
   deleteMonitor() {
-    let indexOfMonitor = this.procedureStepToRemoveMonitorFrom.monitors.findIndex(s => s.id === this.monitorToDelete.id);
-    this.procedureStepToRemoveMonitorFrom.monitors.splice(indexOfMonitor, 1);
-    this.mockServices.procedureStepMonitorsDelete(this.monitorToDelete.id);
-    this.showConfirmDeleteMonitorDialog = !this.showConfirmDeleteMonitorDialog;
+
+    this.procedureStepMonitorService.procedureStepMonitorDelete(this.monitorToDelete.id,env.apiVersion).subscribe(responseHandler((response) => {
+      let indexOfMonitor = this.procedureStepToRemoveMonitorFrom.monitors.findIndex(s => s.id === this.monitorToDelete.id);
+      this.procedureStepToRemoveMonitorFrom.monitors.splice(indexOfMonitor, 1);
+      this.showConfirmDeleteMonitorDialog = !this.showConfirmDeleteMonitorDialog;
+    }));
+
   }
 
   openEditMonitorDialog(monitor: ProcedureStepMonitor) {
@@ -236,8 +237,21 @@ export class ProcedureEditComponent implements OnInit {
   }
 
   updateMonitor() {
-    this.mockServices.procedureStepMonitorsPatch(this.monitorToEdit);
-    this.showEditMonitorDialog = !this.showEditMonitorDialog;
+    
+    let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest();
+    updateProcedureStepMonitorRequest.inputType = this.monitorToEdit.inputType;
+    updateProcedureStepMonitorRequest.shouldBe = this.monitorToEdit.shouldBe;
+    updateProcedureStepMonitorRequest.targetValue = this.monitorToEdit.targetValue;
+    updateProcedureStepMonitorRequest.faultHandling = this.monitorToEdit.faultHandling;
+    updateProcedureStepMonitorRequest.description = this.monitorToEdit.description;
+    updateProcedureStepMonitorRequest.sendEmailNotification = this.monitorToEdit.sendEmailNotification;
+    updateProcedureStepMonitorRequest.id = this.monitorToEdit.id;
+
+    this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion,updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
+
+      this.showEditMonitorDialog = !this.showEditMonitorDialog;
+
+    }));
   }
 
   openAddMonitorDialog(procedureStep) {
@@ -259,10 +273,14 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepMonitorRequest.faultHandling = this.monitorToAdd.faultHandling;
     createProcedureStepMonitorRequest.description = this.monitorToAdd.description;
     createProcedureStepMonitorRequest.sendEmailNotification = this.monitorToAdd.sendEmailNotification;
-    this.mockServices.procedureStepMonitorsPost(createProcedureStepMonitorRequest);
+    createProcedureStepMonitorRequest.procedureStepId = this.procedureStepToAddMonitorTo.id;
 
-    this.procedureStepToAddMonitorTo.monitors.push(this.monitorToAdd);
-    this.showAddMonitorDialog = !this.showAddMonitorDialog;
+    this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion,createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
+
+      this.procedureStepToAddMonitorTo.monitors.push(this.monitorToAdd);
+      this.showAddMonitorDialog = !this.showAddMonitorDialog;
+
+    }));
 
   }
 
@@ -355,7 +373,7 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepToAdd.usefulLife = 0;
       procedureStepToAdd.utilizationTime = 0;
       this.procedureSteps.push(procedureStepToAdd);
-      console.log(this.procedureSteps);
+      this.procedureSteps = [...this.procedureSteps];
 
     } else {
 
@@ -403,10 +421,12 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepRequest.title = procedureStep.title;
     createProcedureStepRequest.usefulLife = procedureStep.usefulLife;
     createProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
-    createProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
+    createProcedureStepRequest.procedureStepType = procedureStep.selectedProcedureStepTypeId;
 
-    this.mockServices.procedureStepPost(createProcedureStepRequest);
-    procedureStep.id = 100;
+    this.procedureService.stepPost(this.procedure.id, env.apiVersion,createProcedureStepRequest).subscribe(responseHandler((response) => {
+      procedureStep.id = response.object.id;
+    }))
+    
 
   }
 
