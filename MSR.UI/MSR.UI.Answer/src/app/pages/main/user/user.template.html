@@ -132,13 +132,8 @@
           </ng-template>
         </td>
         <td class="text-center" [hidden]="!cg.isVisibleCol('isAnswerUser', gridSettings)">
-          <ng-template [ngIf]="!canEditUsers">
-            <p-inputSwitch disabled="true" [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)">
-            </p-inputSwitch>
-          </ng-template>
-          <ng-template [ngIf]="canEditUsers">
-            <p-inputSwitch [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)"></p-inputSwitch>
-          </ng-template>
+          <span
+            style="vertical-align: middle; margin-left: .5em">{{user.isAnswerUser?'Answer User':'Portal User'}}</span>
         </td>
         <td [hidden]="!cg.isVisibleCol('firstName', gridSettings)">
           <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
@@ -177,7 +172,7 @@
   </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
-  [appendTo]="'body'" [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  [appendTo]="'body'" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -271,8 +266,6 @@
                 [baseZIndex]="100002" [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
-          </div>
-          <div class="form-group row">
             <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
               Supervisor
             </label>
@@ -310,6 +303,16 @@
                     type="checkbox" class="ios" checked id="isAnswerUser" /><i data-cy="isansweruser-checkbox"></i>
                 </label>
               </div>
+            </div>
+          </div>
+          <div *ngIf="!currUser.isAnswerUser" class=" form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+              Customer
+            </label>
+            <div class="col-md-4 col-12">
+              <p-dropdown placeholder="Select Customer" name="customer" optionLabel="name" [options]="customers" appendTo="body"
+                [baseZIndex]="100001" [(ngModel)]="currUser.customer">
+              </p-dropdown>
             </div>
           </div>
         </fieldset>

@@ -53,9 +53,9 @@ export class HelpCreateComponent implements OnInit {
       let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
 
       this.generateAllUrlPathsRegistered();
-      this.friendlyUrlOptions.forEach( friendlyUrlOption => {
+      this.friendlyUrlOptions.forEach(friendlyUrlOption => {
 
-        if ( friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
+        if (friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
 
           this.urls.push({ label: friendlyUrlOption, value: friendlyUrlOption });
 
@@ -67,7 +67,7 @@ export class HelpCreateComponent implements OnInit {
         this.urls.push({ label: this.helpPageToEdit.friendlyURL, value: this.helpPageToEdit.friendlyURL });
       }
 
-  }));
+    }));
 
   }
 

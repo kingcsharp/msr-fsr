@@ -62,6 +62,11 @@ namespace MSR.Infrastructure.Resources.Services.Users
             efUser.Location = _unitOfWork.Locations.Query().FirstOrDefault(x => x.Id == command.LocationId);
             efUser.TimeZoneId = command.TimeZoneId;
 
+            if (command.LocationId.HasValue && command.IsAnswerUser.HasValue && !command.IsAnswerUser.Value)
+            {
+                efUser.Customer = _unitOfWork.Customers.Query().FirstOrDefault(x => x.Id == command.CustomerId);
+            }
+
             var password = _authenticationHelper.CreateRandomPassword();
             _authenticationHelper.CreatePasswordHash(password, out var hash, out var salt);
             efUser.PasswordHash = hash;

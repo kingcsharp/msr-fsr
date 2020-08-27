@@ -14,7 +14,7 @@ export class TimeZonePipe implements PipeTransform {
 
     transform(value: Date, format: string = 'short'): string {
         if (value) {
-            var convert = this.datePipe.transform(value, format, this.currentUserGmtTimezone);
+            let convert = this.datePipe.transform(value, format, this.currentUserGmtTimezone);
             return convert;
         }
     }

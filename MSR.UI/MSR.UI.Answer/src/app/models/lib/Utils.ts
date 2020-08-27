@@ -17,9 +17,8 @@ export function pushIfNotExists(item, array, id) {
     }
 }
 
-export function copyObj(objToCopy) {
-    const objCopy = JSON.parse(JSON.stringify(objToCopy));
-    return objCopy;
+export function copyObj(objToCopy: any): any {
+    return Object.assign({}, objToCopy);
 }
 
 
