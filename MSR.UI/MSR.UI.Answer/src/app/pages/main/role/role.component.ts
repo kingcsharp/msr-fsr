@@ -3,9 +3,9 @@ import { Globals } from '../../../models/lib/globals';
 import {
   EnumMenuItem, EnumApprovalTables,
   RoleService,
-  MenuItem, RoleView,
+  MenuItem, Role,
   CreateRoleRequest,
-  AuditActionResultOfRoleView,
+  AuditActionResultOfRole,
   UpdateUserRoleRequest,
   UpdateRoleRequest
 } from '../../../services/api.client.generated';
@@ -37,9 +37,9 @@ export class RoleComponent implements OnInit {
   roles: any[];
   allRoles: any[] = [];
   display: boolean = false;
-  currentRole: RoleView;
-  data: Array<RoleView>;
-  availableRoles: Array<RoleView>;
+  currentRole: Role;
+  data: Array<Role>;
+  availableRoles: Array<Role>;
   isCertificationRole: any[];
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
@@ -70,60 +70,78 @@ export class RoleComponent implements OnInit {
   }
 
   getRoles() {
-    this.roleService.roles(env.apiVersion).subscribe(responseHandler(response => {
+    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler(response => {
       this.globals.showLoader(false);
       this.data = response.object;
     }));
   }
 
-  showDialog(roleView: RoleView) {
+  showDialog(roleView: Role) {
     this.currentRole = this.getCurrentRole(roleView);
-    this.availableRoles = copyObj(this.data.filter((elem) => { return elem.id !== this.currentRole.id }));
+    this.availableRoles = this.data.filter((elem) => { return elem.id !== this.currentRole.id });
     this.display = true;
   }
 
   submitRole() {
     const ctrl = this;
-    let method: Observable<AuditActionResultOfRoleView> = null;
+    jQuery('.parsleyjs').parsley().validate();
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      this.globals.showLoader(true);
+      let method: Observable<AuditActionResultOfRole> = null;
 
-    let data = {
-      id: this.currentRole.id,
-      name: this.currentRole.name, isCertificationRole: this.currentRole.isCertificationRole,
-      parentRoleIds: this.currentRole.parentRoles.map((role) => { return role.id })
-    };
+      let data = {
+        id: this.currentRole.id,
+        name: this.currentRole.name, isCertificationRole: this.currentRole.isCertificationRole,
+        parentRoleIds: this.currentRole.parentRoles.map((role) => { return role.id })
+      };
 
-    if (this.currentRole.id !== undefined) {
-      let postRoleData = new UpdateRoleRequest(data);
-      method = this.roleService.rolePatch(env.apiVersion, postRoleData);
-    } else {
-      let postRoleData = new CreateRoleRequest(data);
-      method = this.roleService.rolePost(env.apiVersion, postRoleData);
-    }
-    
-    method.pipe(take(1)).subscribe(responseHandler((resp) => {
-      if (!resp.hasErrors) {
-        if (ctrl.currentRole.id === undefined) {
-          ctrl.data.push(resp.object);
-        } else {
-          const index = ctrl.data.findIndex(x => x.id === ctrl.currentRole.id);
-          ctrl.data.splice(index, 1);
-          ctrl.data.splice(index, 0, resp.object);
-        }
-        ctrl.clseDialog();
+      if (this.currentRole.id !== undefined) {
+        let postRoleData = new UpdateRoleRequest(data);
+        method = this.roleService.rolePatch(env.apiVersion, postRoleData);
+      } else {
+        let postRoleData = new CreateRoleRequest(data);
+        method = this.roleService.rolePost(env.apiVersion, postRoleData);
       }
-    }, () => {
 
-    }));
+      method.pipe(take(1)).subscribe(responseHandler((resp) => {
+        if (!resp.hasErrors) {
+          resp.object.parentRoles = this.currentRole.parentRoles;
+          if (ctrl.currentRole.id === undefined) {
+            ctrl.data.push(resp.object);
+          } else {
+            const index = ctrl.data.findIndex(x => x.id === ctrl.currentRole.id);
+            ctrl.data.splice(index, 1);
+            ctrl.data.splice(index, 0, resp.object);
+          }
+          ctrl.clseDialog();
+        }
+      }, () => {
+
+      }));
+    }
   }
 
   getCurrentRole(role) {
     if (role === undefined) {
-      let ret = new RoleView();
+      let ret = new Role();
       ret.parentRoles = [];
       return ret;
     } else {
       return copyObj(role);
     }
+  }
+
+  removeRow(role: Role) {
+    this.globals.showLoader(true);
+    this.roleService.roleDelete(role.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((resp) => {
+      if (!resp.hasErrors) {
+        const index = this.data.findIndex(x => x.id === role.id);
+        this.data.splice(index, 1);
+        this.clseDialog();
+      }
+    }, () => {
+
+    }));
   }
 
   clseDialog() {

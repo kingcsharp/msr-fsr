@@ -3334,7 +3334,7 @@ export class RoleService {
         return _observableOf<AuditActionResultOfICollectionOfRole>(<any>null);
     }
 
-    rolePost(version: string, request: CreateRoleRequest): Observable<AuditActionResultOfRoleView> {
+    rolePost(version: string, request: CreateRoleRequest): Observable<AuditActionResultOfRole> {
         let url_ = this.baseUrl + "/v{version}/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3360,14 +3360,14 @@ export class RoleService {
                 try {
                     return this.processRolePost(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfRole>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfRole>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResultOfRoleView> {
+    protected processRolePost(response: HttpResponseBase): Observable<AuditActionResultOfRole> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3378,7 +3378,7 @@ export class RoleService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfRoleView.fromJS(resultData200);
+            result200 = AuditActionResultOfRole.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3386,10 +3386,10 @@ export class RoleService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfRoleView>(<any>null);
+        return _observableOf<AuditActionResultOfRole>(<any>null);
     }
 
-    rolePatch(version: string, request: UpdateRoleRequest): Observable<AuditActionResultOfRoleView> {
+    rolePatch(version: string, request: UpdateRoleRequest): Observable<AuditActionResultOfRole> {
         let url_ = this.baseUrl + "/v{version}/Role";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -3415,14 +3415,14 @@ export class RoleService {
                 try {
                     return this.processRolePatch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfRole>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfRoleView>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfRole>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRolePatch(response: HttpResponseBase): Observable<AuditActionResultOfRoleView> {
+    protected processRolePatch(response: HttpResponseBase): Observable<AuditActionResultOfRole> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3433,7 +3433,7 @@ export class RoleService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfRoleView.fromJS(resultData200);
+            result200 = AuditActionResultOfRole.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3441,61 +3441,10 @@ export class RoleService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfRoleView>(<any>null);
+        return _observableOf<AuditActionResultOfRole>(<any>null);
     }
 
-    roles(version: string): Observable<AuditActionResultOfICollectionOfRoleView> {
-        let url_ = this.baseUrl + "/v{version}/Role/Roles";
-        if (version === undefined || version === null)
-            throw new Error("The parameter 'version' must be defined.");
-        url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRoles(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRoles(<any>response_);
-                } catch (e) {
-                    return <Observable<AuditActionResultOfICollectionOfRoleView>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AuditActionResultOfICollectionOfRoleView>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRoles(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRoleView> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfICollectionOfRoleView.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AuditActionResultOfICollectionOfRoleView>(<any>null);
-    }
-
-    roleDelete(id: number, version: string): Observable<AuditActionResultOfRole> {
+    roleDelete(id: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Role/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -3520,14 +3469,14 @@ export class RoleService {
                 try {
                     return this.processRoleDelete(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfRole>><any>_observableThrow(e);
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfRole>><any>_observableThrow(response_);
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRoleDelete(response: HttpResponseBase): Observable<AuditActionResultOfRole> {
+    protected processRoleDelete(response: HttpResponseBase): Observable<AuditActionResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3538,7 +3487,7 @@ export class RoleService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfRole.fromJS(resultData200);
+            result200 = AuditActionResult.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3546,7 +3495,7 @@ export class RoleService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfRole>(<any>null);
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -6140,6 +6089,8 @@ export class Role implements IRole {
     menus?: MenuItem[] | undefined;
     permissions?: Permission | undefined;
     inheritedPermissions?: Permission | undefined;
+    parentRoles?: Role[] | undefined;
+    hasAssignedUsers?: boolean;
 
     constructor(data?: IRole) {
         if (data) {
@@ -6162,6 +6113,12 @@ export class Role implements IRole {
             }
             this.permissions = _data["permissions"] ? Permission.fromJS(_data["permissions"]) : <any>undefined;
             this.inheritedPermissions = _data["inheritedPermissions"] ? Permission.fromJS(_data["inheritedPermissions"]) : <any>undefined;
+            if (Array.isArray(_data["parentRoles"])) {
+                this.parentRoles = [] as any;
+                for (let item of _data["parentRoles"])
+                    this.parentRoles!.push(Role.fromJS(item));
+            }
+            this.hasAssignedUsers = _data["hasAssignedUsers"];
         }
     }
 
@@ -6184,6 +6141,12 @@ export class Role implements IRole {
         }
         data["permissions"] = this.permissions ? this.permissions.toJSON() : <any>undefined;
         data["inheritedPermissions"] = this.inheritedPermissions ? this.inheritedPermissions.toJSON() : <any>undefined;
+        if (Array.isArray(this.parentRoles)) {
+            data["parentRoles"] = [];
+            for (let item of this.parentRoles)
+                data["parentRoles"].push(item.toJSON());
+        }
+        data["hasAssignedUsers"] = this.hasAssignedUsers;
         return data; 
     }
 }
@@ -6195,6 +6158,8 @@ export interface IRole {
     menus?: MenuItem[] | undefined;
     permissions?: Permission | undefined;
     inheritedPermissions?: Permission | undefined;
+    parentRoles?: Role[] | undefined;
+    hasAssignedUsers?: boolean;
 }
 
 export class MenuItem implements IMenuItem {
@@ -10228,117 +10193,23 @@ export interface IAuditActionResultOfICollectionOfRole extends IAuditActionResul
     object?: Role[] | undefined;
 }
 
-export class AuditActionResultOfICollectionOfRoleView extends AuditActionResult implements IAuditActionResultOfICollectionOfRoleView {
-    object?: RoleView[] | undefined;
+export class AuditActionResultOfRole extends AuditActionResult implements IAuditActionResultOfRole {
+    object?: Role | undefined;
 
-    constructor(data?: IAuditActionResultOfICollectionOfRoleView) {
+    constructor(data?: IAuditActionResultOfRole) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            if (Array.isArray(_data["object"])) {
-                this.object = [] as any;
-                for (let item of _data["object"])
-                    this.object!.push(RoleView.fromJS(item));
-            }
+            this.object = _data["object"] ? Role.fromJS(_data["object"]) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfICollectionOfRoleView {
+    static fromJS(data: any): AuditActionResultOfRole {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfICollectionOfRoleView();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.object)) {
-            data["object"] = [];
-            for (let item of this.object)
-                data["object"].push(item.toJSON());
-        }
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfICollectionOfRoleView extends IAuditActionResult {
-    object?: RoleView[] | undefined;
-}
-
-export class RoleView extends TrackableModel implements IRoleView {
-    name?: string | undefined;
-    isCertificationRole?: boolean | undefined;
-    parentRoles?: RoleView[] | undefined;
-    hasAssignedUsers?: boolean;
-
-    constructor(data?: IRoleView) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.name = _data["name"];
-            this.isCertificationRole = _data["isCertificationRole"];
-            if (Array.isArray(_data["parentRoles"])) {
-                this.parentRoles = [] as any;
-                for (let item of _data["parentRoles"])
-                    this.parentRoles!.push(RoleView.fromJS(item));
-            }
-            this.hasAssignedUsers = _data["hasAssignedUsers"];
-        }
-    }
-
-    static fromJS(data: any): RoleView {
-        data = typeof data === 'object' ? data : {};
-        let result = new RoleView();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["isCertificationRole"] = this.isCertificationRole;
-        if (Array.isArray(this.parentRoles)) {
-            data["parentRoles"] = [];
-            for (let item of this.parentRoles)
-                data["parentRoles"].push(item.toJSON());
-        }
-        data["hasAssignedUsers"] = this.hasAssignedUsers;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IRoleView extends ITrackableModel {
-    name?: string | undefined;
-    isCertificationRole?: boolean | undefined;
-    parentRoles?: RoleView[] | undefined;
-    hasAssignedUsers?: boolean;
-}
-
-export class AuditActionResultOfRoleView extends AuditActionResult implements IAuditActionResultOfRoleView {
-    object?: RoleView | undefined;
-
-    constructor(data?: IAuditActionResultOfRoleView) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? RoleView.fromJS(_data["object"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfRoleView {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfRoleView();
+        let result = new AuditActionResultOfRole();
         result.init(data);
         return result;
     }
@@ -10351,8 +10222,8 @@ export class AuditActionResultOfRoleView extends AuditActionResult implements IA
     }
 }
 
-export interface IAuditActionResultOfRoleView extends IAuditActionResult {
-    object?: RoleView | undefined;
+export interface IAuditActionResultOfRole extends IAuditActionResult {
+    object?: Role | undefined;
 }
 
 export class CreateRoleRequest implements ICreateRoleRequest {
@@ -10438,39 +10309,6 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
 
 export interface IUpdateRoleRequest extends ICreateRoleRequest {
     id?: number;
-}
-
-export class AuditActionResultOfRole extends AuditActionResult implements IAuditActionResultOfRole {
-    object?: Role | undefined;
-
-    constructor(data?: IAuditActionResultOfRole) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.object = _data["object"] ? Role.fromJS(_data["object"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): AuditActionResultOfRole {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfRole();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IAuditActionResultOfRole extends IAuditActionResult {
-    object?: Role | undefined;
 }
 
 export class AuditActionResultOfICollectionOfTimeZoneModel extends AuditActionResult implements IAuditActionResultOfICollectionOfTimeZoneModel {
