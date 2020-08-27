@@ -22,12 +22,22 @@ namespace MSR.Answer.API.V1.Controllers
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="dispatcher"></param>
         public HelpController(ILogger<HelpController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet, HasPrivilegeApi("HelpPages",EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<IEnumerable<HelpPage>>))]
         public async Task<IActionResult> GetHelpPages([FromQuery] GetHelpPageRequest request)
@@ -37,6 +47,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<IEnumerable<HelpPage>>();
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost, HasPrivilegeApi("HelpPages", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<HelpPage>))]
         public async Task<IActionResult> CreateHelpPage([FromBody, Required]CreateHelpPageRequest request)
@@ -46,6 +61,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<HelpPage>("HelpPage created successfully");
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("Role"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<HelpPage>))]
         public async Task<IActionResult> CreateHelpPageRole([FromBody, Required]CreateHelpPageRoleRequest request)
@@ -55,6 +75,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<HelpPage>("Role assigned to HelpPage successfully");
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPatch, HasPrivilegeApi("HelpPages", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> UpdateHelpPage([FromBody, Required]UpdateHelpPageRequest request)
@@ -64,6 +89,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse("HelpPage Updated successfully");
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeleteHelpPage(int id)
@@ -73,6 +103,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse("HelpPage Deleted successfully");
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpDelete("Role"), HasPrivilegeApi("HelpPages", EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeleteHelpPageRole([FromQuery]DeleteHelpPageRoleRequest request)
@@ -81,6 +116,6 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse("Role removed HelpPage successfully");
         }
-        
+
     }
 }

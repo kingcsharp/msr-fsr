@@ -40,9 +40,9 @@ export class LocationCreateComponent implements OnInit {
 
       this.parentLocationOptions = response.object;
 
-      this.timezoneService.timezone(env.apiVersion).subscribe(responseHandler((response) => {
+      this.timezoneService.timezone(env.apiVersion).subscribe(responseHandler((timezoneResponse) => {
 
-        this.timezonesAvailable = response.object.map(s => ({ label: s.description, value: s.id }));
+        this.timezonesAvailable = timezoneResponse.object.map(s => ({ label: s.description, value: s.id }));
         this.getLocationForEditorCreate();
       }));
 

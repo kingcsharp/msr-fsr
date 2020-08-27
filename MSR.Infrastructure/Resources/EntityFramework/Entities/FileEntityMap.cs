@@ -16,5 +16,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string EntityTableName { get; set; }
 
         public int EntityId { get; set; }
+
+        public ProcedureStepTemplate ProcedureTemplate { get; set; }
+        // Procedure
+        // Part
+        // Anything else files can be attached to
+        // etc.
     }
 }

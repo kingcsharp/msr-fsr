@@ -4,8 +4,11 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,21 +30,40 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.ProcedureStepTemplateModel>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command)
         {
             List<EntityFramework.Entities.ProcedureStepTemplate> procedures;
+            List<Domain.Models.ProcedureStepTemplateModel> result;
 
-            if (command.Id.HasValue)
-            {
-                procedures = await _unitOfWork.ProcedureStepTemplates.Query().Where(x => x.Id == command.Id).ToListAsync();
-                if (procedures.Count == 0)
-                {
+            if (command.Id.HasValue) {
+                procedures = await _unitOfWork.ProcedureStepTemplates
+                    .Query()
+                    .Where(x => x.Id == command.Id.Value)
+                    .Include(x => x.ReferenceFiles)
+                    .ThenInclude(x => x.FileObject)
+                    .ToListAsync();
+                if (procedures.Count == 0) {
                     throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
                 }
-            }
-            else
-            {
-                procedures = await _unitOfWork.ProcedureStepTemplates.Query().ToListAsync();
+            } else {
+                procedures = await _unitOfWork.ProcedureStepTemplates
+                    .Query()
+                    .Include(x => x.ReferenceFiles)
+                    .ThenInclude(y => y.FileObject)
+                    .ToListAsync();
             }
 
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepTemplateModel>(x)).OrderBy(x => x.Id).ToList();
+            // map and attach the right files for this object, if any
+            result = procedures.Select(x => {
+                var model = _mapper.Map<Domain.Models.ProcedureStepTemplateModel>(x);
+                model.ReferenceDocuments = new List<FileModel>();
+                foreach (FileEntityMap map in x.ReferenceFiles) {
+                    if (map.EntityTableName != nameof(EntityFramework.Entities.ProcedureStepTemplate)) {
+                        continue;
+                    }
+                    model.ReferenceDocuments.Add(
+                        _mapper.Map<FileModel>(map.FileObject)
+                    );
+                }
+                return model;
+            }).OrderBy(x => x.Id).ToList();
 
             return result;
         }
@@ -96,6 +118,23 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return ret;
 
+        }
+
+        public async Task<bool> DeleteProcedureStepTemplateAsync(DeleteProcedureStepTemplate command)
+        {
+            var current = await _unitOfWork.ProcedureStepTemplates.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepTemplate)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.ProcedureStepTemplates.Delete(false, current);
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplateModel)} uid {CurrentUser.GetId()}");
+            }
+            return true;
         }
     }
 }
