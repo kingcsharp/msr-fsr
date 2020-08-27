@@ -251,7 +251,6 @@ export class UserComponent implements OnInit {
       return ret;
     } else {
       this.setCustomer(user);
-      this.currUser.customer
       return copyObj(user);
     }
   }
@@ -259,7 +258,7 @@ export class UserComponent implements OnInit {
   setCustomer(user: any) {
     if (user.customerId !== undefined) {
       const customerIndex = this.customers.findIndex(z => z.id === user.customerId);
-      if (customerIndex !== -1){
+      if (customerIndex !== -1) {
         user.customer = this.customers[customerIndex];
       }
     }

@@ -6,11 +6,11 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router, Route } from '@angular/router';
 import { Globals } from '../../../models/lib/globals';
 import { SelectItem } from 'primeng/api';
-import {LoadedRouterConfig} from '@angular/router/bundles/router.umd.js';
-import {LocationsModule} from '../../locations/locations.module';
-import {MainModule} from '../../main/main.module';
-import {PartsModule} from '../../parts/parts.module';
-import { WorkflowModule} from '../../workflow/workflow.module';
+import { LoadedRouterConfig } from '@angular/router/bundles/router.umd.js';
+import { LocationsModule } from '../../locations/locations.module';
+import { MainModule } from '../../main/main.module';
+import { PartsModule } from '../../parts/parts.module';
+import { WorkflowModule } from '../../workflow/workflow.module';
 
 @Component({
   selector: 'app-help-create',
@@ -51,9 +51,9 @@ export class HelpCreateComponent implements OnInit {
       let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
 
       this.generateAllUrlPathsRegistered();
-      this.friendlyUrlOptions.forEach( friendlyUrlOption => {
+      this.friendlyUrlOptions.forEach(friendlyUrlOption => {
 
-        if ( friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
+        if (friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
 
           this.urls.push({ label: friendlyUrlOption, value: friendlyUrlOption });
 
@@ -61,11 +61,11 @@ export class HelpCreateComponent implements OnInit {
 
       });
 
-      if(this.helpPageToEditId !== 0){
+      if (this.helpPageToEditId !== 0) {
         this.urls.push({ label: this.helpPageToEdit.friendlyURL, value: this.helpPageToEdit.friendlyURL });
       }
 
-  }));
+    }));
 
   }
 
