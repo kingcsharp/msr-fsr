@@ -118,12 +118,20 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             List<EntityFramework.Entities.ProcedureStep> steps;
             if (command.stepId.HasValue) {
-                steps = await _unitOfWork.ProcedureSteps.Query().Where(x => x.Id == command.stepId.Value).ToListAsync();
+                steps = await _unitOfWork.ProcedureSteps
+                    .Query()
+                    .Where(x => x.Id == command.stepId.Value)
+                    .Include(x => x.StepType)
+                    .ToListAsync();
                 if (steps.Count == 0) {
                     throw new DomainException($"step ID {command.stepId.Value} not found", DomainError.NotFound);
                 }
             } else {
-                steps = await _unitOfWork.ProcedureSteps.Query().Where(x => x.ProcedureId == command.procedureId).ToListAsync();
+                steps = await _unitOfWork.ProcedureSteps
+                    .Query()
+                    .Where(x => x.ProcedureId == command.procedureId)
+                    .Include(x => x.StepType)
+                    .ToListAsync();
             }
             var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
             return result;

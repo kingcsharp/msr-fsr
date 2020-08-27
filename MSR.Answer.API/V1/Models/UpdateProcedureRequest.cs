@@ -36,37 +36,49 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
+        /// <example>NAME1598366449</example>
         [Required]
         [DataMember(Name="name")]
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or Sets IsRelatedToAProduct
+        /// </summary>
+        [DataMember(Name="isRelatedToAProduct")]
+        public bool IsRelatedToAProduct { get; set; }
+
+        /// <summary>
         /// Gets or Sets ProcedureTypeId
         /// </summary>
+        /// <example>1</example>
         [DataMember(Name="procedureTypeId")]
         public int? ProcedureTypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets Comments
         /// </summary>
+        /// <example>A comment 1598366449</example>
         [DataMember(Name="comments")]
         public string Comments { get; set; }
 
         /// <summary>
         /// Gets or Sets RoleIds
         /// </summary>
+        /// <example>[1,2,3]</example>
         [DataMember(Name="roleIds")]
         public List<int?> RoleIds { get; set; }
 
         /// <summary>
         /// Gets or Sets Duration
         /// </summary>
+        /// <example>5.2</example>
         [DataMember(Name="duration")]
         public double? Duration { get; set; }
 
         /// <summary>
         /// Gets or Sets DurationType
         /// </summary>
+        /// <example>hours</example>
         [Required]
         [DataMember(Name="durationType")]
         public string DurationType { get; set; }

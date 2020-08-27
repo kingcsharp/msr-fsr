@@ -15,6 +15,7 @@ using ProcedureType = MSR.Infrastructure.Resources.EntityFramework.Entities.Proc
 using Role = MSR.Infrastructure.Resources.EntityFramework.Entities.Role;
 using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
+using System.Collections.Generic;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -163,7 +164,9 @@ namespace MSR.Infrastructure.Profiles
             #region Procedure
             CreateMap<Procedure, Domain.Models.Procedure>();
             CreateMap<ProcedureStep, Domain.Models.ProcedureStepModel>()
-                .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization));
+                .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization))
+                .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
+                .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.StepType.Id));
             CreateMap<ProcedureStepType, Domain.Models.ProcedureStepTypeModel>().ReverseMap();
 
             // This mapping is correct according to the requirements
@@ -173,7 +176,8 @@ namespace MSR.Infrastructure.Profiles
             // Likewise, in answer 2 there is no distinction.
             // TODO: This might need to be revisited.
             CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplateModel>()
-                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
+                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => splitRoles(src)));
 
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, Domain.Models.WorkOrderModel>();
@@ -195,10 +199,15 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateProcedureStep, ProcedureStep>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
-            CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>();
+            CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles.Select(y => y.Id).ToList())))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedureType, ProcedureType>();
@@ -264,6 +273,21 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ContentType, opts => opts.MapFrom(src => src.FileObject.ContentType))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileObject.Name))
                 .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL));
+        }
+
+        private static List<int> splitRoles(ProcedureStepTemplate arg)
+        {
+            List<int> ret;
+
+            try {
+                ret = arg.Roles.Split(',')
+                    .Select(x => Convert.ToInt32(x))
+                    .ToList();
+            } catch(FormatException) {
+                // ignore bad data
+                ret = new List<int>();
+            }
+            return ret;
         }
 
         private int? GetLocationId(Invoice src)

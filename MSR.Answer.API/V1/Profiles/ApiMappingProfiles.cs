@@ -53,11 +53,13 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.MonitorTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)))
                 .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue))
                 .ForMember(dest => dest.InputTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)));
-            CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>();
-            CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>();
-            CreateMap<CreateProcedureTemplateRequest, CreateProcedureStepTemplate>()
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles.Select(y => y.Id).ToList())))
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>()
+                .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
+                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
+            CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>()
+                .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
+                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
+            CreateMap<CreateProcedureTemplateRequest, CreateProcedureStepTemplate>();
             CreateMap<UpdateProcedureTemplateRequest, UpdateProcedureStepTemplate>();
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();

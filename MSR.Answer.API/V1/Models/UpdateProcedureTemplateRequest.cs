@@ -110,7 +110,7 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets Roles
         /// </summary>
         [DataMember(Name="roles")]
-        public List<RoleRequest> Roles { get; set; }
+        public List<int> Roles { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

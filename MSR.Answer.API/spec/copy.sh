@@ -10,10 +10,14 @@ curl https://localhost:44398/swagger/Answer3/swagger.json > ~/xfer/swagger.json
 
 cp ~/xfer/swagger.json swagger-work.json
 dos2unix swagger-work.json
+
+cp swagger-work.json swagger-work.json.orig
 patch -p0 < swagger-removebearer.patch || exit
-# diff -u swagger-work.json.orig swagger-work.json > swagger-removebearer.patch
+diff -u swagger-work.json.orig swagger-work.json > swagger-removebearer.patch
+
+cp swagger-work.json swagger-work.json.orig
 patch -p0 < swagger-addexamples.patch || exit
-# diff -u swagger-work.json.orig swagger-work.json > swagger-addexamples.patch
+diff -u swagger-work.json.orig swagger-work.json > swagger-addexamples.patch
 
 # report difference
 diff -q swagger-work.json swagger.json

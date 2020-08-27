@@ -16,5 +16,6 @@ namespace MSR.Domain.Commands
         public float? Utilization { get; set; }
         public double? EquipmentTime { get; set; }
         public string Roles { get; set; }
+        public string procedureStepType { get; set; }
     }
 }

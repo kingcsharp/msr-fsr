@@ -2210,7 +2210,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "example": 3
+              "example": 305
             },
             "x-position": 1
           },
@@ -2221,7 +2221,7 @@
               "type": "integer",
               "format": "int32",
               "nullable": true,
-              "example": 2147483647
+              "example": 3
             },
             "x-position": 2
           },
@@ -2237,7 +2237,7 @@
           }
         ],
         "responses": {
-          "404": {
+          "200": {
             "description": "",
             "content": {
               "application/json": {
@@ -6684,8 +6684,7 @@
             "format": "int32"
           },
           "isRelatedToAProduct": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "creatorCompany": {
             "type": "string",
@@ -6785,6 +6784,10 @@
             "minLength": 1,
             "example": "NAME1598366448"
           },
+          "isRelatedToAProduct": {
+            "type": "boolean",
+            "description": "Gets or Sets IsRelatedToAProduct"
+          },
           "procedureTypeId": {
             "type": "integer",
             "description": "Gets or Sets ProcedureTypeId",
@@ -6874,7 +6877,8 @@
           },
           "procedureId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "title": {
             "type": "string",
@@ -6886,15 +6890,25 @@
           },
           "duration": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "durationType": {
             "type": "string",
             "nullable": true
           },
+          "procedureStepType": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedureStepTypeId": {
+            "type": "string",
+            "nullable": true
+          },
           "printOrder": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "predecessorStepId": {
             "type": "integer",
@@ -6906,19 +6920,19 @@
             "format": "int32",
             "nullable": true
           },
+          "equipmentTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "replacementCost": {
             "type": "number",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "utilizationTime": {
             "type": "number",
             "format": "float",
-            "nullable": true
-          },
-          "equipmentTime": {
-            "type": "integer",
-            "format": "int32",
             "nullable": true
           },
           "usefulLife": {
@@ -6972,6 +6986,11 @@
           "durationType": {
             "type": "string",
             "description": "Gets or Sets DurationType",
+            "nullable": true
+          },
+          "procedureStepType": {
+            "type": "string",
+            "description": "Procedure Step Type",
             "nullable": true
           },
           "printOrder": {
@@ -7036,6 +7055,7 @@
         "example": {
             "title": "TITLE1594442130",
             "text": "TEXT1594442130",
+            "procedureStepType": "TYPE1594442130",
             "roles": [
                 { "id": 1 }
             ]
@@ -7198,23 +7218,35 @@
           "name": {
             "type": "string",
             "description": "Gets or Sets Name",
-            "minLength": 1
+            "minLength": 1,
+            "example": "NAME1598366449"
+          },
+          "isRelatedToAProduct": {
+            "type": "boolean",
+            "description": "Gets or Sets IsRelatedToAProduct"
           },
           "procedureTypeId": {
             "type": "integer",
             "description": "Gets or Sets ProcedureTypeId",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "example": 1
           },
           "comments": {
             "type": "string",
             "description": "Gets or Sets Comments",
-            "nullable": true
+            "nullable": true,
+            "example": "A comment 1598366449"
           },
           "roleIds": {
             "type": "array",
             "description": "Gets or Sets RoleIds",
             "nullable": true,
+            "example": [
+              1,
+              2,
+              3
+            ],
             "items": {
               "type": "integer",
               "format": "int32",
@@ -7225,12 +7257,14 @@
             "type": "number",
             "description": "Gets or Sets Duration",
             "format": "double",
-            "nullable": true
+            "nullable": true,
+            "example": 5.2
           },
           "durationType": {
             "type": "string",
             "description": "Gets or Sets DurationType",
-            "minLength": 1
+            "minLength": 1,
+            "example": "hours"
           },
           "referenceFiles": {
             "type": "array",
@@ -7285,6 +7319,11 @@
           "durationType": {
             "type": "string",
             "description": "Gets or Sets DurationType",
+            "nullable": true
+          },
+          "procedureStepType": {
+            "type": "string",
+            "description": "Procedure Step Type",
             "nullable": true
           },
           "printOrder": {
@@ -7349,6 +7388,7 @@
         "example": {
             "procedureStepId": 3,
             "procedureId": 305,
+            "procedureStepType": "TYPE1594442130",
             "title": "NEWTITLE1594442279"
         }
       },
@@ -7573,25 +7613,67 @@
             "type": "string",
             "nullable": true
           },
-          "revision": {
+          "systemTaskId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "status": {
-            "type": "string",
+          "laborTime": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
-          "isRelatedToAProduct": {
-            "type": "boolean",
-            "nullable": true
+          "referenceProcedures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
-          "referenceFiles": {
+          "referenceDocuments": {
             "type": "array",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/FileModel"
             }
+          },
+          "equipmentTime": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "usefulLife": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -7619,52 +7701,85 @@
       },
       "CreateProcedureStepTemplateRequest": {
         "type": "object",
+        "description": " ",
         "additionalProperties": true,
         "properties": {
           "title": {
             "type": "string",
+            "description": "Title",
             "nullable": true
           },
           "stepText": {
             "type": "string",
+            "description": "StepText",
             "nullable": true
           },
-          "systemTaskId": {
+          "procedureStepTypeId": {
             "type": "integer",
+            "description": "ProcedureStepTypeId (SystemTaskId in the DB)",
             "format": "int32",
             "nullable": true
           },
           "laborTime": {
             "type": "number",
+            "description": "LaborTime",
             "format": "double",
             "nullable": true
           },
+          "referenceProcedures": {
+            "type": "array",
+            "description": "ReferenceProcedures",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "referenceDocuments": {
+            "type": "array",
+            "description": "ReferenceDocuments",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           "equipmentTime": {
             "type": "number",
+            "description": "EquipmentTime",
             "format": "double",
             "nullable": true
           },
           "replacementCost": {
             "type": "number",
+            "description": "ReplacementCost",
             "format": "double",
             "nullable": true
           },
           "utilization": {
             "type": "number",
+            "description": "Utilization Time",
             "format": "double",
             "nullable": true
           },
           "usefulLife": {
             "type": "integer",
+            "description": "UsefulLife",
             "format": "int32",
             "nullable": true
           },
           "roles": {
-            "type": "string",
-            "nullable": true
+            "type": "array",
+            "description": "Role list",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           "comments": {
             "type": "string",
+            "description": "Comments",
             "nullable": true
           }
         },
@@ -7672,61 +7787,95 @@
             "title": "TESTTITLE1598384740",
             "stepText": "TESTSTEPTEXT1598384740",
             "comments": "here are some comments Tue, Aug 25, 2020 12:46:12 PM",
-            "roles": "1"
+            "roles": [ 1 ]
         }
       },
       "UpdateProcedureStepTemplateRequest": {
         "type": "object",
+        "description": " ",
         "additionalProperties": true,
         "properties": {
           "id": {
             "type": "integer",
+            "description": "ProcedureStepTemplate Id",
             "format": "int32"
           },
           "title": {
             "type": "string",
+            "description": "Title",
             "nullable": true
           },
           "stepText": {
             "type": "string",
+            "description": "StepText",
             "nullable": true
           },
-          "systemTaskId": {
+          "procedureStepTypeId": {
             "type": "integer",
+            "description": "ProcedureStepTypeId (SystemTaskId in the DB)",
             "format": "int32",
             "nullable": true
           },
           "laborTime": {
             "type": "number",
+            "description": "LaborTime",
             "format": "double",
             "nullable": true
           },
+          "referenceProcedures": {
+            "type": "array",
+            "description": "ReferenceProcedures",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "referenceDocuments": {
+            "type": "array",
+            "description": "ReferenceDocuments",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           "equipmentTime": {
             "type": "number",
+            "description": "EquipmentTime",
             "format": "double",
             "nullable": true
           },
           "replacementCost": {
             "type": "number",
+            "description": "ReplacementCost",
             "format": "double",
             "nullable": true
           },
           "utilization": {
             "type": "number",
+            "description": "Utilization Time",
             "format": "double",
             "nullable": true
           },
           "usefulLife": {
             "type": "integer",
+            "description": "UsefulLife",
             "format": "int32",
             "nullable": true
           },
           "roles": {
-            "type": "string",
-            "nullable": true
+            "type": "array",
+            "description": "Role list",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           "comments": {
             "type": "string",
+            "description": "Comments",
             "nullable": true
           }
         },
@@ -7865,7 +8014,8 @@
             "description": "Gets or Sets Roles",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/RoleRequest"
+              "type": "integer",
+              "format": "int32"
             }
           }
         },
@@ -7873,7 +8023,7 @@
             "title": "PROCTEMP1598415724",
             "comments": "Here is a comment from Tue, Aug 25, 2020  9:24:25 PM",
             "text": "TEXT1598415724",
-            "roles": [ { "id": 1 } ]
+            "roles": [ 1 ]
         }
       },
       "UpdateProcedureTemplateRequest": {
@@ -7976,13 +8126,15 @@
             "description": "Gets or Sets Roles",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/RoleRequest"
+              "type": "integer",
+              "format": "int32"
             }
           }
         },
         "example": {
             "id": 6,
-            "title": "UPDTITLE1598415399"
+            "title": "UPDTITLE1598415399",
+            "roles": [ 1 ]
         }
       },
       "AuditActionResultOfProcedureType": {
