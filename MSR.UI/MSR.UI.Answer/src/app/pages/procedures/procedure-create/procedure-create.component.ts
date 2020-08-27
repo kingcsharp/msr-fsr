@@ -32,7 +32,7 @@ export class ProcedureCreateComponent implements OnInit {
     this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
 
-    this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {
+    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
 
       this.availableRoles = response.object.map(s => ({ label: s.name, value: s.id }));
 

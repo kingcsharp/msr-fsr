@@ -76,7 +76,7 @@
                             {{model.status}}
                         </td>
                         <td>
-                            <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Procedure Type"
+                            <i *ngIf="canEdit" class="far fa-edit pointer" tooltip="Edit Procedure Type"
                                 data-cy="edit-button" [routerLink]="['../proceduretype-edit']"
                                 [queryParams]="{id: model.id}"></i>
                             <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Procedure Type"

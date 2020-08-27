@@ -43,7 +43,7 @@ export class TemplateComponent implements OnInit {
     this.procedureTemplate.referenceFiles = new Array<any>();
 
     this.globals.showLoader(true);
-    this.roleService.role(env.apiVersion).subscribe(responseHandler((response) => {
+    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
 
       this.availableRoles = response.object.map(s => ({label: s.name, value: s.id}));
 
