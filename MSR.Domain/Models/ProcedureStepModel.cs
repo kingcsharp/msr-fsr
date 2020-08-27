@@ -48,6 +48,11 @@ namespace MSR.Domain.Models
         public string ProcedureStepType { get; set; }
 
         /// <summary>
+        /// Procedure Step Type
+        /// </summary>
+        public string ProcedureStepTypeId { get; set; }
+
+        /// <summary>
         /// Gets or Sets PrintOrder
         /// </summary>
         public int? PrintOrder { get; set; }

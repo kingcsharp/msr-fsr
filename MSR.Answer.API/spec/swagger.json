@@ -2210,7 +2210,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "example": 3
+              "example": 305
             },
             "x-position": 1
           },
@@ -2221,7 +2221,7 @@
               "type": "integer",
               "format": "int32",
               "nullable": true,
-              "example": 2147483647
+              "example": 3
             },
             "x-position": 2
           },
@@ -2237,7 +2237,7 @@
           }
         ],
         "responses": {
-          "404": {
+          "200": {
             "description": "",
             "content": {
               "application/json": {
@@ -6895,6 +6895,10 @@
             "nullable": true
           },
           "procedureStepType": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedureStepTypeId": {
             "type": "string",
             "nullable": true
           },
