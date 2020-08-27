@@ -508,5 +508,8 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
+
+        public static CreateRole ToCreateRoleCommand(this CreateRoleRequest request) => AutoMapperHelper.Mapper.Map<CreateRole>(request);
+        public static UpdateRole ToUpdateRoleCommand(this UpdateRoleRequest request) => AutoMapperHelper.Mapper.Map<UpdateRole>(request);
     }
 }

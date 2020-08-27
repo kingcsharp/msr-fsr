@@ -35,176 +35,30 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<Role>>();
         }
 
-        [HttpGet("Roles"), SwaggerResponse(typeof(AuditActionResult<ICollection<RoleView>>))]
-        [HasPrivilegeApi("Roles", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> Get()
-        {
-            return new OkObjectResult(new AuditActionResult<ICollection<RoleView>>()
-            {
-                Object = new List<RoleView>()
-                {
-                    new RoleView()
-                    {
-                        Created = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                        LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                        HasAssignedUsers = false,
-                        Id = 1,
-                        IsCertificationRole = true,
-                        Name = "SuperPotatoe",
-                        ParentRoles = new List<RoleView>()
-                        {
-                            new RoleView()
-                            {
-                                Created = new UserModel(){FirstName = "Pedro2",LastName = "John2"},
-                                LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                                HasAssignedUsers = false,
-                                Id = 2,
-                                IsCertificationRole = true,
-                                Name = "SuperPotatoe2",
-                                ParentRoles = new List<RoleView>()
-                            },new RoleView()
-                            {
-                                Created = new UserModel(){FirstName = "Pedro4",LastName = "John4"},
-                                LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                                HasAssignedUsers = false,
-                                Id = 3,
-                                IsCertificationRole = true,
-                                Name = "SuperPotatoe4",
-                                ParentRoles = new List<RoleView>()
-                            },
-                            new RoleView()
-                            {
-                                Created = new UserModel(){FirstName = "Pedro",LastName = "John"},
-                                HasAssignedUsers = false,
-                                Id = 5,
-                                IsCertificationRole = true,
-                                Name = "SuperAdmin",
-                                ParentRoles = new List<RoleView>()
-                                {
-                                    new RoleView()
-                                    {
-                                        Created = new UserModel(){FirstName = "ABC",LastName = "OHG"},
-                                        HasAssignedUsers = false,
-                                        Id = 6,
-                                        IsCertificationRole = true,
-                                        Name = "Morungan",
-                                        ParentRoles = new List<RoleView>()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    new RoleView()
-                    {
-                        Created = new UserModel(){FirstName = "Pedro",LastName = "John"},
-                        HasAssignedUsers = false,
-                        Id = 5,
-                        IsCertificationRole = true,
-                        Name = "SuperAdmin",
-                        ParentRoles = new List<RoleView>()
-                        {
-                            new RoleView()
-                            {
-                                Created = new UserModel(){FirstName = "ABC",LastName = "OHG"},
-                                HasAssignedUsers = false,
-                                Id = 6,
-                                IsCertificationRole = true,
-                                Name = "Morungan",
-                                ParentRoles = new List<RoleView>()
-                            }
-                        }
-                    },
-                    new RoleView()
-                    {
-                        Created = new UserModel(){FirstName = "Pedro2",LastName = "John2"},
-                        LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                        HasAssignedUsers = false,
-                        Id = 2,
-                        IsCertificationRole = true,
-                        Name = "SuperPotatoe2",
-                        ParentRoles = new List<RoleView>()
-                    },new RoleView()
-                    {
-                        Created = new UserModel(){FirstName = "Pedro4",LastName = "John4"},
-                        LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                        HasAssignedUsers = false,
-                        Id = 3,
-                        IsCertificationRole = true,
-                        Name = "SuperPotatoe4",
-                        ParentRoles = new List<RoleView>()
-                    },
-                }
-            });
-        }
-
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult<RoleView>))]
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<Role>))]
         [HasPrivilegeApi("Roles", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> Post(CreateRoleRequest request)
         {
-            return new OkObjectResult(new AuditActionResult<RoleView>()
-            {
-                SuccessMessage = "Role Successfully Created",
-                Object = new RoleView()
-                {
-                    Created = new UserModel() { FirstName = "aaPedro", LastName = "Jaaaohn" },
-                    HasAssignedUsers = false,
-                    Id = 8,
-                    IsCertificationRole = true,
-                    Name = "SuperPotatoe",
-                    ParentRoles = null
-                }
-            });
+            var command = request.ToCreateRoleCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Role>("Role successfully created");
         }
 
-        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<RoleView>))]
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<Role>))]
         [HasPrivilegeApi("Roles", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> Patch(UpdateRoleRequest request)
         {
-            return new OkObjectResult(new AuditActionResult<RoleView>()
-            {
-                SuccessMessage = "Role Successfully Updated",
-                Object = new RoleView()
-                {
-                    Created = new UserModel() { FirstName = "Pedrooo", LastName = "Johnooo", CreatedOn = DateTime.UtcNow },
-                    LastUpdated = new UserModel() { FirstName = "Pedro", LastName = "John", CreatedOn = DateTime.UtcNow },
-                    HasAssignedUsers = false,
-                    Id = 1,
-                    IsCertificationRole = true,
-                    Name = "SuperPotatoe",
-                    ParentRoles = new List<RoleView>()
-                    {
-                        new RoleView()
-                        {
-                            Created = new UserModel(){FirstName = "Pedro2",LastName = "John2"},
-                            LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                            HasAssignedUsers = false,
-                            Id = 2,
-                            IsCertificationRole = true,
-                            Name = "SuperPotatoe2",
-                            ParentRoles = null
-                        },new RoleView()
-                        {
-                            Created = new UserModel(){FirstName = "Pedro4",LastName = "John4"},
-                            LastUpdated = new UserModel(){FirstName = "Pedro",LastName = "John",CreatedOn = DateTime.UtcNow},
-                            HasAssignedUsers = false,
-                            Id = 3,
-                            IsCertificationRole = true,
-                            Name = "SuperPotatoe4",
-                            ParentRoles = null
-                        }
-                    }
-                }
-            });
+            var command = request.ToUpdateRoleCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Role>("Role successfully updated");
         }
 
-        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult<Role>))]
+        [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult))]
         [HasPrivilegeApi("Roles", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> Delete(int id)
         {
-            return new OkObjectResult(new AuditActionResult()
-            {
-                SuccessMessage = "Role Successfully Removed"
-            });
+            var ret = await _dispatcher.DispatchAsync(new DeleteRole() { Id = id });
+            return ret.ToOkObjectResponse("Role successfully Deleted");
         }
     }
 }
