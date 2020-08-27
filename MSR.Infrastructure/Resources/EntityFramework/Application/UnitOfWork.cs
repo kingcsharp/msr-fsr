@@ -27,6 +27,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ProcedureStep> _procedureSteps;
         private IRepository<ProcedureStepMonitor> _monitors;
         private IRepository<ProcedureStepTemplate> _procedureStepTemplates;
+        private IRepository<ProcedureStepType> _procedureStepTypes;
         private IRepository<ProcedureType> _procedureTypes;
         private IRepository<Status> _status;
         private IRepository<UserRole> _userRoles;
@@ -113,6 +114,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
         public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
+        public IRepository<ProcedureStepType> ProcedureStepTypes { get { return _procedureStepTypes ??= new EFRepository<ProcedureStepType>(Context); } }
         public IRepository<ProcedureType> ProcedureTypes { get { return _procedureTypes ??= new EFRepository<ProcedureType>(Context); } }
         public IRepository<MonitorInputType> MonitorInputTypes { get { return _monitorInputTypes ??= new EFRepository<MonitorInputType>(Context); } }
         public IRepository<MonitorListItem> MonitorListItems { get { return _monitorListItems ??= new EFRepository<MonitorListItem>(Context); } }

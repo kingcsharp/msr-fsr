@@ -23,6 +23,6 @@ namespace MSR.Answer.API.V1.Models
         public int AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
-        public File File { get; set; }
+        public FileModel File { get; set; }
     }
 }

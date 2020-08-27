@@ -25,7 +25,7 @@ export class Globals {
     modalData: ModalData = {
         showModal: false,
         comment: new Subject<string>()
-    }
+    };
 
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
@@ -38,15 +38,14 @@ export class Globals {
             this.modalData.showModal = true;
             this.modalData.comment = new Subject<string>();
             return this.modalData.comment.asObservable().toPromise().then((comment) => {
-                if (comment === null || comment === "" || comment === undefined) {
+                if (comment === null || comment === '' || comment === undefined) {
                     this.toastr.error('Can not save without adding a comment.');
                     throw new Error();
                 }
                 approvalEntity.comment = comment;
                 return;
             });
-        }
-        else {
+        } else {
             return new Promise((resolve) => {
                 return resolve();
             });
