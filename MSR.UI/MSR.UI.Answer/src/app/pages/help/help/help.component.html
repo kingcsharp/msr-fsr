@@ -88,7 +88,7 @@
               <span *ngFor="let role of helpPage.roles" class="badge mr-xs badge-secondary">{{role.name}}</span>
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-              <i *ngIf="canEditHelpPage" class="fa fa-cog pointer" tooltip="Edit Help Page" data-cy="edit-button"
+              <i *ngIf="canEditHelpPage" class="far fa-edit pointer" tooltip="Edit Help Page" data-cy="edit-button"
                 [routerLink]="['../help-create']" [queryParams]="{id: helpPage.id}"></i>
               <i *ngIf="canDeleteHelpPage" class="fa fa-trash pointer" tooltip="Delete Help Page" data-cy="delete-button"
                 (click)="openConfirmDeleteDialog(helpPage)"></i>
