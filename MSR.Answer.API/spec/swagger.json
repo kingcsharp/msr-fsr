@@ -171,6 +171,42 @@
         }
       }
     },
+    "/v{version}/Account/resetmypassword": {
+      "patch": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_ResetMyPassword",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetMyPasswordRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/v{version}/Customer": {
       "get": {
         "tags": [
@@ -3141,6 +3177,129 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_Post",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfRole"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_Patch",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfRole"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Role/{id}": {
+      "delete": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v{version}/Sensor": {
@@ -3325,7 +3484,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfUser"
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfUserModel"
                 }
               }
             }
@@ -3368,7 +3527,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfUser"
+                  "$ref": "#/components/schemas/AuditActionResultOfUserModel"
                 }
               }
             }
@@ -3411,7 +3570,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfUser"
+                  "$ref": "#/components/schemas/AuditActionResultOfUserModel"
                 }
               }
             }
@@ -3444,7 +3603,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfUser"
+                  "$ref": "#/components/schemas/AuditActionResultOfUserModel"
                 }
               }
             }
@@ -4699,6 +4858,24 @@
             "type": "string",
             "minLength": 1
           }
+        }
+      },
+      "ResetMyPasswordRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "newPassword",
+          "oldPassword"
+        ],
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "minLength": 1
+          },
+          "oldPassword": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "example": {
             "token": "kvcNhL+3YY5K4WfYNxC31POQcgSvdpsnSgrsfqeAncE=",
@@ -4755,7 +4932,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/UserModel"
                   }
                 ]
               },
@@ -4763,7 +4940,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/UserModel"
                   }
                 ]
               },
@@ -4790,7 +4967,7 @@
           }
         ]
       },
-      "User": {
+      "UserModel": {
         "type": "object",
         "additionalProperties": true,
         "properties": {
@@ -4881,6 +5058,14 @@
             "type": "string",
             "format": "date-time"
           },
+          "timeZone": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TimeZoneModel"
+              }
+            ]
+          },
           "lastUpdatedBy": {
             "type": "integer",
             "format": "int32",
@@ -4901,6 +5086,32 @@
             "items": {
               "$ref": "#/components/schemas/Role"
             }
+          },
+          "fileModel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileModel"
+              }
+            ]
+          }
+        }
+      },
+      "TimeZoneModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "offset": {
+            "type": "number",
+            "format": "float"
           }
         }
       },
@@ -4942,6 +5153,16 @@
                 "$ref": "#/components/schemas/Permission"
               }
             ]
+          },
+          "parentRoles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
+          },
+          "hasAssignedUsers": {
+            "type": "boolean"
           }
         }
       },
@@ -5133,6 +5354,43 @@
           32
         ]
       },
+      "FileModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "fileId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "entityId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "base64String": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileContents": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "contentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileURL": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "LocationModel": {
         "allOf": [
           {
@@ -5220,24 +5478,6 @@
           }
         ]
       },
-      "TimeZoneModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "offset": {
-            "type": "number",
-            "format": "float"
-          }
-        }
-      },
       "DeletableModel": {
         "allOf": [
           {
@@ -5278,7 +5518,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/UserModel"
                   }
                 ]
               }
@@ -5308,7 +5548,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/UserModel"
                   }
                 ]
               }
@@ -5463,43 +5703,6 @@
             }
           }
         ]
-      },
-      "FileModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "fileId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "entityId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "base64String": {
-            "type": "string",
-            "nullable": true
-          },
-          "fileContents": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "fileURL": {
-            "type": "string",
-            "nullable": true
-          }
-        }
       },
       "AuditActionResultOfFileModel": {
         "allOf": [
@@ -6390,7 +6593,7 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/User"
+              "$ref": "#/components/schemas/UserModel"
             }
           }
         }
@@ -8252,6 +8455,70 @@
           }
         ]
       },
+      "AuditActionResultOfRole": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CreateRoleRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isCertificationRole": {
+            "type": "boolean"
+          },
+          "parentRoleIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "example": {
+            "username": "95f27a6f8b3ffa55",
+            "isActive": false
+        }
+      },
+      "UpdateRoleRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateRoleRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
       "AuditActionResultOfICollectionOfTimeZoneModel": {
         "allOf": [
           {
@@ -8273,7 +8540,7 @@
           }
         ]
       },
-      "AuditActionResultOfICollectionOfUser": {
+      "AuditActionResultOfICollectionOfUserModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -8287,14 +8554,14 @@
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserModel"
                 }
               }
             }
           }
         ]
       },
-      "AuditActionResultOfUser": {
+      "AuditActionResultOfUserModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -8308,7 +8575,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/UserModel"
                   }
                 ]
               }
@@ -8442,6 +8709,14 @@
             "items": {
               "$ref": "#/components/schemas/Role"
             }
+          },
+          "file": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileModel"
+              }
+            ]
           }
         },
         "example": {
@@ -9012,7 +9287,7 @@
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/UserModel"
               }
             ]
           },

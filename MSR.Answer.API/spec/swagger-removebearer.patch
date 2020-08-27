@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-08-26 20:53:46.336010200 -0700
-+++ swagger-work.json	2020-08-26 20:53:46.461269000 -0700
+--- swagger-work.json.orig	2020-08-27 08:04:37.413292100 -0700
++++ swagger-work.json	2020-08-27 08:04:37.504440900 -0700
 @@ -53,12 +53,7 @@
                }
              }
@@ -55,8 +55,22 @@
 +        }
        }
      },
+     "/v{version}/Account/resetmypassword": {
+@@ -220,12 +200,7 @@
+           "200": {
+             "description": ""
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       }
+     },
      "/v{version}/Customer": {
-@@ -291,12 +271,7 @@
+@@ -332,12 +307,7 @@
                }
              }
            }
@@ -70,7 +84,7 @@
        },
        "post": {
          "tags": [
-@@ -337,12 +312,7 @@
+@@ -378,12 +348,7 @@
                }
              }
            }
@@ -84,7 +98,7 @@
        },
        "patch": {
          "tags": [
-@@ -383,12 +353,7 @@
+@@ -424,12 +389,7 @@
                }
              }
            }
@@ -98,7 +112,7 @@
        }
      },
      "/v{version}/Customer/{id}": {
-@@ -429,12 +394,7 @@
+@@ -470,12 +430,7 @@
                }
              }
            }
@@ -112,7 +126,7 @@
        }
      },
      "/v{version}/File": {
-@@ -493,12 +453,7 @@
+@@ -534,12 +489,7 @@
                }
              }
            }
@@ -126,7 +140,7 @@
        },
        "post": {
          "tags": [
-@@ -539,12 +494,7 @@
+@@ -580,12 +530,7 @@
                }
              }
            }
@@ -140,7 +154,7 @@
        },
        "delete": {
          "tags": [
-@@ -601,12 +551,7 @@
+@@ -642,12 +587,7 @@
                }
              }
            }
@@ -154,7 +168,7 @@
        }
      },
      "/v{version}/File/Import": {
-@@ -649,12 +594,7 @@
+@@ -690,12 +630,7 @@
                }
              }
            }
@@ -168,7 +182,7 @@
        }
      },
      "/v{version}/Help": {
-@@ -705,12 +645,7 @@
+@@ -746,12 +681,7 @@
                }
              }
            }
@@ -182,7 +196,7 @@
        },
        "post": {
          "tags": [
-@@ -752,12 +687,7 @@
+@@ -793,12 +723,7 @@
                }
              }
            }
@@ -196,7 +210,7 @@
        },
        "patch": {
          "tags": [
-@@ -799,12 +729,7 @@
+@@ -840,12 +765,7 @@
                }
              }
            }
@@ -210,7 +224,7 @@
        }
      },
      "/v{version}/Help/Role": {
-@@ -848,12 +773,7 @@
+@@ -889,12 +809,7 @@
                }
              }
            }
@@ -224,7 +238,7 @@
        },
        "delete": {
          "tags": [
-@@ -901,12 +821,7 @@
+@@ -942,12 +857,7 @@
                }
              }
            }
@@ -238,7 +252,7 @@
        }
      },
      "/v{version}/Help/{id}": {
-@@ -948,12 +863,7 @@
+@@ -989,12 +899,7 @@
                }
              }
            }
@@ -252,7 +266,7 @@
        }
      },
      "/v{version}/Invoice": {
-@@ -1089,12 +999,7 @@
+@@ -1130,12 +1035,7 @@
                }
              }
            }
@@ -266,7 +280,7 @@
        },
        "patch": {
          "tags": [
-@@ -1135,12 +1040,7 @@
+@@ -1176,12 +1076,7 @@
                }
              }
            }
@@ -280,7 +294,7 @@
        }
      },
      "/v{version}/Invoice/CreateOneInvoice": {
-@@ -1183,12 +1083,7 @@
+@@ -1224,12 +1119,7 @@
                }
              }
            }
@@ -294,7 +308,7 @@
        }
      },
      "/v{version}/Invoice/CreateIndividualInvoices": {
-@@ -1231,12 +1126,7 @@
+@@ -1272,12 +1162,7 @@
                }
              }
            }
@@ -308,7 +322,7 @@
        }
      },
      "/v{version}/Invoice/Download": {
-@@ -1373,12 +1263,7 @@
+@@ -1414,12 +1299,7 @@
                }
              }
            }
@@ -322,7 +336,7 @@
        }
      },
      "/v{version}/Location": {
-@@ -1429,12 +1314,7 @@
+@@ -1470,12 +1350,7 @@
                }
              }
            }
@@ -336,7 +350,7 @@
        },
        "post": {
          "tags": [
-@@ -1475,12 +1355,7 @@
+@@ -1516,12 +1391,7 @@
                }
              }
            }
@@ -350,7 +364,7 @@
        },
        "patch": {
          "tags": [
-@@ -1521,12 +1396,7 @@
+@@ -1562,12 +1432,7 @@
                }
              }
            }
@@ -364,7 +378,7 @@
        }
      },
      "/v{version}/Location/{id}/Sensor": {
-@@ -1567,12 +1437,7 @@
+@@ -1608,12 +1473,7 @@
                }
              }
            }
@@ -378,7 +392,7 @@
        }
      },
      "/v{version}/Location/{locationId}/Sensor/{sensorId}": {
-@@ -1623,12 +1488,7 @@
+@@ -1664,12 +1524,7 @@
                }
              }
            }
@@ -392,7 +406,7 @@
        },
        "delete": {
          "tags": [
-@@ -1677,12 +1537,7 @@
+@@ -1718,12 +1573,7 @@
                }
              }
            }
@@ -406,7 +420,7 @@
        }
      },
      "/v{version}/Location/{id}": {
-@@ -1723,12 +1578,7 @@
+@@ -1764,12 +1614,7 @@
                }
              }
            }
@@ -420,7 +434,7 @@
        }
      },
      "/v{version}/Menu": {
-@@ -1759,12 +1609,7 @@
+@@ -1800,12 +1645,7 @@
                }
              }
            }
@@ -434,7 +448,7 @@
        }
      },
      "/v{version}/Menu/Role": {
-@@ -1807,12 +1652,7 @@
+@@ -1848,12 +1688,7 @@
                }
              }
            }
@@ -448,7 +462,7 @@
        },
        "patch": {
          "tags": [
-@@ -1853,12 +1693,7 @@
+@@ -1894,12 +1729,7 @@
                }
              }
            }
@@ -462,7 +476,7 @@
        },
        "delete": {
          "tags": [
-@@ -1905,12 +1740,7 @@
+@@ -1946,12 +1776,7 @@
                }
              }
            }
@@ -476,7 +490,7 @@
        }
      },
      "/v{version}/Monitor": {
-@@ -1952,12 +1782,7 @@
+@@ -1993,12 +1818,7 @@
                }
              }
            }
@@ -490,7 +504,7 @@
        }
      },
      "/v{version}/Part": {
-@@ -1999,12 +1824,7 @@
+@@ -2040,12 +1860,7 @@
                }
              }
            }
@@ -504,7 +518,7 @@
        },
        "post": {
          "tags": [
-@@ -2046,12 +1866,7 @@
+@@ -2087,12 +1902,7 @@
                }
              }
            }
@@ -518,7 +532,7 @@
        },
        "patch": {
          "tags": [
-@@ -2093,12 +1908,7 @@
+@@ -2134,12 +1944,7 @@
                }
              }
            }
@@ -532,7 +546,7 @@
        }
      },
      "/v{version}/Part/{id}": {
-@@ -2140,12 +1950,7 @@
+@@ -2181,12 +1986,7 @@
                }
              }
            }
@@ -546,7 +560,7 @@
        }
      },
      "/v{version}/Part/import": {
-@@ -2189,12 +1994,7 @@
+@@ -2230,12 +2030,7 @@
                }
              }
            }
@@ -560,7 +574,7 @@
        }
      },
      "/v{version}/Procedure": {
-@@ -2238,12 +2038,7 @@
+@@ -2279,12 +2074,7 @@
                }
              }
            }
@@ -574,7 +588,7 @@
        },
        "get": {
          "tags": [
-@@ -2283,12 +2078,7 @@
+@@ -2324,12 +2114,7 @@
                }
              }
            }
@@ -588,7 +602,7 @@
        },
        "patch": {
          "tags": [
-@@ -2330,12 +2120,7 @@
+@@ -2371,12 +2156,7 @@
                }
              }
            }
@@ -602,7 +616,7 @@
        }
      },
      "/v{version}/Procedure/{id}/step": {
-@@ -2389,12 +2174,7 @@
+@@ -2430,12 +2210,7 @@
                }
              }
            }
@@ -616,7 +630,7 @@
        },
        "get": {
          "tags": [
-@@ -2444,12 +2224,7 @@
+@@ -2485,12 +2260,7 @@
                }
              }
            }
@@ -630,7 +644,7 @@
        },
        "patch": {
          "tags": [
-@@ -2501,12 +2276,7 @@
+@@ -2542,12 +2312,7 @@
                }
              }
            }
@@ -644,7 +658,7 @@
        }
      },
      "/v{version}/Procedure/{id}": {
-@@ -2548,12 +2318,7 @@
+@@ -2589,12 +2354,7 @@
                }
              }
            }
@@ -658,7 +672,7 @@
        }
      },
      "/v{version}/Procedure/{id}/step/{stepid}": {
-@@ -2605,12 +2370,7 @@
+@@ -2646,12 +2406,7 @@
                }
              }
            }
@@ -672,7 +686,7 @@
        }
      },
      "/v{version}/ProcedureStepMonitor": {
-@@ -2654,12 +2414,7 @@
+@@ -2695,12 +2450,7 @@
                }
              }
            }
@@ -686,7 +700,7 @@
        },
        "patch": {
          "tags": [
-@@ -2701,12 +2456,7 @@
+@@ -2742,12 +2492,7 @@
                }
              }
            }
@@ -700,7 +714,7 @@
        }
      },
      "/v{version}/ProcedureStepMonitor/{id}": {
-@@ -2748,12 +2498,7 @@
+@@ -2789,12 +2534,7 @@
                }
              }
            }
@@ -714,7 +728,7 @@
        }
      },
      "/v{version}/ProcedureStepMonitor/procedurestep/{stepId}": {
-@@ -2805,12 +2550,7 @@
+@@ -2846,12 +2586,7 @@
                }
              }
            }
@@ -728,7 +742,7 @@
        }
      },
      "/v{version}/ProcedureStepTemplate": {
-@@ -2852,12 +2592,7 @@
+@@ -2893,12 +2628,7 @@
                }
              }
            }
@@ -742,7 +756,7 @@
        },
        "post": {
          "tags": [
-@@ -2899,12 +2634,7 @@
+@@ -2940,12 +2670,7 @@
                }
              }
            }
@@ -756,7 +770,7 @@
        },
        "patch": {
          "tags": [
-@@ -2946,12 +2676,7 @@
+@@ -2987,12 +2712,7 @@
                }
              }
            }
@@ -770,7 +784,7 @@
        }
      },
      "/v{version}/ProcedureStepType": {
-@@ -2993,12 +2718,7 @@
+@@ -3034,12 +2754,7 @@
                }
              }
            }
@@ -784,7 +798,7 @@
        }
      },
      "/v{version}/ProcedureTemplate": {
-@@ -3042,12 +2762,7 @@
+@@ -3083,12 +2798,7 @@
                }
              }
            }
@@ -798,7 +812,7 @@
        },
        "get": {
          "tags": [
-@@ -3087,12 +2802,7 @@
+@@ -3128,12 +2838,7 @@
                }
              }
            }
@@ -812,7 +826,7 @@
        },
        "patch": {
          "tags": [
-@@ -3134,12 +2844,7 @@
+@@ -3175,12 +2880,7 @@
                }
              }
            }
@@ -826,7 +840,7 @@
        }
      },
      "/v{version}/ProcedureTemplate/{id}": {
-@@ -3181,12 +2886,7 @@
+@@ -3222,12 +2922,7 @@
                }
              }
            }
@@ -840,7 +854,7 @@
        }
      },
      "/v{version}/ProcedureType": {
-@@ -3230,12 +2930,7 @@
+@@ -3271,12 +2966,7 @@
                }
              }
            }
@@ -854,7 +868,7 @@
        },
        "get": {
          "tags": [
-@@ -3275,12 +2970,7 @@
+@@ -3316,12 +3006,7 @@
                }
              }
            }
@@ -868,7 +882,7 @@
        },
        "patch": {
          "tags": [
-@@ -3322,12 +3012,7 @@
+@@ -3363,12 +3048,7 @@
                }
              }
            }
@@ -882,7 +896,7 @@
        }
      },
      "/v{version}/ProcedureType/{id}": {
-@@ -3369,12 +3054,7 @@
+@@ -3410,12 +3090,7 @@
                }
              }
            }
@@ -896,7 +910,49 @@
        }
      },
      "/v{version}/Role": {
-@@ -3405,12 +3085,7 @@
+@@ -3446,12 +3121,7 @@
+               }
+             }
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       },
+       "post": {
+         "tags": [
+@@ -3492,12 +3162,7 @@
+               }
+             }
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       },
+       "patch": {
+         "tags": [
+@@ -3538,12 +3203,7 @@
+               }
+             }
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       }
+     },
+     "/v{version}/Role/{id}": {
+@@ -3584,12 +3244,7 @@
                }
              }
            }
@@ -910,7 +966,7 @@
        }
      },
      "/v{version}/Sensor": {
-@@ -3461,12 +3136,7 @@
+@@ -3640,12 +3295,7 @@
                }
              }
            }
@@ -924,7 +980,7 @@
        }
      },
      "/v{version}/Timezone": {
-@@ -3497,12 +3167,7 @@
+@@ -3676,12 +3326,7 @@
                }
              }
            }
@@ -938,7 +994,7 @@
        }
      },
      "/v{version}/User": {
-@@ -3608,12 +3273,7 @@
+@@ -3787,12 +3432,7 @@
                }
              }
            }
@@ -952,7 +1008,7 @@
        },
        "post": {
          "tags": [
-@@ -3655,12 +3315,7 @@
+@@ -3834,12 +3474,7 @@
                }
              }
            }
@@ -966,7 +1022,7 @@
        },
        "patch": {
          "tags": [
-@@ -3702,12 +3357,7 @@
+@@ -3881,12 +3516,7 @@
                }
              }
            }
@@ -980,7 +1036,7 @@
        }
      },
      "/v{version}/User/LoggedInUser": {
-@@ -3739,12 +3389,7 @@
+@@ -3918,12 +3548,7 @@
                }
              }
            }
@@ -994,7 +1050,7 @@
        }
      },
      "/v{version}/User/TrainingCertification": {
-@@ -3786,12 +3431,7 @@
+@@ -3965,12 +3590,7 @@
                }
              }
            }
@@ -1008,7 +1064,7 @@
        }
      },
      "/v{version}/User/{accountId}": {
-@@ -3826,12 +3466,7 @@
+@@ -4005,12 +3625,7 @@
            "200": {
              "description": ""
            }
@@ -1022,7 +1078,7 @@
        }
      },
      "/Role": {
-@@ -3864,12 +3499,7 @@
+@@ -4043,12 +3658,7 @@
                }
              }
            }
@@ -1035,62 +1091,6 @@
 +        }
        },
        "patch": {
-         "tags": [
-@@ -3900,12 +3530,7 @@
-               }
-             }
-           }
--        },
--        "security": [
--          {
--            "Bearer": []
--          }
--        ]
-+        }
-       }
-     },
-     "/Role/{id}": {
-@@ -3938,12 +3563,7 @@
-               }
-             }
-           }
--        },
--        "security": [
--          {
--            "Bearer": []
--          }
--        ]
-+        }
-       }
-     },
-     "/v{version}/WorkflowPendingApproval": {
-@@ -3982,12 +3602,7 @@
-               }
-             }
-           }
--        },
--        "security": [
--          {
--            "Bearer": []
--          }
--        ]
-+        }
-       },
-       "post": {
-         "tags": [
-@@ -4028,12 +3643,7 @@
-               }
-             }
-           }
--        },
--        "security": [
--          {
--            "Bearer": []
--          }
--        ]
-+        }
-       },
-       "delete": {
          "tags": [
 @@ -4079,12 +3689,7 @@
                }
@@ -1105,8 +1105,64 @@
 +        }
        }
      },
+     "/Role/{id}": {
+@@ -4117,12 +3722,7 @@
+               }
+             }
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       }
+     },
+     "/v{version}/WorkflowPendingApproval": {
+@@ -4161,12 +3761,7 @@
+               }
+             }
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       },
+       "post": {
+         "tags": [
+@@ -4207,12 +3802,7 @@
+               }
+             }
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       },
+       "delete": {
+         "tags": [
+@@ -4258,12 +3848,7 @@
+               }
+             }
+           }
+-        },
+-        "security": [
+-          {
+-            "Bearer": []
+-          }
+-        ]
++        }
+       }
+     },
      "/v{version}/WorkflowPendingApproval/Details": {
-@@ -4132,12 +3737,7 @@
+@@ -4311,12 +3896,7 @@
                }
              }
            }
@@ -1120,7 +1176,7 @@
        }
      },
      "/v{version}/WorkOrder": {
-@@ -4208,12 +3808,7 @@
+@@ -4387,12 +3967,7 @@
                }
              }
            }
@@ -1134,7 +1190,7 @@
        },
        "post": {
          "tags": [
-@@ -4254,12 +3849,7 @@
+@@ -4433,12 +4008,7 @@
                }
              }
            }
@@ -1148,7 +1204,7 @@
        },
        "patch": {
          "tags": [
-@@ -4300,12 +3890,7 @@
+@@ -4479,12 +4049,7 @@
                }
              }
            }
@@ -1162,7 +1218,7 @@
        }
      },
      "/v{version}/Workflow/pending": {
-@@ -4336,12 +3921,7 @@
+@@ -4515,12 +4080,7 @@
                }
              }
            }
@@ -1176,7 +1232,7 @@
        }
      },
      "/v{version}/Workflow/activity": {
-@@ -4372,12 +3952,7 @@
+@@ -4551,12 +4111,7 @@
                }
              }
            }
@@ -1190,7 +1246,7 @@
        }
      },
      "/v{version}/Workflow": {
-@@ -4418,12 +3993,7 @@
+@@ -4597,12 +4152,7 @@
                }
              }
            }
@@ -1204,7 +1260,7 @@
        },
        "post": {
          "tags": [
-@@ -4464,12 +4034,7 @@
+@@ -4643,12 +4193,7 @@
                }
              }
            }
@@ -1218,7 +1274,7 @@
        },
        "patch": {
          "tags": [
-@@ -4510,12 +4075,7 @@
+@@ -4689,12 +4234,7 @@
                }
              }
            }
@@ -1232,7 +1288,7 @@
        }
      },
      "/v{version}/Workflow/{workflowId}": {
-@@ -4556,12 +4116,7 @@
+@@ -4735,12 +4275,7 @@
                }
              }
            }
@@ -1246,7 +1302,7 @@
        }
      },
      "/v{version}/WorkflowGroup": {
-@@ -4602,12 +4157,7 @@
+@@ -4781,12 +4316,7 @@
                }
              }
            }
@@ -1260,7 +1316,7 @@
        },
        "post": {
          "tags": [
-@@ -4648,12 +4198,7 @@
+@@ -4827,12 +4357,7 @@
                }
              }
            }
@@ -1274,7 +1330,7 @@
        },
        "patch": {
          "tags": [
-@@ -4694,12 +4239,7 @@
+@@ -4873,12 +4398,7 @@
                }
              }
            }
@@ -1288,7 +1344,7 @@
        }
      },
      "/v{version}/WorkflowGroup/{workflowId}": {
-@@ -4740,12 +4280,7 @@
+@@ -4919,12 +4439,7 @@
                }
              }
            }
@@ -1302,7 +1358,7 @@
        }
      },
      "/v{version}/WorkflowStage": {
-@@ -4786,12 +4321,7 @@
+@@ -4965,12 +4480,7 @@
                }
              }
            }
@@ -1316,7 +1372,7 @@
        },
        "post": {
          "tags": [
-@@ -4832,12 +4362,7 @@
+@@ -5011,12 +4521,7 @@
                }
              }
            }
@@ -1330,7 +1386,7 @@
        },
        "patch": {
          "tags": [
-@@ -4878,12 +4403,7 @@
+@@ -5057,12 +4562,7 @@
                }
              }
            }
@@ -1344,7 +1400,7 @@
        }
      },
      "/v{version}/WorkflowStage/{workflowId}": {
-@@ -4924,12 +4444,7 @@
+@@ -5103,12 +4603,7 @@
                }
              }
            }
@@ -1358,7 +1414,7 @@
        }
      }
    },
-@@ -4943,7 +4458,7 @@
+@@ -5122,7 +4617,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1367,7 +1423,7 @@
              "properties": {
                "object": {
                  "type": "string",
-@@ -4956,7 +4471,7 @@
+@@ -5135,7 +4630,7 @@
        "AuditActionResult": {
          "type": "object",
          "description": "Base class for an API call with a non-typed result",
@@ -1376,7 +1432,7 @@
          "properties": {
            "successMessage": {
              "type": "string",
-@@ -4989,7 +4504,7 @@
+@@ -5168,7 +4663,7 @@
        "ErrorMessage": {
          "type": "object",
          "description": " ",
@@ -1385,7 +1441,7 @@
          "properties": {
            "number": {
              "type": "integer",
-@@ -5017,7 +4532,7 @@
+@@ -5196,7 +4691,7 @@
        },
        "Exception": {
          "type": "object",
@@ -1394,7 +1450,7 @@
          "properties": {
            "StackTrace": {
              "type": "string",
-@@ -5042,7 +4557,7 @@
+@@ -5221,7 +4716,7 @@
        },
        "SystemLoginRequest": {
          "type": "object",
@@ -1403,7 +1459,7 @@
          "required": [
            "userName",
            "password"
-@@ -5064,7 +4579,7 @@
+@@ -5243,7 +4738,7 @@
        },
        "ForgotPasswordRequest": {
          "type": "object",
@@ -1412,7 +1468,7 @@
          "required": [
            "userName"
          ],
-@@ -5077,7 +4592,7 @@
+@@ -5256,7 +4751,7 @@
        },
        "ForgotUserNameRequest": {
          "type": "object",
@@ -1421,7 +1477,7 @@
          "required": [
            "email"
          ],
-@@ -5090,7 +4605,7 @@
+@@ -5269,7 +4764,7 @@
        },
        "ResetPasswordRequest": {
          "type": "object",
@@ -1430,7 +1486,16 @@
          "required": [
            "token",
            "newPassword"
-@@ -5114,7 +4629,7 @@
+@@ -5287,7 +4782,7 @@
+       },
+       "ResetMyPasswordRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "required": [
+           "newPassword",
+           "oldPassword"
+@@ -5311,7 +4806,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1439,7 +1504,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -5134,7 +4649,7 @@
+@@ -5331,7 +4826,7 @@
            },
            {
              "type": "object",
@@ -1448,61 +1513,16 @@
              "properties": {
                "oldId": {
                  "type": "integer",
-@@ -5193,7 +4708,7 @@
+@@ -5390,7 +4885,7 @@
        },
-       "User": {
+       "UserModel": {
          "type": "object",
 -        "additionalProperties": false,
 +        "additionalProperties": true,
          "properties": {
            "id": {
              "type": "integer",
-@@ -5307,7 +4822,7 @@
-       },
-       "Role": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "id": {
-             "type": "integer",
-@@ -5348,7 +4863,7 @@
-       },
-       "MenuItem": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "id": {
-             "type": "integer",
-@@ -5412,7 +4927,7 @@
-       },
-       "MenuGroup": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "url": {
-             "type": "string",
-@@ -5438,7 +4953,7 @@
-       },
-       "Permission": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "canRead": {
-             "type": "boolean"
-@@ -5541,7 +5056,7 @@
-           },
-           {
-             "type": "object",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "oldId": {
-                 "type": "integer",
-@@ -5623,7 +5138,7 @@
+@@ -5520,7 +5015,7 @@
        },
        "TimeZoneModel": {
          "type": "object",
@@ -1511,79 +1531,43 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -5646,7 +5161,7 @@
-           },
-           {
-             "type": "object",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "isActive": {
-                 "type": "boolean"
-@@ -5663,7 +5178,7 @@
-           {
-             "type": "object",
-             "x-abstract": true,
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "lastUpdatedOn": {
-                 "type": "string",
-@@ -5694,7 +5209,7 @@
-           },
-           {
-             "type": "object",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "createdOn": {
-                 "type": "string",
-@@ -5720,7 +5235,7 @@
-       "EntityModel": {
+@@ -5538,7 +5033,7 @@
+       },
+       "Role": {
          "type": "object",
-         "x-abstract": true,
 -        "additionalProperties": false,
 +        "additionalProperties": true,
          "properties": {
            "id": {
              "type": "integer",
-@@ -5736,7 +5251,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "nullable": true,
-@@ -5752,7 +5267,7 @@
+@@ -5589,7 +5084,7 @@
        },
-       "CreateCustomerRequest": {
+       "MenuItem": {
          "type": "object",
 -        "additionalProperties": false,
 +        "additionalProperties": true,
          "properties": {
-           "name": {
-             "type": "string",
-@@ -5789,7 +5304,7 @@
+           "id": {
+             "type": "integer",
+@@ -5653,7 +5148,7 @@
        },
-       "UpdateCustomerRequest": {
+       "MenuGroup": {
          "type": "object",
 -        "additionalProperties": false,
 +        "additionalProperties": true,
-         "required": [
-           "customerId"
-         ],
-@@ -5852,7 +5367,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "type": "array",
-@@ -5867,7 +5382,7 @@
+         "properties": {
+           "url": {
+             "type": "string",
+@@ -5679,7 +5174,7 @@
+       },
+       "Permission": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "canRead": {
+             "type": "boolean"
+@@ -5777,7 +5272,7 @@
        },
        "FileModel": {
          "type": "object",
@@ -1592,7 +1576,52 @@
          "properties": {
            "fileId": {
              "type": "integer",
-@@ -5910,7 +5425,7 @@
+@@ -5819,7 +5314,7 @@
+           },
+           {
+             "type": "object",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "oldId": {
+                 "type": "integer",
+@@ -5906,7 +5401,7 @@
+           },
+           {
+             "type": "object",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "isActive": {
+                 "type": "boolean"
+@@ -5923,7 +5418,7 @@
+           {
+             "type": "object",
+             "x-abstract": true,
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "lastUpdatedOn": {
+                 "type": "string",
+@@ -5954,7 +5449,7 @@
+           },
+           {
+             "type": "object",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "createdOn": {
+                 "type": "string",
+@@ -5980,7 +5475,7 @@
+       "EntityModel": {
+         "type": "object",
+         "x-abstract": true,
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "id": {
+             "type": "integer",
+@@ -5996,7 +5491,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1601,7 +1630,43 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -5926,7 +5441,7 @@
+@@ -6012,7 +5507,7 @@
+       },
+       "CreateCustomerRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "name": {
+             "type": "string",
+@@ -6049,7 +5544,7 @@
+       },
+       "UpdateCustomerRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "required": [
+           "customerId"
+         ],
+@@ -6112,7 +5607,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "type": "array",
+@@ -6133,7 +5628,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "nullable": true,
+@@ -6149,7 +5644,7 @@
        },
        "CreateFileRequest": {
          "type": "object",
@@ -1610,7 +1675,7 @@
          "properties": {
            "entityName": {
              "type": "string",
-@@ -5957,7 +5472,7 @@
+@@ -6180,7 +5675,7 @@
            },
            {
              "type": "object",
@@ -1619,7 +1684,7 @@
              "properties": {
                "importErrors": {
                  "type": "array",
-@@ -5972,7 +5487,7 @@
+@@ -6195,7 +5690,7 @@
        },
        "ImportError": {
          "type": "object",
@@ -1628,7 +1693,7 @@
          "properties": {
            "line": {
              "type": "integer",
-@@ -5995,7 +5510,7 @@
+@@ -6218,7 +5713,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1637,7 +1702,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -6010,7 +5525,7 @@
+@@ -6233,7 +5728,7 @@
        },
        "ImportRequest": {
          "type": "object",
@@ -1646,7 +1711,7 @@
          "required": [
            "base64Data",
            "menuItem"
-@@ -6033,7 +5548,7 @@
+@@ -6256,7 +5751,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1655,7 +1720,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -6048,7 +5563,7 @@
+@@ -6271,7 +5766,7 @@
        },
        "HelpPage": {
          "type": "object",
@@ -1664,7 +1729,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -6083,7 +5598,7 @@
+@@ -6306,7 +5801,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1673,7 +1738,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -6099,7 +5614,7 @@
+@@ -6322,7 +5817,7 @@
        },
        "CreateHelpPageRequest": {
          "type": "object",
@@ -1682,7 +1747,7 @@
          "properties": {
            "title": {
              "type": "string",
-@@ -6125,7 +5640,7 @@
+@@ -6348,7 +5843,7 @@
        },
        "CreateHelpPageRoleRequest": {
          "type": "object",
@@ -1691,7 +1756,7 @@
          "properties": {
            "helpPageId": {
              "type": "integer",
-@@ -6139,7 +5654,7 @@
+@@ -6362,7 +5857,7 @@
        },
        "UpdateHelpPageRequest": {
          "type": "object",
@@ -1700,7 +1765,7 @@
          "properties": {
            "helpPageId": {
              "type": "integer",
-@@ -6175,7 +5690,7 @@
+@@ -6398,7 +5893,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1709,7 +1774,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -6190,7 +5705,7 @@
+@@ -6413,7 +5908,7 @@
        },
        "InvoiceView": {
          "type": "object",
@@ -1718,7 +1783,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -6259,7 +5774,7 @@
+@@ -6482,7 +5977,7 @@
        },
        "InvoiceItemView": {
          "type": "object",
@@ -1727,7 +1792,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -6287,7 +5802,7 @@
+@@ -6510,7 +6005,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1736,7 +1801,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -6303,7 +5818,7 @@
+@@ -6526,7 +6021,7 @@
        },
        "CreateInvoiceRequest": {
          "type": "object",
@@ -1745,7 +1810,7 @@
          "required": [
            "customerId",
            "description",
-@@ -6346,7 +5861,7 @@
+@@ -6569,7 +6064,7 @@
        },
        "CreateInvoiceItemRequest": {
          "type": "object",
@@ -1754,7 +1819,7 @@
          "required": [
            "workOrderId",
            "purchaseOrderId"
-@@ -6364,7 +5879,7 @@
+@@ -6587,7 +6082,7 @@
        },
        "UpdateInvoiceRequest": {
          "type": "object",
@@ -1763,7 +1828,7 @@
          "required": [
            "id"
          ],
-@@ -6402,7 +5917,7 @@
+@@ -6625,7 +6120,7 @@
        },
        "UpdateInvoiceItemRequest": {
          "type": "object",
@@ -1772,7 +1837,7 @@
          "required": [
            "id"
          ],
-@@ -6421,7 +5936,7 @@
+@@ -6644,7 +6139,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1781,7 +1846,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -6442,7 +5957,7 @@
+@@ -6665,7 +6160,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1790,7 +1855,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -6462,7 +5977,7 @@
+@@ -6685,7 +6180,7 @@
            },
            {
              "type": "object",
@@ -1799,7 +1864,7 @@
              "properties": {
                "sensorName": {
                  "type": "string",
-@@ -6496,7 +6011,7 @@
+@@ -6719,7 +6214,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1808,7 +1873,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -6512,7 +6027,7 @@
+@@ -6735,7 +6230,7 @@
        },
        "CreateLocationRequest": {
          "type": "object",
@@ -1817,7 +1882,7 @@
          "properties": {
            "name": {
              "type": "string",
-@@ -6569,7 +6084,7 @@
+@@ -6792,7 +6287,7 @@
        "UpdateLocationRequest": {
          "type": "object",
          "description": " ",
@@ -1826,7 +1891,7 @@
          "required": [
            "locationId"
          ],
-@@ -6651,7 +6166,7 @@
+@@ -6874,7 +6369,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1835,7 +1900,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -6666,7 +6181,7 @@
+@@ -6889,7 +6384,7 @@
        },
        "CreateMenuRoleMapRequest": {
          "type": "object",
@@ -1844,7 +1909,7 @@
          "required": [
            "menuId",
            "roleId"
-@@ -6684,7 +6199,7 @@
+@@ -6907,7 +6402,7 @@
        },
        "UpdateMenuRoleMapRequest": {
          "type": "object",
@@ -1853,7 +1918,7 @@
          "required": [
            "roleId",
            "menuId"
-@@ -6726,7 +6241,7 @@
+@@ -6949,7 +6444,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1862,7 +1927,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -6742,7 +6257,7 @@
+@@ -6965,7 +6460,7 @@
        },
        "MonitorModel": {
          "type": "object",
@@ -1871,7 +1936,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -6791,7 +6306,7 @@
+@@ -7014,7 +6509,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1880,7 +1945,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -6811,7 +6326,7 @@
+@@ -7034,7 +6529,7 @@
            },
            {
              "type": "object",
@@ -1889,7 +1954,7 @@
              "properties": {
                "isPending": {
                  "type": "boolean"
-@@ -6872,7 +6387,7 @@
+@@ -7095,7 +6590,7 @@
        },
        "SubPartModel": {
          "type": "object",
@@ -1898,7 +1963,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -6901,7 +6416,7 @@
+@@ -7124,7 +6619,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1907,7 +1972,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -6917,7 +6432,7 @@
+@@ -7140,7 +6635,7 @@
        },
        "CreatePartRequest": {
          "type": "object",
@@ -1916,7 +1981,7 @@
          "required": [
            "name",
            "partNumber"
-@@ -6969,7 +6484,7 @@
+@@ -7192,7 +6687,7 @@
        },
        "FileRequest": {
          "type": "object",
@@ -1925,7 +1990,7 @@
          "properties": {
            "name": {
              "type": "string",
-@@ -6997,7 +6512,7 @@
+@@ -7220,7 +6715,7 @@
            },
            {
              "type": "object",
@@ -1934,7 +1999,7 @@
              "required": [
                "id"
              ],
-@@ -7012,7 +6527,7 @@
+@@ -7235,7 +6730,7 @@
        },
        "ImportPartsRequest": {
          "type": "object",
@@ -1943,7 +2008,7 @@
          "required": [
            "base64Data"
          ],
-@@ -7031,7 +6546,7 @@
+@@ -7254,7 +6749,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1952,7 +2017,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -7047,7 +6562,7 @@
+@@ -7270,7 +6765,7 @@
        },
        "Procedure": {
          "type": "object",
@@ -1961,7 +2026,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -7114,7 +6629,7 @@
+@@ -7337,7 +6832,7 @@
        },
        "ProcedureType": {
          "type": "object",
@@ -1970,7 +2035,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -7142,7 +6657,7 @@
+@@ -7365,7 +6860,7 @@
        "CreateProcedureRequest": {
          "type": "object",
          "description": " ",
@@ -1979,7 +2044,7 @@
          "required": [
            "name",
            "procedureTypeId",
-@@ -7217,7 +6732,7 @@
+@@ -7440,7 +6935,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -1988,7 +2053,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -7233,7 +6748,7 @@
+@@ -7456,7 +6951,7 @@
        },
        "ProcedureStepModel": {
          "type": "object",
@@ -1997,7 +2062,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -7323,7 +6838,7 @@
+@@ -7546,7 +7041,7 @@
        "CreateProcedureStepRequest": {
          "type": "object",
          "description": " ",
@@ -2006,7 +2071,7 @@
          "properties": {
            "procedureId": {
              "type": "integer",
-@@ -7420,7 +6935,7 @@
+@@ -7643,7 +7138,7 @@
        "RoleRequest": {
          "type": "object",
          "description": " ",
@@ -2015,7 +2080,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -7451,7 +6966,7 @@
+@@ -7674,7 +7169,7 @@
        "MenuItemRequest": {
          "type": "object",
          "description": " ",
@@ -2024,7 +2089,7 @@
          "properties": {
            "url": {
              "type": "string",
-@@ -7512,7 +7027,7 @@
+@@ -7735,7 +7230,7 @@
        "OneOfMenuItemMenuGroup": {
          "type": "object",
          "description": " ",
@@ -2033,7 +2098,7 @@
        },
        "AuditActionResultOfICollectionOfProcedure": {
          "allOf": [
-@@ -7522,7 +7037,7 @@
+@@ -7745,7 +7240,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2042,7 +2107,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -7543,7 +7058,7 @@
+@@ -7766,7 +7261,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2051,7 +2116,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -7559,7 +7074,7 @@
+@@ -7782,7 +7277,7 @@
        "UpdateProcedureRequest": {
          "type": "object",
          "description": " ",
@@ -2060,7 +2125,7 @@
          "required": [
            "name",
            "durationType"
-@@ -7635,7 +7150,7 @@
+@@ -7858,7 +7353,7 @@
        "UpdateProcedureStepRequest": {
          "type": "object",
          "description": " ",
@@ -2069,7 +2134,7 @@
          "properties": {
            "procedureStepId": {
              "type": "integer",
-@@ -7742,7 +7257,7 @@
+@@ -7965,7 +7460,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2078,7 +2143,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -7758,7 +7273,7 @@
+@@ -7981,7 +7476,7 @@
        },
        "ProcedureStepMonitor": {
          "type": "object",
@@ -2087,7 +2152,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -7797,7 +7312,7 @@
+@@ -8020,7 +7515,7 @@
        "CreateProcedureStepMonitorRequest": {
          "type": "object",
          "description": " ",
@@ -2096,7 +2161,7 @@
          "properties": {
            "inputType": {
              "type": "string",
-@@ -7849,7 +7364,7 @@
+@@ -8072,7 +7567,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2105,7 +2170,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -7865,7 +7380,7 @@
+@@ -8088,7 +7583,7 @@
        "UpdateProcedureStepMonitorRequest": {
          "type": "object",
          "description": " ",
@@ -2114,7 +2179,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -7912,7 +7427,7 @@
+@@ -8135,7 +7630,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2123,7 +2188,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -7927,7 +7442,7 @@
+@@ -8150,7 +7645,7 @@
        },
        "ProcedureStepTemplateModel": {
          "type": "object",
@@ -2132,7 +2197,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -8014,7 +7529,7 @@
+@@ -8237,7 +7732,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2141,7 +2206,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -8031,7 +7546,7 @@
+@@ -8254,7 +7749,7 @@
        "CreateProcedureStepTemplateRequest": {
          "type": "object",
          "description": " ",
@@ -2150,7 +2215,7 @@
          "properties": {
            "title": {
              "type": "string",
-@@ -8116,7 +7631,7 @@
+@@ -8339,7 +7834,7 @@
        "UpdateProcedureStepTemplateRequest": {
          "type": "object",
          "description": " ",
@@ -2159,7 +2224,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -8211,7 +7726,7 @@
+@@ -8434,7 +7929,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2168,7 +2233,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -8226,7 +7741,7 @@
+@@ -8449,7 +7944,7 @@
        },
        "ProcedureStepTypeModel": {
          "type": "object",
@@ -2177,7 +2242,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -8241,7 +7756,7 @@
+@@ -8464,7 +7959,7 @@
        "CreateProcedureTemplateRequest": {
          "type": "object",
          "description": " ",
@@ -2186,7 +2251,7 @@
          "properties": {
            "title": {
              "type": "string",
-@@ -8341,7 +7856,7 @@
+@@ -8564,7 +8059,7 @@
        "UpdateProcedureTemplateRequest": {
          "type": "object",
          "description": " ",
@@ -2195,7 +2260,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -8452,7 +7967,7 @@
+@@ -8675,7 +8170,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2204,7 +2269,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -8469,7 +7984,7 @@
+@@ -8692,7 +8187,7 @@
        "CreateProcedureTypeRequest": {
          "type": "object",
          "description": " ",
@@ -2213,7 +2278,7 @@
          "required": [
            "name"
          ],
-@@ -8494,7 +8009,7 @@
+@@ -8717,7 +8212,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2222,7 +2287,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -8510,7 +8025,7 @@
+@@ -8733,7 +8228,7 @@
        "UpdateProcedureTypeRequest": {
          "type": "object",
          "description": " ",
@@ -2231,7 +2296,7 @@
          "properties": {
            "id": {
              "type": "integer",
-@@ -8538,7 +8053,7 @@
+@@ -8761,7 +8256,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2240,25 +2305,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -8559,7 +8074,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "type": "array",
-@@ -8580,7 +8095,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "type": "array",
-@@ -8601,7 +8116,7 @@
+@@ -8782,7 +8277,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2267,214 +2314,16 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -8623,7 +8138,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "type": "array",
-@@ -8638,7 +8153,7 @@
+@@ -8798,7 +8293,7 @@
        },
-       "TrainingCertificationView": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "employeeName": {
-             "type": "string",
-@@ -8666,7 +8181,7 @@
-       },
-       "CreateUserRequest": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "userName": {
-             "type": "string",
-@@ -8751,7 +8266,7 @@
-           },
-           {
-             "type": "object",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "required": [
-               "id"
-             ],
-@@ -8766,7 +8281,7 @@
-       },
-       "CreateUserRoleRequest": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "required": [
-           "userId",
-           "roleId"
-@@ -8794,7 +8309,7 @@
-       },
-       "UpdateUserRoleRequest": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "required": [
-           "userRoleId"
-         ],
-@@ -8833,7 +8348,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "type": "array",
-@@ -8848,7 +8363,7 @@
-       },
-       "PendingApprovalModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "id": {
-             "type": "integer",
-@@ -8938,7 +8453,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "nullable": true,
-@@ -8954,7 +8469,7 @@
-       },
-       "PendingApprovalPopoverModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "rows": {
-             "type": "array",
-@@ -8973,7 +8488,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "nullable": true,
-@@ -8989,7 +8504,7 @@
-       },
-       "PostPendingApprovalRequest": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "table": {
-             "$ref": "#/components/schemas/EnumApprovalTables"
-@@ -9012,7 +8527,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "type": "array",
-@@ -9027,7 +8542,7 @@
-       },
-       "WorkOrderModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "id": {
-             "type": "integer",
-@@ -9113,7 +8628,7 @@
-       },
-       "ProductModel": {
+       "CreateRoleRequest": {
          "type": "object",
 -        "additionalProperties": false,
 +        "additionalProperties": true,
          "properties": {
            "name": {
              "type": "string",
-@@ -9173,7 +8688,7 @@
-       },
-       "PurchaseModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "id": {
-             "type": "integer",
-@@ -9218,7 +8733,7 @@
-       },
-       "WorkOrderPartModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "workOrderId": {
-             "type": "integer",
-@@ -9272,7 +8787,7 @@
-       },
-       "WorkOrderTaskModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "workOrderId": {
-             "type": "integer",
-@@ -9364,7 +8879,7 @@
-       },
-       "StatusModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "id": {
-             "type": "integer",
-@@ -9378,7 +8893,7 @@
-       },
-       "WorkOrderTaskMonitorModel": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "workOrderTaskId": {
-             "type": "integer",
-@@ -9427,7 +8942,7 @@
-           {
-             "type": "object",
-             "description": "Base class for an API call with a typed result",
--            "additionalProperties": false,
-+            "additionalProperties": true,
-             "properties": {
-               "object": {
-                 "nullable": true,
-@@ -9443,7 +8958,7 @@
-       },
-       "CreateWorkOrderRequest": {
-         "type": "object",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "purchaseId": {
-             "type": "integer",
-@@ -9491,7 +9006,7 @@
-       "WorkOrderPartRequest": {
-         "type": "object",
-         "description": " ",
--        "additionalProperties": false,
-+        "additionalProperties": true,
-         "properties": {
-           "workOrderId": {
-             "type": "integer",
-@@ -9558,7 +9073,7 @@
+@@ -8824,7 +8319,7 @@
            },
            {
              "type": "object",
@@ -2483,7 +2332,250 @@
              "properties": {
                "id": {
                  "type": "integer",
-@@ -9571,7 +9086,7 @@
+@@ -8842,7 +8337,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "type": "array",
+@@ -8863,7 +8358,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "type": "array",
+@@ -8884,7 +8379,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "nullable": true,
+@@ -8906,7 +8401,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "type": "array",
+@@ -8921,7 +8416,7 @@
+       },
+       "TrainingCertificationView": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "employeeName": {
+             "type": "string",
+@@ -8949,7 +8444,7 @@
+       },
+       "CreateUserRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "userName": {
+             "type": "string",
+@@ -9042,7 +8537,7 @@
+           },
+           {
+             "type": "object",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "required": [
+               "id"
+             ],
+@@ -9057,7 +8552,7 @@
+       },
+       "CreateUserRoleRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "required": [
+           "userId",
+           "roleId"
+@@ -9085,7 +8580,7 @@
+       },
+       "UpdateUserRoleRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "required": [
+           "userRoleId"
+         ],
+@@ -9124,7 +8619,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "type": "array",
+@@ -9139,7 +8634,7 @@
+       },
+       "PendingApprovalModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "id": {
+             "type": "integer",
+@@ -9229,7 +8724,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "nullable": true,
+@@ -9245,7 +8740,7 @@
+       },
+       "PendingApprovalPopoverModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "rows": {
+             "type": "array",
+@@ -9264,7 +8759,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "nullable": true,
+@@ -9280,7 +8775,7 @@
+       },
+       "PostPendingApprovalRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "table": {
+             "$ref": "#/components/schemas/EnumApprovalTables"
+@@ -9303,7 +8798,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "type": "array",
+@@ -9318,7 +8813,7 @@
+       },
+       "WorkOrderModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "id": {
+             "type": "integer",
+@@ -9404,7 +8899,7 @@
+       },
+       "ProductModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "name": {
+             "type": "string",
+@@ -9464,7 +8959,7 @@
+       },
+       "PurchaseModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "id": {
+             "type": "integer",
+@@ -9509,7 +9004,7 @@
+       },
+       "WorkOrderPartModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "workOrderId": {
+             "type": "integer",
+@@ -9563,7 +9058,7 @@
+       },
+       "WorkOrderTaskModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "workOrderId": {
+             "type": "integer",
+@@ -9655,7 +9150,7 @@
+       },
+       "StatusModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "id": {
+             "type": "integer",
+@@ -9669,7 +9164,7 @@
+       },
+       "WorkOrderTaskMonitorModel": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "workOrderTaskId": {
+             "type": "integer",
+@@ -9718,7 +9213,7 @@
+           {
+             "type": "object",
+             "description": "Base class for an API call with a typed result",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "object": {
+                 "nullable": true,
+@@ -9734,7 +9229,7 @@
+       },
+       "CreateWorkOrderRequest": {
+         "type": "object",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "purchaseId": {
+             "type": "integer",
+@@ -9782,7 +9277,7 @@
+       "WorkOrderPartRequest": {
+         "type": "object",
+         "description": " ",
+-        "additionalProperties": false,
++        "additionalProperties": true,
+         "properties": {
+           "workOrderId": {
+             "type": "integer",
+@@ -9849,7 +9344,7 @@
+           },
+           {
+             "type": "object",
+-            "additionalProperties": false,
++            "additionalProperties": true,
+             "properties": {
+               "id": {
+                 "type": "integer",
+@@ -9862,7 +9357,7 @@
        "WorkOrderTaskRequest": {
          "type": "object",
          "description": " ",
@@ -2492,7 +2584,7 @@
          "properties": {
            "workOrderId": {
              "type": "integer",
-@@ -9639,7 +9154,7 @@
+@@ -9930,7 +9425,7 @@
        },
        "WorkOrderTaskMonitorRequest": {
          "type": "object",
@@ -2501,7 +2593,7 @@
          "properties": {
            "workOrderTaskId": {
              "type": "integer",
-@@ -9696,7 +9211,7 @@
+@@ -9987,7 +9482,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2510,7 +2602,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -9712,7 +9227,7 @@
+@@ -10003,7 +9498,7 @@
        },
        "PendingApprovalNotification": {
          "type": "object",
@@ -2519,7 +2611,7 @@
          "properties": {
            "items": {
              "type": "array",
-@@ -9725,7 +9240,7 @@
+@@ -10016,7 +9511,7 @@
        },
        "PendingNotificationItem": {
          "type": "object",
@@ -2528,7 +2620,7 @@
          "properties": {
            "name": {
              "type": "string",
-@@ -9749,7 +9264,7 @@
+@@ -10040,7 +9535,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2537,7 +2629,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -9769,7 +9284,7 @@
+@@ -10060,7 +9555,7 @@
            },
            {
              "type": "object",
@@ -2546,7 +2638,7 @@
              "properties": {
                "name": {
                  "type": "string",
-@@ -9795,7 +9310,7 @@
+@@ -10086,7 +9581,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2555,7 +2647,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -9815,7 +9330,7 @@
+@@ -10106,7 +9601,7 @@
            },
            {
              "type": "object",
@@ -2564,7 +2656,7 @@
              "properties": {
                "name": {
                  "type": "string",
-@@ -9849,7 +9364,7 @@
+@@ -10140,7 +9635,7 @@
        },
        "WorkflowStageMapModel": {
          "type": "object",
@@ -2573,7 +2665,7 @@
          "properties": {
            "workflowStageName": {
              "type": "string",
-@@ -9867,7 +9382,7 @@
+@@ -10158,7 +9653,7 @@
        },
        "WorkflowActivityMapModel": {
          "type": "object",
@@ -2582,7 +2674,7 @@
          "properties": {
            "workflowActivityName": {
              "type": "string",
-@@ -9891,7 +9406,7 @@
+@@ -10182,7 +9677,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2591,7 +2683,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -9907,7 +9422,7 @@
+@@ -10198,7 +9693,7 @@
        },
        "CreateWorkflowRequest": {
          "type": "object",
@@ -2600,7 +2692,7 @@
          "required": [
            "name"
          ],
-@@ -9942,7 +9457,7 @@
+@@ -10233,7 +9728,7 @@
            },
            {
              "type": "object",
@@ -2609,7 +2701,7 @@
              "required": [
                "id"
              ],
-@@ -9963,7 +9478,7 @@
+@@ -10254,7 +9749,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2618,7 +2710,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -9978,7 +9493,7 @@
+@@ -10269,7 +9764,7 @@
        },
        "WorkflowGroupModel": {
          "type": "object",
@@ -2627,7 +2719,7 @@
          "properties": {
            "name": {
              "type": "string",
-@@ -10036,7 +9551,7 @@
+@@ -10327,7 +9822,7 @@
        },
        "WorkflowGroupRoleMapModel": {
          "type": "object",
@@ -2636,7 +2728,7 @@
          "properties": {
            "roleId": {
              "type": "integer",
-@@ -10055,7 +9570,7 @@
+@@ -10346,7 +9841,7 @@
        },
        "WorkflowGroupUserMapModel": {
          "type": "object",
@@ -2645,7 +2737,7 @@
          "properties": {
            "userId": {
              "type": "integer",
-@@ -10076,7 +9591,7 @@
+@@ -10367,7 +9862,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2654,7 +2746,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -10092,7 +9607,7 @@
+@@ -10383,7 +9878,7 @@
        },
        "CreateWorkflowGroupRequest": {
          "type": "object",
@@ -2663,7 +2755,7 @@
          "required": [
            "name"
          ],
-@@ -10127,7 +9642,7 @@
+@@ -10418,7 +9913,7 @@
            },
            {
              "type": "object",
@@ -2672,7 +2764,7 @@
              "required": [
                "id"
              ],
-@@ -10148,7 +9663,7 @@
+@@ -10439,7 +9934,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2681,7 +2773,7 @@
              "properties": {
                "object": {
                  "type": "array",
-@@ -10168,7 +9683,7 @@
+@@ -10459,7 +9954,7 @@
            },
            {
              "type": "object",
@@ -2690,7 +2782,7 @@
              "properties": {
                "name": {
                  "type": "string",
-@@ -10195,7 +9710,7 @@
+@@ -10486,7 +9981,7 @@
        },
        "WorkflowGroupStageMapModel": {
          "type": "object",
@@ -2699,7 +2791,7 @@
          "properties": {
            "workflowStageId": {
              "type": "integer",
-@@ -10216,7 +9731,7 @@
+@@ -10507,7 +10002,7 @@
            {
              "type": "object",
              "description": "Base class for an API call with a typed result",
@@ -2708,7 +2800,7 @@
              "properties": {
                "object": {
                  "nullable": true,
-@@ -10232,7 +9747,7 @@
+@@ -10523,7 +10018,7 @@
        },
        "CreateWorkflowStageRequest": {
          "type": "object",
@@ -2717,7 +2809,7 @@
          "required": [
            "name"
          ],
-@@ -10260,7 +9775,7 @@
+@@ -10551,7 +10046,7 @@
            },
            {
              "type": "object",
@@ -2726,7 +2818,7 @@
              "required": [
                "id"
              ],
-@@ -10282,10 +9797,5 @@
+@@ -10573,10 +10068,5 @@
          "in": "header"
        }
      }

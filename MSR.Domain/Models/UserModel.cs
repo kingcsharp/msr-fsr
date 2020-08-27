@@ -193,7 +193,7 @@ namespace MSR.Domain.Models
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((User)obj);
+            return obj.GetType() == GetType() && Equals((UserModel)obj);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace MSR.Domain.Models
         /// </summary>
         /// <param name="other">Instance of User to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(User other)
+        public bool Equals(UserModel other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -385,12 +385,12 @@ namespace MSR.Domain.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(User left, User right)
+        public static bool operator ==(UserModel left, UserModel right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(User left, User right)
+        public static bool operator !=(UserModel left, UserModel right)
         {
             return !Equals(left, right);
         }

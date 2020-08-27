@@ -69,7 +69,7 @@ namespace MSR.Domain.Models
         /// Gets or Sets WorkerName
         /// </summary>
         [DataMember(Name="workerName")]
-        public List<User> WorkerName { get; set; }
+        public List<UserModel> WorkerName { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
