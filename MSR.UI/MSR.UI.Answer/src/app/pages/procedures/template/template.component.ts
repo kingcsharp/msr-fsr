@@ -6,6 +6,7 @@ import { RoleService, ProcedureStepTemplateService  , ProcedureStepTemplateModel
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
+import { ProcedureStepTemplate } from '../../../services/mockclasses';
 
 @Component({
   selector: 'app-template',
@@ -13,10 +14,6 @@ import { Globals } from '../../../models/lib/globals';
   styleUrls: ['./template.component.scss'],
   providers: [RoleService, ProcedureStepTemplateService, ProcedureTemplateService, ProcedureService]
 })
-
-export class ProcedureStepTemplate extends ProcedureStepTemplateModel {
-  referenceFiles?: FileRequest[] | undefined;
-}
 
 export class TemplateComponent implements OnInit {
 

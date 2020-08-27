@@ -17,7 +17,7 @@
                         <div class="col-12">
                             <p-dropdown placeholder="Select Major Group" name="proceduretype"
                                 [options]="availableProcedureTypes" showClear="true" [(ngModel)]="procedure.procedureTypeId"
-                                data-cy="majorgroup-dropdown">
+                                data-cy="proceduretype-dropdown">
                             </p-dropdown>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="col-12">
                             <p-dropdown placeholder="Select Duration Type" name="durationType"
                                 [options]="durationTypeOptions" showClear="true" [(ngModel)]="procedure.durationType"
-                                data-cy="majorgroup-dropdown">
+                                data-cy="durationtype-dropdown">
                             </p-dropdown>
                         </div>
                     </div>
@@ -103,12 +103,24 @@
                     <ng-template #itemTemplate let-procedureStep="item" let-i="index">
                         <div class="row my-4 custom-panel">
                         <div class="col-5">
-                            <div class="row">
-                                <div class="form-group">
-                                    <label class="col-form-label text-left">
-                                        Step Number: {{ procedureStep.value.printOrder}} {{ procedureStep.value.id}} {{procedureStep.id}}
-                                        
-                                    </label>
+                            <div class="row d-flex flex-row">
+                                <div class="col-4">
+                                    <div class="form-group ml-3">
+                                        <label class="col-form-label text-left">
+                                            Step Number: {{procedureStep.printOrder}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <div class="form-group d-flex flex-row justify-content-end">
+                                        <label class="col-form-label text-left">
+                                            Predecessor Step
+                                        </label>
+                                        <input type="text" name="title{{i}}" [(ngModel)]="procedureStep.value.predecessorStepName"
+                                            data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                            data-parsley-required="true" class="form-control input-transparent col-8 ml-4"
+                                            tooltip="Title of Procedure Step" data-cy="title-input" disabled>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -211,7 +223,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row ml-2">
                                 <button *ngIf="procedureStep.value.id === 0" type="button" name="savebutton{{i}}" class="btn btn-primary m-2" (click)="saveProcedureStep(procedureStep.value)">Save</button>
                                 <button *ngIf="procedureStep.value.id !== 0" type="button" name="updatebutton{{i}}" class="btn btn-primary m-2" (click)="updateProcedureStep(procedureStep.value)"
                                     data-cy="update-button">Update</button>
@@ -232,7 +244,7 @@
                         </div>
                         <div class="col-4">
                             <div class="row justify-content-end">
-                                <button *ngIf="canEdit" class="btn btn-success width-100 mb-xs sm-mrg" role="button" (click)="openAddMonitorDialog(procedureStep.value)" data-cy="add-button">
+                                <button *ngIf="canEdit" class="btn btn-success width-100 mb-xs sm-mrg m-2" role="button" (click)="openAddMonitorDialog(procedureStep.value)" data-cy="add-button">
                                     Add Monitor
                                 </button>
                             </div>

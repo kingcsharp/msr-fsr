@@ -65,7 +65,7 @@ export class Globals {
                         return;
                     }
                 });
-                
+
                 if (currMenuItem.length > 0) {
                     this.activeMenu = currMenuItem[0];
                 }
