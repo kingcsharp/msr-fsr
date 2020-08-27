@@ -11,6 +11,7 @@ import { TableState } from 'primeng/api';
   },
   selector: 'grid-options',
   templateUrl: './grid-options.component.html'
+
 })
 export class GridOptionsComponent implements OnInit {
   gridSettings: ColumnsSaved[];

@@ -1,8 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MockServices } from '../../../services/mocks/services/mockservices';
 import { SelectItem } from 'primeng/api';
-import { RoleService, ProcedureStepTemplateService  ,ProcedureStepTemplateModel, CreateProcedureTemplateRequest,
+import { RoleService, ProcedureStepTemplateService  , ProcedureStepTemplateModel, CreateProcedureTemplateRequest,
   UpdateProcedureTemplateRequest, ProcedureTemplateService, ProcedureService, EnumMenuItem, FileRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -12,8 +11,13 @@ import { Globals } from '../../../models/lib/globals';
   selector: 'app-template',
   templateUrl: './template.component.html',
   styleUrls: ['./template.component.scss'],
-  providers: [MockServices, RoleService, ProcedureStepTemplateService, ProcedureTemplateService, ProcedureService]
+  providers: [RoleService, ProcedureStepTemplateService, ProcedureTemplateService, ProcedureService]
 })
+
+export class ProcedureStepTemplate extends ProcedureStepTemplateModel {
+  referenceFiles?: FileRequest[] | undefined;
+}
+
 export class TemplateComponent implements OnInit {
 
   menuItems = EnumMenuItem;
@@ -70,7 +74,7 @@ export class TemplateComponent implements OnInit {
 
           this.procedureTemplate = response.object[0];
 
-          if(this.procedureTemplate.referenceFiles === undefined){
+          if (this.procedureTemplate.referenceFiles === undefined) {
             this.procedureTemplate.referenceFiles = [];
           }
 
@@ -129,8 +133,4 @@ export class TemplateComponent implements OnInit {
 
   }
 
-}
-
-export class ProcedureStepTemplate extends ProcedureStepTemplateModel{
-  referenceFiles?: FileRequest[] | undefined;
 }

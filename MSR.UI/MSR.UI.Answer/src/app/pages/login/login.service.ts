@@ -87,6 +87,7 @@ export class LoginService {
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
         user.privileges = JSON.parse(decodedToken.Privileges);
         this.globals.updateUser(user);
+
         if (user.roles.length === 0) {
           this.logoutUser();
           this.loginError('Sorry you do not have roles associated with your user.');

@@ -6,13 +6,12 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { EnumApprovalTables, MonitorService, MonitorModel } from '../../../services/api.client.generated';
-import { MockServices } from '../../../services/mocks/services/mockservices';
 
 @Component({
   selector: 'app-monitors',
   templateUrl: './monitors.component.html',
   styleUrls: ['./monitors.component.scss'],
-  providers: [MonitorService, MockServices]
+  providers: [MonitorService]
 })
 export class MonitorsComponent implements OnInit {
 
@@ -23,8 +22,7 @@ export class MonitorsComponent implements OnInit {
   loading: boolean = true;
   gridStorageId: string;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, public monitorsService: MonitorService,
-    private mockService: MockServices) { }
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, public monitorsService: MonitorService) { }
 
   ngOnInit(): void {
 

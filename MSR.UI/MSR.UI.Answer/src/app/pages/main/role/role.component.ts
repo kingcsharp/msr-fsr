@@ -148,4 +148,5 @@ export class RoleComponent implements OnInit {
     this.display = false;
     jQuery('.parsleyjs').parsley().reset();
   }
+
 }
