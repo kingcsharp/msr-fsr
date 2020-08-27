@@ -123,6 +123,7 @@ export class ProfileComponent implements OnInit {
   submitDetailsChange() {
     let updateUserReq = new UpdateUserRequest();
     Object.assign(updateUserReq, this.user);
+    updateUserReq.customerId = updateUserReq.customerId === 0 ? null : updateUserReq.customerId;
     if (this.uploadedFiles.length > 0) {
       updateUserReq.file = this.uploadedFiles[0];
     }
@@ -146,7 +147,7 @@ export class ProfileComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler(response => {
         this.globals.showLoader(false);
         this.user = response.object[0];
-        if(this.user.fileModel !== undefined){
+        if (this.user.fileModel !== undefined) {
           this.uploadedFiles.push(this.user.fileModel);
         }
       }));

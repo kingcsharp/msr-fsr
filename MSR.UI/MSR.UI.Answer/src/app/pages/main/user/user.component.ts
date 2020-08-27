@@ -213,6 +213,9 @@ export class UserComponent implements OnInit {
       if (this.currUser.customer !== undefined) {
         this.currUser.customerId = this.currUser.customer.id;
       }
+      if (this.currUser.isAnswerUser) {
+        this.currUser.customerId = null;
+      }
       if (this.currUser.id === undefined) {
         method = this.userService.userPost(env.apiVersion, this.currUser);
       } else {
@@ -247,7 +250,18 @@ export class UserComponent implements OnInit {
       ret.firstName = '';
       return ret;
     } else {
+      this.setCustomer(user);
+      this.currUser.customer
       return copyObj(user);
+    }
+  }
+
+  setCustomer(user: any) {
+    if (user.customerId !== undefined) {
+      const customerIndex = this.customers.findIndex(z => z.id === user.customerId);
+      if (customerIndex !== -1){
+        user.customer = this.customers[customerIndex];
+      }
     }
   }
 }

@@ -172,7 +172,7 @@
   </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
-  [appendTo]="'body'" [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  [appendTo]="'body'" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -310,7 +310,6 @@
               Customer
             </label>
             <div class="col-md-4 col-12">
-              {{currUser.customerId}}
               <p-dropdown placeholder="Select Customer" name="customer" optionLabel="name" [options]="customers" appendTo="body"
                 [baseZIndex]="100001" [(ngModel)]="currUser.customer">
               </p-dropdown>
