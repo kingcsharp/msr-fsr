@@ -23,10 +23,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.Role>> GetRolesMapAsync(GetRoles command)
         {
             var result = new List<Domain.Models.Role>();
-            var roles = await _unitOfWork.Roles.Query().Include(i => i.Menus).ThenInclude(i => i.MenuRolePermission)
-                                                       .Include(i => i.Menus).ThenInclude(i => i.MenuItem).ThenInclude(i => i.MenuGroup)
-                                                       .Include(i => i.ChildRoles).ThenInclude(i => i.ChildRole).ThenInclude(i => i.Menus).ThenInclude(i => i.MenuRolePermission)
-                                                       .ToListAsync();
+
+            var roles = await _unitOfWork.Roles.Query()
+                .Include(i => i.Menus).ThenInclude(i => i.MenuRolePermission)
+                .Include(i => i.Menus).ThenInclude(i => i.MenuItem).ThenInclude(i => i.MenuGroup).ToListAsync();
+            var rolesIds = roles.Select(x => x.Id).ToList();
+            var allChildRoles = await _unitOfWork.RoleChildRoleMaps.Query().Include(x=>x.ChildRole).ThenInclude(i => i.Menus)
+            .ThenInclude(i => i.MenuRolePermission).Where(x => rolesIds.Contains(x.ParentRoleId)).ToListAsync();
+
             foreach (var role in roles)
             {
                 var domRole = _mapper.Map<Domain.Models.Role>(role);
@@ -50,7 +54,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 }
                 result.Add(domRole);
             }
-            
+
             return result;
         }
 
