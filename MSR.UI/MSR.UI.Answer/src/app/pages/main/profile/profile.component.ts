@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
     Parsley.addValidator('uppercase', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        let uppercases = value.match(/[A-Z]/g) || [];
+        const uppercases = value.match(/[A-Z]/g) || [];
         return uppercases.length >= requirement;
       },
       messages: {
@@ -42,11 +42,10 @@ export class ProfileComponent implements OnInit {
       }
     });
 
-    // has lowercase
     Parsley.addValidator('lowercase', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        let lowecases = value.match(/[a-z]/g) || [];
+        const lowecases = value.match(/[a-z]/g) || [];
         return lowecases.length >= requirement;
       },
       messages: {
@@ -54,11 +53,10 @@ export class ProfileComponent implements OnInit {
       }
     });
 
-    // has number
     Parsley.addValidator('number', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        let numbers = value.match(/[0-9]/g) || [];
+        const numbers = value.match(/[0-9]/g) || [];
         return numbers.length >= requirement;
       },
       messages: {
@@ -69,7 +67,7 @@ export class ProfileComponent implements OnInit {
     Parsley.addValidator('special', {
       requirementType: 'number',
       validateString: function (value, requirement) {
-        let specials = value.match(/[^a-zA-Z0-9]/g) || [];
+        const specials = value.match(/[^a-zA-Z0-9]/g) || [];
         return specials.length >= requirement;
       },
       messages: {
@@ -103,7 +101,6 @@ export class ProfileComponent implements OnInit {
     jQuery(jQuery('.parsleyjs')[1]).parsley().validate();
     const ctrl = this;
     if (jQuery(jQuery('.parsleyjs')[1]).parsley().isValid()) {
-      console.log('valid');
       this.accountService.resetmypassword(env.apiVersion, this.userPwObj).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.userPwObj = new ResetMyPasswordRequest({ newPassword: '', oldPassword: '' });
@@ -122,6 +119,7 @@ export class ProfileComponent implements OnInit {
   submitDetailsChange() {
     let updateUserReq = new UpdateUserRequest();
     Object.assign(updateUserReq, this.user);
+    updateUserReq.customerId = updateUserReq.customerId === 0 ? null : updateUserReq.customerId;
     if (this.uploadedFiles.length > 0) {
       updateUserReq.file = this.uploadedFiles[0];
     }

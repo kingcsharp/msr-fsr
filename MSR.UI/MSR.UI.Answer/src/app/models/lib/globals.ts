@@ -56,7 +56,16 @@ export class Globals {
         router.events.forEach((event) => {
             if (event instanceof NavigationEnd && this.user !== undefined) {
                 let splitUrl = event.url.split('/');
-                const currMenuItem: [MenuItem] = this.user.roles[0].menus.filter(x => x.url.toLowerCase() === splitUrl[splitUrl.length - 1]);
+                const urlTocheck = splitUrl[splitUrl.length - 1];
+                let currMenuItem: [MenuItem];
+                this.user.roles.forEach(element => {
+                    const elem = element.menus.filter(x => x.url.toLowerCase() === urlTocheck);
+                    if (elem !== undefined) {
+                        currMenuItem = elem;
+                        return;
+                    }
+                });
+                
                 if (currMenuItem.length > 0) {
                     this.activeMenu = currMenuItem[0];
                 }
