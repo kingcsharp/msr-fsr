@@ -128,7 +128,7 @@
             (onShown)="getApprovalInfo(approvalTables[approval.activityType],approval.id)"
             (onHidden)="clearGetApprovalInfo()" [popover]="popTemplate" [popoverContext]="approvalInfo"
             popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
-            View Details
+            Details
           </button>
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings)">
@@ -309,7 +309,7 @@
             (onShown)="getApprovalInfo(approvalTables[approval.activityType],approval.id)"
             (onHidden)="clearGetApprovalInfo()" [popover]="popTemplate" [popoverContext]="approvalInfo"
             popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
-            View Details
+            Details
           </button>
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
