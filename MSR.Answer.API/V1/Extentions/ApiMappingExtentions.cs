@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -26,6 +27,15 @@ namespace MSR.Answer.API.V1.Extentions
             {
                 Token = request.Token,
                 Password = request.NewPassword
+            };
+        }
+
+        public static ResetMyPassword ToResetMyPasswordCommand(this ResetMyPasswordRequest request)
+        {
+            return new ResetMyPassword()
+            {
+                NewPassword = request.NewPassword,
+                OldPassword = request.OldPassword
             };
 
         }
@@ -82,8 +92,8 @@ namespace MSR.Answer.API.V1.Extentions
                 LockoutEnabled = request.LockoutEnabled,
                 AccessFailedCount = request.AccessFailedCount,
                 TimeZoneId = request.TimeZoneId,
-                Roles = request.Roles
-
+                Roles = request.Roles,
+                File = AutoMapperHelper.Mapper.Map<FileModel>(request.File)
             };
         }
 
@@ -232,7 +242,8 @@ namespace MSR.Answer.API.V1.Extentions
                 LockoutEnabled = request.LockoutEnabled,
                 AccessFailedCount = request.AccessFailedCount,
                 TimeZoneId = request.TimeZoneId,
-                Roles = request.Roles
+                Roles = request.Roles,
+                File = AutoMapperHelper.Mapper.Map<FileModel>(request.File)
             };
         }
 
@@ -497,5 +508,8 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
+
+        public static CreateRole ToCreateRoleCommand(this CreateRoleRequest request) => AutoMapperHelper.Mapper.Map<CreateRole>(request);
+        public static UpdateRole ToUpdateRoleCommand(this UpdateRoleRequest request) => AutoMapperHelper.Mapper.Map<UpdateRole>(request);
     }
 }

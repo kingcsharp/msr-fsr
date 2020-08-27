@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import { WidgetModule } from '../../layout/widget/widget.module';
@@ -29,7 +28,6 @@ export const routes = [
     CommonModule,
     FormsModule,
     AlertModule.forRoot(),
-    TooltipModule.forRoot(),
     ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),

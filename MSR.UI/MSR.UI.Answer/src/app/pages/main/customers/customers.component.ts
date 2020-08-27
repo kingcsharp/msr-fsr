@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { CustomerService, Customer, UserService, User, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
+import { CustomerService, Customer, UserService, UserModel, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
   providers: [CustomerService]
 })
 export class CustomersComponent implements OnInit {
-  users: Array<User>;
+  users: Array<UserModel>;
   data: Array<Customer>;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();

@@ -31,24 +31,24 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<UserModel>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required] GetUsersRequest request)
         {
             var command = request.ToGetUsersCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<ICollection<User>>();
+            return ret.ToOkObjectResponse<ICollection<UserModel>>();
         }
 
-        [HttpGet("LoggedInUser"), SwaggerResponse(typeof(AuditActionResult<User>))]
+        [HttpGet("LoggedInUser"), SwaggerResponse(typeof(AuditActionResult<UserModel>))]
         public async Task<IActionResult> GetLoggedInUserData()
         {
             var command = new GetLoggedInUserData() { UserId = UserId };
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<User>();
+            return ret.ToOkObjectResponse<UserModel>();
         }
                        
         [HttpGetAttribute("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
@@ -60,23 +60,23 @@ namespace MSR.Answer.API.V1.Controllers
 
         }
 
-        [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<User>))]
+        [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<UserModel>))]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
             var command = request.ToCreateUserCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<User>("User has been successfully created.");
+            return ret.ToOkObjectResponse<UserModel>("User has been successfully created.");
         }
 
-        [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<User>))]
+        [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<UserModel>))]
         public async Task<IActionResult> UpdateUser([FromBody, Required] UpdateUserRequest request)
         {
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            return ret.ToOkObjectResponse<User>("User has been successfully updated.");
+            return ret.ToOkObjectResponse<UserModel>("User has been successfully updated.");
         }
 
         [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete), SwaggerResponse(typeof(void))]
@@ -98,7 +98,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToCreateUserRoleCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<User>("Role assigned to user successfully");
+            return ret.ToOkObjectResponse<UserModel>("Role assigned to user successfully");
         }
 
         [HttpPatch("/Role"), HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]

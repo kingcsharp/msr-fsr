@@ -153,7 +153,7 @@
           {{user.email}}
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{user.createdOn | date :'short' }}
+          {{user.createdOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('roles',gridSettings)">
           <span *ngFor="let role of user.roles" class="badge mr-xs badge-secondary">{{role.name}}</span>
@@ -285,7 +285,7 @@
               Created On
             </label>
             <div class="col-md-4" *ngIf="currUser.id !== undefined">
-              <label class="col-form-label">{{currUser.createdOn | date :'short'}}</label>
+              <label class="col-form-label">{{currUser.createdOn | userTimezone}}</label>
             </div>
           </div>
           <div class="form-group row">

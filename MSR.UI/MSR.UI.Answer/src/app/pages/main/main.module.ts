@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { UtilsModule } from '../../layout/utils/utils.module';
 import { LiveTileModule } from '../../components/tile/tile.module';
 import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
@@ -17,7 +16,6 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
-import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RoleassignmentsComponent } from './roleassignments/roleassignments.component';
@@ -25,6 +23,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerCreateComponent } from './customer-create/customer-create.component';
 import { CertificationsComponent } from './certifications/certifications.component';
+import { RoleComponent } from './role/role.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -32,7 +32,9 @@ export const routes = [
   { path: 'roleassignments', component: RoleassignmentsComponent, pathMatch: 'full' },
   { path: 'customers', component: CustomersComponent, pathMatch: 'full' },
   { path: 'customer-create', component: CustomerCreateComponent, pathMatch: 'full' },
-  { path: 'training', component: CertificationsComponent, pathMatch: 'full' }
+  { path: 'training', component: CertificationsComponent, pathMatch: 'full' },
+  { path: 'roles', component: RoleComponent, pathMatch: 'full' },
+  { path: 'profile', component: ProfileComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -41,19 +43,18 @@ export const routes = [
     RoleassignmentsComponent,
     CustomersComponent,
     CustomerCreateComponent,
-    CertificationsComponent
+    CertificationsComponent,
+    RoleComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     WidgetModule,
     ProgressbarModule.forRoot(),
-    // TrendModule,
-    CheckboxModule,
     MultiSelectModule,
     BsDropdownModule.forRoot(),
     DropdownModule,
-    TooltipModule.forRoot(),
     FormsModule,
     InputSwitchModule,
     TextMaskModule,

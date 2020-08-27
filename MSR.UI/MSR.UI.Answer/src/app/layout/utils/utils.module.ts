@@ -9,7 +9,7 @@ import 'jquery.animate-number/jquery.animateNumber.js';
 //import 'jQuery-Mapael/js/maps/usa_states';
 //import 'jQuery-Mapael/js/maps/world_countries.js';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { ProgressAnimateDirective } from './directives/progress-animate.directive';
@@ -18,9 +18,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { CheckboxModule } from 'primeng/checkbox';
 import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
 import { MultiselectWrapperFormComponent } from '../../../app/components/multiselect-wrapper-form/multiselect-wrapper-form.component';
-import { CheckboxModule } from 'primeng/checkbox';
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component';
@@ -32,7 +32,7 @@ import { CsvImportComponent } from '../../../app/components/csv-import/csv-impor
 import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
-
+import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
 
 @NgModule({
   declarations: [
@@ -41,13 +41,14 @@ import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    GridOptionsComponent,
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
-    HelpbuttonWrapperComponent
+    HelpbuttonWrapperComponent,
+    GridOptionsComponent,
+    TimeZonePipe
   ],
   exports: [
     ProgressAnimateDirective,
@@ -55,15 +56,22 @@ import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    GridOptionsComponent,
     FileUploadModule,
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
+    FileUploadModule,
+    TooltipModule,
     CheckboxModule,
-    HelpbuttonWrapperComponent
+    FormsModule,
+    MultiSelectModule,
+    DialogModule,
+    CalendarModule,
+    GridOptionsComponent,
+    HelpbuttonWrapperComponent,
+    TimeZonePipe
   ],
   imports: [
     CommonModule,
@@ -72,10 +80,11 @@ import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/
     MultiSelectModule,
     DialogModule,
     FileUploadModule,
-    TooltipModule,
-    NgxDocViewerModule,
-    CheckboxModule
-  ]
+    CheckboxModule,
+    TooltipModule.forRoot(),
+    NgxDocViewerModule
+  ],
+  providers: [DatePipe]
 })
 export class UtilsModule {
 }

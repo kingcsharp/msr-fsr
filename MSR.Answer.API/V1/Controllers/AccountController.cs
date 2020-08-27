@@ -26,7 +26,7 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous, SwaggerResponse(typeof(AuditActionResult<string>))]
-        public async Task<IActionResult> Login([FromBody, Required]SystemLoginRequest request)
+        public async Task<IActionResult> Login([FromBody, Required] SystemLoginRequest request)
         {
             var command = request.ToSystemLoginCommand();
 
@@ -34,10 +34,10 @@ namespace MSR.Answer.API.V1.Controllers
 
             return result.ToOkObjectResponse<string>();
         }
-                                                                                                                                                                                                                                                                                                                                                                                                                        
+
         [HttpPost("forgotpassword")]
         [AllowAnonymous, SwaggerResponse(System.Net.HttpStatusCode.NoContent, typeof(void))]
-        public async Task<IActionResult> ForgotPassword([FromBody, Required]ForgotPasswordRequest request)
+        public async Task<IActionResult> ForgotPassword([FromBody, Required] ForgotPasswordRequest request)
         {
             var command = request.ToForgotPasswordCommand();
 
@@ -48,7 +48,7 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpPost("forgotusername")]
         [AllowAnonymous, SwaggerResponse(System.Net.HttpStatusCode.NoContent, typeof(void))]
-        public async Task<IActionResult> ForgotUserName([FromBody, Required]ForgotUserNameRequest request)
+        public async Task<IActionResult> ForgotUserName([FromBody, Required] ForgotUserNameRequest request)
         {
             var command = request.ToForgotUserNameCommand();
 
@@ -59,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpPatch("resetpassword")]
         [AllowAnonymous, SwaggerResponse(System.Net.HttpStatusCode.NoContent, typeof(void))]
-        public async Task<IActionResult> ResetPassword([FromBody, Required]ResetPasswordRequest request)
+        public async Task<IActionResult> ResetPassword([FromBody, Required] ResetPasswordRequest request)
         {
             var command = request.ToResetPasswordCommand();
 
@@ -68,5 +68,15 @@ namespace MSR.Answer.API.V1.Controllers
             return result.ToOkObjectResponse("Password reset email sent");
         }
 
+        [HttpPatch("resetmypassword")]
+        [SwaggerResponse(System.Net.HttpStatusCode.OK, typeof(void))]
+        public async Task<IActionResult> ResetMyPassword([FromBody, Required] ResetMyPasswordRequest request)
+        {
+            var command = request.ToResetMyPasswordCommand();
+
+            var result = await _dispatcher.DispatchAsync(command);
+
+            return result.ToOkObjectResponse("Password was successfully updated.");
+        }
     }
 }

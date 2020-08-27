@@ -175,7 +175,7 @@
 
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
-              {{location.createdOn | date :'short'}}
+              {{location.createdOn | userTimezone}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('address1', gridSettings)">
               {{location.address1}}

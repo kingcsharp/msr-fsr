@@ -11,7 +11,7 @@ namespace MSR.Domain.Models
         public int StatusId { get; set; }
         public int TaskStepOrder { get; set; }
         public int? AssignedTo { get; set; }
-        public virtual User AssignedToUser { get; set; }
+        public virtual UserModel AssignedToUser { get; set; }
         public decimal? TotalTaskTime { get; set; }
         public bool? TaskIsRunning { get; set; }
         public DateTime? TaskRunningSince { get; set; }

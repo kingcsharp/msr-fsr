@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
-import { MenuItem, EnumMenuItem, EnumApprovalTables } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
@@ -9,7 +9,6 @@ import { EnumPrivilege } from '../../models/enums/privileges';
 import { AllowedActions } from './AllowedActions';
 import { Observable, Observer, BehaviorSubject, Subject } from 'rxjs';
 import { ModalData } from './ModalData';
-import { resolve } from 'dns';
 
 @Injectable()
 export class Globals {
@@ -77,6 +76,7 @@ export class Globals {
         }
         if (localStorage.user !== undefined) {
             this.user = JSON.parse(localStorage.user);
+            this.user.timezonePipe = this.getOffset();
         }
     }
 
@@ -156,6 +156,29 @@ export class Globals {
 
     updateUser(val) {
         this.user = val;
+        this.user.timezonePipe = this.getOffset();
+        localStorage.setItem('user', JSON.stringify(val));
+    }
+
+    getCurrentUser() {
+        return this.user;
+    }
+
+    getOffset() {
+        if (this.user.timeZone === undefined) {
+            return '';
+        }
+        const offset = this.user.timeZone.offset;
+        var intPart = Math.floor(offset).toString();
+        var fraction = Math.floor((offset - Math.floor(offset)) * 100) * 60 / 100;
+        var fractionPart = '';
+        if (fraction > 0) {
+            fractionPart = ':' + fraction.toString();
+            if (fraction.toString().length === 1) {
+                fractionPart += '0';
+            }
+        }
+        return 'GMT' + intPart + fractionPart;
     }
 
     getLogin() {

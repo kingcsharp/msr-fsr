@@ -38,14 +38,14 @@
         </div>
         <div class="save-view-form" *ngIf="showSaveView">
             <div>
-                <div class="form-row">
+                <div class="form-row"> 
                     <input type="text" class="form-control col-5" placeholder="View Name"
                         [(ngModel)]="viewToSave.viewName" />
                     <div class="form-check col-3">
                         <div class="ui-g-12">
-                            <p-checkbox name="isDefault" label="Default" [(ngModel)]="viewToSave.isDefault"
+                            <!-- <p-checkbox name="isDefault" label="Default" [(ngModel)]="viewToSave.isDefault"
                                 binary="true">
-                            </p-checkbox>
+                            </p-checkbox> -->
                         </div>
                     </div>
                     <button type="button" class="btn btn-warning width-100 float-right"

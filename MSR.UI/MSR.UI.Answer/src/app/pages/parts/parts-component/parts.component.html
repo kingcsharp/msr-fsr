@@ -147,13 +147,13 @@
           <grid-file-viewer [menuItem]="menuItems.Parts" [files]="partmodel.files"></grid-file-viewer>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{partmodel.createdOn | date :'short' }}
+          {{partmodel.createdOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           {{partmodel.createdByName }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-          {{partmodel.lastUpdatedOn | date :'short' }}
+          {{partmodel.lastUpdatedOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
           {{partmodel.lastUpdatedByName }}

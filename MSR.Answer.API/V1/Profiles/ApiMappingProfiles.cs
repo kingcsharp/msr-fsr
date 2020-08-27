@@ -59,6 +59,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateInvoiceItemRequest, CreateUpdateInvoiceItem>();
             CreateMap<ImportRequest, ImportFile>();
             CreateMap<GetSensorRequest, GetSensor>();
+            CreateMap<CreateRoleRequest, CreateRole>();
+            CreateMap<UpdateRoleRequest, UpdateRole>();
         }
     }
 }
