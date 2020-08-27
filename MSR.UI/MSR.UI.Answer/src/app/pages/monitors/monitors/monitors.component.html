@@ -85,7 +85,7 @@
                             {{model.workerName}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)">
-                            {{model.taskCompleted | date :'short'}}
+                            {{model.taskCompleted | userTimezone}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
                             {{model.serialNumber}}
