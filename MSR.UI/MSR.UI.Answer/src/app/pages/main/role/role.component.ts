@@ -78,7 +78,7 @@ export class RoleComponent implements OnInit {
 
   showDialog(roleView: Role) {
     this.currentRole = this.getCurrentRole(roleView);
-    this.availableRoles = this.data.filter((elem) => { return elem.id !== this.currentRole.id; });
+    this.availableRoles = this.data.filter((elem) => elem.id !== this.currentRole.id);
     this.display = true;
   }
 
@@ -92,7 +92,7 @@ export class RoleComponent implements OnInit {
       let data = {
         id: this.currentRole.id,
         name: this.currentRole.name, isCertificationRole: this.currentRole.isCertificationRole,
-        parentRoleIds: this.currentRole.parentRoles.map((role) => { return role.id; })
+        parentRoleIds: this.currentRole.parentRoles.map((role) => role.id)
       };
 
       if (this.currentRole.id !== undefined) {
