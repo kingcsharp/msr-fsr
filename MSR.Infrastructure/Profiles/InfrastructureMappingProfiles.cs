@@ -95,7 +95,9 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
 
             CreateMap<Role, Domain.Models.Role>()
-                .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
+                .ForMember(dest => dest.Menus, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentRoles, opt => opt.Ignore())
+                .ForMember(dest => dest.IsCertificationRole, opts => opts.MapFrom(src => src.IsCertificationRole == null ? false : src.IsCertificationRole));
 
 
             #region Workflow

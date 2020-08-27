@@ -34,63 +34,22 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<Role>>();
         }
 
-        [HttpGet("Roles"), SwaggerResponse(typeof(AuditActionResult<ICollection<RoleView>>))]
-        [HasPrivilegeApi("Roles", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> Get()
-        {
-            return new OkObjectResult(new AuditActionResult<ICollection<RoleView>>()
-            {
-                Object = new List<RoleView>()
-                {
-                    new RoleView()
-                    {
-                        Created = new UserModel(){FirstName = "Pedro",LastName = "John"},
-                        HasAssignedUsers = false,
-                        Id = 1,
-                        IsCertificationRole = true,
-                        Name = "SuperPotatoe",
-                        ParentRoles = null
-                    }
-                }
-            });
-        }
-
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult<RoleView>))]
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<Role>))]
         [HasPrivilegeApi("Roles", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> Post(CreateRoleRequest request)
         {
-            return new OkObjectResult(new AuditActionResult<RoleView>()
-            {
-                SuccessMessage = "Role Successfully Created",
-                Object = new RoleView()
-                {
-                    Created = new UserModel() { FirstName = "Pedro", LastName = "John" },
-                    HasAssignedUsers = false,
-                    Id = 1,
-                    IsCertificationRole = true,
-                    Name = "SuperPotatoe",
-                    ParentRoles = null
-                }
-            });
+            var command = request.ToCreateRoleCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Role>("Role successfully created");
         }
 
-        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<RoleView>))]
+        [HttpPatch, SwaggerResponse(typeof(AuditActionResult<Role>))]
         [HasPrivilegeApi("Roles", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> Patch(UpdateRoleRequest request)
         {
-            return new OkObjectResult(new AuditActionResult<RoleView>()
-            {
-                SuccessMessage = "Role Successfully Updated",
-                Object = new RoleView()
-                {
-                    Created = new UserModel() { FirstName = "Pedro", LastName = "John" },
-                    HasAssignedUsers = false,
-                    Id = 1,
-                    IsCertificationRole = true,
-                    Name = "SuperPotatoe",
-                    ParentRoles = null
-                }
-            });
+            var command = request.ToUpdateRoleCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Role>("Role successfully updated");
         }
 
         [HttpDelete("{id}"), SwaggerResponse(typeof(AuditActionResult<Role>))]
