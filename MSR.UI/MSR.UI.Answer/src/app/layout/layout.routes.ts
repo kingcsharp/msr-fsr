@@ -11,7 +11,6 @@ const routes: Routes = [
       { path: 'parts', loadChildren: () => import('../pages/parts/parts.module').then(m => m.PartsModule) },
       { path: 'billing', loadChildren: () => import('../pages/billing/billing.module').then(m => m.BillingModule) },
       { path: 'inbox', loadChildren: () => import('../pages/inbox/inbox.module').then(m => m.InboxModule) },
-      { path: 'profile', loadChildren: () => import('../pages/profile/profile.module').then(m => m.ProfileModule) },
       { path: 'ecommerce', loadChildren: () => import('../pages/ecommerce/ecommerce.module').then(m => m.EcommerceModule) },
       { path: 'core', loadChildren: () => import('../pages/core/core-elements.module').then(m => m.CoreElementsModule) },
       { path: 'forms', loadChildren: () => import('../pages/forms/forms.module').then(m => m.FormModule) },

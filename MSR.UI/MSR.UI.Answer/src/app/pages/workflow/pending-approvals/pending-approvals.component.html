@@ -147,7 +147,7 @@
           {{approval.status}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{approval.createdOn | date :'short'}}
+          {{approval.createdOn | userTimezone}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           {{approval.createdByName}}
@@ -328,7 +328,7 @@
           {{approval.status}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
-          {{approval.createdOn | date :'short'}}
+          {{approval.createdOn | userTimezone}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
           {{approval.createdByName}}

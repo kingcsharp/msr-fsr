@@ -11,7 +11,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<SystemLogin>,
         ICommandHandler<ForgotPassword>,
         ICommandHandler<ResetPassword>,
-        ICommandHandler<ForgotUserName>
+        ICommandHandler<ForgotUserName>,
+        ICommandHandler<ResetMyPassword>
     {
         private readonly IAccountService _accountService;
         public AccountAppService(IAccountService accountService)
@@ -29,14 +30,18 @@ namespace MSR.Application.ApplicationServices
         {
             await _accountService.ForgotPasswordAsync(command);
             return new CommandResponse();
-
         }
 
         public async Task<ICommandResponse> HandleAsync(ResetPassword command, CancellationToken cancellationToken = default)
         {
             await _accountService.ResetPasswordAsync(command);
             return new CommandResponse();
+        }
 
+        public async Task<ICommandResponse> HandleAsync(ResetMyPassword command, CancellationToken cancellationToken = default)
+        {
+            await _accountService.ResetMyPasswordAsync(command);
+            return new CommandResponse();
         }
 
         public async Task<ICommandResponse> HandleAsync(ForgotUserName command, CancellationToken cancellationToken = default)

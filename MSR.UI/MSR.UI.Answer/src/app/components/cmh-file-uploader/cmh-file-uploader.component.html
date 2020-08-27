@@ -5,7 +5,7 @@
     <ng-template pTemplate="content">
         <ul *ngIf="showLi && files !==undefined && files.length>0">
             <li class="row fileLi" *ngFor="let file of files">
-                <div class="col-sm-2 col-md-2 col-lg-1 text-center">
+                <div class="col-sm-2 col-md-2 col-lg-2 text-center">
                     <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'"
                         class="fad fa-file-word"></i>
                     <i tooltip="{{file.name}}"
@@ -29,7 +29,7 @@
                         *ngIf="file.fileId === undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
                         width="50" class="ng-star-inserted" />
                 </div>
-                <div class="col-sm-9  col-md-9 col-lg-10">{{file.name}}</div>
+                <div class="col-sm-9  col-md-9 col-lg-9">{{file.name}}</div>
                 <div class="col-sm-1 col-md-1">
                     <i class="far fa-trash-alt pointer" tooltip="Remove File" data-cy="removeSubPart"
                         (click)="removeFile(file)"></i>

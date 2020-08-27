@@ -6,9 +6,9 @@ using System.Text;
 
 namespace MSR.Domain.Models
 {
-    public class User
+    public class UserModel
     {
-        public User()
+        public UserModel()
         {
             Roles = new HashSet<Role>();
         }
@@ -114,6 +114,8 @@ namespace MSR.Domain.Models
         /// </summary>
         public DateTime LastUpdatedOn { get; set; }
 
+        public TimeZoneModel TimeZone { get; set; }
+
         /// <summary>
         /// Gets or Sets LastUpdatedBy
         /// </summary>
@@ -133,6 +135,8 @@ namespace MSR.Domain.Models
         /// Gets or Sets Roles
         /// </summary>
         public ICollection<Role> Roles { get; set; }
+
+        public FileModel FileModel { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

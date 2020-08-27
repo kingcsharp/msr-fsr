@@ -1254,7 +1254,7 @@ describe('Help Functionality', () => {
                                 "url": "AdminCostSettings",
                                 "name": "Admin Cost Settings",
                                 "info": "System Wide Cost Settings",
-                                "icon": "fa fa-cog",
+                                "icon": "far fa-edit",
                                 "orderNumber": 2,
                                 "menuGroup": {
                                     "url": "#",

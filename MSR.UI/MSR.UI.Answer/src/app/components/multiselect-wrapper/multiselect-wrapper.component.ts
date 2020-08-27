@@ -101,27 +101,30 @@ export class MultiselectWrapperComponent implements OnInit {
         if (filterItem == undefined) {
           filterItem = item;
         }
-        filterItem.forEach(element => {
-          let length = this.currentOptions.length;
-          let found = false;
-          while (length--) {
-            const existingItem = this.currentOptions[length];
-            if (existingItem.value.id === element[ctrl.basicOptions.id]) {
-              found = true;
-              length = 0;
-            }
-          }
-          if (!found) {
-            this.currentOptions.push({
-              label: element[ctrl.basicOptions.name],
-              value: {
-                id: element[ctrl.basicOptions.id],
-                name: element[ctrl.basicOptions.name]
+        if (filterItem.length > 0) {
+          filterItem.forEach(element => {
+            let length = this.currentOptions.length;
+            let found = false;
+            while (length--) {
+              const existingItem = this.currentOptions[length];
+              if (existingItem.value.id === element[ctrl.basicOptions.id]) {
+                found = true;
+                length = 0;
               }
-            });
-          }
-        });
-      } else {
+            }
+            if (!found) {
+              this.currentOptions.push({
+                label: element[ctrl.basicOptions.name],
+                value: {
+                  id: element[ctrl.basicOptions.id],
+                  name: element[ctrl.basicOptions.name]
+                }
+              });
+            }
+          });
+        }
+      }
+      else {
         this.currentOptions.push({
           label: this.getLabel(item),
           value: this.getValue(item)

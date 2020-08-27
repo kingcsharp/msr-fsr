@@ -10,9 +10,8 @@ import { TableState } from 'primeng/api';
     '(document:click)': 'onClick($event)',
   },
   selector: 'grid-options',
-  templateUrl: './grid-options.component.html',
-  // template: `<div>HIasfasf</div>`,
-  styleUrls: ['./grid-options.component.scss']
+  templateUrl: './grid-options.component.html'
+  
 })
 export class GridOptionsComponent implements OnInit {
   gridSettings: ColumnsSaved[];
@@ -182,9 +181,14 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public showSaveViewDiv() {
-    this.showSaveView = !this.showSaveView;
-    if (this.showSaveView) {
-      this.viewToSave = new ViewSaved({ version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, columns: this.defaultColumns });
+    try {
+      if (!this.showSaveView) {
+        const viewData = { version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, columns: this.defaultColumns };
+        this.viewToSave = new ViewSaved(viewData);
+      }
+      this.showSaveView = !this.showSaveView;
+    } catch (err) {
+      console.log(err);
     }
   }
 

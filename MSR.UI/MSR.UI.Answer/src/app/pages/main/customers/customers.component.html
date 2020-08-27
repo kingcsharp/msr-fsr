@@ -163,7 +163,7 @@
               {{customer.created?.fullName}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
-              {{customer.createdOn | date :'short'}}
+              {{customer.createdOn | userTimezone}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="customer.status != null">
               {{customer.status}}
@@ -172,7 +172,7 @@
               Approved
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-              <i *ngIf="canEditCustomer" class="fa fa-cog pointer" tooltip="Edit Customer" data-cy="edit-button"
+              <i *ngIf="canEditCustomer" class="far fa-edit pointer" tooltip="Edit Customer" data-cy="edit-button"
                 [routerLink]="['../customer-create']" [queryParams]="{id: customer.id}"></i>
               <i *ngIf="canDeleteCustomer" class="fa fa-trash pointer" tooltip="Delete Customer" data-cy="delete-button"
                 (click)="openConfirmDeleteDialog(customer)"></i>

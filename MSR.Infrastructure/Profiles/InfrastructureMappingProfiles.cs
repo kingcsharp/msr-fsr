@@ -24,7 +24,7 @@ namespace MSR.Infrastructure.Profiles
         public InfrastructureMappingProfiles()
         {
             #region User
-            CreateMap<User, Domain.Models.User>()
+            CreateMap<User, UserModel>()
                 .ForMember(dest => dest.Roles, opts => opts.Ignore())
                 .ForMember(dest => dest.SupervisorName, opt => opt.MapFrom(src => src.Supervisor.GetFullName()))
                 .ReverseMap();
@@ -59,7 +59,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.CustomerImportItem, CreateCustomer>();
             CreateMap<Domain.Models.CustomerImportItem, UpdateCustomer>()
                 .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Id));
-
             #endregion
 
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
@@ -95,10 +94,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
-           
 
             CreateMap<Role, Domain.Models.Role>()
-                .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
+                .ForMember(dest => dest.Menus, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentRoles, opt => opt.Ignore())
+                .ForMember(dest => dest.IsCertificationRole, opts => opts.MapFrom(src => src.IsCertificationRole == null ? false : src.IsCertificationRole));
 
 
             #region Workflow
