@@ -21,7 +21,7 @@ describe('Procedure Types Functionality', () => {
 
         cy.get('body').click('top')
 
-        cy.get('[data-cy="grid-header"]').each(($el, index, list$) => {
+        cy.get('[data-cy="monitors-header"]').each(($el, index, list$) => {
 
             if(headerNames.find( name => name === $el.text().trim()) === undefined){
                 throw new Error("Invalid Column in Grid")

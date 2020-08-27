@@ -65,7 +65,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-model>
-                    <tr class="ui-selectable-row">
+                    <tr class="ui-selectable-row" data-cy="row">
                         <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
                             {{model.id}}
                         </td>
@@ -85,7 +85,7 @@
                             {{model.workerName}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)">
-                            {{model.taskCompleted}}
+                            {{model.taskCompleted | date :'short'}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
                             {{model.serialNumber}}
