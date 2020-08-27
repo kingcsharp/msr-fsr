@@ -58,7 +58,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-model>
-                    <tr class="ui-selectable-row">
+                    <tr class="ui-selectable-row" data-cy="row">
                         <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
                             {{model.id}}
                         </td>

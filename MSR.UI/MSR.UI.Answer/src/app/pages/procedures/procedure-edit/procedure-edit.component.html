@@ -17,7 +17,7 @@
                         <div class="col-12">
                             <p-dropdown placeholder="Select Major Group" name="proceduretype"
                                 [options]="availableProcedureTypes" showClear="true" [(ngModel)]="procedure.procedureTypeId"
-                                data-cy="majorgroup-dropdown">
+                                data-cy="proceduretype-dropdown">
                             </p-dropdown>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="col-12">
                             <p-dropdown placeholder="Select Duration Type" name="durationType"
                                 [options]="durationTypeOptions" showClear="true" [(ngModel)]="procedure.durationType"
-                                data-cy="majorgroup-dropdown">
+                                data-cy="durationtype-dropdown">
                             </p-dropdown>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                             <div class="row">
                                 <div class="form-group">
                                     <label class="col-form-label text-left">
-                                        Step Number: {{ procedureStep.value.printOrder}} {{ procedureStep.value.id}} {{procedureStep.id}}
+                                        Step Number: {{ procedureStep.value.printOrder}} {{procedureStep.id}}
                                         
                                     </label>
                                 </div>

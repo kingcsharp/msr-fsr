@@ -10,6 +10,7 @@ import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
+import { ProcedureModel } from '../../../services/mockclasses';
 
 @Component({
   selector: 'app-procedure-edit',
@@ -18,11 +19,6 @@ import { Globals } from '../../../models/lib/globals';
   providers: [DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService,
     ProcedureTypeService, ProcedureStepTypeService]
 })
-
-export class ProcedureModel extends Procedure {
-  referenceFiles?: FileRequest[] | undefined;
-}
-
 export class ProcedureEditComponent implements OnInit {
 
   privileges = EnumPrivilege;
@@ -101,14 +97,17 @@ export class ProcedureEditComponent implements OnInit {
     this.procedureTemplateService.procedureTemplateGet(null, env.apiVersion).subscribe(responseHandler((procedureTemplateGetResponse) => {
       this.availableProcedureStepTemplates = procedureTemplateGetResponse.object.map(s => ({ label: s.title, value: s.id }));
 
+      this.globals.showLoader(true);
       this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((roleResponse) => {
 
         this.availableRoles = roleResponse.object.map(s => ({ label: s.name, value: s.id }));
 
+        this.globals.showLoader(true);
         this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe((procedureTypeGetResponse) => {
 
           this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
 
+          this.globals.showLoader(true);
           this.procedureStepTypeService.procedureStepType(null, env.apiVersion).subscribe(responseHandler((procedureStepTypeResponse) => {
 
               this.procedureStepTypeOptions = procedureStepTypeResponse.object.map(s => ({ label: s.name, value: s.id }));
@@ -135,6 +134,7 @@ export class ProcedureEditComponent implements OnInit {
 
       if (this.procedure.id !== 0) {
 
+        this.globals.showLoader(true);
         this.procedureService.procedureGet(this.procedure.id, env.apiVersion).subscribe(responseHandler((procedrueGetResponse) => {
 
           this.procedure = procedrueGetResponse.object[0];
@@ -159,14 +159,18 @@ export class ProcedureEditComponent implements OnInit {
 
   getProcedureSteps() {
 
+    this.globals.showLoader(true);
     this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((setGetResponse) => {
 
       this.procedureSteps = setGetResponse.object.sort((a, b) => a.printOrder < b.printOrder ? -1 : a.printOrder > b.printOrder ? 1 : 0);
+      
       this.procedureSteps.forEach( procedureStep => {
 
         if (procedureStep.referenceFiles === undefined) {
           procedureStep.referenceFiles = [];
         }
+        procedureStep.newPrintOrder = procedureStep.printOrder;
+        procedureStep.predecessorStepName = this.procedureSteps.find(s => s.id === procedureStep.predecessorStepId)?.title;
 
       });
 
@@ -180,6 +184,7 @@ export class ProcedureEditComponent implements OnInit {
 
     this.procedureSteps.forEach(procedureStep => {
 
+      this.globals.showLoader(true);
       this.procedureStepMonitorService.procedurestep(procedureStep.id, null, env.apiVersion).subscribe(responseHandler((procedureStepResponse) => {
 
         if (procedureStepResponse.object.length === 0) {
@@ -187,10 +192,11 @@ export class ProcedureEditComponent implements OnInit {
         } else {
           procedureStep.monitors = procedureStepResponse.object;
         }
+        
+        procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId)?.value;
 
-        procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId).value;
         procedureStep.selectedRoles = new Array<number>();
-        procedureStep.roles.forEach(role => {
+        procedureStep.roles?.forEach(role => {
 
           procedureStep.selectedRoles.push(this.availableRoles.find(s => s.value === role.id).value);
 
