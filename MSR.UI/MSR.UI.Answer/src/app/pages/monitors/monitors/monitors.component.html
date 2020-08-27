@@ -27,7 +27,7 @@
                         </grid-options>
                     </div>
                 </ng-template>
-                <ng-template pTemplate="header">
+                <ng-template pTemplate="header" *ngIf="data.length !== 0">
                     <tr>
                         <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
                             data-cy="monitors-header">

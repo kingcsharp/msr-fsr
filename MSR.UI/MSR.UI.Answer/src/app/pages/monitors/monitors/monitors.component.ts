@@ -44,10 +44,27 @@ export class MonitorsComponent implements OnInit {
   getMonitors() {
 
     this.globals.showLoader(true);
-    this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler( (response) => {
-      this.data = response.object;
+
+    try{
+
+      this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler( (response) => {
+        this.data = response.object;
+        this.loading = false;
+      }, () => {
+  
+        this.data = [];
+        this.loading = false;
+  
+      }));
+
+
+    }catch(e){
+
+      this.data = [];
       this.loading = false;
-    }));
+
+    }
+
   }
 
 }

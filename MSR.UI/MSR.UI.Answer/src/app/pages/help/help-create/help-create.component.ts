@@ -12,6 +12,7 @@ import {MainModule} from '../../main/main.module';
 import {PartsModule} from '../../parts/parts.module';
 import { WorkflowModule} from '../../workflow/workflow.module';
 import { ProceduresModule} from '../../procedures/procedures.module';
+import { MonitorsModule} from '../../monitors/monitors.module';
 
 @Component({
   selector: 'app-help-create',
@@ -113,6 +114,8 @@ export class HelpCreateComponent implements OnInit {
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(workflowPaths);
     let proceduresPaths = ProceduresModule.routes.filter(s => s.path !== '').map(m => '/procedures/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(proceduresPaths);
+    let monitorsPaths = MonitorsModule.routes.filter(s => s.path !== '').map(m => '/monitors/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(monitorsPaths);
   }
 
   getHelpPaths(): Array<string> {
