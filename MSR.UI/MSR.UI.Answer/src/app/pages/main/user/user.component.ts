@@ -91,8 +91,8 @@ export class UserComponent implements OnInit {
       { label: 'InActive', value: false },
     ];
     this.userTypes = [
-      { label: 'Is Portal User', value: true },
-      { label: 'Is Not Portal User', value: false },
+      { label: 'Portal User', value: false },
+      { label: 'Answer User', value: true },
     ];
 
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);

@@ -132,13 +132,7 @@
           </ng-template>
         </td>
         <td class="text-center" [hidden]="!cg.isVisibleCol('isAnswerUser', gridSettings)">
-          <ng-template [ngIf]="!canEditUsers">
-            <p-inputSwitch disabled="true" [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)">
-            </p-inputSwitch>
-          </ng-template>
-          <ng-template [ngIf]="canEditUsers">
-            <p-inputSwitch [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)"></p-inputSwitch>
-          </ng-template>
+          <span style="vertical-align: middle; margin-left: .5em">{{user.isAnswerUser?'Answer User':'Portal User'}}</span>
         </td>
         <td [hidden]="!cg.isVisibleCol('firstName', gridSettings)">
           <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
