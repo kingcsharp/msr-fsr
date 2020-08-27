@@ -20,6 +20,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string ReferenceName { get; set; }
 
         public DateTime OpenDate { get; set; }
+        public int? Revision { get; set; }
 
         public DateTime? CloseDate { get; set; }
 
