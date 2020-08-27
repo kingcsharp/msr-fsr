@@ -19,17 +19,17 @@
                     <legend>
                     </legend>
                     <div class="form-group row">
-                        <label for="firstName" class="col-md-2 col-form-label text-md-right">
+                        <label for="firstName" class="col-md-2 form-control-label text-md-right">
                             First Name:
                         </label>
                         <div class="col-md-4 ">
-                            <label class="col-form-label">{{user.firstName}}</label>
+                            <label class="form-control-label">{{user.firstName}}</label>
                         </div>
-                        <label for="lastName" class="col-md-2  col-form-label text-md-right">
+                        <label for="lastName" class="col-md-2  form-control-label text-md-right">
                             Last Name:
                         </label>
                         <div class="col-md-4 ">
-                            <label class="col-form-label">{{user.lastName}}</label>
+                            <label class="form-control-label">{{user.lastName}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -37,27 +37,27 @@
                             E-mail:
                         </label>
                         <div class="col-md-4 col-12">
-                            <label class="col-form-label">{{user.email}}</label>
+                            <label class="form-control-label">{{user.email}}</label>
                         </div>
-                        <label for="userName" class="col-md-2  col-form-label text-md-right">
+                        <label for="userName" class="col-md-2  form-control-label text-md-right">
                             Username:
                         </label>
                         <div class="col-md-4 ">
-                            <label class="col-form-label">{{user.userName}}</label>
+                            <label class="form-control-label">{{user.userName}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="title" class="col-md-2  col-form-label text-md-right">
+                        <label for="title" class="col-md-2  form-control-label text-md-right">
                             Title:
                         </label>
                         <div class="col-md-4 ">
-                            <label class="col-form-label">{{user.title}}</label>
+                            <label class="form-control-label">{{user.title}}</label>
                         </div>
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
                             Phone:
                         </label>
                         <div class="col-md-4 col-12">
-                            <label class="col-form-label">{{user.phone}}</label>
+                            <label class="form-control-label">{{user.phone}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -65,31 +65,31 @@
                             Supervisor:
                         </label>
                         <div class="col-md-4 ">
-                            <label class="col-form-label">{{user.supervisorName}}</label>
+                            <label class="form-control-label">{{user.supervisorName}}</label>
                         </div>
                         <label for="createdOn" *ngIf="user.id !== undefined"
-                            class="col-md-2  col-form-label text-md-right">
+                            class="col-md-2  form-control-label text-md-right">
                             Created On:
                         </label>
                         <div class="col-md-4" *ngIf="user.id !== undefined">
-                            <label class="col-form-label">{{user.createdOn | userTimezone}}</label>
+                            <label class="form-control-label">{{user.createdOn | userTimezone}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-2  col-form-label text-md-right">
+                        <label class="col-md-2  form-control-label text-md-right">
                             Is Active:
                         </label>
                         <div class="col-md-4 ">
                             <div class="display-inline-block isActive">
-                                <label class="col-form-label">{{user.isActive?'Yes':'No'}}</label>
+                                <label class="form-control-label">{{user.isActive?'Yes':'No'}}</label>
                             </div>
                         </div>
-                        <label class="col-md-2  col-form-label text-md-right">
+                        <label class="col-md-2  form-control-label text-md-right">
                             Is Answer User:
                         </label>
                         <div class="col-md-4 ">
                             <div class="display-inline-block isAnswerUser">
-                                <label class="col-form-label">{{user.isAnswerUser?'Yes':'No'}}</label>
+                                <label class="form-control-label">{{user.isAnswerUser?'Yes':'No'}}</label>
                             </div>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                             Location:
                         </label>
                         <div class="col-md-4 col-12">
-                            <label class="col-form-label">{{user.locationName}}</label>
+                            <label class="form-control-label">{{user.locationName}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -119,12 +119,13 @@
                                 [ngModelOptions]="{standalone: true}" data-cy="timezone-dropdown">
                             </p-dropdown>
                         </div>
-                        <label class="col-md-2 col-form-label text-md-right">
+                        <label class="col-md-2 form-control-label text-md-right">
                             Select Avatar File
                         </label>
                         <div class="col-md-4 col-12">
-                            <cmh-file-uploader class="col-md-10" [menuItem]="menuItem" [(files)]="uploadedFiles"
-                                accept=".jpeg,.img" chooseLabel="Select Avatar File of 34x34px">
+                            <cmh-file-uploader tooltip="" class="col-md-10" [menuItem]="menuItem"
+                                [(files)]="uploadedFiles" accept=".jpeg,.img,.gif,.webp"
+                                chooseLabel="Select Avatar File" [maxFileSize]="1000000">
                             </cmh-file-uploader>
                         </div>
                     </div>
@@ -157,10 +158,21 @@
                     <legend>
                     </legend>
                     <div class="form-group row">
-                        <label for="newPassword" class="col-md-2 col-form-label text-md-right">
+                        <label for="oldPassword" class="col-md-4 col-form-label text-md-right">
+                            Current Password
+                        </label>
+                        <div class="col-md-5 ">
+                            <input type="password" id="oldPassword" name="oldPassword"
+                                [(ngModel)]="userPwObj.oldPassword" data-validate="parsley" data-parsley-required="true"
+                                class="form-control input-transparent" tooltip="Min length 3 characters"
+                                placeholder="Current Password" data-cy="oldPassword-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newPassword" class="col-md-4 col-form-label text-md-right">
                             New Password
                         </label>
-                        <div class="col-md-4 ">
+                        <div class="col-md-5 ">
                             <input type="password" id="newPassword" name="newPassword"
                                 [(ngModel)]="userPwObj.newPassword" data-validate="parsley"
                                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
@@ -171,21 +183,12 @@
                                 tooltip="Min length 3 characters" placeholder="New Password"
                                 data-cy="newPassword-input">
                         </div>
-                        <label for="oldPassword" class="col-md-2 col-form-label text-md-right">
-                            Current Password
-                        </label>
-                        <div class="col-md-4 ">
-                            <input type="password" id="oldPassword" name="oldPassword"
-                                [(ngModel)]="userPwObj.oldPassword" data-validate="parsley" data-parsley-required="true"
-                                class="form-control input-transparent" tooltip="Min length 3 characters"
-                                placeholder="Current Password" data-cy="oldPassword-input">
-                        </div>
                     </div>
                     <div class="form-group row">
-                        <label for="confirmpassword" class="col-md-2 col-form-label text-md-right">
+                        <label for="confirmpassword" class="col-md-4 col-form-label text-md-right">
                             Confirm Password
                         </label>
-                        <div class="col-md-4 ">
+                        <div class="col-md-5 ">
                             <input type="password" id="confirmpassword" name="confirmpassword"
                                 [(ngModel)]="userPwObj.confirmpassword" data-validate="parsley"
                                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"

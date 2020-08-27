@@ -208,7 +208,7 @@
               {{location.status}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-              <i *ngIf="canEditLocation" class="fa fa-cog pointer" tooltip="Edit Location" data-cy="edit-button"
+              <i *ngIf="canEditLocation" class="far fa-edit pointer" tooltip="Edit Location" data-cy="edit-button"
                 [routerLink]="['../location-create']" [queryParams]="{id: location.id}"></i>
               <i *ngIf="canDeleteLocation" class="fa fa-trash pointer" tooltip="Delete Location" data-cy="delete-button"
                 (click)="openConfirmDeleteDialog(location)"></i>

@@ -95,7 +95,7 @@
                     {{role.lastUpdated?.fullName }}
                 </td>
                 <td>
-                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
+                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Role" data-cy="editRow"
                         (click)="showDialog(role)"></i>
                     <i *ngIf="userPrivileges.canDelete && role.hasAssignedUsers" class="far fa-trash-alt pointer"
                         tooltip="Delete Role" data-cy="deleteRow" (click)="removeRow(role)"></i>
