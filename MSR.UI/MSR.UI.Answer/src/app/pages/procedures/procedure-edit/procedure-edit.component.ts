@@ -192,7 +192,7 @@ export class ProcedureEditComponent implements OnInit {
         } else {
           procedureStep.monitors = procedureStepResponse.object;
         }
-        
+
         procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId)?.value;
 
         procedureStep.selectedRoles = new Array<number>();
@@ -328,15 +328,15 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.replacementCost = procedureStep.replacementCost;
     updateProcedureStepRequest.roles = new Array<RoleRequest>();
 
-    if(procedureStep.selectedRoles.length !== 0){
-      
+    if (procedureStep.selectedRoles.length !== 0) {
+
       procedureStep.selectedRoles?.foreach(role => {
 
         let roleRequest = new RoleRequest();
         roleRequest.id = role;
-  
+
         updateProcedureStepRequest.roles.push(roleRequest);
-  
+
       });
     }
 
