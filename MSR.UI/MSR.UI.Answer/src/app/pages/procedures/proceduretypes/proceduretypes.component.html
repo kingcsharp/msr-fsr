@@ -30,7 +30,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-                            data-cy="certifications-header">
+                        data-cy="grid-header">
                             {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label !== 'Actions'"></p-sortIcon>
                         </th>
                     </tr>
