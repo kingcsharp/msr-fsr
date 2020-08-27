@@ -14,8 +14,9 @@ namespace MSR.Domain.Models
         public virtual Procedure Procedure { get; set; }
         public int PartId { get; set; }
         public virtual PartModel Part { get; set; }
-        public decimal EquipmentCost { get; set; }
-        public decimal MaterialCost { get; set; }
+        public decimal? LaborCost { get; set; }
+        public decimal? EquipmentCost { get; set; }
+        public decimal? MaterialCost { get; set; }
         public decimal? SalesTax { get; set; }
         public decimal TotalSalePrice { get; set; }
         public int CycleTime { get; set; }

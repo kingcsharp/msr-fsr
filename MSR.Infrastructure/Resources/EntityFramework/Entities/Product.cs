@@ -17,8 +17,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(100)]
         public string Name { get; set; }
 
+        [Required]
         public int Revision { get; set; }
 
+        [Required]
         public int CustomerId { get; set; }
 
         [ForeignKey("CustomerId")]
@@ -26,15 +28,21 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? CustomerRequirementId { get; set; }
         
+        [Required]
         public int ProcedureId { get; set; }
 
         [ForeignKey("ProcedureId")]
         public virtual Procedure Procedure { get; set; }
 
+        [Required]
         public int PartId { get; set; }
 
         [ForeignKey("PartId")]
         public virtual Part Part { get; set; }
+
+        
+        [Column(TypeName = "money")]
+        public decimal LaborCost { get; set; }
 
         [Column(TypeName = "money")]
         public decimal EquipmentCost { get; set; }
@@ -45,6 +53,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Column(TypeName = "money")]
         public decimal? SalesTax { get; set; }
 
+        [Required]
         [Column(TypeName = "money")]
         public decimal TotalSalePrice { get; set; }
 

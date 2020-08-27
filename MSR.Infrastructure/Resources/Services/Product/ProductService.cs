@@ -81,7 +81,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Retreive product to update
             var product = await _unitOfWork.Products
                                 .Query()
-                                //.Include(i => i.ProductStepItems)
                                 .FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if (product is null)
@@ -89,11 +88,10 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException($"{nameof(Product)} not found with ID: {command.Id}");
             }
 
-            //product.ProductStepItems.Clear();
-
             // Update product details and items
             product.CustomerId = command.CustomerId ?? product.CustomerId;
             product.CycleTime = command.CycleTime ?? product.CycleTime;
+            product.LaborCost = command.LaborCost ?? product.LaborCost;
             product.EquipmentCost = command.EquipmentCost ?? product.EquipmentCost;
             product.MaterialCost = command.MaterialCost ?? product.MaterialCost;
             product.Name = command.Name ?? product.Name;

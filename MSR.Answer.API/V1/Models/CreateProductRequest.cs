@@ -24,6 +24,9 @@ namespace MSR.Answer.API.V1.Models
         public int? PartId { get; set; }
 
         [Required]
+        public decimal? LaborCost { get; set; }
+
+        [Required]
         public decimal? EquipmentCost { get; set; }
 
         [Required]

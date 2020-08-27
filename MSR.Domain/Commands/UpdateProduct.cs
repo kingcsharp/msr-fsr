@@ -13,11 +13,11 @@ namespace MSR.Domain.Commands
         public int? CustomerRequirementId { get; set; }
         public int? ProcedureId { get; set; }
         public int? PartId { get; set; }
+        public decimal? LaborCost { get; set; }
         public decimal? EquipmentCost { get; set; }
         public decimal? MaterialCost { get; set; }
         public decimal? SalesTax { get; set; }
         public decimal? TotalSalePrice { get; set; }
         public int? CycleTime { get; set; }
-        //public ICollection<CreateUpdateInvoiceItem> InvoiceItems { get; set; }
     }
 }
