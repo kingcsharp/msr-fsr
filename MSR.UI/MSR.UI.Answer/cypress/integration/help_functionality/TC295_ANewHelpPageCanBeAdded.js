@@ -1704,7 +1704,7 @@ describe('Help Functionality', () => {
 
         cy.get('[data-cy=friendlyurl-dropdown]').click()
 
-        cy.get("[aria-label='/wip/wip']").click()
+        cy.get("[aria-label='/help/help']").click()
 
         cy.get("[aria-label='Rich Text Editor, main']").type('Loreum Ipsum')
 
@@ -1713,7 +1713,7 @@ describe('Help Functionality', () => {
         cy.get('span').contains('Production Manager').click();
         cy.get('span').contains('Administrator').click();
 
-        cy.get("[data-cy=roles-multiselect]").click()
+        cy.get('[data-cy=page-title]').contains('Create Help Page').click()
 
         cy.get("[data-cy=save-button]").click()
 

@@ -10269,7 +10269,7 @@ export interface IAuditActionResultOfICollectionOfRoleView extends IAuditActionR
     object?: RoleView[] | undefined;
 }
 
-export class RoleView extends CreatableModel implements IRoleView {
+export class RoleView extends TrackableModel implements IRoleView {
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     parentRoles?: RoleView[] | undefined;
@@ -10315,7 +10315,7 @@ export class RoleView extends CreatableModel implements IRoleView {
     }
 }
 
-export interface IRoleView extends ICreatableModel {
+export interface IRoleView extends ITrackableModel {
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
     parentRoles?: RoleView[] | undefined;

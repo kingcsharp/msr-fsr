@@ -89,7 +89,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
                 result.Add(domRole);
             }
-            
+
             return result;
         }
 
