@@ -132,7 +132,8 @@
           </ng-template>
         </td>
         <td class="text-center" [hidden]="!cg.isVisibleCol('isAnswerUser', gridSettings)">
-          <span style="vertical-align: middle; margin-left: .5em">{{user.isAnswerUser?'Answer User':'Portal User'}}</span>
+          <span
+            style="vertical-align: middle; margin-left: .5em">{{user.isAnswerUser?'Answer User':'Portal User'}}</span>
         </td>
         <td [hidden]="!cg.isVisibleCol('firstName', gridSettings)">
           <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
@@ -265,8 +266,6 @@
                 [baseZIndex]="100002" [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
-          </div>
-          <div class="form-group row">
             <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
               Supervisor
             </label>
@@ -304,6 +303,17 @@
                     type="checkbox" class="ios" checked id="isAnswerUser" /><i data-cy="isansweruser-checkbox"></i>
                 </label>
               </div>
+            </div>
+          </div>
+          <div *ngIf="!currUser.isAnswerUser" class=" form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+              Customer
+            </label>
+            <div class="col-md-4 col-12">
+              {{currUser.customerId}}
+              <p-dropdown placeholder="Select Customer" name="customer" optionLabel="name" [options]="customers" appendTo="body"
+                [baseZIndex]="100001" [(ngModel)]="currUser.customer">
+              </p-dropdown>
             </div>
           </div>
         </fieldset>

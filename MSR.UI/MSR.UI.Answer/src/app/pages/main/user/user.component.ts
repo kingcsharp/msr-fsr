@@ -4,7 +4,7 @@ import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
   UserService, UserModel, IAuditActionResultOfUserModel, LocationService
-  , UpdateUserRequest, RoleService, Role, EnumMenuItem
+  , UpdateUserRequest, RoleService, Role, EnumMenuItem, CustomerService, Customer
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -59,8 +59,9 @@ export class UserComponent implements OnInit {
   locations: any[] = [];
   getLocationsFlag: boolean = false;
   backendRoles: Array<Role>;
+  customers: Array<Customer>;
 
-  constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
+  constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService, private customerService: CustomerService,
     public globals: Globals, private elem: ElementRef, public locationService: LocationService, public roleService: RoleService) {
   }
 
@@ -101,6 +102,15 @@ export class UserComponent implements OnInit {
     this.getUsers();
     this.getLocations();
     this.getRoles();
+    this.getCustomers();
+
+  }
+
+  getCustomers() {
+    this.customerService.customerGet(null, null, null, null, null, null, null, true, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.customers = response.object;
+      }));
   }
 
   getRoles() {
@@ -200,7 +210,9 @@ export class UserComponent implements OnInit {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method: Observable<IAuditActionResultOfUserModel> = null;
       this.globals.showLoader(true);
-
+      if (this.currUser.customer !== undefined) {
+        this.currUser.customerId = this.currUser.customer.id;
+      }
       if (this.currUser.id === undefined) {
         method = this.userService.userPost(env.apiVersion, this.currUser);
       } else {
