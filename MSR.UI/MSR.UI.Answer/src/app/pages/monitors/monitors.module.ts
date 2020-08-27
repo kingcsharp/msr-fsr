@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MonitorsComponent } from './monitors/monitors.component';
 import { UtilsModule } from '../../layout/utils/utils.module';
-import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
@@ -15,7 +14,7 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [MonitorsComponent, HelpbuttonWrapperComponent],
+  declarations: [MonitorsComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

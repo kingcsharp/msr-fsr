@@ -30,28 +30,28 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
-                            data-cy="proceduretemplate-header">
+                            data-cy="templates-header">
                             {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label !== 'Actions' && col.label !== 'Reference Files'"></p-sortIcon>
                         </th>
                     </tr>
                     <tr>
-                        <th grid-input-filter [dt]="dt" searchField="id"
+                        <th grid-input-filter [dt]="dt" searchField="id" data-cy="id-filter"
                             [hidden]="!commonGrid.isVisibleCol('id',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="title"
+                        <th grid-input-filter [dt]="dt" searchField="title" data-cy="title-filter"
                             [hidden]="!commonGrid.isVisibleCol('title',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="text"
+                        <th grid-input-filter [dt]="dt" searchField="text" data-cy="text-filter"
                             [hidden]="!commonGrid.isVisibleCol('text',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="revision"
+                        <th grid-input-filter [dt]="dt" searchField="revision" data-cy="revision-filter"
                             [hidden]="!commonGrid.isVisibleCol('revision',gridSettings)" [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
                             <div class="position-relative">
                                 <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
                                     [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
-                                    [datatable]="dt">
+                                    [datatable]="dt" data-cy="status-multiselect">
                                 </multiselect-wrapper>
                             </div>
                         </th>
@@ -60,7 +60,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-model>
-                    <tr class="ui-selectable-row">
+                    <tr class="ui-selectable-row" data-cy="row">
                         <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
                             {{model.id}}
                         </td>
@@ -83,7 +83,7 @@
                             <i *ngIf="canEdit" class="fa fa-cog pointer" tooltip="Edit Procedure Template"
                                 data-cy="edit-button" [routerLink]="['../proceduretemplate-edit']"
                                 [queryParams]="{id: model.id}"></i>
-                            <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Procedure Template"
+                            <i *ngIf="canDelete && model.isRelatedToAProduct === false" class="fa fa-trash pointer" tooltip="Delete Procedure Template"
                                 data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
                         </td>
                     </tr>
