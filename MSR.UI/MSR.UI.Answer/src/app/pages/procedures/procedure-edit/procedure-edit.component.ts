@@ -157,7 +157,7 @@ export class ProcedureEditComponent implements OnInit {
 
     this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((setGetResponse) => {
 
-      this.procedureSteps = setGetResponse.object;
+      this.procedureSteps = setGetResponse.object.sort((a, b) => a.printOrder < b.printOrder ? -1 : a.printOrder > b.printOrder ? 1 : 0);
       this.procedureSteps.forEach( procedureStep => {
 
         if(procedureStep.referenceFiles === undefined){
