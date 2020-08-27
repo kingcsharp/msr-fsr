@@ -6874,7 +6874,8 @@
           },
           "procedureId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "title": {
             "type": "string",
@@ -6886,15 +6887,21 @@
           },
           "duration": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "durationType": {
             "type": "string",
             "nullable": true
           },
+          "procedureStepType": {
+            "type": "string",
+            "nullable": true
+          },
           "printOrder": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "predecessorStepId": {
             "type": "integer",
@@ -6906,19 +6913,19 @@
             "format": "int32",
             "nullable": true
           },
+          "equipmentTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "replacementCost": {
             "type": "number",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "utilizationTime": {
             "type": "number",
             "format": "float",
-            "nullable": true
-          },
-          "equipmentTime": {
-            "type": "integer",
-            "format": "int32",
             "nullable": true
           },
           "usefulLife": {
@@ -6972,6 +6979,11 @@
           "durationType": {
             "type": "string",
             "description": "Gets or Sets DurationType",
+            "nullable": true
+          },
+          "procedureStepType": {
+            "type": "string",
+            "description": "Procedure Step Type",
             "nullable": true
           },
           "printOrder": {
@@ -7036,6 +7048,7 @@
         "example": {
             "title": "TITLE1594442130",
             "text": "TEXT1594442130",
+            "procedureStepType": "TYPE1594442130",
             "roles": [
                 { "id": 1 }
             ]
@@ -7287,6 +7300,11 @@
             "description": "Gets or Sets DurationType",
             "nullable": true
           },
+          "procedureStepType": {
+            "type": "string",
+            "description": "Procedure Step Type",
+            "nullable": true
+          },
           "printOrder": {
             "type": "integer",
             "description": "Gets or Sets PrintOrder",
@@ -7349,6 +7367,7 @@
         "example": {
             "procedureStepId": 3,
             "procedureId": 305,
+            "procedureStepType": "TYPE1594442130",
             "title": "NEWTITLE1594442279"
         }
       },

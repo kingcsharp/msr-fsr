@@ -20,12 +20,13 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets ProcedureId
         /// </summary>
-        public int ProcedureId { get; set; }
+        public int? ProcedureId { get; set; }
 
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         public string Title { get; set; }
+
         /// <summary>
         /// Gets or Sets StepText
         /// </summary>
@@ -34,7 +35,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets Duration
         /// </summary>
-        public double Duration { get; set; }
+        public double? Duration { get; set; }
 
         /// <summary>
         /// Gets or Sets DurationType
@@ -42,9 +43,14 @@ namespace MSR.Domain.Models
         public string DurationType { get; set; }
 
         /// <summary>
+        /// Procedure Step Type
+        /// </summary>
+        public string ProcedureStepType { get; set; }
+
+        /// <summary>
         /// Gets or Sets PrintOrder
         /// </summary>
-        public int PrintOrder { get; set; }
+        public int? PrintOrder { get; set; }
 
         /// <summary>
         /// Gets or Sets PredecessorStepId
@@ -57,19 +63,19 @@ namespace MSR.Domain.Models
         public int? LaborTime { get; set; }
 
         /// <summary>
+        /// Gets or Sets EquipmentTime
+        /// </summary>
+        public int? EquipmentTime { get; set; }
+
+        /// <summary>
         /// Gets or Sets ReplacementCost
         /// </summary>
-        public decimal? ReplacementCost { get; set; }
+        public double? ReplacementCost { get; set; }
 
         /// <summary>
         /// Gets or Sets UtilizationTime
         /// </summary>
         public float? UtilizationTime { get; set; }
-
-        /// <summary>
-        /// Gets or Sets EquipmentTime
-        /// </summary>
-        public int? EquipmentTime { get; set; }
 
         /// <summary>
         /// Gets or Sets UsefulLife
