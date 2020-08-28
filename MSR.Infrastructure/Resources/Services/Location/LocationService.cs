@@ -67,6 +67,15 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 {
                     domlocation.Status = locationApproval.Status.Name;
                 }
+                if(domlocation.Parent != null)
+                {
+                    domlocation.Parent.Created = null;
+                    domlocation.Parent.LastUpdated = null;
+                }
+                if(domlocation.Parent?.Parent != null)
+                {
+                    domlocation.Parent.Parent = null;
+                }
                 ret.Add(domlocation);
             }
 
