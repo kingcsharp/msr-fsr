@@ -40,7 +40,7 @@ export class CustomersComponent implements OnInit {
       new ColumnsSaved({ id: 'customerNumber', label: 'Customer Number', visible: true }),
       new ColumnsSaved({ id: 'address', label: 'Address', visible: true }),
       new ColumnsSaved({ id: 'phone', label: 'Phone', visible: true }),
-      new ColumnsSaved({ id: 'location', label: 'Location', visible: true }),
+      new ColumnsSaved({ id: 'location.name', label: 'Location', visible: true }),
       new ColumnsSaved({ id: 'primaryContactUser.fullName', label: 'Primary Contact', visible: true }),
       new ColumnsSaved({ id: 'secondaryContactUser.fullName', label: 'Secondary Contact', visible: true }),
       new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
