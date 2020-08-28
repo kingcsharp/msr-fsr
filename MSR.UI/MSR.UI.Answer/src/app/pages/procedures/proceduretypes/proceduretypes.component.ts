@@ -37,8 +37,6 @@ export class ProceduretypesComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'type', label: 'Type', visible: true }),
-      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
       ];
 
