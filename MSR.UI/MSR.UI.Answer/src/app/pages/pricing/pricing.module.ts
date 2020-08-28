@@ -31,7 +31,7 @@ import { QuotesProductsComponent } from './quotes-products/quotes-products.compo
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
   { path: 'products', component:QuotesProductsComponent, pathMatch: 'full' },
-  { path: 'quote-create', component: QuoteCreateComponent, pathMatch: 'full'},
+  { path: 'quote/create', component: QuoteCreateComponent, pathMatch: 'full'},
   { path: 'product/:mode/:id', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'},
   { path: 'purchaseorder-create', component: PurchaseOrderCreateComponent, pathMatch: 'full'},

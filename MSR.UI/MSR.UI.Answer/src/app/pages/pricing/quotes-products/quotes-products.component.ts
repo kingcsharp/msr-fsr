@@ -5,16 +5,18 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem } from '../../../services/api.client.generated';
-import { QuotesProductsView, quotesproductsData } from '../../../temp/mock-data';
-import {ConfirmationService} from 'primeng/api';
 import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
+import { take } from 'rxjs/operators';
+import { responseHandler } from '../../../utils/responseHandler';
+import { environment as env } from '../../../../environments/environment';
+import { Observable } from 'rxjs';
+import { QuoteService, QuotesProductsView, EnumMenuItem } from '../../../services/api.client.generated';
 
 @Component({
   selector: 'app-quotes-products',
   templateUrl: './quotes-products.component.html',
   styleUrls: ['./quotes-products.component.scss'],
-  providers: [ConfirmationService]
+  providers: [QuoteService]
 })
 export class QuotesProductsComponent implements OnInit {
   productPageModes = EnumProductPageModes;
@@ -24,14 +26,16 @@ export class QuotesProductsComponent implements OnInit {
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
   gridVersion: string;
-  data: QuotesProductsView[];
+  data: QuotesProductsView[] = [];
   userPrivileges: AllowedActions;
+  showConfirmDeleteDialog: boolean;
+  quoteToDelete: QuotesProductsView;
 
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
     private elem: ElementRef,
-    private confirmationService: ConfirmationService
+    private quoteService: QuoteService,
   ) { }
 
   ngOnInit(): void {
@@ -55,14 +59,19 @@ export class QuotesProductsComponent implements OnInit {
       new ColumnsSaved({ id: 'lastUpdatedBy', label: 'LastUpdated By', visible: false })
     ];
     this.userPrivileges = this.globals.getEnumPrivileges(this.menuItems.QuotesProducts);
-
-    this.data = []
+    this.showConfirmDeleteDialog = false;
+    this.data = [];
     this.getQuotesProducts();
   }
 
   getQuotesProducts() {
-    this.globals.showLoader(false);
-    this.data = quotesproductsData;
+    this.globals.showLoader(true);
+    this.quoteService.product(env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
+        this.data = response.object;
+      }));
   }
 
   onClickImportQuote($event) {
@@ -70,19 +79,24 @@ export class QuotesProductsComponent implements OnInit {
     console.log('Click Import Quote');
   }
 
-  onClickDeleteQuote(quoteId: number) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to Delete this Quote?',
-      accept: () => {
-        this.deleteQuote(quoteId);
-      }
-    });
+  openConfirmDeleteDialog(quote: QuotesProductsView) {
+    this.quoteToDelete = quote;
+    this.showConfirmDeleteDialog = true;
   }
 
-  deleteQuote(quoteId: number) {
-    //TODO: Delete Quote API;
-    const index = this.data.findIndex(x => x.id === quoteId);
-    this.data.splice(index, 1);
+  closeConfirmDeleteDialog() {
+    this.quoteToDelete = null;
+    this.showConfirmDeleteDialog = false;
+  }
+
+  deleteQuote() {
+    this.showConfirmDeleteDialog = false;
+    this.globals.showLoader(true);
+    this.quoteService.quoteDelete(this.quoteToDelete.id, env.apiVersion)
+      .subscribe(responseHandler((response) => {
+        this.quoteToDelete = null;
+        this.getQuotesProducts();
+      }));
   }
 
 }

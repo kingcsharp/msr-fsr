@@ -3,7 +3,7 @@
 	{{globals.activeMenu.name}}
 </h1>
 
-<widget>
+<widget class="mt-4">
 	<p-table
 		#dt [value]="data"
 		dataKey="id"
@@ -24,7 +24,7 @@
           class="btn btn-success width-100 mb-xs sm-mrg"
 					role="button"
           data-cy="add-button"
-          [routerLink]="['../quote-create']"
+          [routerLink]="['../quote/create']"
 				>+ Add</button>
 
         <csv-import
@@ -369,7 +369,7 @@
             class="far fa-trash-alt pointer"
             tooltip="Delete Quote"
             data-cy="deleteRow"
-            (click)="onClickDeleteQuote(quoteproductmodel.id)"
+            (click)="openConfirmDeleteDialog(quoteproductmodel)"
           ></i>
           <i
             *ngIf="quoteproductmodel.isProduct && userPrivileges.canEdit"
@@ -395,12 +395,29 @@
 	</p-table>
 </widget>
 
-<p-confirmDialog
-  #cd
-  header="Confirmation"
-  icon="pi pi-exclamation-triangle"
-  acceptLabel="Yes"
-  rejectLabel="No"
-  position="top"
+<p-dialog
+  header="Confirm Delete"
+  [(visible)]="showConfirmDeleteDialog"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '50vw'}"
+  data-cy="user-header"
 >
-</p-confirmDialog>
+  <div class="container">
+    <div class="row">
+      Are you sure you want to Delete this Quote?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="deleteQuote()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

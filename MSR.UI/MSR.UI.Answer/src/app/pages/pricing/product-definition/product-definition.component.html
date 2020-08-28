@@ -1,45 +1,116 @@
-<div class="container-fluid">
+<div *ngIf="getProductDataFlag" class="container-fluid">
   <div class="row mb-lg">
-    <div class="col-12">
+    <div class="col-md-6">
       <h1 class="page-title">
         <span>{{mode === productPageModes.Create ? 'New ' : ''}}Product Definition</span>
       </h1>
     </div>
+    <!-- <div class="col-md-6 d-flex justify-content-end align-items-end">
+      <button
+        *ngIf="productData.quoteJson"
+        class="pull-right btn btn-primary"
+        tooltip="Generates a Quote Preview"
+        (click)="openQuoteViewModal()"
+      >
+        <i class="fa fa-eye"></i>Preview Quote
+      </button>
+    </div> -->
   </div>
 
-  <widget>
-    <form role="form">
+  <widget class="py-4">
+    <form
+      data-parsley-validate
+      data-cy="quote-create-form"
+      class="parsleyjs"
+      data-parsley-priority-enabled="false"
+      (ngSubmit)="onSubmit()"
+      novalidate="novalidate"
+    >
       <div class="row mx-0 mb-lg">
         <div class="col-md-4">
           <div class="form-group">
             <label for="customerId">Customer :</label>
-            <p-dropdown placeholder="Select Customer" name="customerId" [options]="customersData" appendTo="body" [baseZIndex]="100001"
-            [(ngModel)]="productData.customerId">
+            <p-dropdown
+              *ngIf="getCustomersFlag"
+              [class.hide]="mode === productPageModes.View"
+              placeholder="Select Customer"
+              name="customerId"
+              [options]="customersData"
+              appendTo="body" [baseZIndex]="100001"
+              [(ngModel)]="productData.customerId"
+              data-cy="product-select-customerid"
+            >
             </p-dropdown>
+            <input
+              [class.hide]="mode !== productPageModes.View"
+              class="form-control input-transparent"
+              name="customerName"
+              [value]="mode === productPageModes.View ? getCustomerLabel(productData.customer) : productData.customerId"
+              data-cy="product-customer"
+              readonly
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+              parsley-type="number"
+            >
           </div>
         </div>
 
         <div class="col-md-3">
           <div class="form-group">
             <label for="locationId">Location :</label>
-            <p-dropdown placeholder="Select Location" name="locationId" [options]="locationsData" appendTo="body" [baseZIndex]="100002"
-              [(ngModel)]="productData.locationId">
+            <!-- <p-dropdown
+              [class.hide]="mode === productPageModes.View"
+              placeholder="Select Location"
+              name="locationId"
+              [options]="locationsData"
+              appendTo="body"
+              [baseZIndex]="100002"
+              [(ngModel)]="productData.locationId"
+              data-cy="product-locationid"
+            >
             </p-dropdown>
+            <input
+              [class.hide]="mode !== productPageModes.View"
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="location"
+              [value]="mode === productPageModes.View ? getLocationLabel(productData.location) : productData.locationId"
+              data-cy="product-location"
+              readonly
+            > -->
           </div>
         </div>
 
         <div class="col-md-2">
           <div class="form-group">
             <label for="productCustomerDivision">Division/Fab # :</label>
-            <input type="text" id="ProductCustomerDivision" class="form-control input-transparent" name="ProductCustomerDivision">
+            <input
+              pInputText
+              type="number"
+              id="ProductCustomerDivision"
+              class="form-control input-transparent" name="ProductCustomerDivision"
+              [(ngModel)]="productData.customerRequirementId"
+              [readonly]="mode === productPageModes.View"
+              data-cy="product-division"
+            >
           </div>
         </div>
 
         <div class="col-md-3">
-          <div class="form-group row mx-0">
+          <div class="form-group">
             <label for="cycleTime">Cycle Time :</label>
-            <div class="input-group input-group-transparent">
-              <input type="text" id="CycleTime" class="form-control input-transparent" name="CycleTime">
+            <div class="input-group input-group-transparent row mx-0">
+              <input
+                pInputText
+                type="number"
+                class="form-control input-transparent"
+                name="CycleTime"
+                [(ngModel)]="productData.cycleTime"
+                [readonly]="mode === productPageModes.View"
+                data-cy="product-cycletime"
+              >
               <span class="input-group-addon bg-secondary">
                 Days
               </span>
@@ -52,62 +123,138 @@
         <div class="col-md-2">
           <div class="form-group">
             <label for="productName">Product Name :</label>
-            <input type="text" id="productName" class="form-control input-transparent" name="productName">
+            <input
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="productName"
+              [(ngModel)]="productData.name"
+              [readonly]="mode === productPageModes.View"
+              data-cy="product-name"
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+            >
           </div>
         </div>
 
         <div class="col-md-5">
           <div class="form-group">
             <label for="partId">Part :</label>
-            <!-- Note: primeNg dropdown has too long delays. need to discuss alternate option -->
-
-            <!-- <p-dropdown placeholder="Select Part" name="partId" [options]="partsData" appendTo="body" [baseZIndex]="100003"  [filter]="true"
-              [(ngModel)]="productData.partId" panelstyle="width: 100%">
-            </p-dropdown> -->
-            <div class="input-group input-group-transparent">
-              <select
-                name="partId"
-                class="form-control input-transparent"
+            <div
+              [class.hide]="mode === productPageModes.View"
+              class="input-group input-group-transparent"
+            >
+              <p-dropdown
+                *ngIf="getPartsFlag"
                 placeholder="Select Part"
+                name="partId"
+                [options]="partsData"
+                [baseZIndex]="100003"
                 [(ngModel)]="productData.partId"
+                data-cy="product-select-partid"
               >
-                <option *ngFor="let part of partsData" value="{{part.value}}" class="w-100">{{part.label}}</option>
-              </select>
+              </p-dropdown>
               <div class="input-group-btn">
-                <button type="button" class="btn btn-primary" [routerLink]="['../../parts/parts']"><i class="fa fa-plus-circle" tooltip="Create a new Customer Part in a New Tab"></i ></button>
-                <button type="button" class="btn btn-default active" (click)="getParts(true)"><i class="fa fa-refresh" [class.fa-spin]="isRefreshingPartsData" tooltip="Refresh List of Approved Parts"></i></button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [routerLink]="['../../parts/parts']"
+                  data-cy="btn-add-newpart"
+                >
+                  <i
+                    class="fa fa-plus-circle"
+                    tooltip="Create a new Customer Part in a New Tab"
+                  ></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-default active"
+                  (click)="getParts(true)"
+                  data-cy="btn-refresh-partsdata"
+                >
+                  <i
+                    class="fa fa-refresh"
+                    [class.fa-spin]="isRefreshingPartsData"
+                    tooltip="Refresh List of Approved Parts"
+                  ></i>
+                </button>
               </div>
             </div>
+            <input
+              [class.hide]="mode !== productPageModes.View"
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="partName"
+              [value]="mode === productPageModes.View ? getPartLabel(productData.part) : productData.partId"
+              data-cy="product-part"
+              readonly
+            >
           </div>
         </div>
 
         <div class="col-md-5">
           <div class="form-group">
             <label for="procedureId">Procedure :</label>
-            <!-- <p-dropdown placeholder="Select Procedure" name="procedureId" [options]="partsData" appendTo="body" [baseZIndex]="100004"  [filter]="true"
-              [(ngModel)]="productData.procedureId" panelstyle="width: 100%">
-            </p-dropdown> -->
-            <div class="input-group input-group-transparent">
-              <select
-                name="procedureId"
-                class="form-control input-transparent"
+            <div
+              [class.hide]="mode === productPageModes.View"
+              class="input-group input-group-transparent"
+            >
+              <p-dropdown
+                *ngIf="getProceduresFlag"
                 placeholder="Select Procedure"
+                name="procedureId"
+                [options]="proceduresData"
+                [baseZIndex]="100004"
                 [(ngModel)]="productData.procedureId"
-                (change)="onSelectProcedure($event)"
+                (onChange)="onSelectProcedureId($event)"
+                data-cy="product-select-procedureid"
               >
-                <option *ngFor="let procedure of proceduresData" value="{{procedure.value}}">{{procedure.label}}</option>
-              </select>
+              </p-dropdown>
               <div class="input-group-btn">
                 <!-- TODO: Add routing to procedure creation page -->
-                <button type="button" class="btn btn-primary"><i class="fa fa-plus-circle" tooltip="Create an new Procedure in a new Tab"></i></button>
-                <button type="button" class="btn btn-default active" (click)="getProcedures(true)"><i class="fa fa-refresh" [class.fa-spin]="isRefreshingProceduresData" tooltip="Refresh List of Approved Procedures"></i></button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-cy="btn-add-newprocedure"
+                >
+                  <i
+                    class="fa fa-plus-circle"
+                    tooltip="Create an new Procedure in a new Tab"
+                  ></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-default active"
+                  (click)="getProcedures(true)"
+                  data-cy="btn-refresh-proceduresdata"
+                >
+                  <i
+                    class="fa fa-refresh"
+                    [class.fa-spin]="isRefreshingProceduresData" tooltip="Refresh List of Approved Procedures"
+                  ></i>
+                </button>
               </div>
             </div>
+            <input
+              [class.hide]="mode !== productPageModes.View"
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="procedureName"
+              [value]="mode === productPageModes.View ? getPartLabel(productData.procedure) : productData.procedureId"
+              data-cy="product-procedure"
+              readonly
+            >
           </div>
         </div>
       </div>
 
-      <div *ngIf="getProcedureStepsFlag && productData.procedureSteps &&  productData.procedureSteps.length > 0" class="row mx-0 mt-5 mb-4">
+      <div
+        *ngIf="getProcedureStepsFlag"
+        class="row mx-0 mt-5 mb-4"
+      >
         <div class="col-sm-9">
           <h2>Step Details</h2>
         </div>
@@ -117,9 +264,12 @@
         </div>
       </div>
 
-      <div *ngIf="getProcedureStepsFlag && productData.procedureSteps &&  productData.procedureSteps.length > 0" class="row mx-0" id="add-steps">
+      <div
+        *ngIf="getProcedureStepsFlag"
+        class="row mx-0"
+      >
         <div class="col-md-12 column mb-4">
-          <table class="table table-bordered table-hover table-striped table-condensed" id="process_steps">
+          <table class="table table-bordered table-condensed">
             <thead>
               <tr data-toggle="tooltip" data-placement="top" title="" data-original-title="">
                 <th class="text-center" width="15%">
@@ -155,68 +305,140 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let step of productData.procedureSteps; index as i">
+              <tr *ngFor="let step of procedureStepsData; index as i">
                 <td>
-                  <span [class.hide]="i >= productData.procedureSteps.length - newStepsCounts">{{step.title}}</span>
-                  <select class="form-control form-control input-transparent preDefinedStep" name="Step{{i}}__rocess" [class.hide]="i < productData.procedureSteps.length - newStepsCounts">
-                    <option value="155214">Blow-off CDA</option>
-                    <option value="154944">CO2 Ice</option>
-                    <option value="169418">Final Clean 6-Stage Ceramic</option>
-                  </select>
+                  <span [class.hide]="i >= procedureStepsData.length - newStepsCounts">{{step.title}}</span>
+                  <p-dropdown
+                    *ngIf="getProcedureStepTemplatesFlag && i >= procedureStepsData.length - newStepsCounts"
+                    placeholder="Select Step"
+                    name="procedureStepId"
+                    [options]="procedureStepTemplatesData"
+                    [baseZIndex]="100005"
+                    (onChange)="onSelectStepTemplate($event, i)"
+                    data-cy="product-select-stepid"
+                  >
+                  </p-dropdown>
                 </td>
                 <td>
                   <input
+                    pInputText
+                    type="number"
                     class="form-control input-transparent"
                     name="Step{{i}}_printOrder"
-                    [(ngModel)]="productData.procedureSteps[i].printOrder"
+                    [(ngModel)]="procedureStepsData[i].printOrder"
+                    [readonly]="mode === productPageModes.View"
+                    data-cy="procedure-step-printorder"
                   >
                 </td>
                 <td>
-                  <!-- TODO: laborTime need to be added to ProcedureSteps API -->
-                  <input class="form-control input-transparent">
+                  <input
+                    pInputText
+                    type="number"
+                    class="form-control input-transparent"
+                    name="Step{{i}}_laborTime"
+                    [(ngModel)]="procedureStepsData[i].laborTime"
+                    [readonly]="mode === productPageModes.View"
+                    data-cy="procedure-step-labortime"
+                  >
                 </td>
                 <td>
                   <input
+                    pInputText
+                    type="number"
                     class="form-control input-transparent"
                     name="Step{{i}}_equipmentTime"
-                    [(ngModel)]="productData.procedureSteps[i].equipmentTime"
+                    [(ngModel)]="procedureStepsData[i].equipmentTime"
+                    [readonly]="mode === productPageModes.View"
+                    data-cy="procedure-step-equipmenttime"
                   >
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input type="text" readonly="readonly" class="form-control input-transparent" value="{{productData.procedureSteps[i].replacementCost}}">
+                    <input
+                      pInputText
+                      type="text"
+                      readonly
+                      class="form-control input-transparent"
+                      [value]="procedureStepsData[i].replacementCost"
+                      data-cy="procedure-step-replacementcost"
+                    >
                     <span class="input-group-addon bg-secondary">.00</span>
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
-                    <input class="form-control form-control input-transparent " readonly="readonly" type="text" value="{{productData.procedureSteps[i].utilization}}">
+                    <input
+                     pInputText
+                      class="form-control form-control input-transparent " readonly
+                      type="text"
+                      [value]="procedureStepsData[i].utilization"
+                      data-cy="procedure-step-utilization"
+                    >
                     <span class="input-group-addon bg-secondary">%</span>
                   </div>
                 </td>
-                <!-- TODO: usefulLife need to be added to ProcedureSteps API -->
                 <td class="text-center" [class.hide]="!showAllStepColumns">
-                  <input class="form-control form-control input-transparent useful-life" readonly="readonly" type="text" value="">
+                  <input
+                    pInputText
+                    class="form-control form-control input-transparent useful-life"
+                    readonly
+                    type="text"
+                    [value]="procedureStepsData[i].usefulLife"
+                    data-cy="procedure-step-usefullife"
+                  >
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input class="form-control input-transparent" readonly="readonly" type="text" value="">
+                    <input
+                      pInputText
+                      class="form-control input-transparent"
+                      readonly
+                      type="text"
+                      [value]="procedureStepsData[i].ex_per_min"
+                      data-cy="equip-per-min"
+                    >
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input class="form-control input-transparent" readonly="readonly" type="text">
+                    <input
+                      pInputText
+                      class="form-control input-transparent"
+                      readonly
+                      type="text"
+                      [value]="procedureStepsData[i].annual_rm"
+                      data-cy="anual-rm"
+                    >
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input class="form-control input-transparent" readonly="readonly" type="text" value="">
+                    <input
+                      pInputText
+                      class="form-control input-transparent"
+                      readonly="readonly"
+                      type="text"
+                      [value]="procedureStepsData[i].rm_per_min"
+                      data-cy="rm-per-min"
+                    >
                   </div>
                 </td>
+              </tr>
+              <tr *ngIf="procedureStepsData.length === 0">
+                <td></td>
+                <td> </td>
+                <td></td>
+                <td></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"> </td>
               </tr>
             </tbody>
             <tfoot>
@@ -224,10 +446,26 @@
                 <td></td>
                 <td class="text-right">Total:</td>
                 <td class="text-right">
-                  <input class="form-control input-transparent" id="totalDirectMins" name="TotalDirectMins" type="text" value="0.00">
+                  <input
+                    pInputText
+                    class="form-control input-transparent"
+                    name="TotalLaborMins"
+                    type="text"
+                    readonly
+                    [value]="getStepsValues().totalLaborMins"
+                    data-cy="total-labor-mins"
+                  >
                 </td>
                 <td class="text-right">
-                  <input class="form-control input-transparent" id="totalMachineMins" name="TotalMachineMins" type="text" value="0.00">
+                  <input
+                    pInputText
+                    class="form-control input-transparent"
+                    name="TotalMachineMins"
+                    type="text"
+                    readonly
+                    [value]="getStepsValues().totalMachineMins"
+                    data-cy="total-matchine-mins"
+                  >
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>
               </tr>
@@ -237,13 +475,27 @@
                 <td class="text-right">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input class="form-control input-transparent" id="totalDirectDollar" name="TotalDirectDollar" readonly="readonly" type="text" value="0.00">
+                    <input
+                      pInputText
+                      class="form-control input-transparent" name="TotalDirectDollar"
+                      readonly
+                      type="text"
+                      [value]="getStepsValues().totalLaborCharge"
+                      data-cy="total-labor-dollar"
+                    >
                   </div>
                 </td>
                 <td class="text-right">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input class="form-control input-transparent" id="standardMachineDollar" name="StandardMachineDollar" readonly="readonly" type="text" value="0.00">
+                    <input
+                      pInputText
+                      class="form-control input-transparent" name="StandardMachineDollar"
+                      readonly
+                      type="text"
+                      [value]="getStepsValues().totalEquipmentCharge"
+                      data-cy="total-machine-dollar"
+                    >
                   </div>
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>
@@ -254,8 +506,15 @@
                 <td class="text-right">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input class="form-control input-transparent" data-val="true"
-                    id="MaterialCost" name="MaterialCost" type="text" value="">
+                    <input
+                      pInputText
+                      class="form-control input-transparent"
+                      name="MaterialCost"
+                      type="text"
+                      [readonly]="mode === productPageModes.View"
+                      [(ngModel)]="productData.materialCost"
+                      data-cy="product-materialcost"
+                    >
                   </div>
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>
@@ -266,7 +525,14 @@
                 <td class="text-right">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input class="form-control input-transparent" id="totalSalePrice" name="TotalSalePrice" type="text" value="">
+                    <input
+                      class="form-control input-transparent"
+                      name="TotalSalePrice"
+                      type="text"
+                      [readonly]="mode === productPageModes.View"
+                      [(ngModel)]="productData.totalSalePrice"
+                      data-cy="product-totalsaleprice"
+                    >
                   </div>
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>
@@ -275,20 +541,34 @@
           </table>
         </div>
 
-        <div class="col-md-12 d-flex justify-content-end mb-3">
-          <a class="btn btn-primary pull-left" tooltip="Add a Step to the Definition" (click)="onAddProcedureStep()"><i class="fa fa-plus-circle"></i> Add Step</a>
-          <a class="pull-left btn btn-warning" style="margin-left: 10px;" tooltip="Removes Last Step from Definition" (click)="onRemoveProcedureStep()"><i class="fa fa-minus-circle"></i> Remove Step</a>
+        <div
+          *ngIf="mode === productPageModes.Create || mode === productPageModes.Edit"
+          class="col-md-12 d-flex justify-content-end mb-3"
+        >
+          <a
+            class="btn btn-primary pull-left"
+            tooltip="Add a Step to the Definition"
+            (click)="onAddProcedureStep()"
+          >
+            <i class="fa fa-plus-circle"></i> Add Step
+          </a>
+          <a
+            class="pull-left btn btn-warning ml-2"
+            tooltip="Removes Last Step from Definition"
+            (click)="onRemoveProcedureStep()"
+          >
+            <i class="fa fa-minus-circle"></i> Remove Step
+          </a>
         </div>
       </div>
 
       <div class="row mx-0 my-4">
         <div class="col-md-12 d-flex justify-content-end">
-          <!-- <span class="pull-right btn btn-primary" style="margin-left: 10px;" tooltip="Generates a Quote Preview" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span> -->
           <button
-            *ngIf="mode === productPageModes.Create && mode === productPageModes.Edit"
+            type="submit"
+            *ngIf="mode === productPageModes.Create || mode === productPageModes.Edit"
             class="btn btn-success ml-2"
-            tooltip="Saves and Sends Quoation to Client"
-            (click)="onSubmit()"
+            data-cy="btn-product-submit"
           >
             <i class="fa fa-send"></i> Save & Submit
           </button>
@@ -296,6 +576,7 @@
             class="btn btn-warning ml-2"
             tooltip="Back To Production Planning"
             [routerLink]="['../../../products']"
+            data-cy="btn-product-cancel"
           >Cancel</a>
         </div>
       </div>

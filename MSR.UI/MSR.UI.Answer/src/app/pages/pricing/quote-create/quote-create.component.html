@@ -1,30 +1,24 @@
 
 <div class="container">
-  <h1 class="page-title mb-lg">
+  <h1 class="page-title">
     <i class="icon fa fa-usd"></i>
     Freeform Quote
   </h1>
 
-  <widget>
-    <form role="form">
+  <widget class="mt-4">
+    <form
+      data-parsley-validate
+      data-cy="quote-create-form"
+      class="parsleyjs"
+      data-parsley-priority-enabled="false"
+      (ngSubmit)="submit()"
+      novalidate="novalidate"
+    >
       <div class="row mr-0 ml-0">
         <table class="table no-border quote-header" width="100%">
           <tbody>
             <tr>
-              <td rowspan="2" width="60%" class="text-left"><img src="/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services"></td>
-              <th class="text-right">
-                Date:
-              </th>
-              <td>
-                <div class="input-group input-group-transparent">
-                  <p-calendar
-                    [(ngModel)]="data.submittedDate"
-                    name="submittedDate"
-                    id="submittedDate"
-                    showIcon="true"
-                  >
-                  </p-calendar>
-                </div>
+              <td rowspan="2" width="60%" class="text-left"><img src="/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services">
               </td>
             </tr>
             <tr>
@@ -46,24 +40,41 @@
             <tr>
                 <th class="text-right">Customer:</th>
                 <td>
-                  <select
-                    id="customerId"
-                    class="form-control input-transparent"
+                  <p-dropdown
+                    placeholder="Select Customer"
                     name="customerId"
+                    [options]="customersData"
+                    appendTo="body"
+                    [baseZIndex]="100001"
                     [(ngModel)]="data.customerId"
+                    data-cy="quote-customerid"
                   >
-                    <option value="">Select Customer</option>
-                    <option value="1566">  [MSR-FSR]APPLIED MATERIALS - [ID:1566]</option>
-                    <option value="1574">  [MSR-FSR]ATA - [ID:1574]</option>
-                  </select>
+                  </p-dropdown>
                 </td>
                 <th class="text-right">Contact:</th>
                 <td>
-                  <input type="text" id="contact" class="form-control input-transparent" name="contact" [(ngModel)]="data.contact">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="contact"
+                    [(ngModel)]="data.contact"
+                    data-cy="quote-contact"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                  >
                 </td>
                 <th class="text-right">Delivery</th>
                 <td>
-                  <input type="text" id="delivery" class="form-control input-transparent" name="delivery" [(ngModel)]="data.delivery">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="delivery"
+                    [(ngModel)]="data.delivery"
+                    data-cy="quote-contact"
+                  >
                 </td>
               </tr>
               <tr>
@@ -71,7 +82,17 @@
                 <td></td>
                 <th class="text-right">Title:</th>
                 <td>
-                  <input type="text" id="title" class="form-control input-transparent" name="title" [(ngModel)]="data.title">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="title"
+                    [(ngModel)]="data.title"
+                    data-cy="quote-title"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                  >
                 </td>
                 <th class="text-right"></th>
                 <td></td>
@@ -81,7 +102,14 @@
                 <td></td>
                 <th class="text-right">Phone:</th>
                 <td>
-                  <input type="text" id="phone" class="form-control input-transparent" name="phone" [(ngModel)]="data.phone">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="phone"
+                    [(ngModel)]="data.phone"
+                    data-cy="quote-phone"
+                  >
                 </td>
                 <th class="text-right"></th>
                 <td></td>
@@ -91,7 +119,9 @@
               </tr>
           </tbody>
         </table>
-        <table class="table table-bordered table-striped items-table mb-0" width="100%">
+        <table
+          class="table table-bordered table-striped items-table mb-0" width="100%"
+        >
           <thead>
             <tr>
               <th width="10%">Item No.</th>
@@ -107,30 +137,98 @@
             <tr *ngFor="let quoteItem of data.quoteItems; index as i;">
               <td>{{i+1}}</td>
               <td>
-                <input class="form-control input-transparent" name="quoteItem{{i}}_quantity" [(ngModel)]="data.quoteItems[i].quantity">
+                <input
+                  pInputText
+                  type="number"
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_qty"
+                  [(ngModel)]="data.quoteItems[i].qty"
+                  data-cy="quote-item-qty"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
               <td>
-                <input class="form-control input-transparent" name="quoteItem{{i}}_description" [(ngModel)]="data.quoteItems[i].description">
+                <input
+                  pInputText
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_description"
+                  [(ngModel)]="data.quoteItems[i].description"
+                  data-cy="quote-item-description"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
               <td>
-                <input class="form-control input-transparent" name="quoteItem{{i}}_leadTime" [(ngModel)]="data.quoteItems[i].leadTime">
+                <input
+                  pInputText
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_leadTime"
+                  [(ngModel)]="data.quoteItems[i].leadTime"
+                  data-cy="quote-item-leadtime"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
               <td>
-                <input class="form-control input-transparent" name="quoteItem{{i}}_customerPartNo" [(ngModel)]="data.quoteItems[i].customerPartNo">
+                <input
+                  pInputText
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_customerPartNo"
+                  [(ngModel)]="data.quoteItems[i].customerPartNo"
+                  data-cy="quote-item-partno"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
               <td>
-                <input class="form-control input-transparent" name="quoteItem{{i}}_price" [(ngModel)]="data.quoteItems[i].price">
+                <input
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_price"
+                  [(ngModel)]="data.quoteItems[i].price"
+                  data-cy="quote-item-price"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                  type="number"
+                >
               </td>
               <td>
-                <input class="form-control input-transparent" name="quoteItem{{i}}_extension" [(ngModel)]="data.quoteItems[i].extension">
+                <input
+                  pInputText
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_extension"
+                  [(ngModel)]="data.quoteItems[i].extension"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  type="number"
+                >
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="7">
-                <a id="add_row" class="btn btn-primary pull-left" tooltip="Add an Item to the Quote" (click)="addQuoteItem()"><i class="fa fa-plus-circle"></i> Add Item</a>
-                <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" tooltip="Removes Last Item from the Quote" (click)="removeQuoteItem()"><i class="fa fa-minus-circle"></i> Remove Item</a>
+                <a
+                  class="btn btn-primary pull-left"
+                  tooltip="Add an Item to the Quote"
+                  (click)="addQuoteItem()"
+                  data-cy="add-quote-item"
+                >
+                  <i class="fa fa-plus-circle"></i> Add Item
+                </a>
+                <a
+                  class="pull-left btn btn-warning ml-2"
+                  tooltip="Removes Last Item from the Quote"
+                  (click)="removeQuoteItem()"
+                  data-cy="remove-quote-item"
+                >
+                  <i class="fa fa-minus-circle"></i> Remove Item
+                </a>
               </td>
             </tr>
           </tfoot>
@@ -146,10 +244,31 @@
           <tbody>
             <tr>
               <td>
-                <textarea class="form-control input-transparent" cols="20" rows="3" style="width:100" name="existingProcess" [(ngModel)]="data.existingProcess"></textarea>
+                <textarea
+                  pTextArea
+                  class="form-control input-transparent"
+                  cols="20"
+                  rows="3"
+                  style="width:100"
+                  name="existingProcess"
+                  [(ngModel)]="data.processName"
+                  data-cy='quote-processname'
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                ></textarea>
               </td>
               <td>
-                <textarea class="form-control input-transparent" cols="20" rows="3" style="width:100" name="processDescription" [(ngModel)]="data.processDescription"></textarea>
+                <textarea
+                  pTextArea
+                  class="form-control input-transparent"
+                  cols="20"
+                  rows="3"
+                  style="width:100"
+                  name="processDescription"
+                  [(ngModel)]="data.description"
+                  data-cy="quote-description"
+                ></textarea>
               </td>
             </tr>
           </tbody>
@@ -189,11 +308,33 @@
             </tr>
             <tr>
               <td colspan="5" width="60%"></td>
-              <td width="20%" style="border-bottom: 1px solid #000 !important;">
-                <input class="form-control input-transparent single-line" name="createdByName" [(ngModel)]="data.createdByName">
+              <td
+                width="20%"
+                style="border-bottom: 1px solid #000 !important;"
+              >
+                <input
+                  pInputText
+                  class="form-control input-transparent single-line" name="createdByName"
+                  [(ngModel)]="data.representative"
+                  data-cy="quote-representative"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
-              <td width="30%" style="border-bottom: 1px solid #000 !important;">
-                <input class="form-control input-transparent single-line" name="titleSubmit" [(ngModel)]="data.titleSubmit">
+              <td
+                width="30%"
+                style="border-bottom: 1px solid #000 !important;"
+              >
+                <input
+                  pInputText
+                  class="form-control input-transparent single-line" name="titleSubmit"
+                  [(ngModel)]="data.representativeTitle"
+                  data-cy="quote-representative-title"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
             </tr>
             <tr>
@@ -204,7 +345,15 @@
             <tr>
               <td colspan="5" width="60%"></td>
               <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
-                <input class="form-control input-transparent single-line" name="address" [(ngModel)]="data.address">
+                <input
+                  pInputText
+                  class="form-control input-transparent single-line" name="address"
+                  [(ngModel)]="data.representativeAddress"
+                  data-cy="quote-representative-address"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
             </tr>
             <tr>
@@ -218,10 +367,21 @@
           </tbody>
         </table>
 
-        <a class="pull-right btn btn-danger fa" style="margin-left: 10px;" [routerLink]="['../products']">Cancel</a>
+        <div class="col-12 my-3 d-flex justify-content-end">
+          <a
+            class="pull-right btn btn-danger fa"
+            [routerLink]="['../../products']"
+          >
+            Cancel
+          </a>
 
-        <input type="submit" id="submit" class="pull-right btn btn-success fa fa-send" style="margin-left: 10px;" tooltip="Save and Send Quote to Client" value="Save & Submit" (click)="submit()">
-
+          <input
+            type="submit"
+            class="pull-right btn btn-success fa fa-send ml-2"
+            tooltip="Save and Send Quote to Client"
+            value="Save & Submit"
+          >
+        </div>
       </div>
     </form>
   </widget>

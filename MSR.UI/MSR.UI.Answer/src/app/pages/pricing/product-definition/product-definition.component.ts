@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import {
   PartService, PartModel, SubPartModel, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel,
   ProcedureService, Procedure,
-  ProcedureStepTemplateService, ProcedureStepTemplate,
+  ProcedureStepTemplateService, ProcedureStepTemplateModel,
   LocationService, LocationModel,
-  CustomerService,
-  ProcedureStep
+  ProductService, ProductModel, CreateProductRequest, UpdateProductRequest,
+  CustomerService, Customer,
+  QuoteService, QuotesProductsView,
+  ProcedureStepModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -15,31 +17,47 @@ import { Observable } from 'rxjs';
 import { Globals } from '../../../models/lib/globals';
 import { ActivatedRoute } from '@angular/router';
 import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
+import { Router } from '@angular/router';
+
+declare let jQuery: any;
 
 @Component({
   selector: 'app-product-definition',
   templateUrl: './product-definition.component.html',
   styleUrls: ['./product-definition.component.scss'],
-  providers: [CustomerService, ProcedureService]
+  providers: [
+    CustomerService,
+    ProcedureService,
+    ProductService,
+    ProcedureStepTemplateService,
+    QuoteService,
+  ]
 })
 export class ProductDefinitionComponent implements OnInit {
   productPageModes = EnumProductPageModes;
   mode: string = null;
   id: number = null;
   showAllStepColumns: boolean = false;
-  partsData: any[] = [];
-  getPartsFlag: boolean = false;
-  proceduresData: any[] = [];
-  getProceduresFlag: boolean = false;
-  locationsData: any[] = [];
-  getLocationsFlag: boolean = false;
+
   customersData: any[] = [];
   getCustomersFlag: boolean = false;
-  productData: ProductModel;
+  locationsData: any[] = [];
+  getLocationsFlag: boolean = false;
+  partsData: any[] = [];
+  getPartsFlag: boolean = false;
   isRefreshingPartsData: boolean = false;
+  proceduresData: any[] = [];
+  getProceduresFlag: boolean = false;
   isRefreshingProceduresData: boolean = false;
-  getProcedureStepsFlag: boolean = true;
+  procedureStepsData: any[];
+  getProcedureStepsFlag: boolean = false;
   newStepsCounts: number = 0;
+  procedureStepTemplatesData: any[] = [];
+  getProcedureStepTemplatesFlag: boolean = false;
+  productData: ProductModel;
+  getProductDataFlag: boolean = false;
+  quoteData: QuotesProductsView;
+  getQuoteDataFlag: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -47,7 +65,11 @@ export class ProductDefinitionComponent implements OnInit {
     private locationService: LocationService,
     private customerService: CustomerService,
     private procedureService: ProcedureService,
-    private route: ActivatedRoute
+    private procedureStepTemplateService: ProcedureStepTemplateService,
+    private productService: ProductService,
+    private quoteService: QuoteService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -68,24 +90,61 @@ export class ProductDefinitionComponent implements OnInit {
           break;
       }
     });
-    this.productData = new ProductModel;
-    this.productData.procedureSteps = [];
-    this.getLocations();
-    this.getCustomers();
-    this.getParts();
-    this.getProcedures();
   }
 
   initPageCreateMode() {
-
+    this.getQuoteData();
+    this.getAllData();
   }
 
   initPageEditMode() {
-
+    this.getProductData();
+    this.getAllData();
   }
 
   initPageViewMode() {
+    this.getProductData();
+  }
 
+  getAllData() {
+    this.getCustomers();
+    this.getParts();
+    this.getProcedures();
+    this.getProcedureStepTemplates();
+  }
+
+  getQuoteData() {
+    this.getQuoteDataFlag = false;
+    this.quoteService.quoteGet(this.id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.quoteData = response.object[0];
+        this.getQuoteDataFlag = true;
+        this.productData = new ProductModel();
+        this.productData.name = this.quoteData.productName;
+        this.getProductDataFlag = true;
+      }));
+  }
+
+  getProductData() {
+    this.getProductDataFlag = false;
+    this.productService.productGet(this.id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.productData = response.object[0];
+        this.getProductDataFlag = true;
+        this.getProcedureStepsData(this.productData.procedureId);
+      }));
+  }
+
+  getProcedureStepsData(procedureId: number) {
+    this.getProcedureStepsFlag = false;
+    this.procedureService.stepGet(procedureId, null, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.procedureStepsData = response.object;
+        this.getProcedureStepsFlag = true;
+      }));
   }
 
   getCustomers() {
@@ -101,6 +160,10 @@ export class ProductDefinitionComponent implements OnInit {
     }));
   }
 
+  getCustomerLabel(customer: Customer): string {
+    return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`
+  }
+
   getLocations() {
     const ctrl = this;
     if (ctrl.getLocationsFlag) {
@@ -113,6 +176,10 @@ export class ProductDefinitionComponent implements OnInit {
       });
       ctrl.getLocationsFlag = true;
     }));
+  }
+
+  getLocationLabel(location: LocationModel): string {
+    return location.name;
   }
 
   getParts(isRefresh: boolean = false) {
@@ -139,6 +206,10 @@ export class ProductDefinitionComponent implements OnInit {
       }));
   }
 
+  getPartLabel(part: PartModel): string {
+    return `${part.name} [${part.partNumber}] [ID: ${part.id}]`;
+  }
+
   getProcedures(isRefresh: boolean = false) {
     const ctrl = this;
 
@@ -161,14 +232,55 @@ export class ProductDefinitionComponent implements OnInit {
       }));
   }
 
+  getProcedureLabel(procedure: Procedure): string {
+    return `${procedure.name} [ID: ${procedure.id}]`;
+  }
+
+  onSelectProcedureId($event) {
+    if ($event.value) {
+      this.getProcedureSteps($event.value);
+    }
+  }
+
+  onSelectStepTemplate($event, index: number) {
+    if ($event.value) {
+      this.procedureStepsData[index].equipmentTime = $event.value.equipmentTime;
+      this.procedureStepsData[index].laborTime = $event.value.laborTime;
+      this.procedureStepsData[index].replacementCost = $event.value.replacementCost;
+      this.procedureStepsData[index].usefulLife = $event.value.usefulLife;
+      this.procedureStepsData[index].utilization = $event.value.utilization;
+      this.procedureStepsData[index].printOrder = index + 1;
+      this.procedureStepsData[index].stepText = $event.value.stepText;
+      this.procedureStepsData[index].title = $event.value.title;
+    }
+  }
+
+  getProcedureStepTemplates() {
+    const ctrl = this;
+    if (ctrl.getProcedureStepTemplatesFlag) {
+      return ctrl.procedureStepTemplatesData;
+    }
+    this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        response.object.map((x) => {
+          ctrl.procedureStepTemplatesData.push({ label: x.name, value: x });
+        });
+        ctrl.getProceduresFlag = true;
+      }));
+  }
+
+
   getProcedureSteps(id: number) {
     const ctrl = this;
 
     ctrl.getProcedureStepsFlag = false;
-    ctrl.productData.procedureSteps = [];
+    ctrl.procedureStepsData = [];
     this.procedureService.stepGet(id, null, env.apiVersion).pipe(take(1))
     .subscribe(responseHandler(response => {
-      ctrl.productData.procedureSteps = response.object;
+      response.object.forEach(step => {
+        ctrl.procedureStepsData.push({...step, ...ctrl.calculateStepValues(step)});
+      });
       ctrl.getProcedureStepsFlag = true;
       ctrl.newStepsCounts = 0;
     }));
@@ -179,14 +291,41 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   onAddProcedureStep() {
-    this.productData.procedureSteps.push(new ProcedureStep);
+    this.procedureStepsData.push(new ProcedureStepModel());
     this.newStepsCounts++;
   }
 
   onRemoveProcedureStep() {
     if (this.newStepsCounts > 0) {
-      this.productData.procedureSteps.pop();
+      this.procedureStepsData.pop();
       this.newStepsCounts--;
+    }
+  }
+
+  getStepsValues() {
+    const values = {
+      totalLaborMins: 0,
+      totalMachineMins: 0,
+      totalLaborCharge: 0,
+      totalEquipmentCharge: 0
+    }
+    this.procedureStepsData.forEach(step => {
+      values.totalLaborMins += step.laborTime;
+      values.totalMachineMins += step.equipmentTime;
+      values.totalLaborCharge += step.laboar_chage ? step.laboar_chage : 0;
+      values.totalEquipmentCharge += step.equipment_charge ? step.equipment_charge : 0;
+    });
+
+    this.productData.totalSalePrice = values.totalLaborCharge + values.totalEquipmentCharge + this.productData.materialCost ? this.productData.materialCost : 0;
+
+    return values;
+  }
+
+  getEquipPerMin(procedureStep: ProcedureStepModel) {
+    if (procedureStep.replacementCost && procedureStep.usefulLife && procedureStep.utilization) {
+      return procedureStep.replacementCost/procedureStep.usefulLife;
+    } else {
+      return 0.0;
     }
   }
 
@@ -194,20 +333,64 @@ export class ProductDefinitionComponent implements OnInit {
     this.showAllStepColumns = $event;
   }
 
+  openQuoteViewModal() {
+
+  }
+
 
   onSubmit() {
-    // TODO: Submit Functionality
-    console.log('_______', this.productData)
+    jQuery('.parsleyjs').parsley().validate();
+    const ctrl = this;
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      this.globals.showLoader(true);
+      if (ctrl.mode === ctrl.productPageModes.Create) {
+        const requestData = new CreateProductRequest();
+        requestData.init(ctrl.productData);
+        this.productService.productPost(env.apiVersion, requestData)
+          .pipe(take(1))
+          .subscribe(responseHandler((resp) => {
+            this.globals.showLoader(true);
+            if (!resp.hasErrors) {
+              ctrl.router.navigate(['app/pricing/products']);
+            }
+          }));
+      } else if (ctrl.mode === ctrl.productPageModes.Edit) {
+        const updateData = new UpdateProductRequest();
+        updateData.init(ctrl.productData);
+        this.productService.productPatch(env.apiVersion, updateData)
+          .pipe(take(1))
+          .subscribe(responseHandler((resp) => {
+            this.globals.showLoader(true);
+            if (!resp.hasErrors) {
+              ctrl.router.navigate(['app/pricing/products']);
+            }
+          }));
+      }
+    }
+  }
+
+  calculateStepValues(step: ProcedureStepModel) {
+
+    const laboar_chage = step.laborTime * LABOR_RATE_PER_MIN;
+     const annual_rm = step.replacementCost * RM_ANNUAL_RATE;
+    const rm_per_min = annual_rm / (YEAR_HOURS * HOURS_MINUTES * step.utilization);
+    const ex_per_min = (step.replacementCost / step.usefulLife) /  (YEAR_HOURS * HOURS_MINUTES * step.utilization);
+    const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
+
+    return {
+      laboar_charge: laboar_chage,
+      annual_rm: annual_rm,
+      rm_per_min: rm_per_min,
+      ex_per_min: ex_per_min,
+      equipment_charge: equipment_charge
+    }
+
   }
 
 }
 
-class ProductModel {
-  locationId: number;
-  customerId: number;
-  partId: number;
-  procedureId: number;
-  procedureSteps: ProcedureStep[];
-}
-
+const RM_ANNUAL_RATE = 10;
+const LABOR_RATE_PER_MIN = 2.92;
+const YEAR_HOURS = 2080;
+const HOURS_MINUTES = 60;
 
