@@ -278,7 +278,7 @@ describe('Procedure Functionality', () => {
         headerNames.push('Id');
         headerNames.push('Name');
         headerNames.push('Creator Company');
-        headerNames.push('Created By Department Name');
+        headerNames.push('Created By Department');
         headerNames.push('Type');
         headerNames.push('Revision');
         headerNames.push('Reference Files');

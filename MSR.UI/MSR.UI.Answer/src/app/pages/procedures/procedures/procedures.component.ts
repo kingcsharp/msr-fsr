@@ -39,7 +39,7 @@ export class ProceduresComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'creatorCompany', label: 'Creator Company', visible: true }),
-      new ColumnsSaved({ id: 'createdByDepartmentName', label: 'Created By Department Name', visible: true }),
+      new ColumnsSaved({ id: 'createdByDepartmentName', label: 'Created By Department', visible: true }),
       new ColumnsSaved({ id: 'procedureType.name', label: 'Type', visible: true }),
       new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
       new ColumnsSaved({ id: 'referenceFiles', label: 'Reference Files', visible: true }),
