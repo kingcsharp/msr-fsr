@@ -22,7 +22,7 @@ export class TemplateComponent implements OnInit {
   baseStartOnCounterOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
   availableRoles: Array<SelectItem>;
-  selectedRoles: Array<number> = new Array<number>();
+  selectedRoles: Array<number>;
 
   constructor(private procedureTemplateService: ProcedureTemplateService, private route: ActivatedRoute,
     public elementReference: ElementRef, public roleService: RoleService, private router: Router, public globals: Globals) { }
@@ -75,12 +75,6 @@ export class TemplateComponent implements OnInit {
             this.procedureTemplate.referenceFiles = [];
           }
 
-          this.procedureTemplate.roles.forEach(id => {
-
-            this.selectedRoles.push(this.availableRoles.find(s => s.value === id).value);
-
-          });
-
         }));
 
       }
@@ -96,7 +90,7 @@ export class TemplateComponent implements OnInit {
     createProcedureTemplateRequest.referenceFiles = this.procedureTemplate.referenceFiles;
     createProcedureTemplateRequest.referenceProcedures = this.procedureTemplate.referenceProcedures;
     createProcedureTemplateRequest.replacementCost = this.procedureTemplate.replacementCost;
-    createProcedureTemplateRequest.roles = this.selectedRoles;
+    createProcedureTemplateRequest.roles = this.procedureTemplate.roles;
     createProcedureTemplateRequest.text = this.procedureTemplate.text;
     createProcedureTemplateRequest.title = this.procedureTemplate.title;
     createProcedureTemplateRequest.usefulLife = this.procedureTemplate.usefulLife;
@@ -117,7 +111,7 @@ export class TemplateComponent implements OnInit {
     updateProcedureTemplateRequest.referenceFiles = this.procedureTemplate.referenceFiles;
     updateProcedureTemplateRequest.referenceProcedures = this.procedureTemplate.referenceProcedures;
     updateProcedureTemplateRequest.replacementCost = this.procedureTemplate.replacementCost;
-    updateProcedureTemplateRequest.roles = this.selectedRoles;
+    updateProcedureTemplateRequest.roles = this.procedureTemplate.roles;
     updateProcedureTemplateRequest.text = this.procedureTemplate.text;
     updateProcedureTemplateRequest.title = this.procedureTemplate.title;
     updateProcedureTemplateRequest.usefulLife = this.procedureTemplate.usefulLife;

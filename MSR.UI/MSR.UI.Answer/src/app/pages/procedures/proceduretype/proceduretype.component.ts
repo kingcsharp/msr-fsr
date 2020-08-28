@@ -52,8 +52,7 @@ export class ProceduretypeComponent implements OnInit {
 
     let createProcedureTypeRequest = new CreateProcedureTypeRequest();
     createProcedureTypeRequest.name = this.procedureType.name;
-    // TODO: Uncomment when type is added to ProcedureType
-    // createProcedureTypeRequest.majorGroup = this.procedureType.type;
+    createProcedureTypeRequest.majorGroup = this.procedureType.type;
 
     this.procedureTypeService.procedureTypePost(env.apiVersion, createProcedureTypeRequest).subscribe(responseHandler((response) => {
       this.router.navigate(['app/procedures/proceduretypes']);
@@ -67,8 +66,7 @@ export class ProceduretypeComponent implements OnInit {
     let updateProcedureTypeRequest = new UpdateProcedureTypeRequest();
     updateProcedureTypeRequest.id = this.procedureType.id;
     updateProcedureTypeRequest.name = this.procedureType.name;
-    // TODO: Uncomment when type is added to ProcedureType
-    // updateProcedureTypeRequest.majorGroup = this.procedureType.type;
+    updateProcedureTypeRequest.majorGroup = this.procedureType.type;
 
     this.procedureTypeService.procedureTypePatch(env.apiVersion, updateProcedureTypeRequest).subscribe(responseHandler((response) => {
       this.router.navigate(['app/procedures/proceduretypes']);

@@ -1,4 +1,4 @@
-<div class="container-flex">
+<div class="container-flex custom-panel">
     <div class="row">
         <div class="col-12">
             <h1 class="page-title">
@@ -7,36 +7,39 @@
             </h1>
         </div>
     </div>
-    <div class="row d-flex flex-column">
-        <div class="col-12 d-flex flex-column">
+    <div class="row">
+        <div class="col-12">
             <div>Procedure Id: {{ procedure.id}} </div>
             <div>Revision Number: {{ procedure.revision}} </div>
         </div>
-        <table class="col-12 m-4 table table-striped">
-            <thead class="thead-light">
-                <tr>
-                    <th>Number</th>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Text</th>
-                    <th>Duration Type</th>
-                    <th>Duration</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let procedureStep of procedureSteps;">
-                    <td> {{ procedureStep.id }} </td>
-                    <td> {{ procedureStep.id }} </td>
-                    <td> {{ procedureStep.title }} </td>
-                    <td> {{ procedureStep.text }} </td>
-                    <td> {{ procedureStep.durationType }} </td>
-                    <td> {{ procedureStep.duration }} </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Number</th>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Text</th>
+                        <th>Duration Type</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let procedureStep of procedureSteps;">
+                        <td> {{ procedureStep.id }} </td>
+                        <td> {{ procedureStep.id }} </td>
+                        <td> {{ procedureStep.title }} </td>
+                        <td> {{ procedureStep.stepText }} </td>
+                        <td> {{ procedureStep.procedureStepType }} </td>
+                        <td> {{ procedureStep.duration }} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="row">
-        <button type="button" class="btn btn-warning m-2" [routerLink]="['../procedures']"
-            data-cy="cancel-button">Cancel</button>
+        <div class="col-12">
+            <button type="button" class="btn btn-warning m-2" [routerLink]="['../procedures']" data-cy="cancel-button">Cancel</button>
+        </div>
     </div>
 </div>
