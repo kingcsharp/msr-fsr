@@ -168,14 +168,14 @@ export class ProcedureEditComponent implements OnInit {
           procedureStep.referenceFiles = [];
         }
         procedureStep.originalPrintOrder = procedureStep.printOrder - 1;
-        if(procedureStep.printOrder !== 1){
+        if (procedureStep.printOrder !== 1) {
           procedureStep.predecessorStepId = setGetResponse.object.find(s => s.printOrder === procedureStep.printOrder - 1)?.id;
           procedureStep.predecessorStepName = setGetResponse.object.find(s => s.printOrder === procedureStep.printOrder - 1)?.title;
-        }else{
+        } else {
           procedureStep.predecessorStepId = undefined;
           procedureStep.predecessorStepName = undefined;
         }
-        
+
 
       });
 
@@ -382,10 +382,10 @@ export class ProcedureEditComponent implements OnInit {
 
     if (this.selectedProcedureStepTemplate === undefined) {
 
-      let procedureStepToAdd:any = {};
+      let procedureStepToAdd: any = {};
       procedureStepToAdd.id = 0;
       procedureStepToAdd.duration = 0;
-      procedureStepToAdd.durationType;
+      procedureStepToAdd.durationType = undefined;
       procedureStepToAdd.equipmentTime = 0;
       procedureStepToAdd.laborTime = 0;
       procedureStepToAdd.printOrder = this.procedureSteps.length;
@@ -397,7 +397,7 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepToAdd.title = '';
       procedureStepToAdd.usefulLife = 0;
       procedureStepToAdd.utilizationTime = 0;
-      procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length-1].title;
+      procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1].title;
       this.procedureSteps.push(procedureStepToAdd);
       this.procedureSteps = [...this.procedureSteps];
 
@@ -406,14 +406,14 @@ export class ProcedureEditComponent implements OnInit {
       this.procedureTemplateService.procedureTemplateGet(this.selectedProcedureStepTemplate, env.apiVersion).subscribe(responseHandler((response) => {
 
         let procedureStepTemplateToAdd = response.object[0];
-        let procedureStepToAdd:any = {};
+        let procedureStepToAdd: any = {};
         procedureStepToAdd.id = 0;
         procedureStepToAdd.duration = procedureStepTemplateToAdd.estimatedStepDuration;
         procedureStepToAdd.durationType = '0';
         procedureStepToAdd.laborTime = 0;
         procedureStepToAdd.printOrder = this.procedureSteps.length;
         procedureStepToAdd.procedureId = this.procedure.id;
-        procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles === undefined? [] : procedureStepTemplateToAdd.referenceFiles;
+        procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles === undefined ? [] : procedureStepTemplateToAdd.referenceFiles;
         procedureStepToAdd.replacementCost = 0;
         procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
         procedureStepToAdd.stepText = procedureStepTemplateToAdd.text;
@@ -421,7 +421,7 @@ export class ProcedureEditComponent implements OnInit {
         procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
         procedureStepToAdd.equipmentTime = 0;
         procedureStepToAdd.utilizationTime = procedureStepTemplateToAdd.utilization;
-        procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length-1].title;
+        procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1].title;
         this.procedureSteps.push(procedureStepToAdd);
         this.selectedProcedureStepTemplate = undefined;
         this.procedureSteps = [...this.procedureSteps];
