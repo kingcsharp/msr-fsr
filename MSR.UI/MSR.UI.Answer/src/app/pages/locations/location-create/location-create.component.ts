@@ -20,9 +20,9 @@ export class LocationCreateComponent implements OnInit {
 
   locationToEdit: LocationModel;
   locationToEditId: number;
-  parentLocationOptions: Array<LocationModel>;
+  parentLocationOptions: Array<SelectItem>;
   countryOptions: SelectItem[];
-  selectedParentLocation: LocationModel;
+  selectedParentLocation: number;
   sensorOptions: SensorModel[] = new Array<SensorModel>();
   selectedSensors: SensorModel[] = new Array<SensorModel>();
   originalSensorsSelected: SensorModel[] = new Array<SensorModel>();
@@ -35,21 +35,25 @@ export class LocationCreateComponent implements OnInit {
 
     this.countryOptions = new LookUpItems().Countries();
 
+    this.getLocationForEditorCreate();
+
+  }
+
+  getAvailableParentLocations() {
+
     this.globals.showLoader(true);
     this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.parentLocationOptions = response.object;
+      this.parentLocationOptions = response.object.filter(s => s.id !== this.locationToEdit.id).map(m => ({ label: m.name, value: m.id }))
+        .sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0);
 
       this.timezoneService.timezone(env.apiVersion).subscribe(responseHandler((timezoneResponse) => {
 
         this.timezonesAvailable = timezoneResponse.object.map(s => ({ label: s.description, value: s.id }));
-        this.getLocationForEditorCreate();
+
       }));
 
-
     }));
-
-
 
   }
 
@@ -64,18 +68,20 @@ export class LocationCreateComponent implements OnInit {
         this.locationService.locationGet(null, this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
 
           this.locationToEdit = locationGetResponse.object[0];
-          if (this.locationToEdit.parentId !== null) {
 
-            this.selectedParentLocation = this.parentLocationOptions.find(s => s.id === this.locationToEdit.id);
+          this.getAvailableParentLocations();
 
-            this.globals.showLoader(true);
-            this.sensorService.sensor(null, this.locationToEdit.site, env.apiVersion).subscribe(responseHandler((locationResponse) => {
+          if (this.locationToEdit.parentId !== this.locationToEdit.id) {
 
-              this.selectedSensors = locationResponse.object;
-              this.originalSensorsSelected = locationResponse.object;
-            }));
-
+            this.selectedParentLocation = this.locationToEdit.parentId;
           }
+
+          this.globals.showLoader(true);
+          this.sensorService.sensor(null, this.locationToEdit.site, env.apiVersion).subscribe(responseHandler((locationResponse) => {
+
+            this.selectedSensors = locationResponse.object;
+            this.originalSensorsSelected = locationResponse.object;
+          }));
 
         }));
 
@@ -89,9 +95,6 @@ export class LocationCreateComponent implements OnInit {
   }
 
   updateLocation() {
-    if (this.selectedParentLocation !== undefined) {
-      this.locationToEdit.parentId = this.selectedParentLocation.id;
-    }
 
     let updateLocationRequest = new UpdateLocationRequest();
     updateLocationRequest.locationId = this.locationToEditId;
@@ -102,11 +105,11 @@ export class LocationCreateComponent implements OnInit {
     updateLocationRequest.internalAddress = this.locationToEdit.internalAddress;
     updateLocationRequest.invoiceClass = this.locationToEdit.invoiceClass;
     updateLocationRequest.name = this.locationToEdit.name;
-    updateLocationRequest.parentId = this.locationToEdit.parentId;
+    updateLocationRequest.parentId = this.selectedParentLocation;
     updateLocationRequest.phone = this.locationToEdit.phone;
     updateLocationRequest.postalCode = this.locationToEdit.postalCode;
     updateLocationRequest.state = this.locationToEdit.state;
-    updateLocationRequest.timeZoneId = this.selectedTimezone;
+    updateLocationRequest.timeZoneId = updateLocationRequest.timeZoneId === undefined ? null : this.selectedTimezone;
     this.globals.showLoader(true);
     this.locationService.locationPatch(env.apiVersion, updateLocationRequest).subscribe(responseHandler((response) => {
 
@@ -161,9 +164,6 @@ export class LocationCreateComponent implements OnInit {
 
   saveLocation() {
 
-    if (this.selectedParentLocation !== undefined) {
-      this.locationToEdit.parentId = this.selectedParentLocation.id;
-    }
 
     let createLocationRequest = new CreateLocationRequest();
     createLocationRequest.address1 = this.locationToEdit.address1;
@@ -173,7 +173,7 @@ export class LocationCreateComponent implements OnInit {
     createLocationRequest.internalAddress = this.locationToEdit.internalAddress;
     createLocationRequest.invoiceClass = this.locationToEdit.invoiceClass;
     createLocationRequest.name = this.locationToEdit.name;
-    createLocationRequest.parentId = this.locationToEdit.parentId;
+    createLocationRequest.parentId = this.selectedParentLocation;
     createLocationRequest.phone = this.locationToEdit.phone;
     createLocationRequest.postalCode = this.locationToEdit.postalCode;
     createLocationRequest.state = this.locationToEdit.state;
