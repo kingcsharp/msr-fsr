@@ -44,17 +44,6 @@
                         <th grid-input-filter [dt]="dt" searchField="text" data-cy="text-filter"
                             [hidden]="!commonGrid.isVisibleCol('text',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="revision" data-cy="revision-filter"
-                            [hidden]="!commonGrid.isVisibleCol('revision',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
-                            <div class="position-relative">
-                                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
-                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
-                                    [datatable]="dt" data-cy="status-multiselect">
-                                </multiselect-wrapper>
-                            </div>
-                        </th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -69,12 +58,6 @@
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('text', gridSettings)">
                             {{model.text}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('revision', gridSettings)">
-                            {{model.revision}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
-                            {{model.status}}
                         </td>
                         <td>
                             <grid-file-viewer [menuItem]="model.referenceFiles" [files]="model.referenceFiles"></grid-file-viewer>

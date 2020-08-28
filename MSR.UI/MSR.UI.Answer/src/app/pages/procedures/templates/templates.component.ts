@@ -42,8 +42,6 @@ export class TemplatesComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'title', label: 'Title', visible: true }),
       new ColumnsSaved({ id: 'text', label: 'Text', visible: true }),
-      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'referenceFiles', label: 'Reference Files', visible: true }),
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
       ];
