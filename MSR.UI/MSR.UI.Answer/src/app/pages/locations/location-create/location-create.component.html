@@ -23,9 +23,8 @@
                     Parent Location
                 </label>
                 <div class="col-12">
-                    <p-dropdown placeholder="Select Parent Location" name="country" [options]="parentLocationOptions"
-                        showClear="true" optionLabel="name" appendTo="body" [baseZIndex]="100001"
-                        [(ngModel)]="selectedParentLocation" data-cy="parentlocation-dropdown"
+                    <p-dropdown placeholder="Select Parent Location" name="parentlocation" [options]="parentLocationOptions"
+                        showClear="true" [(ngModel)]="selectedParentLocation" data-cy="parentlocation-dropdown"
                         (onChange)="parentSelected($event)">
                     </p-dropdown>
                 </div>
