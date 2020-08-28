@@ -36,7 +36,7 @@ export class CustomersComponent implements OnInit {
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'Name', visible: false }),
+      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'customerNumber', label: 'Customer Number', visible: true }),
       new ColumnsSaved({ id: 'address', label: 'Address', visible: true }),
       new ColumnsSaved({ id: 'phone', label: 'Phone', visible: true }),
