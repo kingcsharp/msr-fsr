@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { CustomerService, Customer, UserService, UserModel, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
+import { CustomerService, Customer, UserService, UserModel, EnumMenuItem, EnumApprovalTables, UpdateCustomerRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
@@ -23,6 +23,7 @@ export class CustomersComponent implements OnInit {
   canAddCustomer: boolean = false;
   canEditCustomer: boolean = false;
   canDeleteCustomer: boolean = false;
+  canActivateCustomer: boolean = false;
   customerToDelete: Customer;
   showConfirmDeleteDialog: boolean = false;
   approvalTables = EnumApprovalTables;
@@ -53,6 +54,7 @@ export class CustomersComponent implements OnInit {
     this.canAddCustomer = this.hasPrivilege(this.privileges.CanCreate);
     this.canDeleteCustomer = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditCustomer = this.hasPrivilege(this.privileges.CanEdit);
+    this.canActivateCustomer = this.hasPrivilege(this.privileges.CanActivate);
     this.getCustomers();
 
 
@@ -111,4 +113,23 @@ export class CustomersComponent implements OnInit {
 
   }
 
+  changeCustomerStatus(customer:Customer){
+
+    let updateCustomerRequest = new UpdateCustomerRequest();
+    updateCustomerRequest.customerId = customer.id;
+    updateCustomerRequest.address = customer.address;
+    updateCustomerRequest.locationId = customer.location.id;
+    updateCustomerRequest.name = customer.name;
+    updateCustomerRequest.phone = customer.phone;
+    updateCustomerRequest.primaryContactUserId = customer.primaryContactUser?.id;
+    updateCustomerRequest.secondaryContactUserId = customer.secondaryContactUser?.id;
+    updateCustomerRequest.customerNumber = customer.customerNumber;
+    updateCustomerRequest.isActive = customer.isActive;
+
+    this.globals.showLoader(true);
+    this.customerService.customerPatch(env.apiVersion, updateCustomerRequest).subscribe(responseHandler((response) => {
+
+    }));
+    
+  }
 }
