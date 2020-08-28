@@ -156,8 +156,15 @@
             <td [hidden]="!commonGrid.isVisibleCol('secondaryContactUser.fullName', gridSettings)">
               {{customer.secondaryContactUser?.fullName}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('isActive', gridSettings)">
-              {{customer.isActive}}
+            <td class="text-center" [hidden]="!commonGrid.isVisibleCol('isActive', gridSettings)">
+              <ng-template [ngIf]="!canActivateCustomer">
+                <p-inputSwitch disabled="true" [(ngModel)]="customer.isActive" (ngModelChange)="changeCustomerStatus(customer)">
+                </p-inputSwitch>
+              </ng-template>
+              <ng-template [ngIf]="canActivateCustomer">
+                <p-inputSwitch [(ngModel)]="customer.isActive" (ngModelChange)="changeCustomerStatus(customer)">
+                </p-inputSwitch>
+              </ng-template>
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('created.fullName', gridSettings)">
               {{customer.created?.fullName}}
