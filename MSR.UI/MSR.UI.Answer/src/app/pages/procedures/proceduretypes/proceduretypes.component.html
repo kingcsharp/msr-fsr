@@ -44,17 +44,6 @@
                         <th grid-input-filter [dt]="dt" searchField="type"
                             [hidden]="!commonGrid.isVisibleCol('type',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="revision"
-                            [hidden]="!commonGrid.isVisibleCol('revision',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
-                            <div class="position-relative">
-                                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
-                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
-                                    [datatable]="dt">
-                                </multiselect-wrapper>
-                            </div>
-                        </th>
                         <th></th>
                     </tr>
                 </ng-template>
@@ -68,12 +57,6 @@
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('type', gridSettings)">
                             {{model.type}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('revision', gridSettings)">
-                            {{model.revision}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
-                            {{model.status}}
                         </td>
                         <td>
                             <i *ngIf="canEdit" class="far fa-edit pointer" tooltip="Edit Procedure Type"
