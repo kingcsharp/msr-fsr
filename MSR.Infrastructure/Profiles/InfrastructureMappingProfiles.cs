@@ -91,7 +91,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.LocationImportItem, UpdateLocation>();
             #endregion
 
-            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZone>().ReverseMap();
+            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZoneModel>().ReverseMap();
            
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();

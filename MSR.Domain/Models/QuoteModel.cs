@@ -10,7 +10,7 @@ namespace MSR.Domain.Models
         public int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
         public int SubmittedById { get; set; }
-        public virtual User SubmittedBy { get; set; }
+        public virtual UserModel SubmittedBy { get; set; }
         public string Contact { get; set; }
         public string Delivery { get; set; }
         public string Title { get; set; }
