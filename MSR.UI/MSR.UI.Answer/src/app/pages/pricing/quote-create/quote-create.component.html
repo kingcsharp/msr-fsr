@@ -42,14 +42,28 @@
                 <td>
                   <p-dropdown
                     placeholder="Select Customer"
-                    name="customerId"
+                    name="customerSelectId"
                     [options]="customersData"
                     appendTo="body"
                     [baseZIndex]="100001"
                     [(ngModel)]="data.customerId"
-                    data-cy="quote-customerid"
+                    data-cy="quote-select-customerid"
                   >
                   </p-dropdown>
+                  <p-inputNumber
+                    [(ngModel)]="data.customerId"
+                    mode="decimal"
+                    name="customerId"
+                    inputId="customerId"
+                    [useGrouping]="false"
+                    class="hide"
+                    data-cy="quote-customerid"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                    data-parsley-type="integer"
+                  >
+                  </p-inputNumber>
                 </td>
                 <th class="text-right">Contact:</th>
                 <td>
@@ -137,17 +151,19 @@
             <tr *ngFor="let quoteItem of data.quoteItems; index as i;">
               <td>{{i+1}}</td>
               <td>
-                <input
-                  pInputText
-                  type="number"
-                  class="form-control input-transparent"
-                  name="quoteItem{{i}}_qty"
+                <p-inputNumber
                   [(ngModel)]="data.quoteItems[i].qty"
+                  mode="decimal"
+                  name="quoteItem{{i}}_qty"
+                  [useGrouping]="false"
+                  inputStyleClass="form-control input-transparent"
                   data-cy="quote-item-qty"
                   data-validate="parsley"
                   data-parsley-trigger="change"
                   data-parsley-required="true"
+                  data-parsley-type="integer"
                 >
+                </p-inputNumber>
               </td>
               <td>
                 <input
@@ -186,27 +202,31 @@
                 >
               </td>
               <td>
-                <input
-                  class="form-control input-transparent"
-                  name="quoteItem{{i}}_price"
+                <p-inputNumber
                   [(ngModel)]="data.quoteItems[i].price"
+                  name="quoteItem{{i}}_price"
+                  [minFractionDigits]="2"
+                  inputStyleClass="form-control input-transparent"
                   data-cy="quote-item-price"
                   data-validate="parsley"
                   data-parsley-trigger="change"
                   data-parsley-required="true"
-                  type="number"
+                  data-parsley-type="integer"
                 >
+                </p-inputNumber>
               </td>
               <td>
-                <input
-                  pInputText
-                  class="form-control input-transparent"
-                  name="quoteItem{{i}}_extension"
+                <p-inputNumber
                   [(ngModel)]="data.quoteItems[i].extension"
+                  name="quoteItem{{i}}_extension"
+                  [minFractionDigits]="2"
+                  inputStyleClass="form-control input-transparent"
+                  data-cy="quote-item-extension"
                   data-validate="parsley"
                   data-parsley-trigger="change"
-                  type="number"
+                  data-parsley-type="integer"
                 >
+                </p-inputNumber>
               </td>
             </tr>
           </tbody>

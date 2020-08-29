@@ -18,6 +18,7 @@ import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
+import {InputNumberModule} from 'primeng/inputnumber';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { QuoteCreateComponent } from './quote-create/quote-create.component';
 import { ProductDefinitionComponent } from './product-definition/product-definition.component';
@@ -64,6 +65,7 @@ export const routes = [
     DialogModule,
     TableModule,
     CalendarModule,
+    InputNumberModule,
     UtilsModule,
     LiveTileModule,
     WidgetModule,
