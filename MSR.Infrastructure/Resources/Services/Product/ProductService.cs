@@ -99,6 +99,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.ProcedureId = command.ProcedureId ?? product.ProcedureId;
             product.Revision = command.Revision ?? product.Revision;
             product.SalesTax = command.SalesTax ?? product.SalesTax;
+            product.QuoteId = command.QuoteId ?? product.QuoteId;
 
             // Save product changes
             await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);

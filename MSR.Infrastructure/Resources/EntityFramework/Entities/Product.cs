@@ -39,7 +39,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("PartId")]
         public virtual Part Part { get; set; }
 
-        public int QuoteId { get; set; }
+        public int? QuoteId { get; set; }
 
         [ForeignKey("QuoteId")]
         public virtual Quote Quote { get; set; }

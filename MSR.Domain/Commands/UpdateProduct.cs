@@ -19,5 +19,6 @@ namespace MSR.Domain.Commands
         public decimal? SalesTax { get; set; }
         public decimal? TotalSalePrice { get; set; }
         public int? CycleTime { get; set; }
+        public int? QuoteId { get; set; }
     }
 }
