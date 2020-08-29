@@ -175,5 +175,15 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             return ret;
         }
+
+        public async Task<Domain.Models.PurchaseModel> CreatePurchaseAsync(CreatePurchase command)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<Domain.Models.PurchaseModel> UpdatePurchaseAsync(UpdatePurchase command)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
