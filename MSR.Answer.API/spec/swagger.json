@@ -3147,6 +3147,47 @@
         }
       }
     },
+    "/v{version}/PurchaseOrder": {
+      "get": {
+        "tags": [
+          "PurchaseOrder"
+        ],
+        "operationId": "PurchaseOrder_GetPurchases",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfPurchaseOrderView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Role": {
       "get": {
         "tags": [
@@ -8434,6 +8475,118 @@
             "name": "PROCTYPE1598416546"
         }
       },
+      "AuditActionResultOfIEnumerableOfPurchaseOrderView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/PurchaseOrderView"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "PurchaseOrderView": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerReferencePO": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerReferenceNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "invoicedBalance": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "uninvoicedBalance": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "openDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalPurchaseLimit": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "customerReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "products": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderProductView"
+            }
+          },
+          "isDeletable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PurchaseOrderProductView": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalSalePrice": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
       "AuditActionResultOfICollectionOfRole": {
         "allOf": [
           {
@@ -9175,21 +9328,45 @@
             "type": "string",
             "nullable": true
           },
-          "customerLineNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
           "locationId": {
             "type": "integer",
             "format": "int32"
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
           },
           "qty": {
             "type": "integer",
             "format": "int32"
           },
+          "customerLineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mttn": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
           "purchasePrice": {
             "type": "number",
             "format": "decimal"
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StatusModel"
+              }
+            ]
           },
           "workOrders": {
             "type": "array",
@@ -9197,6 +9374,28 @@
             "items": {
               "$ref": "#/components/schemas/WorkOrderModel"
             }
+          },
+          "location": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LocationModel"
+              }
+            ]
+          }
+        }
+      },
+      "StatusModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9343,20 +9542,6 @@
             "items": {
               "$ref": "#/components/schemas/WorkOrderTaskMonitorModel"
             }
-          }
-        }
-      },
-      "StatusModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
