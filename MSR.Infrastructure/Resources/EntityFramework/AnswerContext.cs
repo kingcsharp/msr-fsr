@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 
 namespace MSR.Infrastructure.Resources.EntityFramework
 {
@@ -60,8 +61,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<FileEntityMap> FileEntityMap { get; set; }
         public DbSet<Sensor> SensorItem { get; set; }
         public DbSet<Quote> Quote { get; set; }
-
-
+        public DbSet<TimeZone> Timezone { get; set; }
 
         public AnswerContext() : base()
         {

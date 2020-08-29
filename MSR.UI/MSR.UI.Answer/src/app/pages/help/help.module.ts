@@ -12,7 +12,6 @@ import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { DropdownModule } from 'primeng/dropdown';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
-import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { UtilsModule } from '../../../app/layout/utils/utils.module';
 
 export const routes = [
@@ -23,7 +22,7 @@ export const routes = [
 
 @NgModule({
   declarations: [HelpComponent, HelpCreateComponent,
-    CkeditorWrapperComponent, HelpbuttonWrapperComponent],
+    CkeditorWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

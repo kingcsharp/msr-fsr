@@ -74,10 +74,10 @@
                             {{certification.certificationName}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('certificationFromDate', gridSettings)">
-                            {{certification.certificationFromDate  | date :'short'}}
+                            {{certification.certificationFromDate  | userTimezone}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('certificationToDate', gridSettings)">
-                            {{certification.certificationToDate  | date :'short'}}
+                            {{certification.certificationToDate  | userTimezone}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
                             {{certification.status}}
@@ -91,4 +91,3 @@
                 </ng-template>
             </p-table>
         </widget>
-   

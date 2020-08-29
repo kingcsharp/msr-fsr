@@ -3,8 +3,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
-  UserService, User, IAuditActionResultOfUser, LocationService
-  , UpdateUserRequest, RoleService, Role, EnumMenuItem
+  UserService, UserModel, IAuditActionResultOfUserModel, LocationService
+  , UpdateUserRequest, RoleService, Role, EnumMenuItem, CustomerService, Customer
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -59,14 +59,15 @@ export class UserComponent implements OnInit {
   locations: any[] = [];
   getLocationsFlag: boolean = false;
   backendRoles: Array<Role>;
+  customers: Array<Customer>;
 
-  constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
+  constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService, private customerService: CustomerService,
     public globals: Globals, private elem: ElementRef, public locationService: LocationService, public roleService: RoleService) {
   }
 
   ngOnInit(): void {
     this.data = [];
-    this.currUser = new User();
+    this.currUser = new UserModel();
     this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elem.nativeElement.tagName.toLowerCase();
     // SET DEFAULT VIEW COLS
@@ -91,8 +92,8 @@ export class UserComponent implements OnInit {
       { label: 'InActive', value: false },
     ];
     this.userTypes = [
-      { label: 'Is Portal User', value: true },
-      { label: 'Is Not Portal User', value: false },
+      { label: 'Portal User', value: false },
+      { label: 'Answer User', value: true },
     ];
 
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
@@ -101,11 +102,20 @@ export class UserComponent implements OnInit {
     this.getUsers();
     this.getLocations();
     this.getRoles();
+    this.getCustomers();
+
+  }
+
+  getCustomers() {
+    this.customerService.customerGet(null, null, null, null, null, null, null, true, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.customers = response.object;
+      }));
   }
 
   getRoles() {
     const ctrl = this;
-    this.roleService.role(env.apiVersion).pipe(take(1))
+    this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.allRoles = response.object;
         ctrl.backendRoles = response.object;
@@ -158,7 +168,7 @@ export class UserComponent implements OnInit {
     return event.replace(/\D+/g, '');
   }
 
-  showDialog(user: User) {
+  showDialog(user: UserModel) {
     this.display = true;
     this.currUser = this.getUser(user);
   }
@@ -168,7 +178,7 @@ export class UserComponent implements OnInit {
     jQuery('.parsleyjs').parsley().reset();
   }
 
-  changeUserStatus(user: User) {
+  changeUserStatus(user: UserModel) {
     const ctrl = this;
     this.userService.userDelete(user.customerId, env.apiVersion).pipe(take(1)).subscribe(responseHandler(() => {
       ctrl.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
@@ -198,14 +208,22 @@ export class UserComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      let method: Observable<IAuditActionResultOfUser> = null;
+      let method: Observable<IAuditActionResultOfUserModel> = null;
       this.globals.showLoader(true);
-
+      if (this.currUser.customer !== undefined) {
+        this.currUser.customerId = this.currUser.customer.id;
+      }
+      if (this.currUser.isAnswerUser) {
+        this.currUser.customerId = null;
+      }
       if (this.currUser.id === undefined) {
         method = this.userService.userPost(env.apiVersion, this.currUser);
       } else {
         let updateUserReq = new UpdateUserRequest();
         Object.assign(updateUserReq, this.currUser);
+        if (this.currUser.timeZone !== undefined) {
+          updateUserReq.timeZoneId = this.currUser.timeZone.id;
+        }
         method = this.userService.userPatch(env.apiVersion, updateUserReq);
       }
 
@@ -216,7 +234,7 @@ export class UserComponent implements OnInit {
             ctrl.data.splice(index, 1);
           }
 
-          ctrl.data.push(new User(resp.object));
+          ctrl.data.push(new UserModel(resp.object));
           this.updateUsersData(ctrl.data);
           ctrl.clseDialog();
         }
@@ -224,16 +242,25 @@ export class UserComponent implements OnInit {
     }
   }
 
-  getUser(user: User) {
+  getUser(user: UserModel) {
     if (user === undefined) {
-      let ret = new User();
+      let ret = new UserModel();
       ret.isActive = true;
       ret.isAnswerUser = true;
       ret.firstName = '';
       return ret;
     } else {
+      this.setCustomer(user);
       return copyObj(user);
     }
   }
 
+  setCustomer(user: any) {
+    if (user.customerId !== undefined) {
+      const customerIndex = this.customers.findIndex(z => z.id === user.customerId);
+      if (customerIndex !== -1) {
+        user.customer = this.customers[customerIndex];
+      }
+    }
+  }
 }

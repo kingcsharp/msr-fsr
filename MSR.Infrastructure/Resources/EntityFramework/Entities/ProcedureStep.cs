@@ -29,6 +29,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public double? LaborTime { get; set; }
         public double? EquipmentTime { get; set; }
 
+        [ForeignKey("ProcedureStepTypeId")]
+        public ProcedureStepType StepType { get; set; }
+        public int? ProcedureStepTypeId { get; set; }
+
         [Column(TypeName = "money")]
         public decimal? ReplacementCost { get; set; }
 

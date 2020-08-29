@@ -1,0 +1,214 @@
+<h1 class="page-title">
+    <i class="fad fa-user"></i>
+    User Profile
+</h1>
+<widget>
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="submitDetailsChange()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    User Details
+                </h5>
+            </header>
+            <div class="widget-body">
+
+                <fieldset>
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <label for="firstName" class="col-md-2 form-control-label text-md-right">
+                            First Name:
+                        </label>
+                        <div class="col-md-4 ">
+                            <label class="form-control-label">{{user.firstName}}</label>
+                        </div>
+                        <label for="lastName" class="col-md-2  form-control-label text-md-right">
+                            Last Name:
+                        </label>
+                        <div class="col-md-4 ">
+                            <label class="form-control-label">{{user.lastName}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="email">
+                            E-mail:
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <label class="form-control-label">{{user.email}}</label>
+                        </div>
+                        <label for="userName" class="col-md-2  form-control-label text-md-right">
+                            Username:
+                        </label>
+                        <div class="col-md-4 ">
+                            <label class="form-control-label">{{user.userName}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="title" class="col-md-2  form-control-label text-md-right">
+                            Title:
+                        </label>
+                        <div class="col-md-4 ">
+                            <label class="form-control-label">{{user.title}}</label>
+                        </div>
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
+                            Phone:
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <label class="form-control-label">{{user.phone}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+                            Supervisor:
+                        </label>
+                        <div class="col-md-4 ">
+                            <label class="form-control-label">{{user.supervisorName}}</label>
+                        </div>
+                        <label for="createdOn" *ngIf="user.id !== undefined"
+                            class="col-md-2  form-control-label text-md-right">
+                            Created On:
+                        </label>
+                        <div class="col-md-4" *ngIf="user.id !== undefined">
+                            <label class="form-control-label">{{user.createdOn | userTimezone}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2  form-control-label text-md-right">
+                            Is Active:
+                        </label>
+                        <div class="col-md-4 ">
+                            <div class="display-inline-block isActive">
+                                <label class="form-control-label">{{user.isActive?'Yes':'No'}}</label>
+                            </div>
+                        </div>
+                        <label class="col-md-2  form-control-label text-md-right">
+                            Is Answer User:
+                        </label>
+                        <div class="col-md-4 ">
+                            <div class="display-inline-block isAnswerUser">
+                                <label class="form-control-label">{{user.isAnswerUser?'Yes':'No'}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                            Roles:
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <span *ngFor="let item of user.roles"
+                                class="badge mr-xs badge-secondary ng-star-inserted">{{item.name}}</span>
+                        </div>
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="locations">
+                            Location:
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <label class="form-control-label">{{user.locationName}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                            Timezone:
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <p-dropdown placeholder="Select Time Zone" dataKey="id" name="timezone"
+                                [options]="allTimezones" [(ngModel)]="user.timeZone" [virtualScroll]="true"
+                                optionLabel="description" appendTo="body" itemSize="30"
+                                [ngModelOptions]="{standalone: true}" data-cy="timezone-dropdown">
+                            </p-dropdown>
+                        </div>
+                        <label class="col-md-2 form-control-label text-md-right">
+                            Select Avatar File
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <cmh-file-uploader tooltip="" class="col-md-10" [menuItem]="menuItem"
+                                [(files)]="uploadedFiles" accept=".jpg,.jpeg,.jfif,.pjpeg,.pjp,.png,.svg,.tif,.tiff,.webp,.gif,.bmp,.apng"
+                                chooseLabel="Select Avatar File" [maxFileSize]="1000000">
+                            </cmh-file-uploader>
+                        </div>
+                    </div>
+                    <p-footer>
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                                data-cy="save-button">
+                                Save
+                            </button>
+                        </div>
+                    </p-footer>
+                </fieldset>
+            </div>
+        </section>
+    </form>
+</widget>
+<widget>
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="submitPwChange()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    Change Password
+                </h5>
+            </header>
+            <div class="widget-body">
+                <fieldset>
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <label for="oldPassword" class="col-md-4 col-form-label text-md-right">
+                            Current Password
+                        </label>
+                        <div class="col-md-5 ">
+                            <input type="password" id="oldPassword" name="oldPassword"
+                                [(ngModel)]="userPwObj.oldPassword" data-validate="parsley" data-parsley-required="true"
+                                class="form-control input-transparent" tooltip="Min length 3 characters"
+                                placeholder="Current Password" data-cy="oldPassword-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newPassword" class="col-md-4 col-form-label text-md-right">
+                            New Password
+                        </label>
+                        <div class="col-md-5 ">
+                            <input type="password" id="newPassword" name="newPassword"
+                                [(ngModel)]="userPwObj.newPassword" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                                data-parsley-minlength="8" data-parsley-minlength="8" data-parsley-special="1"
+                                data-parsley-uppercase="1" data-parsley-lowercase="1" data-parsley-number="1"
+                                data-parsley-required-message="Please re-enter your new password."
+                                data-parsley-equalto="#confirmpassword" class="form-control input-transparent"
+                                tooltip="Min length 3 characters" placeholder="New Password"
+                                data-cy="newPassword-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="confirmpassword" class="col-md-4 col-form-label text-md-right">
+                            Confirm Password
+                        </label>
+                        <div class="col-md-5 ">
+                            <input type="password" id="confirmpassword" name="confirmpassword"
+                                [(ngModel)]="userPwObj.confirmpassword" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                                data-parsley-minlength="8" data-parsley-special="1" data-parsley-uppercase="1"
+                                data-parsley-lowercase="1" data-parsley-number="1"
+                                data-parsley-required-message="Please confirm your new password."
+                                class="form-control input-transparent" tooltip="Min length 3 characters"
+                                placeholder="Confirm Password" data-cy="confirmpassword-input">
+                        </div>
+                    </div>
+                    <p-footer>
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                                data-cy="save-button">
+                                Save
+                            </button>
+                        </div>
+                    </p-footer>
+                </fieldset>
+            </div>
+        </section>
+    </form>
+</widget>

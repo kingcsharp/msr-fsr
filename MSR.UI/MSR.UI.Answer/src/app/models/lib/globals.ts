@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
-import { MenuItem, EnumMenuItem, EnumApprovalTables } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
@@ -9,7 +9,6 @@ import { EnumPrivilege } from '../../models/enums/privileges';
 import { AllowedActions } from './AllowedActions';
 import { Observable, Observer, BehaviorSubject, Subject } from 'rxjs';
 import { ModalData } from './ModalData';
-import { resolve } from 'dns';
 
 @Injectable()
 export class Globals {
@@ -26,7 +25,7 @@ export class Globals {
     modalData: ModalData = {
         showModal: false,
         comment: new Subject<string>()
-    }
+    };
 
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
@@ -39,15 +38,14 @@ export class Globals {
             this.modalData.showModal = true;
             this.modalData.comment = new Subject<string>();
             return this.modalData.comment.asObservable().toPromise().then((comment) => {
-                if (comment === null || comment === "" || comment === undefined) {
+                if (comment === null || comment === '' || comment === undefined) {
                     this.toastr.error('Can not save without adding a comment.');
                     throw new Error();
                 }
                 approvalEntity.comment = comment;
                 return;
             });
-        }
-        else {
+        } else {
             return new Promise((resolve) => {
                 return resolve();
             });
@@ -58,7 +56,16 @@ export class Globals {
         router.events.forEach((event) => {
             if (event instanceof NavigationEnd && this.user !== undefined) {
                 let splitUrl = event.url.split('/');
-                const currMenuItem: [MenuItem] = this.user.roles[0].menus.filter(x => x.url.toLowerCase() === splitUrl[splitUrl.length - 1]);
+                const urlTocheck = splitUrl[splitUrl.length - 1];
+                let currMenuItem: [MenuItem];
+                this.user.roles.forEach(element => {
+                    const elem = element.menus.filter(x => x.url.toLowerCase() === urlTocheck);
+                    if (elem !== undefined) {
+                        currMenuItem = elem;
+                        return;
+                    }
+                });
+
                 if (currMenuItem.length > 0) {
                     this.activeMenu = currMenuItem[0];
                 }
@@ -77,6 +84,7 @@ export class Globals {
         }
         if (localStorage.user !== undefined) {
             this.user = JSON.parse(localStorage.user);
+            this.user.timezonePipe = this.getOffset();
         }
     }
 
@@ -156,6 +164,29 @@ export class Globals {
 
     updateUser(val) {
         this.user = val;
+        this.user.timezonePipe = this.getOffset();
+        localStorage.setItem('user', JSON.stringify(val));
+    }
+
+    getCurrentUser() {
+        return this.user;
+    }
+
+    getOffset() {
+        if (this.user.timeZone === undefined) {
+            return '';
+        }
+        const offset = this.user.timeZone.offset;
+        let intPart = Math.floor(offset).toString();
+        let fraction = Math.floor((offset - Math.floor(offset)) * 100) * 60 / 100;
+        let fractionPart = '';
+        if (fraction > 0) {
+            fractionPart = ':' + fraction.toString();
+            if (fraction.toString().length === 1) {
+                fractionPart += '0';
+            }
+        }
+        return 'GMT' + intPart + fractionPart;
     }
 
     getLogin() {

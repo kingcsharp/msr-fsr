@@ -23,10 +23,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         [StringLength(20)]
         public string DurationType { get; set; }
-
+        [ForeignKey("ProcedureId")]
         public virtual Procedure Procedure { get; set; }
         public int ProcedureId { get; set; }
-        [ForeignKey("ProcedureId")]
+        
         public virtual ProcedureType ProcedureType { get; set; }
 
         public virtual ICollection<ProcedureStepApproval> ProcedureStepApprovals { get; set; }

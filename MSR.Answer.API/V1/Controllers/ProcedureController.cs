@@ -7,86 +7,153 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using Newtonsoft.Json;
 using NSwag.Annotations;
 using System.Collections.Generic;
-using System.Net;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
+    /// <summary>
+    /// Procedure Controller
+    /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     public class ProcedureController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
 
+        /// <summary>
+        /// Procedure Controller
+        /// </summary>
         public ProcedureController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
 
-        [HttpGet()]
+        /// <summary>
+        /// Add Procedure
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        [HttpPost]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
+        public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest body)
+        {
+            var command = body.ToCreateProcedureCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<Procedure>();
+        }
+
+        /// <summary>
+        /// Add Procedure Step
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        [HttpPost("{id}/step")]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
+        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepModel>))]
+        public async Task<IActionResult> ProcedureAddProcedureStep(int id, CreateProcedureStepRequest body)
+        {
+            var command = body.ToCreateProcedureStepCommand();
+            command.procedureId = id;
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ProcedureStepModel>();
+        }
+
+        /// <summary>
+        /// Delete Procedure
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        [HttpDelete("{id}")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> ProcedureDeleteProcedure([FromRoute][Required]int id)
+        {
+            var command = new DeleteProcedure(){ procedureID = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse();
+        }
+
+        /// <summary>
+        /// Delete Procedure Step
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="stepid"></param>
+        /// <response code="200"></response>
+        [HttpDelete("{id}/step/{stepid}")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> ProcedureDeleteProcedureStep([FromRoute][Required]int id, [FromRoute][Required]int stepid)
+        {
+            var command = new DeleteProcedureStep(){ procedureID = id, procedureStepID = stepid };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse();
+        }
+
+        /// <summary>
+        /// Get one of all Procedures
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        [HttpGet]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
-        public async Task<IActionResult> GetProcedure(int? id)
+        public async Task<IActionResult> ProcedureGetProcedure(int? id)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedure()
-            {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedure() {
                 procedureID = id
             });
             return ret.ToOkObjectResponse<ICollection<Procedure>>();
         }
 
-        [HttpPost]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
-        public async Task<IActionResult> AddProcedure(CreateProcedureRequest newproc)
-        {
-            var command = newproc.ToCreateProcedureCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Procedure>();
-        }
-
-        [HttpPatch]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
-        public async Task<IActionResult> UpdateProcedure(UpdateProcedureRequest newproc)
-        {
-            var command = newproc.ToUpdateProcedureCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Procedure>();
-        }
-
+        /// <summary>
+        /// Get Procedure Step
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="stepid"></param>
+        /// <response code="200"></response>
         [HttpGet("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ICollection<ProcedureStepModel>>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepModel>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedureStep()
-            {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedureStep() {
                 procedureId = id,
                 stepId = stepid
             });
             return ret.ToOkObjectResponse<ICollection<ProcedureStepModel>>();
         }
 
-        [HttpPost("{id}/step")]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ProcedureStepModel>))]
-        public async Task<IActionResult> AddProcedureStep(int id, CreateProcedureStepRequest newstep)
+        /// <summary>
+        /// Update Procedure
+        /// </summary>
+        /// <param name="body"></param>
+        /// <response code="200"></response>
+        [HttpPatch]
+        [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
+        public async Task<IActionResult> ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest body)
         {
-            var command = newstep.ToCreateProcedureStepCommand();
-            command.procedureId = id;
+            var command = body.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>();
+            return ret.ToOkObjectResponse<Procedure>();
         }
 
+        /// <summary>
+        /// Update Procedure Step
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
         [HttpPatch("{id}/step")]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepModel>))]
-        public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest newstep)
+        public async Task<IActionResult> UpdateProcedureStep(int id, UpdateProcedureStepRequest body)
         {
-            var command = newstep.ToUpdateProcedureStepCommand();
+            var command = body.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureStepModel>();

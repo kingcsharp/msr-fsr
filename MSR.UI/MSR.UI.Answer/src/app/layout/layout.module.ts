@@ -5,7 +5,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { UtilsModule } from '../layout/utils/utils.module';
 import { ROUTES } from './layout.routes';
 
 import { Layout } from './layout.component';
@@ -24,8 +24,8 @@ import { ApprovalCommentComponent } from '../components/approval-comment/approva
     BsDropdownModule.forRoot(),
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
-    TooltipModule.forRoot(),
     BlockUIModule,
+    UtilsModule,
     DialogModule
   ],
   declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent]

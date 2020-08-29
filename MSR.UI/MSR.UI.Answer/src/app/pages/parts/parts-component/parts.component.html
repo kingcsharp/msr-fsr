@@ -147,13 +147,13 @@
           <grid-file-viewer [menuItem]="menuItems.Parts" [files]="partmodel.files"></grid-file-viewer>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{partmodel.createdOn | date :'short' }}
+          {{partmodel.createdOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           {{partmodel.createdByName }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-          {{partmodel.lastUpdatedOn | date :'short' }}
+          {{partmodel.lastUpdatedOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
           {{partmodel.lastUpdatedByName }}
@@ -173,7 +173,7 @@
     </ng-template>
   </p-table>
 </widget>
-<p-dialog header="{{ currPart.id === undefined ?'Create Part':'Edit Part'}}" [(visible)]="display"
+<p-dialog *ngIf="display" header="{{ currPart.id === undefined ?'Create Part':'Edit Part'}}" [(visible)]="display"
   [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onpartSubmit()" novalidate="novalidate">
@@ -269,7 +269,7 @@
             <label for="demo[]" class="col-md-2 col-form-label text-md-right">
               Files
             </label>
-            <cmh-file-uploader class="col-md-10" *ngIf="currPart.files !==undefined" [menuItem]="menuItems.Parts"
+            <cmh-file-uploader class="col-md-10" [menuItem]="menuItems.Parts"
               multiple="multiple" [(files)]="currPart.files">
             </cmh-file-uploader>
           </div>
@@ -289,7 +289,7 @@
           <legend>
           </legend>
           <div class="form-group row partTbl">
-            <widget>
+            <widget style="width: 100%;">
               <p-table #dt2 [value]="currPart.createSubParts" dataKey="id" styleClass="ui-table-customers modal-grid"
                 [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
                 [paginator]="true"

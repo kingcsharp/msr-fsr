@@ -82,14 +82,9 @@
                   (click)="commonGrid.filter(dt,'phone')"></i>
               </div>
             </th>
-            <th [hidden]="!commonGrid.isVisibleCol('location',gridSettings)">
-              <div class="position-relative">
-                <input id="location" pInputText type="text" tooltip="Search by Location"
-                  (input)="dt.filter($event.target.value, 'location', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['location']?.value">
-                <i *ngIf="dt.filters['location']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'location')"></i>
-              </div>
+            <th grid-input-filter [dt]="dt" searchField="location.name"
+              [hidden]="!commonGrid.isVisibleCol('location.name',gridSettings)"
+              [gridSettings]="gridSettings">
             </th>
             <th grid-input-filter [dt]="dt" searchField="primaryContactUser.fullName"
               [hidden]="!commonGrid.isVisibleCol('primaryContactUser.fullName',gridSettings)"
@@ -144,10 +139,7 @@
             <td [hidden]="!commonGrid.isVisibleCol('phone', gridSettings)">
               {{customer.phone}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)" *ngIf="customer.location === undefined">
-
-            </td>
-            <td [hidden]="!commonGrid.isVisibleCol('location', gridSettings)" *ngIf="customer.location !== undefined">
+            <td [hidden]="!commonGrid.isVisibleCol('location.name', gridSettings)">
               {{customer.location?.name}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('primaryContactUser.fullName', gridSettings)">
@@ -156,14 +148,21 @@
             <td [hidden]="!commonGrid.isVisibleCol('secondaryContactUser.fullName', gridSettings)">
               {{customer.secondaryContactUser?.fullName}}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('isActive', gridSettings)">
-              {{customer.isActive}}
+            <td class="text-center" [hidden]="!commonGrid.isVisibleCol('isActive', gridSettings)">
+              <ng-template [ngIf]="!canActivateCustomer">
+                <p-inputSwitch disabled="true" [(ngModel)]="customer.isActive" (ngModelChange)="changeCustomerStatus(customer)">
+                </p-inputSwitch>
+              </ng-template>
+              <ng-template [ngIf]="canActivateCustomer">
+                <p-inputSwitch [(ngModel)]="customer.isActive" (ngModelChange)="changeCustomerStatus(customer)">
+                </p-inputSwitch>
+              </ng-template>
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('created.fullName', gridSettings)">
               {{customer.created?.fullName}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
-              {{customer.createdOn | date :'short'}}
+              {{customer.createdOn | userTimezone}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)" *ngIf="customer.status != null">
               {{customer.status}}
@@ -172,7 +171,7 @@
               Approved
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
-              <i *ngIf="canEditCustomer" class="fa fa-cog pointer" tooltip="Edit Customer" data-cy="edit-button"
+              <i *ngIf="canEditCustomer" class="far fa-edit pointer" tooltip="Edit Customer" data-cy="edit-button"
                 [routerLink]="['../customer-create']" [queryParams]="{id: customer.id}"></i>
               <i *ngIf="canDeleteCustomer" class="fa fa-trash pointer" tooltip="Delete Customer" data-cy="delete-button"
                 (click)="openConfirmDeleteDialog(customer)"></i>

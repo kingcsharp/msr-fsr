@@ -4,6 +4,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
@@ -24,6 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ProcedureStep> ProcedureSteps { get; }
         IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get; }
         IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get; }
+        IRepository<ProcedureStepType> ProcedureStepTypes { get; }
         IRepository<ProcedureType> ProcedureTypes { get; }
         IRepository<Status> Status { get; }
         IRepository<UserRole> UserRoles { get; }
@@ -68,9 +70,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
 
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
         IRepository<Sensor> Sensors { get; }
-
         IRepository<Quote> Quotes { get; }
-
+        IRepository<TimeZone> Timezones { get; }
+        
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

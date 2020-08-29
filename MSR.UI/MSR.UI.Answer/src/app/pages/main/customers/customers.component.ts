@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { CustomerService, Customer, UserService, User, EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
+import { CustomerService, Customer, UserService, UserModel, EnumMenuItem, EnumApprovalTables, UpdateCustomerRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
@@ -14,7 +14,7 @@ import { Globals } from '../../../models/lib/globals';
   providers: [CustomerService]
 })
 export class CustomersComponent implements OnInit {
-  users: Array<User>;
+  users: Array<UserModel>;
   data: Array<Customer>;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
@@ -23,6 +23,7 @@ export class CustomersComponent implements OnInit {
   canAddCustomer: boolean = false;
   canEditCustomer: boolean = false;
   canDeleteCustomer: boolean = false;
+  canActivateCustomer: boolean = false;
   customerToDelete: Customer;
   showConfirmDeleteDialog: boolean = false;
   approvalTables = EnumApprovalTables;
@@ -36,11 +37,11 @@ export class CustomersComponent implements OnInit {
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
-      new ColumnsSaved({ id: 'name', label: 'Name', visible: false }),
+      new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'customerNumber', label: 'Customer Number', visible: true }),
       new ColumnsSaved({ id: 'address', label: 'Address', visible: true }),
       new ColumnsSaved({ id: 'phone', label: 'Phone', visible: true }),
-      new ColumnsSaved({ id: 'location', label: 'Location', visible: true }),
+      new ColumnsSaved({ id: 'location.name', label: 'Location', visible: true }),
       new ColumnsSaved({ id: 'primaryContactUser.fullName', label: 'Primary Contact', visible: true }),
       new ColumnsSaved({ id: 'secondaryContactUser.fullName', label: 'Secondary Contact', visible: true }),
       new ColumnsSaved({ id: 'isActive', label: 'Is Active', visible: true }),
@@ -53,6 +54,7 @@ export class CustomersComponent implements OnInit {
     this.canAddCustomer = this.hasPrivilege(this.privileges.CanCreate);
     this.canDeleteCustomer = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditCustomer = this.hasPrivilege(this.privileges.CanEdit);
+    this.canActivateCustomer = this.hasPrivilege(this.privileges.CanActivate);
     this.getCustomers();
 
 
@@ -111,4 +113,23 @@ export class CustomersComponent implements OnInit {
 
   }
 
+  changeCustomerStatus(customer:Customer){
+
+    let updateCustomerRequest = new UpdateCustomerRequest();
+    updateCustomerRequest.customerId = customer.id;
+    updateCustomerRequest.address = customer.address;
+    updateCustomerRequest.locationId = customer.location.id;
+    updateCustomerRequest.name = customer.name;
+    updateCustomerRequest.phone = customer.phone;
+    updateCustomerRequest.primaryContactUserId = customer.primaryContactUser?.id;
+    updateCustomerRequest.secondaryContactUserId = customer.secondaryContactUser?.id;
+    updateCustomerRequest.customerNumber = customer.customerNumber;
+    updateCustomerRequest.isActive = customer.isActive;
+
+    this.globals.showLoader(true);
+    this.customerService.customerPatch(env.apiVersion, updateCustomerRequest).subscribe(responseHandler((response) => {
+
+    }));
+    
+  }
 }

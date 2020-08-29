@@ -6,6 +6,6 @@ namespace MSR.Domain.Models.BaseModels
     {
         public DateTime CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
-        public User Created { get; set; }
+        public UserModel Created { get; set; }
     }
 }

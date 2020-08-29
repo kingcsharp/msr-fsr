@@ -6,6 +6,6 @@ namespace MSR.Domain.Models.BaseModels
     {
         public DateTime? LastUpdatedOn { get; set; }
         public int? LastUpdatedBy { get; set; }
-        public User LastUpdated { get; set; }
+        public UserModel LastUpdated { get; set; }
     }
 }

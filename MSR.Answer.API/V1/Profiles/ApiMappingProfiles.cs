@@ -2,11 +2,20 @@
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using System;
+using System.Configuration;
+using System.Linq;
 
 namespace MSR.Answer.API.V1.Profiles
 {
+    /// <summary>
+    ///
+    /// </summary>
     public class ApiMappingProfiles: Profile
     {
+        /// <summary>
+        ///
+        /// </summary>
         public ApiMappingProfiles()
         {
             CreateMap<GetLocationRequest, GetLocations>();
@@ -15,6 +24,9 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.LocationId));
             CreateMap<CreateUserRoleRequest, CreateUserRole>();
             CreateMap<UpdateUserRoleRequest, UpdateUserRole>();
+            CreateMap<RoleRequest, Role>()
+                .ForMember(dest => dest.Menus, opts => opts.Ignore()); // <- FIXME
+            CreateMap<MenuItemRequest, MenuItem>();
             CreateMap<CreateHelpPageRequest, CreateHelpPage>();
             CreateMap<CreateHelpPageRoleRequest, CreateHelpPageRole>();
             CreateMap<UpdateHelpPageRequest, UpdateHelpPage>();
@@ -23,16 +35,32 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreatePartRequest, CreatePart>()
             .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
             CreateMap<UpdatePartRequest, UpdatePart>()
-                .ForMember(dest=>dest.SubParts, opts => opts.MapFrom(src=>src.CreateSubParts));
+                .ForMember(dest=>dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();
-            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
-            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
-            CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>();
-            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>();
-            CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>();
-            CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>();
+            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>()
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>()
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>()
+                .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
+                .ForMember(dest => dest.MonitorTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)))
+                .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue))
+                .ForMember(dest => dest.InputTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)));
+            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>()
+                .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
+                .ForMember(dest => dest.MonitorTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)))
+                .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue))
+                .ForMember(dest => dest.InputTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)));
+            CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>()
+                .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
+                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
+            CreateMap<UpdateProcedureStepTemplateRequest, UpdateProcedureStepTemplate>()
+                .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
+                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
+            CreateMap<CreateProcedureTemplateRequest, CreateProcedureStepTemplate>();
+            CreateMap<UpdateProcedureTemplateRequest, UpdateProcedureStepTemplate>();
             CreateMap<CreateProcedureTypeRequest, CreateProcedureType>();
             CreateMap<UpdateProcedureTypeRequest, UpdateProcedureType>();
             CreateMap<CreateWorkOrderRequest, CreateWorkOrder>().ReverseMap();
@@ -47,7 +75,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<WorkOrderPartRequest, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTaskRequest, WorkOrderTaskModel>().ReverseMap();
             CreateMap<DeleteMenuRoleMapRequest, RemoveMenuRoleMap>();
-            CreateMap<File, FileModel>().ReverseMap();
+            CreateMap<FileRequest, FileModel>().ReverseMap();
             CreateMap<CreateCustomerRequest, CreateCustomer>();
             CreateMap<UpdateCustomerRequest, UpdateCustomer>();
             CreateMap<CreateFileRequest, CreateFile>();
@@ -65,6 +93,8 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateProductRequest, CreateProduct>();
             CreateMap<GetProductRequest, GetProduct>();
             CreateMap<UpdateProductRequest, UpdateProduct>();
+            CreateMap<CreateRoleRequest, CreateRole>();
+            CreateMap<UpdateRoleRequest, UpdateRole>();
         }
     }
 }

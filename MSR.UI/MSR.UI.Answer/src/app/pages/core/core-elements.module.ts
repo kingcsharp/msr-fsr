@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { UtilsModule } from '../../layout/utils/utils.module';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -36,7 +36,7 @@ export const routes = [
     RouterModule.forChild(routes),
     AlertModule.forRoot(),
     WidgetModule,
-    TooltipModule.forRoot(),
+    UtilsModule,
     ModalModule,
     ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),

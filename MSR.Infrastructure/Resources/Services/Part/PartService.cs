@@ -43,7 +43,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
             else
             {
-                parts = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Take(10).ToListAsync();
+                parts = await _unitOfWork.Parts.Query().Include(x => x.Subparts).ToListAsync();
             }
             var result = parts.Select(x => _mapper.Map<PartModel>(x)).OrderBy(x => x.Name).ToList();
             return result;
@@ -131,14 +131,18 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
                 _mapper.Map(command, current);
 
-                current.Subparts = command.SubParts.Select(x =>
-                {
-                    x.ParentId = current.Id;
-                    x.Id = null;
-                    var subpart = _mapper.Map<PartSubPartMap>(x);
-                    _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
-                    return subpart;
-                }).ToList();
+                if (command.SubParts == null) {
+                    current.Subparts = new List<PartSubPartMap>();
+                } else {
+                    current.Subparts = command.SubParts.Select(x =>
+                    {
+                        x.ParentId = current.Id;
+                        x.Id = null;
+                        var subpart = _mapper.Map<PartSubPartMap>(x);
+                        _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
+                        return subpart;
+                    }).ToList();
+                }
 
                 _unitOfWork.Parts.Update(current);
                 // This will call SaveChangesAsync
