@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://6694addd3c12.ngrok.io"
+      "url": "https://fc507b818c3c.ngrok.io"
     }
   ],
   "paths": {
@@ -3181,7 +3181,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfPurchaseModel"
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfPurchaseModel"
                 }
               }
             }
@@ -8559,7 +8559,7 @@
             "name": "PROCTYPE1598416546"
         }
       },
-      "AuditActionResultOfIEnumerableOfPurchaseModel": {
+      "AuditActionResultOfICollectionOfPurchaseModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"

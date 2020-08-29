@@ -1,11 +1,11 @@
---- swagger-work.json.orig	2020-08-28 19:48:11.372128000 -0700
-+++ swagger-work.json	2020-08-28 19:48:11.468942700 -0700
+--- swagger-work.json.orig	2020-08-28 20:30:07.941898900 -0700
++++ swagger-work.json	2020-08-28 20:30:08.036954400 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
      {
 -      "url": "https://localhost:44398"
-+      "url": "https://6694addd3c12.ngrok.io"
++      "url": "https://fc507b818c3c.ngrok.io"
      }
    ],
    "paths": {
@@ -1144,7 +1144,7 @@
 +            "name": "PROCTYPE1598416546"
          }
        },
-       "AuditActionResultOfIEnumerableOfPurchaseModel": {
+       "AuditActionResultOfICollectionOfPurchaseModel": {
 @@ -9069,6 +9255,10 @@
                "format": "int32"
              }

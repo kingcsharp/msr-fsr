@@ -42,12 +42,12 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="filters"></param>
         /// <returns></returns>
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseModel>>))]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ICollection<PurchaseModel>>))]
         public async Task<IActionResult> GetPurchases([FromQuery] GetPurchasesRequest filters)
         {
             var getPurchases = filters.ToGetPurchasesCommand();
             var ret = await _dispatcher.DispatchAsync(getPurchases);
-            return ret.ToOkObjectResponse<IEnumerable<PurchaseModel>>();
+            return ret.ToOkObjectResponse<ICollection<PurchaseModel>>();
         }
 
         /// <summary>
