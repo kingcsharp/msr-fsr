@@ -1,20 +1,120 @@
-﻿using System;
-using System.Text.Json.Serialization;
+using System;
+using System.Text;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace MSR.Answer.API.V1.Models
 {
-    public class ErrorMessage
+    /// <summary>
+    ///
+    /// </summary>
+    [DataContract]
+    public partial class ErrorMessage : IEquatable<ErrorMessage>
     {
+        /// <summary>
+        /// Gets or Sets Number
+        /// </summary>
+        [DataMember(Name="number")]
         public int Number { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Message
+        /// </summary>
+        [DataMember(Name="message")]
         public string Message { get; set; }
+
+        /// <summary>
+        /// Gets or Sets IsValidationMessage
+        /// </summary>
+        [DataMember(Name="isValidationMessage")]
+        public bool IsValidationMessage { get; set; }
 
         [JsonIgnore]
         public Exception Exception { get; set; }
 
         /// <summary>
-        /// Indicates if the message should be displayed to the user
+        /// Returns the string presentation of the object
         /// </summary>
-        public bool IsValidationMessage { get; set; }
+        /// <returns>String presentation of the object</returns>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append("class ErrorMessage {\n");
+            sb.Append("  Number: ").Append(Number).Append("\n");
+            sb.Append("  Message: ").Append(Message).Append("\n");
+            sb.Append("  IsValidationMessage: ").Append(IsValidationMessage).Append("\n");
+            sb.Append("}\n");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns the JSON string presentation of the object
+        /// </summary>
+        /// <returns>JSON string presentation of the object</returns>
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
+
+        /// <summary>
+        /// Returns true if objects are equal
+        /// </summary>
+        /// <param name="obj">Object to be compared</param>
+        /// <returns>Boolean</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((ErrorMessage)obj);
+        }
+
+        /// <summary>
+        /// Returns true if ErrorMessage instances are equal
+        /// </summary>
+        /// <param name="other">Instance of ErrorMessage to be compared</param>
+        /// <returns>Boolean</returns>
+        public bool Equals(ErrorMessage other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return
+                (
+                    Number == other.Number ||
+                    Number != null &&
+                    Number.Equals(other.Number)
+                ) &&
+                (
+                    Message == other.Message ||
+                    Message != null &&
+                    Message.Equals(other.Message)
+                ) &&
+                (
+                    IsValidationMessage == other.IsValidationMessage ||
+                    IsValidationMessage != null &&
+                    IsValidationMessage.Equals(other.IsValidationMessage)
+                );
+        }
+
+        /// <summary>
+        /// Gets the hash code
+        /// </summary>
+        /// <returns>Hash code</returns>
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                var hashCode = 41;
+                // Suitable nullity checks etc, of course :)
+                    if (Number != null)
+                    hashCode = hashCode * 59 + Number.GetHashCode();
+                    if (Message != null)
+                    hashCode = hashCode * 59 + Message.GetHashCode();
+                    if (IsValidationMessage != null)
+                    hashCode = hashCode * 59 + IsValidationMessage.GetHashCode();
+                return hashCode;
+            }
+        }
 
         public ErrorMessage(int number, string message, Exception exception, bool displayToClient)
         {
@@ -23,5 +123,21 @@ namespace MSR.Answer.API.V1.Models
             Exception = exception;
             IsValidationMessage = displayToClient;
         }
+
+        #region Operators
+        #pragma warning disable 1591
+
+        public static bool operator ==(ErrorMessage left, ErrorMessage right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ErrorMessage left, ErrorMessage right)
+        {
+            return !Equals(left, right);
+        }
+
+        #pragma warning restore 1591
+        #endregion Operators
     }
 }

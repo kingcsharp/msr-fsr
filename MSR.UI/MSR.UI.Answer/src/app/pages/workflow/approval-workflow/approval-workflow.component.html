@@ -45,28 +45,30 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('memberStages',gridSettings)">
           <div class="position-relative">
-            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="memberStages" [filterId]="'memberStages'"
-              [defaultText]="'Member Stages'" [filterProp]="'workflowStageId'" [multipleValues]="true"
-              [defaultTextTooltip]="''" [datatable]="dt">
+
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="data" filterId="memberStages"
+              defaultText="Member Stages" filterProp="workflowStageName" defaultId="workflowStageId"
+              [multipleValues]="true" defaultTextTooltip="" [datatable]="dt">
             </multiselect-wrapper>
+
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('activityMaps',gridSettings)">
           <div class="position-relative">
-            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="activityMaps" [filterId]="'activityMaps'"
-              [defaultText]="'Applicable Activities'" [filterProp]="'workflowActivityId'" [multipleValues]="true"
-              [defaultTextTooltip]="''" [datatable]="dt">
+            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="data" filterId="activityMaps"
+              defaultText="Applicable Activities" filterProp="workflowActivityName" defaultId="workflowActivityId"
+              [multipleValues]="true" defaultTextTooltip="" [datatable]="dt">
             </multiselect-wrapper>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
-          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
-            [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" filterId="isActive"
+            defaultText="Select Status" defaultTextTooltip="" [datatable]="dt">
           </multiselect-wrapper>
         </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           <div class="position-relative" tooltip="Search by Created Date">
-            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'createdOn'" [datatable]="dt">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
             </pcalendar-wrapper>
           </div>
         </th>
@@ -106,10 +108,12 @@
           {{workflow.name}}
         </td>
         <td [hidden]="!cg.isVisibleCol('memberStages',gridSettings)">
-          <span *ngFor="let item of workflow.memberStages" class="badge mr-xs badge-secondary">{{item.name}}</span>
+          <span *ngFor="let item of workflow.memberStages"
+            class="badge mr-xs badge-secondary">{{item.workflowStageName}}</span>
         </td>
         <td [hidden]="!cg.isVisibleCol('activityMaps',gridSettings)">
-          <span *ngFor="let item of workflow.activityMaps" class="badge mr-xs badge-secondary">{{item.name}}</span>
+          <span *ngFor="let item of workflow.activityMaps"
+            class="badge mr-xs badge-secondary">{{item.workflowActivityName}}</span>
         </td>
         <td class="text-center" [hidden]="!cg.isVisibleCol('isActive', gridSettings)">
           <ng-template [ngIf]="!canActivate">
@@ -122,13 +126,13 @@
           </ng-template>
         </td>
         <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{workflow.createdOn | date :'short' }}
+          {{workflow.createdOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           {{workflow.createdByName }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-          {{workflow.lastUpdatedOn | date :'short' }}
+          {{workflow.lastUpdatedOn | userTimezone }}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
           {{workflow.lastUpdatedByName }}
@@ -149,8 +153,8 @@
     </ng-template>
   </p-table>
 </widget>
-<p-dialog header="{{ currWorkflow.id === undefined ?'Create Workflow ':'Edit Workflow '}}" [(visible)]="display"
-  [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog *ngIf="display" header="{{ currWorkflow.id === undefined ?'Create Workflow ':'Edit Workflow '}}"
+  [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -172,7 +176,7 @@
             <div class="col-md-4 ">
               <input type="text" id="name" name="name" [(ngModel)]="currWorkflow.name" data-validate="parsley"
                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Approval  Name"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Approval Name"
                 data-cy="name-input">
             </div>
           </div>
@@ -180,24 +184,22 @@
             <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
               Member Stages
             </label>
-            <div class="col-md-4 col-12">
-              <p-multiSelect name="role" [options]="allStages" data-cy="roles-multiselect"
-                [(ngModel)]="currWorkflow.stagesSaved" [itemSize]="15" appendTo="body">
-                <ng-template pTemplate="selectedItems">
-                  <div>Select Member Stages</div>
-                </ng-template>
-              </p-multiSelect>
+            <div class="col-md-10 col-12" data-cy="form-memberStages">
+              <multiselect-wrapper-form [options]="allStages" [limit]="30" [(model)]="currWorkflow.memberStages"
+                defaultLabelProperty="workflowStageName" defaultId="workflowStageId"
+                defaultLabel="Select Member Stages">
+              </multiselect-wrapper-form>
             </div>
+          </div>
+          <div class="form-group row">
             <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
               Applicable Activities
             </label>
-            <div class="col-md-4 col-12">
-              <p-multiSelect name="role2" [options]="allActivities" data-cy="allactivities-multiselect"
-                [(ngModel)]="currWorkflow.activitiesSaved" [itemSize]="15" appendTo="body">
-                <ng-template pTemplate="selectedItems">
-                  <div>Select Activities</div>
-                </ng-template>
-              </p-multiSelect>
+            <div class="col-md-10 col-12" data-cy="form-activityMaps">
+              <multiselect-wrapper-form [options]="allActivities" [limit]="30" [(model)]="currWorkflow.activityMaps"
+                defaultLabelProperty="workflowActivityName" defaultId="workflowActivityId"
+                defaultLabel="Select Activities">
+              </multiselect-wrapper-form>
             </div>
           </div>
           <div class="form-group row">

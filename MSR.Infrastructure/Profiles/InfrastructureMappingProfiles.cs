@@ -4,6 +4,18 @@ using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Linq;
+using MSR.Domain.Models;
+using Customer = MSR.Infrastructure.Resources.EntityFramework.Entities.Customer;
+using HelpPage = MSR.Infrastructure.Resources.EntityFramework.Entities.HelpPage;
+using MenuGroup = MSR.Infrastructure.Resources.EntityFramework.Entities.MenuGroup;
+using MenuItem = MSR.Infrastructure.Resources.EntityFramework.Entities.MenuItem;
+using Procedure = MSR.Infrastructure.Resources.EntityFramework.Entities.Procedure;
+using ProcedureStepMonitor = MSR.Infrastructure.Resources.EntityFramework.Entities.ProcedureStepMonitor;
+using ProcedureType = MSR.Infrastructure.Resources.EntityFramework.Entities.ProcedureType;
+using Role = MSR.Infrastructure.Resources.EntityFramework.Entities.Role;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
+using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
+using System.Collections.Generic;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -12,7 +24,7 @@ namespace MSR.Infrastructure.Profiles
         public InfrastructureMappingProfiles()
         {
             #region User
-            CreateMap<User, Domain.Models.User>()
+            CreateMap<User, UserModel>()
                 .ForMember(dest => dest.Roles, opts => opts.Ignore())
                 .ForMember(dest => dest.SupervisorName, opt => opt.MapFrom(src => src.Supervisor.GetFullName()))
                 .ReverseMap();
@@ -47,7 +59,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.CustomerImportItem, CreateCustomer>();
             CreateMap<Domain.Models.CustomerImportItem, UpdateCustomer>()
                 .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Id));
-
             #endregion
 
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
@@ -80,21 +91,24 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.LocationImportItem, UpdateLocation>();
             #endregion
 
-            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZone>().ReverseMap();
+            CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
 
-
             CreateMap<Role, Domain.Models.Role>()
-                .ForMember(dest => dest.Menus, opt => opt.Ignore()).ReverseMap();
+                .ForMember(dest => dest.Menus, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentRoles, opt => opt.Ignore())
+                .ForMember(dest => dest.IsCertificationRole, opts => opts.MapFrom(src => src.IsCertificationRole == null ? false : src.IsCertificationRole));
 
-            /*Workflow*/
+
+            #region Workflow
             CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<UpdateWorkflowGroupModel, WorkflowGroup>();
             CreateMap<Domain.Models.WorkflowGroupRoleMapModel, WorkflowGroupRoleMap>();
-
             CreateMap<WorkflowGroup, Domain.Models.WorkflowGroupModel>();
             CreateMap<WorkflowGroupRoleMap, Domain.Models.WorkflowGroupRoleMapModel>();
+            #endregion
+
 
             #region Invoice
             CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
@@ -149,9 +163,22 @@ namespace MSR.Infrastructure.Profiles
 
             #region Procedure
             CreateMap<Procedure, Domain.Models.Procedure>();
-            CreateMap<ProcedureStep, Domain.Models.ProcedureStep>();
+            CreateMap<ProcedureStep, Domain.Models.ProcedureStepModel>()
+                .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization))
+                .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
+                .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.StepType.Id));
             CreateMap<ProcedureStepType, Domain.Models.ProcedureStepTypeModel>().ReverseMap();
-            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplate>();
+
+            // This mapping is correct according to the requirements
+            // https://cmhworks.testlodge.com/projects/30813/requirements/32475
+            // The fields are for procedure template, and commands for procedure
+            // step template, and "procedure template" does not exist in the DB.
+            // Likewise, in answer 2 there is no distinction.
+            // TODO: This might need to be revisited.
+            CreateMap<ProcedureStepTemplate, Domain.Models.ProcedureStepTemplateModel>()
+                .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => splitRoles(src)));
+
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
             CreateMap<WorkOrder, Domain.Models.WorkOrderModel>();
             CreateMap<CreateWorkOrder, WorkOrder>();
@@ -172,8 +199,15 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateProcedureStep, ProcedureStep>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
-            CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>();
+            CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedureType, ProcedureType>();
@@ -183,7 +217,13 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             // Monitor
-            CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>();
+            CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
+                .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputTypeId.ToString()))
+                .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorTypeId.ToString()))
+                .ForMember(dest => dest.ShouldBe, opt => opt.MapFrom(src =>src.ShouldBe))
+                .ForMember(dest => dest.TargetValue, opt => opt.MapFrom(src => src.Target.ToString()))
+                .ForMember(dest => dest.FaultHandling, opt => opt.MapFrom(src => src.FailAction))
+                .ForMember(dest => dest.SendEmailNotification, opt => opt.MapFrom(src => src.SendNCREmail));
             CreateMap<MonitorInputType, Domain.Models.ProcedureStepMonitorInputType>()
                 .ForMember(dest => dest.InputTypeId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.InputTypeName, opt => opt.MapFrom(src => src.Name))
@@ -243,6 +283,28 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Product, Domain.Models.PurchaseOrderProductView>();
 
+            CreateMap<File, Domain.Models.FileModel>()
+                .ForMember(dest => dest.FileId, opts => opts.MapFrom(src => src.Id));
+            CreateMap<FileEntityMap, Domain.Models.FileModel>()
+                .ForMember(dest => dest.FileId, opts => opts.MapFrom(src => src.FileObject.Id))
+                .ForMember(dest => dest.ContentType, opts => opts.MapFrom(src => src.FileObject.ContentType))
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileObject.Name))
+                .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL));
+        }
+
+        private static List<int> splitRoles(ProcedureStepTemplate arg)
+        {
+            List<int> ret;
+
+            try {
+                ret = arg.Roles.Split(',')
+                    .Select(x => Convert.ToInt32(x))
+                    .ToList();
+            } catch(FormatException) {
+                // ignore bad data
+                ret = new List<int>();
+            }
+            return ret;
         }
 
         private int? GetLocationId(Invoice src)

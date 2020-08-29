@@ -9,7 +9,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         {
             Roles = new HashSet<UserRole>();
         }
-
         public int? OldId { get; set; }
         public string UserRoleId { get; set; }
         public string UserName { get; set; }
@@ -33,6 +32,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public bool LockoutEnabled { get; set; }
         public int? AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
+        [ForeignKey("TimeZoneId")]
+        public TimeZone TimeZone { get; set; }
         public virtual ICollection<UserRole> Roles { get; set; }
 
         public string GetFullName()

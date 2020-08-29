@@ -59,7 +59,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 var customerApproval = _mapper.Map<CustomerApproval>(command);
                 customerApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(customerApproval);
                 customerApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(customerApproval.Workflow?.Id ?? 0);
-                customerApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+                customerApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
                 customerApproval.IsActive = true;
                 if (customerApproval.LocationId == 0)
@@ -101,7 +101,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 customerApproval.CustomerId = curCustomer.Id;
                 customerApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(customerApproval);
                 customerApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(customerApproval.Workflow?.Id ?? 0);
-                customerApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+                customerApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
                 var ret = await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
                 await _unitOfWork.SaveChangesAsync();
@@ -147,7 +147,7 @@ namespace MSR.Infrastructure.Resources.Services.Customers
                 customerApproval.CustomerId = customer.Id;
                 customerApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(customerApproval);
                 customerApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(customerApproval.Workflow?.Id ?? 0);
-                customerApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+                customerApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
                 await _unitOfWork.CustomerApprovals.AddAsync(customerApproval);
                 await _unitOfWork.SaveChangesAsync();
 

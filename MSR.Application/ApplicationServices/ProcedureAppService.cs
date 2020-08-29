@@ -15,6 +15,9 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<CreateProcedureStep>,
         ICommandHandler<GetProcedureStep>,
         ICommandHandler<UpdateProcedureStep>,
+        ICommandHandler<DeleteProcedure>,
+        ICommandHandler<DeleteProcedureStep>,
+        ICommandHandler<GetProcedureStepType>,
         ICommandHandler<UpdateProcedure>
     {
         private readonly IProcedureService _procedureService;
@@ -42,17 +45,35 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(CreateProcedureStep command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.CreateProcedureStepAsync(command);
-            return new CommandResponse<ProcedureStep>(ret);
+            return new CommandResponse<ProcedureStepModel>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(GetProcedureStep command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetProcedureStepAsync(command);
-            return new CommandResponse<ICollection<ProcedureStep>>(ret);
+            return new CommandResponse<ICollection<ProcedureStepModel>>(ret);
         }
         public async Task<ICommandResponse> HandleAsync(UpdateProcedureStep command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.UpdateProcedureStepAsync(command);
-            return new CommandResponse<ProcedureStep>(ret);
+            return new CommandResponse<ProcedureStepModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteProcedure command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.DeleteProcedureAsync(command);
+            return new CommandResponse<bool>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteProcedureStep command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.DeleteProcedureStepAsync(command);
+            return new CommandResponse<bool>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetProcedureStepType command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _procedureService.GetProcedureStepType(command);
+            return new CommandResponse<ICollection<ProcedureStepTypeModel>>(ret);
         }
     }
 }

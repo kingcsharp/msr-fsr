@@ -25,6 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         [Required]
         public DateTime OpenDate { get; set; }
+        public int? Revision { get; set; }
 
         public DateTime? CloseDate { get; set; }
 

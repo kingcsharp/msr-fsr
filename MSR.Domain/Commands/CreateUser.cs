@@ -25,5 +25,6 @@ namespace MSR.Domain.Commands
         public int AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
+        public FileModel File { get; set; }
     }
 }

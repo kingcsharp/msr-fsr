@@ -1,1 +1,3 @@
-Id,Name,Address,City,State,Zip,Country,ShipName,ShipAddress,ShipCity,ShipState,ShipZip,ShipCountry,Phone,LinkedId
+Id,Name,Address,Phone,CustomerNumber
+,Samplecustomer,,2222222222,123abc
+66,CustomerUpdate,Import,5554443333,542abc

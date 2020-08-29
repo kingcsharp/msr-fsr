@@ -7,6 +7,7 @@ namespace MSR.Domain.Models
         public Role()
         {
             Menus = new HashSet<MenuItem>();
+            ParentRoles = new HashSet<Role>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,5 +18,9 @@ namespace MSR.Domain.Models
 
         public Permission Permissions { get; set; }
         public Permission InheritedPermissions { get; set; }
+
+        public ICollection<Role> ParentRoles { get; set; }
+
+        public bool HasAssignedUsers { get; set; }
     }
 }

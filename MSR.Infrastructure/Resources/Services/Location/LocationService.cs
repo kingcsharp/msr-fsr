@@ -67,6 +67,15 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 {
                     domlocation.Status = locationApproval.Status.Name;
                 }
+                if(domlocation.Parent != null)
+                {
+                    domlocation.Parent.Created = null;
+                    domlocation.Parent.LastUpdated = null;
+                }
+                if(domlocation.Parent?.Parent != null)
+                {
+                    domlocation.Parent.Parent = null;
+                }
                 ret.Add(domlocation);
             }
 
@@ -93,7 +102,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 var locationApproval = _mapper.Map<LocationApproval>(command);
                 locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
                 locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
-                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
                 locationApproval.IsActive = true;
 
                 await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
@@ -133,7 +142,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 locationApproval.LocationId = curLocation.Id;
                 locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
                 locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
-                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
                 await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
@@ -180,7 +189,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 locationApproval.LocationId = curLocation.Id;
                 locationApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(locationApproval);
                 locationApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(locationApproval.Workflow?.Id ?? 0);
-                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatus.Pending);
+                locationApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
                 await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
                 await _unitOfWork.SaveChangesAsync();

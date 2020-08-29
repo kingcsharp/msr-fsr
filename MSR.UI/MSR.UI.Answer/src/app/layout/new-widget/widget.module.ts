@@ -1,16 +1,16 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 
-import {WidgetComponent} from './widget';
-import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-import {LoaderModule} from '../../components/loader/loader.module';
+import { WidgetComponent } from './widget';
+import { UtilsModule } from '../../layout/utils/utils.module';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { LoaderModule } from '../../components/loader/loader.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    TooltipModule.forRoot(),
+    UtilsModule,
     LoaderModule
   ],
   exports: [WidgetComponent],

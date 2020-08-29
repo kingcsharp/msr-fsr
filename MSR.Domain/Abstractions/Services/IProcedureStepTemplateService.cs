@@ -7,8 +7,9 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IProcedureStepTemplateService
     {
-        Task<ICollection<ProcedureStepTemplate>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command);
-        Task<ProcedureStepTemplate> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command);
-        Task<ProcedureStepTemplate> UpdateProcedureStepTemplateAsync(UpdateProcedureStepTemplate command);
+        Task<ICollection<ProcedureStepTemplateModel>> GetProcedureStepTemplateAsync(GetProcedureStepTemplate command);
+        Task<ProcedureStepTemplateModel> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command);
+        Task<ProcedureStepTemplateModel> UpdateProcedureStepTemplateAsync(UpdateProcedureStepTemplate command);
+        Task<bool> DeleteProcedureStepTemplateAsync(DeleteProcedureStepTemplate command);
     }
 }

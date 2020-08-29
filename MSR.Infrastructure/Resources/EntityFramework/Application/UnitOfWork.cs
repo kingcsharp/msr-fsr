@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.EntityFramework.Repository;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
@@ -26,6 +27,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ProcedureStep> _procedureSteps;
         private IRepository<ProcedureStepMonitor> _monitors;
         private IRepository<ProcedureStepTemplate> _procedureStepTemplates;
+        private IRepository<ProcedureStepType> _procedureStepTypes;
         private IRepository<ProcedureType> _procedureTypes;
         private IRepository<Status> _status;
         private IRepository<UserRole> _userRoles;
@@ -70,6 +72,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
         private IRepository<Sensor> _sensor;
+        private IRepository<TimeZone> _timezone;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
@@ -113,6 +116,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
         public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
+        public IRepository<ProcedureStepType> ProcedureStepTypes { get { return _procedureStepTypes ??= new EFRepository<ProcedureStepType>(Context); } }
         public IRepository<ProcedureType> ProcedureTypes { get { return _procedureTypes ??= new EFRepository<ProcedureType>(Context); } }
         public IRepository<MonitorInputType> MonitorInputTypes { get { return _monitorInputTypes ??= new EFRepository<MonitorInputType>(Context); } }
         public IRepository<MonitorListItem> MonitorListItems { get { return _monitorListItems ??= new EFRepository<MonitorListItem>(Context); } }
@@ -129,6 +133,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
         public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
+        public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
 
         #endregion Repositories
 

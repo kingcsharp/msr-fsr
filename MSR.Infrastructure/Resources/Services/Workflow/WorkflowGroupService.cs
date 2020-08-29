@@ -70,7 +70,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
         }
         public async Task<WorkflowGroupModel> UpdateWorkFlowGroupAsync(UpdateWorkflowGroupModel command)
         {
-            var efWorkFlow = await _unitOfWork.WorkflowGroups.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            var efWorkFlow = await _unitOfWork.WorkflowGroups.Query().Include(x => x.GroupUsers).Include(x=>x.GroupRoles).FirstOrDefaultAsync(x => x.Id == command.Id);
 
             if (efWorkFlow == null)
             {

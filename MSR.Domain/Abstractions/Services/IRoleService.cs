@@ -7,5 +7,9 @@ namespace MSR.Domain.Abstractions.Services
     public interface IRoleService
     {
         Task<ICollection<Role>> GetRolesMapAsync(GetRoles command);
+        Task<Role> CreateRoleAsync(CreateRole command);
+        Task<Role> UpdateRoleAsync(UpdateRole command);
+        Task DeleteRoleAsync(DeleteRole command);
+
     }
 }

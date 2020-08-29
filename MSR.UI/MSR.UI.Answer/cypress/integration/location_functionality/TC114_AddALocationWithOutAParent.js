@@ -103,8 +103,6 @@ describe('Location Functionality', () => {
 
         cy.get('[data-cy=save-button]').click()
         
-        cy.logout()
-
         cy.checkWebConsoleTracking();
 
     })

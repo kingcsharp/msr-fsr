@@ -8,8 +8,8 @@ namespace MSR.Domain.Models
         public string Name { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
-        public User PrimaryContactUser { get; set; }
-        public User SecondaryContactUser { get; set; }
+        public UserModel PrimaryContactUser { get; set; }
+        public UserModel SecondaryContactUser { get; set; }
         public LocationModel Location { get; set; }
         public string Status { get; set; }
         public bool IsActive { get; set; }

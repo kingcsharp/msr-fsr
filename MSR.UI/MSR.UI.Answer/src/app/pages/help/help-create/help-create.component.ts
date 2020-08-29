@@ -11,6 +11,8 @@ import {LocationsModule} from '../../locations/locations.module';
 import {MainModule} from '../../main/main.module';
 import {PartsModule} from '../../parts/parts.module';
 import { WorkflowModule} from '../../workflow/workflow.module';
+import { ProceduresModule} from '../../procedures/procedures.module';
+import { MonitorsModule} from '../../monitors/monitors.module';
 
 @Component({
   selector: 'app-help-create',
@@ -34,7 +36,7 @@ export class HelpCreateComponent implements OnInit {
   ngOnInit(): void {
 
     this.globals.showLoader(true);
-    this.roleService.role(env.apiVersion).subscribe(response => {
+    this.roleService.roleGet(env.apiVersion).subscribe(response => {
       this.availableRoles = this.availableRoles.concat(response.object);
 
       this.loadHelpPage();
@@ -51,9 +53,9 @@ export class HelpCreateComponent implements OnInit {
       let friendlyUrlsUsed = response.object.map(s => s.friendlyURL) as Array<string>;
 
       this.generateAllUrlPathsRegistered();
-      this.friendlyUrlOptions.forEach( friendlyUrlOption => {
+      this.friendlyUrlOptions.forEach(friendlyUrlOption => {
 
-        if ( friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
+        if (friendlyUrlsUsed.find(s => s === friendlyUrlOption) === undefined) {
 
           this.urls.push({ label: friendlyUrlOption, value: friendlyUrlOption });
 
@@ -61,11 +63,11 @@ export class HelpCreateComponent implements OnInit {
 
       });
 
-      if(this.helpPageToEditId !== 0){
+      if (this.helpPageToEditId !== 0) {
         this.urls.push({ label: this.helpPageToEdit.friendlyURL, value: this.helpPageToEdit.friendlyURL });
       }
 
-  }));
+    }));
 
   }
 
@@ -110,6 +112,10 @@ export class HelpCreateComponent implements OnInit {
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(partsPaths);
     let workflowPaths = PartsModule.routes.filter(s => s.path !== '').map(m => '/workflow/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(workflowPaths);
+    let proceduresPaths = ProceduresModule.routes.filter(s => s.path !== '').map(m => '/procedures/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(proceduresPaths);
+    let monitorsPaths = MonitorsModule.routes.filter(s => s.path !== '').map(m => '/monitors/' + m.path.toLowerCase());
+    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(monitorsPaths);
   }
 
   getHelpPaths(): Array<string> {
@@ -134,7 +140,7 @@ export class HelpCreateComponent implements OnInit {
     this.globals.showLoader(true);
     this.helpService.helpPost(env.apiVersion, createHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
-        this.helpPageToEditId = response.object.id;
+        this.router.navigate(['app/help/help']);
       }
     }, (error) => {
     }));
@@ -156,7 +162,7 @@ export class HelpCreateComponent implements OnInit {
 
     this.helpService.helpPatch(env.apiVersion, updateHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
-        this.helpPageToEditId = response.object.id;
+        this.router.navigate(['app/help/help']);
       }
     }, (error) => {
     }));
