@@ -25,8 +25,7 @@ namespace MSR.Domain.Models
         public virtual StatusModel Status { get; set; }
         public string QuoteJson { get; set; }
         public string CustomerRequirementJson { get; set; }
-        public int? ProductId { get; set; }
-        public virtual ProductModel Product { get; set; }
+        public virtual ICollection<ProductModel> Products { get; set; }
         public ICollection<QuoteItemModel> QuoteItems { get; set; }
     }
 }

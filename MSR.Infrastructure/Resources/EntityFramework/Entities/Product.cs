@@ -10,7 +10,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public Product()
         {
             WorkOrders = new HashSet<WorkOrder>();
-            Quotes = new HashSet<Quote>();
         }
 
         [Required]
@@ -40,7 +39,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("PartId")]
         public virtual Part Part { get; set; }
 
-        
+        public int? QuoteId { get; set; }
+
+        [ForeignKey("QuoteId")]
+        public virtual Quote Quote { get; set; }
+
+
         [Column(TypeName = "money")]
         public decimal LaborCost { get; set; }
 
@@ -61,6 +65,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
 
-        public virtual ICollection<Quote> Quotes { get; set; }
     }
 }

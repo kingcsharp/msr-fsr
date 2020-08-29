@@ -38,5 +38,7 @@ namespace MSR.Answer.API.V1.Models
         public decimal? TotalSalePrice { get; set; }
 
         public int? CycleTime { get; set; }
+
+        public int? QuoteId { get; set; }
     }
 }

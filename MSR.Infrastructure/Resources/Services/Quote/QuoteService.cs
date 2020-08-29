@@ -32,7 +32,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var quoteList = new List<QuoteModel>();
             var quotes = _unitOfWork.Quotes
                             .Query()
-                            .Include(q => q.Product)
+                            .Include(q => q.Products)
                             .Include(q => q.Customer)
                             .Include(q => q.Status);
 
@@ -50,7 +50,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             var quotes = _unitOfWork.Quotes
                             .Query()
-                            .Include(q => q.Product)
                             .Include(q => q.Customer)
                             .Include(q => q.Status)
                             .Where(q => q.Id == id)

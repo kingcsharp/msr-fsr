@@ -7,6 +7,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,13 +39,18 @@ namespace MSR.Application.ApplicationServices
             {
                 var qpModel = _mapper.Map<QuotesProductsView>(product);
                 qpModel.IsProduct = true;
+                qpModel.IsDeletable = false;
+                qpModel.Representative = product.Quote?.Representative;
                 retQuotesProductsViewsList.Add(qpModel);
             }
+
+            var productList = new List<ProductModel>(products);
 
             foreach (var quote in quotes)
             {
                 var qpModel = _mapper.Map<QuotesProductsView>(quote);
                 qpModel.IsProduct = false;
+                qpModel.IsDeletable = !productList.Any(p => p.QuoteId == quote.Id);
                 retQuotesProductsViewsList.Add(qpModel);
             }
 
