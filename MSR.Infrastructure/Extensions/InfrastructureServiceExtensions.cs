@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Domain.Abstractions.Email;
@@ -64,8 +64,9 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ISensorService, SensorService>();
             services.AddScoped<IImportValidatorFactory, ImportValidatorFactory>();
             services.AddTransient<S3FileHandler>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IQuoteService, QuoteService>();
             services.AddScoped<ITimezoneService, TimezoneService>();
-
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
             return services;
