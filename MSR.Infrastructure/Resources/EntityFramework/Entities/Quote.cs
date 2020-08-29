@@ -46,8 +46,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public string CustomerRequirementJson { get; set; }
 
-        public int? ProductId { get; set; }
-
         [StringLength(50)]
         public string Contact { get; set; }
 
@@ -63,9 +61,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(50)]
         public string ProcessName { get; set; }
 
-        [ForeignKey("ProductId")]
-
-        public virtual Product Product { get; set; }
+        public virtual ICollection<Product>  Products { get; set; }
         public virtual ICollection<QuoteItem> QuoteItems { get; set; }
     }
 }

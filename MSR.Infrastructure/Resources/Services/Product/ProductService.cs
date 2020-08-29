@@ -31,8 +31,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                                 .Query()
                                 .Include(p => p.Procedure)
                                 .Include( p => p.Customer)
-                                .Include(p => p.Created)
-                                .Include(p => p.LastUpdated);
+                                .Include(q => q.Quote);
 
             foreach (var product in await products.ToListAsync())
             {
@@ -64,6 +63,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                             .Include(q => q.Procedure)
                             .Include(q => q.Customer)
                             .Include(q => q.Part)
+                            .Include(q => q.Quote)
                             .Where(q => q.Id == id)
                             .AsQueryable();
 

@@ -13,9 +13,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
                        .WithMany(c => c.Quotes)
                        .HasForeignKey(q => q.CustomerId)
                        .IsRequired();
-            _ = builder.HasOne(q => q.Product)
-                   .WithMany(p => p.Quotes )
-                   .HasForeignKey(c => c.ProductId);
             _ = builder.HasOne(q => q.SubmittedBy)
                    .WithMany()
                    .HasForeignKey(u => u.SubmittedById)
