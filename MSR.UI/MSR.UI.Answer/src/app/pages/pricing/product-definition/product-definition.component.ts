@@ -248,7 +248,7 @@ export class ProductDefinitionComponent implements OnInit {
       this.procedureStepsData[index].laborTime = $event.value.laborTime;
       this.procedureStepsData[index].replacementCost = $event.value.replacementCost;
       this.procedureStepsData[index].usefulLife = $event.value.usefulLife;
-      this.procedureStepsData[index].utilization = $event.value.utilization;
+      this.procedureStepsData[index].utilizationTime = $event.value.utilizationTime;
       this.procedureStepsData[index].printOrder = index + 1;
       this.procedureStepsData[index].stepText = $event.value.stepText;
       this.procedureStepsData[index].title = $event.value.title;
@@ -322,7 +322,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getEquipPerMin(procedureStep: ProcedureStepModel) {
-    if (procedureStep.replacementCost && procedureStep.usefulLife && procedureStep.utilization) {
+    if (procedureStep.replacementCost && procedureStep.usefulLife && procedureStep.utilizationTime) {
       return procedureStep.replacementCost/procedureStep.usefulLife;
     } else {
       return 0.0;
@@ -373,8 +373,8 @@ export class ProductDefinitionComponent implements OnInit {
 
     const laboar_chage = step.laborTime * LABOR_RATE_PER_MIN;
      const annual_rm = step.replacementCost * RM_ANNUAL_RATE;
-    const rm_per_min = annual_rm / (YEAR_HOURS * HOURS_MINUTES * step.utilization);
-    const ex_per_min = (step.replacementCost / step.usefulLife) /  (YEAR_HOURS * HOURS_MINUTES * step.utilization);
+    const rm_per_min = annual_rm / (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
+    const ex_per_min = (step.replacementCost / step.usefulLife) /  (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
     const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
 
     return {

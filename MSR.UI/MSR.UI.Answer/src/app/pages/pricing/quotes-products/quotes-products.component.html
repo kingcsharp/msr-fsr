@@ -312,7 +312,7 @@
 		<ng-template pTemplate="body" let-quoteproductmodel>
 			<tr class="ui-selectable-row">
 				<td [hidden]="!cg.isVisibleCol('submittedDate',gridSettings)">
-          {{quoteproductmodel.submittedDate | date :'shortDate'}}
+          {{quoteproductmodel.submittedDate | userTimezone}}
 				</td>
 				<td [hidden]="!cg.isVisibleCol('company', gridSettings)">
           {{quoteproductmodel.company}}
@@ -351,7 +351,7 @@
           {{quoteproductmodel.cycleTime}}
 				</td>
         <td [hidden]="!cg.isVisibleCol('lastUpdateOn', gridSettings)">
-          {{quoteproductmodel.lastUpdateOn | date :'shortDate'}}
+          {{quoteproductmodel.lastUpdateOn | userTimezone}}
         </td>
         <td [hidden]="!cg.isVisibleCol('lastUpdatedBy', gridSettings)">
           {{quoteproductmodel.lastUpdated ? quoteproductmodel.lastUpdated.userName : ''}}
