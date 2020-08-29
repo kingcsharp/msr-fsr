@@ -4,6 +4,6 @@ namespace MSR.Domain.Commands
 {
     public class GetPurchases : Command
     {
-        public int Id;
+        public int? Id;
     }
 }
