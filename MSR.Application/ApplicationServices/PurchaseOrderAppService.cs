@@ -3,6 +3,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,8 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class PurchaseOrderAppService :
-        ICommandHandler<GetPurchaseOrder>
+        ICommandHandler<GetPurchaseOrder>,
+        ICommandHandler<CreatePurchaseOrder>
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
 
@@ -23,6 +25,11 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _purchaseOrderService.GetPurchaseOrderAsync(command);
             return new CommandResponse<IEnumerable<PurchaseOrderView>>(ret);
+        }
+
+        public Task<ICommandResponse> HandleAsync(CreatePurchaseOrder command, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

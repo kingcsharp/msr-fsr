@@ -30,7 +30,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int Qty { get; set; }
 
-        public int CustomerLineNumber { get; set; }
+        public int? CustomerLineNumber { get; set; }
 
         [StringLength(10)]
         public string MTTN { get; set; }

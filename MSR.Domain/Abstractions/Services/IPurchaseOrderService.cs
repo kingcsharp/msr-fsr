@@ -1,5 +1,6 @@
 ﻿using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

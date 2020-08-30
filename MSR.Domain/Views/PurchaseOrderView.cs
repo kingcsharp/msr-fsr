@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MSR.Domain.Models
+namespace MSR.Domain.Views
 {
     public class PurchaseOrderView
     {

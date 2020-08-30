@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Views;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -25,64 +26,64 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Domain.Models.PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command)
+        public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command)
         {
-            List<Domain.Models.PurchaseOrderView> poList;
+            var poList = new List<PurchaseOrderView>();
 
+            var purchaseOrders = _unitOfWork.PurchaseOrders.Query();
             if (command.Id.HasValue)
             {
-                //poList = await _unitOfWork.PurchaseOrderProducts
-                //                            .Query()
-                //                            .Include(pop => pop.Product)
-                //                            .Include(pop => pop.PurchaseOrder)
-                //                                .ThenInclude(p => p.Customer)
-                //                            .Where(pop => pop.PurchaseOrderId == command.Id)
-                //                            .Select(pop => _mapper.Map<Domain.Models.PurchaseOrderView>(pop))
-                //                            .ToListAsync();
-
-                poList = await _unitOfWork.PurchaseOrderProducts
-                                        .Query()
-                                        .Include(pop => pop.Product)
-                                        .Include(pop => pop.PurchaseOrder)
-                                            .ThenInclude(p => p.Customer)
-                                        .Where(pop => pop.PurchaseOrderId == command.Id)
-                                        .Select(pop => _mapper.Map<Domain.Models.PurchaseOrderView>(pop))
-                                        .ToListAsync();
-
-                if (!poList.Any())
-                {
-                    throw new DomainException($"PurchaseOrder ID {command.Id} not found", DomainError.NotFound);
-                }
+                purchaseOrders = purchaseOrders.Where(i => i.Id == command.Id);
             }
-            else
+
+            var purchaseOrderList = await purchaseOrders.ToListAsync();
+            var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
+            var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.Id);
+
+            var products = await _unitOfWork.PurchaseOrderProducts.Query()
+                                                                  .Include(i => i.Product)
+                                                                  .Where(i => i.Product != null && purchaseOrderIds.Contains(i.PurchaseOrderId))
+                                                                  .ToListAsync();
+            var customers = await _unitOfWork.Customers.Query()
+                                                       .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
+                                                       .Select(i => new { i.Id, i.Name})
+                                                       .ToDictionaryAsync(item => item.Id);
+
+            var purchases = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId)).ToListAsync();
+
+            foreach(var po in purchaseOrderList)
             {
-                poList = await _unitOfWork.PurchaseOrderProducts
-                                            .Query()
-                                            .Include(pop => pop.Product)
-                                            .Include(pop => pop.PurchaseOrder)
-                                                .ThenInclude(p => p.Customer)
-                                            .Select(pop => _mapper.Map<Domain.Models.PurchaseOrderView>(pop))
-                                            .ToListAsync();
-            }
+                customers.TryGetValue(po.CustomerId, out var poCustomer);
+                var domPo = _mapper.Map<PurchaseOrderView>(po);
 
-            //poList.ForEach(po =>
-            //{
-            //    po.Products = new List<>
-            //})
+                domPo.Products = products.Where(i => i.PurchaseOrderId == po.Id).Select(i => _mapper.Map<PurchaseOrderProductView>(i.Product)).ToList();
+                if (poCustomer != null)
+                {
+                    domPo.CustomerId = poCustomer.Id;
+                    domPo.CustomerName = poCustomer.Name;
+                }
+                domPo.IsDeletable = purchases.All(i => i.PurchaseOrderId != po.Id);
+                poList.Add(domPo);
+            }
 
             return poList;
         }
 
-        public async Task<IEnumerable<Domain.Models.PurchaseOrderView>> GetPurchaseOrderProductAsync(GetPurchaseOrder command)
+        public async Task<PurchaseOrderView> CreatePurchaseOrderAsync(CreatePurchaseOrder command)
         {
-            List<Domain.Models.PurchaseOrderView> poList;
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderProductAsync(GetPurchaseOrder command)
+        {
+            List<PurchaseOrderView> poList;
 
             if (command.Id.HasValue)
             {
                 poList = await _unitOfWork.PurchaseOrders
                                             .Query()
                                             .Include(po => po.Customer)
-                                            .Select(po => _mapper.Map<Domain.Models.PurchaseOrderView>(po))
+                                            .Select(po => _mapper.Map<PurchaseOrderView>(po))
                                             .Where(po => po.Id == command.Id)
                                             .ToListAsync();
                 if (!poList.Any())
@@ -95,11 +96,11 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 poList = await _unitOfWork.PurchaseOrders
                                             .Query()
                                             .Include(po => po.Customer)
-                                            .Select(po => _mapper.Map<Domain.Models.PurchaseOrderView>(po))
+                                            .Select(po => _mapper.Map<PurchaseOrderView>(po))
                                             .ToListAsync();
             }
 
-            var result = poList.Select(x => _mapper.Map<Domain.Models.PurchaseOrderView>(x)).OrderBy(x => x.Name).AsEnumerable();
+            var result = poList.Select(x => _mapper.Map<PurchaseOrderView>(x)).OrderBy(x => x.Name).AsEnumerable();
 
             return result;
         }
