@@ -107,7 +107,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = productApproval;
                     break;
                 case EnumApprovalTables.PurchaseOrderApproval:
-                    result = ApprovePurchaseOrder(command, status);
+                    result = await ApprovePurchaseOrder(command, status);
                     break;
                 case EnumApprovalTables.UserApproval:
                     var userApproval = await _unitOfWork.UserApprovals.Query().Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == command.Id);

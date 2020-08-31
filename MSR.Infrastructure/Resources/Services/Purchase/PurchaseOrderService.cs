@@ -45,7 +45,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 OpenDate = po.OpenDate,
                 CloseDate = po.CloseDate
             }).ToListAsync();
-            
+
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
             var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId);
 
@@ -220,7 +220,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             foreach (var poProduct in poProductsToDelete)
             {
-                //_unitOfWork.PurchaseOrderProducts.Delete(poProduct);
+                _unitOfWork.PurchaseOrderProducts.Delete(false, poProduct);
             }
 
             _unitOfWork.PurchaseOrders.Delete(false, purchaseOrder);
