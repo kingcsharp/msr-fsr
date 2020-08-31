@@ -31,9 +31,6 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
         public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command)
         {
-            var dt1 = DateTime.Now;
-            //var poList = new List<PurchaseOrderView>();
-
             var purchaseOrders = _unitOfWork.PurchaseOrders.Query();
             if (command.Id.HasValue)
             {
@@ -48,32 +45,23 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 OpenDate = po.OpenDate,
                 CloseDate = po.CloseDate
             }).ToListAsync();
-            //var purchaseOrderList = await purchaseOrders.ToListAsync();
+            
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
             var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId);
-            var dt2 = DateTime.Now;
 
-            var poIds = await _unitOfWork.PurchaseOrderProducts.Query()
-                      .Select(i => i.ProductId)
-                      .ToListAsync();
+            //var poIds = await _unitOfWork.PurchaseOrderProducts.Query()
+            //          .Select(i => i.ProductId)
+            //          .ToListAsync();
 
-            var products = await _unitOfWork.Products.Query().Where(x => poIds.Contains(x.Id))
+            var products = await _unitOfWork.Products.Query().Where(x => _unitOfWork.PurchaseOrderProducts.Query()
+                    .Select(i => i.ProductId).Contains(x.Id))
                 .Select(i => _mapper.Map<PurchaseOrderProductView>(i))
                 .ToListAsync();
-
-            //var customers = await _unitOfWork.Customers.Query()
-            //    .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
-            //    .ToListAsync();
 
             var customers = await _unitOfWork.Customers.Query().AsNoTracking()
                 .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
                 .Select(i => new { i.Id, i.Name })
                 .ToDictionaryAsync(i => i.Id, i => i.Name);
-
-            var dt3 = DateTime.Now;
-            var dt4diffInSeconds = (dt3 - dt1).TotalSeconds;
-            //.Select(i => new { i.Id, i.Name })
-            //.ToDictionaryAsync(item => item.Id);
 
             var purchaseOrderIdsForDeletable = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
                 .Select(x => x.PurchaseOrderId).ToListAsync();
@@ -81,22 +69,13 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             foreach (var po in purchaseOrderList)
             {
                 customers.TryGetValue(po.CustomerId, out var name);
-                //var domPo = _mapper.Map<PurchaseOrderView>(po);
-
                 po.Products = products.Where(i => i.Id == po.Id).ToList();
                 if (name != null)
                 {
-                    //po.CustomerId = poCustomer.Id;
                     po.CustomerName = name;
                 }
-                //po.IsDeletable = purchases.All(i => i.PurchaseOrderId != po.Id);
                 po.IsDeletable = purchaseOrderIdsForDeletable.All(i => i != po.Id);
-                //poList.Add(po);
             }
-            var d4 = DateTime.Now;
-
-            var dt5diffInSeconds = (d4 - dt3).TotalSeconds;
-            //var tot = purchaseOrderList.Where(x => x.Customer != null).Count(); 
 
             return purchaseOrderList;
         }
