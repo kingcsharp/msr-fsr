@@ -846,7 +846,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static GetPurchaseOrder ToGetPurchaseOrderRequestCommand(this GetPurchaseOrderRequest request)
+        public static GetPurchaseOrder ToGetPurchaseOrderCommand(this GetPurchaseOrderRequest request)
         {
             return AutoMapperHelper.Mapper.Map<GetPurchaseOrder>(request);
         }
@@ -869,5 +869,8 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static CreateRole ToCreateRoleCommand(this CreateRoleRequest request) => AutoMapperHelper.Mapper.Map<CreateRole>(request);
         public static UpdateRole ToUpdateRoleCommand(this UpdateRoleRequest request) => AutoMapperHelper.Mapper.Map<UpdateRole>(request);
+
+        public static CreatePurchaseOrder ToCreatePurchaseOrderCommand(this CreatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<CreatePurchaseOrder>(request);
+        public static UpdatePurchaseOrder ToUpdatePurchaseOrderCommand(this UpdatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<UpdatePurchaseOrder>(request);
     }
 }

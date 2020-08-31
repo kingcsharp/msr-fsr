@@ -16,29 +16,37 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [StringLength(100)]
         public string Name { get; set; }
 
+        [Required]
         public int Revision { get; set; }
 
+        [Required]
         public int CustomerId { get; set; }
 
-        public int? CustomerRequirementId { get; set; }
-
+        [Required]
         public int ProcedureId { get; set; }
 
+        [Required]
         public int PartId { get; set; }
 
-        [Column(TypeName = "money")]
-        public decimal EquipmentCost { get; set; }
+        [Column(TypeName ="money")]
+        public decimal? LaborCost { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal MaterialCost { get; set; }
+        public decimal? EquipmentCost { get; set; }
+
+        [Column(TypeName = "money")]
+        public decimal? MaterialCost { get; set; }
 
         [Column(TypeName = "money")]
         public decimal? SalesTax { get; set; }
 
+        [Required]
         [Column(TypeName = "money")]
         public decimal TotalSalePrice { get; set; }
 
         public int? CycleTime { get; set; }
+
+        public int? CustomerRequirementId { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
     }

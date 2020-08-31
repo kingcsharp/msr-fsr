@@ -12,7 +12,9 @@ namespace MSR.Application.ApplicationServices
 {
     public class PurchaseOrderAppService :
         ICommandHandler<GetPurchaseOrder>,
-        ICommandHandler<CreatePurchaseOrder>
+        ICommandHandler<CreatePurchaseOrder>,
+        ICommandHandler<UpdatePurchaseOrder>,
+        ICommandHandler<DeletePurchaseOrder>
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
 
@@ -27,9 +29,22 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<IEnumerable<PurchaseOrderView>>(ret);
         }
 
-        public Task<ICommandResponse> HandleAsync(CreatePurchaseOrder command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(CreatePurchaseOrder command, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            var ret = await _purchaseOrderService.CreatePurchaseOrderAsync(command);
+            return new CommandResponse<PurchaseOrderView>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdatePurchaseOrder command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _purchaseOrderService.UpdatePurchaseOrderAsync(command);
+            return new CommandResponse<PurchaseOrderView>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeletePurchaseOrder command, CancellationToken cancellationToken = default)
+        {
+            await _purchaseOrderService.DeletePurchaseOrderAsync(command);
+            return CommandResponse.SuccessCommand;
         }
     }
 }

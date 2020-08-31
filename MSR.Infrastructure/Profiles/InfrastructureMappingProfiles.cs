@@ -266,6 +266,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UploadFile, FileModel>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
 
+            #region PurchaseOrder
             CreateMap<PurchaseOrderProduct, PurchaseOrderView>()
                 .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.PurchaseOrder.CustomerId))
                 .ForMember(dest => dest.CustomerName, opts => opts.MapFrom(src => src.PurchaseOrder.Customer.Name))
@@ -276,8 +277,20 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<PurchaseOrder, PurchaseOrderView>()
                 .ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.ReferencePO));
+            CreateMap<PurchaseOrderApproval, PurchaseOrderView>()
+                .ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.ReferencePO))
+                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status == null ? "Pending" : src.Status.Name));
 
             CreateMap<Product, PurchaseOrderProductView>();
+            CreateMap<CreatePurchaseOrder, PurchaseOrder>()
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo));
+            CreateMap<CreatePurchaseOrder, PurchaseOrderApproval>()
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo));
+            CreateMap<PurchaseOrderApproval, PurchaseOrder>();
+
+            #endregion
 
             CreateMap<File, FileModel>()
                 .ForMember(dest => dest.FileId, opts => opts.MapFrom(src => src.Id));

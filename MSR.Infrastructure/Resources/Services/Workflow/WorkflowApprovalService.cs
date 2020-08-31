@@ -107,16 +107,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = productApproval;
                     break;
                 case EnumApprovalTables.PurchaseOrderApproval:
-                    var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    purchaseOrderApproval.Status = status;
-                    _unitOfWork.PurchaseOrderApprovals.Update(purchaseOrderApproval);
-                    _mapper.Map(purchaseOrderApproval, purchaseOrder);
-                    purchaseOrder.Revision = purchaseOrder.Revision == null ?  1 : purchaseOrder.Revision+1;
-                    _unitOfWork.PurchaseOrders.Update(purchaseOrder);
-                    _unitOfWork.SaveChanges();
-                    await _unitOfWork.LogApprovalTransaction(purchaseOrderApproval, purchaseOrderApproval.Id, status.Name, command.Comments);
-                    result = purchaseOrderApproval;
+                    result = ApprovePurchaseOrder(command, status);
                     break;
                 case EnumApprovalTables.UserApproval:
                     var userApproval = await _unitOfWork.UserApprovals.Query().Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -507,6 +498,46 @@ namespace MSR.Infrastructure.Resources.Services
             return locationApproval;
         }
 
+        private async Task<ApprovalEntity> ApprovePurchaseOrder(PostApprovalModel command, Status status)
+        {
+            var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            if (purchaseOrderApproval.PurchaseOrderId is null)
+            {
+                //It's a new one so create it
+                var purchaseOrder = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(purchaseOrderApproval);
+                purchaseOrder.Revision = 1;
+
+                await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrder);
+
+                var purchaseOrderProductApprovals = await _unitOfWork.PurchaseOrderProductApprovals.Query().Where(i => i.PurchaseOrderApprovalId == purchaseOrderApproval.Id).ToListAsync();
+
+                foreach(var purchaseOrderProduct in purchaseOrderProductApprovals)
+                {
+                    var map = new PurchaseOrderProduct()
+                    {
+                        PurchaseOrder = purchaseOrder,
+                        ProductId = purchaseOrderProduct.ProductId
+                    };
+
+                    await _unitOfWork.PurchaseOrderProducts.AddAsync(map);
+                    _unitOfWork.PurchaseOrderProductApprovals.Delete(false,purchaseOrderProduct);
+                }
+            }
+            else
+            {
+                var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                purchaseOrderApproval.Status = status;
+
+                _mapper.Map(purchaseOrderApproval, purchaseOrder);
+                purchaseOrder.Revision = purchaseOrder.Revision == null ? 1 : purchaseOrder.Revision + 1;
+                _unitOfWork.PurchaseOrders.Update(purchaseOrder);
+                _unitOfWork.SaveChanges();
+            }
+
+            _unitOfWork.PurchaseOrderApprovals.Delete(false, purchaseOrderApproval);
+            await _unitOfWork.LogApprovalTransaction(purchaseOrderApproval, purchaseOrderApproval.Id, status.Name, command.Comments);
+            return purchaseOrderApproval;
+        }
     }
 }
 

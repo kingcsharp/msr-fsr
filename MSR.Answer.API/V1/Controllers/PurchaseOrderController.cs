@@ -14,6 +14,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
+using MSR.Domain.Commands;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -31,11 +32,38 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderView>>))]
-        public async Task<IActionResult> GetPurchases([FromQuery] GetPurchaseOrderRequest filters)
+        public async Task<IActionResult> GetPurchaseOrders([FromQuery] GetPurchaseOrderRequest filters)
         {
-            var getPurchaseOrder = filters.ToGetPurchaseOrderRequestCommand();
+            var getPurchaseOrder = filters.ToGetPurchaseOrderCommand();
             var ret = await _dispatcher.DispatchAsync(getPurchaseOrder);
             return ret.ToOkObjectResponse<IEnumerable<PurchaseOrderView>>();
+        }
+
+        [HttpPost, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseOrderView>))]
+        public async Task<IActionResult> CreatePurchaseOrder([FromBody]CreatePurchaseOrderRequest request)
+        {
+            var command = request.ToCreatePurchaseOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Create"));
+        }
+
+        [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseOrderView>))]
+        public async Task<IActionResult> UpdatePurchaseOrder([FromBody] UpdatePurchaseOrderRequest request)
+        {
+            var command = request.ToUpdatePurchaseOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
+        }
+        
+        [HttpDelete("{id}"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanDelete)]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult))]
+        public async Task<IActionResult> DeletePurchaseOrder([FromRoute, Required]int id)
+        {
+            var command = new DeletePurchaseOrder() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
         }
 
         //[HttpPost, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
@@ -47,5 +75,18 @@ namespace MSR.Answer.API.V1.Controllers
         //    //return ret.ToOkObjectResponse<PurchaseModel>("Purchase has been successfully created.");
         //}
 
+        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        {
+            var poView = commandResponse.ToEntity<PurchaseOrderView>();
+            var response = $"PurchaseOrder {action} Pending Approval";
+
+            if (string.IsNullOrWhiteSpace(poView.Status))
+            {
+                response = $"PurchaseOrder {action} Successfull";
+                poView.Status = "Approved";
+            }
+
+            return response;
+        }
     }
 }

@@ -9,5 +9,8 @@ namespace MSR.Domain.Abstractions.Services
     public interface IPurchaseOrderService
     {
         Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command);
+        Task<PurchaseOrderView> CreatePurchaseOrderAsync(CreatePurchaseOrder command);
+        Task<PurchaseOrderView> UpdatePurchaseOrderAsync(UpdatePurchaseOrder command);
+        Task DeletePurchaseOrderAsync(DeletePurchaseOrder command);
     }
 }
