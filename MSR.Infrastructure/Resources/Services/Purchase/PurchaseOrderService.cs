@@ -49,16 +49,12 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
             var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId);
 
-            //var poIds = await _unitOfWork.PurchaseOrderProducts.Query()
-            //          .Select(i => i.ProductId)
-            //          .ToListAsync();
-
             var products = await _unitOfWork.Products.Query().Where(x => _unitOfWork.PurchaseOrderProducts.Query()
                     .Select(i => i.ProductId).Contains(x.Id))
                 .Select(i => _mapper.Map<PurchaseOrderProductView>(i))
                 .ToListAsync();
 
-            var customers = await _unitOfWork.Customers.Query().AsNoTracking()
+            var customers = await _unitOfWork.Customers.Query()
                 .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
                 .Select(i => new { i.Id, i.Name })
                 .ToDictionaryAsync(i => i.Id, i => i.Name);
