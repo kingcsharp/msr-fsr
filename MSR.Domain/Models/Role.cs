@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MSR.Domain.Models.BaseModels;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Models
 {
-    public class Role
+    public class Role: TrackableModel
     {
         public Role()
         {
