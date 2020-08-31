@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -115,75 +116,52 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             return result;
         }
 
-        public async Task<Domain.Models.ProcedureStepModel> CreateProcedureStepAsync(CreateProcedureStep command)
-        {
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStepModel ret;
-
-            if (user.CanApprove(EnumMenuItem.Procedures))
-            {
-                var procstep = _mapper.Map<ProcedureStep>(command);
-                _unitOfWork.ProcedureSteps.Add(procstep);
-
-                // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(procstep, procstep.Id);
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(procstep);
-            }
-            else
-            {
-                var approval = _mapper.Map<ProcedureStepApproval>(command);
-                _unitOfWork.ProcedureStepApprovals.Add(approval);
-                await _unitOfWork.SaveChangesAsync();
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(approval);
-            }
-
-            return ret;
-        }
-
-        public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command)
-        {
-            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i => i.Id == command.procedureStepId);
-
-            if(current is null)
-            {
-                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStep)} not found with ID: {command.procedureStepId}", DomainError.NotFound);
-            }
-
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStepModel ret;
-
-            if (user.CanApprove(EnumMenuItem.Procedures))
-            {
-                var step = _mapper.Map(command, current);
-                _unitOfWork.ProcedureSteps.Update(step);
-
-                // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(step, step.Id);
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(step);
-            }
-            else
-            {
-                var approval = _mapper.Map<ProcedureStepApproval>(command);
-                _unitOfWork.ProcedureStepApprovals.Add(approval);
-                await _unitOfWork.SaveChangesAsync();
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(approval);
-            }
-
-            return ret;
-        }
-
         public async Task<Domain.Models.PurchaseModel> CreatePurchaseAsync(CreatePurchase command)
         {
-            throw new System.NotImplementedException();
+            Domain.Models.PurchaseModel ret;
+
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanCreate)) {
+                var purchase = _mapper.Map<Purchase>(command);
+                _unitOfWork.Purchases.Add(purchase);
+
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(purchase, purchase.Id);
+
+                ret = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
+            }
+            else
+            {
+                throw new DomainException($"Permission deined on {nameof(Purchase)} for user {CurrentUser.GetId()}");
+            }
+
+            return ret;
         }
 
         public async Task<Domain.Models.PurchaseModel> UpdatePurchaseAsync(UpdatePurchase command)
         {
-            throw new System.NotImplementedException();
+            Domain.Models.PurchaseModel ret;
+            var current = await _unitOfWork.Purchases.FirstOrDefaultAsync(false, i => i.Id == command.purchaseId);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(Purchase)} not found with ID: {command.purchaseId}", DomainError.NotFound);
+            }
+
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanEdit)) {
+                var toUpdate = _mapper.Map(command, current);
+                _unitOfWork.Purchases.Update(toUpdate);
+
+                // This will call SaveChangesAsync
+                await _unitOfWork.LogApprovalTransaction(toUpdate, toUpdate.Id);
+
+                ret = _mapper.Map<Domain.Models.PurchaseModel>(toUpdate);
+            }
+            else
+            {
+                throw new DomainException($"Permission deined on {nameof(Purchase)} for user {CurrentUser.GetId()}");
+            }
+
+            return ret;
         }
     }
 }
