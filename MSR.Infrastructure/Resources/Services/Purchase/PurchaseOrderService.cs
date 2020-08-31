@@ -83,6 +83,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             {
                 //They can approve so just put it in the tables
                 var purchaseOrder = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(command);
+                purchaseOrder.Revision = 1;
 
                 await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrder);
                 await _unitOfWork.SaveChangesAsync();
@@ -144,7 +145,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.PurchaseOrderApproval))
             {
                 _mapper.Map(command, purchaseOrder);
-
+                purchaseOrder.Revision = purchaseOrder.Revision == null ? 1 : purchaseOrder.Revision + 1;
                 _unitOfWork.PurchaseOrders.Update(purchaseOrder);
 
                 var productIds = _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id).Select(i => i.ProductId);
@@ -178,6 +179,9 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             {
                 var poApproval = _mapper.Map<PurchaseOrderApproval>(purchaseOrder);
                 _mapper.Map(command, poApproval);
+                poApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(poApproval);
+                poApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(poApproval.Workflow?.Id ?? 0);
+                poApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
                 await _unitOfWork.PurchaseOrderApprovals.AddAsync(poApproval);
                 await _unitOfWork.SaveChangesAsync();
