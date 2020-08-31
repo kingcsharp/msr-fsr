@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -30,7 +31,8 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
         public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderAsync(GetPurchaseOrder command)
         {
-            var poList = new List<PurchaseOrderView>();
+            var dt1 = DateTime.Now;
+            //var poList = new List<PurchaseOrderView>();
 
             var purchaseOrders = _unitOfWork.PurchaseOrders.Query();
             if (command.Id.HasValue)
@@ -38,37 +40,65 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 purchaseOrders = purchaseOrders.Where(i => i.Id == command.Id);
             }
 
-            var purchaseOrderList = await purchaseOrders.ToListAsync();
-            var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
-            var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.Id);
-
-            var products = await _unitOfWork.PurchaseOrderProducts.Query()
-                                                                  .Include(i => i.Product)
-                                                                  .Where(i => i.Product != null && purchaseOrderIds.Contains(i.PurchaseOrderId))
-                                                                  .ToListAsync();
-            var customers = await _unitOfWork.Customers.Query()
-                                                       .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
-                                                       .Select(i => new { i.Id, i.Name})
-                                                       .ToDictionaryAsync(item => item.Id);
-
-            var purchases = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId)).ToListAsync();
-
-            foreach(var po in purchaseOrderList)
+            var purchaseOrderList = await purchaseOrders.Select(po => new PurchaseOrderView
             {
-                customers.TryGetValue(po.CustomerId, out var poCustomer);
-                var domPo = _mapper.Map<PurchaseOrderView>(po);
+                Name = po.Name,
+                CustomerId = po.CustomerId,
+                CustomerReferencePO = po.CustomerReference,
+                OpenDate = po.OpenDate,
+                CloseDate = po.CloseDate
+            }).ToListAsync();
+            //var purchaseOrderList = await purchaseOrders.ToListAsync();
+            var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
+            var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId);
+            var dt2 = DateTime.Now;
 
-                domPo.Products = products.Where(i => i.PurchaseOrderId == po.Id).Select(i => _mapper.Map<PurchaseOrderProductView>(i.Product)).ToList();
-                if (poCustomer != null)
+            var poIds = await _unitOfWork.PurchaseOrderProducts.Query()
+                      .Select(i => i.ProductId)
+                      .ToListAsync();
+
+            var products = await _unitOfWork.Products.Query().Where(x => poIds.Contains(x.Id))
+                .Select(i => _mapper.Map<PurchaseOrderProductView>(i))
+                .ToListAsync();
+
+            //var customers = await _unitOfWork.Customers.Query()
+            //    .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
+            //    .ToListAsync();
+
+            var customers = await _unitOfWork.Customers.Query().AsNoTracking()
+                .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
+                .Select(i => new { i.Id, i.Name })
+                .ToDictionaryAsync(i => i.Id, i => i.Name);
+
+            var dt3 = DateTime.Now;
+            var dt4diffInSeconds = (dt3 - dt1).TotalSeconds;
+            //.Select(i => new { i.Id, i.Name })
+            //.ToDictionaryAsync(item => item.Id);
+
+            var purchaseOrderIdsForDeletable = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
+                .Select(x => x.PurchaseOrderId).ToListAsync();
+
+            foreach (var po in purchaseOrderList)
+            {
+                customers.TryGetValue(po.CustomerId, out var name);
+                //var domPo = _mapper.Map<PurchaseOrderView>(po);
+
+                po.Products = products.Where(i => i.Id == po.Id).ToList();
+                if (name != null)
                 {
-                    domPo.CustomerId = poCustomer.Id;
-                    domPo.CustomerName = poCustomer.Name;
+                    //po.CustomerId = poCustomer.Id;
+                    po.CustomerName = name;
                 }
-                domPo.IsDeletable = purchases.All(i => i.PurchaseOrderId != po.Id);
-                poList.Add(domPo);
+                //po.IsDeletable = purchases.All(i => i.PurchaseOrderId != po.Id);
+                po.IsDeletable = purchaseOrderIdsForDeletable.All(i => i != po.Id);
+                //poList.Add(po);
             }
+            var d4 = DateTime.Now;
 
-            return poList;
+            var dt5diffInSeconds = (d4 - dt3).TotalSeconds;
+            //var tot = purchaseOrderList.Where(x => x.Customer != null).Count(); 
+
+            return purchaseOrderList;
         }
 
         public async Task<PurchaseOrderView> CreatePurchaseOrderAsync(CreatePurchaseOrder command)
@@ -84,7 +114,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
                 var products = _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id));
 
-                foreach(var product in products)
+                foreach (var product in products)
                 {
                     var map = new PurchaseOrderProduct()
                     {
@@ -131,7 +161,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
         {
             var purchaseOrder = await _unitOfWork.PurchaseOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(purchaseOrder is null)
+            if (purchaseOrder is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.PurchaseOrder)} with ID: {command.Id} not found", DomainError.NotFound);
             }
@@ -150,12 +180,12 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 var productsToAdd = command.Products.Except(productIds);
 
                 var removeProducts = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id && productsToRemove.Contains(i.ProductId)).ToListAsync();
-                foreach(var removeProduct in removeProducts)
+                foreach (var removeProduct in removeProducts)
                 {
                     _unitOfWork.PurchaseOrderProducts.Delete(false, removeProduct);
                 }
 
-                foreach(var addProduct in productsToAdd)
+                foreach (var addProduct in productsToAdd)
                 {
                     var map = new PurchaseOrderProduct()
                     {
@@ -213,12 +243,12 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             var poProductsToDelete = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == command.Id).ToListAsync();
 
-            foreach(var poProduct in poProductsToDelete)
+            foreach (var poProduct in poProductsToDelete)
             {
-                _unitOfWork.PurchaseOrderProducts.Delete(poProduct);
+                //_unitOfWork.PurchaseOrderProducts.Delete(poProduct);
             }
 
-            _unitOfWork.PurchaseOrders.Delete(false,purchaseOrder);
+            _unitOfWork.PurchaseOrders.Delete(false, purchaseOrder);
             await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
         }
 
