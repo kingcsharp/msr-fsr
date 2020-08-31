@@ -66,15 +66,6 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
         }
 
-        //[HttpPost, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
-        //[SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseModel>))]
-        //public async Task<IActionResult> CreatePurchase([FromBody, Required] CreatePurchaseRequest request)
-        //{
-        //    //var createOnePurchase = request.ToCreateOnePurchaseCommand();
-        //    //var ret = await _dispatcher.DispatchAsync(createOnePurchase);
-        //    //return ret.ToOkObjectResponse<PurchaseModel>("Purchase has been successfully created.");
-        //}
-
         private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var poView = commandResponse.ToEntity<PurchaseOrderView>();
