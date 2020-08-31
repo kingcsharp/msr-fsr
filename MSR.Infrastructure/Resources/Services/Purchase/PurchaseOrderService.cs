@@ -215,7 +215,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             foreach(var poProduct in poProductsToDelete)
             {
-                _unitOfWork.PurchaseOrderProducts.Delete(poProduct);
+                _unitOfWork.PurchaseOrderProducts.Delete(false,poProduct);
             }
 
             _unitOfWork.PurchaseOrders.Delete(false,purchaseOrder);
