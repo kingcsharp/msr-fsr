@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-08-28 20:30:07.941898900 -0700
-+++ swagger-work.json	2020-08-28 20:30:08.036954400 -0700
+--- swagger-work.json.orig	2020-08-31 11:57:31.559010500 -0700
++++ swagger-work.json	2020-08-31 11:57:31.618946700 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -634,7 +634,7 @@
              "description": "",
              "content": {
                "application/json": {
-@@ -3230,7 +3284,8 @@
+@@ -3353,7 +3407,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -644,7 +644,7 @@
              },
              "x-position": 1
            }
-@@ -3404,7 +3459,8 @@
+@@ -3527,7 +3582,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -654,7 +654,7 @@
              },
              "x-position": 3
            }
-@@ -3541,7 +3597,8 @@
+@@ -3664,7 +3720,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -664,7 +664,7 @@
              },
              "x-position": 9
            }
-@@ -3571,7 +3628,8 @@
+@@ -3694,7 +3751,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -674,7 +674,7 @@
              },
              "x-position": 2
            }
-@@ -3589,7 +3647,7 @@
+@@ -3712,7 +3770,7 @@
            "x-position": 1
          },
          "responses": {
@@ -683,7 +683,7 @@
              "description": "",
              "content": {
                "application/json": {
-@@ -3613,7 +3671,8 @@
+@@ -3736,7 +3794,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -693,7 +693,7 @@
              },
              "x-position": 2
            }
-@@ -3631,7 +3690,7 @@
+@@ -3754,7 +3813,7 @@
            "x-position": 1
          },
          "responses": {
@@ -702,7 +702,7 @@
              "description": "",
              "content": {
                "application/json": {
-@@ -3657,7 +3716,8 @@
+@@ -3780,7 +3839,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -712,7 +712,7 @@
              },
              "x-position": 1
            }
-@@ -3732,7 +3792,8 @@
+@@ -3855,7 +3915,8 @@
              "required": true,
              "schema": {
                "type": "integer",
@@ -722,7 +722,7 @@
              },
              "x-position": 1
            },
-@@ -3741,13 +3802,14 @@
+@@ -3864,13 +3925,14 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -739,7 +739,7 @@
              "description": ""
            }
          }
-@@ -4189,7 +4251,8 @@
+@@ -4312,7 +4374,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -749,7 +749,7 @@
              },
              "x-position": 1
            }
-@@ -4425,7 +4488,8 @@
+@@ -4548,7 +4611,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -759,7 +759,7 @@
              },
              "x-position": 2
            }
-@@ -4454,7 +4518,8 @@
+@@ -4577,7 +4641,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -769,7 +769,7 @@
              },
              "x-position": 2
            }
-@@ -4472,7 +4537,7 @@
+@@ -4595,7 +4660,7 @@
            "x-position": 1
          },
          "responses": {
@@ -778,7 +778,7 @@
              "description": "",
              "content": {
                "application/json": {
-@@ -4495,7 +4560,8 @@
+@@ -4618,7 +4683,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -788,7 +788,7 @@
              },
              "x-position": 2
            }
-@@ -4513,7 +4579,7 @@
+@@ -4636,7 +4702,7 @@
            "x-position": 1
          },
          "responses": {
@@ -797,7 +797,7 @@
              "description": "",
              "content": {
                "application/json": {
-@@ -4539,7 +4605,8 @@
+@@ -4662,7 +4728,8 @@
              "required": true,
              "schema": {
                "type": "integer",
@@ -807,7 +807,7 @@
              },
              "x-position": 1
            },
-@@ -4548,7 +4615,8 @@
+@@ -4671,7 +4738,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -817,7 +817,7 @@
              },
              "x-position": 2
            }
-@@ -4589,7 +4657,8 @@
+@@ -4712,7 +4780,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -827,7 +827,7 @@
              },
              "x-position": 2
            }
-@@ -4618,7 +4687,8 @@
+@@ -4741,7 +4810,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -837,7 +837,7 @@
              },
              "x-position": 2
            }
-@@ -4659,7 +4729,8 @@
+@@ -4782,7 +4852,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -847,7 +847,7 @@
              },
              "x-position": 2
            }
-@@ -4677,7 +4748,7 @@
+@@ -4800,7 +4871,7 @@
            "x-position": 1
          },
          "responses": {
@@ -856,7 +856,7 @@
              "description": "",
              "content": {
                "application/json": {
-@@ -4703,7 +4774,8 @@
+@@ -4826,7 +4897,8 @@
              "required": true,
              "schema": {
                "type": "integer",
@@ -866,7 +866,7 @@
              },
              "x-position": 1
            },
-@@ -4712,7 +4784,8 @@
+@@ -4835,7 +4907,8 @@
              "in": "path",
              "required": true,
              "schema": {
@@ -876,7 +876,7 @@
              },
              "x-position": 2
            }
-@@ -4817,6 +4890,7 @@
+@@ -4940,6 +5013,7 @@
        "Exception": {
          "type": "object",
          "additionalProperties": true,
@@ -884,7 +884,7 @@
          "properties": {
            "StackTrace": {
              "type": "string",
-@@ -4872,6 +4946,9 @@
+@@ -4995,6 +5069,9 @@
              "type": "string",
              "minLength": 1
            }
@@ -894,7 +894,7 @@
          }
        },
        "ForgotUserNameRequest": {
-@@ -4885,6 +4962,9 @@
+@@ -5008,6 +5085,9 @@
              "type": "string",
              "minLength": 1
            }
@@ -904,7 +904,7 @@
          }
        },
        "ResetPasswordRequest": {
-@@ -4921,6 +5001,10 @@
+@@ -5044,6 +5124,10 @@
              "type": "string",
              "minLength": 1
            }
@@ -915,7 +915,7 @@
          }
        },
        "AuditActionResultOfIEnumerableOfCustomer": {
-@@ -6523,6 +6607,10 @@
+@@ -6646,6 +6730,10 @@
              "type": "integer",
              "format": "int32"
            }
@@ -926,7 +926,7 @@
          }
        },
        "UpdateMenuRoleMapRequest": {
-@@ -6559,6 +6647,15 @@
+@@ -6682,6 +6770,15 @@
            "canApprove": {
              "type": "boolean"
            }
@@ -942,7 +942,7 @@
          }
        },
        "AuditActionResultOfMonitorModel": {
-@@ -6808,6 +6905,11 @@
+@@ -6931,6 +7028,11 @@
                "$ref": "#/components/schemas/FileRequest"
              }
            }
@@ -954,7 +954,7 @@
          }
        },
        "FileRequest": {
-@@ -6851,7 +6953,12 @@
+@@ -6974,7 +7076,12 @@
                }
              }
            }
@@ -968,7 +968,7 @@
        },
        "ImportPartsRequest": {
          "type": "object",
-@@ -6953,6 +7060,13 @@
+@@ -7076,6 +7183,13 @@
                "$ref": "#/components/schemas/Role"
              }
            }
@@ -982,7 +982,7 @@
          }
        },
        "ProcedureType": {
-@@ -7006,6 +7120,7 @@
+@@ -7129,6 +7243,7 @@
              "type": "integer",
              "description": "Gets or Sets ProcedureTypeId",
              "format": "int32",
@@ -990,7 +990,7 @@
              "example": 1
            },
            "comments": {
-@@ -7050,6 +7165,12 @@
+@@ -7173,6 +7288,12 @@
                "$ref": "#/components/schemas/FileRequest"
              }
            }
@@ -1003,7 +1003,7 @@
          }
        },
        "AuditActionResultOfProcedureStepModel": {
-@@ -7258,6 +7379,14 @@
+@@ -7381,6 +7502,14 @@
                "$ref": "#/components/schemas/RoleRequest"
              }
            }
@@ -1018,7 +1018,7 @@
          }
        },
        "RoleRequest": {
-@@ -7473,6 +7602,14 @@
+@@ -7596,6 +7725,14 @@
                "$ref": "#/components/schemas/FileRequest"
              }
            }
@@ -1033,7 +1033,7 @@
          }
        },
        "UpdateProcedureStepRequest": {
-@@ -7575,6 +7712,12 @@
+@@ -7698,6 +7835,12 @@
                "$ref": "#/components/schemas/RoleRequest"
              }
            }
@@ -1046,7 +1046,7 @@
          }
        },
        "AuditActionResultOfProcedureStepMonitor": {
-@@ -7682,6 +7825,14 @@
+@@ -7805,6 +7948,14 @@
              "description": "Gets or Sets SendEmailNotification",
              "nullable": true
            }
@@ -1061,7 +1061,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepMonitor": {
-@@ -7745,6 +7896,11 @@
+@@ -7868,6 +8019,11 @@
              "description": "Gets or Sets SendEmailNotification",
              "nullable": true
            }
@@ -1073,7 +1073,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTemplateModel": {
-@@ -7954,6 +8110,12 @@
+@@ -8077,6 +8233,12 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1086,7 +1086,7 @@
          }
        },
        "UpdateProcedureStepTemplateRequest": {
-@@ -8044,6 +8206,11 @@
+@@ -8167,6 +8329,11 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1098,7 +1098,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTypeModel": {
-@@ -8179,6 +8346,12 @@
+@@ -8302,6 +8469,12 @@
                "format": "int32"
              }
            }
@@ -1111,7 +1111,7 @@
          }
        },
        "UpdateProcedureTemplateRequest": {
-@@ -8285,6 +8458,11 @@
+@@ -8408,6 +8581,11 @@
                "format": "int32"
              }
            }
@@ -1123,7 +1123,7 @@
          }
        },
        "AuditActionResultOfProcedureType": {
-@@ -8327,6 +8505,10 @@
+@@ -8450,6 +8628,10 @@
              "description": "Gets or Sets MajorGroup",
              "nullable": true
            }
@@ -1134,7 +1134,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureType": {
-@@ -8371,6 +8553,10 @@
+@@ -8494,6 +8676,10 @@
              "description": "Gets or Sets MajorGroup",
              "nullable": true
            }
@@ -1145,7 +1145,7 @@
          }
        },
        "AuditActionResultOfICollectionOfPurchaseModel": {
-@@ -9069,6 +9255,10 @@
+@@ -9295,6 +9481,10 @@
                "format": "int32"
              }
            }
@@ -1156,7 +1156,7 @@
          }
        },
        "UpdateRoleRequest": {
-@@ -9287,6 +9477,10 @@
+@@ -9513,6 +9703,10 @@
                }
              ]
            }
@@ -1167,7 +1167,7 @@
          }
        },
        "UpdateUserRequest": {
-@@ -9307,7 +9501,11 @@
+@@ -9533,7 +9727,11 @@
                }
              }
            }
@@ -1180,7 +1180,7 @@
        },
        "CreateUserRoleRequest": {
          "type": "object",
-@@ -10269,6 +10467,14 @@
+@@ -10495,6 +10693,14 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1195,7 +1195,7 @@
          }
        },
        "UpdateWorkflowGroupRequest": {
-@@ -10289,7 +10495,16 @@
+@@ -10515,7 +10721,16 @@
                }
              }
            }
@@ -1213,7 +1213,7 @@
        },
        "AuditActionResultOfICollectionOfWorkflowStageModel": {
          "allOf": [
-@@ -10402,6 +10617,10 @@
+@@ -10628,6 +10843,10 @@
                "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
              }
            }
@@ -1224,7 +1224,7 @@
          }
        },
        "UpdateWorkflowStageRequest": {
-@@ -10422,7 +10641,12 @@
+@@ -10648,7 +10867,12 @@
                }
              }
            }
