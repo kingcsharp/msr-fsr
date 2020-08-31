@@ -249,7 +249,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStepApproval, ProcedureStep>().ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<ProductApproval, Product>().ForMember(dest => dest.Id, opt => opt.Ignore());
-            CreateMap<PurchaseOrderApproval, PurchaseOrder>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            //CreateMap<PurchaseOrderApproval, PurchaseOrder>().ForMember(dest => dest.Id, opt => opt.Ignore());
             #endregion
 
             CreateMap<MenuRolePermission, Permission>().ReverseMap();
@@ -288,7 +288,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreatePurchaseOrder, PurchaseOrderApproval>()
                 .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo));
-            CreateMap<PurchaseOrderApproval, PurchaseOrder>();
+            CreateMap<PurchaseOrderApproval, PurchaseOrder>().ReverseMap();
 
             #endregion
 
