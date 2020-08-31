@@ -289,7 +289,18 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo));
             CreateMap<PurchaseOrderApproval, PurchaseOrder>();
-
+            CreateMap<UpdatePurchaseOrder, PurchaseOrder>()
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo))
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdatePurchaseOrder, PurchaseOrderApproval>()
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo))
+                .ForMember(dest => dest.PurchaseOrderId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<PurchaseOrder, PurchaseOrderApproval>()
+                .ForMember(dest => dest.PurchaseOrderId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
             #endregion
 
             CreateMap<File, FileModel>()
