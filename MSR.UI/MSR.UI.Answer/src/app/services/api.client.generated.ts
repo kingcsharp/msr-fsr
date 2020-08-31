@@ -7256,7 +7256,7 @@ export interface ITimeZoneModel {
     offset?: number;
 }
 
-export class Role implements IRole {
+export class Role extends TrackableModel implements IRole {
     id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
@@ -7267,15 +7267,11 @@ export class Role implements IRole {
     hasAssignedUsers?: boolean;
 
     constructor(data?: IRole) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
@@ -7321,11 +7317,12 @@ export class Role implements IRole {
                 data["parentRoles"].push(item.toJSON());
         }
         data["hasAssignedUsers"] = this.hasAssignedUsers;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IRole {
+export interface IRole extends ITrackableModel {
     id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;

@@ -5207,24 +5207,10 @@ describe('User Functionality', () => {
         cy.writeAndValidate('name','TestRole12');
         cy.multiselectClick('isCertificationRole-grid','Yes');
         cy.multiselectClick('parentRoles-grid','GM - General Manager');
-        cy.writeAndValidate('name','TestRole12');
-        cy.writeAndValidate('name','TestRole12');
-        // cy.writeAndValidateDate('createdOn-grid','06/17/2020');
-        // cy.writeAndValidateDate('createdOn-grid','06/17/2020');
-        //createdOn-grid
-        lastUpdatedOn-grid
-        createdByName
-
-
-        // cy.writeAndValidate('name-grid','DD Part B 1592421221');
-        // cy.writeAndValidate('partNumber-grid','1592421221b');   
-        // cy.writeAndValidate('oemPartNumber-grid','1592421221b-OEM');
-        // cy.writeAndValidate('maximumCycles-grid','9999');
-        // cy.writeAndValidate('createdByName-grid','David  Dombrowsky');
-        // cy.writeAndValidate('lastUpdatedByName-grid','David  Dombrowsky');
-        // cy.writeAndValidateDate('createdOn-grid','06/17/2020');
-        // cy.writeAndValidateDate('lastUpdatedOn-grid','06/17/2020');
-        // cy.get('[data-cy=row]').find('td:first').contains('3');
+        cy.writeAndValidate('lastUpdatedByName','James Bridgeford');
+        cy.writeAndValidate('createdByName','James Bridgeford');
+        cy.writeAndValidateDate('createdOn-grid','06/17/2020');
+        cy.writeAndValidateDate('lastUpdatedOn-grid','06/17/2020');
 
         cy.logout();
         cy.checkWebConsoleTracking();
