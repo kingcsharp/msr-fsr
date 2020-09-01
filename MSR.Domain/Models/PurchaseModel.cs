@@ -21,9 +21,7 @@ namespace MSR.Domain.Models
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
 
         public virtual LocationModel Location { get; set; }
-
-        //public virtual PurchaseOrder PurchaseOrder { get; set; }
-
-        //public virtual PurchaseOrderProduct PurchaseOrderProduct { get; set; }
+        public virtual PurchaseOrderModel PurchaseOrder { get; set; }
+        public virtual ProductModel PurchaseOrderProduct { get; set; }
     }
 }

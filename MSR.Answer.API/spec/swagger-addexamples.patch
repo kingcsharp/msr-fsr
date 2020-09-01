@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-08-31 21:40:05.765793000 -0700
-+++ swagger-work.json	2020-08-31 21:40:05.825576700 -0700
+--- swagger-work.json.orig	2020-08-31 22:48:42.267753200 -0700
++++ swagger-work.json	2020-08-31 22:48:42.325400700 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -1197,8 +1197,16 @@
                {
                  "$ref": "#/components/schemas/LocationModel"
                }
-@@ -9039,6 +9231,19 @@
-             "description": "PurchasePrice ",
+@@ -9008,6 +9200,7 @@
+           "location": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null" },
+               {
+                 "$ref": "#/components/schemas/LocationModel"
+               }
+@@ -9111,6 +9304,19 @@
+             "description": "PurchasePrice",
              "format": "decimal"
            }
 +        },
@@ -1217,7 +1225,7 @@
          }
        },
        "AuditActionResultOfIEnumerableOfPurchaseOrderView": {
-@@ -9318,6 +9523,10 @@
+@@ -9390,6 +9596,10 @@
                "format": "int32"
              }
            }
@@ -1228,7 +1236,7 @@
          }
        },
        "UpdateRoleRequest": {
-@@ -9536,6 +9745,10 @@
+@@ -9608,6 +9818,10 @@
                }
              ]
            }
@@ -1239,7 +1247,7 @@
          }
        },
        "UpdateUserRequest": {
-@@ -9556,7 +9769,11 @@
+@@ -9628,7 +9842,11 @@
                }
              }
            }
@@ -1252,7 +1260,7 @@
        },
        "CreateUserRoleRequest": {
          "type": "object",
-@@ -10518,6 +10735,14 @@
+@@ -10590,6 +10808,14 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1267,7 +1275,7 @@
          }
        },
        "UpdateWorkflowGroupRequest": {
-@@ -10538,7 +10763,16 @@
+@@ -10610,7 +10836,16 @@
                }
              }
            }
@@ -1285,7 +1293,7 @@
        },
        "AuditActionResultOfICollectionOfWorkflowStageModel": {
          "allOf": [
-@@ -10651,6 +10885,10 @@
+@@ -10723,6 +10958,10 @@
                "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
              }
            }
@@ -1296,7 +1304,7 @@
          }
        },
        "UpdateWorkflowStageRequest": {
-@@ -10671,7 +10909,12 @@
+@@ -10743,7 +10982,12 @@
                }
              }
            }

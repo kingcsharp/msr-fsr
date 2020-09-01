@@ -30,12 +30,20 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
         {
             List<Purchase> purchases = null;
             if (command.Id.HasValue) {
-                purchases = await _unitOfWork.Purchases.Query().Where(x => x.Id == command.Id.Value).ToListAsync();
+                purchases = await _unitOfWork.Purchases.Query()
+                    .Where(x => x.Id == command.Id.Value)
+                    .Include(x => x.Status)
+                    .Include(x => x.WorkOrders)
+                    .Include(x => x.Location)
+                    .Include(x => x.PurchaseOrder)
+                    .Include(x => x.PurchaseOrderProduct)
+                    .ToListAsync();
                 if (purchases.Count == 0) {
                     throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
                 }
             } else {
-                purchases = await _unitOfWork.Purchases.Query().ToListAsync();
+                purchases = await _unitOfWork.Purchases.Query()
+                    .ToListAsync();
             }
             var result = purchases.Select(x => _mapper.Map<Domain.Models.PurchaseModel>(x)).ToList();
             return result;
@@ -47,10 +55,22 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             if (CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate)) {
                 var purchase = _mapper.Map<Purchase>(command);
-                _unitOfWork.Purchases.Add(purchase);
+                var created = _unitOfWork.Purchases.Add(purchase);
 
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(purchase, purchase.Id);
+
+                // load required navigation fields
+                created.Context.Entry(purchase)
+                    .Reference(x => x.Status).Load();
+                created.Context.Entry(purchase)
+                    .Reference(x => x.Location).Load();
+                created.Context.Entry(purchase)
+                    .Reference(x => x.PurchaseOrder).Load();
+                created.Context.Entry(purchase)
+                    .Reference(x => x.PurchaseOrderProduct).Load();
+                created.Context.Entry(purchase.PurchaseOrderProduct)
+                    .Reference(x => x.Product).Load();
 
                 ret = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
             }

@@ -244,7 +244,8 @@ namespace MSR.Infrastructure.Resources.Services
                     var productApprovalChanges = new PendingApprovalPopoverModel();
                     productApprovalChanges.AddRow("Name", product.Name, productApproval.Name);
                     productApprovalChanges.AddRow("Revision", product.Revision, productApproval.Revision);
-                    productApprovalChanges.AddRow("Customer Requirement Id", product.CustomerRequirementId, productApproval.CustomerRequirementId);
+                    // TODO: there is no such field
+                    //productApprovalChanges.AddRow("Customer Requirement Id", product.CustomerRequirementId, productApproval.CustomerRequirementId);
                     productApprovalChanges.AddRow("Equipment Cost", product.EquipmentCost, productApproval.EquipmentCost);
                     productApprovalChanges.AddRow("Material Cost", product.MaterialCost, productApproval.MaterialCost);
                     productApprovalChanges.AddRow("Sales Tax", product.SalesTax, productApproval.SalesTax);

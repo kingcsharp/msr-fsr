@@ -5696,6 +5696,7 @@
               "parent": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/LocationModel"
                   }
@@ -5712,6 +5713,7 @@
               "timeZone": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/TimeZoneModel"
                   }
@@ -5769,6 +5771,7 @@
               "lastUpdated": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/UserModel"
                   }
@@ -5799,6 +5802,7 @@
               "created": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/UserModel"
                   }
@@ -8762,7 +8766,7 @@
           "status": {
             "nullable": true,
             "oneOf": [
-              { "type": "null"} ,
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/StatusModel"
               }
@@ -8778,9 +8782,27 @@
           "location": {
             "nullable": true,
             "oneOf": [
-              { "type": "null"} ,
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/LocationModel"
+              }
+            ]
+          },
+          "purchaseOrder": {
+            "nullable": true,
+            "oneOf": [
+              { "type": "null"},
+              {
+                "$ref": "#/components/schemas/PurchaseOrderModel"
+              }
+            ]
+          },
+          "purchaseOrderProduct": {
+            "nullable": true,
+            "oneOf": [
+              { "type": "null"},
+              {
+                "$ref": "#/components/schemas/ProductModel"
               }
             ]
           }
@@ -9135,6 +9157,63 @@
           }
         }
       },
+      "PurchaseOrderModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "referencePO": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "openDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalPurchaseLimit": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "customerReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "location": {
+            "nullable": true,
+            "oneOf": [
+              { "type": "null" },
+              {
+                "$ref": "#/components/schemas/LocationModel"
+              }
+            ]
+          }
+        }
+      },
       "AuditActionResultOfPurchaseModel": {
         "allOf": [
           {
@@ -9184,22 +9263,22 @@
           },
           "purchaseOrderProductId": {
             "type": "integer",
-            "description": "PurchaseOrderProductId ",
+            "description": "PurchaseOrderProductId",
             "format": "int32"
           },
           "customerPurchaseNumber": {
             "type": "string",
-            "description": "CustomerPurchaseNumber ",
+            "description": "CustomerPurchaseNumber",
             "nullable": true
           },
           "locationId": {
             "type": "integer",
-            "description": "LocationId ",
+            "description": "LocationId",
             "format": "int32"
           },
           "serialNumber": {
             "type": "string",
-            "description": "SerialNumber ",
+            "description": "SerialNumber",
             "maxLength": 20,
             "minLength": 0
           },
@@ -9210,7 +9289,7 @@
           },
           "customerLineNumber": {
             "type": "integer",
-            "description": "CustomerLineNumber ",
+            "description": "CustomerLineNumber",
             "format": "int32"
           },
           "mttn": {
@@ -9222,13 +9301,13 @@
           },
           "dueDate": {
             "type": "string",
-            "description": "DueDate ",
+            "description": "DueDate",
             "format": "date-time",
             "minLength": 1
           },
           "purchasePrice": {
             "type": "number",
-            "description": "PurchasePrice ",
+            "description": "PurchasePrice",
             "format": "decimal"
           }
         },

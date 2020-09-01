@@ -22,6 +22,8 @@ namespace MSR.Domain.Models
 
         public string CustomerReference { get; set; }
 
+        public int LocationId { get; set; }
+
         public virtual LocationModel Location { get; set; }
     }
 }

@@ -62,7 +62,8 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             CreateMap<Product, ProductModel>().ReverseMap();
-            CreateMap<Purchase, PurchaseModel>().ReverseMap();
+            CreateMap<Purchase, PurchaseModel>()
+                .ForMember(dest => dest.PurchaseOrderProduct, opts => opts.MapFrom(src => src.PurchaseOrderProduct.Product));
             CreateMap<CreatePurchase, Purchase>().ReverseMap();
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
@@ -276,6 +277,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.OpenDate, opts => opts.MapFrom(src => src.PurchaseOrder.OpenDate))
                 .ForMember(dest => dest.CloseDate, opts => opts.MapFrom(src => src.PurchaseOrder.CloseDate));
 
+            CreateMap<PurchaseOrder, PurchaseOrderModel>().ReverseMap();
             CreateMap<PurchaseOrder, PurchaseOrderView>()
                 .ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.ReferencePO));
             CreateMap<PurchaseOrderApproval, PurchaseOrderView>()
