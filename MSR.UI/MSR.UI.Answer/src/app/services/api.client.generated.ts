@@ -9956,6 +9956,7 @@ export interface IUpdatePartRequest extends ICreatePartRequest {
 }
 
 export class ImportPartsRequest implements IImportPartsRequest {
+    /** URL encoded base64 data */
     base64Data!: string;
 
     constructor(data?: IImportPartsRequest) {
@@ -9988,6 +9989,7 @@ export class ImportPartsRequest implements IImportPartsRequest {
 }
 
 export interface IImportPartsRequest {
+    /** URL encoded base64 data */
     base64Data: string;
 }
 
@@ -11195,7 +11197,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     /** Gets or Sets InputType */
     inputType?: string | undefined;
     /** Gets or Sets MonitorType */
-    monitorType?: string | undefined;
+    monitorType!: string;
     /** Gets or Sets the procedure step ID */
     procedureStepId?: number;
     /** Gets or Sets ShouldBe */
@@ -11257,7 +11259,7 @@ export interface ICreateProcedureStepMonitorRequest {
     /** Gets or Sets InputType */
     inputType?: string | undefined;
     /** Gets or Sets MonitorType */
-    monitorType?: string | undefined;
+    monitorType: string;
     /** Gets or Sets the procedure step ID */
     procedureStepId?: number;
     /** Gets or Sets ShouldBe */
@@ -12104,8 +12106,6 @@ export class UpdateProcedureTemplateRequest implements IUpdateProcedureTemplateR
     numberOfQuestionsToUse?: number | undefined;
     /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets ReferenceProcedures */
-    referenceProcedures?: (number | undefined)[] | undefined;
     /** Gets or Sets ReferenceDocuments */
     referenceDocuments?: (number | undefined)[] | undefined;
     /** Gets or Sets ReferenceFiles */
@@ -12135,11 +12135,6 @@ export class UpdateProcedureTemplateRequest implements IUpdateProcedureTemplateR
             this.procedureStepId = _data["procedureStepId"];
             this.numberOfQuestionsToUse = _data["numberOfQuestionsToUse"];
             this.comments = _data["comments"];
-            if (Array.isArray(_data["referenceProcedures"])) {
-                this.referenceProcedures = [] as any;
-                for (let item of _data["referenceProcedures"])
-                    this.referenceProcedures!.push(item);
-            }
             if (Array.isArray(_data["referenceDocuments"])) {
                 this.referenceDocuments = [] as any;
                 for (let item of _data["referenceDocuments"])
@@ -12178,11 +12173,6 @@ export class UpdateProcedureTemplateRequest implements IUpdateProcedureTemplateR
         data["procedureStepId"] = this.procedureStepId;
         data["numberOfQuestionsToUse"] = this.numberOfQuestionsToUse;
         data["comments"] = this.comments;
-        if (Array.isArray(this.referenceProcedures)) {
-            data["referenceProcedures"] = [];
-            for (let item of this.referenceProcedures)
-                data["referenceProcedures"].push(item);
-        }
         if (Array.isArray(this.referenceDocuments)) {
             data["referenceDocuments"] = [];
             for (let item of this.referenceDocuments)
@@ -12226,8 +12216,6 @@ export interface IUpdateProcedureTemplateRequest {
     numberOfQuestionsToUse?: number | undefined;
     /** Gets or Sets Comments */
     comments?: string | undefined;
-    /** Gets or Sets ReferenceProcedures */
-    referenceProcedures?: (number | undefined)[] | undefined;
     /** Gets or Sets ReferenceDocuments */
     referenceDocuments?: (number | undefined)[] | undefined;
     /** Gets or Sets ReferenceFiles */

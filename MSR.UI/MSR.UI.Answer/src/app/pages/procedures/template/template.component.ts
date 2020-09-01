@@ -119,7 +119,6 @@ export class TemplateComponent implements OnInit {
     updateProcedureTemplateRequest.id = this.procedureTemplate.id;
     updateProcedureTemplateRequest.comments = this.procedureTemplate.comments;
     updateProcedureTemplateRequest.referenceFiles = this.procedureTemplate.referenceFiles;
-    updateProcedureTemplateRequest.referenceProcedures = this.procedureTemplate.referenceProcedures;
     updateProcedureTemplateRequest.replacementCost = this.procedureTemplate.replacementCost;
     updateProcedureTemplateRequest.roles = this.selectedRoles.map(s => s.id);
     updateProcedureTemplateRequest.text = this.procedureTemplate.text;
