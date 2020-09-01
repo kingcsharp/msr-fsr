@@ -67,7 +67,7 @@ namespace MSR.Answer.API.Extentions
                         CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
                         {
                             var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
-                            if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
+                            if (menuItemPrivileges == null || Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
                             {
                                 return false;
                             }
