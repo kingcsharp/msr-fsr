@@ -93,6 +93,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<LocationImportItem, UpdateLocation>();
             #endregion
 
+            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZoneModel>().ReverseMap();
+           
+            CreateMap<GetLocations, Location>();
+            CreateMap<User, UserApproval>();
+
+            CreateMap<GetLocations, Location>();
             CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
             CreateMap<Invoice, InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, InvoiceItemModel>().ReverseMap();
@@ -113,7 +119,8 @@ namespace MSR.Infrastructure.Profiles
 
 
             #region Invoice
-            CreateMap<Invoice, InvoiceModel>().ReverseMap();
+            CreateMap<Invoice, Domain.Models.InvoiceModel>().ReverseMap();
+            CreateMap<InvoiceItem, Domain.Models.InvoiceItemModel>().ReverseMap();
             CreateMap<Invoice, InvoiceView>()
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Total))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
@@ -264,9 +271,36 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
+            
+            #region Product
+            CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
+            CreateMap<CreateProduct, Product>();
+            CreateMap<Domain.Models.ProductModel, Product>();
+            #endregion
+
+            #region Quote
+            CreateMap<Quote, Domain.Models.QuoteModel>().ReverseMap();
+            CreateMap<QuoteItem, Domain.Models.QuoteItemModel>().ReverseMap();
+            CreateMap<CreateQuote, Quote>();
+            CreateMap<CreateQuoteItem, QuoteItem>();
+            #endregion
+
 
             CreateMap<UploadFile, FileModel>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
+
+            CreateMap<Domain.Models.ProductModel, Domain.Views.QuotesProductsView>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.CreatedBy.ToString()))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
+
+            CreateMap<Domain.Models.QuoteModel, QuotesProductsView>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.SubmittedBy.FullName));
 
             #region PurchaseOrder
             CreateMap<PurchaseOrderProduct, PurchaseOrderView>()

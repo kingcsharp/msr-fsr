@@ -831,6 +831,31 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
 
+        public static CreateQuote ToCreateQuoteCommand(this CreateQuoteRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateQuote>(request);
+        }
+
+        public static GetQuote ToGetQuotesCommand(this GetQuoteRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetQuote>(request);
+        }
+
+        public static CreateProduct ToCreateProductCommand(this CreateProductRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateProduct>(request);
+        }
+
+        public static GetProduct ToGetProductCommand(this GetProductRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetProduct>(request);
+        }
+
+        public static UpdateProduct ToUpdateProductCommand(this UpdateProductRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateProduct>(request);
+        }
+      
         /// <summary>
         /// ToGetPurchasesCommand
         /// </summary>

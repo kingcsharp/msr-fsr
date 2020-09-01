@@ -40,7 +40,7 @@ pipeline {
         //}
         stage('Build & Deploy') {
             parallel {
-                stage('Build and Deploy UI') {
+                stage('Build & Deploy UI to QA') {
                     agent { label 'master'}
                     steps {
                         script {
@@ -70,9 +70,6 @@ pipeline {
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
                                         deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
-                                    } else if (env.BRANCH_NAME == 'Stage') {
-                                        echo "Deploying Stage"
-                                        //deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
                                     }
                                 }
 
@@ -86,7 +83,7 @@ pipeline {
                         }
                     }
                 }
-                stage('Build and Deploy API') {
+                stage('Build and Deploy API to QA') {
                     agent { label 'master'}
                     steps {
                         script {
@@ -130,9 +127,6 @@ pipeline {
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
                                         deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}", "reverseproxy")
-                                    } else if (env.BRANCH_NAME == 'Stage') {
-                                        echo "Deploying Stage"
-                                        deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                                     }
                                 }
 
@@ -143,12 +137,27 @@ pipeline {
                                 currentBuild.result = 'FAILURE'
                                 sh "exit 1"
                             }
-
                         }
                     }
                 }
             }
         }
+
+        stage("Promote UI & API to UAT") {
+            agent { label 'master'}
+            steps {
+                script {
+                    timeout(activity: true, time: 5) {
+                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                    }
+                    sh "sudo sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                    sh "cat ${API_COMPOSE}"
+                    deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                }
+            }
+        }
+
         /*
         stage("Running API Tests") {
             agent { label 'jenkins-ecs-slave' }

@@ -26,6 +26,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public string CustomerNumber { get; set; }
 
+        public virtual ICollection<Quote> Quotes { get; set; }
+
         public virtual ICollection<Invoice> Invoices { get; set; }
+
     }
 }

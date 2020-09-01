@@ -22,14 +22,30 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int CustomerId { get; set; }
 
+        [Column(TypeName ="money")]
+        public decimal? LaborCost { get; set; }
+
+        [ForeignKey("CustomerId")]
+        public virtual Customer Customer { get; set; }
+
+        public int? CustomerRequirementId { get; set; }
+        
         [Required]
         public int ProcedureId { get; set; }
+
+        [ForeignKey("ProcedureId")]
+        public virtual Procedure Procedure { get; set; }
 
         [Required]
         public int PartId { get; set; }
 
-        [Column(TypeName ="money")]
-        public decimal? LaborCost { get; set; }
+        [ForeignKey("PartId")]
+        public virtual Part Part { get; set; }
+
+        public int? QuoteId { get; set; }
+
+        [ForeignKey("QuoteId")]
+        public virtual Quote Quote { get; set; }
 
         [Column(TypeName = "money")]
         public decimal? EquipmentCost { get; set; }
@@ -50,5 +66,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         //public int? CustomerRequirementId { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+
     }
 }

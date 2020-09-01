@@ -71,8 +71,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
 
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
         IRepository<Sensor> Sensors { get; }
+        IRepository<Quote> Quotes { get; }
         IRepository<TimeZone> Timezones { get; }
-
+        
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

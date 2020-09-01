@@ -1,20 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using MSR.Domain.Models.BaseModels;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Models
 {
-    public class ProductModel
+    public class ProductModel : TrackableModel
     {
         public string Name { get; set; }
         public int Revision { get; set; }
         public int CustomerId { get; set; }
-        public int? CustomerRequirementId { get; set; }
+        public virtual Customer Customer { get; set; }
+        public int CustomerRequirementId { get; set; }
         public int ProcedureId { get; set; }
+        public virtual Procedure Procedure { get; set; }
         public int PartId { get; set; }
-        public decimal EquipmentCost { get; set; }
-        public decimal MaterialCost { get; set; }
+        public virtual PartModel Part { get; set; }
+        public decimal? LaborCost { get; set; }
+        public decimal? EquipmentCost { get; set; }
+        public decimal? MaterialCost { get; set; }
         public decimal? SalesTax { get; set; }
         public decimal TotalSalePrice { get; set; }
-        public int? CycleTime { get; set; }
+        public int CycleTime { get; set; }
+        public int? QuoteId { get; set; }
+        public virtual QuoteModel Quote { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
     }
 }
