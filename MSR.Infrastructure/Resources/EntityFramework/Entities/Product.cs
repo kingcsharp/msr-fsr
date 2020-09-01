@@ -28,8 +28,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("CustomerId")]
         public virtual Customer Customer { get; set; }
 
-        public int? CustomerRequirementId { get; set; }
-        
         [Required]
         public int ProcedureId { get; set; }
 
