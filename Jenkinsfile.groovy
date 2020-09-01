@@ -144,6 +144,7 @@ pipeline {
         }
 
         stage("Promote UI & API to UAT") {
+            agent { label 'master'}
             steps {
                 script {
                     timeout(activity: true, time: 5) {
@@ -156,6 +157,7 @@ pipeline {
         }
 
         stage("Promote UI & API to PRODUCTION") {
+            agent { label 'master'}
             steps {
                 script {
                     timeout(activity: true, time: 5) {
