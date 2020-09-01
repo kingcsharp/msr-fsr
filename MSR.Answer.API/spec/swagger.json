@@ -3031,7 +3031,7 @@
               "type": "integer",
               "format": "int32",
               "nullable": true,
-              "example": 8
+              "example": 25
             },
             "x-position": 1
           },
@@ -3201,7 +3201,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -8681,7 +8682,7 @@
           }
         },
         "example": {
-            "id": 8,
+            "id": 25,
             "name": "PROCTYPE1598416546"
         }
       },
@@ -9158,8 +9159,12 @@
       },
       "CreatePurchaseRequest": {
         "type": "object",
+        "description": "CreatePurchaseRequest",
         "additionalProperties": true,
         "required": [
+          "purchaseOrderId",
+          "statusId",
+          "purchaseOrderProductId",
           "locationId",
           "serialNumber",
           "qty",
@@ -9169,44 +9174,76 @@
         "properties": {
           "purchaseOrderId": {
             "type": "integer",
+            "description": "PurchaseOrderId",
+            "format": "int32"
+          },
+          "statusId": {
+            "type": "integer",
+            "description": "Status ID",
+            "format": "int32"
+          },
+          "purchaseOrderProductId": {
+            "type": "integer",
+            "description": "PurchaseOrderProductId ",
             "format": "int32"
           },
           "customerPurchaseNumber": {
             "type": "string",
+            "description": "CustomerPurchaseNumber ",
             "nullable": true
           },
           "locationId": {
             "type": "integer",
+            "description": "LocationId ",
             "format": "int32"
           },
           "serialNumber": {
             "type": "string",
+            "description": "SerialNumber ",
             "maxLength": 20,
             "minLength": 0
           },
           "qty": {
             "type": "integer",
+            "description": "Quantity",
             "format": "int32"
           },
           "customerLineNumber": {
             "type": "integer",
+            "description": "CustomerLineNumber ",
             "format": "int32"
           },
           "mttn": {
             "type": "string",
+            "description": "Material Transfer Number (MTTN)",
             "maxLength": 10,
             "minLength": 0,
             "nullable": true
           },
           "dueDate": {
             "type": "string",
+            "description": "DueDate ",
             "format": "date-time",
             "minLength": 1
           },
           "purchasePrice": {
             "type": "number",
+            "description": "PurchasePrice ",
             "format": "decimal"
           }
+        },
+        "example" : {
+          "purchaseOrderId": 1,
+          "purchaseOrderProductId": 2,
+          "customerPurchaseNumber": "PURCHASE1598926122",
+          "locationId": 54,
+          "serialNumber": "SN1598926122",
+          "statusId": 1,
+          "qty": 1,
+          "customerLineNumber": 1,
+          "mttn": "1598926122",
+          "dueDate": "2099-12-31",
+          "purchasePrice": 123.45
         }
       },
       "AuditActionResultOfIEnumerableOfPurchaseOrderView": {
@@ -9333,7 +9370,7 @@
           {
             "type": "object",
             "description": "Base class for an API call with a typed result",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "nullable": true,
@@ -9349,7 +9386,7 @@
       },
       "CreatePurchaseOrderRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "customerId",
           "name",
@@ -9411,7 +9448,7 @@
           },
           {
             "type": "object",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "required": [
               "id"
             ],

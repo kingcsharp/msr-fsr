@@ -836,10 +836,16 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public static GetPurchases ToGetPurchasesCommand(this GetPurchasesRequest request)
-        {
-            return AutoMapperHelper.Mapper.Map<GetPurchases>(request);
-        }
+        public static GetPurchases ToGetPurchasesCommand(this GetPurchasesRequest request) =>
+            AutoMapperHelper.Mapper.Map<GetPurchases>(request);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static CreatePurchase ToCreateOnePurchaseCommand(this CreatePurchaseRequest request) =>
+            AutoMapperHelper.Mapper.Map<CreatePurchase>(request);
 
         /// <summary>
         /// ToGetPurchaseOrderRequestCommand
@@ -867,10 +873,30 @@ namespace MSR.Answer.API.V1.Extentions
         public static UpdateProcedureStepTemplate ToUpdateProcedureStepTemplate(this UpdateProcedureTemplateRequest request) =>
             AutoMapperHelper.Mapper.Map<UpdateProcedureStepTemplate>(request);
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static CreateRole ToCreateRoleCommand(this CreateRoleRequest request) => AutoMapperHelper.Mapper.Map<CreateRole>(request);
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static UpdateRole ToUpdateRoleCommand(this UpdateRoleRequest request) => AutoMapperHelper.Mapper.Map<UpdateRole>(request);
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static CreatePurchaseOrder ToCreatePurchaseOrderCommand(this CreatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<CreatePurchaseOrder>(request);
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static UpdatePurchaseOrder ToUpdatePurchaseOrderCommand(this UpdatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<UpdatePurchaseOrder>(request);
     }
 }

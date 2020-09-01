@@ -63,6 +63,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Product, ProductModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>().ReverseMap();
+            CreateMap<CreatePurchase, Purchase>().ReverseMap();
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
