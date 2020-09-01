@@ -3147,6 +3147,132 @@
         }
       }
     },
+    "/v{version}/Product": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Creates a Product based on the  request.",
+        "operationId": "Product_CreateProduct",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 1
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "product",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Product DTO",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProductModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "operationId": "Product_GetProduct",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfProductModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Product"
+        ],
+        "operationId": "Product_UpdateProduct",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfProductModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Purchase": {
       "get": {
         "tags": [
@@ -3362,6 +3488,163 @@
           "PurchaseOrder"
         ],
         "operationId": "PurchaseOrder_DeletePurchaseOrder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Quote/Product": {
+      "get": {
+        "tags": [
+          "Quote"
+        ],
+        "operationId": "Quote_Get",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfQuotesProductsView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Quote": {
+      "post": {
+        "tags": [
+          "Quote"
+        ],
+        "summary": "Creates a Quote based on the  request.",
+        "operationId": "Quote_CreateQuote",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "quote",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateQuoteRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Quote DTO",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfQuoteModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Quote"
+        ],
+        "operationId": "Quote_GetQuote",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfQuoteModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Quote/{id}": {
+      "delete": {
+        "tags": [
+          "Quote"
+        ],
+        "summary": "Deletes a Quote based on the  parameter",
+        "operationId": "Quote_DeleteQuote",
         "parameters": [
           {
             "name": "id",
@@ -8690,7 +8973,7 @@
             "name": "PROCTYPE1598416546"
         }
       },
-      "AuditActionResultOfICollectionOfPurchaseModel": {
+      "AuditActionResultOfProductModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -8701,15 +8984,386 @@
             "additionalProperties": true,
             "properties": {
               "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProductModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "ProductModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "revision": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "customerId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "customer": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                ]
+              },
+              "customerRequirementId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "procedureId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "procedure": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Procedure"
+                  }
+                ]
+              },
+              "partId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "part": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PartModel"
+                  }
+                ]
+              },
+              "laborCost": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "equipmentCost": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "materialCost": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "salesTax": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "totalSalePrice": {
+                "type": "number",
+                "format": "decimal"
+              },
+              "cycleTime": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "quoteId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "quote": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/QuoteModel"
+                  }
+                ]
+              },
+              "workOrders": {
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "$ref": "#/components/schemas/PurchaseModel"
+                  "$ref": "#/components/schemas/WorkOrderModel"
                 }
               }
             }
           }
         ]
+      },
+      "QuoteModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "submittedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customer": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Customer"
+              }
+            ]
+          },
+          "submittedById": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "submittedBy": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UserModel"
+              }
+            ]
+          },
+          "contact": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivery": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "processName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "representative": {
+            "type": "string",
+            "nullable": true
+          },
+          "representativeTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "representativeAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "partKitNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "nullable": true,
+            "oneOf": [
+              { "type": "null"},
+              {
+                "$ref": "#/components/schemas/StatusModel"
+              }
+            ]
+          },
+          "quoteJson": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerRequirementJson": {
+            "type": "string",
+            "nullable": true
+          },
+          "products": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProductModel"
+            }
+          },
+          "quoteItems": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/QuoteItemModel"
+            }
+          }
+        }
+      },
+      "StatusModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "QuoteItemModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quoteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "itemNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "leadTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPartNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "extension": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "WorkOrderModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purchaseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "scheduledStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actualStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "actualEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hasNCR": {
+            "type": "boolean"
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "location": {
+            "nullable": true,
+            "oneOf": [
+              { "type": "null"},
+              {
+                "$ref": "#/components/schemas/LocationModel"
+              }
+            ]
+          },
+          "product": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProductModel"
+              }
+            ]
+          },
+          "purchase": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PurchaseModel"
+              }
+            ]
+          },
+          "workOrderParts": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderPartModel"
+            }
+          },
+          "workOrderTasks": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderTaskModel"
+            }
+          }
+        }
       },
       "PurchaseModel": {
         "type": "object",
@@ -8808,115 +9462,11 @@
           }
         }
       },
-      "StatusModel": {
+      "PurchaseOrderModel": {
         "type": "object",
         "additionalProperties": true,
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "WorkOrderModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "purchaseId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "productId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "price": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "scheduledStartDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "scheduledEndDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "actualStartDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "actualEndDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "hasNCR": {
-            "type": "boolean"
-          },
-          "locationId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "location": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/LocationModel"
-              }
-            ]
-          },
-          "product": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProductModel"
-              }
-            ]
-          },
-          "purchase": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/PurchaseModel"
-              }
-            ]
-          },
-          "workOrderParts": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderPartModel"
-            }
-          },
-          "workOrderTasks": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderTaskModel"
-            }
-          }
-        }
-      },
-      "ProductModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "revision": {
             "type": "integer",
             "format": "int32"
           },
@@ -8924,47 +9474,48 @@
             "type": "integer",
             "format": "int32"
           },
-          "customerRequirementId": {
-            "type": "integer",
-            "format": "int32",
+          "name": {
+            "type": "string",
             "nullable": true
           },
-          "procedureId": {
-            "type": "integer",
-            "format": "int32"
+          "referencePO": {
+            "type": "string",
+            "nullable": true
           },
-          "partId": {
-            "type": "integer",
-            "format": "int32"
+          "referenceName": {
+            "type": "string",
+            "nullable": true
           },
-          "equipmentCost": {
-            "type": "number",
-            "format": "decimal"
+          "openDate": {
+            "type": "string",
+            "format": "date-time"
           },
-          "materialCost": {
-            "type": "number",
-            "format": "decimal"
+          "closeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
-          "salesTax": {
+          "totalPurchaseLimit": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "totalSalePrice": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "cycleTime": {
-            "type": "integer",
-            "format": "int32",
+          "customerReference": {
+            "type": "string",
             "nullable": true
           },
-          "workOrders": {
-            "type": "array",
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "location": {
             "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderModel"
-            }
+            "oneOf": [
+              { "type": "null" },
+              {
+                "$ref": "#/components/schemas/LocationModel"
+              }
+            ]
           }
         }
       },
@@ -9157,11 +9708,27 @@
           }
         }
       },
-      "PurchaseOrderModel": {
+      "CreateProductRequest": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "revision",
+          "customerId",
+          "procedureId",
+          "partId",
+          "laborCost",
+          "equipmentCost",
+          "materialCost",
+          "totalSalePrice"
+        ],
         "properties": {
-          "id": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "revision": {
             "type": "integer",
             "format": "int32"
           },
@@ -9169,50 +9736,170 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
-            "type": "string",
+          "customerRequirementId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "referencePO": {
-            "type": "string",
-            "nullable": true
+          "procedureId": {
+            "type": "integer",
+            "format": "int32"
           },
-          "referenceName": {
-            "type": "string",
-            "nullable": true
+          "partId": {
+            "type": "integer",
+            "format": "int32"
           },
-          "openDate": {
-            "type": "string",
-            "format": "date-time"
+          "laborCost": {
+            "type": "number",
+            "format": "decimal"
           },
-          "closeDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+          "equipmentCost": {
+            "type": "number",
+            "format": "decimal"
           },
-          "totalPurchaseLimit": {
+          "materialCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "salesTax": {
             "type": "number",
             "format": "decimal",
             "nullable": true
           },
-          "customerReference": {
-            "type": "string",
+          "totalSalePrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "cycleTime": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "locationId": {
+          "quoteId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfIEnumerableOfProductModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ProductModel"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UpdateProductRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
-          "location": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null" },
-              {
-                "$ref": "#/components/schemas/LocationModel"
-              }
-            ]
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "customerRequirementId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "procedureId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "partId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "equipmentCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "laborCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "materialCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "salesTax": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "totalSalePrice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "cycleTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "quoteId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
+      },
+      "AuditActionResultOfICollectionOfPurchaseModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/PurchaseModel"
+                }
+              }
+            }
+          }
+        ]
       },
       "AuditActionResultOfPurchaseModel": {
         "allOf": [
@@ -9535,6 +10222,248 @@
               "id": {
                 "type": "integer",
                 "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "AuditActionResultOfIEnumerableOfQuotesProductsView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/QuotesProductsView"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "QuotesProductsView": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isProduct": {
+            "type": "boolean"
+          },
+          "isDeletable": {
+            "type": "boolean"
+          },
+          "submittedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "company": {
+            "type": "string",
+            "nullable": true
+          },
+          "submittedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "partKitNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedureName": {
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "representative": {
+            "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "equipmentCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "materialCost": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "salesTax": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "cycleTime": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AuditActionResultOfQuoteModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/QuoteModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CreateQuoteRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "customerId",
+          "quoteItems"
+        ],
+        "properties": {
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contact": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivery": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "processName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "representative": {
+            "type": "string",
+            "nullable": true
+          },
+          "representativeTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "representativeAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "quoteJson": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerRequirementJson": {
+            "type": "string",
+            "nullable": true
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "partKitNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "quoteItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateQuoteItemRequest"
+            }
+          }
+        }
+      },
+      "CreateQuoteItemRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "itemNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "leadTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPartNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "extension": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfIEnumerableOfQuoteModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/QuoteModel"
+                }
               }
             }
           }
