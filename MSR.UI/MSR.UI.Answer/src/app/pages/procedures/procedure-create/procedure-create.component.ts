@@ -20,8 +20,8 @@ export class ProcedureCreateComponent implements OnInit {
   availableProcedureTypes: Array<SelectItem>;
   selectedProcedureType: string;
   menuItems = EnumMenuItem;
-  availableRoles: Array<SelectItem>;
-  selectedRoles: Array<number> = new Array<number>();
+  availableRoles: Array<Role>;
+  selectedRoles: Array<Role>;
   durationTypeOptions: Array<SelectItem>;
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
@@ -34,8 +34,8 @@ export class ProcedureCreateComponent implements OnInit {
 
     this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.availableRoles = response.object.map(s => ({ label: s.name, value: s.id }));
-
+      this.availableRoles = response.object;
+      this.selectedRoles = new Array<Role>();
       this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe(responseHandler((procedureTypeGetResponse) => {
         this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
       }));
@@ -56,8 +56,9 @@ export class ProcedureCreateComponent implements OnInit {
     createProcedureRequest.name = this.procedure.name;
     createProcedureRequest.procedureTypeId = this.selectedProcedureType === undefined ? undefined : Number(this.selectedProcedureType);
     createProcedureRequest.referenceFiles = this.procedure.referenceFiles;
-    createProcedureRequest.roleIds = this.selectedRoles.map(s => s);
+    createProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
 
+    this.globals.showLoader(true);
     this.procedureService.procedurePost(env.apiVersion, createProcedureRequest).subscribe(responseHandler((response) => {
 
       this.router.navigate(['app/procedures/procedures']);
