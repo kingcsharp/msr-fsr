@@ -147,7 +147,7 @@ pipeline {
             steps {
                 script {
                     timeout(activity: true, time: 5) {
-                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: false, description: '', name: 'choice')]
+                        input message: 'Which environment do you want to deploy to?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
                     deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                     deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
