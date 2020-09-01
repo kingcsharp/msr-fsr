@@ -39,6 +39,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             var purchaseOrderList = await purchaseOrders.Select(po => new PurchaseOrderView
             {
+                Id = po.Id,
                 Name = po.Name,
                 CustomerId = po.CustomerId,
                 CustomerReferencePO = po.CustomerReference,
