@@ -12,6 +12,7 @@ import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
 
 declare let jQuery: any;
 
@@ -101,10 +102,7 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   onClickEdit(purchaseOrder: PurchaseOrder) {
-    //TODO: Edit function
-    this.currentPO = purchaseOrder;
-    this.setCurrentCustomer(this.currentPO, purchaseOrder);
-
+    this.currentPO =  this.getPuchaseOrder(purchaseOrder);
     this.display = true;
   }
 
@@ -160,11 +158,20 @@ export class PurchaseOrdersComponent implements OnInit {
 
   setCustomerId(purchaseOrderRequest: any, purchaseOrder: any) {
     purchaseOrderRequest.customer = purchaseOrder.customer.id;
-    debugger;
   }
 
   onClickAdd() {
-    //TODO: Add function
+    this.currentPO =  this.getPuchaseOrder(undefined);
+    this.display = true;
+  }
+
+  getPuchaseOrder(purchaseOrder) {
+    if (purchaseOrder === undefined) {
+      return new PurchaseOrder();
+    }
+    let ret = copyObj(purchaseOrder);
+    this.setCurrentCustomer(ret, purchaseOrder);
+    return ret;
   }
 
   clseDialog() {
