@@ -3448,6 +3448,7 @@
         "tags": [
           "PurchaseOrder"
         ],
+        "summary": "UpdatePurchaseOrder",
         "operationId": "PurchaseOrder_UpdatePurchaseOrder",
         "parameters": [
           {
@@ -3491,6 +3492,7 @@
         "tags": [
           "PurchaseOrder"
         ],
+        "summary": "DeletePurchaseOrder",
         "operationId": "PurchaseOrder_DeletePurchaseOrder",
         "parameters": [
           {
@@ -10117,6 +10119,11 @@
           },
           "status": {
             "type": "string",
+            "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         }
