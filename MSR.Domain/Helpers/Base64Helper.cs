@@ -10,6 +10,17 @@ namespace MSR.Domain.Helpers
 
         public static string ByteOrderMarkUtf8 => Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
         public byte[] FileContents { get; set; }
+
+        /// <summary>
+        /// Parse URL encoded base64 concent
+        /// </summary>
+        /// <description>
+        /// Parses URL encoded base64 content.  This includes the leading text, per
+        /// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+        /// e.g.
+        /// data:text/plain;base64,aGVsbG9vCg==
+        /// <param name="base64Content"></param>
+        /// <returns></returns>
         public static Base64Helper Parse(string base64Content)
         {
             if (string.IsNullOrWhiteSpace(base64Content))

@@ -45,7 +45,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureTypeCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureType>();
+            return ret.ToOkObjectResponse<ProcedureType>("Procedure type successfully created");
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureType() { id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<bool>();
+            return ret.ToOkObjectResponse<bool>("Procedure type successfully deleted");
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToUpdateProcedureTypeCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureType>();
+            return ret.ToOkObjectResponse<ProcedureType>("Procedure type successfully updated");
         }
     }
 }
