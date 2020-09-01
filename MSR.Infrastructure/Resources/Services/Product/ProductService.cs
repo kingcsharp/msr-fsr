@@ -27,11 +27,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<ICollection<ProductModel>> GetProductsAsync()
         {
             var productList = new List<ProductModel>();
-            var products = _unitOfWork.Products
-                                .Query()
-                                .Include(p => p.Procedure)
-                                .Include( p => p.Customer)
-                                .Include(q => q.Quote);
+            var products = _unitOfWork.Products.Query();
 
             foreach (var product in await products.ToListAsync())
             {
@@ -65,10 +61,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             IQueryable<Product> products;
             products = _unitOfWork.Products
                         .Query()
-                        .Include(q => q.Procedure)
-                        .Include(q => q.Customer)
                         .Include(q => q.Part)
-                        .Include(q => q.Quote)
                         .Where(q => q.Id == id)
                         .AsQueryable();
 
