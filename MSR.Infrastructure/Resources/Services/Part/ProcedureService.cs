@@ -52,7 +52,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 Procedure procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
@@ -92,7 +92,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 var procedure = _mapper.Map(command, current);
                 _unitOfWork.Procedures.Update(procedure);
@@ -142,7 +142,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 var procstep = _mapper.Map<ProcedureStep>(command);
                 _unitOfWork.ProcedureSteps.Add(procstep);
@@ -179,7 +179,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 var step = _mapper.Map(command, current);
                 _unitOfWork.ProcedureSteps.Update(step);
@@ -208,7 +208,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             {
                 throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
             }
-            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
                 _unitOfWork.Procedures.Delete(false, current);
                 await _unitOfWork.SaveChangesAsync();
             } else {
@@ -227,7 +227,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             {
                 throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
             }
-            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
                 _unitOfWork.ProcedureSteps.Delete(false, current);
                 await _unitOfWork.SaveChangesAsync();
             } else {

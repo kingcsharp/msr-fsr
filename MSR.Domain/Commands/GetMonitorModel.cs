@@ -5,6 +5,6 @@ namespace MSR.Domain.Commands
     public class GetMonitorModel : Command
     {
         public int? procedureStepId;
-        public int procedureStepMonitorId;
+        public int? procedureStepMonitorId;
     }
 }
