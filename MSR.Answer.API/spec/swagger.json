@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://fc507b818c3c.ngrok.io"
+      "url": "https://2421c96cbfde.ngrok.io"
     }
   ],
   "paths": {
@@ -3170,7 +3170,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": 1
             },
             "x-position": 2
           }
@@ -5309,6 +5310,7 @@
           "timeZone": {
             "nullable": true,
             "oneOf": [
+              { "type": "null" },
               {
                 "$ref": "#/components/schemas/TimeZoneModel"
               }
@@ -5338,6 +5340,7 @@
           "fileModel": {
             "nullable": true,
             "oneOf": [
+              { "type": "null" },
               {
                 "$ref": "#/components/schemas/FileModel"
               }
@@ -8758,6 +8761,7 @@
           "status": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"} ,
               {
                 "$ref": "#/components/schemas/StatusModel"
               }
@@ -8773,6 +8777,7 @@
           "location": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"} ,
               {
                 "$ref": "#/components/schemas/LocationModel"
               }
