@@ -1,9 +1,10 @@
+using MSR.Domain.Models.BaseModels;
 using System;
 using System.Collections.Generic;
 
 namespace MSR.Domain.Models
 {
-    public class PurchaseModel
+    public class PurchaseModel : CreatableModel
     {
         public int Id { get; set; }
         public int PurchaseOrderId { get; set; }

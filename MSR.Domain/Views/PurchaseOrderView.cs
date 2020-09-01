@@ -1,9 +1,10 @@
+using MSR.Domain.Models.BaseModels;
 using System;
 using System.Collections.Generic;
 
 namespace MSR.Domain.Views
 {
-    public class PurchaseOrderView
+    public class PurchaseOrderView : CreatableModel
     {
         public int Id { get; set; }
 

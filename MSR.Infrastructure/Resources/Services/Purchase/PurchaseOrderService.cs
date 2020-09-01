@@ -37,6 +37,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 purchaseOrders = purchaseOrders.Where(i => i.Id == command.Id);
             }
 
+            // TODO: I think this should be a automap
             var purchaseOrderList = await purchaseOrders.Select(po => new PurchaseOrderView
             {
                 Id = po.Id,
@@ -46,7 +47,10 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 OpenDate = po.OpenDate,
                 CloseDate = po.CloseDate,
                 Revision = po.Revision,
-                TotalPurchaseLimit = po.TotalPurchaseLimit
+                TotalPurchaseLimit = po.TotalPurchaseLimit,
+                CreatedBy = po.CreatedBy,
+                CreatedOn = po.CreatedOn,
+                Created = _mapper.Map<UserModel>(po.Created)
             }).ToListAsync();
 
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
