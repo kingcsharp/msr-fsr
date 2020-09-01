@@ -68,13 +68,13 @@
                 </cmh-file-uploader>
             </div>
             <!-- TODO: Add Documents reference here when A3-164 is finished-->
-            <div class="form-group">
+            <div class="form-group" *ngIf="availableRoles !== undefined && selectedRoles !== undefined">
                 <label for="roles" class="col-form-label text-left">
                     Roles
                 </label>
-                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="procedureTemplate.roles"
-                    data-cy="roles-multiselect">
-                </p-multiSelect>
+                <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="selectedRoles"
+                defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
+              </multiselect-wrapper-form>
             </div>
             <div class="form-group" *ngIf='procedureTemplate !== undefined'>
                 <label for="comment" class="col-form-label text-left">

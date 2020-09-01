@@ -41,15 +41,9 @@
                 <label for="roles" class="col-form-label text-left">
                     Roles
                 </label>
-                <p-multiSelect name="role" [options]="availableRoles" [(ngModel)]="selectedRoles" optionLabel="name"
-                    data-cy="roles-multiselect">
-                    <ng-template let-value pTemplate="selectedItems">
-                        <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">
-                            <span>{{val.name}}</span>
-                        </div>
-                        <span *ngIf="!value || value.length === 0">Select Roles</span>
-                    </ng-template>
-                </p-multiSelect>
+                <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="selectedRoles"
+                defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
+              </multiselect-wrapper-form>
             </div>
         </form>
     </div>

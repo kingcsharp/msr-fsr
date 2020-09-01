@@ -5,7 +5,7 @@ import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService,
 ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, CreateProcedureStepMonitorRequest,
-FileRequest, UpdateProcedureStepRequest, RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest } from '../../../services/api.client.generated';
+FileRequest, UpdateProcedureStepRequest, RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest, Role } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
@@ -26,8 +26,8 @@ export class ProcedureEditComponent implements OnInit {
   procedureSteps: Array<any>;
   availableProcedureTypes: Array<SelectItem>;
   menuItems = EnumMenuItem;
-  availableRoles: Array<SelectItem>;
-  selectedRoles: Array<number> = new Array<number>();
+  availableRoles: Array<Role>;
+  selectedRoles: Array<Role>;
   durationTypeOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
   canEdit: boolean = false;
@@ -100,7 +100,7 @@ export class ProcedureEditComponent implements OnInit {
       this.globals.showLoader(true);
       this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((roleResponse) => {
 
-        this.availableRoles = roleResponse.object.map(s => ({ label: s.name, value: s.id }));
+        this.availableRoles = roleResponse.object;
 
         this.globals.showLoader(true);
         this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe((procedureTypeGetResponse) => {
@@ -138,6 +138,13 @@ export class ProcedureEditComponent implements OnInit {
         this.procedureService.procedureGet(this.procedure.id, env.apiVersion).subscribe(responseHandler((procedrueGetResponse) => {
 
           this.procedure = procedrueGetResponse.object[0];
+          this.selectedRoles = new Array<Role>();
+          this.procedure.roles?.forEach(role => {
+
+            let selectedRole = this.availableRoles.find(s => s.id === role.id);
+
+            this.selectedRoles.push(selectedRole);
+          });
 
           if (this.procedure.referenceFiles === undefined) {
             this.procedure.referenceFiles = [];
@@ -205,7 +212,7 @@ export class ProcedureEditComponent implements OnInit {
         procedureStep.selectedRoles = new Array<number>();
         procedureStep.roles?.forEach(role => {
 
-          procedureStep.selectedRoles.push(this.availableRoles.find(s => s.value === role.id).value);
+          procedureStep.selectedRoles.push(role);
 
         });
 
@@ -333,19 +340,9 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.procedureId = procedureStep.procedureId;
     updateProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
     updateProcedureStepRequest.replacementCost = procedureStep.replacementCost;
-    updateProcedureStepRequest.roles = new Array<RoleRequest>();
 
-    if (procedureStep.selectedRoles.length !== 0) {
+    updateProcedureStepRequest.roles = procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id}));
 
-      procedureStep.selectedRoles?.foreach(role => {
-
-        let roleRequest = new RoleRequest();
-        roleRequest.id = role;
-
-        updateProcedureStepRequest.roles.push(roleRequest);
-
-      });
-    }
 
     updateProcedureStepRequest.text = procedureStep.text;
     updateProcedureStepRequest.title = procedureStep.title;
@@ -371,7 +368,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.name = procedure.name;
     updateProcedureRequest.procedureTypeId = procedure.procedureTypeId;
     updateProcedureRequest.referenceFiles = procedure.referenceFiles;
-    updateProcedureRequest.roleIds = this.selectedRoles;
+    updateProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
     this.globals.showLoader(true);
     this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).subscribe((response) => {
 

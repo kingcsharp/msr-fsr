@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { RoleService, ProcedureStepTemplateService  , ProcedureStepTemplateModel, CreateProcedureTemplateRequest,
-  UpdateProcedureTemplateRequest, ProcedureTemplateService, ProcedureService, EnumMenuItem, FileRequest } from '../../../services/api.client.generated';
+  UpdateProcedureTemplateRequest, ProcedureTemplateService, ProcedureService, EnumMenuItem, FileRequest, Role } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
@@ -21,8 +21,8 @@ export class TemplateComponent implements OnInit {
   procedureTemplate: ProcedureStepTemplate = new ProcedureStepTemplate();
   baseStartOnCounterOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
-  availableRoles: Array<SelectItem>;
-  selectedRoles: Array<number>;
+  availableRoles: Array<Role>;
+  selectedRoles: Array<Role>;
 
   constructor(private procedureTemplateService: ProcedureTemplateService, private route: ActivatedRoute,
     public elementReference: ElementRef, public roleService: RoleService, private router: Router, public globals: Globals) { }
@@ -42,12 +42,13 @@ export class TemplateComponent implements OnInit {
     this.procedureTemplate.text = '';
     this.procedureTemplate.comments = '';
     this.procedureTemplate.referenceFiles = new Array<any>();
+    
 
     this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.availableRoles = response.object.map(s => ({label: s.name, value: s.id}));
-
+      this.availableRoles = response.object;
+      
       this.setProcedureTemplateForEditOrCreate();
 
     }));
@@ -70,6 +71,13 @@ export class TemplateComponent implements OnInit {
 
 
           this.procedureTemplate = response.object[0];
+          this.selectedRoles = new Array<Role>();
+          this.procedureTemplate?.roles?.forEach(id => {
+
+              let preSelectedRole = this.availableRoles.find(s => s.id === id);
+              this.selectedRoles.push(preSelectedRole);
+
+          });
 
           if (this.procedureTemplate.referenceFiles === undefined) {
             this.procedureTemplate.referenceFiles = [];
@@ -77,6 +85,8 @@ export class TemplateComponent implements OnInit {
 
         }));
 
+      }else{
+        this.selectedRoles = new Array<Role>();
       }
 
     });
@@ -90,7 +100,7 @@ export class TemplateComponent implements OnInit {
     createProcedureTemplateRequest.referenceFiles = this.procedureTemplate.referenceFiles;
     createProcedureTemplateRequest.referenceProcedures = this.procedureTemplate.referenceProcedures;
     createProcedureTemplateRequest.replacementCost = this.procedureTemplate.replacementCost;
-    createProcedureTemplateRequest.roles = this.procedureTemplate.roles;
+    createProcedureTemplateRequest.roles = this.selectedRoles.map(s => s.id);
     createProcedureTemplateRequest.text = this.procedureTemplate.text;
     createProcedureTemplateRequest.title = this.procedureTemplate.title;
     createProcedureTemplateRequest.usefulLife = this.procedureTemplate.usefulLife;
@@ -111,7 +121,7 @@ export class TemplateComponent implements OnInit {
     updateProcedureTemplateRequest.referenceFiles = this.procedureTemplate.referenceFiles;
     updateProcedureTemplateRequest.referenceProcedures = this.procedureTemplate.referenceProcedures;
     updateProcedureTemplateRequest.replacementCost = this.procedureTemplate.replacementCost;
-    updateProcedureTemplateRequest.roles = this.procedureTemplate.roles;
+    updateProcedureTemplateRequest.roles = this.selectedRoles.map(s => s.id);
     updateProcedureTemplateRequest.text = this.procedureTemplate.text;
     updateProcedureTemplateRequest.title = this.procedureTemplate.title;
     updateProcedureTemplateRequest.usefulLife = this.procedureTemplate.usefulLife;
