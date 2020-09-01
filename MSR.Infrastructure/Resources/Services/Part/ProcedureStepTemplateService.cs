@@ -129,7 +129,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepTemplate)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (CurrentUser.HasPrivilege(EnumMenuItem.Procedures, EnumPrivilege.CanDelete)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
                 _unitOfWork.ProcedureStepTemplates.Delete(false, current);
             } else {
                 throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplateModel)} uid {CurrentUser.GetId()}");
