@@ -24,8 +24,8 @@ import { PurchaseCreateComponent } from './purchase-create/purchase-create.compo
 export const routes = [
   { path: '', redirectTo: 'invoices', pathMatch: 'prefix' },
   { path: 'invoices', component: InvoiceComponent, pathMatch: 'full' },
-  { path: 'purchases', component: PurchasesComponent, pathMatch: 'full'},
-  { path: 'purchase-create', component: PurchaseCreateComponent, pathMatch: 'full'},
+  { path: 'purchaseorder/purchases', component: PurchasesComponent, pathMatch: 'full'},
+  { path: 'purchaseorder/purchase-create', component: PurchaseCreateComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
