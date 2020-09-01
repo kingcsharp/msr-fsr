@@ -150,6 +150,8 @@ pipeline {
                     timeout(activity: true, time: 5) {
                         input message: 'Which environment do you want to deploy to?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
+                    sh "sudo sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                    sh "cat ${API_COMPOSE}"
                     deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                     deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
                 }
@@ -163,6 +165,8 @@ pipeline {
                     timeout(activity: true, time: 5) {
                         input message: 'Are you ready to deploy to PRODUCTION?', parameters: [booleanParam(defaultValue: false, description: '', name: 'choice')]
                     }
+                    sh "sudo sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
+                    sh "cat ${API_COMPOSE}"
                     deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                     deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
                 }
