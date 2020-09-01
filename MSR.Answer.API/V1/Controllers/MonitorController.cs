@@ -51,7 +51,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<MonitorModel>))]
-        public async Task<IActionResult> MonitorGetMonitor([FromQuery]int id)
+        public async Task<IActionResult> MonitorGetMonitor([FromQuery]int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetMonitorModel(){
                     procedureStepMonitorId = id

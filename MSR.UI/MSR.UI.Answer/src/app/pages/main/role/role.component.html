@@ -34,20 +34,20 @@
                 <th grid-input-filter [dt]="dt" searchField="name" [hidden]="!cg.isVisibleCol('name',gridSettings)"
                     [gridSettings]="gridSettings">
                 </th>
-                <th [hidden]="!cg.isVisibleCol('isCertificationRole',gridSettings)" data-cy="isKit-grid">
+                <th [hidden]="!cg.isVisibleCol('isCertificationRole',gridSettings)" data-cy="isCertificationRole-grid">
                     <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isCertificationRole"
                         filterId="isCertificationRole" defaultText="Select Is Certification Role" defaultTextTooltip=""
                         [datatable]="dt">
                     </multiselect-wrapper>
                 </th>
-                <th [hidden]="!cg.isVisibleCol('parentRoles',gridSettings)" data-cy="isKit-grid">
+                <th [hidden]="!cg.isVisibleCol('parentRoles',gridSettings)" data-cy="parentRoles-grid">
                     <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="data" filterId="parentRoles"
                         [multipleValues]="true" defaultText="Select Parent Roles" defaultTextTooltip=""
                         [datatable]="dt">
                     </multiselect-wrapper>
                 </th>
                 <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-                    <div class="position-relative" tooltip="Search by Created Date">
+                    <div class="position-relative" tooltip="Search by Created Date"  data-cy="createdOn-grid">
                         <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
                         </pcalendar-wrapper>
                     </div>
@@ -55,7 +55,7 @@
                 <th grid-input-filter [dt]="dt" searchField="createdByName"
                     [hidden]="!cg.isVisibleCol('createdByName',gridSettings)" [gridSettings]="gridSettings">
                 </th>
-                <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+                <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)"  data-cy="lastUpdatedOn-grid">
                     <div class="position-relative" tooltip="Search by Last Updated On Date">
                         <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="lastUpdatedOn" [datatable]="dt">
                         </pcalendar-wrapper>
@@ -152,7 +152,7 @@
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
                            Parent Roles
                         </label>
-                        <div class="col-md-10 col-12">
+                        <div class="col-md-10 col-12" data-cy="parentroles-modal">
                             <multiselect-wrapper-form [options]="availableRoles" defaultId="id" [limit]="30"
                                 [(model)]="currentRole.parentRoles"  defaultLabel="Select Parent Roles">
                             </multiselect-wrapper-form>

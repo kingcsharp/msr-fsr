@@ -107,6 +107,7 @@ Cypress.Commands.add("showDropdownTrackableModel", (cyGridName) => {
 
 Cypress.Commands.add("multiselectClick", (cyproperty, containsName) => {
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').click();
+    cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').find('input[type=text]:last').clear();
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').find('input[type=text]:last').type(containsName);
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').find('.ui-multiselect-items-wrapper').contains(containsName).click();
     cy.get(`[data-cy=${cyproperty}]`).find('.ui-multiselect').click();

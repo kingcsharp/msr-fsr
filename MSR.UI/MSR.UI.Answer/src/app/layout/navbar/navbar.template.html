@@ -56,7 +56,7 @@
     </li>
     <li class="divider"></li>
     <li class="nav-item dropdown d-sm-down-none">
-      <a href="javascript:;" id="account" tooltip="Account" class="nav-link dropdown-toggle" data-toggle="dropdown">
+      <a href="javascript:;" id="account" data-cy="account-a"tooltip="Account" class="nav-link dropdown-toggle" data-toggle="dropdown">
         <img *ngIf="globals.user.fileModel === undefined" width="34" src="assets/img/2.png" alt="">
         <img *ngIf="globals.user.fileModel !== undefined" width="34" [src]="globals.user.fileModel.fileURL" alt="">
       </a>
@@ -67,7 +67,7 @@
           {{globals.user.firstName + ' ' + globals.user.lastName}}
         </li>
         <li role="presentation">
-          <a routerLink="../app/people/profile" class="dropdown-item">
+          <a data-cy="profile-link" routerLink="../app/people/profile" class="dropdown-item">
             <i class="fad fa-user"></i>
             Profile
           </a>

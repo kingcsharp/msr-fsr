@@ -54,7 +54,6 @@ export class RoleComponent implements OnInit {
     new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
     new ColumnsSaved({ id: 'isCertificationRole', label: 'Is Certification Role', visible: true }),
     new ColumnsSaved({ id: 'parentRoles', label: 'Parent Roles', visible: true }),
-
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
