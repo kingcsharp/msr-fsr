@@ -25,7 +25,6 @@ import { ProductDefinitionComponent } from './product-definition/product-definit
 import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.component';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { PurchaseOrderCreateComponent } from './purchase-order-create/purchase-order-create.component';
-import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import { QuotesProductsComponent } from './quotes-products/quotes-products.component';
 
@@ -36,7 +35,6 @@ export const routes = [
   { path: 'product/:mode/:id', component: ProductDefinitionComponent, pathMatch: 'full'},
   { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full'},
   { path: 'purchaseorder-create', component: PurchaseOrderCreateComponent, pathMatch: 'full'},
-  { path: 'purchase-create', component: PurchaseCreateComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
@@ -45,7 +43,6 @@ export const routes = [
     ProductDefinitionComponent,
     PurchaseOrdersComponent,
     PurchaseOrderCreateComponent,
-    PurchaseCreateComponent,
     QuotesProductsComponent,
   ],
   imports: [

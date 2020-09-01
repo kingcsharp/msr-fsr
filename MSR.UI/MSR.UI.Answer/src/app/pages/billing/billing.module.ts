@@ -19,17 +19,20 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { PurchasesComponent } from './purchases/purchases.component';
+import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
 
 export const routes = [
   { path: '', redirectTo: 'invoices', pathMatch: 'prefix' },
   { path: 'invoices', component: InvoiceComponent, pathMatch: 'full' },
   { path: 'purchases', component: PurchasesComponent, pathMatch: 'full'},
+  { path: 'purchase-create', component: PurchaseCreateComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
   declarations: [
     InvoiceComponent,
-    PurchasesComponent
+    PurchasesComponent,
+    PurchaseCreateComponent,
   ],
   imports: [
     UtilsModule,
