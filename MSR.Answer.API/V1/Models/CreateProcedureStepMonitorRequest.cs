@@ -11,6 +11,7 @@ using System;
 using System.Text;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Answer.API.V1.Models
 {
@@ -29,6 +30,7 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets MonitorType
         /// </summary>
+        [Required]
         [DataMember(Name="monitorType")]
         public string MonitorType { get; set; }
 

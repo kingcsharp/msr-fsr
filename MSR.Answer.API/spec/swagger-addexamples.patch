@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-09-01 11:02:14.625078600 -0700
-+++ swagger-work.json	2020-09-01 11:02:14.692403900 -0700
+--- swagger-work.json.orig	2020-09-01 11:22:59.674178400 -0700
++++ swagger-work.json	2020-09-01 11:22:59.742470600 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -1145,7 +1145,7 @@
          }
        },
        "AuditActionResultOfProcedureStepMonitor": {
-@@ -7840,6 +7997,14 @@
+@@ -7843,6 +8000,14 @@
              "description": "Gets or Sets SendEmailNotification",
              "nullable": true
            }
@@ -1160,7 +1160,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepMonitor": {
-@@ -7903,6 +8068,11 @@
+@@ -7906,6 +8071,11 @@
              "description": "Gets or Sets SendEmailNotification",
              "nullable": true
            }
@@ -1172,7 +1172,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTemplateModel": {
-@@ -8112,6 +8282,12 @@
+@@ -8115,6 +8285,12 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1185,7 +1185,7 @@
          }
        },
        "UpdateProcedureStepTemplateRequest": {
-@@ -8202,6 +8378,11 @@
+@@ -8205,6 +8381,11 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1197,7 +1197,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTypeModel": {
-@@ -8337,6 +8518,12 @@
+@@ -8340,6 +8521,12 @@
                "format": "int32"
              }
            }
@@ -1210,7 +1210,7 @@
          }
        },
        "UpdateProcedureTemplateRequest": {
-@@ -8433,6 +8620,11 @@
+@@ -8436,6 +8623,11 @@
                "format": "int32"
              }
            }
@@ -1222,7 +1222,7 @@
          }
        },
        "AuditActionResultOfProcedureType": {
-@@ -8475,6 +8667,10 @@
+@@ -8478,6 +8670,10 @@
              "description": "Gets or Sets MajorGroup",
              "nullable": true
            }
@@ -1233,7 +1233,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureType": {
-@@ -8519,6 +8715,10 @@
+@@ -8522,6 +8718,10 @@
              "description": "Gets or Sets MajorGroup",
              "nullable": true
            }
@@ -1244,7 +1244,7 @@
          }
        },
        "AuditActionResultOfProductModel": {
-@@ -8567,6 +8767,7 @@
+@@ -8570,6 +8770,7 @@
                "customer": {
                  "nullable": true,
                  "oneOf": [
@@ -1252,7 +1252,7 @@
                    {
                      "$ref": "#/components/schemas/Customer"
                    }
-@@ -8636,6 +8837,7 @@
+@@ -8639,6 +8840,7 @@
                "quote": {
                  "nullable": true,
                  "oneOf": [
@@ -1260,7 +1260,7 @@
                    {
                      "$ref": "#/components/schemas/QuoteModel"
                    }
-@@ -8735,6 +8937,7 @@
+@@ -8738,6 +8940,7 @@
            "status": {
              "nullable": true,
              "oneOf": [
@@ -1268,7 +1268,7 @@
                {
                  "$ref": "#/components/schemas/StatusModel"
                }
-@@ -8872,6 +9075,7 @@
+@@ -8875,6 +9078,7 @@
            "location": {
              "nullable": true,
              "oneOf": [
@@ -1276,7 +1276,7 @@
                {
                  "$ref": "#/components/schemas/LocationModel"
                }
-@@ -9619,6 +9823,10 @@
+@@ -9622,6 +9826,10 @@
                "format": "int32"
              }
            }
@@ -1287,7 +1287,7 @@
          }
        },
        "UpdateRoleRequest": {
-@@ -9837,6 +10045,10 @@
+@@ -9840,6 +10048,10 @@
                }
              ]
            }
@@ -1298,7 +1298,7 @@
          }
        },
        "UpdateUserRequest": {
-@@ -9857,7 +10069,11 @@
+@@ -9860,7 +10072,11 @@
                }
              }
            }
@@ -1311,7 +1311,7 @@
        },
        "CreateUserRoleRequest": {
          "type": "object",
-@@ -10819,6 +11035,14 @@
+@@ -10822,6 +11038,14 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1326,7 +1326,7 @@
          }
        },
        "UpdateWorkflowGroupRequest": {
-@@ -10839,7 +11063,16 @@
+@@ -10842,7 +11066,16 @@
                }
              }
            }
@@ -1344,7 +1344,7 @@
        },
        "AuditActionResultOfICollectionOfWorkflowStageModel": {
          "allOf": [
-@@ -10952,6 +11185,10 @@
+@@ -10955,6 +11188,10 @@
                "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
              }
            }
@@ -1355,7 +1355,7 @@
          }
        },
        "UpdateWorkflowStageRequest": {
-@@ -10972,7 +11209,12 @@
+@@ -10975,7 +11212,12 @@
                }
              }
            }

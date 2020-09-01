@@ -7956,6 +7956,9 @@
         "type": "object",
         "description": " ",
         "additionalProperties": true,
+        "required": [
+          "monitorType"
+        ],
         "properties": {
           "inputType": {
             "type": "string",
@@ -7965,7 +7968,7 @@
           "monitorType": {
             "type": "string",
             "description": "Gets or Sets MonitorType",
-            "nullable": true
+            "minLength": 1
           },
           "procedureStepId": {
             "type": "integer",
