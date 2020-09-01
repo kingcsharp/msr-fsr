@@ -9379,158 +9379,172 @@
         }
       },
       "PurchaseModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreatableModel"
           },
-          "purchaseOrderId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "purchaseOrderProductId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "customerPurchaseNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "locationId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "serialNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "qty": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "customerLineNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "mttn": {
-            "type": "string",
-            "nullable": true
-          },
-          "dueDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "purchasePrice": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "statusId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "status": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null"},
-              {
-                "$ref": "#/components/schemas/StatusModel"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "purchaseOrderId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "purchaseOrderProductId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "customerPurchaseNumber": {
+                "type": "string",
+                "nullable": true
+              },
+              "locationId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "serialNumber": {
+                "type": "string",
+                "nullable": true
+              },
+              "qty": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "customerLineNumber": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "mttn": {
+                "type": "string",
+                "nullable": true
+              },
+              "dueDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "purchasePrice": {
+                "type": "number",
+                "format": "decimal"
+              },
+              "statusId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "status": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/StatusModel"
+                  }
+                ]
+              },
+              "workOrders": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/WorkOrderModel"
+                }
+              },
+              "location": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/LocationModel"
+                  }
+                ]
+              },
+              "purchaseOrder": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/PurchaseOrderModel"
+                  }
+                ]
+              },
+              "purchaseOrderProduct": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/ProductModel"
+                  }
+                ]
               }
-            ]
-          },
-          "workOrders": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderModel"
             }
-          },
-          "location": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null"},
-              {
-                "$ref": "#/components/schemas/LocationModel"
-              }
-            ]
-          },
-          "purchaseOrder": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null"},
-              {
-                "$ref": "#/components/schemas/PurchaseOrderModel"
-              }
-            ]
-          },
-          "purchaseOrderProduct": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null"},
-              {
-                "$ref": "#/components/schemas/ProductModel"
-              }
-            ]
           }
-        }
+        ]
       },
       "PurchaseOrderModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreatableModel"
           },
-          "customerId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "referencePO": {
-            "type": "string",
-            "nullable": true
-          },
-          "referenceName": {
-            "type": "string",
-            "nullable": true
-          },
-          "openDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "closeDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "totalPurchaseLimit": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "customerReference": {
-            "type": "string",
-            "nullable": true
-          },
-          "locationId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "location": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null" },
-              {
-                "$ref": "#/components/schemas/LocationModel"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "customerId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "referencePO": {
+                "type": "string",
+                "nullable": true
+              },
+              "referenceName": {
+                "type": "string",
+                "nullable": true
+              },
+              "openDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "closeDate": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "totalPurchaseLimit": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "customerReference": {
+                "type": "string",
+                "nullable": true
+              },
+              "locationId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "location": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null" },
+                  {
+                    "$ref": "#/components/schemas/LocationModel"
+                  }
+                ]
               }
-            ]
+            }
           }
-        }
+        ]
       },
       "WorkOrderPartModel": {
         "type": "object",
@@ -9656,6 +9670,7 @@
           "status": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/StatusModel"
               }
@@ -9664,6 +9679,7 @@
           "workOrder": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/WorkOrderModel"
               }
@@ -9689,6 +9705,7 @@
           "workOrderTask": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/WorkOrderTaskModel"
               }
@@ -10047,86 +10064,93 @@
         ]
       },
       "PurchaseOrderView": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreatableModel"
           },
-          "customerId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "customerReferencePO": {
-            "type": "string",
-            "nullable": true
-          },
-          "customerReferenceNo": {
-            "type": "string",
-            "nullable": true
-          },
-          "invoicedBalance": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "uninvoicedBalance": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "balance": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "openDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "closeDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "totalPurchaseLimit": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "customerReference": {
-            "type": "string",
-            "nullable": true
-          },
-          "products": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/PurchaseOrderProductView"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "customerId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "customerName": {
+                "type": "string",
+                "nullable": true
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "customerReferencePO": {
+                "type": "string",
+                "nullable": true
+              },
+              "customerReferenceNo": {
+                "type": "string",
+                "nullable": true
+              },
+              "invoicedBalance": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "uninvoicedBalance": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "balance": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "openDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "closeDate": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "totalPurchaseLimit": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "customerReference": {
+                "type": "string",
+                "nullable": true
+              },
+              "products": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/PurchaseOrderProductView"
+                }
+              },
+              "isDeletable": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string",
+                "nullable": true
+              },
+              "revision": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              }
             }
-          },
-          "isDeletable": {
-            "type": "boolean"
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "revision": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
           }
-        }
+        ]
       },
       "PurchaseOrderProductView": {
         "type": "object",
@@ -10767,6 +10791,7 @@
           "file": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/FileModel"
               }
@@ -11163,6 +11188,7 @@
             "description": " ",
             "nullable": true,
             "oneOf": [
+              { "type": "null" },
               {
                 "$ref": "#/components/schemas/UpdatePartRequest"
               }
@@ -11677,6 +11703,19 @@
               "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
             }
           }
+        },
+        "example" : {
+          "purchaseOrderId": 1,
+          "purchaseOrderProductId": 2,
+          "customerPurchaseNumber": "PURCHASE1598926122",
+          "locationId": 54,
+          "serialNumber": "SN1598926122",
+          "statusId": 1,
+          "qty": 1,
+          "customerLineNumber": 1,
+          "mttn": "1598926122",
+          "dueDate": "2099-12-31",
+          "purchasePrice": 123.45
         }
       },
       "WorkflowGroupRoleMapModel": {
@@ -11917,6 +11956,10 @@
               "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
             }
           }
+        },
+        "example": {
+            "username": "95f27a6f8b3ffa55",
+            "isActive": false
         },
         "example": {
           "menuRoleId": 1,
