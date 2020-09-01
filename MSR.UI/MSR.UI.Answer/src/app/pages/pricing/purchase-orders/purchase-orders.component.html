@@ -130,7 +130,7 @@
         </th>
         <th [hidden]="!cg.isVisibleCol('status', gridSettings)">
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="purchaseOrderStatus" filterId="status"
-          defaultText="Select Status" defaultTextTooltip="" [datatable]="dt">
+            defaultText="Select Status" defaultTextTooltip="" [datatable]="dt">
           </multiselect-wrapper>
         </th>
         <th></th>
@@ -221,7 +221,8 @@
             <label for="firstName" class="col-md-4 col-form-label text-md-right">
               Customer:
             </label>
-            <p-dropdown class="col-md-8" placeholder="Select Client" name="CutomerId" [(ngModel)]="currentPO.customerId"
+            <p-dropdown class="col-md-8" placeholder="Select Client" optionLabel="name" name="CutomerId" 
+            [(ngModel)]="currentPO.customerId"
               [options]="customersData" appendTo="body" [baseZIndex]="100002" required>
             </p-dropdown>
           </div>
@@ -308,8 +309,8 @@
               Products:
             </label>
             <div class="col-md-10 col-12">
-              <multiselect-wrapper-form [defaultLabelProperty]="'name'" [defaultLabel]="'Select Products'"
-                name="ProductId" [options]="productsData">
+              <multiselect-wrapper-form defaultLabelProperty="name" defaultLabel="Select Products" name="ProductId"
+                [options]="productsData">
               </multiselect-wrapper-form>
             </div>
           </div>
