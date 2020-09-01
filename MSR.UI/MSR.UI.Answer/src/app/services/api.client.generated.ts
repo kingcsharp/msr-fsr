@@ -2092,14 +2092,12 @@ export class MonitorService {
      * Get data on a specific monitor
      * @param id (optional) ProcedureStepMonitor ID
      */
-    monitor(id: number | undefined, version: string): Observable<AuditActionResultOfMonitorModel> {
+    monitor(id: number | null | undefined, version: string): Observable<AuditActionResultOfMonitorModel> {
         let url_ = this.baseUrl + "/v{version}/Monitor?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
+        if (id !== undefined && id !== null)
             url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4091,6 +4089,362 @@ export class ProductService {
             }));
         }
         return _observableOf<AuditActionResultOfProductModel>(<any>null);
+    }
+}
+
+@Injectable()
+export class PurchaseService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    /**
+     * Get Purchase by id
+     * @param id (optional) 
+     */
+    purchaseGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
+        let url_ = this.baseUrl + "/v{version}/Purchase?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPurchaseGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPurchaseGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfPurchaseModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfPurchaseModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPurchaseGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPurchaseModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfPurchaseModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfPurchaseModel>(<any>null);
+    }
+
+    /**
+     * Create a new purchase
+     */
+    purchasePost(version: string, request: CreatePurchaseRequest): Observable<AuditActionResultOfPurchaseModel> {
+        let url_ = this.baseUrl + "/v{version}/Purchase";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPurchasePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPurchasePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPurchaseModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPurchaseModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPurchasePost(response: HttpResponseBase): Observable<AuditActionResultOfPurchaseModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPurchaseModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPurchaseModel>(<any>null);
+    }
+}
+
+@Injectable()
+export class PurchaseOrderService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    purchaseOrderGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
+        let url_ = this.baseUrl + "/v{version}/PurchaseOrder?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPurchaseOrderGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPurchaseOrderGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPurchaseOrderGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfPurchaseOrderView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfPurchaseOrderView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfPurchaseOrderView>(<any>null);
+    }
+
+    purchaseOrderPost(version: string, request: CreatePurchaseOrderRequest): Observable<AuditActionResultOfPurchaseOrderView> {
+        let url_ = this.baseUrl + "/v{version}/PurchaseOrder";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPurchaseOrderPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPurchaseOrderPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPurchaseOrderView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPurchaseOrderView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPurchaseOrderPost(response: HttpResponseBase): Observable<AuditActionResultOfPurchaseOrderView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPurchaseOrderView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPurchaseOrderView>(<any>null);
+    }
+
+    purchaseOrderPatch(version: string, request: UpdatePurchaseOrderRequest): Observable<AuditActionResultOfPurchaseOrderView> {
+        let url_ = this.baseUrl + "/v{version}/PurchaseOrder";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPurchaseOrderPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPurchaseOrderPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfPurchaseOrderView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfPurchaseOrderView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPurchaseOrderPatch(response: HttpResponseBase): Observable<AuditActionResultOfPurchaseOrderView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPurchaseOrderView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfPurchaseOrderView>(<any>null);
+    }
+
+    purchaseOrderDelete(id: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/PurchaseOrder/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPurchaseOrderDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPurchaseOrderDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPurchaseOrderDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -7256,7 +7610,7 @@ export interface ITimeZoneModel {
     offset?: number;
 }
 
-export class Role implements IRole {
+export class Role extends TrackableModel implements IRole {
     id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
@@ -7267,15 +7621,11 @@ export class Role implements IRole {
     hasAssignedUsers?: boolean;
 
     constructor(data?: IRole) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
@@ -7321,11 +7671,12 @@ export class Role implements IRole {
                 data["parentRoles"].push(item.toJSON());
         }
         data["hasAssignedUsers"] = this.hasAssignedUsers;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IRole {
+export interface IRole extends ITrackableModel {
     id?: number;
     name?: string | undefined;
     isCertificationRole?: boolean | undefined;
@@ -12468,6 +12819,8 @@ export class ProductModel extends TrackableModel implements IProductModel {
     salesTax?: number | undefined;
     totalSalePrice?: number;
     cycleTime?: number;
+    quoteId?: number | undefined;
+    quote?: QuoteModel | undefined;
     workOrders?: WorkOrderModel[] | undefined;
 
     constructor(data?: IProductModel) {
@@ -12492,6 +12845,8 @@ export class ProductModel extends TrackableModel implements IProductModel {
             this.salesTax = _data["salesTax"];
             this.totalSalePrice = _data["totalSalePrice"];
             this.cycleTime = _data["cycleTime"];
+            this.quoteId = _data["quoteId"];
+            this.quote = _data["quote"] ? QuoteModel.fromJS(_data["quote"]) : <any>undefined;
             if (Array.isArray(_data["workOrders"])) {
                 this.workOrders = [] as any;
                 for (let item of _data["workOrders"])
@@ -12524,6 +12879,8 @@ export class ProductModel extends TrackableModel implements IProductModel {
         data["salesTax"] = this.salesTax;
         data["totalSalePrice"] = this.totalSalePrice;
         data["cycleTime"] = this.cycleTime;
+        data["quoteId"] = this.quoteId;
+        data["quote"] = this.quote ? this.quote.toJSON() : <any>undefined;
         if (Array.isArray(this.workOrders)) {
             data["workOrders"] = [];
             for (let item of this.workOrders)
@@ -12550,7 +12907,253 @@ export interface IProductModel extends ITrackableModel {
     salesTax?: number | undefined;
     totalSalePrice?: number;
     cycleTime?: number;
+    quoteId?: number | undefined;
+    quote?: QuoteModel | undefined;
     workOrders?: WorkOrderModel[] | undefined;
+}
+
+export class QuoteModel implements IQuoteModel {
+    id?: number;
+    submittedDate?: Date;
+    customerId?: number;
+    customer?: Customer | undefined;
+    submittedById?: number;
+    submittedBy?: UserModel | undefined;
+    contact?: string | undefined;
+    delivery?: string | undefined;
+    title?: string | undefined;
+    phone?: string | undefined;
+    processName?: string | undefined;
+    description?: string | undefined;
+    representative?: string | undefined;
+    representativeTitle?: string | undefined;
+    representativeAddress?: string | undefined;
+    partKitNo?: string | undefined;
+    statusId?: number;
+    status?: StatusModel | undefined;
+    quoteJson?: string | undefined;
+    customerRequirementJson?: string | undefined;
+    products?: ProductModel[] | undefined;
+    quoteItems?: QuoteItemModel[] | undefined;
+
+    constructor(data?: IQuoteModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.submittedDate = _data["submittedDate"] ? new Date(_data["submittedDate"].toString()) : <any>undefined;
+            this.customerId = _data["customerId"];
+            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
+            this.submittedById = _data["submittedById"];
+            this.submittedBy = _data["submittedBy"] ? UserModel.fromJS(_data["submittedBy"]) : <any>undefined;
+            this.contact = _data["contact"];
+            this.delivery = _data["delivery"];
+            this.title = _data["title"];
+            this.phone = _data["phone"];
+            this.processName = _data["processName"];
+            this.description = _data["description"];
+            this.representative = _data["representative"];
+            this.representativeTitle = _data["representativeTitle"];
+            this.representativeAddress = _data["representativeAddress"];
+            this.partKitNo = _data["partKitNo"];
+            this.statusId = _data["statusId"];
+            this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
+            this.quoteJson = _data["quoteJson"];
+            this.customerRequirementJson = _data["customerRequirementJson"];
+            if (Array.isArray(_data["products"])) {
+                this.products = [] as any;
+                for (let item of _data["products"])
+                    this.products!.push(ProductModel.fromJS(item));
+            }
+            if (Array.isArray(_data["quoteItems"])) {
+                this.quoteItems = [] as any;
+                for (let item of _data["quoteItems"])
+                    this.quoteItems!.push(QuoteItemModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): QuoteModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuoteModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["submittedDate"] = this.submittedDate ? this.submittedDate.toISOString() : <any>undefined;
+        data["customerId"] = this.customerId;
+        data["customer"] = this.customer ? this.customer.toJSON() : <any>undefined;
+        data["submittedById"] = this.submittedById;
+        data["submittedBy"] = this.submittedBy ? this.submittedBy.toJSON() : <any>undefined;
+        data["contact"] = this.contact;
+        data["delivery"] = this.delivery;
+        data["title"] = this.title;
+        data["phone"] = this.phone;
+        data["processName"] = this.processName;
+        data["description"] = this.description;
+        data["representative"] = this.representative;
+        data["representativeTitle"] = this.representativeTitle;
+        data["representativeAddress"] = this.representativeAddress;
+        data["partKitNo"] = this.partKitNo;
+        data["statusId"] = this.statusId;
+        data["status"] = this.status ? this.status.toJSON() : <any>undefined;
+        data["quoteJson"] = this.quoteJson;
+        data["customerRequirementJson"] = this.customerRequirementJson;
+        if (Array.isArray(this.products)) {
+            data["products"] = [];
+            for (let item of this.products)
+                data["products"].push(item.toJSON());
+        }
+        if (Array.isArray(this.quoteItems)) {
+            data["quoteItems"] = [];
+            for (let item of this.quoteItems)
+                data["quoteItems"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IQuoteModel {
+    id?: number;
+    submittedDate?: Date;
+    customerId?: number;
+    customer?: Customer | undefined;
+    submittedById?: number;
+    submittedBy?: UserModel | undefined;
+    contact?: string | undefined;
+    delivery?: string | undefined;
+    title?: string | undefined;
+    phone?: string | undefined;
+    processName?: string | undefined;
+    description?: string | undefined;
+    representative?: string | undefined;
+    representativeTitle?: string | undefined;
+    representativeAddress?: string | undefined;
+    partKitNo?: string | undefined;
+    statusId?: number;
+    status?: StatusModel | undefined;
+    quoteJson?: string | undefined;
+    customerRequirementJson?: string | undefined;
+    products?: ProductModel[] | undefined;
+    quoteItems?: QuoteItemModel[] | undefined;
+}
+
+export class StatusModel implements IStatusModel {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IStatusModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): StatusModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IStatusModel {
+    id?: number;
+    name?: string | undefined;
+}
+
+export class QuoteItemModel implements IQuoteItemModel {
+    id?: number;
+    quoteId?: number;
+    itemNo?: string | undefined;
+    qty?: number | undefined;
+    description?: string | undefined;
+    leadTime?: string | undefined;
+    customerPartNo?: string | undefined;
+    price?: number | undefined;
+    extension?: number | undefined;
+
+    constructor(data?: IQuoteItemModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.quoteId = _data["quoteId"];
+            this.itemNo = _data["itemNo"];
+            this.qty = _data["qty"];
+            this.description = _data["description"];
+            this.leadTime = _data["leadTime"];
+            this.customerPartNo = _data["customerPartNo"];
+            this.price = _data["price"];
+            this.extension = _data["extension"];
+        }
+    }
+
+    static fromJS(data: any): QuoteItemModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuoteItemModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["quoteId"] = this.quoteId;
+        data["itemNo"] = this.itemNo;
+        data["qty"] = this.qty;
+        data["description"] = this.description;
+        data["leadTime"] = this.leadTime;
+        data["customerPartNo"] = this.customerPartNo;
+        data["price"] = this.price;
+        data["extension"] = this.extension;
+        return data; 
+    }
+}
+
+export interface IQuoteItemModel {
+    id?: number;
+    quoteId?: number;
+    itemNo?: string | undefined;
+    qty?: number | undefined;
+    description?: string | undefined;
+    leadTime?: string | undefined;
+    customerPartNo?: string | undefined;
+    price?: number | undefined;
+    extension?: number | undefined;
 }
 
 export class WorkOrderModel implements IWorkOrderModel {
@@ -12666,11 +13269,19 @@ export class PurchaseModel implements IPurchaseModel {
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
-    customerLineNumber?: number;
     locationId?: number;
+    serialNumber?: string | undefined;
     qty?: number;
+    customerLineNumber?: number;
+    mttn?: string | undefined;
+    dueDate?: Date;
     purchasePrice?: number;
+    statusId?: number;
+    status?: StatusModel | undefined;
     workOrders?: WorkOrderModel[] | undefined;
+    location?: LocationModel | undefined;
+    purchaseOrder?: PurchaseOrderModel | undefined;
+    purchaseOrderProduct?: ProductModel | undefined;
 
     constructor(data?: IPurchaseModel) {
         if (data) {
@@ -12687,15 +13298,23 @@ export class PurchaseModel implements IPurchaseModel {
             this.purchaseOrderId = _data["purchaseOrderId"];
             this.purchaseOrderProductId = _data["purchaseOrderProductId"];
             this.customerPurchaseNumber = _data["customerPurchaseNumber"];
-            this.customerLineNumber = _data["customerLineNumber"];
             this.locationId = _data["locationId"];
+            this.serialNumber = _data["serialNumber"];
             this.qty = _data["qty"];
+            this.customerLineNumber = _data["customerLineNumber"];
+            this.mttn = _data["mttn"];
+            this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.purchasePrice = _data["purchasePrice"];
+            this.statusId = _data["statusId"];
+            this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
             if (Array.isArray(_data["workOrders"])) {
                 this.workOrders = [] as any;
                 for (let item of _data["workOrders"])
                     this.workOrders!.push(WorkOrderModel.fromJS(item));
             }
+            this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
+            this.purchaseOrder = _data["purchaseOrder"] ? PurchaseOrderModel.fromJS(_data["purchaseOrder"]) : <any>undefined;
+            this.purchaseOrderProduct = _data["purchaseOrderProduct"] ? ProductModel.fromJS(_data["purchaseOrderProduct"]) : <any>undefined;
         }
     }
 
@@ -12712,15 +13331,23 @@ export class PurchaseModel implements IPurchaseModel {
         data["purchaseOrderId"] = this.purchaseOrderId;
         data["purchaseOrderProductId"] = this.purchaseOrderProductId;
         data["customerPurchaseNumber"] = this.customerPurchaseNumber;
-        data["customerLineNumber"] = this.customerLineNumber;
         data["locationId"] = this.locationId;
+        data["serialNumber"] = this.serialNumber;
         data["qty"] = this.qty;
+        data["customerLineNumber"] = this.customerLineNumber;
+        data["mttn"] = this.mttn;
+        data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
+        data["statusId"] = this.statusId;
+        data["status"] = this.status ? this.status.toJSON() : <any>undefined;
         if (Array.isArray(this.workOrders)) {
             data["workOrders"] = [];
             for (let item of this.workOrders)
                 data["workOrders"].push(item.toJSON());
         }
+        data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        data["purchaseOrder"] = this.purchaseOrder ? this.purchaseOrder.toJSON() : <any>undefined;
+        data["purchaseOrderProduct"] = this.purchaseOrderProduct ? this.purchaseOrderProduct.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -12730,11 +13357,95 @@ export interface IPurchaseModel {
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
     customerPurchaseNumber?: string | undefined;
-    customerLineNumber?: number;
     locationId?: number;
+    serialNumber?: string | undefined;
     qty?: number;
+    customerLineNumber?: number;
+    mttn?: string | undefined;
+    dueDate?: Date;
     purchasePrice?: number;
+    statusId?: number;
+    status?: StatusModel | undefined;
     workOrders?: WorkOrderModel[] | undefined;
+    location?: LocationModel | undefined;
+    purchaseOrder?: PurchaseOrderModel | undefined;
+    purchaseOrderProduct?: ProductModel | undefined;
+}
+
+export class PurchaseOrderModel implements IPurchaseOrderModel {
+    id?: number;
+    customerId?: number;
+    name?: string | undefined;
+    referencePO?: string | undefined;
+    referenceName?: string | undefined;
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    totalPurchaseLimit?: number | undefined;
+    customerReference?: string | undefined;
+    locationId?: number;
+    location?: LocationModel | undefined;
+
+    constructor(data?: IPurchaseOrderModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.customerId = _data["customerId"];
+            this.name = _data["name"];
+            this.referencePO = _data["referencePO"];
+            this.referenceName = _data["referenceName"];
+            this.openDate = _data["openDate"] ? new Date(_data["openDate"].toString()) : <any>undefined;
+            this.closeDate = _data["closeDate"] ? new Date(_data["closeDate"].toString()) : <any>undefined;
+            this.totalPurchaseLimit = _data["totalPurchaseLimit"];
+            this.customerReference = _data["customerReference"];
+            this.locationId = _data["locationId"];
+            this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PurchaseOrderModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseOrderModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["customerId"] = this.customerId;
+        data["name"] = this.name;
+        data["referencePO"] = this.referencePO;
+        data["referenceName"] = this.referenceName;
+        data["openDate"] = this.openDate ? this.openDate.toISOString() : <any>undefined;
+        data["closeDate"] = this.closeDate ? this.closeDate.toISOString() : <any>undefined;
+        data["totalPurchaseLimit"] = this.totalPurchaseLimit;
+        data["customerReference"] = this.customerReference;
+        data["locationId"] = this.locationId;
+        data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IPurchaseOrderModel {
+    id?: number;
+    customerId?: number;
+    name?: string | undefined;
+    referencePO?: string | undefined;
+    referenceName?: string | undefined;
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    totalPurchaseLimit?: number | undefined;
+    customerReference?: string | undefined;
+    locationId?: number;
+    location?: LocationModel | undefined;
 }
 
 export class WorkOrderPartModel implements IWorkOrderPartModel {
@@ -12909,46 +13620,6 @@ export interface IWorkOrderTaskModel {
     workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
 }
 
-export class StatusModel implements IStatusModel {
-    id?: number;
-    name?: string | undefined;
-
-    constructor(data?: IStatusModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): StatusModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new StatusModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IStatusModel {
-    id?: number;
-    name?: string | undefined;
-}
-
 export class WorkOrderTaskMonitorModel implements IWorkOrderTaskMonitorModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
@@ -13026,6 +13697,7 @@ export class CreateProductRequest implements ICreateProductRequest {
     salesTax?: number | undefined;
     totalSalePrice!: number;
     cycleTime?: number | undefined;
+    quoteId?: number | undefined;
 
     constructor(data?: ICreateProductRequest) {
         if (data) {
@@ -13050,6 +13722,7 @@ export class CreateProductRequest implements ICreateProductRequest {
             this.salesTax = _data["salesTax"];
             this.totalSalePrice = _data["totalSalePrice"];
             this.cycleTime = _data["cycleTime"];
+            this.quoteId = _data["quoteId"];
         }
     }
 
@@ -13074,6 +13747,7 @@ export class CreateProductRequest implements ICreateProductRequest {
         data["salesTax"] = this.salesTax;
         data["totalSalePrice"] = this.totalSalePrice;
         data["cycleTime"] = this.cycleTime;
+        data["quoteId"] = this.quoteId;
         return data; 
     }
 }
@@ -13091,6 +13765,7 @@ export interface ICreateProductRequest {
     salesTax?: number | undefined;
     totalSalePrice: number;
     cycleTime?: number | undefined;
+    quoteId?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -13150,6 +13825,7 @@ export class UpdateProductRequest implements IUpdateProductRequest {
     salesTax?: number | undefined;
     totalSalePrice?: number | undefined;
     cycleTime?: number | undefined;
+    quoteId?: number | undefined;
 
     constructor(data?: IUpdateProductRequest) {
         if (data) {
@@ -13175,6 +13851,7 @@ export class UpdateProductRequest implements IUpdateProductRequest {
             this.salesTax = _data["salesTax"];
             this.totalSalePrice = _data["totalSalePrice"];
             this.cycleTime = _data["cycleTime"];
+            this.quoteId = _data["quoteId"];
         }
     }
 
@@ -13200,6 +13877,7 @@ export class UpdateProductRequest implements IUpdateProductRequest {
         data["salesTax"] = this.salesTax;
         data["totalSalePrice"] = this.totalSalePrice;
         data["cycleTime"] = this.cycleTime;
+        data["quoteId"] = this.quoteId;
         return data; 
     }
 }
@@ -13218,6 +13896,527 @@ export interface IUpdateProductRequest {
     salesTax?: number | undefined;
     totalSalePrice?: number | undefined;
     cycleTime?: number | undefined;
+    quoteId?: number | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfPurchaseModel extends AuditActionResult implements IAuditActionResultOfICollectionOfPurchaseModel {
+    object?: PurchaseModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfPurchaseModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(PurchaseModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfPurchaseModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfPurchaseModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfPurchaseModel extends IAuditActionResult {
+    object?: PurchaseModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfPurchaseModel extends AuditActionResult implements IAuditActionResultOfPurchaseModel {
+    object?: PurchaseModel | undefined;
+
+    constructor(data?: IAuditActionResultOfPurchaseModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PurchaseModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPurchaseModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPurchaseModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfPurchaseModel extends IAuditActionResult {
+    object?: PurchaseModel | undefined;
+}
+
+/** CreatePurchaseRequest */
+export class CreatePurchaseRequest implements ICreatePurchaseRequest {
+    /** PurchaseOrderId */
+    purchaseOrderId!: number;
+    /** Status ID */
+    statusId!: number;
+    /** PurchaseOrderProductId */
+    purchaseOrderProductId!: number;
+    /** CustomerPurchaseNumber */
+    customerPurchaseNumber?: string | undefined;
+    /** LocationId */
+    locationId!: number;
+    /** SerialNumber */
+    serialNumber!: string;
+    /** Quantity */
+    qty!: number;
+    /** CustomerLineNumber */
+    customerLineNumber?: number;
+    /** Material Transfer Number (MTTN) */
+    mttn?: string | undefined;
+    /** DueDate */
+    dueDate!: Date;
+    /** PurchasePrice */
+    purchasePrice!: number;
+
+    constructor(data?: ICreatePurchaseRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.purchaseOrderId = _data["purchaseOrderId"];
+            this.statusId = _data["statusId"];
+            this.purchaseOrderProductId = _data["purchaseOrderProductId"];
+            this.customerPurchaseNumber = _data["customerPurchaseNumber"];
+            this.locationId = _data["locationId"];
+            this.serialNumber = _data["serialNumber"];
+            this.qty = _data["qty"];
+            this.customerLineNumber = _data["customerLineNumber"];
+            this.mttn = _data["mttn"];
+            this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
+            this.purchasePrice = _data["purchasePrice"];
+        }
+    }
+
+    static fromJS(data: any): CreatePurchaseRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePurchaseRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["purchaseOrderId"] = this.purchaseOrderId;
+        data["statusId"] = this.statusId;
+        data["purchaseOrderProductId"] = this.purchaseOrderProductId;
+        data["customerPurchaseNumber"] = this.customerPurchaseNumber;
+        data["locationId"] = this.locationId;
+        data["serialNumber"] = this.serialNumber;
+        data["qty"] = this.qty;
+        data["customerLineNumber"] = this.customerLineNumber;
+        data["mttn"] = this.mttn;
+        data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
+        data["purchasePrice"] = this.purchasePrice;
+        return data; 
+    }
+}
+
+/** CreatePurchaseRequest */
+export interface ICreatePurchaseRequest {
+    /** PurchaseOrderId */
+    purchaseOrderId: number;
+    /** Status ID */
+    statusId: number;
+    /** PurchaseOrderProductId */
+    purchaseOrderProductId: number;
+    /** CustomerPurchaseNumber */
+    customerPurchaseNumber?: string | undefined;
+    /** LocationId */
+    locationId: number;
+    /** SerialNumber */
+    serialNumber: string;
+    /** Quantity */
+    qty: number;
+    /** CustomerLineNumber */
+    customerLineNumber?: number;
+    /** Material Transfer Number (MTTN) */
+    mttn?: string | undefined;
+    /** DueDate */
+    dueDate: Date;
+    /** PurchasePrice */
+    purchasePrice: number;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfIEnumerableOfPurchaseOrderView extends AuditActionResult implements IAuditActionResultOfIEnumerableOfPurchaseOrderView {
+    object?: PurchaseOrderView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfPurchaseOrderView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(PurchaseOrderView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfPurchaseOrderView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfPurchaseOrderView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfIEnumerableOfPurchaseOrderView extends IAuditActionResult {
+    object?: PurchaseOrderView[] | undefined;
+}
+
+export class PurchaseOrderView implements IPurchaseOrderView {
+    id?: number;
+    customerId?: number;
+    customerName?: string | undefined;
+    name?: string | undefined;
+    customerReferencePO?: string | undefined;
+    customerReferenceNo?: string | undefined;
+    invoicedBalance?: number | undefined;
+    uninvoicedBalance?: number | undefined;
+    balance?: number | undefined;
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    totalPurchaseLimit?: number | undefined;
+    customerReference?: string | undefined;
+    products?: PurchaseOrderProductView[] | undefined;
+    isDeletable?: boolean;
+    status?: string | undefined;
+
+    constructor(data?: IPurchaseOrderView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.customerId = _data["customerId"];
+            this.customerName = _data["customerName"];
+            this.name = _data["name"];
+            this.customerReferencePO = _data["customerReferencePO"];
+            this.customerReferenceNo = _data["customerReferenceNo"];
+            this.invoicedBalance = _data["invoicedBalance"];
+            this.uninvoicedBalance = _data["uninvoicedBalance"];
+            this.balance = _data["balance"];
+            this.openDate = _data["openDate"] ? new Date(_data["openDate"].toString()) : <any>undefined;
+            this.closeDate = _data["closeDate"] ? new Date(_data["closeDate"].toString()) : <any>undefined;
+            this.totalPurchaseLimit = _data["totalPurchaseLimit"];
+            this.customerReference = _data["customerReference"];
+            if (Array.isArray(_data["products"])) {
+                this.products = [] as any;
+                for (let item of _data["products"])
+                    this.products!.push(PurchaseOrderProductView.fromJS(item));
+            }
+            this.isDeletable = _data["isDeletable"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): PurchaseOrderView {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseOrderView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["customerId"] = this.customerId;
+        data["customerName"] = this.customerName;
+        data["name"] = this.name;
+        data["customerReferencePO"] = this.customerReferencePO;
+        data["customerReferenceNo"] = this.customerReferenceNo;
+        data["invoicedBalance"] = this.invoicedBalance;
+        data["uninvoicedBalance"] = this.uninvoicedBalance;
+        data["balance"] = this.balance;
+        data["openDate"] = this.openDate ? this.openDate.toISOString() : <any>undefined;
+        data["closeDate"] = this.closeDate ? this.closeDate.toISOString() : <any>undefined;
+        data["totalPurchaseLimit"] = this.totalPurchaseLimit;
+        data["customerReference"] = this.customerReference;
+        if (Array.isArray(this.products)) {
+            data["products"] = [];
+            for (let item of this.products)
+                data["products"].push(item.toJSON());
+        }
+        data["isDeletable"] = this.isDeletable;
+        data["status"] = this.status;
+        return data; 
+    }
+}
+
+export interface IPurchaseOrderView {
+    id?: number;
+    customerId?: number;
+    customerName?: string | undefined;
+    name?: string | undefined;
+    customerReferencePO?: string | undefined;
+    customerReferenceNo?: string | undefined;
+    invoicedBalance?: number | undefined;
+    uninvoicedBalance?: number | undefined;
+    balance?: number | undefined;
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    totalPurchaseLimit?: number | undefined;
+    customerReference?: string | undefined;
+    products?: PurchaseOrderProductView[] | undefined;
+    isDeletable?: boolean;
+    status?: string | undefined;
+}
+
+export class PurchaseOrderProductView implements IPurchaseOrderProductView {
+    id?: number;
+    name?: string | undefined;
+    totalSalePrice?: number;
+
+    constructor(data?: IPurchaseOrderProductView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.totalSalePrice = _data["totalSalePrice"];
+        }
+    }
+
+    static fromJS(data: any): PurchaseOrderProductView {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseOrderProductView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["totalSalePrice"] = this.totalSalePrice;
+        return data; 
+    }
+}
+
+export interface IPurchaseOrderProductView {
+    id?: number;
+    name?: string | undefined;
+    totalSalePrice?: number;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfPurchaseOrderView extends AuditActionResult implements IAuditActionResultOfPurchaseOrderView {
+    object?: PurchaseOrderView | undefined;
+
+    constructor(data?: IAuditActionResultOfPurchaseOrderView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PurchaseOrderView.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPurchaseOrderView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPurchaseOrderView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfPurchaseOrderView extends IAuditActionResult {
+    object?: PurchaseOrderView | undefined;
+}
+
+export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
+    customerId!: number;
+    name!: string;
+    referenceCustomerPO!: string;
+    referenceName!: string;
+    products!: number[];
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    customerReferenceNo?: string | undefined;
+    totalPurchaseLimit?: number;
+    tax?: number;
+
+    constructor(data?: ICreatePurchaseOrderRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.products = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.customerId = _data["customerId"];
+            this.name = _data["name"];
+            this.referenceCustomerPO = _data["referenceCustomerPO"];
+            this.referenceName = _data["referenceName"];
+            if (Array.isArray(_data["products"])) {
+                this.products = [] as any;
+                for (let item of _data["products"])
+                    this.products!.push(item);
+            }
+            this.openDate = _data["openDate"] ? new Date(_data["openDate"].toString()) : <any>undefined;
+            this.closeDate = _data["closeDate"] ? new Date(_data["closeDate"].toString()) : <any>undefined;
+            this.customerReferenceNo = _data["customerReferenceNo"];
+            this.totalPurchaseLimit = _data["totalPurchaseLimit"];
+            this.tax = _data["tax"];
+        }
+    }
+
+    static fromJS(data: any): CreatePurchaseOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePurchaseOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["customerId"] = this.customerId;
+        data["name"] = this.name;
+        data["referenceCustomerPO"] = this.referenceCustomerPO;
+        data["referenceName"] = this.referenceName;
+        if (Array.isArray(this.products)) {
+            data["products"] = [];
+            for (let item of this.products)
+                data["products"].push(item);
+        }
+        data["openDate"] = this.openDate ? this.openDate.toISOString() : <any>undefined;
+        data["closeDate"] = this.closeDate ? this.closeDate.toISOString() : <any>undefined;
+        data["customerReferenceNo"] = this.customerReferenceNo;
+        data["totalPurchaseLimit"] = this.totalPurchaseLimit;
+        data["tax"] = this.tax;
+        return data; 
+    }
+}
+
+export interface ICreatePurchaseOrderRequest {
+    customerId: number;
+    name: string;
+    referenceCustomerPO: string;
+    referenceName: string;
+    products: number[];
+    openDate?: Date;
+    closeDate?: Date | undefined;
+    customerReferenceNo?: string | undefined;
+    totalPurchaseLimit?: number;
+    tax?: number;
+}
+
+export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest implements IUpdatePurchaseOrderRequest {
+    id!: number;
+
+    constructor(data?: IUpdatePurchaseOrderRequest) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdatePurchaseOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdatePurchaseOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IUpdatePurchaseOrderRequest extends ICreatePurchaseOrderRequest {
+    id: number;
 }
 
 /** Base class for an API call with a typed result */
@@ -13392,206 +14591,6 @@ export class AuditActionResultOfQuoteModel extends AuditActionResult implements 
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfQuoteModel extends IAuditActionResult {
     object?: QuoteModel | undefined;
-}
-
-export class QuoteModel implements IQuoteModel {
-    id?: number;
-    submittedDate?: Date;
-    customerId?: number;
-    customer?: Customer | undefined;
-    submittedById?: number;
-    submittedBy?: UserModel | undefined;
-    contact?: string | undefined;
-    delivery?: string | undefined;
-    title?: string | undefined;
-    phone?: string | undefined;
-    processName?: string | undefined;
-    description?: string | undefined;
-    representative?: string | undefined;
-    representativeTitle?: string | undefined;
-    representativeAddress?: string | undefined;
-    partKitNo?: string | undefined;
-    statusId?: number;
-    status?: StatusModel | undefined;
-    quoteJson?: string | undefined;
-    customerRequirementJson?: string | undefined;
-    productId?: number | undefined;
-    product?: ProductModel | undefined;
-    quoteItems?: QuoteItemModel[] | undefined;
-
-    constructor(data?: IQuoteModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.submittedDate = _data["submittedDate"] ? new Date(_data["submittedDate"].toString()) : <any>undefined;
-            this.customerId = _data["customerId"];
-            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
-            this.submittedById = _data["submittedById"];
-            this.submittedBy = _data["submittedBy"] ? UserModel.fromJS(_data["submittedBy"]) : <any>undefined;
-            this.contact = _data["contact"];
-            this.delivery = _data["delivery"];
-            this.title = _data["title"];
-            this.phone = _data["phone"];
-            this.processName = _data["processName"];
-            this.description = _data["description"];
-            this.representative = _data["representative"];
-            this.representativeTitle = _data["representativeTitle"];
-            this.representativeAddress = _data["representativeAddress"];
-            this.partKitNo = _data["partKitNo"];
-            this.statusId = _data["statusId"];
-            this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
-            this.quoteJson = _data["quoteJson"];
-            this.customerRequirementJson = _data["customerRequirementJson"];
-            this.productId = _data["productId"];
-            this.product = _data["product"] ? ProductModel.fromJS(_data["product"]) : <any>undefined;
-            if (Array.isArray(_data["quoteItems"])) {
-                this.quoteItems = [] as any;
-                for (let item of _data["quoteItems"])
-                    this.quoteItems!.push(QuoteItemModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): QuoteModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new QuoteModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["submittedDate"] = this.submittedDate ? this.submittedDate.toISOString() : <any>undefined;
-        data["customerId"] = this.customerId;
-        data["customer"] = this.customer ? this.customer.toJSON() : <any>undefined;
-        data["submittedById"] = this.submittedById;
-        data["submittedBy"] = this.submittedBy ? this.submittedBy.toJSON() : <any>undefined;
-        data["contact"] = this.contact;
-        data["delivery"] = this.delivery;
-        data["title"] = this.title;
-        data["phone"] = this.phone;
-        data["processName"] = this.processName;
-        data["description"] = this.description;
-        data["representative"] = this.representative;
-        data["representativeTitle"] = this.representativeTitle;
-        data["representativeAddress"] = this.representativeAddress;
-        data["partKitNo"] = this.partKitNo;
-        data["statusId"] = this.statusId;
-        data["status"] = this.status ? this.status.toJSON() : <any>undefined;
-        data["quoteJson"] = this.quoteJson;
-        data["customerRequirementJson"] = this.customerRequirementJson;
-        data["productId"] = this.productId;
-        data["product"] = this.product ? this.product.toJSON() : <any>undefined;
-        if (Array.isArray(this.quoteItems)) {
-            data["quoteItems"] = [];
-            for (let item of this.quoteItems)
-                data["quoteItems"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IQuoteModel {
-    id?: number;
-    submittedDate?: Date;
-    customerId?: number;
-    customer?: Customer | undefined;
-    submittedById?: number;
-    submittedBy?: UserModel | undefined;
-    contact?: string | undefined;
-    delivery?: string | undefined;
-    title?: string | undefined;
-    phone?: string | undefined;
-    processName?: string | undefined;
-    description?: string | undefined;
-    representative?: string | undefined;
-    representativeTitle?: string | undefined;
-    representativeAddress?: string | undefined;
-    partKitNo?: string | undefined;
-    statusId?: number;
-    status?: StatusModel | undefined;
-    quoteJson?: string | undefined;
-    customerRequirementJson?: string | undefined;
-    productId?: number | undefined;
-    product?: ProductModel | undefined;
-    quoteItems?: QuoteItemModel[] | undefined;
-}
-
-export class QuoteItemModel implements IQuoteItemModel {
-    id?: number;
-    quoteId?: number;
-    itemNo?: string | undefined;
-    qty?: number | undefined;
-    description?: string | undefined;
-    leadTime?: string | undefined;
-    customerPartNo?: string | undefined;
-    price?: number | undefined;
-    extension?: number | undefined;
-
-    constructor(data?: IQuoteItemModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.quoteId = _data["quoteId"];
-            this.itemNo = _data["itemNo"];
-            this.qty = _data["qty"];
-            this.description = _data["description"];
-            this.leadTime = _data["leadTime"];
-            this.customerPartNo = _data["customerPartNo"];
-            this.price = _data["price"];
-            this.extension = _data["extension"];
-        }
-    }
-
-    static fromJS(data: any): QuoteItemModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new QuoteItemModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["quoteId"] = this.quoteId;
-        data["itemNo"] = this.itemNo;
-        data["qty"] = this.qty;
-        data["description"] = this.description;
-        data["leadTime"] = this.leadTime;
-        data["customerPartNo"] = this.customerPartNo;
-        data["price"] = this.price;
-        data["extension"] = this.extension;
-        return data; 
-    }
-}
-
-export interface IQuoteItemModel {
-    id?: number;
-    quoteId?: number;
-    itemNo?: string | undefined;
-    qty?: number | undefined;
-    description?: string | undefined;
-    leadTime?: string | undefined;
-    customerPartNo?: string | undefined;
-    price?: number | undefined;
-    extension?: number | undefined;
 }
 
 export class CreateQuoteRequest implements ICreateQuoteRequest {

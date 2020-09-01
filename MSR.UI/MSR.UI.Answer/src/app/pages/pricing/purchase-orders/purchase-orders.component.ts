@@ -4,9 +4,14 @@ import { EnumPrivilege } from '../../../models/enums/privileges';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import {ConfirmationService} from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem } from '../../../services/api.client.generated';
+import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest } from '../../../services/api.client.generated';
+import { take } from 'rxjs/operators';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
+import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 
 declare let jQuery: any;
 
@@ -28,20 +33,36 @@ export class PurchaseOrdersComponent implements OnInit {
   data: any;
   purchasePrivileges: AllowedActions;
   purchaseOrderPrivileges: AllowedActions;
-  purchaseOrderStatus: any[];
   display: boolean = false;
   currentPO: PurchaseOrder;
   customersData: any[] = [];
   getCustomersFlag: boolean = false;
   productsData: any[] = [];
   getProductsFlag: boolean = false;
+  purchaseOrderStatus: any[] = [
+    {
+      label: 'All',
+      value: 'All'
+    },
+    {
+      label: 'Open',
+      value: 'Open'
+    },
+    {
+      label: 'Closed',
+      value: 'Closed'
+    }
+  ]
 
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
     private elem: ElementRef,
-    private confirmationService: ConfirmationService
-  ) {}
+    private confirmationService: ConfirmationService,
+    private purchaseOrderService: PurchaseOrderService,
+    private customerService: CustomerService,
+    private productService: ProductService
+  ) { }
 
   ngOnInit(): void {
     this.gridVersion = '1.0.0';
@@ -65,14 +86,18 @@ export class PurchaseOrdersComponent implements OnInit {
     this.purchaseOrderPrivileges = this.globals.getEnumPrivileges(this.menuItems.PurchaseOrders);
     this.data = [];
     this.getPurchaseOrders();
-    this.purchaseOrderStatus = purchaseOrderStatus;
     this.getCustomers();
     this.currentPO = new PurchaseOrder();
     this.getProducts();
   }
 
   getPurchaseOrders() {
-    this.data = demoData;
+    this.globals.showLoader(true);
+    this.purchaseOrderService.purchaseOrderGet(null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
+        this.data = response.object;
+      }));
   }
 
   onClickEdit(purchaseOrder: PurchaseOrder) {
@@ -82,7 +107,6 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   onClickDelete(purchaseOrder: PurchaseOrder) {
-    //TODO: Delete function
     this.confirmationService.confirm({
       message: 'Are you sure you want to Delete this record?',
       accept: () => {
@@ -92,8 +116,12 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   deletePurchaseOrder(purchaseOrder: PurchaseOrder) {
-    const index = this.data.findIndex(x => x.id === purchaseOrder.id);
-    this.data.splice(index, 1);
+    this.globals.showLoader(true);
+    this.purchaseOrderService.purchaseOrderDelete(purchaseOrder.id, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        const index = this.data.findIndex(x => x.id === purchaseOrder.id);
+        this.data.splice(index, 1);
+      }));
   }
 
   onClickPurchase(purchaseOrder: PurchaseOrder) {
@@ -101,7 +129,6 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   onClickClose(purchaseOrder: PurchaseOrder) {
-    //TODO: Close function
     this.confirmationService.confirm({
       message: 'Are you sure you want to Close this record?',
       accept: () => {
@@ -111,9 +138,14 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   closePurchaseOrder(purchaseOrder: PurchaseOrder) {
-    //TODO: Close function
-    const index = this.data.findIndex(x => x.id === purchaseOrder.id);
-    this.data[index].status = 'Closed';
+    let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
+    Object.assign(purchaseOrderRequest, purchaseOrder);
+    this.globals.showLoader(true);
+    // BACKEND ENDPOINT TBD
+    // this.purchaseOrderService.purchaseOrderPatch(env.apiVersion,purchaseOrderRequest).pipe(take(1))
+    // .subscribe(responseHandler(response => {
+    //   purchaseOrder.status = 'Closed';
+    // }));
   }
 
   onClickAdd() {
@@ -130,31 +162,20 @@ export class PurchaseOrdersComponent implements OnInit {
     if (ctrl.getCustomersFlag) {
       return ctrl.customersData;
     }
-    ctrl.customersData = [
-      {
-        label: '[MSR-FSR] APPLIED MATERIALS - [ID:1566]',
-        value: 1566
-      },
-      {
-        label: '[MSR-FSR]ATA - [ID:1574]',
-        value: 1574
-      }
-    ];
-    ctrl.getCustomersFlag = true;
+    this.customerService.customerGet(null, null, null, null, null, null, null
+      , true, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        ctrl.customersData = response.object;
+        ctrl.getCustomersFlag = true;
+      }));
   }
 
   getProducts() {
     const ctrl = this;
-    ctrl.productsData = [
-      {
-        id: 1,
-        name: 'Product 1'
-      },
-      {
-        id: 2,
-        name: 'Product 2'
-      }
-    ]
+    this.productService.productGet(null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        ctrl.productsData = response.object;
+      }));
   }
 
   onEditSubmit() {
@@ -162,12 +183,11 @@ export class PurchaseOrdersComponent implements OnInit {
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
       const index = this.data.findIndex(x => x.id === this.currentPO.id);
-      this.data[index]=this.currentPO;
+      this.data[index] = this.currentPO;
       this.currentPO = new PurchaseOrder();
       ctrl.clseDialog();
     }
   }
-
 }
 
 
@@ -251,17 +271,4 @@ const demoData = [
   })
 ]
 
-const purchaseOrderStatus = [
-  {
-    label: 'All',
-    value: 'All'
-  },
-  {
-    label: 'Open',
-    value: 'Open'
-  },
-  {
-    label: 'Closed',
-    value: 'Closed'
-  }
-]
+
