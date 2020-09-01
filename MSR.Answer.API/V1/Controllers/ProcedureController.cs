@@ -45,7 +45,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Procedure>();
+            return ret.ToOkObjectResponse<Procedure>("Procedure successfully added");
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>();
+            return ret.ToOkObjectResponse<ProcedureStepModel>("Procedure step successfully added");
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedure(){ procedureID = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse();
+            return ret.ToOkObjectResponse("Procedure successfully deleted");
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureStep(){ procedureID = id, procedureStepID = stepid };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse();
+            return ret.ToOkObjectResponse("Procedure step successfully deleted");
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<Procedure>();
+            return ret.ToOkObjectResponse<Procedure>("Procedure successfully updated");
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>();
+            return ret.ToOkObjectResponse<ProcedureStepModel>("Procedure step successfully updated");
         }
     }
 }
