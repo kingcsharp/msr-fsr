@@ -63,7 +63,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeletePurchaseOrder() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Delete"));
         }
 
         private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
