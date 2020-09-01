@@ -44,7 +44,9 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 CustomerId = po.CustomerId,
                 CustomerReferencePO = po.CustomerReference,
                 OpenDate = po.OpenDate,
-                CloseDate = po.CloseDate
+                CloseDate = po.CloseDate,
+                Revision = po.Revision,
+                TotalPurchaseLimit = po.TotalPurchaseLimit
             }).ToListAsync();
 
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
