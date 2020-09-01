@@ -24,7 +24,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductModel>> GetProductsAsync()
+        public async Task<ICollection<ProductModel>> GetProductsAsync()
         {
             var productList = new List<ProductModel>();
             var products = _unitOfWork.Products
@@ -38,7 +38,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 productList.Add(_mapper.Map<ProductModel>(product));
             }
 
-            return productList.AsEnumerable();
+            return productList;
         }
 
         public async Task<ProductModel> CreateProductAsync(CreateProduct command)
@@ -54,25 +54,30 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return retProduct;
         }
 
-        public async Task<IEnumerable<ProductModel>> GetProductAsync(int id)
+        public async Task<ICollection<ProductModel>> GetProductAsync(int? id)
         {
+            if (!id.HasValue) {
+                return await GetProductsAsync();
+            }
+
             var productList = new List<ProductModel>();
 
-            var products = _unitOfWork.Products
-                            .Query()
-                            .Include(q => q.Procedure)
-                            .Include(q => q.Customer)
-                            .Include(q => q.Part)
-                            .Include(q => q.Quote)
-                            .Where(q => q.Id == id)
-                            .AsQueryable();
+            IQueryable<Product> products;
+            products = _unitOfWork.Products
+                        .Query()
+                        .Include(q => q.Procedure)
+                        .Include(q => q.Customer)
+                        .Include(q => q.Part)
+                        .Include(q => q.Quote)
+                        .Where(q => q.Id == id)
+                        .AsQueryable();
 
             foreach (var product in await products.ToListAsync())
             {
                 productList.Add(_mapper.Map<ProductModel>(product));
             }
 
-            return productList.AsEnumerable();
+            return productList;
         }
 
 
