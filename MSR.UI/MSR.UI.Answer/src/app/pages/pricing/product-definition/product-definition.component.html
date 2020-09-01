@@ -5,16 +5,16 @@
         <span>{{mode === productPageModes.Create ? 'New ' : ''}}Product Definition</span>
       </h1>
     </div>
-    <!-- <div class="col-md-6 d-flex justify-content-end align-items-end">
+    <div class="col-md-6 d-flex justify-content-end align-items-end">
       <button
-        *ngIf="productData.quoteJson"
+        *ngIf="quoteData"
         class="pull-right btn btn-primary"
         tooltip="Generates a Quote Preview"
         (click)="openQuoteViewModal()"
       >
-        <i class="fa fa-eye"></i>Preview Quote
+        <i class="fa fa-eye mr-2"></i>Preview Quote
       </button>
-    </div> -->
+    </div>
   </div>
 
   <widget class="py-4">
@@ -27,11 +27,10 @@
       novalidate="novalidate"
     >
       <div class="row mx-0 mb-lg">
-        <div class="col-md-4">
+        <div class="col-md-5">
           <div class="form-group">
             <label for="customerId">Customer :</label>
             <p-dropdown
-              *ngIf="getCustomersFlag"
               [class.hide]="mode === productPageModes.View"
               placeholder="Select Customer"
               name="customerId"
@@ -58,33 +57,6 @@
 
         <div class="col-md-3">
           <div class="form-group">
-            <label for="locationId">Location :</label>
-            <!-- <p-dropdown
-              [class.hide]="mode === productPageModes.View"
-              placeholder="Select Location"
-              name="locationId"
-              [options]="locationsData"
-              appendTo="body"
-              [baseZIndex]="100002"
-              [(ngModel)]="productData.locationId"
-              data-cy="product-locationid"
-            >
-            </p-dropdown>
-            <input
-              [class.hide]="mode !== productPageModes.View"
-              pInputText
-              type="text"
-              class="form-control input-transparent"
-              name="location"
-              [value]="mode === productPageModes.View ? getLocationLabel(productData.location) : productData.locationId"
-              data-cy="product-location"
-              readonly
-            > -->
-          </div>
-        </div>
-
-        <div class="col-md-2">
-          <div class="form-group">
             <label for="productCustomerDivision">Division/Fab # :</label>
             <input
               pInputText
@@ -98,11 +70,12 @@
           </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="form-group">
             <label for="cycleTime">Cycle Time :</label>
             <div class="input-group input-group-transparent row mx-0">
               <input
+                [class.hide]="mode !== productPageModes.View"
                 pInputText
                 type="number"
                 class="form-control input-transparent"
@@ -111,6 +84,19 @@
                 [readonly]="mode === productPageModes.View"
                 data-cy="product-cycletime"
               >
+              <p-inputNumber
+                [(ngModel)]="productData.cycleTime"
+                mode="decimal"
+                name="CycleTime"
+                [useGrouping]="false"
+                [class.hide]="mode === productPageModes.View"
+                data-cy="product-cycletime"
+                data-validate="parsley"
+                data-parsley-trigger="change"
+                data-parsley-required="true"
+                data-parsley-type="integer"
+              >
+              </p-inputNumber>
               <span class="input-group-addon bg-secondary">
                 Days
               </span>
@@ -146,7 +132,6 @@
               class="input-group input-group-transparent"
             >
               <p-dropdown
-                *ngIf="getPartsFlag"
                 placeholder="Select Part"
                 name="partId"
                 [options]="partsData"
@@ -202,7 +187,6 @@
               class="input-group input-group-transparent"
             >
               <p-dropdown
-                *ngIf="getProceduresFlag"
                 placeholder="Select Procedure"
                 name="procedureId"
                 [options]="proceduresData"
@@ -322,35 +306,64 @@
                 <td>
                   <input
                     pInputText
-                    type="number"
+                    [class.hide]="mode !== productPageModes.View"
                     class="form-control input-transparent"
                     name="Step{{i}}_printOrder"
                     [(ngModel)]="procedureStepsData[i].printOrder"
-                    [readonly]="mode === productPageModes.View"
+                    readyonly
                     data-cy="procedure-step-printorder"
                   >
+                  <p-inputNumber
+                    [(ngModel)]="procedureStepsData[i].printOrder"
+                    mode="decimal"
+                    name="Step{{i}}_printOrder"
+                    [useGrouping]="false"
+                    [class.hide]="mode === productPageModes.View"
+                    data-cy="procedure-step-printorder"
+                  >
+                  </p-inputNumber>
                 </td>
                 <td>
                   <input
                     pInputText
-                    type="number"
+                    [class.hide]="mode !== productPageModes.View"
                     class="form-control input-transparent"
                     name="Step{{i}}_laborTime"
                     [(ngModel)]="procedureStepsData[i].laborTime"
-                    [readonly]="mode === productPageModes.View"
+                    readonly
                     data-cy="procedure-step-labortime"
                   >
+                  <p-inputNumber
+                    [(ngModel)]="procedureStepsData[i].laborTime"
+                    mode="decimal"
+                    name="Step{{i}}_laborTime"
+                    [useGrouping]="false"
+                    [class.hide]="mode === productPageModes.View"
+                    (onBlur)="getStepsValues()"
+                    data-cy="procedure-step-labortime"
+                  >
+                  </p-inputNumber>
                 </td>
                 <td>
                   <input
                     pInputText
-                    type="number"
+                    [class.hide]="mode !== productPageModes.View"
                     class="form-control input-transparent"
                     name="Step{{i}}_equipmentTime"
                     [(ngModel)]="procedureStepsData[i].equipmentTime"
-                    [readonly]="mode === productPageModes.View"
+                    readonly
                     data-cy="procedure-step-equipmenttime"
                   >
+                  <p-inputNumber
+                    [(ngModel)]="procedureStepsData[i].equipmentTime"
+                    mode="decimal"
+                    name="Step{{i}}_equipmentTime"
+                    [useGrouping]="false"
+                    [class.hide]="mode === productPageModes.View"
+                    (onBlur)="getStepsValues()"
+                    data-cy="procedure-step-equipmenttime"
+                  >
+                  </p-inputNumber>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
@@ -452,7 +465,7 @@
                     name="TotalLaborMins"
                     type="text"
                     readonly
-                    [value]="getStepsValues().totalLaborMins"
+                    [value]="productData.totalLaborMins"
                     data-cy="total-labor-mins"
                   >
                 </td>
@@ -463,7 +476,7 @@
                     name="TotalMachineMins"
                     type="text"
                     readonly
-                    [value]="getStepsValues().totalMachineMins"
+                    [value]="productData.totalMachineMins"
                     data-cy="total-matchine-mins"
                   >
                 </td>
@@ -480,7 +493,7 @@
                       class="form-control input-transparent" name="TotalDirectDollar"
                       readonly
                       type="text"
-                      [value]="getStepsValues().totalLaborCharge"
+                      [value]="productData.totalLaborCharge"
                       data-cy="total-labor-dollar"
                     >
                   </div>
@@ -493,7 +506,7 @@
                       class="form-control input-transparent" name="StandardMachineDollar"
                       readonly
                       type="text"
-                      [value]="getStepsValues().totalEquipmentCharge"
+                      [value]="productData.totalEquipmentCharge"
                       data-cy="total-machine-dollar"
                     >
                   </div>
@@ -508,13 +521,23 @@
                     <span class="input-group-addon bg-secondary">$</span>
                     <input
                       pInputText
+                      [class.hide]="mode !== productPageModes.View"
                       class="form-control input-transparent"
                       name="MaterialCost"
                       type="text"
-                      [readonly]="mode === productPageModes.View"
+                      readonly
                       [(ngModel)]="productData.materialCost"
                       data-cy="product-materialcost"
                     >
+                    <p-inputNumber
+                      [(ngModel)]="productData.materialCost"
+                      name="MaterialCost"
+                      [useGrouping]="false"
+                      [class.hide]="mode === productPageModes.View"
+                      (onBlur)="getStepsValues()"
+                      data-cy="product-materialcost"
+                    >
+                    </p-inputNumber>
                   </div>
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>
@@ -526,13 +549,22 @@
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
                     <input
+                      [class.hide]="mode !== productPageModes.View"
                       class="form-control input-transparent"
                       name="TotalSalePrice"
                       type="text"
-                      [readonly]="mode === productPageModes.View"
+                      readonly
                       [(ngModel)]="productData.totalSalePrice"
                       data-cy="product-totalsaleprice"
                     >
+                    <p-inputNumber
+                      [(ngModel)]="productData.totalSalePrice"
+                      name="TotalSalePrice"
+                      [useGrouping]="false"
+                      [class.hide]="mode === productPageModes.View"
+                      data-cy="product-totalsaleprice"
+                    >
+                    </p-inputNumber>
                   </div>
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>
@@ -570,7 +602,7 @@
             class="btn btn-success ml-2"
             data-cy="btn-product-submit"
           >
-            <i class="fa fa-send"></i> Save & Submit
+            <i class="fa fa-send"></i> Submit
           </button>
           <a
             class="btn btn-warning ml-2"
@@ -583,3 +615,212 @@
     </form>
   </widget>
 </div>
+
+<p-dialog
+  header="Quote Preview"
+  [(visible)]="showQuoteViewModal"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '70vw'}"
+  data-cy="user-header"
+>
+  <div *ngIf="quoteData" class="container">
+    <div class="row mr-0 ml-0">
+      <table class="table no-border quote-header" width="100%">
+        <tbody>
+          <tr>
+            <td rowspan="2" width="60%" class="text-left"><img src="/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-center">
+              <h2>Quotation</h2>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table quote-header" width="100%">
+        <tbody>
+          <tr>
+              <th class="text-right">Customer:</th>
+              <td>
+                {{getCustomerLabel(quoteData.customer)}}
+              </td>
+              <th class="text-right">Contact:</th>
+              <td>
+                {{quoteData.contact}}
+              </td>
+              <th class="text-right">Delivery</th>
+              <td>
+                {{quoteData.delivery}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right"></th>
+              <td></td>
+              <th class="text-right">Title:</th>
+              <td>
+                {{quoteData.title}}
+              </td>
+              <th class="text-right"></th>
+              <td></td>
+            </tr>
+            <tr>
+              <th class="text-right"></th>
+              <td></td>
+              <th class="text-right">Phone:</th>
+              <td>
+                {{quoteData.phone}}
+              </td>
+              <th class="text-right"></th>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="6"></td>
+            </tr>
+        </tbody>
+      </table>
+      <table
+        class="table table-bordered table-striped items-table mb-0" width="100%"
+      >
+        <thead>
+          <tr>
+            <th width="10%">Item No.</th>
+            <th width="10%">Quantity</th>
+            <th width="30%" style="text-align: left !important">Description</th>
+            <th>Lead Time</th>
+            <th>Customer Part No.</th>
+            <th>Price</th>
+            <th>Extension</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let quoteItem of quoteJson.quoteItems; index as i;">
+            <td>{{i+1}}</td>
+            <td>
+              {{quoteItem.qty}}
+            </td>
+            <td>
+              {{quoteItem.description}}
+            </td>
+            <td>
+              {{quoteItem.leadTime}}
+            </td>
+            <td>
+              {{quoteItem.customerPartNo}}
+            </td>
+            <td>
+              {{quoteItem.price | currency}}
+            </td>
+            <td>
+              {{quoteItem.extension | currency}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered table-striped items-table" width="100%">
+        <thead>
+          <tr>
+            <th width="20%">Existing Process Spec. # or New</th>
+            <th width="80%">Process Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {{quoteData.processName}}
+            </td>
+            <td>
+              {{quoteData.description}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table" width="100%">
+        <tbody>
+          <tr>
+            <td width="100%">
+              <small>
+                This quotation is subject to the following terms and conditions, and is good only for 30 Days from date of quotation.<br>
+                <ol>
+                  <li>
+                    All orders tendered to MSR-FSR are subject to credit approval and final acceptance by MSR-FSR<br>
+                    MSR-FSR reserves the right to refuse any order tendered pursuant to this quotation without incurring any liability because of such refusal.
+                  </li>
+                  <li>
+                    MSR-FSR guarantees to the purchaser that all goods sold pursuant to an accepted purchase order(s) shall conform to MSR-FSR process specifications and shall be free from defects in materials and workmanship. MSR-FSR expressly disclaims all other warranties, whether express, implied or statutory, including the warranty of merchantability and fitness for use.<br>
+                    In no event will MSR-FSR be liable for consequential damages arising out of the use of the products described herein.
+                  </li>
+                  <li>MSR-FSR will use its reasonably best efforts to expedite the delivery of any goods sold: however, MSR-FSR does not guarantee any specific delivery date nor assume any responsibility for delays due to any cause beyond the control of MSR-FSR.</li>
+                  <li>Prices indicated are good for thirty (30) days from date of this quotation and based on quantities specificed unless otherwise noted.</li>
+                  <li>Prices are in USD unless specified otherwise. If services are provided outside of the US and in USD, pricing may be adjusted based on foreign currency effects.</li>
+                  <li>This quote is based on a projected process flow derived from best known methods, and may require re-negotiation and change based on subsequent validation results or process changes. </li>
+                </ol>
+              </small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table  no-border quote-footer" width="100%">
+        <tbody>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2">Respectfully submitted,</td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td
+              width="20%"
+              style="border-bottom: 1px solid #000 !important;"
+            >
+              {{quoteData.representative}}
+            </td>
+            <td
+              width="30%"
+              style="border-bottom: 1px solid #000 !important;"
+            >
+              {{quoteData.representativeTitle}}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td width="20%" class="line-caption"><small>Created By</small></td>
+            <td width="30%" class="line-caption"><small>Title</small></td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
+              {{quoteData.representativeAddress}}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2" width="40%" class="line-caption"><small>Address</small></td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2" width="40%">MSR-FSR LLC</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

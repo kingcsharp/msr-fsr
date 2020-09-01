@@ -3,10 +3,9 @@ import {
   PartService, PartModel, SubPartModel, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel,
   ProcedureService, Procedure,
   ProcedureStepTemplateService, ProcedureStepTemplateModel,
-  LocationService, LocationModel,
   ProductService, ProductModel, CreateProductRequest, UpdateProductRequest,
   CustomerService, Customer,
-  QuoteService, QuotesProductsView,
+  QuoteService, QuoteModel,
   ProcedureStepModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
@@ -54,15 +53,16 @@ export class ProductDefinitionComponent implements OnInit {
   newStepsCounts: number = 0;
   procedureStepTemplatesData: any[] = [];
   getProcedureStepTemplatesFlag: boolean = false;
-  productData: ProductModel;
+  productData: any;
   getProductDataFlag: boolean = false;
-  quoteData: QuotesProductsView;
+  quoteData: QuoteModel;
   getQuoteDataFlag: boolean = false;
+  showQuoteViewModal: boolean = false;
+  quoteJson: any;
 
   constructor(
     public globals: Globals,
     private partsService: PartService,
-    private locationService: LocationService,
     private customerService: CustomerService,
     private procedureService: ProcedureService,
     private procedureStepTemplateService: ProcedureStepTemplateService,
@@ -76,6 +76,8 @@ export class ProductDefinitionComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.id = parseInt(params.get('id'), 10);
       this.mode = params.get('mode');
+      this.globals.showLoader(true);
+
       switch(this.mode) {
         case this.productPageModes.Create:
           this.initPageCreateMode();
@@ -113,16 +115,49 @@ export class ProductDefinitionComponent implements OnInit {
     this.getProcedureStepTemplates();
   }
 
+  isLoading() {
+    switch(this.mode) {
+      case this.productPageModes.Create:
+        // this.globals.showLoader(!(
+        //   this.getQuoteDataFlag &&
+        //   this.getCustomersFlag &&
+        //   this.getPartsFlag &&
+        //   this.getProcedureStepsFlag &&
+        //   this.getProcedureStepTemplatesFlag
+        // ));
+        this.globals.showLoader(!this.getQuoteDataFlag)
+        break;
+      case this.productPageModes.Edit:
+
+        break;
+      case this.productPageModes.View:
+
+        break;
+      default:
+        break;
+    }
+  }
+
   getQuoteData() {
     this.getQuoteDataFlag = false;
     this.quoteService.quoteGet(this.id, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.quoteData = response.object[0];
+        this.quoteJson = JSON.parse(this.quoteData.quoteJson);
         this.getQuoteDataFlag = true;
-        this.productData = new ProductModel();
-        this.productData.name = this.quoteData.productName;
+
+        this.productData = new CreateProductRequest();
+        // this.productData.name = this.quoteData.productName;
+        this.productData.quoteId = this.quoteData.id;
+        this.productData.revision = 0;
+        this.productData.totalLaborMins = 0;
+        this.productData.totalMachineMins = 0;
+        this.productData.laborCost = 0;
+        this.productData.equipmentCost = 0;
+
         this.getProductDataFlag = true;
+        this.isLoading();
       }));
   }
 
@@ -133,6 +168,7 @@ export class ProductDefinitionComponent implements OnInit {
       .subscribe(responseHandler(response => {
         this.productData = response.object[0];
         this.getProductDataFlag = true;
+        this.isLoading();
         this.getProcedureStepsData(this.productData.procedureId);
       }));
   }
@@ -144,6 +180,7 @@ export class ProductDefinitionComponent implements OnInit {
       .subscribe(responseHandler(response => {
         this.procedureStepsData = response.object;
         this.getProcedureStepsFlag = true;
+        this.isLoading();
       }));
   }
 
@@ -157,29 +194,12 @@ export class ProductDefinitionComponent implements OnInit {
         ctrl.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
       });
       ctrl.getCustomersFlag = true;
+      this.isLoading();
     }));
   }
 
   getCustomerLabel(customer: Customer): string {
     return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`
-  }
-
-  getLocations() {
-    const ctrl = this;
-    if (ctrl.getLocationsFlag) {
-      return ctrl.locationsData;
-    }
-    this.globals.showLoader(true);
-    this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
-      response.object.map((x) => {
-        ctrl.locationsData.push({ label: x.name, value: x.id });
-      });
-      ctrl.getLocationsFlag = true;
-    }));
-  }
-
-  getLocationLabel(location: LocationModel): string {
-    return location.name;
   }
 
   getParts(isRefresh: boolean = false) {
@@ -229,6 +249,7 @@ export class ProductDefinitionComponent implements OnInit {
         if (isRefresh) {
           ctrl.isRefreshingProceduresData = false;
         }
+        this.isLoading();
       }));
   }
 
@@ -267,22 +288,32 @@ export class ProductDefinitionComponent implements OnInit {
           ctrl.procedureStepTemplatesData.push({ label: x.name, value: x });
         });
         ctrl.getProceduresFlag = true;
+        this.isLoading();
       }));
   }
 
 
   getProcedureSteps(id: number) {
     const ctrl = this;
+    ctrl.globals.showLoader(true);
 
     ctrl.getProcedureStepsFlag = false;
     ctrl.procedureStepsData = [];
     this.procedureService.stepGet(id, null, env.apiVersion).pipe(take(1))
     .subscribe(responseHandler(response => {
       response.object.forEach(step => {
-        ctrl.procedureStepsData.push({...step, ...ctrl.calculateStepValues(step)});
+
+        // Calculate each step values
+        const stepValues = ctrl.calculateStepValues(step);
+        ctrl.procedureStepsData.push({...step, ...stepValues});
+
       });
       ctrl.getProcedureStepsFlag = true;
+
+      // Calcuate total step values
+      ctrl.getStepsValues();
       ctrl.newStepsCounts = 0;
+      ctrl.globals.showLoader(false);
     }));
   }
 
@@ -316,16 +347,26 @@ export class ProductDefinitionComponent implements OnInit {
       values.totalEquipmentCharge += step.equipment_charge ? step.equipment_charge : 0;
     });
 
-    this.productData.totalSalePrice = values.totalLaborCharge + values.totalEquipmentCharge + this.productData.materialCost ? this.productData.materialCost : 0;
-
-    return values;
+    this.productData.totalLaborMins = values.totalLaborMins;
+    this.productData.totalMachineMins = values.totalMachineMins;
+    this.productData.laborCost = values.totalLaborCharge;
+    this.productData.equipmentCost = values.totalEquipmentCharge;
+    this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + this.productData.materialCost ? this.productData.materialCost : 0;
   }
 
-  getEquipPerMin(procedureStep: ProcedureStepModel) {
-    if (procedureStep.replacementCost && procedureStep.usefulLife && procedureStep.utilizationTime) {
-      return procedureStep.replacementCost/procedureStep.usefulLife;
-    } else {
-      return 0.0;
+  calculateStepValues(step: ProcedureStepModel) {
+    const laboar_chage = step.laborTime * LABOR_RATE_PER_MIN;
+    const annual_rm = step.replacementCost * RM_ANNUAL_RATE;
+    const rm_per_min = annual_rm / (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
+    const ex_per_min = (step.replacementCost / step.usefulLife) /  (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
+    const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
+
+    return {
+      laboar_charge: laboar_chage,
+      annual_rm: annual_rm,
+      rm_per_min: rm_per_min,
+      ex_per_min: ex_per_min,
+      equipment_charge: equipment_charge
     }
   }
 
@@ -334,7 +375,11 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   openQuoteViewModal() {
+    this.showQuoteViewModal = true;
+  }
 
+  closeQuoteViewModal() {
+    this.showQuoteViewModal = false;
   }
 
 
@@ -369,23 +414,7 @@ export class ProductDefinitionComponent implements OnInit {
     }
   }
 
-  calculateStepValues(step: ProcedureStepModel) {
 
-    const laboar_chage = step.laborTime * LABOR_RATE_PER_MIN;
-     const annual_rm = step.replacementCost * RM_ANNUAL_RATE;
-    const rm_per_min = annual_rm / (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
-    const ex_per_min = (step.replacementCost / step.usefulLife) /  (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
-    const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
-
-    return {
-      laboar_charge: laboar_chage,
-      annual_rm: annual_rm,
-      rm_per_min: rm_per_min,
-      ex_per_min: ex_per_min,
-      equipment_charge: equipment_charge
-    }
-
-  }
 
 }
 

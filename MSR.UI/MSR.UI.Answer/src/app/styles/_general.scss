@@ -140,3 +140,18 @@ p-footer button[type="submit"] {
   color: #f8f8f8;
   background: rgba(0, 0, 0, 0.24);
 }
+
+.input-group.row {
+  p-inputnumber {
+    flex: 1;
+    .ui-inputnumber {
+      width: 100%;
+    }
+  }
+}
+
+p-inputnumber-input {
+  border: none;
+  color: #f8f8f8;
+  background-color: rgba(0, 0, 0, 0.24);
+}
