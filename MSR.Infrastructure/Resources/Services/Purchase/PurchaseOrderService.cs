@@ -207,7 +207,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             }
         }
 
-        public async Task DeletePurchaseOrderAsync(DeletePurchaseOrder command)
+        public async Task<PurchaseOrderView> DeletePurchaseOrderAsync(DeletePurchaseOrder command)
         {
             var inUse = _unitOfWork.Purchases.Query().Any(i => i.PurchaseOrderId == command.Id);
 
@@ -232,6 +232,8 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
             _unitOfWork.PurchaseOrders.Delete(false, purchaseOrder);
             await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
+
+            return _mapper.Map<PurchaseOrderView>(purchaseOrder);
         }
 
         public async Task<IEnumerable<PurchaseOrderView>> GetPurchaseOrderProductAsync(GetPurchaseOrder command)

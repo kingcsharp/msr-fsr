@@ -43,8 +43,8 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(DeletePurchaseOrder command, CancellationToken cancellationToken = default)
         {
-            await _purchaseOrderService.DeletePurchaseOrderAsync(command);
-            return CommandResponse.SuccessCommand;
+            var ret = await _purchaseOrderService.DeletePurchaseOrderAsync(command);
+            return new CommandResponse<PurchaseOrderView>(ret);
         }
     }
 }

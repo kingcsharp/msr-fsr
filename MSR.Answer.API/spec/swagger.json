@@ -1748,7 +1748,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 3
             },
             "x-position": 1
           },
@@ -3195,11 +3196,13 @@
         "tags": [
           "Product"
         ],
+        "summary": "GetProduct",
         "operationId": "Product_GetProduct",
         "parameters": [
           {
             "name": "Id",
             "in": "query",
+            "description": "Get product by Id",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -3235,6 +3238,7 @@
         "tags": [
           "Product"
         ],
+        "summary": "UpdateProduct",
         "operationId": "Product_UpdateProduct",
         "parameters": [
           {
@@ -3444,6 +3448,7 @@
         "tags": [
           "PurchaseOrder"
         ],
+        "summary": "UpdatePurchaseOrder",
         "operationId": "PurchaseOrder_UpdatePurchaseOrder",
         "parameters": [
           {
@@ -3487,6 +3492,7 @@
         "tags": [
           "PurchaseOrder"
         ],
+        "summary": "DeletePurchaseOrder",
         "operationId": "PurchaseOrder_DeletePurchaseOrder",
         "parameters": [
           {
@@ -5651,55 +5657,62 @@
         }
       },
       "Role": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
           },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "isCertificationRole": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "menus": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/MenuItem"
-            }
-          },
-          "permissions": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Permission"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "isCertificationRole": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "menus": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/MenuItem"
+                }
+              },
+              "permissions": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Permission"
+                  }
+                ]
+              },
+              "inheritedPermissions": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Permission"
+                  }
+                ]
+              },
+              "parentRoles": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              },
+              "hasAssignedUsers": {
+                "type": "boolean"
               }
-            ]
-          },
-          "inheritedPermissions": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Permission"
-              }
-            ]
-          },
-          "parentRoles": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Role"
             }
-          },
-          "hasAssignedUsers": {
-            "type": "boolean"
           }
-        }
+        ]
       },
       "MenuItem": {
         "type": "object",
@@ -5889,6 +5902,81 @@
           32
         ]
       },
+      "TrackableModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreatableModel"
+          },
+          {
+            "type": "object",
+            "x-abstract": true,
+            "additionalProperties": true,
+            "properties": {
+              "lastUpdatedOn": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "lastUpdatedBy": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "lastUpdated": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null" },
+                  {
+                    "$ref": "#/components/schemas/UserModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CreatableModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "createdOn": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "createdBy": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "created": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null" },
+                  {
+                    "$ref": "#/components/schemas/UserModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "EntityModel": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "FileModel": {
         "type": "object",
         "additionalProperties": true,
@@ -6030,81 +6118,6 @@
             }
           }
         ]
-      },
-      "TrackableModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CreatableModel"
-          },
-          {
-            "type": "object",
-            "x-abstract": true,
-            "additionalProperties": true,
-            "properties": {
-              "lastUpdatedOn": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "lastUpdatedBy": {
-                "type": "integer",
-                "format": "int32",
-                "nullable": true
-              },
-              "lastUpdated": {
-                "nullable": true,
-                "oneOf": [
-                  { "type": "null" },
-                  {
-                    "$ref": "#/components/schemas/UserModel"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "CreatableModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityModel"
-          },
-          {
-            "type": "object",
-            "additionalProperties": true,
-            "properties": {
-              "createdOn": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "createdBy": {
-                "type": "integer",
-                "format": "int32",
-                "nullable": true
-              },
-              "created": {
-                "nullable": true,
-                "oneOf": [
-                  { "type": "null" },
-                  {
-                    "$ref": "#/components/schemas/UserModel"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "EntityModel": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
       },
       "AuditActionResultOfCustomer": {
         "allOf": [
@@ -10107,6 +10120,11 @@
           "status": {
             "type": "string",
             "nullable": true
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -10609,6 +10627,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/UserModel"
                   }
@@ -10962,6 +10981,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/PendingApprovalPopoverModel"
                   }
@@ -11848,6 +11868,10 @@
             "type": "integer",
             "format": "int32"
           }
+        },
+        "example": {
+            "menuId": 2147483647,
+            "roleId": 2147483647
         }
       },
       "AuditActionResultOfWorkflowStageModel": {
@@ -11893,6 +11917,15 @@
               "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
             }
           }
+        },
+        "example": {
+          "menuRoleId": 1,
+          "canRead": true,
+          "canCreate": true,
+          "canEdit": true,
+          "canDelete": true,
+          "canActivate": true,
+          "canApprove": true
         },
         "example": {
             "name": "d8f75230c904a614",

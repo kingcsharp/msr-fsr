@@ -48,6 +48,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Create"));
         }
 
+        /// <summary>
+        /// UpdatePurchaseOrder
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseOrderView>))]
         public async Task<IActionResult> UpdatePurchaseOrder([FromBody] UpdatePurchaseOrderRequest request)
@@ -57,6 +62,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
         }
         
+        /// <summary>
+        /// DeletePurchaseOrder
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanDelete)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult))]
         public async Task<IActionResult> DeletePurchaseOrder([FromRoute, Required]int id)
