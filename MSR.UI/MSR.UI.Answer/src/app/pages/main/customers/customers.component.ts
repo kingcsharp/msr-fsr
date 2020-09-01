@@ -113,7 +113,7 @@ export class CustomersComponent implements OnInit {
 
   }
 
-  changeCustomerStatus(customer:Customer){
+  changeCustomerStatus(customer: Customer) {
 
     let updateCustomerRequest = new UpdateCustomerRequest();
     updateCustomerRequest.customerId = customer.id;
@@ -130,6 +130,6 @@ export class CustomersComponent implements OnInit {
     this.customerService.customerPatch(env.apiVersion, updateCustomerRequest).subscribe(responseHandler((response) => {
 
     }));
-    
+
   }
 }

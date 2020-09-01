@@ -42,13 +42,13 @@ export class TemplateComponent implements OnInit {
     this.procedureTemplate.text = '';
     this.procedureTemplate.comments = '';
     this.procedureTemplate.referenceFiles = new Array<any>();
-    
+
 
     this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((response) => {
 
       this.availableRoles = response.object;
-      
+
       this.setProcedureTemplateForEditOrCreate();
 
     }));
@@ -85,7 +85,7 @@ export class TemplateComponent implements OnInit {
 
         }));
 
-      }else{
+      } else {
         this.selectedRoles = new Array<Role>();
       }
 
