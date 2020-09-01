@@ -1748,7 +1748,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 3
             },
             "x-position": 1
           },
@@ -1800,6 +1801,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
+              "nullable": true,
               "example": 3
             },
             "x-position": 1
