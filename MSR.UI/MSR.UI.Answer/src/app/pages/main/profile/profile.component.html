@@ -22,13 +22,13 @@
                         <label for="firstName" class="col-md-2 form-control-label text-md-right">
                             First Name:
                         </label>
-                        <div class="col-md-4 ">
+                        <div class="col-md-4" data-cy="firstNameValue">
                             <label class="form-control-label">{{user.firstName}}</label>
                         </div>
                         <label for="lastName" class="col-md-2  form-control-label text-md-right">
                             Last Name:
                         </label>
-                        <div class="col-md-4 ">
+                        <div class="col-md-4" data-cy="lastNameValue">
                             <label class="form-control-label">{{user.lastName}}</label>
                         </div>
                     </div>
@@ -36,13 +36,13 @@
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="email">
                             E-mail:
                         </label>
-                        <div class="col-md-4 col-12">
+                        <div class="col-md-4 col-12" data-cy="emailValue">
                             <label class="form-control-label">{{user.email}}</label>
                         </div>
                         <label for="userName" class="col-md-2  form-control-label text-md-right">
                             Username:
                         </label>
-                        <div class="col-md-4 ">
+                        <div class="col-md-4" data-cy="userNameValue">
                             <label class="form-control-label">{{user.userName}}</label>
                         </div>
                     </div>
@@ -51,13 +51,13 @@
                             Title:
                         </label>
                         <div class="col-md-4 ">
-                            <label class="form-control-label">{{user.title}}</label>
+                            <label class="form-control-label" data-cy="titleValue">{{user.title}}</label>
                         </div>
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
                             Phone:
                         </label>
                         <div class="col-md-4 col-12">
-                            <label class="form-control-label">{{user.phone}}</label>
+                            <label class="form-control-label" data-cy="phoneValue">{{user.phone}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -65,14 +65,14 @@
                             Supervisor:
                         </label>
                         <div class="col-md-4 ">
-                            <label class="form-control-label">{{user.supervisorName}}</label>
+                            <label class="form-control-label" data-cy="supervisorNameValue">{{user.supervisorName}}</label>
                         </div>
                         <label for="createdOn" *ngIf="user.id !== undefined"
                             class="col-md-2  form-control-label text-md-right">
                             Created On:
                         </label>
                         <div class="col-md-4" *ngIf="user.id !== undefined">
-                            <label class="form-control-label">{{user.createdOn | userTimezone}}</label>
+                            <label class="form-control-label" data-cy="createdOnValue">{{user.createdOn | userTimezone}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -81,7 +81,7 @@
                         </label>
                         <div class="col-md-4 ">
                             <div class="display-inline-block isActive">
-                                <label class="form-control-label">{{user.isActive?'Yes':'No'}}</label>
+                                <label class="form-control-label"  data-cy="isActiveValue">{{user.isActive?'Yes':'No'}}</label>
                             </div>
                         </div>
                         <label class="col-md-2  form-control-label text-md-right">
@@ -89,7 +89,7 @@
                         </label>
                         <div class="col-md-4 ">
                             <div class="display-inline-block isAnswerUser">
-                                <label class="form-control-label">{{user.isAnswerUser?'Yes':'No'}}</label>
+                                <label class="form-control-label" data-cy="isAnswerUserValue">{{user.isAnswerUser?'Yes':'No'}}</label>
                             </div>
                         </div>
                     </div>
@@ -98,14 +98,14 @@
                             Roles:
                         </label>
                         <div class="col-md-4 col-12">
-                            <span *ngFor="let item of user.roles"
+                            <span  *ngFor="let item of user.roles" data-cy="rolesValue"
                                 class="badge mr-xs badge-secondary ng-star-inserted">{{item.name}}</span>
                         </div>
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="locations">
                             Location:
                         </label>
                         <div class="col-md-4 col-12">
-                            <label class="form-control-label">{{user.locationName}}</label>
+                            <label class="form-control-label" data-cy="locationNameValue">{{user.locationName}}</label>
                         </div>
                     </div>
                     <div class="form-group row">
