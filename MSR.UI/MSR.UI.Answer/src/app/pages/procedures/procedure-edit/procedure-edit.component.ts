@@ -352,7 +352,7 @@ export class ProcedureEditComponent implements OnInit {
 
     updateProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1;
     this.globals.showLoader(true);
-    this.procedureService.stepPatch(updateProcedureStepRequest.procedureStepId, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((response) => {
+    this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((response) => {
       procedureStep.printOrder = updateProcedureStepRequest.printOrder;
     }));
 
