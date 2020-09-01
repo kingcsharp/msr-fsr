@@ -34,5 +34,6 @@ namespace MSR.Domain.Views
         public virtual ICollection<PurchaseOrderProductView> Products { get; set; }
         public bool IsDeletable { get; set; }
         public string Status { get; set; }
+        public int? Revision { get; set; }
     }
 }

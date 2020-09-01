@@ -95,7 +95,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   initPageCreateMode() {
-    this.getQuoteData();
+    this.getQuoteData(this.id);
     this.getAllData();
   }
 
@@ -118,17 +118,23 @@ export class ProductDefinitionComponent implements OnInit {
   isLoading() {
     switch(this.mode) {
       case this.productPageModes.Create:
-        // this.globals.showLoader(!(
-        //   this.getQuoteDataFlag &&
-        //   this.getCustomersFlag &&
-        //   this.getPartsFlag &&
-        //   this.getProcedureStepsFlag &&
-        //   this.getProcedureStepTemplatesFlag
-        // ));
-        this.globals.showLoader(!this.getQuoteDataFlag)
+        this.globals.showLoader(!(
+          this.getQuoteDataFlag &&
+          this.getCustomersFlag &&
+          this.getPartsFlag &&
+          this.getProcedureStepsFlag &&
+          this.getProcedureStepTemplatesFlag
+        ));
         break;
       case this.productPageModes.Edit:
-
+        this.globals.showLoader(!(
+          this.getProductDataFlag &&
+          this.getQuoteDataFlag &&
+          this.getCustomersFlag &&
+          this.getPartsFlag &&
+          this.getProcedureStepsFlag &&
+          this.getProcedureStepTemplatesFlag
+        ));
         break;
       case this.productPageModes.View:
 
@@ -138,23 +144,27 @@ export class ProductDefinitionComponent implements OnInit {
     }
   }
 
-  getQuoteData() {
+  getQuoteData(id: number) {
     this.getQuoteDataFlag = false;
-    this.quoteService.quoteGet(this.id, env.apiVersion)
+    const isCreateMode = this.mode === this.productPageModes.Create;
+    this.quoteService.quoteGet(id, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.quoteData = response.object[0];
         this.quoteJson = JSON.parse(this.quoteData.quoteJson);
         this.getQuoteDataFlag = true;
 
-        this.productData = new CreateProductRequest();
-        // this.productData.name = this.quoteData.productName;
-        this.productData.quoteId = this.quoteData.id;
-        this.productData.revision = 0;
+        if (isCreateMode) {
+          this.productData = new CreateProductRequest();
+          // this.productData.name = this.quoteData.productName;
+          this.productData.quoteId = this.quoteData.id;
+          this.productData.revision = 0;
+          this.productData.laborCost = 0;
+          this.productData.equipmentCost = 0;
+        }
+
         this.productData.totalLaborMins = 0;
         this.productData.totalMachineMins = 0;
-        this.productData.laborCost = 0;
-        this.productData.equipmentCost = 0;
 
         this.getProductDataFlag = true;
         this.isLoading();
@@ -170,6 +180,7 @@ export class ProductDefinitionComponent implements OnInit {
         this.getProductDataFlag = true;
         this.isLoading();
         this.getProcedureStepsData(this.productData.procedureId);
+        this.getQuoteData(this.productData.quoteId);
       }));
   }
 
