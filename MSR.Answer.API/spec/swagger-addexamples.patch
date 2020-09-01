@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-09-01 08:45:58.284315000 -0700
-+++ swagger-work.json	2020-09-01 08:45:58.355781800 -0700
+--- swagger-work.json.orig	2020-09-01 08:52:59.668451000 -0700
++++ swagger-work.json	2020-09-01 08:52:59.736933200 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -300,15 +300,6 @@
              },
              "x-position": 3
            }
-@@ -2307,7 +2332,7 @@
-             "content": {
-               "application/json": {
-                 "schema": {
--                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepModel"
-+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepRequest"
-                 }
-               }
-             }
 @@ -2329,7 +2354,8 @@
              "required": true,
              "schema": {

@@ -2332,7 +2332,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepRequest"
+                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepModel"
                 }
               }
             }
