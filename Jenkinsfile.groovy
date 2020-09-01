@@ -158,21 +158,6 @@ pipeline {
             }
         }
 
-        stage("Promote UI & API to PRODUCTION") {
-            agent { label 'master'}
-            steps {
-                script {
-                    timeout(activity: true, time: 5) {
-                        input message: 'Are you ready to deploy to PRODUCTION?', parameters: [booleanParam(defaultValue: false, description: '', name: 'choice')]
-                    }
-                    sh "sudo sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
-                    sh "cat ${API_COMPOSE}"
-                    deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
-                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
-                }
-            }
-        }
-
         /*
         stage("Running API Tests") {
             agent { label 'jenkins-ecs-slave' }
