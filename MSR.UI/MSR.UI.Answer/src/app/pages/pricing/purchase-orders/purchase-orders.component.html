@@ -44,13 +44,13 @@
             <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('referencePo',gridSettings)">
+        <th [hidden]="!cg.isVisibleCol('customerReferencePO',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" tooltip="Search by PO#" data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'referencePo', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['referencePo']?.value">
-            <i *ngIf="dt.filters['referencePo']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'referencePo')"></i>
+              (input)="dt.filter($event.target.value, 'customerReferencePO', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['customerReferencePO']?.value">
+            <i *ngIf="dt.filters['customerReferencePO']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'customerReferencePO')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('invoicedBalance',gridSettings)">
@@ -144,8 +144,8 @@
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
           {{purcahseordermodel.name}}
         </td>
-        <td [hidden]="!cg.isVisibleCol('referencePo',gridSettings)">
-          {{purcahseordermodel.referencePo}}
+        <td [hidden]="!cg.isVisibleCol('customerReferencePO',gridSettings)">
+          {{purcahseordermodel.customerReferencePO}}
         </td>
         <td [hidden]="!cg.isVisibleCol('invoicedBalance',gridSettings)">
           {{purcahseordermodel.invoicedBalance | currency }}
@@ -205,7 +205,7 @@
   position="top">
 </p-confirmDialog>
 
-<p-dialog header="Edit Purchase Order" [(visible)]="display" [appendTo]="'body'" [baseZIndex]="100001" [modal]='true'
+<p-dialog header="Edit Purchase Order" *ngIf="display" [(visible)]="display" [appendTo]="'body'" [baseZIndex]="100001" [modal]='true'
   [style]="{width: '50vw'}" data-cy="purchase-order-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onEditSubmit()" novalidate="novalidate">
@@ -221,9 +221,9 @@
             <label for="firstName" class="col-md-4 col-form-label text-md-right">
               Customer:
             </label>
-            <p-dropdown class="col-md-8" placeholder="Select Client" optionLabel="name" name="CutomerId" 
-            [(ngModel)]="currentPO.customerId"
-              [options]="customersData" appendTo="body" [baseZIndex]="100002" required>
+            <p-dropdown class="col-md-8" placeholder="Select Client" optionLabel="name" name="CutomerId"
+              [(ngModel)]="currentPO.customer" [options]="customersData" appendTo="body" [baseZIndex]="100002"
+              required>
             </p-dropdown>
           </div>
 
@@ -244,7 +244,7 @@
             </label>
             <div class="col-md-8 col-12">
               <input placeholder="Enter Reference Customer PO # (typically a blanket PO)" type="text"
-                [(ngModel)]="currentPO.referencePo" name="RefCustPO" class="form-control input-transparent"
+                [(ngModel)]="currentPO.customerReferencePO" name="RefCustPO" class="form-control input-transparent"
                 data-parsley-trigger="change" data-parsley-required="true" data-parsley-validation-threshold="1"
                 data-cy="refcustpo-input">
             </div>
@@ -288,7 +288,7 @@
             </label>
             <div class="col-md-8 col-12 input-group input-group-transparent">
               <span class="input-group-addon bg-secondary">$</span>
-              <input [(ngModel)]="currentPO.totalPurchaseLimit" placeholder="Enter total amount" type="text"
+              <input [(ngModel)]="currentPO.totalPurchaseLimit" placeholder="Enter total amount" type="number"
                 class="form-control input-transparent" name="TotalPurchaseLimit" data-cy="totalamount-input">
               <span class="input-group-addon bg-secondary">.00</span>
             </div>
@@ -299,7 +299,7 @@
               Tax %:
             </label>
             <div class="col-md-8 col-12 input-group input-group-transparent">
-              <input placeholder="Enter Tax %" type="text" class="form-control input-transparent" name="Tax">
+              <input placeholder="Enter Tax %" type="number" class="form-control input-transparent" name="Tax">
               <span class="input-group-addon bg-secondary">%</span>
             </div>
           </div>
@@ -309,8 +309,8 @@
               Products:
             </label>
             <div class="col-md-10 col-12">
-              <multiselect-wrapper-form defaultLabelProperty="name" defaultLabel="Select Products" name="ProductId"
-                [options]="productsData">
+              <multiselect-wrapper-form defaultLabel="Select Products" name="ProductId" defaultId="id"
+                defaultLabelProperty="name" [options]="productsData" [limit]="30">
               </multiselect-wrapper-form>
             </div>
           </div>

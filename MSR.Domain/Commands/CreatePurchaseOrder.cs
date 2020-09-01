@@ -9,7 +9,7 @@ namespace MSR.Domain.Commands
     {
         public int CustomerId { get; set; }
         public string Name { get; set; }
-        public string ReferenceCustomerPO { get; set; }
+        public string CustomerReferencePO { get; set; }
         public int[] Products { get; set; }
         public DateTime OpenDate { get; set; }
         public DateTime? CloseDate { get; set; }

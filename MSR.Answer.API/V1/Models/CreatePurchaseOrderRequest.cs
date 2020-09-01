@@ -13,7 +13,7 @@ namespace MSR.Answer.API.V1.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public string ReferenceCustomerPO { get; set; }
+        public string CustomerReferencePO { get; set; }
         [Required]
         public string ReferenceName { get; set; }
         [Required]

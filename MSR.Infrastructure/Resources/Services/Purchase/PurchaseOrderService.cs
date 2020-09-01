@@ -43,15 +43,14 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 Id = po.Id,
                 Name = po.Name,
                 CustomerId = po.CustomerId,
-                CustomerReferencePO = po.CustomerReference,
+                CustomerReferencePO = po.ReferencePO,
+                CustomerReference = po.CustomerReference,
+                ReferenceName = po.ReferenceName,
                 OpenDate = po.OpenDate,
                 CloseDate = po.CloseDate,
                 Revision = po.Revision,
-                TotalPurchaseLimit = po.TotalPurchaseLimit,
-                CreatedBy = po.CreatedBy,
-                CreatedOn = po.CreatedOn,
-                Created = _mapper.Map<UserModel>(po.Created)
-            }).ToListAsync();
+                TotalPurchaseLimit = po.TotalPurchaseLimit
+            }).Take(20).ToListAsync();
 
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
             var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId);
@@ -180,7 +179,8 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 }
 
                 await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
-                return _mapper.Map<PurchaseOrderView>(purchaseOrder);
+                var result = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
+                return result.FirstOrDefault();
             }
             else
             {
@@ -207,7 +207,9 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 }
 
                 await _unitOfWork.SaveChangesAsync();
-                return _mapper.Map<PurchaseOrderView>(poApproval);
+
+                var result = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
+                return result.FirstOrDefault();
             }
         }
 

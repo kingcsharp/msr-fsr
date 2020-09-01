@@ -320,18 +320,18 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Product, PurchaseOrderProductView>();
             CreateMap<CreatePurchaseOrder, PurchaseOrder>()
-                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.CustomerReferencePO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo));
             CreateMap<CreatePurchaseOrder, PurchaseOrderApproval>()
-                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.CustomerReferencePO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo));
             CreateMap<PurchaseOrderApproval, PurchaseOrder>();
             CreateMap<UpdatePurchaseOrder, PurchaseOrder>()
-                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.CustomerReferencePO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdatePurchaseOrder, PurchaseOrderApproval>()
-                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.ReferenceCustomerPO))
+                .ForMember(dest => dest.ReferencePO, opts => opts.MapFrom(src => src.CustomerReferencePO))
                 .ForMember(dest => dest.CustomerReference, opts => opts.MapFrom(src => src.CustomerReferenceNo))
                 .ForMember(dest => dest.PurchaseOrderId, opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Id, opts => opts.Ignore());

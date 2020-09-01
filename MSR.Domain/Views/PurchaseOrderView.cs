@@ -11,6 +11,7 @@ namespace MSR.Domain.Views
         public int CustomerId { get; set; }
 
         public string CustomerName { get; set; }
+        public string ReferenceName { get; set; }
 
         public string Name { get; set; }
 

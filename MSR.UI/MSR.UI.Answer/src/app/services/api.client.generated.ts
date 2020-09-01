@@ -3983,6 +3983,10 @@ export class ProductService {
         return _observableOf<AuditActionResultOfProductModel>(<any>null);
     }
 
+    /**
+     * GetProduct
+     * @param id (optional) Get product by Id
+     */
     productGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product?";
         if (version === undefined || version === null)
@@ -4036,6 +4040,9 @@ export class ProductService {
         return _observableOf<AuditActionResultOfIEnumerableOfProductModel>(<any>null);
     }
 
+    /**
+     * UpdateProduct
+     */
     productPatch(version: string, request: UpdateProductRequest): Observable<AuditActionResultOfProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product";
         if (version === undefined || version === null)
@@ -4338,6 +4345,9 @@ export class PurchaseOrderService {
         return _observableOf<AuditActionResultOfPurchaseOrderView>(<any>null);
     }
 
+    /**
+     * UpdatePurchaseOrder
+     */
     purchaseOrderPatch(version: string, request: UpdatePurchaseOrderRequest): Observable<AuditActionResultOfPurchaseOrderView> {
         let url_ = this.baseUrl + "/v{version}/PurchaseOrder";
         if (version === undefined || version === null)
@@ -4393,6 +4403,9 @@ export class PurchaseOrderService {
         return _observableOf<AuditActionResultOfPurchaseOrderView>(<any>null);
     }
 
+    /**
+     * DeletePurchaseOrder
+     */
     purchaseOrderDelete(id: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/PurchaseOrder/{id}";
         if (id === undefined || id === null)
@@ -13264,7 +13277,7 @@ export interface IWorkOrderModel {
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
 }
 
-export class PurchaseModel implements IPurchaseModel {
+export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     id?: number;
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
@@ -13284,15 +13297,11 @@ export class PurchaseModel implements IPurchaseModel {
     purchaseOrderProduct?: ProductModel | undefined;
 
     constructor(data?: IPurchaseModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.id = _data["id"];
             this.purchaseOrderId = _data["purchaseOrderId"];
@@ -13348,11 +13357,12 @@ export class PurchaseModel implements IPurchaseModel {
         data["location"] = this.location ? this.location.toJSON() : <any>undefined;
         data["purchaseOrder"] = this.purchaseOrder ? this.purchaseOrder.toJSON() : <any>undefined;
         data["purchaseOrderProduct"] = this.purchaseOrderProduct ? this.purchaseOrderProduct.toJSON() : <any>undefined;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IPurchaseModel {
+export interface IPurchaseModel extends ICreatableModel {
     id?: number;
     purchaseOrderId?: number;
     purchaseOrderProductId?: number;
@@ -13372,7 +13382,7 @@ export interface IPurchaseModel {
     purchaseOrderProduct?: ProductModel | undefined;
 }
 
-export class PurchaseOrderModel implements IPurchaseOrderModel {
+export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrderModel {
     id?: number;
     customerId?: number;
     name?: string | undefined;
@@ -13386,15 +13396,11 @@ export class PurchaseOrderModel implements IPurchaseOrderModel {
     location?: LocationModel | undefined;
 
     constructor(data?: IPurchaseOrderModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.id = _data["id"];
             this.customerId = _data["customerId"];
@@ -13430,11 +13436,12 @@ export class PurchaseOrderModel implements IPurchaseOrderModel {
         data["customerReference"] = this.customerReference;
         data["locationId"] = this.locationId;
         data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IPurchaseOrderModel {
+export interface IPurchaseOrderModel extends ICreatableModel {
     id?: number;
     customerId?: number;
     name?: string | undefined;
@@ -14120,10 +14127,11 @@ export interface IAuditActionResultOfIEnumerableOfPurchaseOrderView extends IAud
     object?: PurchaseOrderView[] | undefined;
 }
 
-export class PurchaseOrderView implements IPurchaseOrderView {
+export class PurchaseOrderView extends CreatableModel implements IPurchaseOrderView {
     id?: number;
     customerId?: number;
     customerName?: string | undefined;
+    referenceName?: string | undefined;
     name?: string | undefined;
     customerReferencePO?: string | undefined;
     customerReferenceNo?: string | undefined;
@@ -14137,21 +14145,19 @@ export class PurchaseOrderView implements IPurchaseOrderView {
     products?: PurchaseOrderProductView[] | undefined;
     isDeletable?: boolean;
     status?: string | undefined;
+    revision?: number | undefined;
 
     constructor(data?: IPurchaseOrderView) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.id = _data["id"];
             this.customerId = _data["customerId"];
             this.customerName = _data["customerName"];
+            this.referenceName = _data["referenceName"];
             this.name = _data["name"];
             this.customerReferencePO = _data["customerReferencePO"];
             this.customerReferenceNo = _data["customerReferenceNo"];
@@ -14169,6 +14175,7 @@ export class PurchaseOrderView implements IPurchaseOrderView {
             }
             this.isDeletable = _data["isDeletable"];
             this.status = _data["status"];
+            this.revision = _data["revision"];
         }
     }
 
@@ -14184,6 +14191,7 @@ export class PurchaseOrderView implements IPurchaseOrderView {
         data["id"] = this.id;
         data["customerId"] = this.customerId;
         data["customerName"] = this.customerName;
+        data["referenceName"] = this.referenceName;
         data["name"] = this.name;
         data["customerReferencePO"] = this.customerReferencePO;
         data["customerReferenceNo"] = this.customerReferenceNo;
@@ -14201,14 +14209,17 @@ export class PurchaseOrderView implements IPurchaseOrderView {
         }
         data["isDeletable"] = this.isDeletable;
         data["status"] = this.status;
+        data["revision"] = this.revision;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IPurchaseOrderView {
+export interface IPurchaseOrderView extends ICreatableModel {
     id?: number;
     customerId?: number;
     customerName?: string | undefined;
+    referenceName?: string | undefined;
     name?: string | undefined;
     customerReferencePO?: string | undefined;
     customerReferenceNo?: string | undefined;
@@ -14222,6 +14233,7 @@ export interface IPurchaseOrderView {
     products?: PurchaseOrderProductView[] | undefined;
     isDeletable?: boolean;
     status?: string | undefined;
+    revision?: number | undefined;
 }
 
 export class PurchaseOrderProductView implements IPurchaseOrderProductView {
@@ -14306,7 +14318,7 @@ export interface IAuditActionResultOfPurchaseOrderView extends IAuditActionResul
 export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
     customerId!: number;
     name!: string;
-    referenceCustomerPO!: string;
+    customerReferencePO!: string;
     referenceName!: string;
     products!: number[];
     openDate?: Date;
@@ -14331,7 +14343,7 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
         if (_data) {
             this.customerId = _data["customerId"];
             this.name = _data["name"];
-            this.referenceCustomerPO = _data["referenceCustomerPO"];
+            this.customerReferencePO = _data["customerReferencePO"];
             this.referenceName = _data["referenceName"];
             if (Array.isArray(_data["products"])) {
                 this.products = [] as any;
@@ -14357,7 +14369,7 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
         data = typeof data === 'object' ? data : {};
         data["customerId"] = this.customerId;
         data["name"] = this.name;
-        data["referenceCustomerPO"] = this.referenceCustomerPO;
+        data["customerReferencePO"] = this.customerReferencePO;
         data["referenceName"] = this.referenceName;
         if (Array.isArray(this.products)) {
             data["products"] = [];
@@ -14376,7 +14388,7 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
 export interface ICreatePurchaseOrderRequest {
     customerId: number;
     name: string;
-    referenceCustomerPO: string;
+    customerReferencePO: string;
     referenceName: string;
     products: number[];
     openDate?: Date;

@@ -70,7 +70,7 @@ export class PurchaseOrdersComponent implements OnInit {
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'ID', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-      new ColumnsSaved({ id: 'referencePo', label: 'PO#', visible: true }),
+      new ColumnsSaved({ id: 'customerReferencePO', label: 'PO#', visible: true }),
       new ColumnsSaved({ id: 'invoicedBalance', label: 'Invoiced', visible: true }),
       new ColumnsSaved({ id: 'uninvoicedBalance', label: 'Not Invoiced', visible: true }),
       new ColumnsSaved({ id: 'balance', label: 'Balance', visible: true }),
@@ -103,7 +103,13 @@ export class PurchaseOrdersComponent implements OnInit {
   onClickEdit(purchaseOrder: PurchaseOrder) {
     //TODO: Edit function
     this.currentPO = purchaseOrder;
+    this.setCurrentCustomer(this.currentPO, purchaseOrder);
+
     this.display = true;
+  }
+
+  setCurrentCustomer(currentPO, purchaseOrder) {
+    currentPO.customer = this.customersData.find(x => x.id == purchaseOrder.customerId);
   }
 
   onClickDelete(purchaseOrder: PurchaseOrder) {
@@ -140,12 +146,21 @@ export class PurchaseOrdersComponent implements OnInit {
   closePurchaseOrder(purchaseOrder: PurchaseOrder) {
     let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
     Object.assign(purchaseOrderRequest, purchaseOrder);
+    purchaseOrderRequest.closeDate = new Date();
+    this.setCustomerId(purchaseOrderRequest, purchaseOrder);
     this.globals.showLoader(true);
     // BACKEND ENDPOINT TBD
-    // this.purchaseOrderService.purchaseOrderPatch(env.apiVersion,purchaseOrderRequest).pipe(take(1))
-    // .subscribe(responseHandler(response => {
-    //   purchaseOrder.status = 'Closed';
-    // }));
+    this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        const index = this.data.findIndex(x => x.id === purchaseOrder.id);
+        this.data.splice(index, 1);
+        this.data.splice(index, 0, response.object);
+      }));
+  }
+
+  setCustomerId(purchaseOrderRequest: any, purchaseOrder: any) {
+    purchaseOrderRequest.customer = purchaseOrder.customer.id;
+    debugger;
   }
 
   onClickAdd() {
@@ -182,9 +197,18 @@ export class PurchaseOrdersComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      const index = this.data.findIndex(x => x.id === this.currentPO.id);
-      this.data[index] = this.currentPO;
-      this.currentPO = new PurchaseOrder();
+      let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
+      Object.assign(purchaseOrderRequest, this.currentPO);
+      this.globals.showLoader(true);
+      this.setCustomerId(purchaseOrderRequest, this.currentPO);
+      this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
+        .subscribe(responseHandler(response => {
+          console.log(response);
+          const index = this.data.findIndex(x => x.id === this.currentPO.id);
+          this.data.splice(index, 1);
+          this.data.splice(index, 0, response.object);
+        }));
+
       ctrl.clseDialog();
     }
   }
