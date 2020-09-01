@@ -29,13 +29,13 @@
                             data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                             class="form-control input-transparent" tooltip="Name of Procedure" data-cy="name-input">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" *ngIf="availableRoles !== undefined">
                         <label for="roles" class="col-form-label text-left">
                             Roles
                         </label><br />
-                        <p-multiSelect name="roles" [options]="availableRoles" [(ngModel)]="selectedRoles"
-                            data-cy="roles-multiselect">
-                        </p-multiSelect>
+                        <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="selectedRoles"
+                            defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
+                        </multiselect-wrapper-form>
                     </div>
                     <div class="form-group">
                         <label for="duration" class="col-form-label text-left">
@@ -217,9 +217,9 @@
                                     <label for="roles{{i}}" class="col-form-label text-left col-3">
                                         Roles
                                     </label>
-                                    <p-multiSelect name="role{{i}}" [options]="availableRoles" [(ngModel)]="procedureStep.value.selectedRoles"
-                                        data-cy="roles-multiselect">
-                                    </p-multiSelect>
+                                    <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="procedureStep.value.selectedRoles"
+                                        defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
+                                    </multiselect-wrapper-form>
                                 </div>
                             </div>
 

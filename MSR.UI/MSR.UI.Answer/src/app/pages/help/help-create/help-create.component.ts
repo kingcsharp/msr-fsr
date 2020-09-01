@@ -159,7 +159,7 @@ export class HelpCreateComponent implements OnInit {
       updateHelpPageRequest.roleIds = this.selectedRoles.filter((selectedRole) => this.availableRoles.find(role => role.name === selectedRole.name)).map(s => s.id);
     }
 
-
+    this.globals.showLoader(true);
     this.helpService.helpPatch(env.apiVersion, updateHelpPageRequest).subscribe(responseHandler((response) => {
       if (!response.hasErrors) {
         this.router.navigate(['app/help/help']);
