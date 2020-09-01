@@ -89,12 +89,6 @@ namespace MSR.Answer.API.V1.Models
         public string Comments { get; set; }
 
         /// <summary>
-        /// Gets or Sets ReferenceProcedures
-        /// </summary>
-        [DataMember(Name="referenceProcedures")]
-        public List<int?> ReferenceProcedures { get; set; }
-
-        /// <summary>
         /// Gets or Sets ReferenceDocuments
         /// </summary>
         [DataMember(Name="referenceDocuments")]
@@ -131,7 +125,6 @@ namespace MSR.Answer.API.V1.Models
             sb.Append("  ProcedureStepId: ").Append(ProcedureStepId).Append("\n");
             sb.Append("  NumberOfQuestionsToUse: ").Append(NumberOfQuestionsToUse).Append("\n");
             sb.Append("  Comments: ").Append(Comments).Append("\n");
-            sb.Append("  ReferenceProcedures: ").Append(ReferenceProcedures).Append("\n");
             sb.Append("  ReferenceDocuments: ").Append(ReferenceDocuments).Append("\n");
             sb.Append("  ReferenceFiles: ").Append(ReferenceFiles).Append("\n");
             sb.Append("  Roles: ").Append(Roles).Append("\n");
@@ -227,11 +220,6 @@ namespace MSR.Answer.API.V1.Models
                     Comments.Equals(other.Comments)
                 ) &&
                 (
-                    ReferenceProcedures == other.ReferenceProcedures ||
-                    ReferenceProcedures != null &&
-                    ReferenceProcedures.SequenceEqual(other.ReferenceProcedures)
-                ) &&
-                (
                     ReferenceDocuments == other.ReferenceDocuments ||
                     ReferenceDocuments != null &&
                     ReferenceDocuments.SequenceEqual(other.ReferenceDocuments)
@@ -280,8 +268,6 @@ namespace MSR.Answer.API.V1.Models
                     hashCode = hashCode * 59 + NumberOfQuestionsToUse.GetHashCode();
                     if (Comments != null)
                     hashCode = hashCode * 59 + Comments.GetHashCode();
-                    if (ReferenceProcedures != null)
-                    hashCode = hashCode * 59 + ReferenceProcedures.GetHashCode();
                     if (ReferenceDocuments != null)
                     hashCode = hashCode * 59 + ReferenceDocuments.GetHashCode();
                     if (ReferenceFiles != null)

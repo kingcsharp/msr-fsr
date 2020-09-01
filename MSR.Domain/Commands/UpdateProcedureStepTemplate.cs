@@ -35,11 +35,6 @@ namespace MSR.Domain.Commands
         public double? LaborTime { get; set; }
 
         /// <summary>
-        /// Gets or Sets ReferenceProcedures
-        /// </summary>
-        public List<int> ReferenceProcedures { get; set; }
-
-        /// <summary>
         /// Gets or Sets ReferenceDocuments
         /// </summary>
         public List<int> ReferenceDocuments { get; set; }
@@ -89,7 +84,6 @@ namespace MSR.Domain.Commands
             sb.Append("  UsefulLife: ").Append(UsefulLife).Append("\n");
             sb.Append("  Text: ").Append(Text).Append("\n");
             sb.Append("  Comments: ").Append(Comments).Append("\n");
-            sb.Append("  ReferenceProcedures: ").Append(ReferenceProcedures).Append("\n");
             sb.Append("  ReferenceDocuments: ").Append(ReferenceDocuments).Append("\n");
             sb.Append("  Roles: ").Append(Roles).Append("\n");
             sb.Append("}\n");
@@ -163,11 +157,6 @@ namespace MSR.Domain.Commands
                     Comments.Equals(other.Comments)
                 ) &&
                 (
-                    ReferenceProcedures == other.ReferenceProcedures ||
-                    ReferenceProcedures != null &&
-                    ReferenceProcedures.SequenceEqual(other.ReferenceProcedures)
-                ) &&
-                (
                     ReferenceDocuments == other.ReferenceDocuments ||
                     ReferenceDocuments != null &&
                     ReferenceDocuments.SequenceEqual(other.ReferenceDocuments)
@@ -203,8 +192,6 @@ namespace MSR.Domain.Commands
                     hashCode = hashCode * 59 + Text.GetHashCode();
                     if (Comments != null)
                     hashCode = hashCode * 59 + Comments.GetHashCode();
-                    if (ReferenceProcedures != null)
-                    hashCode = hashCode * 59 + ReferenceProcedures.GetHashCode();
                     if (ReferenceDocuments != null)
                     hashCode = hashCode * 59 + ReferenceDocuments.GetHashCode();
                     if (Roles != null)
