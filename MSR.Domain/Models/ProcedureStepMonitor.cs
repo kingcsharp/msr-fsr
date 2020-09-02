@@ -33,6 +33,15 @@ namespace MSR.Domain.Models
         public int InputTypeId { get; set; }
 
         /// <summary>
+        /// Sensor Name
+        /// </summary>
+        /// <description>
+        /// Sensor Name is only valid if this monitor is
+        /// of input type == sensor.
+        /// </description>
+        public string SensorName { get; set; }
+
+        /// <summary>
         /// Gets or Sets ShouldBe
         /// </summary>
         public string ShouldBe { get; set; }

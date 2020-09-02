@@ -8203,6 +8203,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "sensorName": {
+            "type": "string",
+            "nullable": true
+          },
           "shouldBe": {
             "type": "string",
             "nullable": true
@@ -8236,6 +8240,11 @@
           "inputType": {
             "type": "string",
             "description": "Gets or Sets InputType",
+            "nullable": true
+          },
+          "sensorName": {
+            "type": "string",
+            "description": "Sensor Name",
             "nullable": true
           },
           "monitorType": {
@@ -8317,6 +8326,11 @@
           "inputType": {
             "type": "string",
             "description": "Gets or Sets InputType string",
+            "nullable": true
+          },
+          "sensorName": {
+            "type": "string",
+            "description": "Sensor Name",
             "nullable": true
           },
           "monitorType": {

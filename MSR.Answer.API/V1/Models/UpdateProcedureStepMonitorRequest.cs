@@ -33,6 +33,16 @@ namespace MSR.Answer.API.V1.Models
         public string InputType { get; set; }
 
         /// <summary>
+        /// Sensor Name
+        /// </summary>
+        /// <description>
+        /// Sensor Name is only valid if this monitor is
+        /// of input type == sensor.
+        /// </description>
+        [DataMember(Name="sensorName")]
+        public string SensorName { get; set; }
+
+        /// <summary>
         /// Gets or Sets MonitorType string
         /// </summary>
         [DataMember(Name="monitorType")]
