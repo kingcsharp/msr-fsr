@@ -54,7 +54,7 @@ export class LocationsComponent implements OnInit {
     ];
 
     this.canAddLocation = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDeleteLocation = this.hasPrivilege(this.privileges.CanActivate);
+    this.canDeleteLocation = this.hasPrivilege(this.privileges.CanDelete);
     this.canEditLocation = this.hasPrivilege(this.privileges.CanEdit);
     this.canApproveLocation = this.hasPrivilege(this.privileges.CanApprove);
     this.getLocations();

@@ -47,7 +47,7 @@ export class ProceduresComponent implements OnInit {
       ];
 
     this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDelete = this.hasPrivilege(this.privileges.CanActivate);
+    this.canDelete = this.hasPrivilege(this.privileges.CanDelete);
     this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
 
     this.getProcedures();
@@ -64,7 +64,7 @@ export class ProceduresComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
+    return this.globals.hasPrivilege(EnumMenuItem.Procedures, privName);
   }
 
   openConfirmDeleteDialog(procedure) {
