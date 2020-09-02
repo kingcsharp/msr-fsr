@@ -183,7 +183,7 @@ export class ProcedureEditComponent implements OnInit {
           procedureStep.predecessorStepName = undefined;
         }
 
-        if(procedureStep.text === undefined){
+        if (procedureStep.text === undefined) {
           procedureStep.text = '';
         }
 
