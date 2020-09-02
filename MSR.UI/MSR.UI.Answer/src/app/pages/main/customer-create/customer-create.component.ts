@@ -14,8 +14,8 @@ import { Globals } from '../../../models/lib/globals';
 })
 export class CustomerCreateComponent implements OnInit {
 
-  customer: Customer = null;
-  customerToEditId: number = null;
+  customer: Customer = new Customer;
+  customerToEditId: number = 0;
   allUsers: Array<SelectItem>;
   locationOptions: Array<LocationModel>;
   selectedLocation: LocationModel;

@@ -183,6 +183,10 @@ export class ProcedureEditComponent implements OnInit {
           procedureStep.predecessorStepName = undefined;
         }
 
+        if (procedureStep.text === undefined) {
+          procedureStep.text = '';
+        }
+
 
       });
 
@@ -324,8 +328,7 @@ export class ProcedureEditComponent implements OnInit {
   deleteStep() {
     this.globals.showLoader(true);
     this.procedureService.stepDelete(this.procedure.id, this.procedureStepToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
-      let procedureStepToDeleteIndex = this.procedureSteps.findIndex(s => s.id === this.procedureStepToDelete.id);
-      this.procedureSteps.splice(procedureStepToDeleteIndex, 1);
+      this.procedureSteps = this.procedureSteps.filter(s => s.id === this.procedureStepToDelete.id);
       this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
     }));
 
@@ -415,7 +418,7 @@ export class ProcedureEditComponent implements OnInit {
         procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles === undefined ? [] : procedureStepTemplateToAdd.referenceFiles;
         procedureStepToAdd.replacementCost = 0;
         procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
-        procedureStepToAdd.stepText = procedureStepTemplateToAdd.text;
+        procedureStepToAdd.stepText = procedureStepTemplateToAdd.text === undefined ? '' : procedureStepTemplateToAdd.text;
         procedureStepToAdd.title = procedureStepTemplateToAdd.title;
         procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
         procedureStepToAdd.equipmentTime = 0;
