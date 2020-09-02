@@ -62,11 +62,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
                         _mapper.Map<FileModel>(map.FileObject)
                     );
                 }
+
+                // TODO: This is unimplemented.  If it is false, the template
+                // can be deleted.  Right now it is always true.
+                model.IsRelatedToAProduct = true;
+
                 return model;
             }).OrderBy(x => x.Id).ToList();
 
             return result;
         }
+
         public async Task<Domain.Models.ProcedureStepTemplateModel> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
