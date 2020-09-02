@@ -56,7 +56,6 @@ export class Globals {
         router.events
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
-                    console.log(event);
                     if (this.user !== undefined) {
                         let splitUrl = event.url.split('/');
                         const urlTocheck = splitUrl[splitUrl.length - 1];
@@ -66,7 +65,6 @@ export class Globals {
                             const elem = this.user.roles[length].menus.filter(x => x.url.toLowerCase() === urlTocheck);
                             if (elem !== undefined && elem.length > 0) {
                                 this.activeMenu = elem[0];
-                                console.log(this.activeMenu);
                                 length = 0;
                             }
                         }

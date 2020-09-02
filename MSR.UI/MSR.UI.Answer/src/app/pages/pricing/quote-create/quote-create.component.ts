@@ -32,6 +32,7 @@ export class QuoteCreateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    debugger;
     this.initCreateQuoteRequestData();
     this.getCustomers();
   }
@@ -60,7 +61,6 @@ export class QuoteCreateComponent implements OnInit {
       this.quoteService.quotePost(env.apiVersion, this.data)
         .pipe(take(1))
         .subscribe(responseHandler((resp) => {
-          this.globals.showLoader(true);
           if (!resp.hasErrors) {
             ctrl.router.navigate(['app/pricing/products']);
           }
@@ -79,7 +79,6 @@ export class QuoteCreateComponent implements OnInit {
         ctrl.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
       });
       ctrl.getCustomersFlag = true;
-      this.globals.showLoader(false);
     }));
   }
 }
