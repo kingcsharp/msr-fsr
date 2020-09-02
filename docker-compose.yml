@@ -20,12 +20,12 @@ services:
       - "17777:80"
     links:
       - api
-#  app:
-#    build:
-#      context: ./MSR.UI/MSR.UI.Answer
-#      dockerfile: Dockerfile
-#      args:
-#        - 'ENV=dev'
-#    ports:
-#      - "3000:80"
+  app:
+    build:
+      context: ./MSR.UI/MSR.UI.Answer
+      dockerfile: Dockerfile
+      args:
+        - 'ENV=dev'
+    ports:
+      - "3000:80"
 
