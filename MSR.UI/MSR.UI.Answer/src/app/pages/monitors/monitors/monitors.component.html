@@ -50,8 +50,8 @@
                         <th grid-input-filter [dt]="dt" searchField="passing"
                             [hidden]="!commonGrid.isVisibleCol('passing',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="workerName"
-                            [hidden]="!commonGrid.isVisibleCol('workerName',gridSettings)" [gridSettings]="gridSettings">
+                        <th grid-input-filter [dt]="dt" searchField="workerName.fullName"
+                            [hidden]="!commonGrid.isVisibleCol('workerName.fullName',gridSettings)" [gridSettings]="gridSettings">
                         </th>
                         <th [hidden]="!commonGrid.isVisibleCol('taskCompleted',gridSettings)">
                             <div class="position-relative" tooltip="Search by Task Completed Date">
@@ -81,11 +81,14 @@
                         <td [hidden]="!commonGrid.isVisibleCol('passing', gridSettings)">
                             {{model.passing}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('workerName', gridSettings)">
-                            {{model.workerName}}
+                        <td [hidden]="!commonGrid.isVisibleCol('workerName.fullName', gridSettings)">
+                            {{model.workerName.fullName}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)">
-                            {{model.taskCompleted | userTimezone}}
+                        <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)" *ngIf="model.taskCompleted !== undefined">
+                            {{model.taskCompleted | userTimezone}} 
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)" *ngIf="model.taskCompleted === undefined">
+                            
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
                             {{model.serialNumber}}

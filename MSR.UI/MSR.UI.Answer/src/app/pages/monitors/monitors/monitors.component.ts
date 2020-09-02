@@ -33,7 +33,7 @@ export class MonitorsComponent implements OnInit {
       new ColumnsSaved({ id: 'monitorType', label: 'Monitor Type', visible: true }),
       new ColumnsSaved({ id: 'result', label: 'Result', visible: true }),
       new ColumnsSaved({ id: 'passing', label: 'Passing', visible: true }),
-      new ColumnsSaved({ id: 'workerName', label: 'Worker Name', visible: true }),
+      new ColumnsSaved({ id: 'workerName.fullName', label: 'Worker Name', visible: true }),
       new ColumnsSaved({ id: 'taskCompleted', label: 'Task Completed', visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true })
     ];
