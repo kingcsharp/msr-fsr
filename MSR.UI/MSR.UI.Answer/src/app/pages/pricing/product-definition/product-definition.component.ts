@@ -137,7 +137,11 @@ export class ProductDefinitionComponent implements OnInit {
         ));
         break;
       case this.productPageModes.View:
-
+        this.globals.showLoader(!(
+          this.getProductDataFlag &&
+          this.getQuoteDataFlag &&
+          this.getProcedureStepsFlag
+        ));
         break;
       default:
         break;

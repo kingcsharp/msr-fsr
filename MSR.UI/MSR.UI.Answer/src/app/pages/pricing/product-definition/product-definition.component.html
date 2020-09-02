@@ -89,7 +89,7 @@
                 mode="decimal"
                 name="CycleTime"
                 [useGrouping]="false"
-                [class.hide]="mode === productPageModes.View"
+                *ngIf="mode === productPageModes.View"
                 data-cy="product-cycletime"
                 data-validate="parsley"
                 data-parsley-trigger="change"
@@ -140,7 +140,7 @@
                 data-cy="product-select-partid"
               >
               </p-dropdown>
-              <div class="input-group-btn">
+              <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
                 <button
                   type="button"
                   class="btn btn-primary"
@@ -196,7 +196,7 @@
                 data-cy="product-select-procedureid"
               >
               </p-dropdown>
-              <div class="input-group-btn">
+              <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
                 <!-- TODO: Add routing to procedure creation page -->
                 <button
                   type="button"
