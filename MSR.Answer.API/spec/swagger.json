@@ -8934,16 +8934,10 @@
             "type": "string",
             "description": "Gets or Sets Name",
             "minLength": 1
-          },
-          "majorGroup": {
-            "type": "string",
-            "description": "Gets or Sets MajorGroup",
-            "nullable": true
           }
         },
         "example": {
-            "name": "PROCTYPE1598416853",
-            "majorGroup": "GROUP1598416853"
+            "name": "PROCTYPE1598416853"
         }
       },
       "AuditActionResultOfICollectionOfProcedureType": {
@@ -8981,11 +8975,6 @@
           "name": {
             "type": "string",
             "description": "Gets or Sets Name",
-            "nullable": true
-          },
-          "majorGroup": {
-            "type": "string",
-            "description": "Gets or Sets MajorGroup",
             "nullable": true
           }
         },
@@ -9252,6 +9241,10 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+            "id": 25,
+            "name": "PROCTYPE1598416546"
         }
       },
       "QuoteItemModel": {
@@ -9482,7 +9475,7 @@
                 "oneOf": [
                   { "type": "null"},
                   {
-                    "$ref": "#/components/schemas/ProductModel"
+                    "$ref": "#/components/schemas/PurchaseOrderProductView"
                   }
                 ]
               }
@@ -10383,6 +10376,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/QuoteModel"
                   }
@@ -11384,6 +11378,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/PendingApprovalNotification"
                   }
@@ -11579,6 +11574,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/WorkflowModel"
                   }
@@ -11777,6 +11773,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/WorkflowGroupModel"
                   }
@@ -11938,6 +11935,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/WorkflowStageModel"
                   }
@@ -11968,6 +11966,19 @@
               "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
             }
           }
+        },
+        "example" : {
+          "purchaseOrderId": 1,
+          "purchaseOrderProductId": 2,
+          "customerPurchaseNumber": "PURCHASE1598926122",
+          "locationId": 54,
+          "serialNumber": "SN1598926122",
+          "statusId": 1,
+          "qty": 1,
+          "customerLineNumber": 1,
+          "mttn": "1598926122",
+          "dueDate": "2099-12-31",
+          "purchasePrice": 123.45
         },
         "example": {
             "username": "95f27a6f8b3ffa55",
