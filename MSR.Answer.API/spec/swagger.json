@@ -1823,7 +1823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfMonitorModel"
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfMonitorModel"
                 }
               }
             }
@@ -7087,7 +7087,7 @@
           "canApprove": true
         }
       },
-      "AuditActionResultOfMonitorModel": {
+      "AuditActionResultOfICollectionOfMonitorModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -7098,12 +7098,11 @@
             "additionalProperties": true,
             "properties": {
               "object": {
+                "type": "array",
                 "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MonitorModel"
-                  }
-                ]
+                "items": {
+                  "$ref": "#/components/schemas/MonitorModel"
+                }
               }
             }
           }

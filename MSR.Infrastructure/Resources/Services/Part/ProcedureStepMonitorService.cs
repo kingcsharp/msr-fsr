@@ -28,7 +28,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             _mapper = mapper;
         }
 
-        public async Task<MonitorModel> GetMonitorModelAsync(GetMonitorModel command)
+        public async Task<ICollection<MonitorModel>> GetMonitorModelAsync(GetMonitorModel command)
         {
             var procsteps = await GetProcedureStepMonitorAsync(new GetProcedureStepMonitor(){
                 procedureStepMonitorId = command.procedureStepMonitorId
@@ -39,9 +39,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 throw new DomainException($"procedure ID {command.procedureStepMonitorId} not found", DomainError.NotFound);
             }
 
-            Domain.Models.ProcedureStepMonitor procstepmon = procsteps.First();
-
-            var ret = _mapper.Map<MonitorModel>(procstepmon);
+            var ret = procsteps.Select(x => _mapper.Map<MonitorModel>(x)).ToList();;
 
             // TODO: get serial and recorded result?
 

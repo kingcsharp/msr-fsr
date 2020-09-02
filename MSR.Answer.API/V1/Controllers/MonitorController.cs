@@ -50,7 +50,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id">ProcedureStepMonitor ID</param>
         /// <response code="200"></response>
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<MonitorModel>))]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<MonitorModel>>))]
         public async Task<IActionResult> MonitorGetMonitor([FromQuery]int? id)
         {
             var ret = await _dispatcher.DispatchAsync(new GetMonitorModel(){
@@ -58,7 +58,7 @@ namespace MSR.Answer.API.V1.Controllers
                 }
             );
 
-            return ret.ToOkObjectResponse<MonitorModel>();
+            return ret.ToOkObjectResponse<ICollection<MonitorModel>>();
         }
     }
 }
