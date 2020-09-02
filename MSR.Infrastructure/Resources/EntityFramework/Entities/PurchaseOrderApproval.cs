@@ -7,7 +7,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(PurchaseOrderApproval))]
     public partial class PurchaseOrderApproval: ApprovalEntity
     {
-        public int PurchaseOrderId { get; set; }
+        public int? PurchaseOrderId { get; set; }
+
+        [Required]
+        public int CustomerId { get; set; }
 
         [Required]
         [StringLength(50)]

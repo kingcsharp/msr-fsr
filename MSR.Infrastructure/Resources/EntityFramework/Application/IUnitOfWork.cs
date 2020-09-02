@@ -59,6 +59,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Product> Products { get; }
         IRepository<Purchase> Purchases { get; }
         IRepository<PurchaseOrder> PurchaseOrders { get; }
+        IRepository<PurchaseOrderProduct> PurchaseOrderProducts { get; }
         IRepository<PartSubPartMap> PartSubPartMaps { get ; }
         IRepository<Invoice> Invoices { get; }
         IRepository<InvoiceItem> InvoiceItems { get; }

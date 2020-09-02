@@ -1,0 +1,827 @@
+<div *ngIf="getProductDataFlag" class="container-fluid">
+  <div class="row mb-lg">
+    <div class="col-md-6">
+      <h1 class="page-title">
+        <span>{{mode === productPageModes.Create ? 'New ' : ''}}Product Definition</span>
+      </h1>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end align-items-end">
+      <button
+        *ngIf="quoteData"
+        class="pull-right btn btn-primary"
+        tooltip="Generates a Quote Preview"
+        (click)="openQuoteViewModal()"
+      >
+        <i class="fa fa-eye mr-2"></i>Preview Quote
+      </button>
+    </div>
+  </div>
+
+  <widget class="py-4">
+    <form
+      data-parsley-validate
+      data-cy="quote-create-form"
+      class="parsleyjs"
+      data-parsley-priority-enabled="false"
+      (ngSubmit)="onSubmit()"
+      novalidate="novalidate"
+    >
+      <div class="row mx-0 mb-lg">
+        <div class="col-md-5">
+          <div class="form-group">
+            <label for="customerId">Customer :</label>
+            <p-dropdown
+              [class.hide]="mode === productPageModes.View"
+              placeholder="Select Customer"
+              name="customerId"
+              [options]="customersData"
+              appendTo="body" [baseZIndex]="100001"
+              [(ngModel)]="productData.customerId"
+              data-cy="product-select-customerid"
+            >
+            </p-dropdown>
+            <input
+              [class.hide]="mode !== productPageModes.View"
+              class="form-control input-transparent"
+              name="customerName"
+              [value]="mode === productPageModes.View ? getCustomerLabel(productData.customer) : productData.customerId"
+              data-cy="product-customer"
+              readonly
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+              parsley-type="number"
+            >
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="productCustomerDivision">Division/Fab # :</label>
+            <input
+              pInputText
+              type="number"
+              id="ProductCustomerDivision"
+              class="form-control input-transparent" name="ProductCustomerDivision"
+              [(ngModel)]="productData.customerRequirementId"
+              [readonly]="mode === productPageModes.View"
+              data-cy="product-division"
+            >
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="cycleTime">Cycle Time :</label>
+            <div class="input-group input-group-transparent row mx-0">
+              <input
+                [class.hide]="mode !== productPageModes.View"
+                pInputText
+                type="number"
+                class="form-control input-transparent"
+                name="CycleTime"
+                [(ngModel)]="productData.cycleTime"
+                readonly
+                data-cy="product-cycletime"
+              >
+              <p-inputNumber
+                [(ngModel)]="productData.cycleTime"
+                mode="decimal"
+                name="CycleTime"
+                [useGrouping]="false"
+                *ngIf="mode !== productPageModes.View"
+                data-cy="product-cycletime"
+                data-validate="parsley"
+                data-parsley-trigger="change"
+                data-parsley-required="true"
+                data-parsley-type="integer"
+              >
+              </p-inputNumber>
+              <span class="input-group-addon bg-secondary">
+                Days
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mx-0 mb-lg">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="productName">Product Name :</label>
+            <input
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="productName"
+              [(ngModel)]="productData.name"
+              [readonly]="mode === productPageModes.View"
+              data-cy="product-name"
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+            >
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="form-group">
+            <label for="partId">Part :</label>
+            <div
+              [class.hide]="mode === productPageModes.View"
+              class="input-group input-group-transparent"
+            >
+              <p-dropdown
+                placeholder="Select Part"
+                name="partId"
+                [options]="partsData"
+                [baseZIndex]="100003"
+                [(ngModel)]="productData.partId"
+                data-cy="product-select-partid"
+              >
+              </p-dropdown>
+              <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [routerLink]="['../../parts/parts']"
+                  data-cy="btn-add-newpart"
+                >
+                  <i
+                    class="fa fa-plus-circle"
+                    tooltip="Create a new Customer Part in a New Tab"
+                  ></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-default active"
+                  (click)="getParts(true)"
+                  data-cy="btn-refresh-partsdata"
+                >
+                  <i
+                    class="fa fa-refresh"
+                    [class.fa-spin]="isRefreshingPartsData"
+                    tooltip="Refresh List of Approved Parts"
+                  ></i>
+                </button>
+              </div>
+            </div>
+            <input
+              [class.hide]="mode !== productPageModes.View"
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="partName"
+              [value]="mode === productPageModes.View ? getPartLabel(productData.part) : productData.partId"
+              data-cy="product-part"
+              readonly
+            >
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="form-group">
+            <label for="procedureId">Procedure :</label>
+            <div
+              [class.hide]="mode === productPageModes.View"
+              class="input-group input-group-transparent"
+            >
+              <p-dropdown
+                placeholder="Select Procedure"
+                name="procedureId"
+                [options]="proceduresData"
+                [baseZIndex]="100004"
+                [(ngModel)]="productData.procedureId"
+                (onChange)="onSelectProcedureId($event)"
+                data-cy="product-select-procedureid"
+              >
+              </p-dropdown>
+              <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
+                <!-- TODO: Add routing to procedure creation page -->
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-cy="btn-add-newprocedure"
+                >
+                  <i
+                    class="fa fa-plus-circle"
+                    tooltip="Create an new Procedure in a new Tab"
+                  ></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-default active"
+                  (click)="getProcedures(true)"
+                  data-cy="btn-refresh-proceduresdata"
+                >
+                  <i
+                    class="fa fa-refresh"
+                    [class.fa-spin]="isRefreshingProceduresData" tooltip="Refresh List of Approved Procedures"
+                  ></i>
+                </button>
+              </div>
+            </div>
+            <input
+              [class.hide]="mode !== productPageModes.View"
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="procedureName"
+              [value]="mode === productPageModes.View ? getPartLabel(productData.procedure) : productData.procedureId"
+              data-cy="product-procedure"
+              readonly
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="getProcedureStepsFlag"
+        class="row mx-0 mt-5 mb-4"
+      >
+        <div class="col-sm-9">
+          <h2>Step Details</h2>
+        </div>
+        <div class="col-sm-3 d-flex justify-content-end">
+          <label style="width: 100px;">Show All Columns</label>
+          <bootstrap-switch (onChange)="onToggle($event)" [isOn]="showAllStepColumns"></bootstrap-switch>
+        </div>
+      </div>
+
+      <div
+        *ngIf="getProcedureStepsFlag"
+        class="row mx-0"
+      >
+        <div class="col-md-12 column mb-4">
+          <table class="table table-bordered table-condensed">
+            <thead>
+              <tr data-toggle="tooltip" data-placement="top" title="" data-original-title="">
+                <th class="text-center" width="15%">
+                  Process
+                </th>
+                <th class="text-center" width="5%">
+                  Step #
+                </th>
+                <th class="text-center">
+                  Standard Direct Labor Minutes
+                </th>
+                <th class="text-center">
+                  Standard Machine Minutes
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Replacement Cost
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Utilization
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Useful Life
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Equip. Expense Per Minute
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  Annual R&amp;M
+                </th>
+                <th class="text-center" [class.hide]="!showAllStepColumns" width="10%">
+                  R&amp;M Per Minute
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let step of procedureStepsData; index as i">
+                <td>
+                  <span [class.hide]="i >= procedureStepsData.length - newStepsCounts">{{step.title}}</span>
+                  <p-dropdown
+                    *ngIf="getProcedureStepTemplatesFlag && i >= procedureStepsData.length - newStepsCounts"
+                    placeholder="Select Step"
+                    name="procedureStepId"
+                    [options]="procedureStepTemplatesData"
+                    [baseZIndex]="100005"
+                    (onChange)="onSelectStepTemplate($event, i)"
+                    data-cy="product-select-stepid"
+                  >
+                  </p-dropdown>
+                </td>
+                <td>
+                  <input
+                    pInputText
+                    [class.hide]="mode !== productPageModes.View"
+                    class="form-control input-transparent"
+                    name="Step{{i}}_printOrder"
+                    [(ngModel)]="procedureStepsData[i].printOrder"
+                    readyonly
+                    data-cy="procedure-step-printorder"
+                  >
+                  <p-inputNumber
+                    [(ngModel)]="procedureStepsData[i].printOrder"
+                    mode="decimal"
+                    name="Step{{i}}_printOrder"
+                    [useGrouping]="false"
+                    [class.hide]="mode === productPageModes.View"
+                    data-cy="procedure-step-printorder"
+                  >
+                  </p-inputNumber>
+                </td>
+                <td>
+                  <input
+                    pInputText
+                    [class.hide]="mode !== productPageModes.View"
+                    class="form-control input-transparent"
+                    name="Step{{i}}_laborTime"
+                    [(ngModel)]="procedureStepsData[i].laborTime"
+                    readonly
+                    data-cy="procedure-step-labortime"
+                  >
+                  <p-inputNumber
+                    [(ngModel)]="procedureStepsData[i].laborTime"
+                    mode="decimal"
+                    name="Step{{i}}_laborTime"
+                    [useGrouping]="false"
+                    [class.hide]="mode === productPageModes.View"
+                    (onBlur)="getStepsValues()"
+                    data-cy="procedure-step-labortime"
+                  >
+                  </p-inputNumber>
+                </td>
+                <td>
+                  <input
+                    pInputText
+                    [class.hide]="mode !== productPageModes.View"
+                    class="form-control input-transparent"
+                    name="Step{{i}}_equipmentTime"
+                    [(ngModel)]="procedureStepsData[i].equipmentTime"
+                    readonly
+                    data-cy="procedure-step-equipmenttime"
+                  >
+                  <p-inputNumber
+                    [(ngModel)]="procedureStepsData[i].equipmentTime"
+                    mode="decimal"
+                    name="Step{{i}}_equipmentTime"
+                    [useGrouping]="false"
+                    [class.hide]="mode === productPageModes.View"
+                    (onBlur)="getStepsValues()"
+                    data-cy="procedure-step-equipmenttime"
+                  >
+                  </p-inputNumber>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      pInputText
+                      type="text"
+                      readonly
+                      class="form-control input-transparent"
+                      [value]="procedureStepsData[i].replacementCost"
+                      data-cy="procedure-step-replacementcost"
+                    >
+                    <span class="input-group-addon bg-secondary">.00</span>
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <input
+                     pInputText
+                      class="form-control form-control input-transparent " readonly
+                      type="text"
+                      [value]="procedureStepsData[i].utilization"
+                      data-cy="procedure-step-utilization"
+                    >
+                    <span class="input-group-addon bg-secondary">%</span>
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <input
+                    pInputText
+                    class="form-control form-control input-transparent useful-life"
+                    readonly
+                    type="text"
+                    [value]="procedureStepsData[i].usefulLife"
+                    data-cy="procedure-step-usefullife"
+                  >
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      pInputText
+                      class="form-control input-transparent"
+                      readonly
+                      type="text"
+                      [value]="procedureStepsData[i].ex_per_min"
+                      data-cy="equip-per-min"
+                    >
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      pInputText
+                      class="form-control input-transparent"
+                      readonly
+                      type="text"
+                      [value]="procedureStepsData[i].annual_rm"
+                      data-cy="anual-rm"
+                    >
+                  </div>
+                </td>
+                <td class="text-center" [class.hide]="!showAllStepColumns">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      pInputText
+                      class="form-control input-transparent"
+                      readonly="readonly"
+                      type="text"
+                      [value]="procedureStepsData[i].rm_per_min"
+                      data-cy="rm-per-min"
+                    >
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="procedureStepsData.length === 0">
+                <td></td>
+                <td> </td>
+                <td></td>
+                <td></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"></td>
+                <td [class.hide]="!showAllStepColumns"> </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td></td>
+                <td class="text-right">Total:</td>
+                <td class="text-right">
+                  <input
+                    pInputText
+                    class="form-control input-transparent"
+                    name="TotalLaborMins"
+                    type="text"
+                    readonly
+                    [value]="productData.totalLaborMins"
+                    data-cy="total-labor-mins"
+                  >
+                </td>
+                <td class="text-right">
+                  <input
+                    pInputText
+                    class="form-control input-transparent"
+                    name="TotalMachineMins"
+                    type="text"
+                    readonly
+                    [value]="productData.totalMachineMins"
+                    data-cy="total-matchine-mins"
+                  >
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td class="text-right">Dollars:</td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      pInputText
+                      class="form-control input-transparent" name="TotalDirectDollar"
+                      readonly
+                      type="text"
+                      [value]="productData.laborCost"
+                      data-cy="total-labor-dollar"
+                    >
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      pInputText
+                      class="form-control input-transparent" name="StandardMachineDollar"
+                      readonly
+                      type="text"
+                      [value]="productData.equipmentCost"
+                      data-cy="total-machine-dollar"
+                    >
+                  </div>
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td colspan="2" class="text-right">Material Cost:</td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      pInputText
+                      [class.hide]="mode !== productPageModes.View"
+                      class="form-control input-transparent"
+                      name="MaterialCost"
+                      type="text"
+                      readonly
+                      [(ngModel)]="productData.materialCost"
+                      data-cy="product-materialcost"
+                    >
+                    <p-inputNumber
+                      [(ngModel)]="productData.materialCost"
+                      name="MaterialCost"
+                      [useGrouping]="false"
+                      [class.hide]="mode === productPageModes.View"
+                      (onBlur)="getStepsValues()"
+                      data-cy="product-materialcost"
+                    >
+                    </p-inputNumber>
+                  </div>
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td colspan="2" class="text-right">Recommended Sale Price:</td>
+                <td class="text-right">
+                  <div class="input-group input-group-transparent">
+                    <span class="input-group-addon bg-secondary">$</span>
+                    <input
+                      [class.hide]="mode !== productPageModes.View"
+                      class="form-control input-transparent"
+                      name="TotalSalePrice"
+                      type="text"
+                      readonly
+                      [(ngModel)]="productData.totalSalePrice"
+                      data-cy="product-totalsaleprice"
+                    >
+                    <p-inputNumber
+                      [(ngModel)]="productData.totalSalePrice"
+                      name="TotalSalePrice"
+                      [useGrouping]="false"
+                      [class.hide]="mode === productPageModes.View"
+                      data-cy="product-totalsaleprice"
+                    >
+                    </p-inputNumber>
+                  </div>
+                </td>
+                <td colspan="6" [class.hide]="!showAllStepColumns"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div
+          *ngIf="mode === productPageModes.Create || mode === productPageModes.Edit"
+          class="col-md-12 d-flex justify-content-end mb-3"
+        >
+          <a
+            class="btn btn-primary pull-left"
+            tooltip="Add a Step to the Definition"
+            (click)="onAddProcedureStep()"
+          >
+            <i class="fa fa-plus-circle"></i> Add Step
+          </a>
+          <a
+            class="pull-left btn btn-warning ml-2"
+            tooltip="Removes Last Step from Definition"
+            (click)="onRemoveProcedureStep()"
+          >
+            <i class="fa fa-minus-circle"></i> Remove Step
+          </a>
+        </div>
+      </div>
+
+      <div class="row mx-0 my-4">
+        <div class="col-md-12 d-flex justify-content-end">
+          <button
+            type="submit"
+            *ngIf="mode === productPageModes.Create || mode === productPageModes.Edit"
+            class="btn btn-success ml-2"
+            data-cy="btn-product-submit"
+          >
+            <i class="fa fa-send"></i> Submit
+          </button>
+          <a
+            class="btn btn-warning ml-2"
+            tooltip="Back To Production Planning"
+            [routerLink]="['../../../products']"
+            data-cy="btn-product-cancel"
+          >Cancel</a>
+        </div>
+      </div>
+    </form>
+  </widget>
+</div>
+
+<p-dialog
+  header="Quote Preview"
+  [(visible)]="showQuoteViewModal"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '70vw'}"
+  data-cy="user-header"
+>
+  <div *ngIf="quoteData" class="container">
+    <div class="row mr-0 ml-0">
+      <table class="table no-border quote-header" width="100%">
+        <tbody>
+          <tr>
+            <td rowspan="2" width="60%" class="text-left"><img src="/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-center">
+              <h2>Quotation</h2>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table quote-header" width="100%">
+        <tbody>
+          <tr>
+              <th class="text-right">Customer:</th>
+              <td>
+                {{getCustomerLabel(quoteData.customer)}}
+              </td>
+              <th class="text-right">Contact:</th>
+              <td>
+                {{quoteData.contact}}
+              </td>
+              <th class="text-right">Delivery</th>
+              <td>
+                {{quoteData.delivery}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right"></th>
+              <td></td>
+              <th class="text-right">Title:</th>
+              <td>
+                {{quoteData.title}}
+              </td>
+              <th class="text-right"></th>
+              <td></td>
+            </tr>
+            <tr>
+              <th class="text-right"></th>
+              <td></td>
+              <th class="text-right">Phone:</th>
+              <td>
+                {{quoteData.phone}}
+              </td>
+              <th class="text-right"></th>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="6"></td>
+            </tr>
+        </tbody>
+      </table>
+      <table
+        *ngIf="quoteJson"
+        class="table table-bordered table-striped items-table mb-0" width="100%"
+      >
+        <thead>
+          <tr>
+            <th width="10%">Item No.</th>
+            <th width="10%">Quantity</th>
+            <th width="30%" style="text-align: left !important">Description</th>
+            <th>Lead Time</th>
+            <th>Customer Part No.</th>
+            <th>Price</th>
+            <th>Extension</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let quoteItem of quoteJson.quoteItems; index as i;">
+            <td>{{i+1}}</td>
+            <td>
+              {{quoteItem.qty}}
+            </td>
+            <td>
+              {{quoteItem.description}}
+            </td>
+            <td>
+              {{quoteItem.leadTime}}
+            </td>
+            <td>
+              {{quoteItem.customerPartNo}}
+            </td>
+            <td>
+              {{quoteItem.price | currency}}
+            </td>
+            <td>
+              {{quoteItem.extension | currency}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered table-striped items-table" width="100%">
+        <thead>
+          <tr>
+            <th width="20%">Existing Process Spec. # or New</th>
+            <th width="80%">Process Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {{quoteData.processName}}
+            </td>
+            <td>
+              {{quoteData.description}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table" width="100%">
+        <tbody>
+          <tr>
+            <td width="100%">
+              <small>
+                This quotation is subject to the following terms and conditions, and is good only for 30 Days from date of quotation.<br>
+                <ol>
+                  <li>
+                    All orders tendered to MSR-FSR are subject to credit approval and final acceptance by MSR-FSR<br>
+                    MSR-FSR reserves the right to refuse any order tendered pursuant to this quotation without incurring any liability because of such refusal.
+                  </li>
+                  <li>
+                    MSR-FSR guarantees to the purchaser that all goods sold pursuant to an accepted purchase order(s) shall conform to MSR-FSR process specifications and shall be free from defects in materials and workmanship. MSR-FSR expressly disclaims all other warranties, whether express, implied or statutory, including the warranty of merchantability and fitness for use.<br>
+                    In no event will MSR-FSR be liable for consequential damages arising out of the use of the products described herein.
+                  </li>
+                  <li>MSR-FSR will use its reasonably best efforts to expedite the delivery of any goods sold: however, MSR-FSR does not guarantee any specific delivery date nor assume any responsibility for delays due to any cause beyond the control of MSR-FSR.</li>
+                  <li>Prices indicated are good for thirty (30) days from date of this quotation and based on quantities specificed unless otherwise noted.</li>
+                  <li>Prices are in USD unless specified otherwise. If services are provided outside of the US and in USD, pricing may be adjusted based on foreign currency effects.</li>
+                  <li>This quote is based on a projected process flow derived from best known methods, and may require re-negotiation and change based on subsequent validation results or process changes. </li>
+                </ol>
+              </small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table  no-border quote-footer" width="100%">
+        <tbody>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2">Respectfully submitted,</td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td
+              width="20%"
+              style="border-bottom: 1px solid #000 !important;"
+            >
+              {{quoteData.representative}}
+            </td>
+            <td
+              width="30%"
+              style="border-bottom: 1px solid #000 !important;"
+            >
+              {{quoteData.representativeTitle}}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td width="20%" class="line-caption"><small>Created By</small></td>
+            <td width="30%" class="line-caption"><small>Title</small></td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
+              {{quoteData.representativeAddress}}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2" width="40%" class="line-caption"><small>Address</small></td>
+          </tr>
+          <tr>
+            <td colspan="5" width="60%"></td>
+            <td colspan="2" width="40%">MSR-FSR LLC</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

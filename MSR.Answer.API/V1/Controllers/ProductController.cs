@@ -16,6 +16,9 @@ using System.Net;
 
 namespace MSR.Answer.API.V1.Controllers
 {
+    /// <summary>
+    ///
+    /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     public class ProductController : BaseApiController
@@ -23,6 +26,10 @@ namespace MSR.Answer.API.V1.Controllers
         private const string privilegeApiName = "QuotesProducts";
         private readonly ICommandDispatcher _dispatcher;
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="dispatcher"></param>
         public ProductController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
@@ -44,6 +51,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ProductModel>("Product was successfully added.");
         }
 
+        /// <summary>
+        /// GetProduct
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <returns></returns>
         [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<ProductModel>>))]
         public async Task<IActionResult> GetProduct([FromQuery] GetProductRequest filters)
@@ -53,6 +65,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<IEnumerable<ProductModel>>();
         }
 
+        /// <summary>
+        /// UpdateProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ProductModel>))]
         public async Task<IActionResult> UpdateProduct([FromBody, Required] UpdateProductRequest request)
