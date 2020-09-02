@@ -188,14 +188,13 @@
                   >
                 </td>
                 <td>
-                  <input
+                  <p-inputNumber
                     [(ngModel)]="purchaseProducts[i].qty"
-                    class="form-control input-transparent"
+                    mode="decimal"
                     name="ProductPo[{{i}}].Qty"
-                    type="number"
-                    data-parsley-trigger="change"
-                    data-parsley-required="true"
+                    [useGrouping]="false"
                   >
+                  </p-inputNumber>
                 </td>
                 <td>
                   <div
@@ -259,12 +258,13 @@
                 >
               </td>
               <td>
-                <input
+                <p-inputNumber
                   [(ngModel)]="purchaseItems[i].customerLineNumber"
-                  class="form-control input-transparent disable"
+                  mode="decimal"
                   name="purchaseItem[{{i}}].CUST_LINE_ITEM"
-                  type="text"
+                  [useGrouping]="false"
                 >
+                </p-inputNumber>
               </td>
               <td>
                 <input
@@ -414,6 +414,7 @@
         <button
           class="btn btn-warning action-button ml-2"
           tooltip="Cancel Purchase and Return to PO List"
+          [routerLink]="['../../../../pricing/purchaseorder']"
         >
           <i class="fa fa-arrow-circle-left"></i>
           Cancel Purchase

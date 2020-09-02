@@ -428,9 +428,6 @@ export class ProductDefinitionComponent implements OnInit {
       }
     }
   }
-
-
-
 }
 
 const RM_ANNUAL_RATE = 10;

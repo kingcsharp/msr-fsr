@@ -21,6 +21,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { PurchasesComponent } from './purchases/purchases.component';
 import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 export const routes = [
   { path: '', redirectTo: 'invoices', pathMatch: 'prefix' },
@@ -56,6 +57,7 @@ export const routes = [
     NewWidgetModule,
     PopoverModule.forRoot(),
     SelectButtonModule,
+    InputNumberModule,
   ]
 })
 export class BillingModule {

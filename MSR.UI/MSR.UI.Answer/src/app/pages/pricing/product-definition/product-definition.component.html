@@ -81,7 +81,7 @@
                 class="form-control input-transparent"
                 name="CycleTime"
                 [(ngModel)]="productData.cycleTime"
-                [readonly]="mode === productPageModes.View"
+                readonly
                 data-cy="product-cycletime"
               >
               <p-inputNumber
@@ -89,7 +89,7 @@
                 mode="decimal"
                 name="CycleTime"
                 [useGrouping]="false"
-                *ngIf="mode === productPageModes.View"
+                *ngIf="mode !== productPageModes.View"
                 data-cy="product-cycletime"
                 data-validate="parsley"
                 data-parsley-trigger="change"
@@ -493,7 +493,7 @@
                       class="form-control input-transparent" name="TotalDirectDollar"
                       readonly
                       type="text"
-                      [value]="productData.totalLaborCharge"
+                      [value]="productData.laborCost"
                       data-cy="total-labor-dollar"
                     >
                   </div>
@@ -506,7 +506,7 @@
                       class="form-control input-transparent" name="StandardMachineDollar"
                       readonly
                       type="text"
-                      [value]="productData.totalEquipmentCharge"
+                      [value]="productData.equipmentCost"
                       data-cy="total-machine-dollar"
                     >
                   </div>
@@ -688,6 +688,7 @@
         </tbody>
       </table>
       <table
+        *ngIf="quoteJson"
         class="table table-bordered table-striped items-table mb-0" width="100%"
       >
         <thead>

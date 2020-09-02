@@ -125,7 +125,10 @@ export class PurchaseCreateComponent implements OnInit {
   goToNextStep() {
     if (this.step === 0) {
       this.purchaseItems = [];
+      let valid = true;
+
       this.purchaseProducts.map(product => {
+        if (product.qty < 1) valid = false;
         if (product.groupWO) {
           this.purchaseItems.push({
             id: product.id,
@@ -156,7 +159,7 @@ export class PurchaseCreateComponent implements OnInit {
           }
         }
       });
-      this.step = 1;
+      if (valid) this.step = 1;
     } else if (this.step === 1) {
       this.purchaseSerializeItems = [];
       this.purchaseItems.map(item => {
