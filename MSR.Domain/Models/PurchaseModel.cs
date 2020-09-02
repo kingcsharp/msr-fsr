@@ -1,4 +1,5 @@
 using MSR.Domain.Models.BaseModels;
+using MSR.Domain.Views;
 using System;
 using System.Collections.Generic;
 
@@ -23,6 +24,6 @@ namespace MSR.Domain.Models
 
         public virtual LocationModel Location { get; set; }
         public virtual PurchaseOrderModel PurchaseOrder { get; set; }
-        public virtual ProductModel PurchaseOrderProduct { get; set; }
+        public virtual PurchaseOrderProductView PurchaseOrderProduct { get; set; }
     }
 }
