@@ -42,6 +42,12 @@ namespace MSR.Domain.Models
         public string MonitorType { get; set; }
 
         /// <summary>
+        /// Gets or Sets MonitorTypeId
+        /// </summary>
+        [DataMember(Name="monitorTypeId")]
+        public int MonitorTypeId { get; set; }
+
+        /// <summary>
         /// Gets or Sets Result
         /// </summary>
         [DataMember(Name="result")]

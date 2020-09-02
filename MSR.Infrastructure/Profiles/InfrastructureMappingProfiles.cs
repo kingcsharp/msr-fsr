@@ -226,9 +226,10 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             // Monitor
+            CreateMap<Domain.Models.ProcedureStepMonitor, MonitorModel>();
             CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
                 .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputTypeId.ToString()))
-                .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorTypeId.ToString()))
+                .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorType.Name))
                 .ForMember(dest => dest.ShouldBe, opt => opt.MapFrom(src =>src.ShouldBe))
                 .ForMember(dest => dest.TargetValue, opt => opt.MapFrom(src => src.Target.ToString()))
                 .ForMember(dest => dest.FaultHandling, opt => opt.MapFrom(src => src.FailAction))

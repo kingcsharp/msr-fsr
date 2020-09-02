@@ -18,6 +18,11 @@ namespace MSR.Domain.Models
         public string MonitorType { get; set; }
 
         /// <summary>
+        /// Gets or Sets MonitorTypeId
+        /// </summary>
+        public int MonitorTypeId { get; set; }
+
+        /// <summary>
         /// Gets or Sets InputType
         /// </summary>
         public string InputType { get; set; }

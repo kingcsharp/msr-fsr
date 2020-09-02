@@ -7126,6 +7126,10 @@
             "type": "string",
             "nullable": true
           },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "result": {
             "type": "string",
             "nullable": true
@@ -8187,6 +8191,10 @@
           "monitorType": {
             "type": "string",
             "nullable": true
+          },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32"
           },
           "inputType": {
             "type": "string",

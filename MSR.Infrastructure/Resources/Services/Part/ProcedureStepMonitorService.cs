@@ -41,14 +41,9 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             Domain.Models.ProcedureStepMonitor procstepmon = procsteps.First();
 
-            var ret = new MonitorModel() {
-                Id = procstepmon.Id,
-                Description = procstepmon.Description,
-                MonitorType = procstepmon.MonitorType,
-                Result = procstepmon.TargetValue
-            };
+            var ret = _mapper.Map<MonitorModel>(procstepmon);
 
-            // TODO: get serial and recorded result
+            // TODO: get serial and recorded result?
 
             return ret;
         }
@@ -60,6 +55,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 procedures = await _unitOfWork.ProcedureStepMonitors
                     .Query()
                     .Where(x => x.Id == command.procedureStepMonitorId.Value)
+                    .Include(x => x.MonitorType)
                     .ToListAsync();
                 if (procedures.Count == 0) {
                     throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
@@ -68,6 +64,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 procedures = await _unitOfWork.ProcedureStepMonitors
                     .Query()
                     .Where(x => x.ProcedureStepId == command.procedureStepId.Value)
+                    .Include(x => x.MonitorType)
                     .ToListAsync();
                 // note that the return here can be an empty list
             } else {
