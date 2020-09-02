@@ -50,20 +50,21 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 CloseDate = po.CloseDate,
                 Revision = po.Revision,
                 TotalPurchaseLimit = po.TotalPurchaseLimit
-            }).Take(20).ToListAsync();
+            }).ToListAsync();
 
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
             var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId);
 
-            var products = await _unitOfWork.Products.Query().Where(x => _unitOfWork.PurchaseOrderProducts.Query()
-                    .Select(i => i.ProductId).Contains(x.Id))
-                .Select(i => _mapper.Map<PurchaseOrderProductView>(i))
+            var products = await _unitOfWork.PurchaseOrderProducts.Query()
+                .Include(i => i.Product)
+                .Where(i => i.Product != null && purchaseOrderIds.Contains(i.PurchaseOrderId))
+                .Select(x => new { PurchaseOrderId = x.PurchaseOrderId, ProductId = x.ProductId, ProductName = x.Product.Name, TotalSalePrice = x.Product.TotalSalePrice })
                 .ToListAsync();
 
             var customers = await _unitOfWork.Customers.Query()
-                .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
-                .Select(i => new { i.Id, i.Name })
-                .ToDictionaryAsync(i => i.Id, i => i.Name);
+                    .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
+                    .Select(i => new { i.Id, i.Name })
+                    .ToDictionaryAsync(i => i.Id, i => i.Name);
 
             var purchaseOrderIdsForDeletable = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
                 .Select(x => x.PurchaseOrderId).ToListAsync();
@@ -71,7 +72,9 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             foreach (var po in purchaseOrderList)
             {
                 customers.TryGetValue(po.CustomerId, out var name);
-                po.Products = products.Where(i => i.Id == po.Id).ToList();
+                po.Products = products.Where(i => i.PurchaseOrderId == po.Id)
+                    .Select(i => new PurchaseOrderProductView() { Id = i.ProductId, Name = i.ProductName, TotalSalePrice = i.TotalSalePrice })
+                    .ToList();
                 if (name != null)
                 {
                     po.CustomerName = name;

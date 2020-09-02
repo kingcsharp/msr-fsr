@@ -8,41 +8,23 @@
       <div class="row mx-0">
         <div class="col-md-6 mb-3">
           <div class="form-group row">
-            <label
-              for="CutomerId"
-              class="col-md-4 text-right"
-            >
+            <label for="CutomerId" class="col-md-4 text-right">
               Customer:
             </label>
-            <p-dropdown
-              class="col-md-8"
-              placeholder="Select Client"
-              name="CutomerId"
-              [options]="customersData"
-              appendTo="body"
-              [baseZIndex]="100001"
-              required
-            >
+            <p-dropdown class="col-md-8" placeholder="Select Client" name="CutomerId" [options]="customersData"
+              appendTo="body" [baseZIndex]="100001" required>
             </p-dropdown>
           </div>
         </div>
 
         <div class="col-md-6 mb-3">
           <div class="form-group row">
-            <label
-              for="POName"
-              class="col-md-4 text-right"
-            >
+            <label for="POName" class="col-md-4 text-right">
               PO Name :
             </label>
             <div class="col-md-8">
-              <input
-                placeholder="Enter PO Name"
-                type="text"
-                class="form-control input-transparent"
-                name="POName"
-                required
-              >
+              <input placeholder="Enter PO Name" type="text" class="form-control input-transparent" name="POName"
+                required>
             </div>
           </div>
         </div>
@@ -51,39 +33,24 @@
 
         <div class="col-md-6 mb-3">
           <div class="form-group row">
-            <label
-              for="RefCustPO"
-              class="col-md-4 text-right"
-            >
+            <label for="RefCustPO" class="col-md-4 text-right">
               Reference Cust PO #:
             </label>
             <div class="col-md-8">
-              <input
-                placeholder="Enter Reference Customer PO # (typically a blanket PO)"
-                type="text"
-                class="form-control input-transparent"
-                name="RefCustPO"
-                required
-              >
+              <input placeholder="Enter Reference Customer PO # (typically a blanket PO)" type="text"
+                class="form-control input-transparent" name="RefCustPO" required>
             </div>
           </div>
         </div>
 
         <div class="col-md-6 mb-3">
           <div class="form-group row">
-            <label
-              for="RefCustPO"
-              class="col-md-4 text-right"
-            >
+            <label for="RefCustPO" class="col-md-4 text-right">
               Cust Ref# / MTTN:
             </label>
             <div class="col-md-8">
-              <input
-                placeholder="Enter Reference Number"
-                type="text"
-                class="form-control input-transparent"
-                name="CustRefNum"
-              >
+              <input placeholder="Enter Reference Number" type="text" class="form-control input-transparent"
+                name="CustRefNum">
             </div>
           </div>
         </div>
@@ -95,15 +62,9 @@
             <label for="OpenDate" class="col-md-4 text-right">
               Open Date:
             </label>
-            <p-calendar
-              placeholder="Select Open Date"
-              class="col-md-8"
-              name="OpenDate"
-              showIcon="true"
-              styleClass="input-group input-group-transparent"
-              inputStyleClass="form-control input-transparent"
-              required
-            >
+            <p-calendar placeholder="Select Open Date" class="col-md-8" name="OpenDate" showIcon="true"
+              styleClass="input-group input-group-transparent" inputStyleClass="form-control input-transparent"
+              required>
             </p-calendar>
           </div>
         </div>
@@ -113,34 +74,21 @@
             <label for="ClosedDate" class="col-md-4 text-right">
               Close Date:
             </label>
-            <p-calendar
-              placeholder="Select Closed Date"
-              class="col-md-8"
-              name="ClosedDate"
-              showIcon="true"
-              styleClass="input-group input-group-transparent"
-              inputStyleClass="form-control input-transparent"
-            >
+            <p-calendar placeholder="Select Closed Date" class="col-md-8" name="ClosedDate" showIcon="true"
+              styleClass="input-group input-group-transparent" inputStyleClass="form-control input-transparent">
             </p-calendar>
           </div>
         </div>
 
         <div class="col-md-6 mb-3">
           <div class="form-group row">
-            <label
-              for="TotalPurchaseLimit"
-              class="col-md-4 text-right"
-            >
+            <label for="TotalPurchaseLimit" class="col-md-4 text-right">
               Total Purchase Limit:
             </label>
             <div class="col-md-8 input-group input-group-transparent">
               <span class="input-group-addon bg-secondary">$</span>
-              <input
-                placeholder="Enter total amount"
-                type="text"
-                class="form-control input-transparent"
-                name="TotalPurchaseLimit"
-              >
+              <input placeholder="Enter total amount" type="text" class="form-control input-transparent"
+                name="TotalPurchaseLimit">
               <span class="input-group-addon bg-secondary">.00</span>
             </div>
           </div>
@@ -148,19 +96,11 @@
 
         <div class="col-md-6 mb-3">
           <div class="form-group row">
-            <label
-              for="Tax"
-              class="col-md-4 text-right"
-            >
+            <label for="Tax" class="col-md-4 text-right">
               Tax %:
             </label>
             <div class="col-md-8 input-group input-group-transparent">
-              <input
-                placeholder="Enter Tax %"
-                type="text"
-                class="form-control input-transparent"
-                name="Tax"
-              >
+              <input placeholder="Enter Tax %" type="text" class="form-control input-transparent" name="Tax">
               <span class="input-group-addon bg-secondary">%</span>
             </div>
           </div>
@@ -168,21 +108,11 @@
 
         <div class="col-12 mb-3">
           <div class="form-group row">
-            <label
-              for="ProductId"
-              class="col-md-2 text-right"
-            >
+            <label for="ProductId" class="col-md-2 text-right">
               Products:
             </label>
-            <p-multiSelect
-              class="col-md-8"
-              defaultLabel="Select Products"
-              name="ProductId"
-              [options]="customersData"
-              appendTo="body"
-              [baseZIndex]="100002"
-              required
-            >
+            <p-multiSelect class="col-md-8" defaultLabel="Select Products" name="ProductId" [options]="customersData"
+              appendTo="body" [baseZIndex]="100002" required>
             </p-multiSelect>
           </div>
         </div>
@@ -198,4 +128,3 @@
     </form>
   </widget>
 </div>
-

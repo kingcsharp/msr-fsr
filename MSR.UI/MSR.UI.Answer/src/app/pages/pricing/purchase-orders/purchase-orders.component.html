@@ -10,7 +10,7 @@
     stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
-        <button *ngIf="purchaseOrderPrivileges.canCreate" [routerLink]="['../purchaseorder-create']"
+        <button *ngIf="purchaseOrderPrivileges.canCreate" (click)="showPurchaseOrderModal()"
           class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
           + Add
         </button>
@@ -182,7 +182,8 @@
             (click)="onClickPurchase(purcahseordermodel)">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
-            class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow" (click)="onClickEdit(purcahseordermodel)">
+            class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
+            (click)="showPurchaseOrderModal(purcahseordermodel)">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-close pointer" tooltip="Close" data-cy="closeRow" (click)="onClickClose(purcahseordermodel)">
@@ -205,10 +206,11 @@
   position="top">
 </p-confirmDialog>
 
-<p-dialog header="Edit Purchase Order" *ngIf="display" [(visible)]="display" [appendTo]="'body'" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '50vw'}" data-cy="purchase-order-header">
+<p-dialog header="{{ currentPO.id === undefined ?'Create Purchase Order':'Edit Purchase Order'}}" *ngIf="display"
+  [(visible)]="display" [appendTo]="'body'" [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}"
+  data-cy="purchase-order-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
-    data-parsley-priority-enabled="false" (ngSubmit)="onEditSubmit()" novalidate="novalidate">
+    data-parsley-priority-enabled="false" (ngSubmit)="onPurchaseSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
       <header>
         <h5>Purchase Order Details</h5>
@@ -222,8 +224,7 @@
               Customer:
             </label>
             <p-dropdown class="col-md-8" placeholder="Select Client" optionLabel="name" name="CutomerId"
-              [(ngModel)]="currentPO.customer" [options]="customersData" appendTo="body" [baseZIndex]="100002"
-              required>
+              [(ngModel)]="currentPO.customer" [options]="customersData" appendTo="body" [baseZIndex]="100002" required>
             </p-dropdown>
           </div>
 
@@ -238,6 +239,16 @@
             </div>
           </div>
 
+          <div class="form-group row">
+            <label for="referenceName" class="col-md-4  col-form-label text-md-right">
+              Reference Name :
+            </label>
+            <div class="col-md-8 ">
+              <input placeholder="Enter Reference Name" type="text" class="form-control input-transparent" name="referenceName"
+                [(ngModel)]="currentPO.referenceName" data-parsley-trigger="change" data-parsley-required="true"
+                tooltip="Reference Name" data-cy="referenceName-input">
+            </div>
+          </div>
           <div class="form-group row">
             <label class="form-control-label col-md-4 col-12 text-md-right" for="RefCustPO">
               Reference Cust PO #:
@@ -255,9 +266,9 @@
               Cust Ref# / MTTN:
             </label>
             <div class="col-md-8 col-12 ">
-              <input placeholder="Enter Reference Number" type="text" class="form-control input-transparent"
-                name="CustRefNum" data-parsley-trigger="change" data-parsley-required="true"
-                tooltip="Customer Reference Number" data-cy="custrefnum-input">
+              <input placeholder="Enter Reference Number" [(ngModel)]="currentPO.customerReferenceNo" type="text"
+                class="form-control input-transparent" name="CustRefNum" data-parsley-trigger="change"
+                data-parsley-required="true" tooltip="Customer Reference Number" data-cy="custrefnum-input">
             </div>
           </div>
 
@@ -271,7 +282,6 @@
               data-parsley-required="true" tooltip="Open Date" data-cy="opendate-input">
             </p-calendar>
           </div>
-
           <div class="form-group row">
             <label class="form-control-label col-md-4 col-12 text-md-right" for="ClosedDate">
               Close Date:
@@ -309,7 +319,7 @@
               Products:
             </label>
             <div class="col-md-10 col-12">
-              <multiselect-wrapper-form defaultLabel="Select Products" name="ProductId" defaultId="id"
+              <multiselect-wrapper-form [(model)]="currentPO.selectedProducts" defaultLabel="Select Products" name="ProductId" defaultId="id"
                 defaultLabelProperty="name" [options]="productsData" [limit]="30">
               </multiselect-wrapper-form>
             </div>

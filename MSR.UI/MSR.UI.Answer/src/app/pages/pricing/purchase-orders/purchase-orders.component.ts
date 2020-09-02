@@ -6,7 +6,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ConfirmationService } from 'primeng/api';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest } from '../../../services/api.client.generated';
+import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderModel } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -35,7 +35,7 @@ export class PurchaseOrdersComponent implements OnInit {
   purchasePrivileges: AllowedActions;
   purchaseOrderPrivileges: AllowedActions;
   display: boolean = false;
-  currentPO: PurchaseOrder;
+  currentPO: PurchaseOrderModel;
   customersData: any[] = [];
   getCustomersFlag: boolean = false;
   productsData: any[] = [];
@@ -88,7 +88,7 @@ export class PurchaseOrdersComponent implements OnInit {
     this.data = [];
     this.getPurchaseOrders();
     this.getCustomers();
-    this.currentPO = new PurchaseOrder();
+    this.currentPO = new PurchaseOrderModel();
     this.getProducts();
   }
 
@@ -101,8 +101,8 @@ export class PurchaseOrdersComponent implements OnInit {
       }));
   }
 
-  onClickEdit(purchaseOrder: PurchaseOrder) {
-    this.currentPO =  this.getPuchaseOrder(purchaseOrder);
+  showPurchaseOrderModal(purchaseOrder: PurchaseOrderModel) {
+    this.currentPO = this.getPuchaseOrder(purchaseOrder === undefined ? new PurchaseOrderModel() : purchaseOrder);
     this.display = true;
   }
 
@@ -110,7 +110,7 @@ export class PurchaseOrdersComponent implements OnInit {
     currentPO.customer = this.customersData.find(x => x.id == purchaseOrder.customerId);
   }
 
-  onClickDelete(purchaseOrder: PurchaseOrder) {
+  onClickDelete(purchaseOrder: PurchaseOrderModel) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to Delete this record?',
       accept: () => {
@@ -119,7 +119,7 @@ export class PurchaseOrdersComponent implements OnInit {
     });
   }
 
-  deletePurchaseOrder(purchaseOrder: PurchaseOrder) {
+  deletePurchaseOrder(purchaseOrder: PurchaseOrderModel) {
     this.globals.showLoader(true);
     this.purchaseOrderService.purchaseOrderDelete(purchaseOrder.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
@@ -128,11 +128,11 @@ export class PurchaseOrdersComponent implements OnInit {
       }));
   }
 
-  onClickPurchase(purchaseOrder: PurchaseOrder) {
+  onClickPurchase(purchaseOrder: PurchaseOrderModel) {
     //TODO: Purchase function
   }
 
-  onClickClose(purchaseOrder: PurchaseOrder) {
+  onClickClose(purchaseOrder: PurchaseOrderModel) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to Close this record?',
       accept: () => {
@@ -141,11 +141,14 @@ export class PurchaseOrdersComponent implements OnInit {
     });
   }
 
-  closePurchaseOrder(purchaseOrder: PurchaseOrder) {
+  closePurchaseOrder(purchaseOrder: PurchaseOrderModel) {
     let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
+    this.setCustomerId(purchaseOrderRequest, purchaseOrder);
+
+    this.setSelectedProductIds(purchaseOrderRequest, purchaseOrder);
+
     Object.assign(purchaseOrderRequest, purchaseOrder);
     purchaseOrderRequest.closeDate = new Date();
-    this.setCustomerId(purchaseOrderRequest, purchaseOrder);
     this.globals.showLoader(true);
     // BACKEND ENDPOINT TBD
     this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
@@ -157,19 +160,17 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   setCustomerId(purchaseOrderRequest: any, purchaseOrder: any) {
-    purchaseOrderRequest.customer = purchaseOrder.customer.id;
+    purchaseOrderRequest.customerId = purchaseOrder.customer.id;
   }
 
-  onClickAdd() {
-    this.currentPO =  this.getPuchaseOrder(undefined);
-    this.display = true;
-  }
 
   getPuchaseOrder(purchaseOrder) {
-    if (purchaseOrder === undefined) {
-      return new PurchaseOrder();
+    if (purchaseOrder.id === undefined) {
+      purchaseOrder.selectedProducts = [];
+      return purchaseOrder;
     }
     let ret = copyObj(purchaseOrder);
+    ret.selectedProducts = ret.products;
     this.setCurrentCustomer(ret, purchaseOrder);
     return ret;
   }
@@ -200,106 +201,39 @@ export class PurchaseOrdersComponent implements OnInit {
       }));
   }
 
-  onEditSubmit() {
+  setSelectedProductIds(to, from) {
+    to.products = from.selectedProducts.map((elem) => { return elem.id });
+  }
+
+  onPurchaseSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
-      Object.assign(purchaseOrderRequest, this.currentPO);
-      this.globals.showLoader(true);
-      this.setCustomerId(purchaseOrderRequest, this.currentPO);
-      this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
-        .subscribe(responseHandler(response => {
-          console.log(response);
-          const index = this.data.findIndex(x => x.id === this.currentPO.id);
-          this.data.splice(index, 1);
-          this.data.splice(index, 0, response.object);
-        }));
-
-      ctrl.clseDialog();
-    }
-  }
-}
-
-
-// Temp model
-interface IPurchaseOrder {
-  id: number;
-  name: string;
-  referencePo: string;
-  invoicedBalance?: number;
-  uninvoicedBalance?: number;
-  balance: number;
-  customerName: string;
-  customerId: number,
-  openDate: Date;
-  closeDate?: Date;
-  totalPurchaseLimit: number;
-  unusedAmount: number;
-  revision: number;
-  status: 'Open' | 'Closed' | 'All';
-}
-
-class PurchaseOrder implements IPurchaseOrder {
-  id: number;
-  name: string;
-  referencePo: string;
-  invoicedBalance: number;
-  uninvoicedBalance: number;
-  balance: number;
-  customerName: string;
-  customerId: number;
-  openDate: Date;
-  closeDate: Date;
-  totalPurchaseLimit: number;
-  unusedAmount: number;
-  revision: number;
-  status: 'Open' | 'Closed' | 'All';
-
-
-  constructor(data?: IPurchaseOrder) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
+      let purchaseUpdateOrderRequest = new UpdatePurchaseOrderRequest();
+      this.setCustomerId(purchaseUpdateOrderRequest, this.currentPO);
+      Object.assign(purchaseUpdateOrderRequest, this.currentPO);
+      this.setSelectedProductIds(purchaseUpdateOrderRequest, this.currentPO);
+      if (this.currentPO.id === undefined) {
+        let purchaseOrderRequest = new CreatePurchaseOrderRequest();
+        Object.assign(purchaseOrderRequest, purchaseUpdateOrderRequest);
+        this.globals.showLoader(true);
+        this.purchaseOrderService.purchaseOrderPost(env.apiVersion, purchaseOrderRequest).pipe(take(1))
+          .subscribe(responseHandler(response => {
+            this.data.push(response.object);
+            ctrl.clseDialog();
+          }));
+      } else {
+        this.globals.showLoader(true);
+        this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseUpdateOrderRequest).pipe(take(1))
+          .subscribe(responseHandler(response => {
+            console.log(response);
+            const index = this.data.findIndex(x => x.id === this.currentPO.id);
+            this.data.splice(index, 1);
+            this.data.splice(index, 0, response.object);
+            ctrl.clseDialog();
+          }));
       }
     }
   }
 }
-
-const demoData = [
-  new PurchaseOrder({
-    id: 516481,
-    name: 'PO1590779276',
-    referencePo: 'refcustponum1223334444',
-    invoicedBalance: 0,
-    uninvoicedBalance: 0,
-    balance: 34775,
-    customerName: '[MSR-FSR] APPLIED MATERIALS - [ID:1566]',
-    customerId: 1566,
-    openDate: new Date(),
-    closeDate: null,
-    totalPurchaseLimit: 1234567,
-    unusedAmount: 1234567,
-    revision: 2,
-    status: 'All'
-  }),
-  new PurchaseOrder({
-    id: 516481,
-    name: 'PO1590779276',
-    referencePo: 'CPO1590779276',
-    invoicedBalance: 34775,
-    uninvoicedBalance: 0,
-    balance: 34775,
-    customerName: '[MSR-FSR]ATA - [ID:1574]',
-    customerId: 1574,
-    openDate: new Date(),
-    closeDate: new Date(),
-    totalPurchaseLimit: 1234567,
-    unusedAmount: 1199792,
-    revision: 1,
-    status: 'Closed'
-  })
-]
-
 
