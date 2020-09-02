@@ -159,7 +159,7 @@
                                     <label for="title{{i}}" class="col-form-label text-left col-3">
                                         Title
                                     </label>
-                                    <input type="text" name="title{{i}}" [(ngModel)]="procedureStep.value.title"
+                                    <input type="text" name="title{{i}}" [(ngModel)]="procedureStep.value.title" (keyup)="updateProcedurePredecessorAndOrder($event)"
                                         data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
                                         data-parsley-required="true" class="form-control input-transparent col-9"
                                         tooltip="Title of Procedure Step" data-cy="title-input">
@@ -363,7 +363,7 @@
 
                 <bs-sortable *ngIf="procedureSteps !== undefined && procedureSteps?.length > 0"
                     [(ngModel)]="procedureSteps" [itemTemplate]="itemTemplate" itemClass="sortable-item"
-                    itemActiveClass="sortable-item-active" placeholderItem="Drag here" (onChange)="procedureStepOrderChanged($event)"
+                    itemActiveClass="sortable-item-active" placeholderItem="Drag here" (onChange)="updateProcedurePredecessorAndOrder($event)"
                     placeholderClass="placeholderStyle" wrapperClass="sortable-wrapper"></bs-sortable>
 
             </div>

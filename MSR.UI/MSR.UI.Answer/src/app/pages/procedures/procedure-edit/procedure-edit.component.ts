@@ -470,8 +470,19 @@ export class ProcedureEditComponent implements OnInit {
 
   }
 
-  procedureStepOrderChanged($event){
-    console.log($event);
+  updateProcedurePredecessorAndOrder($event){
+    this.procedureSteps.forEach(procedureStep => {
+
+      procedureStep.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1;
+      if(procedureStep.printOrder !== 1){
+        procedureStep.predecessorStepId = this.procedureSteps[procedureStep.printOrder - 2].id;
+        procedureStep.predecessorStepName = this.procedureSteps[procedureStep.printOrder - 2].title;
+      }else{
+        procedureStep.predecessorStepId = undefined;
+        procedureStep.predecessorStepName = '';
+      }
+
+    });
   }
 
 }
