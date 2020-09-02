@@ -7443,71 +7443,74 @@
         ]
       },
       "Procedure": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
           },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "procedureTypeId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isRelatedToAProduct": {
-            "type": "boolean"
-          },
-          "creatorCompany": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdByDepartmentName": {
-            "type": "string",
-            "nullable": true
-          },
-          "revision": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          },
-          "duration": {
-            "type": "number",
-            "format": "double"
-          },
-          "durationType": {
-            "type": "string",
-            "nullable": true
-          },
-          "procedureType": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProcedureType"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "procedureTypeId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "isRelatedToAProduct": {
+                "type": "boolean"
+              },
+              "creatorCompany": {
+                "type": "string",
+                "nullable": true
+              },
+              "createdByDepartmentName": {
+                "type": "string",
+                "nullable": true
+              },
+              "revision": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              },
+              "duration": {
+                "type": "number",
+                "format": "double"
+              },
+              "durationType": {
+                "type": "string",
+                "nullable": true
+              },
+              "procedureType": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureType"
+                  }
+                ]
+              },
+              "referenceFiles": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/FileModel"
+                }
+              },
+              "roles": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Role"
+                }
               }
-            ]
-          },
-          "referenceFiles": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/FileModel"
-            }
-          },
-          "roles": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Role"
             }
           }
-        },
+        ],
         "example": {
             "name": "PROCNAME1594440933",
             "procedureTypeId": 1,
@@ -7567,7 +7570,6 @@
             "type": "integer",
             "description": "Gets or Sets ProcedureTypeId",
             "format": "int32",
-            "nullable": true,
             "example": 1
           },
           "comments": {
