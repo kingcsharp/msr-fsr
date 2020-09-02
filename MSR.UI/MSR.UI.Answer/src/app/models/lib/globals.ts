@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
+import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized, RouteConfigLoadStart } from '@angular/router';
 import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
@@ -53,25 +53,29 @@ export class Globals {
     }
 
     setActiveMenuItem(router) {
-        router.events.forEach((event) => {
-            if (event instanceof NavigationEnd && this.user !== undefined) {
-                let splitUrl = event.url.split('/');
-                const urlTocheck = splitUrl[splitUrl.length - 1];
-                let currMenuItem: [MenuItem];
-                this.user.roles.forEach(element => {
-                    const elem = element.menus.filter(x => x.url.toLowerCase() === urlTocheck);
-                    if (elem !== undefined) {
-                        currMenuItem = elem;
-                        return;
+        router.events
+            .subscribe((event) => {
+                if (event instanceof NavigationEnd) {
+                    console.log(event);
+                    if (this.user !== undefined) {
+                        let splitUrl = event.url.split('/');
+                        const urlTocheck = splitUrl[splitUrl.length - 1];
+                        let currMenuItem: [MenuItem];
+                        let length = this.user.roles.length;
+                        while (length--) {
+                            const elem = this.user.roles[length].menus.filter(x => x.url.toLowerCase() === urlTocheck);
+                            if (elem !== undefined && elem.length > 0) {
+                                this.activeMenu = elem[0];
+                                console.log(this.activeMenu);
+                                length = 0;
+                            }
+                        }
                     }
-                });
-
-                if (currMenuItem.length > 0) {
-                    this.activeMenu = currMenuItem[0];
                 }
-            }
-        });
+            });
     }
+
+
 
     loadUserFromLocalStorage() {
         if (localStorage.user === undefined || localStorage.user === undefined) {
