@@ -50,7 +50,7 @@ export class PurchaseCreateComponent implements OnInit {
       label: 'OFF',
       value: false
     }
-  ]
+  ];
 
   constructor(
     public globals: Globals,

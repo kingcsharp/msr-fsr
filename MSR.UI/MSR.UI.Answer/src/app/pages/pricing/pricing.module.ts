@@ -22,7 +22,6 @@ import { QuoteCreateComponent } from './quote-create/quote-create.component';
 import { ProductDefinitionComponent } from './product-definition/product-definition.component';
 import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { PurchaseOrderCreateComponent } from './purchase-order-create/purchase-order-create.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { QuotesProductsComponent } from './quotes-products/quotes-products.component';
 
@@ -32,7 +31,6 @@ export const routes = [
   { path: 'quote/create', component: QuoteCreateComponent, pathMatch: 'full' },
   { path: 'product/:mode/:id', component: ProductDefinitionComponent, pathMatch: 'full' },
   { path: 'purchaseorder', component: PurchaseOrdersComponent, pathMatch: 'full' },
-  { path: 'purchaseorder-create', component: PurchaseOrderCreateComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
@@ -40,7 +38,6 @@ export const routes = [
     QuoteCreateComponent,
     ProductDefinitionComponent,
     PurchaseOrdersComponent,
-    PurchaseOrderCreateComponent,
     QuotesProductsComponent,
   ],
   imports: [
