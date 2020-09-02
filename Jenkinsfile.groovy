@@ -46,11 +46,11 @@ pipeline {
                         script {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
-                                    sh "sudo chmod 777 /var/run/docker.sock"
+                                    //sh "sudo chmod 777 /var/run/docker.sock"
                                     sh "docker build --build-arg ENV=dev -t msr-ui ."
                                     sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
                                 }
                             } catch(e) {
@@ -60,7 +60,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                                sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
                                 sh "cat ${UI_COMPOSE}"
 
                                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
@@ -89,11 +89,11 @@ pipeline {
                         script {
                             try {
                                 dir('reverseproxy') {
-                                    sh "sudo chmod 777 /var/run/docker.sock"
+                                    //sh "sudo chmod 777 /var/run/docker.sock"
                                     sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
                                     sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
 
-                                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
                                 }
                             } catch(e) {
@@ -103,12 +103,12 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo chmod 777 /var/run/docker.sock"
+                                //sh "sudo chmod 777 /var/run/docker.sock"
                                 //sh "git mv Msr.Infrastructure MSR.Infrastructure"
                                 sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
                                 sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
 
-                                sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                 sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
                             } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
@@ -117,7 +117,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo sh update_image_api.sh Development ${env.GIT_COMMIT} ${API_COMPOSE}"
+                                sh "sh update_image_api.sh Development ${env.GIT_COMMIT} ${API_COMPOSE}"
                                 sh "cat ${API_COMPOSE}"
 
                                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
@@ -150,7 +150,7 @@ pipeline {
                     timeout(activity: true, time: 5) {
                         input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
-                    sh "sudo sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                    sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
                     sh "cat ${API_COMPOSE}"
                     deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                     deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")

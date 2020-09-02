@@ -39,7 +39,7 @@
                     <label for="roles" class="col-3">
                         Roles
                     </label>
-                    <div class="col-3">
+                    <div class="col-9">
                         <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="selectedRoles"
                             defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles"
                             data-cy="roles-multiselect">
@@ -112,13 +112,13 @@
             </div>
             <div class="col-9">
                 <div class="form-group form-row">
-                    <div class="col-2 text-right">
+                    <div class="col-4 text-right">
                         <label for="addprocedurestep" class="col-form-label mt-4">
                             Add Procedure Step
                         </label>
                     </div>
-                    <div class="col-10 mt-3">
-                        <p-dropdown placeholder="Select Procedure Step Template" name="addprocedurestep"
+                    <div class="col-8 mt-3  d-flex flex-row ">
+                        <p-dropdown placeholder="Select Procedure Step Template" name="addprocedurestep" class="my-auto"
                             [options]="availableProcedureStepTemplates" showClear="true"
                             [(ngModel)]="selectedProcedureStepTemplate" data-cy="addprocedurestep-dropdown">
                         </p-dropdown>
@@ -298,69 +298,49 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="row form-row">
-                                <div class="col-9">
-                                    <label class="col-form-label text-left">
-                                        Monitors
-                                    </label>
-                                </div>
-                                <div class="col-2">
-                                    <button *ngIf="canEdit" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
-                                        (click)="openAddMonitorDialog(procedureStep.value)" data-cy="add-button">
-                                        Add Monitor
-                                    </button>
-                                </div>
+                            <div class="row justify-content-end">
+                                <button *ngIf="canEdit" class="btn btn-success width-100 mb-xs sm-mrg m-2" role="button"
+                                    (click)="openAddMonitorDialog(procedureStep.value)" data-cy="add-button">
+                                    Add Monitor
+                                </button>
                             </div>
-                            <div class="row form-row monitorstable-column">
-                                <div class="col-12">
-                                    <table class="table table-condensed table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Type</th>
-                                                <th>Description</th>
-                                                <th>Input Type</th>
-                                                <th>Input Target</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let procedureStepMonitor of procedureStep.value.monitors;">
-                                                <td>{{ procedureStepMonitor.monitorType }}</td>
-                                                <td>{{ procedureStepMonitor.description }}</td>
-                                                <td>{{ procedureStepMonitor.inputType }}</td>
-                                                <td>{{ procedureStepMonitor.targetValue }}</td>
-                                                <td>
-                                                    <i *ngIf="canEdit" class="far fa-edit pointer"
-                                                        tooltip="Edit Monitor" data-cy="edit-button"
-                                                        (click)="openEditMonitorDialog(procedureStepMonitor)"></i>
-                                                    <i *ngIf="canDelete" class="fa fa-trash pointer"
-                                                        tooltip="Delete Monitore" data-cy="delete-button"
-                                                        (click)="openConfirmDeleteMonitorDialog(procedureStep.value, procedureStepMonitor)"></i>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group form-row roles-column">
-                                    <label for="roles{{i}}" class="col-form-label text-left col-2">
-                                        Roles
-                                    </label>
-                                    <multiselect-wrapper-form [options]="availableRoles" [limit]="10"
-                                        [(model)]="procedureStep.value.selectedRoles" defaultLabelProperty="name"
-                                        defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
-                                    </multiselect-wrapper-form>
-                                </div>
+                            <div class="row monitorstable-column">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th>Input Type</th>
+                                            <th>Input Target</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let procedureStepMonitor of procedureStep.value.monitors;">
+                                            <td>{{ procedureStepMonitor.monitorType }}</td>
+                                            <td>{{ procedureStepMonitor.description }}</td>
+                                            <td>{{ procedureStepMonitor.inputType }}</td>
+                                            <td>{{ procedureStepMonitor.targetValue }}</td>
+                                            <td>
+                                                <i *ngIf="canEdit" class="far fa-edit pointer" tooltip="Edit Monitor"
+                                                    data-cy="edit-button"
+                                                    (click)="openEditMonitorDialog(procedureStepMonitor)"></i>
+                                                <i *ngIf="canDelete" class="fa fa-trash pointer"
+                                                    tooltip="Delete Monitore" data-cy="delete-button"
+                                                    (click)="openConfirmDeleteMonitorDialog(procedureStep.value, procedureStepMonitor)"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </ng-template>
 
-                <bs-sortable *ngIf="procedureSteps !== undefined" [(ngModel)]="procedureSteps"
-                    [itemTemplate]="itemTemplate" itemClass="sortable-item" itemActiveClass="sortable-item-active"
-                    placeholderItem="Drag here" placeholderClass="placeholderStyle" wrapperClass="sortable-wrapper">
-                </bs-sortable>
+                <bs-sortable *ngIf="procedureSteps !== undefined && procedureSteps?.length > 0"
+                    [(ngModel)]="procedureSteps" [itemTemplate]="itemTemplate" itemClass="sortable-item"
+                    itemActiveClass="sortable-item-active" placeholderItem="Drag here"
+                    placeholderClass="placeholderStyle" wrapperClass="sortable-wrapper"></bs-sortable>
 
             </div>
         </div>
