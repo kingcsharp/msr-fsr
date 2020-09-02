@@ -244,9 +244,9 @@
               Reference Name :
             </label>
             <div class="col-md-8 ">
-              <input placeholder="Enter Reference Name" type="text" class="form-control input-transparent" name="referenceName"
-                [(ngModel)]="currentPO.referenceName" data-parsley-trigger="change" data-parsley-required="true"
-                tooltip="Reference Name" data-cy="referenceName-input">
+              <input placeholder="Enter Reference Name" type="text" class="form-control input-transparent"
+                name="referenceName" [(ngModel)]="currentPO.referenceName" data-parsley-trigger="change"
+                data-parsley-required="true" tooltip="Reference Name" data-cy="referenceName-input">
             </div>
           </div>
           <div class="form-group row">
@@ -309,7 +309,9 @@
               Tax %:
             </label>
             <div class="col-md-8 col-12 input-group input-group-transparent">
-              <input placeholder="Enter Tax %" type="number" class="form-control input-transparent" name="Tax">
+              <input placeholder="Enter Tax %" type="number" data-parsley-range="[0, 100]"
+                data-parsley-trigger="change" data-parsley-validation-threshold="1"
+                class="form-control input-transparent" name="Tax">
               <span class="input-group-addon bg-secondary">%</span>
             </div>
           </div>
@@ -319,8 +321,8 @@
               Products:
             </label>
             <div class="col-md-10 col-12">
-              <multiselect-wrapper-form [(model)]="currentPO.selectedProducts" defaultLabel="Select Products" name="ProductId" defaultId="id"
-                defaultLabelProperty="name" [options]="productsData" [limit]="30">
+              <multiselect-wrapper-form [(model)]="currentPO.selectedProducts" defaultLabel="Select Products"
+                name="ProductId" defaultId="id" defaultLabelProperty="name" [options]="productsData" [limit]="30">
               </multiselect-wrapper-form>
             </div>
           </div>
