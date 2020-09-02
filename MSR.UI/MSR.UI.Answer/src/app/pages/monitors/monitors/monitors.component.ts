@@ -46,13 +46,7 @@ export class MonitorsComponent implements OnInit {
     this.globals.showLoader(true);
 
     this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler((response) => {
-      this.data = Array.isArray(response.object) ? response.object: [];
-      this.data.forEach(monitor =>{
-        monitor.workerName = {};
-        monitor.workerName.fullName = 'John Doe';
-        monitor.taskCompleted = new Date();
-        monitor.serialNumber = '11111';
-      });
+      this.data = response.object;
       this.loading = false;
     }, () => {
 
