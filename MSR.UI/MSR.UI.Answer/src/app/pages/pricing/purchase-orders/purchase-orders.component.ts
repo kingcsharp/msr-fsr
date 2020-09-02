@@ -141,15 +141,12 @@ export class PurchaseOrdersComponent implements OnInit {
     });
   }
 
-  closePurchaseOrder(purchaseOrder: PurchaseOrderModel) {
-    let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
-    this.setCustomerId(purchaseOrderRequest, purchaseOrder);
-
-    this.setSelectedProductIds(purchaseOrderRequest, purchaseOrder);
-
-    Object.assign(purchaseOrderRequest, purchaseOrder);
-    purchaseOrderRequest.closeDate = new Date();
+  closePurchaseOrder(purchaseOrder: any) {
     this.globals.showLoader(true);
+    let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
+    Object.assign(purchaseOrderRequest, purchaseOrder);
+    purchaseOrderRequest.products = purchaseOrder.products.map((elem) => { return elem.id });
+    purchaseOrderRequest.closeDate = new Date();
     // BACKEND ENDPOINT TBD
     this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
       .subscribe(responseHandler(response => {
@@ -209,6 +206,7 @@ export class PurchaseOrdersComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
+      this.globals.showLoader(true);
       let purchaseUpdateOrderRequest = new UpdatePurchaseOrderRequest();
       this.setCustomerId(purchaseUpdateOrderRequest, this.currentPO);
       Object.assign(purchaseUpdateOrderRequest, this.currentPO);
@@ -216,7 +214,6 @@ export class PurchaseOrdersComponent implements OnInit {
       if (this.currentPO.id === undefined) {
         let purchaseOrderRequest = new CreatePurchaseOrderRequest();
         Object.assign(purchaseOrderRequest, purchaseUpdateOrderRequest);
-        this.globals.showLoader(true);
         this.purchaseOrderService.purchaseOrderPost(env.apiVersion, purchaseOrderRequest).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.data.push(response.object);
