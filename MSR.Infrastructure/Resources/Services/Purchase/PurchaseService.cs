@@ -37,12 +37,18 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                     .Include(x => x.Location)
                     .Include(x => x.PurchaseOrder)
                     .Include(x => x.PurchaseOrderProduct)
+                    .ThenInclude(s => s.Product)
                     .ToListAsync();
                 if (purchases.Count == 0) {
                     throw new DomainException($"procedure ID {command.Id.Value} not found", DomainError.NotFound);
                 }
             } else {
                 purchases = await _unitOfWork.Purchases.Query()
+                    .Include(x => x.Status)
+                    .Include(x => x.Location)
+                    .Include(x => x.PurchaseOrder)
+                    .Include(x => x.PurchaseOrderProduct)
+                    .ThenInclude(s => s.Product)
                     .ToListAsync();
             }
             var result = purchases.Select(x => _mapper.Map<Domain.Models.PurchaseModel>(x)).ToList();
