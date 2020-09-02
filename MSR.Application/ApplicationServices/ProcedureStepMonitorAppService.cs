@@ -49,7 +49,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetMonitorModel command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.GetMonitorModelAsync(command);
-            return new CommandResponse<MonitorModel>(ret);
+            return new CommandResponse<ICollection<MonitorModel>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(DeleteProcedureStepMonitor command, CancellationToken cancellationToken = default)

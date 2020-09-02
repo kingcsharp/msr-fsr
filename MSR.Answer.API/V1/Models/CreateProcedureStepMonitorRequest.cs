@@ -19,13 +19,23 @@ namespace MSR.Answer.API.V1.Models
     ///
     /// </summary>
     [DataContract]
-    public partial class CreateProcedureStepMonitorRequest : IEquatable<CreateProcedureStepMonitorRequest>
+    public partial class CreateProcedureStepMonitorRequest
     {
         /// <summary>
         /// Gets or Sets InputType
         /// </summary>
         [DataMember(Name="inputType")]
         public string InputType { get; set; }
+
+        /// <summary>
+        /// Sensor Name
+        /// </summary>
+        /// <description>
+        /// Sensor Name is only valid if this monitor is
+        /// of input type == sensor.
+        /// </description>
+        [DataMember(Name="sensorName")]
+        public string SensorName { get; set; }
 
         /// <summary>
         /// Gets or Sets MonitorType
@@ -71,127 +81,15 @@ namespace MSR.Answer.API.V1.Models
         public bool? SendEmailNotification { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        /// HighTarget
         /// </summary>
-        /// <returns>String presentation of the object</returns>
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.Append("class CreateProcedureStepMonitorRequest {\n");
-            sb.Append("  InputType: ").Append(InputType).Append("\n");
-            sb.Append("  ShouldBe: ").Append(ShouldBe).Append("\n");
-            sb.Append("  TargetValue: ").Append(TargetValue).Append("\n");
-            sb.Append("  FaultHandling: ").Append(FaultHandling).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  SendEmailNotification: ").Append(SendEmailNotification).Append("\n");
-            sb.Append("}\n");
-            return sb.ToString();
-        }
+        [DataMember(Name="highTarget")]
+        public double? HighTarget { get; set; }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        /// LowTarget
         /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public string ToJson()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="obj">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((CreateProcedureStepMonitorRequest)obj);
-        }
-
-        /// <summary>
-        /// Returns true if CreateProcedureStepMonitorRequest instances are equal
-        /// </summary>
-        /// <param name="other">Instance of CreateProcedureStepMonitorRequest to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(CreateProcedureStepMonitorRequest other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return
-                (
-                    InputType == other.InputType ||
-                    InputType != null &&
-                    InputType.Equals(other.InputType)
-                ) &&
-                (
-                    ShouldBe == other.ShouldBe ||
-                    ShouldBe != null &&
-                    ShouldBe.Equals(other.ShouldBe)
-                ) &&
-                (
-                    TargetValue == other.TargetValue ||
-                    TargetValue != null &&
-                    TargetValue.Equals(other.TargetValue)
-                ) &&
-                (
-                    FaultHandling == other.FaultHandling ||
-                    FaultHandling != null &&
-                    FaultHandling.Equals(other.FaultHandling)
-                ) &&
-                (
-                    Description == other.Description ||
-                    Description != null &&
-                    Description.Equals(other.Description)
-                ) &&
-                (
-                    SendEmailNotification == other.SendEmailNotification ||
-                    SendEmailNotification != null &&
-                    SendEmailNotification.Equals(other.SendEmailNotification)
-                );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                // Suitable nullity checks etc, of course :)
-                    if (InputType != null)
-                    hashCode = hashCode * 59 + InputType.GetHashCode();
-                    if (ShouldBe != null)
-                    hashCode = hashCode * 59 + ShouldBe.GetHashCode();
-                    if (TargetValue != null)
-                    hashCode = hashCode * 59 + TargetValue.GetHashCode();
-                    if (FaultHandling != null)
-                    hashCode = hashCode * 59 + FaultHandling.GetHashCode();
-                    if (Description != null)
-                    hashCode = hashCode * 59 + Description.GetHashCode();
-                    if (SendEmailNotification != null)
-                    hashCode = hashCode * 59 + SendEmailNotification.GetHashCode();
-                return hashCode;
-            }
-        }
-
-        #region Operators
-        #pragma warning disable 1591
-
-        public static bool operator ==(CreateProcedureStepMonitorRequest left, CreateProcedureStepMonitorRequest right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(CreateProcedureStepMonitorRequest left, CreateProcedureStepMonitorRequest right)
-        {
-            return !Equals(left, right);
-        }
-
-        #pragma warning restore 1591
-        #endregion Operators
+        [DataMember(Name="lowTarget")]
+        public double? LowTarget { get; set; }
     }
 }

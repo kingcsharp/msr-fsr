@@ -54,6 +54,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<HelpPage> HelpPages { get; }
         IRepository<HelpPageRoleMap> HelpPageRoles { get; }
         IRepository<MonitorInputType> MonitorInputTypes { get; }
+        IRepository<MonitorType> MonitorTypes { get; }
         IRepository<MonitorListItem> MonitorListItems { get; }
         IRepository<Document> Documents { get; }
         IRepository<Product> Products { get; }

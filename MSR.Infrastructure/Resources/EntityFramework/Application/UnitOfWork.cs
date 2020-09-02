@@ -41,6 +41,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<UserApproval> _userApproval;
         private IRepository<UserRoleApproval> _userRoleApproval;
         private IRepository<MonitorInputType> _monitorInputTypes;
+        private IRepository<MonitorType> _monitorTypes;
         private IRepository<MonitorListItem> _monitorListItems;
         private IRepository<WorkflowGroup> _workflowGroup;
         private IRepository<WorkflowStage> _workflowStage;
@@ -120,6 +121,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ProcedureStepType> ProcedureStepTypes { get { return _procedureStepTypes ??= new EFRepository<ProcedureStepType>(Context); } }
         public IRepository<ProcedureType> ProcedureTypes { get { return _procedureTypes ??= new EFRepository<ProcedureType>(Context); } }
         public IRepository<MonitorInputType> MonitorInputTypes { get { return _monitorInputTypes ??= new EFRepository<MonitorInputType>(Context); } }
+        public IRepository<MonitorType> MonitorTypes { get { return _monitorTypes ??= new EFRepository<MonitorType>(Context); } }
         public IRepository<MonitorListItem> MonitorListItems { get { return _monitorListItems ??= new EFRepository<MonitorListItem>(Context); } }
         public IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get { return _approvalTransactionLog ??= new EFRepository<ApprovalTransactionLog>(Context); } }
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }

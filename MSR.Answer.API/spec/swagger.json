@@ -1823,7 +1823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfMonitorModel"
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfMonitorModel"
                 }
               }
             }
@@ -7087,7 +7087,7 @@
           "canApprove": true
         }
       },
-      "AuditActionResultOfMonitorModel": {
+      "AuditActionResultOfICollectionOfMonitorModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -7098,12 +7098,11 @@
             "additionalProperties": true,
             "properties": {
               "object": {
+                "type": "array",
                 "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MonitorModel"
-                  }
-                ]
+                "items": {
+                  "$ref": "#/components/schemas/MonitorModel"
+                }
               }
             }
           }
@@ -7125,6 +7124,10 @@
           "monitorType": {
             "type": "string",
             "nullable": true
+          },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32"
           },
           "result": {
             "type": "string",
@@ -7149,6 +7152,16 @@
             "items": {
               "$ref": "#/components/schemas/UserModel"
             }
+          },
+          "highTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -7430,71 +7443,74 @@
         ]
       },
       "Procedure": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
           },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "procedureTypeId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isRelatedToAProduct": {
-            "type": "boolean"
-          },
-          "creatorCompany": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdByDepartmentName": {
-            "type": "string",
-            "nullable": true
-          },
-          "revision": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          },
-          "duration": {
-            "type": "number",
-            "format": "double"
-          },
-          "durationType": {
-            "type": "string",
-            "nullable": true
-          },
-          "procedureType": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProcedureType"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "procedureTypeId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "isRelatedToAProduct": {
+                "type": "boolean"
+              },
+              "creatorCompany": {
+                "type": "string",
+                "nullable": true
+              },
+              "createdByDepartmentName": {
+                "type": "string",
+                "nullable": true
+              },
+              "revision": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              },
+              "duration": {
+                "type": "number",
+                "format": "double"
+              },
+              "durationType": {
+                "type": "string",
+                "nullable": true
+              },
+              "procedureType": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureType"
+                  }
+                ]
+              },
+              "referenceFiles": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/FileModel"
+                }
+              },
+              "roles": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Role"
+                }
               }
-            ]
-          },
-          "referenceFiles": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/FileModel"
-            }
-          },
-          "roles": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Role"
             }
           }
-        },
+        ],
         "example": {
             "name": "PROCNAME1594440933",
             "procedureTypeId": 1,
@@ -7554,7 +7570,6 @@
             "type": "integer",
             "description": "Gets or Sets ProcedureTypeId",
             "format": "int32",
-            "nullable": true,
             "example": 1
           },
           "comments": {
@@ -8188,7 +8203,19 @@
             "type": "string",
             "nullable": true
           },
+          "monitorTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "inputType": {
+            "type": "string",
+            "nullable": true
+          },
+          "inputTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sensorName": {
             "type": "string",
             "nullable": true
           },
@@ -8211,6 +8238,16 @@
           "sendEmailNotification": {
             "type": "boolean",
             "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -8225,6 +8262,11 @@
           "inputType": {
             "type": "string",
             "description": "Gets or Sets InputType",
+            "nullable": true
+          },
+          "sensorName": {
+            "type": "string",
+            "description": "Sensor Name",
             "nullable": true
           },
           "monitorType": {
@@ -8261,14 +8303,26 @@
             "type": "boolean",
             "description": "Gets or Sets SendEmailNotification",
             "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "description": "HighTarget",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "description": "LowTarget",
+            "format": "double",
+            "nullable": true
           }
         },
         "example" : {
             "procedureStepId": 3,
             "description": "DESC1594442595",
             "faultHandling": "REJECT",
-            "monitorType": "1",
-            "inputType": "1",
+            "monitorType": "EQUIPMENT",
+            "inputType": "MANUAL",
             "targetValue": "LOOKSGOOD"
         }
       },
@@ -8305,7 +8359,17 @@
           },
           "inputType": {
             "type": "string",
-            "description": "Gets or Sets InputType",
+            "description": "Gets or Sets InputType string",
+            "nullable": true
+          },
+          "sensorName": {
+            "type": "string",
+            "description": "Sensor Name",
+            "nullable": true
+          },
+          "monitorType": {
+            "type": "string",
+            "description": "Gets or Sets MonitorType string",
             "nullable": true
           },
           "shouldBe": {
@@ -8331,6 +8395,18 @@
           "sendEmailNotification": {
             "type": "boolean",
             "description": "Gets or Sets SendEmailNotification",
+            "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "description": "HighTarget",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "description": "LowTarget",
+            "format": "double",
             "nullable": true
           }
         },
@@ -8926,16 +9002,10 @@
             "type": "string",
             "description": "Gets or Sets Name",
             "minLength": 1
-          },
-          "majorGroup": {
-            "type": "string",
-            "description": "Gets or Sets MajorGroup",
-            "nullable": true
           }
         },
         "example": {
-            "name": "PROCTYPE1598416853",
-            "majorGroup": "GROUP1598416853"
+            "name": "PROCTYPE1598416853"
         }
       },
       "AuditActionResultOfICollectionOfProcedureType": {
@@ -8973,11 +9043,6 @@
           "name": {
             "type": "string",
             "description": "Gets or Sets Name",
-            "nullable": true
-          },
-          "majorGroup": {
-            "type": "string",
-            "description": "Gets or Sets MajorGroup",
             "nullable": true
           }
         },
@@ -9244,6 +9309,10 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+            "id": 25,
+            "name": "PROCTYPE1598416546"
         }
       },
       "QuoteItemModel": {
@@ -9474,7 +9543,7 @@
                 "oneOf": [
                   { "type": "null"},
                   {
-                    "$ref": "#/components/schemas/ProductModel"
+                    "$ref": "#/components/schemas/PurchaseOrderProductView"
                   }
                 ]
               }
@@ -10375,6 +10444,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/QuoteModel"
                   }
@@ -11376,6 +11446,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/PendingApprovalNotification"
                   }
@@ -11571,6 +11642,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/WorkflowModel"
                   }
@@ -11769,6 +11841,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null"},
                   {
                     "$ref": "#/components/schemas/WorkflowGroupModel"
                   }
@@ -11930,6 +12003,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/WorkflowStageModel"
                   }
@@ -11960,6 +12034,19 @@
               "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
             }
           }
+        },
+        "example" : {
+          "purchaseOrderId": 1,
+          "purchaseOrderProductId": 2,
+          "customerPurchaseNumber": "PURCHASE1598926122",
+          "locationId": 54,
+          "serialNumber": "SN1598926122",
+          "statusId": 1,
+          "qty": 1,
+          "customerLineNumber": 1,
+          "mttn": "1598926122",
+          "dueDate": "2099-12-31",
+          "purchasePrice": 123.45
         },
         "example": {
             "username": "95f27a6f8b3ffa55",

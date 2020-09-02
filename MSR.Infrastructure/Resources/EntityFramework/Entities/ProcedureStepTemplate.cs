@@ -7,11 +7,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     public partial class ProcedureStepTemplate : TrackableEntity
     {
         /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// Gets or Sets Title
         /// </summary>
         public string Title { get; set; }

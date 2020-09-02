@@ -5,8 +5,8 @@ namespace MSR.Domain.Commands
     public class CreateProcedureStepMonitor : Command
     {
         public int ProcedureStepId { get; set; }
-        public int MonitorTypeId { get; set; }
-        public int InputTypeId { get; set; }
+        public string MonitorType { get; set; }
+        public string InputType { get; set; }
         public string Description { get; set; }
         public int? MonitorListId { get; set; }
         public string ShouldBe { get; set; }

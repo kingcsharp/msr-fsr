@@ -67,6 +67,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return result;
         }
+
         public async Task<Domain.Models.ProcedureStepTemplateModel> CreateProcedureStepTemplateAsync(CreateProcedureStepTemplate command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
