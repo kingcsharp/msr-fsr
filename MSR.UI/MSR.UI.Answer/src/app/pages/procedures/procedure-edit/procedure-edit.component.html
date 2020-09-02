@@ -363,7 +363,7 @@
 
                 <bs-sortable *ngIf="procedureSteps !== undefined && procedureSteps?.length > 0"
                     [(ngModel)]="procedureSteps" [itemTemplate]="itemTemplate" itemClass="sortable-item"
-                    itemActiveClass="sortable-item-active" placeholderItem="Drag here"
+                    itemActiveClass="sortable-item-active" placeholderItem="Drag here" (onChange)="procedureStepOrderChanged($event)"
                     placeholderClass="placeholderStyle" wrapperClass="sortable-wrapper"></bs-sortable>
 
             </div>

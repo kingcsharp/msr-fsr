@@ -219,7 +219,7 @@ export class ProcedureEditComponent implements OnInit {
 
         procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId)?.value;
 
-        procedureStep.selectedRoles = new Array<number>();
+        procedureStep.selectedRoles = new Array<Role>();
         procedureStep.roles?.forEach(role => {
 
           procedureStep.selectedRoles.push(role);
@@ -351,17 +351,14 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.procedureId = procedureStep.procedureId;
     updateProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
     updateProcedureStepRequest.replacementCost = procedureStep.replacementCost;
-
     updateProcedureStepRequest.roles = procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id}));
-
-
     updateProcedureStepRequest.text = procedureStep.text;
     updateProcedureStepRequest.title = procedureStep.title;
     updateProcedureStepRequest.usefulLife = procedureStep.usefulLife;
     updateProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
     updateProcedureStepRequest.procedureStepType = procedureStep.selectedProcedureStepTypeId;
-
     updateProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1;
+
     this.globals.showLoader(true);
     this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((response) => {
       procedureStep.printOrder = updateProcedureStepRequest.printOrder;
@@ -396,12 +393,13 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepToAdd.durationType = undefined;
       procedureStepToAdd.equipmentTime = 0;
       procedureStepToAdd.laborTime = 0;
-      procedureStepToAdd.printOrder = this.procedureSteps.length === 0? 1 : this.procedureSteps.length;
+      procedureStepToAdd.printOrder = this.procedureSteps.length === 0? 1 : this.procedureSteps.length + 1;
       procedureStepToAdd.procedureId = this.procedure.id;
       procedureStepToAdd.referenceFiles = [];
       procedureStepToAdd.replacementCost = 0;
       procedureStepToAdd.roles = [];
-      procedureStepToAdd.stepText = '';
+      procedureStepToAdd.selectedRoles = new Array<Role>();
+      procedureStepToAdd.text = '';
       procedureStepToAdd.title = '';
       procedureStepToAdd.usefulLife = 0;
       procedureStepToAdd.utilizationTime = 0;
@@ -419,11 +417,18 @@ export class ProcedureEditComponent implements OnInit {
         procedureStepToAdd.duration = procedureStepTemplateToAdd.estimatedStepDuration;
         procedureStepToAdd.durationType = '0';
         procedureStepToAdd.laborTime = 0;
-        procedureStepToAdd.printOrder = this.procedureSteps.length === 0? 1 : this.procedureSteps.length;
+        procedureStepToAdd.printOrder = this.procedureSteps.length === 0? 1 : this.procedureSteps.length + 1;
         procedureStepToAdd.procedureId = this.procedure.id;
         procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles === undefined ? [] : procedureStepTemplateToAdd.referenceFiles;
         procedureStepToAdd.replacementCost = 0;
+        procedureStepToAdd.text = '';
         procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
+        procedureStepToAdd.selectedRoles = new Array<Role>();
+        procedureStepTemplateToAdd.roles?.forEach(role => {
+
+          procedureStepToAdd.selectedRoles.push(role);
+
+        });
         procedureStepToAdd.stepText = procedureStepTemplateToAdd.text === undefined ? '' : procedureStepTemplateToAdd.text;
         procedureStepToAdd.title = procedureStepTemplateToAdd.title;
         procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
@@ -451,7 +456,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepRequest.procedureId = procedureStep.procedureId;
     createProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
     createProcedureStepRequest.replacementCost = procedureStep.replacementCost;
-    createProcedureStepRequest.roles = procedureStep.selectedRoles;
+    createProcedureStepRequest.roles = procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id}));
     createProcedureStepRequest.text = procedureStep.text;
     createProcedureStepRequest.title = procedureStep.title;
     createProcedureStepRequest.usefulLife = procedureStep.usefulLife;
@@ -463,6 +468,10 @@ export class ProcedureEditComponent implements OnInit {
     }));
 
 
+  }
+
+  procedureStepOrderChanged($event){
+    console.log($event);
   }
 
 }
