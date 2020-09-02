@@ -14,21 +14,12 @@ import { responseHandler } from '../../../utils/responseHandler';
 export class ProceduretypeComponent implements OnInit {
 
   procedureType: ProcedureType = new ProcedureType();
-  availableTypes: Array<SelectItem>;
 
   constructor(private procedureTypeService: ProcedureTypeService, private route: ActivatedRoute, public elementReference: ElementRef, private router: Router) {
 
   }
 
   ngOnInit(): void {
-
-      this.availableTypes = [
-        {label: 'Corrective Action', value: 'Corrective Action'},
-        {label: 'Operate', value: 'Operate'},
-        {label: 'Preventitive Action', value: 'Preventitive Action'},
-        {label: 'Setup', value: 'Setup'},
-        {label: 'Test', value: 'Test'}
-      ];
 
       this.route.queryParams.subscribe(params => {
 
@@ -52,7 +43,6 @@ export class ProceduretypeComponent implements OnInit {
 
     let createProcedureTypeRequest = new CreateProcedureTypeRequest();
     createProcedureTypeRequest.name = this.procedureType.name;
-    createProcedureTypeRequest.majorGroup = this.procedureType.type;
 
     this.procedureTypeService.procedureTypePost(env.apiVersion, createProcedureTypeRequest).subscribe(responseHandler((response) => {
       this.router.navigate(['app/procedures/proceduretypes']);
@@ -66,7 +56,6 @@ export class ProceduretypeComponent implements OnInit {
     let updateProcedureTypeRequest = new UpdateProcedureTypeRequest();
     updateProcedureTypeRequest.id = this.procedureType.id;
     updateProcedureTypeRequest.name = this.procedureType.name;
-    updateProcedureTypeRequest.majorGroup = this.procedureType.type;
 
     this.procedureTypeService.procedureTypePatch(env.apiVersion, updateProcedureTypeRequest).subscribe(responseHandler((response) => {
       this.router.navigate(['app/procedures/proceduretypes']);

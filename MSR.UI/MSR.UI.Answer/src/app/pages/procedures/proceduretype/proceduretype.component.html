@@ -20,16 +20,6 @@
                     class="form-control input-transparent" tooltip="Name of Procedure Type"
                     data-cy="name-input">
             </div>
-            <div class="form-group">
-                <label for="majorgroup" class="col-form-label text-left">
-                    Major Group
-                </label>
-                <div class="col-12">
-                    <p-dropdown placeholder="Select Major Group" name="majorgroup" [options]="availableTypes"
-                        showClear="true" [(ngModel)]="procedureType.type" data-cy="majorgroup-dropdown">
-                    </p-dropdown>
-                </div>
-            </div>
         </form>
     </div>
     <div class="row">

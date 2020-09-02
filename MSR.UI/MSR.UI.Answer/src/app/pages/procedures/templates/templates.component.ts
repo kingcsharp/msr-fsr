@@ -47,7 +47,7 @@ export class TemplatesComponent implements OnInit {
       ];
 
     this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDelete = this.hasPrivilege(this.privileges.CanActivate);
+    this.canDelete = this.hasPrivilege(this.privileges.CanDelete);
     this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
 
     this.getProcedureTemplates();

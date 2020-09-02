@@ -36,12 +36,11 @@ export class ProceduretypesComponent implements OnInit {
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-      new ColumnsSaved({ id: 'type', label: 'Type', visible: true }),
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
       ];
 
     this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
-    this.canDelete = this.hasPrivilege(this.privileges.CanActivate);
+    this.canDelete = this.hasPrivilege(this.privileges.CanDelete);
     this.canEdit = this.hasPrivilege(this.privileges.CanEdit);
 
     this.getProcedureTypes();

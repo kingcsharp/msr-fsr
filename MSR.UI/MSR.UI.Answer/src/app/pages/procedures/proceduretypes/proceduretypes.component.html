@@ -41,9 +41,6 @@
                         <th grid-input-filter [dt]="dt" searchField="name"
                             [hidden]="!commonGrid.isVisibleCol('name',gridSettings)" [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="type"
-                            [hidden]="!commonGrid.isVisibleCol('type',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
                         <th></th>
                     </tr>
                 </ng-template>
@@ -54,9 +51,6 @@
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('name', gridSettings)">
                             {{model.name}}
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('type', gridSettings)">
-                            {{model.type}}
                         </td>
                         <td>
                             <i *ngIf="canEdit" class="far fa-edit pointer" tooltip="Edit Procedure Type"
