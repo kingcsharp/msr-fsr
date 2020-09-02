@@ -26,15 +26,9 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<ICollection<ProductModel>> GetProductsAsync()
         {
-            var productList = new List<ProductModel>();
-            var products = _unitOfWork.Products.Query();
+            var products = await _unitOfWork.Products.Query().Select(p=>_mapper.Map<ProductModel>(p)).ToListAsync();
 
-            foreach (var product in await products.ToListAsync())
-            {
-                productList.Add(_mapper.Map<ProductModel>(product));
-            }
-
-            return productList;
+            return products;
         }
 
         public async Task<ProductModel> CreateProductAsync(CreateProduct command)
@@ -52,25 +46,21 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<ICollection<ProductModel>> GetProductAsync(int? id)
         {
-            if (!id.HasValue) {
+            if (!id.HasValue)
+            {
                 return await GetProductsAsync();
             }
 
-            var productList = new List<ProductModel>();
-
-            IQueryable<Product> products;
-            products = _unitOfWork.Products
+            var product = await _unitOfWork.Products
                         .Query()
-                        .Include(q => q.Part)
-                        .Where(q => q.Id == id)
-                        .AsQueryable();
+                        .Include(x => x.Customer)
+                        .Include(x => x.Part)
+                        .Include(x=>x.Procedure)
+                        .Where(x => x.Id == id)
+                        .Select(x => _mapper.Map<ProductModel>(x))
+                        .ToListAsync();
 
-            foreach (var product in await products.ToListAsync())
-            {
-                productList.Add(_mapper.Map<ProductModel>(product));
-            }
-
-            return productList;
+            return product;
         }
 
 
@@ -106,6 +96,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             return retProduct;
         }
-        
+
     }
 }
