@@ -38,6 +38,10 @@
               appendTo="body" [baseZIndex]="100001"
               [(ngModel)]="productData.customerId"
               data-cy="product-select-customerid"
+              [virtualScroll]="true"
+              itemSize="30"
+              [filter]="true"
+              filterBy="label"
             >
             </p-dropdown>
             <input
@@ -138,6 +142,10 @@
                 [baseZIndex]="100003"
                 [(ngModel)]="productData.partId"
                 data-cy="product-select-partid"
+                [virtualScroll]="true"
+                itemSize="30"
+                [filter]="true"
+                filterBy="label"
               >
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
@@ -194,6 +202,10 @@
                 [(ngModel)]="productData.procedureId"
                 (onChange)="onSelectProcedureId($event)"
                 data-cy="product-select-procedureid"
+                [virtualScroll]="true"
+                itemSize="30"
+                [filter]="true"
+                filterBy="label"
               >
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
@@ -300,6 +312,10 @@
                     [baseZIndex]="100005"
                     (onChange)="onSelectStepTemplate($event, i)"
                     data-cy="product-select-stepid"
+                    [virtualScroll]="true"
+                    itemSize="30"
+                    [filter]="true"
+                    filterBy="label"
                   >
                   </p-dropdown>
                 </td>
