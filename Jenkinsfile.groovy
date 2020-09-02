@@ -60,7 +60,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                                sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
                                 sh "cat ${UI_COMPOSE}"
 
                                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
@@ -117,7 +117,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo sh update_image_api.sh Development ${env.GIT_COMMIT} ${API_COMPOSE}"
+                                sh "sh update_image_api.sh Development ${env.GIT_COMMIT} ${API_COMPOSE}"
                                 sh "cat ${API_COMPOSE}"
 
                                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
@@ -150,7 +150,7 @@ pipeline {
                     timeout(activity: true, time: 5) {
                         input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
-                    sh "sudo sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                    sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
                     sh "cat ${API_COMPOSE}"
                     deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                     deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
