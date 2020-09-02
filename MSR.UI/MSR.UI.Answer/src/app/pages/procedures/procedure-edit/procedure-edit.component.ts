@@ -49,6 +49,7 @@ export class ProcedureEditComponent implements OnInit {
   procedureStepToDelete: ProcedureStepModel;
   availableProcedureStepTemplates: Array<SelectItem>;
   selectedProcedureStepTemplate: number;
+  lastSavedProcedureStepOrder: Array<number>;
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
@@ -169,6 +170,7 @@ export class ProcedureEditComponent implements OnInit {
     this.globals.showLoader(true);
     this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((getGetResponse) => {
 
+      this.lastSavedProcedureStepOrder = getGetResponse.object?.map(s => s.id);
       getGetResponse.object.forEach( procedureStep => {
 
         if (procedureStep.referenceFiles === undefined) {
@@ -361,7 +363,49 @@ export class ProcedureEditComponent implements OnInit {
 
     this.globals.showLoader(true);
     this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((response) => {
-      procedureStep.printOrder = updateProcedureStepRequest.printOrder;
+
+        let procedureStepsToUpdate = this.lastSavedProcedureStepOrder.filter(s => s !== procedureStep.id);
+
+        let procedureStepsToUpdateRequests = new Array<UpdateProcedureStepRequest>();
+        procedureStepsToUpdate.forEach(procedureStepId => {
+
+          let originalStepIndex = this.lastSavedProcedureStepOrder.findIndex(s => s === procedureStepId);
+          let currentStepIndex = this.procedureSteps.findIndex(s => s.id === procedureStepId);
+
+          if(originalStepIndex != currentStepIndex){
+
+            this.globals.showLoader(true);
+            let procedureStepToUpdate = this.procedureSteps.find(s => s.id === procedureStepId);
+            let updateProcedureStepRequest = new UpdateProcedureStepRequest();
+            updateProcedureStepRequest.procedureStepId = procedureStepToUpdate.id;
+            updateProcedureStepRequest.equipmentTime = procedureStepToUpdate.equipmentTime;
+            updateProcedureStepRequest.laborTime = procedureStepToUpdate.laborTime;
+            updateProcedureStepRequest.predecessorStepId = procedureStepToUpdate.predecessorStepId;
+            updateProcedureStepRequest.printOrder = procedureStepToUpdate.printOrder;
+            updateProcedureStepRequest.procedureId = procedureStepToUpdate.procedureId;
+            updateProcedureStepRequest.referenceFiles = procedureStepToUpdate.referenceFiles;
+            updateProcedureStepRequest.replacementCost = procedureStepToUpdate.replacementCost;
+            updateProcedureStepRequest.roles = procedureStepToUpdate.selectedRoles.map(s => new RoleRequest({ id: s.id}));
+            updateProcedureStepRequest.text = procedureStepToUpdate.text;
+            updateProcedureStepRequest.title = procedureStepToUpdate.title;
+            updateProcedureStepRequest.usefulLife = procedureStepToUpdate.usefulLife;
+            updateProcedureStepRequest.utilizationTime = procedureStepToUpdate.utilizationTime;
+            updateProcedureStepRequest.procedureStepType = procedureStepToUpdate.selectedProcedureStepTypeId;
+            updateProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStepToUpdate.id) + 1;
+            procedureStepsToUpdateRequests.push(updateProcedureStepRequest)
+            
+          }
+
+          procedureStepsToUpdateRequests.forEach(updateProcedureStepRequest => {
+            this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((stepPatchResponse) => {
+
+            }));
+          });
+
+          this.lastSavedProcedureStepOrder = this.procedureSteps.map(s => s.id);
+
+        });
+
     }));
 
   }
@@ -471,6 +515,7 @@ export class ProcedureEditComponent implements OnInit {
   }
 
   updateProcedurePredecessorAndOrder($event){
+
     this.procedureSteps.forEach(procedureStep => {
 
       procedureStep.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1;
@@ -483,6 +528,7 @@ export class ProcedureEditComponent implements OnInit {
       }
 
     });
+    
   }
 
 }
