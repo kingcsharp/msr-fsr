@@ -94,10 +94,5 @@ namespace MSR.Domain.Models
         [DataMember(Name="revision")]
         public int? Revision { get; set; }
 
-        /// <summary>
-        /// isRelatedToAProduct 
-        /// </summary>
-        [DataMember(Name="isRelatedToAProduct ")]
-        public bool IsRelatedToAProduct { get; set; }
     }
 }
