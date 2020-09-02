@@ -167,17 +167,17 @@ export class ProcedureEditComponent implements OnInit {
   getProcedureSteps() {
 
     this.globals.showLoader(true);
-    this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((setGetResponse) => {
+    this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((getGetResponse) => {
 
-      setGetResponse.object.forEach( procedureStep => {
+      getGetResponse.object.forEach( procedureStep => {
 
         if (procedureStep.referenceFiles === undefined) {
           procedureStep.referenceFiles = [];
         }
         procedureStep.originalPrintOrder = procedureStep.printOrder - 1;
         if (procedureStep.printOrder !== 1) {
-          procedureStep.predecessorStepId = setGetResponse.object.find(s => s.printOrder === procedureStep.printOrder - 1)?.id;
-          procedureStep.predecessorStepName = setGetResponse.object.find(s => s.printOrder === procedureStep.printOrder - 1)?.title;
+          procedureStep.predecessorStepId = getGetResponse.object.find(s => s.printOrder === procedureStep.printOrder - 1)?.id;
+          procedureStep.predecessorStepName = getGetResponse.object.find(s => s.printOrder === procedureStep.printOrder - 1)?.title;
         } else {
           procedureStep.predecessorStepId = undefined;
           procedureStep.predecessorStepName = undefined;
@@ -187,10 +187,16 @@ export class ProcedureEditComponent implements OnInit {
           procedureStep.text = '';
         }
 
+        
+        procedureStep.selectedRole = new Array<Role>();
+        procedureStep.roles?.forEach(role => {
+          procedureStep.selectedRoles.push(this.availableRoles.find(s => s.id === role.id));
+        });
+
 
       });
 
-      this.procedureSteps = setGetResponse.object.sort((a, b) => a.printOrder < b.printOrder ? -1 : a.printOrder > b.printOrder ? 1 : 0);
+      this.procedureSteps = getGetResponse.object.sort((a, b) => a.printOrder < b.printOrder ? -1 : a.printOrder > b.printOrder ? 1 : 0);
 
       this.getMonitors();
 
