@@ -15,7 +15,7 @@ import { EnumApprovalTables, MonitorService, MonitorModel } from '../../../servi
 })
 export class MonitorsComponent implements OnInit {
 
-  data: any[];
+  data: MonitorModel[];
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();

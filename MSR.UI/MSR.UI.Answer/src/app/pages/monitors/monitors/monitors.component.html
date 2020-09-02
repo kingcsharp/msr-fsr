@@ -84,7 +84,7 @@
                         <td [hidden]="!commonGrid.isVisibleCol('workerName.fullName', gridSettings)">
                             {{model.workerName?.fullName}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)" *ngIf="model.taskCompleted !== undefined">
+                        <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)">
                             {{model.taskCompleted | userTimezone}} 
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
