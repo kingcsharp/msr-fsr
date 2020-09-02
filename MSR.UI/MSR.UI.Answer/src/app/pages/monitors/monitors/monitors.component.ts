@@ -15,7 +15,7 @@ import { EnumApprovalTables, MonitorService, MonitorModel } from '../../../servi
 })
 export class MonitorsComponent implements OnInit {
 
-  data: any;
+  data: any[];
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
@@ -46,7 +46,7 @@ export class MonitorsComponent implements OnInit {
     this.globals.showLoader(true);
 
     this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler((response) => {
-      this.data = response.object;
+      this.data = Array.isArray(response.object) ? response.object: [];
       this.loading = false;
     }, () => {
 

@@ -82,13 +82,10 @@
                             {{model.passing}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('workerName.fullName', gridSettings)">
-                            {{model.workerName.fullName}}
+                            {{model.workerName?.fullName}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)" *ngIf="model.taskCompleted !== undefined">
                             {{model.taskCompleted | userTimezone}} 
-                        </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('taskCompleted', gridSettings)" *ngIf="model.taskCompleted === undefined">
-                            
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
                             {{model.serialNumber}}
@@ -97,7 +94,7 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="100" style="text-align:left">No Monitors to display</td>
+                        <td colspan="8" style="text-align:left">No Monitors to display</td>
                     </tr>
                 </ng-template>
             </p-table>
