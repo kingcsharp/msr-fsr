@@ -9546,6 +9546,24 @@
           }
         ]
       },
+      "PurchaseOrderProductView": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalSalePrice": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
       "WorkOrderPartModel": {
         "type": "object",
         "additionalProperties": true,
@@ -10084,6 +10102,10 @@
                 "type": "string",
                 "nullable": true
               },
+              "referenceName": {
+                "type": "string",
+                "nullable": true
+              },
               "name": {
                 "type": "string",
                 "nullable": true
@@ -10152,24 +10174,6 @@
           }
         ]
       },
-      "PurchaseOrderProductView": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "totalSalePrice": {
-            "type": "number",
-            "format": "decimal"
-          }
-        }
-      },
       "AuditActionResultOfPurchaseOrderView": {
         "allOf": [
           {
@@ -10198,7 +10202,7 @@
         "required": [
           "customerId",
           "name",
-          "referenceCustomerPO",
+          "customerReferencePO",
           "referenceName",
           "products"
         ],
@@ -10211,7 +10215,7 @@
             "type": "string",
             "minLength": 1
           },
-          "referenceCustomerPO": {
+          "customerReferencePO": {
             "type": "string",
             "minLength": 1
           },
