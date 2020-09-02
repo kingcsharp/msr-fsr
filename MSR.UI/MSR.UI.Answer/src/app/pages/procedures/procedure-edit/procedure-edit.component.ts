@@ -295,6 +295,7 @@ export class ProcedureEditComponent implements OnInit {
     this.procedureStepToAddMonitorTo = procedureStep;
     this.monitorToAdd = new ProcedureStepMonitor();
     this.monitorToAdd.description = '';
+    this.monitorToAdd.type = this.monitorTypeOptions.find(s => s.label === 'Number').value;
     this.showAddMonitorDialog = !this.showAddMonitorDialog;
   }
 

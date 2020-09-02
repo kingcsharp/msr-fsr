@@ -400,7 +400,7 @@
                 </label>
                 <div class="col-12 px-0">
                     <p-dropdown placeholder="Select Monitor Type" name="monitortype" [options]="monitorTypeOptions"
-                        showClear="true" [(ngModel)]="monitorToEdit.monitorType">
+                        [(ngModel)]="monitorToEdit.monitorType">
                     </p-dropdown>
                 </div>
             </div>
@@ -498,8 +498,8 @@
                     Monitor Type
                 </label>
                 <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select Monitor Type" name="monitortype" [options]="monitorTypeOptions"
-                        showClear="true" [(ngModel)]="monitorToAdd.type">
+                    <p-dropdown name="monitortype" [options]="monitorTypeOptions" *ngIf="monitorToAdd.type !== undefined"
+                        [(ngModel)]="monitorToAdd.type">
                     </p-dropdown>
                 </div>
             </div>
