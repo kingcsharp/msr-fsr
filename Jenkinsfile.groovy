@@ -50,7 +50,7 @@ pipeline {
                                     sh "docker build --build-arg ENV=dev -t msr-ui ."
                                     sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                                    sh "eval \$(aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
                                 }
                             } catch(e) {
@@ -93,7 +93,7 @@ pipeline {
                                     sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
                                     sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
 
-                                    sh "eval \$(aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                     sh "docker push ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
                                 }
                             } catch(e) {
@@ -108,7 +108,7 @@ pipeline {
                                 sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
                                 sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
 
-                                sh "eval \$(aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                 sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
                             } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
