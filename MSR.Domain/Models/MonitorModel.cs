@@ -21,7 +21,7 @@ namespace MSR.Domain.Models
     /// 
     /// </summary>
     [DataContract]
-    public partial class MonitorModel : IEquatable<MonitorModel>
+    public partial class MonitorModel
     { 
         /// <summary>
         /// Gets or Sets Id
@@ -78,143 +78,13 @@ namespace MSR.Domain.Models
         public List<UserModel> WorkerName { get; set; }
 
         /// <summary>
-        /// Returns the string presentation of the object
+        /// HighTarget
         /// </summary>
-        /// <returns>String presentation of the object</returns>
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.Append("class MonitorModel {\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  MonitorType: ").Append(MonitorType).Append("\n");
-            sb.Append("  Result: ").Append(Result).Append("\n");
-            sb.Append("  Passing: ").Append(Passing).Append("\n");
-            sb.Append("  TaskCompleted: ").Append(TaskCompleted).Append("\n");
-            sb.Append("  SerialNumber: ").Append(SerialNumber).Append("\n");
-            sb.Append("  WorkerName: ").Append(WorkerName).Append("\n");
-            sb.Append("}\n");
-            return sb.ToString();
-        }
+        public double? HighTarget { get; set; }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
+        /// LowTarget
         /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public string ToJson()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="obj">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((MonitorModel)obj);
-        }
-
-        /// <summary>
-        /// Returns true if MonitorModel instances are equal
-        /// </summary>
-        /// <param name="other">Instance of MonitorModel to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(MonitorModel other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return 
-                (
-                    Id == other.Id ||
-                    Id != null &&
-                    Id.Equals(other.Id)
-                ) && 
-                (
-                    Description == other.Description ||
-                    Description != null &&
-                    Description.Equals(other.Description)
-                ) && 
-                (
-                    MonitorType == other.MonitorType ||
-                    MonitorType != null &&
-                    MonitorType.Equals(other.MonitorType)
-                ) && 
-                (
-                    Result == other.Result ||
-                    Result != null &&
-                    Result.Equals(other.Result)
-                ) && 
-                (
-                    Passing == other.Passing ||
-                    Passing != null &&
-                    Passing.Equals(other.Passing)
-                ) && 
-                (
-                    TaskCompleted == other.TaskCompleted ||
-                    TaskCompleted != null &&
-                    TaskCompleted.Equals(other.TaskCompleted)
-                ) && 
-                (
-                    SerialNumber == other.SerialNumber ||
-                    SerialNumber != null &&
-                    SerialNumber.Equals(other.SerialNumber)
-                ) && 
-                (
-                    WorkerName == other.WorkerName ||
-                    WorkerName != null &&
-                    WorkerName.SequenceEqual(other.WorkerName)
-                );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hashCode = 41;
-                // Suitable nullity checks etc, of course :)
-                    if (Id != null)
-                    hashCode = hashCode * 59 + Id.GetHashCode();
-                    if (Description != null)
-                    hashCode = hashCode * 59 + Description.GetHashCode();
-                    if (MonitorType != null)
-                    hashCode = hashCode * 59 + MonitorType.GetHashCode();
-                    if (Result != null)
-                    hashCode = hashCode * 59 + Result.GetHashCode();
-                    if (Passing != null)
-                    hashCode = hashCode * 59 + Passing.GetHashCode();
-                    if (TaskCompleted != null)
-                    hashCode = hashCode * 59 + TaskCompleted.GetHashCode();
-                    if (SerialNumber != null)
-                    hashCode = hashCode * 59 + SerialNumber.GetHashCode();
-                    if (WorkerName != null)
-                    hashCode = hashCode * 59 + WorkerName.GetHashCode();
-                return hashCode;
-            }
-        }
-
-        #region Operators
-        #pragma warning disable 1591
-
-        public static bool operator ==(MonitorModel left, MonitorModel right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(MonitorModel left, MonitorModel right)
-        {
-            return !Equals(left, right);
-        }
-
-        #pragma warning restore 1591
-        #endregion Operators
+        public double? LowTarget { get; set; }
     }
 }

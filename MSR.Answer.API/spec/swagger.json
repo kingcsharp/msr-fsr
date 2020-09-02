@@ -7152,6 +7152,16 @@
             "items": {
               "$ref": "#/components/schemas/UserModel"
             }
+          },
+          "highTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -8226,6 +8236,16 @@
           "sendEmailNotification": {
             "type": "boolean",
             "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -8280,6 +8300,18 @@
           "sendEmailNotification": {
             "type": "boolean",
             "description": "Gets or Sets SendEmailNotification",
+            "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "description": "HighTarget",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "description": "LowTarget",
+            "format": "double",
             "nullable": true
           }
         },
@@ -8361,6 +8393,18 @@
           "sendEmailNotification": {
             "type": "boolean",
             "description": "Gets or Sets SendEmailNotification",
+            "nullable": true
+          },
+          "highTarget": {
+            "type": "number",
+            "description": "HighTarget",
+            "format": "double",
+            "nullable": true
+          },
+          "lowTarget": {
+            "type": "number",
+            "description": "LowTarget",
+            "format": "double",
             "nullable": true
           }
         },
