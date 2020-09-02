@@ -38,6 +38,10 @@
               appendTo="body" [baseZIndex]="100001"
               [(ngModel)]="productData.customerId"
               data-cy="product-select-customerid"
+              [virtualScroll]="true"
+              itemSize="30"
+              [filter]="true"
+              filterBy="label"
             >
             </p-dropdown>
             <input
@@ -138,6 +142,10 @@
                 [baseZIndex]="100003"
                 [(ngModel)]="productData.partId"
                 data-cy="product-select-partid"
+                [virtualScroll]="true"
+                itemSize="30"
+                [filter]="true"
+                filterBy="label"
               >
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
@@ -194,6 +202,10 @@
                 [(ngModel)]="productData.procedureId"
                 (onChange)="onSelectProcedureId($event)"
                 data-cy="product-select-procedureid"
+                [virtualScroll]="true"
+                itemSize="30"
+                [filter]="true"
+                filterBy="label"
               >
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
@@ -300,6 +312,10 @@
                     [baseZIndex]="100005"
                     (onChange)="onSelectStepTemplate($event, i)"
                     data-cy="product-select-stepid"
+                    [virtualScroll]="true"
+                    itemSize="30"
+                    [filter]="true"
+                    filterBy="label"
                   >
                   </p-dropdown>
                 </td>
@@ -339,7 +355,7 @@
                     name="Step{{i}}_laborTime"
                     [useGrouping]="false"
                     [class.hide]="mode === productPageModes.View"
-                    (onBlur)="getStepsValues()"
+                    (onBlur)="onChangeLaborTime(i)"
                     data-cy="procedure-step-labortime"
                   >
                   </p-inputNumber>
@@ -360,7 +376,7 @@
                     name="Step{{i}}_equipmentTime"
                     [useGrouping]="false"
                     [class.hide]="mode === productPageModes.View"
-                    (onBlur)="getStepsValues()"
+                    (onBlur)="onChangeEquipmentTime(i)"
                     data-cy="procedure-step-equipmenttime"
                   >
                   </p-inputNumber>
@@ -373,7 +389,7 @@
                       type="text"
                       readonly
                       class="form-control input-transparent"
-                      [value]="procedureStepsData[i].replacementCost"
+                      [value]="procedureStepsData[i].replacementCost || 0"
                       data-cy="procedure-step-replacementcost"
                     >
                     <span class="input-group-addon bg-secondary">.00</span>
@@ -385,7 +401,7 @@
                      pInputText
                       class="form-control form-control input-transparent " readonly
                       type="text"
-                      [value]="procedureStepsData[i].utilization"
+                      [value]="procedureStepsData[i].utilization || 0"
                       data-cy="procedure-step-utilization"
                     >
                     <span class="input-group-addon bg-secondary">%</span>
@@ -397,7 +413,7 @@
                     class="form-control form-control input-transparent useful-life"
                     readonly
                     type="text"
-                    [value]="procedureStepsData[i].usefulLife"
+                    [value]="procedureStepsData[i].usefulLife || 0"
                     data-cy="procedure-step-usefullife"
                   >
                 </td>
@@ -409,7 +425,7 @@
                       class="form-control input-transparent"
                       readonly
                       type="text"
-                      [value]="procedureStepsData[i].ex_per_min"
+                      [value]="procedureStepsData[i].ex_per_min || 0"
                       data-cy="equip-per-min"
                     >
                   </div>
@@ -422,7 +438,7 @@
                       class="form-control input-transparent"
                       readonly
                       type="text"
-                      [value]="procedureStepsData[i].annual_rm"
+                      [value]="procedureStepsData[i].annual_rm || 0"
                       data-cy="anual-rm"
                     >
                   </div>
@@ -435,7 +451,7 @@
                       class="form-control input-transparent"
                       readonly="readonly"
                       type="text"
-                      [value]="procedureStepsData[i].rm_per_min"
+                      [value]="procedureStepsData[i].rm_per_min || 0"
                       data-cy="rm-per-min"
                     >
                   </div>
@@ -534,7 +550,7 @@
                       name="MaterialCost"
                       [useGrouping]="false"
                       [class.hide]="mode === productPageModes.View"
-                      (onBlur)="getStepsValues()"
+                      (onBlur)="getStepsValues(true)"
                       data-cy="product-materialcost"
                     >
                     </p-inputNumber>
