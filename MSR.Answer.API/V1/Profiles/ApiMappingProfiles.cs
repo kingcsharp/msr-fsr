@@ -45,14 +45,10 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>()
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
-                .ForMember(dest => dest.MonitorTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)))
-                .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue))
-                .ForMember(dest => dest.InputTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)));
+                .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue));
             CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>()
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
-                .ForMember(dest => dest.MonitorTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)))
-                .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue))
-                .ForMember(dest => dest.InputTypeId, opts => opts.MapFrom(src => Int32.Parse(src.InputType)));
+                .ForMember(dest => dest.ShouldBe, opts => opts.MapFrom(src => src.TargetValue));
             CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>()
                 .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
                 .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));

@@ -28,6 +28,11 @@ namespace MSR.Domain.Models
         public string InputType { get; set; }
 
         /// <summary>
+        /// Gets or Sets InputType
+        /// </summary>
+        public int InputTypeId { get; set; }
+
+        /// <summary>
         /// Gets or Sets ShouldBe
         /// </summary>
         public string ShouldBe { get; set; }

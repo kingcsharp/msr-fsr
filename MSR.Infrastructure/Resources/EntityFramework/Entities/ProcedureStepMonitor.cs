@@ -9,7 +9,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int MonitorTypeId { get; set; }
         public MonitorType MonitorType { get; set; }
+
         public int InputTypeId { get; set; }
+        public MonitorInputType InputType { get; set; }
 
         public string Description { get; set; }
         public int? MonitorListId { get; set; }

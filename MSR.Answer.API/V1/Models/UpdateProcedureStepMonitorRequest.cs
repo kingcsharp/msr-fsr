@@ -27,10 +27,16 @@ namespace MSR.Answer.API.V1.Models
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or Sets InputType
+        /// Gets or Sets InputType string
         /// </summary>
         [DataMember(Name="inputType")]
         public string InputType { get; set; }
+
+        /// <summary>
+        /// Gets or Sets MonitorType string
+        /// </summary>
+        [DataMember(Name="monitorType")]
+        public string MonitorType { get; set; }
 
         /// <summary>
         /// Gets or Sets ShouldBe

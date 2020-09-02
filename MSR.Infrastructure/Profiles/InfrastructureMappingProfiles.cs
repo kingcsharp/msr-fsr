@@ -228,7 +228,7 @@ namespace MSR.Infrastructure.Profiles
             // Monitor
             CreateMap<Domain.Models.ProcedureStepMonitor, MonitorModel>();
             CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
-                .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputTypeId.ToString()))
+                .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputType.Name))
                 .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorType.Name))
                 .ForMember(dest => dest.ShouldBe, opt => opt.MapFrom(src =>src.ShouldBe))
                 .ForMember(dest => dest.TargetValue, opt => opt.MapFrom(src => src.Target.ToString()))
@@ -242,8 +242,12 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ListItemId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ListName, opt => opt.MapFrom(src => src.List.Name));
-            CreateMap<CreateProcedureStepMonitor, ProcedureStepMonitor>();
+            CreateMap<CreateProcedureStepMonitor, ProcedureStepMonitor>()
+                .ForMember(dest => dest.MonitorType, opts => opts.Ignore()) // must be manually mapped
+                .ForMember(dest => dest.InputType, opts => opts.Ignore());  // must be manually mapped
             CreateMap<UpdateProcedureStepMonitor, ProcedureStepMonitor>()
+                .ForMember(dest => dest.MonitorType, opts => opts.Ignore()) // must be manually mapped
+                .ForMember(dest => dest.InputType, opts => opts.Ignore())   // must be manually mapped
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
 
