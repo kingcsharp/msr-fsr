@@ -22,11 +22,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int CustomerId { get; set; }
 
+        [Column(TypeName ="money")]
+        public decimal? LaborCost { get; set; }
+
         [ForeignKey("CustomerId")]
         public virtual Customer Customer { get; set; }
 
-        public int? CustomerRequirementId { get; set; }
-        
         [Required]
         public int ProcedureId { get; set; }
 
@@ -44,15 +45,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("QuoteId")]
         public virtual Quote Quote { get; set; }
 
+        [Column(TypeName = "money")]
+        public decimal? EquipmentCost { get; set; }
 
         [Column(TypeName = "money")]
-        public decimal LaborCost { get; set; }
-
-        [Column(TypeName = "money")]
-        public decimal EquipmentCost { get; set; }
-
-        [Column(TypeName = "money")]
-        public decimal MaterialCost { get; set; }
+        public decimal? MaterialCost { get; set; }
 
         [Column(TypeName = "money")]
         public decimal? SalesTax { get; set; }
@@ -62,6 +59,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public decimal TotalSalePrice { get; set; }
 
         public int? CycleTime { get; set; }
+
+        // TODO: there is no such field
+        //public int? CustomerRequirementId { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
 

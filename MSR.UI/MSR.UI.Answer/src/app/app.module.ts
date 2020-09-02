@@ -25,7 +25,7 @@ import * as $ from 'jquery';
 import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
-  FileService, InvoiceService, WorkOrderService, TimezoneService
+  FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -80,7 +80,8 @@ const APP_PROVIDERS = [
       useValue: environment.url
     },
     LocationService,
-    RoleService
+    RoleService,
+    PurchaseOrderService, CustomerService, ProductService
   ]
 })
 // { //we have this bse url set in the app.config that's why we define as ''

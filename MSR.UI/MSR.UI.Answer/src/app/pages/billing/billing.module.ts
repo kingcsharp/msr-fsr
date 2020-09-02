@@ -18,15 +18,23 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { PurchasesComponent } from './purchases/purchases.component';
+import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 export const routes = [
   { path: '', redirectTo: 'invoices', pathMatch: 'prefix' },
   { path: 'invoices', component: InvoiceComponent, pathMatch: 'full' },
+  { path: 'purchaseorder/purchases', component: PurchasesComponent, pathMatch: 'full'},
+  { path: 'purchaseorder/purchase-create/:id', component: PurchaseCreateComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
   declarations: [
-    InvoiceComponent
+    InvoiceComponent,
+    PurchasesComponent,
+    PurchaseCreateComponent,
   ],
   imports: [
     UtilsModule,
@@ -47,7 +55,9 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    PopoverModule.forRoot()
+    PopoverModule.forRoot(),
+    SelectButtonModule,
+    InputNumberModule,
   ]
 })
 export class BillingModule {

@@ -25,6 +25,7 @@ using MSR.Domain.Abstractions;
 using MSR.Infrastructure.Factories;
 using MSR.Infrastructure.Resources.AWS;
 using MSR.Infrastructure.Resources.Services.Sensor;
+using MSR.Infrastructure.Resources.Services.PurchaseOrder;
 using MSR.Infrastructure.Resources.Services.Timezone;
 
 namespace MSR.Infrastructure.Extensions
@@ -64,6 +65,8 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ISensorService, SensorService>();
             services.AddScoped<IImportValidatorFactory, ImportValidatorFactory>();
             services.AddTransient<S3FileHandler>();
+            services.AddScoped<IPurchaseService, PurchaseService>();
+            services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IQuoteService, QuoteService>();
             services.AddScoped<ITimezoneService, TimezoneService>();

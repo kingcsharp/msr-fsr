@@ -30,6 +30,7 @@ import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploa
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
+import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-switch/bootstrap-switch.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
     GridInputFilterComponent,
     HelpbuttonWrapperComponent,
     GridOptionsComponent,
-    TimeZonePipe
+    TimeZonePipe,
+    BootstrapSwitchComponent,
   ],
   exports: [
     ProgressAnimateDirective,
@@ -68,7 +70,8 @@ import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
     CalendarModule,
     GridOptionsComponent,
     HelpbuttonWrapperComponent,
-    TimeZonePipe
+    TimeZonePipe,
+    BootstrapSwitchComponent
   ],
   imports: [
     CommonModule,

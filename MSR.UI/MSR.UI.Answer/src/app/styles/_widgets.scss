@@ -2041,3 +2041,25 @@ grid-options>div .ui-widget.ui-widget-content{
   right: 0px!important;
   left: inherit!important;
 }
+
+.input-group.row, td {
+  p-inputnumber {
+    flex: 1;
+    .ui-inputnumber {
+      width: 100%;
+    }
+
+    .ui-inputtext {
+      border: none;
+      color: #f8f8f8;
+      background-color: rgba(0, 0, 0, 0.24);
+    }
+  }
+}
+
+p-dropdown {
+  .ui-dropdown-label {
+    color: #f8f8f8;
+    background-color: rgba(0, 0, 0, 0.24);
+  }
+}

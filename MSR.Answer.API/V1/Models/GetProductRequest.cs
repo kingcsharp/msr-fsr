@@ -2,9 +2,14 @@
 
 namespace MSR.Answer.API.V1.Models
 {
+    /// <summary>
+    ///
+    /// </summary>
     public class GetProductRequest
     {
-        [Required]
+        /// <summary>
+        /// Get product by Id
+        /// </summary>
         public int? Id { get; set; }
     }
 }
