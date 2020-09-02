@@ -128,10 +128,6 @@ export class PurchaseOrdersComponent implements OnInit {
       }));
   }
 
-  onClickPurchase(purchaseOrder: PurchaseOrderModel) {
-    //TODO: Purchase function
-  }
-
   onClickClose(purchaseOrder: PurchaseOrderModel) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to Close this record?',

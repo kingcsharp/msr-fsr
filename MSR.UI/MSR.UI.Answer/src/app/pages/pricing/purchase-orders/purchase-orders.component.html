@@ -179,7 +179,7 @@
         </td>
         <td>
           <i *ngIf="purchasePrivileges.canCreate" class="fa fa-dollar pointer" tooltip="Purchase" data-cy="purchaseRow"
-            (click)="onClickPurchase(purcahseordermodel)">
+          [routerLink]="['../../billing/purchaseorder/purchase-create/',purcahseordermodel.id]">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
