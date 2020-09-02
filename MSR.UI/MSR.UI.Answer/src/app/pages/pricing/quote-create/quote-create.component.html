@@ -47,6 +47,8 @@
                     appendTo="body"
                     [baseZIndex]="100001"
                     [(ngModel)]="data.customerId"
+                    [virtualScroll]="true"
+                    itemSize="30"
                     data-cy="quote-select-customerid"
                   >
                   </p-dropdown>

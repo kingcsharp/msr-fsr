@@ -122,6 +122,7 @@ export class ProductDefinitionComponent implements OnInit {
           this.getQuoteDataFlag &&
           this.getCustomersFlag &&
           this.getPartsFlag &&
+          this.getProceduresFlag &&
           this.getProcedureStepsFlag &&
           this.getProcedureStepTemplatesFlag
         ));
@@ -132,6 +133,7 @@ export class ProductDefinitionComponent implements OnInit {
           this.getQuoteDataFlag &&
           this.getCustomersFlag &&
           this.getPartsFlag &&
+          this.getProceduresFlag &&
           this.getProcedureStepsFlag &&
           this.getProcedureStepTemplatesFlag
         ));
@@ -183,19 +185,8 @@ export class ProductDefinitionComponent implements OnInit {
         this.productData = response.object[0];
         this.getProductDataFlag = true;
         this.isLoading();
-        this.getProcedureStepsData(this.productData.procedureId);
+        this.getProcedureSteps(this.productData.procedureId);
         this.getQuoteData(this.productData.quoteId);
-      }));
-  }
-
-  getProcedureStepsData(procedureId: number) {
-    this.getProcedureStepsFlag = false;
-    this.procedureService.stepGet(procedureId, null, env.apiVersion)
-      .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.procedureStepsData = response.object;
-        this.getProcedureStepsFlag = true;
-        this.isLoading();
       }));
   }
 
@@ -209,7 +200,7 @@ export class ProductDefinitionComponent implements OnInit {
         ctrl.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
       });
       ctrl.getCustomersFlag = true;
-      this.isLoading();
+      ctrl.isLoading();
     }));
   }
 
@@ -238,6 +229,7 @@ export class ProductDefinitionComponent implements OnInit {
         if (isRefresh) {
           ctrl.isRefreshingPartsData = false;
         }
+        ctrl.isLoading();
       }));
   }
 
@@ -280,14 +272,20 @@ export class ProductDefinitionComponent implements OnInit {
 
   onSelectStepTemplate($event, index: number) {
     if ($event.value) {
-      this.procedureStepsData[index].equipmentTime = $event.value.equipmentTime;
-      this.procedureStepsData[index].laborTime = $event.value.laborTime;
-      this.procedureStepsData[index].replacementCost = $event.value.replacementCost;
-      this.procedureStepsData[index].usefulLife = $event.value.usefulLife;
-      this.procedureStepsData[index].utilizationTime = $event.value.utilizationTime;
-      this.procedureStepsData[index].printOrder = index + 1;
-      this.procedureStepsData[index].stepText = $event.value.stepText;
-      this.procedureStepsData[index].title = $event.value.title;
+      const step = new ProcedureStepModel({
+        equipmentTime: $event.value.equipmentTime,
+        laborTime: $event.value.laborTime,
+        replacementCost: $event.value.replacementCost,
+        usefulLife: $event.value.usefulLife,
+        utilizationTime: $event.value.utilizationTime,
+        printOrder: index + 1,
+        stepText: $event.value.stepText,
+        title: $event.value.title
+      })
+
+      const stepValues = this.calculateStepValues(step);
+      this.procedureStepsData[index] = {...step, ...stepValues};
+      this.getStepsValues(true);
     }
   }
 
@@ -300,14 +298,16 @@ export class ProductDefinitionComponent implements OnInit {
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          ctrl.procedureStepTemplatesData.push({ label: x.name, value: x });
+          ctrl.procedureStepTemplatesData.push({ label: x.title, value: x });
         });
-        ctrl.getProceduresFlag = true;
+        ctrl.getProcedureStepTemplatesFlag = true;
         this.isLoading();
       }));
   }
 
-
+ /**
+  * Get ProcedureSteps by procedure Id
+  */
   getProcedureSteps(id: number) {
     const ctrl = this;
     ctrl.globals.showLoader(true);
@@ -328,7 +328,7 @@ export class ProductDefinitionComponent implements OnInit {
       // Calcuate total step values
       ctrl.getStepsValues();
       ctrl.newStepsCounts = 0;
-      ctrl.globals.showLoader(false);
+      this.isLoading();
     }));
   }
 
@@ -345,10 +345,11 @@ export class ProductDefinitionComponent implements OnInit {
     if (this.newStepsCounts > 0) {
       this.procedureStepsData.pop();
       this.newStepsCounts--;
+      this.getStepsValues(true);
     }
   }
 
-  getStepsValues() {
+  getStepsValues(isRefresh: boolean = false) {
     const values = {
       totalLaborMins: 0,
       totalMachineMins: 0,
@@ -356,17 +357,31 @@ export class ProductDefinitionComponent implements OnInit {
       totalEquipmentCharge: 0
     }
     this.procedureStepsData.forEach(step => {
-      values.totalLaborMins += step.laborTime;
-      values.totalMachineMins += step.equipmentTime;
-      values.totalLaborCharge += step.laboar_chage ? step.laboar_chage : 0;
+      values.totalLaborMins += step.laborTime ? step.laborTime : 0;
+      values.totalMachineMins += step.equipmentTime ? step.equipmentTime : 0;
+      values.totalLaborCharge += step.laboar_charge ? step.laboar_charge : 0;
       values.totalEquipmentCharge += step.equipment_charge ? step.equipment_charge : 0;
     });
-
     this.productData.totalLaborMins = values.totalLaborMins;
     this.productData.totalMachineMins = values.totalMachineMins;
-    this.productData.laborCost = values.totalLaborCharge;
-    this.productData.equipmentCost = values.totalEquipmentCharge;
-    this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + this.productData.materialCost ? this.productData.materialCost : 0;
+
+    if (isRefresh) {
+      this.productData.laborCost = values.totalLaborCharge;
+      this.productData.equipmentCost = values.totalEquipmentCharge;
+      this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + (this.productData.materialCost || 0);
+    }
+  }
+
+  onChangeLaborTime(index: number) {
+    this.procedureStepsData[index].laboar_charge = this.procedureStepsData[index].laborTime * LABOR_RATE_PER_MIN;
+
+    this.getStepsValues(true);
+  }
+
+  onChangeEquipmentTime(index: number) {
+    this.procedureStepsData[index].equipment_charge = this.procedureStepsData[index].equipmentTime * this.procedureStepsData[index].ex_per_min + this.procedureStepsData[index].equipmentTime * this.procedureStepsData[index].rm_per_min;
+
+    this.getStepsValues(true);
   }
 
   calculateStepValues(step: ProcedureStepModel) {
