@@ -2092,7 +2092,7 @@ export class MonitorService {
      * Get data on a specific monitor
      * @param id (optional) ProcedureStepMonitor ID
      */
-    monitor(id: number | null | undefined, version: string): Observable<AuditActionResultOfMonitorModel> {
+    monitor(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfMonitorModel> {
         let url_ = this.baseUrl + "/v{version}/Monitor?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -2116,14 +2116,14 @@ export class MonitorService {
                 try {
                     return this.processMonitor(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfMonitorModel>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfMonitorModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfMonitorModel>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfMonitorModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processMonitor(response: HttpResponseBase): Observable<AuditActionResultOfMonitorModel> {
+    protected processMonitor(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfMonitorModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2134,7 +2134,7 @@ export class MonitorService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfMonitorModel.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfMonitorModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2142,7 +2142,7 @@ export class MonitorService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfMonitorModel>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfMonitorModel>(<any>null);
     }
 }
 
@@ -9832,49 +9832,60 @@ export interface IUpdateMenuRoleMapRequest {
 }
 
 /** Base class for an API call with a typed result */
-export class AuditActionResultOfMonitorModel extends AuditActionResult implements IAuditActionResultOfMonitorModel {
-    object?: MonitorModel | undefined;
+export class AuditActionResultOfICollectionOfMonitorModel extends AuditActionResult implements IAuditActionResultOfICollectionOfMonitorModel {
+    object?: MonitorModel[] | undefined;
 
-    constructor(data?: IAuditActionResultOfMonitorModel) {
+    constructor(data?: IAuditActionResultOfICollectionOfMonitorModel) {
         super(data);
     }
 
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.object = _data["object"] ? MonitorModel.fromJS(_data["object"]) : <any>undefined;
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(MonitorModel.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfMonitorModel {
+    static fromJS(data: any): AuditActionResultOfICollectionOfMonitorModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfMonitorModel();
+        let result = new AuditActionResultOfICollectionOfMonitorModel();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
 }
 
 /** Base class for an API call with a typed result */
-export interface IAuditActionResultOfMonitorModel extends IAuditActionResult {
-    object?: MonitorModel | undefined;
+export interface IAuditActionResultOfICollectionOfMonitorModel extends IAuditActionResult {
+    object?: MonitorModel[] | undefined;
 }
 
 export class MonitorModel implements IMonitorModel {
     id?: number | undefined;
     description?: string | undefined;
     monitorType?: string | undefined;
+    monitorTypeId?: number;
     result?: string | undefined;
     passing?: boolean | undefined;
     taskCompleted?: Date | undefined;
     serialNumber?: string | undefined;
     workerName?: UserModel[] | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
 
     constructor(data?: IMonitorModel) {
         if (data) {
@@ -9890,6 +9901,7 @@ export class MonitorModel implements IMonitorModel {
             this.id = _data["id"];
             this.description = _data["description"];
             this.monitorType = _data["monitorType"];
+            this.monitorTypeId = _data["monitorTypeId"];
             this.result = _data["result"];
             this.passing = _data["passing"];
             this.taskCompleted = _data["taskCompleted"] ? new Date(_data["taskCompleted"].toString()) : <any>undefined;
@@ -9899,6 +9911,8 @@ export class MonitorModel implements IMonitorModel {
                 for (let item of _data["workerName"])
                     this.workerName!.push(UserModel.fromJS(item));
             }
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
         }
     }
 
@@ -9914,6 +9928,7 @@ export class MonitorModel implements IMonitorModel {
         data["id"] = this.id;
         data["description"] = this.description;
         data["monitorType"] = this.monitorType;
+        data["monitorTypeId"] = this.monitorTypeId;
         data["result"] = this.result;
         data["passing"] = this.passing;
         data["taskCompleted"] = this.taskCompleted ? this.taskCompleted.toISOString() : <any>undefined;
@@ -9923,6 +9938,8 @@ export class MonitorModel implements IMonitorModel {
             for (let item of this.workerName)
                 data["workerName"].push(item.toJSON());
         }
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
         return data; 
     }
 }
@@ -9931,11 +9948,14 @@ export interface IMonitorModel {
     id?: number | undefined;
     description?: string | undefined;
     monitorType?: string | undefined;
+    monitorTypeId?: number;
     result?: string | undefined;
     passing?: boolean | undefined;
     taskCompleted?: Date | undefined;
     serialNumber?: string | undefined;
     workerName?: UserModel[] | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -10397,8 +10417,7 @@ export interface IAuditActionResultOfProcedure extends IAuditActionResult {
     object?: Procedure | undefined;
 }
 
-export class Procedure implements IProcedure {
-    id?: number;
+export class Procedure extends TrackableModel implements IProcedure {
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
@@ -10413,17 +10432,12 @@ export class Procedure implements IProcedure {
     roles?: Role[] | undefined;
 
     constructor(data?: IProcedure) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.name = _data["name"];
             this.procedureTypeId = _data["procedureTypeId"];
             this.isRelatedToAProduct = _data["isRelatedToAProduct"];
@@ -10456,7 +10470,6 @@ export class Procedure implements IProcedure {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["name"] = this.name;
         data["procedureTypeId"] = this.procedureTypeId;
         data["isRelatedToAProduct"] = this.isRelatedToAProduct;
@@ -10477,12 +10490,12 @@ export class Procedure implements IProcedure {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IProcedure {
-    id?: number;
+export interface IProcedure extends ITrackableModel {
     name?: string | undefined;
     procedureTypeId?: number;
     isRelatedToAProduct?: boolean;
@@ -11500,12 +11513,17 @@ export interface IAuditActionResultOfProcedureStepMonitor extends IAuditActionRe
 export class ProcedureStepMonitor implements IProcedureStepMonitor {
     id?: number;
     monitorType?: string | undefined;
+    monitorTypeId?: number;
     inputType?: string | undefined;
+    inputTypeId?: number;
+    sensorName?: string | undefined;
     shouldBe?: string | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
     description?: string | undefined;
     sendEmailNotification?: boolean | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
 
     constructor(data?: IProcedureStepMonitor) {
         if (data) {
@@ -11520,12 +11538,17 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         if (_data) {
             this.id = _data["id"];
             this.monitorType = _data["monitorType"];
+            this.monitorTypeId = _data["monitorTypeId"];
             this.inputType = _data["inputType"];
+            this.inputTypeId = _data["inputTypeId"];
+            this.sensorName = _data["sensorName"];
             this.shouldBe = _data["shouldBe"];
             this.targetValue = _data["targetValue"];
             this.faultHandling = _data["faultHandling"];
             this.description = _data["description"];
             this.sendEmailNotification = _data["sendEmailNotification"];
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
         }
     }
 
@@ -11540,12 +11563,17 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["monitorType"] = this.monitorType;
+        data["monitorTypeId"] = this.monitorTypeId;
         data["inputType"] = this.inputType;
+        data["inputTypeId"] = this.inputTypeId;
+        data["sensorName"] = this.sensorName;
         data["shouldBe"] = this.shouldBe;
         data["targetValue"] = this.targetValue;
         data["faultHandling"] = this.faultHandling;
         data["description"] = this.description;
         data["sendEmailNotification"] = this.sendEmailNotification;
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
         return data; 
     }
 }
@@ -11553,18 +11581,25 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
 export interface IProcedureStepMonitor {
     id?: number;
     monitorType?: string | undefined;
+    monitorTypeId?: number;
     inputType?: string | undefined;
+    inputTypeId?: number;
+    sensorName?: string | undefined;
     shouldBe?: string | undefined;
     targetValue?: string | undefined;
     faultHandling?: string | undefined;
     description?: string | undefined;
     sendEmailNotification?: boolean | undefined;
+    highTarget?: number | undefined;
+    lowTarget?: number | undefined;
 }
 
 /**  */
 export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMonitorRequest {
     /** Gets or Sets InputType */
     inputType?: string | undefined;
+    /** Sensor Name */
+    sensorName?: string | undefined;
     /** Gets or Sets MonitorType */
     monitorType!: string;
     /** Gets or Sets the procedure step ID */
@@ -11579,6 +11614,10 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
     sendEmailNotification?: boolean | undefined;
+    /** HighTarget */
+    highTarget?: number | undefined;
+    /** LowTarget */
+    lowTarget?: number | undefined;
 
     constructor(data?: ICreateProcedureStepMonitorRequest) {
         if (data) {
@@ -11592,6 +11631,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     init(_data?: any) {
         if (_data) {
             this.inputType = _data["inputType"];
+            this.sensorName = _data["sensorName"];
             this.monitorType = _data["monitorType"];
             this.procedureStepId = _data["procedureStepId"];
             this.shouldBe = _data["shouldBe"];
@@ -11599,6 +11639,8 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
             this.faultHandling = _data["faultHandling"];
             this.description = _data["description"];
             this.sendEmailNotification = _data["sendEmailNotification"];
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
         }
     }
 
@@ -11612,6 +11654,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["inputType"] = this.inputType;
+        data["sensorName"] = this.sensorName;
         data["monitorType"] = this.monitorType;
         data["procedureStepId"] = this.procedureStepId;
         data["shouldBe"] = this.shouldBe;
@@ -11619,6 +11662,8 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
         data["faultHandling"] = this.faultHandling;
         data["description"] = this.description;
         data["sendEmailNotification"] = this.sendEmailNotification;
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
         return data; 
     }
 }
@@ -11627,6 +11672,8 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
 export interface ICreateProcedureStepMonitorRequest {
     /** Gets or Sets InputType */
     inputType?: string | undefined;
+    /** Sensor Name */
+    sensorName?: string | undefined;
     /** Gets or Sets MonitorType */
     monitorType: string;
     /** Gets or Sets the procedure step ID */
@@ -11641,6 +11688,10 @@ export interface ICreateProcedureStepMonitorRequest {
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
     sendEmailNotification?: boolean | undefined;
+    /** HighTarget */
+    highTarget?: number | undefined;
+    /** LowTarget */
+    lowTarget?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -11690,8 +11741,12 @@ export interface IAuditActionResultOfICollectionOfProcedureStepMonitor extends I
 export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMonitorRequest {
     /** Procedure step monitor Id */
     id?: number;
-    /** Gets or Sets InputType */
+    /** Gets or Sets InputType string */
     inputType?: string | undefined;
+    /** Sensor Name */
+    sensorName?: string | undefined;
+    /** Gets or Sets MonitorType string */
+    monitorType?: string | undefined;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
@@ -11702,6 +11757,10 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
     sendEmailNotification?: boolean | undefined;
+    /** HighTarget */
+    highTarget?: number | undefined;
+    /** LowTarget */
+    lowTarget?: number | undefined;
 
     constructor(data?: IUpdateProcedureStepMonitorRequest) {
         if (data) {
@@ -11716,11 +11775,15 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         if (_data) {
             this.id = _data["id"];
             this.inputType = _data["inputType"];
+            this.sensorName = _data["sensorName"];
+            this.monitorType = _data["monitorType"];
             this.shouldBe = _data["shouldBe"];
             this.targetValue = _data["targetValue"];
             this.faultHandling = _data["faultHandling"];
             this.description = _data["description"];
             this.sendEmailNotification = _data["sendEmailNotification"];
+            this.highTarget = _data["highTarget"];
+            this.lowTarget = _data["lowTarget"];
         }
     }
 
@@ -11735,11 +11798,15 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["inputType"] = this.inputType;
+        data["sensorName"] = this.sensorName;
+        data["monitorType"] = this.monitorType;
         data["shouldBe"] = this.shouldBe;
         data["targetValue"] = this.targetValue;
         data["faultHandling"] = this.faultHandling;
         data["description"] = this.description;
         data["sendEmailNotification"] = this.sendEmailNotification;
+        data["highTarget"] = this.highTarget;
+        data["lowTarget"] = this.lowTarget;
         return data; 
     }
 }
@@ -11748,8 +11815,12 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
 export interface IUpdateProcedureStepMonitorRequest {
     /** Procedure step monitor Id */
     id?: number;
-    /** Gets or Sets InputType */
+    /** Gets or Sets InputType string */
     inputType?: string | undefined;
+    /** Sensor Name */
+    sensorName?: string | undefined;
+    /** Gets or Sets MonitorType string */
+    monitorType?: string | undefined;
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
@@ -11760,6 +11831,10 @@ export interface IUpdateProcedureStepMonitorRequest {
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
     sendEmailNotification?: boolean | undefined;
+    /** HighTarget */
+    highTarget?: number | undefined;
+    /** LowTarget */
+    lowTarget?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -12632,8 +12707,6 @@ export interface IAuditActionResultOfProcedureType extends IAuditActionResult {
 export class CreateProcedureTypeRequest implements ICreateProcedureTypeRequest {
     /** Gets or Sets Name */
     name!: string;
-    /** Gets or Sets MajorGroup */
-    majorGroup?: string | undefined;
 
     constructor(data?: ICreateProcedureTypeRequest) {
         if (data) {
@@ -12647,7 +12720,6 @@ export class CreateProcedureTypeRequest implements ICreateProcedureTypeRequest {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.majorGroup = _data["majorGroup"];
         }
     }
 
@@ -12661,7 +12733,6 @@ export class CreateProcedureTypeRequest implements ICreateProcedureTypeRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["majorGroup"] = this.majorGroup;
         return data; 
     }
 }
@@ -12670,8 +12741,6 @@ export class CreateProcedureTypeRequest implements ICreateProcedureTypeRequest {
 export interface ICreateProcedureTypeRequest {
     /** Gets or Sets Name */
     name: string;
-    /** Gets or Sets MajorGroup */
-    majorGroup?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -12723,8 +12792,6 @@ export class UpdateProcedureTypeRequest implements IUpdateProcedureTypeRequest {
     id?: number | undefined;
     /** Gets or Sets Name */
     name?: string | undefined;
-    /** Gets or Sets MajorGroup */
-    majorGroup?: string | undefined;
 
     constructor(data?: IUpdateProcedureTypeRequest) {
         if (data) {
@@ -12739,7 +12806,6 @@ export class UpdateProcedureTypeRequest implements IUpdateProcedureTypeRequest {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.majorGroup = _data["majorGroup"];
         }
     }
 
@@ -12754,7 +12820,6 @@ export class UpdateProcedureTypeRequest implements IUpdateProcedureTypeRequest {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["majorGroup"] = this.majorGroup;
         return data; 
     }
 }
@@ -12765,8 +12830,6 @@ export interface IUpdateProcedureTypeRequest {
     id?: number | undefined;
     /** Gets or Sets Name */
     name?: string | undefined;
-    /** Gets or Sets MajorGroup */
-    majorGroup?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */

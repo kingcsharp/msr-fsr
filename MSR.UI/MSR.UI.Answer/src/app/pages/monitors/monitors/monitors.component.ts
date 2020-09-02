@@ -35,7 +35,7 @@ export class MonitorsComponent implements OnInit {
       new ColumnsSaved({ id: 'passing', label: 'Passing', visible: true }),
       new ColumnsSaved({ id: 'workerName.fullName', label: 'Worker Name', visible: true }),
       new ColumnsSaved({ id: 'taskCompleted', label: 'Task Completed', visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true })
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial', visible: true })
     ];
 
     this.getMonitors();
@@ -47,6 +47,12 @@ export class MonitorsComponent implements OnInit {
 
     this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler((response) => {
       this.data = Array.isArray(response.object) ? response.object: [];
+      this.data.forEach(monitor =>{
+        monitor.workerName = {};
+        monitor.workerName.fullName = 'John Doe';
+        monitor.taskCompleted = new Date();
+        monitor.serialNumber = '11111';
+      });
       this.loading = false;
     }, () => {
 
