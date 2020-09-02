@@ -5,12 +5,20 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem } from '../../../services/api.client.generated';
+import {
+  EnumMenuItem,
+  PurchaseService,
+  PurchaseModel,
+} from '../../../services/api.client.generated';
+import { environment as env } from '../../../../environments/environment';
+import { take } from 'rxjs/operators';
+import { responseHandler } from '../../../utils/responseHandler';
 
 @Component({
   selector: 'app-purchases',
   templateUrl: './purchases.component.html',
-  styleUrls: ['./purchases.component.scss']
+  styleUrls: ['./purchases.component.scss'],
+  providers: [PurchaseService]
 })
 export class PurchasesComponent implements OnInit {
   privileges = EnumPrivilege;
@@ -19,30 +27,18 @@ export class PurchasesComponent implements OnInit {
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
   gridVersion: string;
-  data: any;
+  data: PurchaseModel[] = [];
   currentPurchase: PurchaseModel;
   purchasePrivileges: AllowedActions;
   purchaseOrderPrivileges: AllowedActions;
   display: boolean =  false;
-  purchaseOrderStatus: any[] = [
-    {
-      label: 'All',
-      value: 'All'
-    },
-    {
-      label: 'Open',
-      value: 'Open'
-    },
-    {
-      label: 'Closed',
-      value: 'Closed'
-    }
-  ];
+  purchaseOrderStatus: any[];
 
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
     private elem: ElementRef,
+    private purchaseService: PurchaseService,
   ) { }
 
   ngOnInit(): void {
@@ -62,14 +58,22 @@ export class PurchasesComponent implements OnInit {
   }
 
   getPurchases() {
-    this.data = demoData;
+    this.globals.showLoader(true);
+    this.purchaseService.purchaseGet(null, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.globals.showLoader(false);
+        this.data = response.object;
+
+        this.purchaseOrderStatus = this.data.filter(
+          (thing, i, arr) => arr.findIndex(t => t.statusId === thing.statusId) === i
+        ).map(x => ({ label: x.status.name, value: x.status.id }));
+      }));
   }
 
   onClickViewPurchase(purchase: PurchaseModel) {
     //TODO: view purchase detail
-
     this.currentPurchase = purchase;
-    console.log('____', this.currentPurchase);
     this.display = true;
   }
 
@@ -78,91 +82,3 @@ export class PurchasesComponent implements OnInit {
     this.currentPurchase = null;
   }
 }
-
-interface PurchaseItemModel {
-  id: number;
-  description: string;
-  account: string;
-  custLine: string;
-  materialTransferTicketNo: string;
-  dueDate: Date;
-  qty: number;
-  unitPrice: number;
-  extPrice: number;
-}
-
-interface IPurchaseModel {
-  id: number;
-  custRefNo: string;
-  orderDescription: string;
-  purchaseStatus: string;
-  createdDate: Date;
-  approvalStatus: string;
-  purchaseItems: PurchaseItemModel[];
-}
-
-class PurchaseModel implements IPurchaseModel {
-  id: number;
-  custRefNo: string;
-  orderDescription: string;
-  purchaseStatus: string;
-  createdDate: Date;
-  approvalStatus: string;
-  purchaseItems: PurchaseItemModel[];
-
-
-  constructor(data?: IPurchaseModel) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-}
-
-
-const demoData = [
-  new PurchaseModel({
-    id: 516481,
-    custRefNo: 'PO1590779276',
-    orderDescription: 'refcustponum1223334444',
-    createdDate: new Date(),
-    purchaseStatus: 'All',
-    approvalStatus: 'approved',
-    purchaseItems: [
-      {
-        id: 12301,
-        description: 'description',
-        account: 'account',
-        custLine: 'line',
-        materialTransferTicketNo: '12301',
-        dueDate: new Date(),
-        qty: 1,
-        unitPrice: 123,
-        extPrice: 123,
-      }
-    ]
-  }),
-  new PurchaseModel({
-    id: 516482,
-    custRefNo: 'PO1590779276',
-    orderDescription: 'refcustponum1223334444',
-    createdDate: new Date(),
-    purchaseStatus: 'All',
-    approvalStatus: 'approved',
-    purchaseItems: [
-      {
-        id: 12301,
-        description: 'description',
-        account: 'account',
-        custLine: 'line',
-        materialTransferTicketNo: '12301',
-        dueDate: new Date(),
-        qty: 1,
-        unitPrice: 123,
-        extPrice: 123,
-      }
-    ]
-  })
-]

@@ -19,7 +19,8 @@
             </label>
             <div class="col-md-8">
               <input
-                [value]="purchaseOrderData.customerName"
+                *ngIf="getCustomerFlag"
+                [value]="getCustomerLabel(customerData)"
                 placeholder="Customer Name"
                 type="text"
                 class="form-control input-transparent"
@@ -57,8 +58,7 @@
             </label>
             <div class="col-md-8">
               <input
-                [value]="purchaseOrderData.referencePo"
-                placeholder="Reference Customer PO # (typically a blanket PO)"
+                [value]="purchaseOrderData.customerReferencePO"
                 type="text"
                 class="form-control input-transparent"
                 name="RefCustPO"
@@ -76,7 +76,7 @@
             </label>
             <div class="col-md-8">
               <input
-                [value]="purchaseOrderData.customerRef"
+                [value]="purchaseOrderData.customerReferenceNo"
                 type="text"
                 class="form-control input-transparent"
                 name="CustRefNum"
@@ -125,12 +125,39 @@
             <div class="col-md-8 input-group input-group-transparent">
               <span class="input-group-addon bg-secondary">$</span>
               <input
-                [value]="purchaseOrderData.totalPurchaseLimit | currency"
+                [value]="purchaseOrderData.totalPurchaseLimit"
                 type="text"
                 class="form-control input-transparent"
                 name="TotalPurchaseLimit"
                 readonly
               >
+            </div>
+          </div>
+
+          <div *ngIf="step === 1" class="form-group row">
+            <label
+              for="TotalPurchaseLimit"
+              class="col-md-4 text-right"
+            >
+            Set all due dates to:
+            </label>
+            <div class="col-md-8 input-group input-group-transparent">
+              <p-calendar
+                [(ngModel)]="globalDueDate"
+                name="globalDueDate"
+                showIcon="true"
+                styleClass="input-group input-group-transparent"
+                inputStyleClass="form-control input-transparent"
+              >
+              </p-calendar>
+              <div class="input-group-btn">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-cy="btn-apply"
+                  (click)="applyGlobalDueDate()"
+                >Apply</button>
+              </div>
             </div>
           </div>
 
@@ -233,7 +260,7 @@
               </td>
               <td>
                 <input
-                  [(ngModel)]="purchaseItems[i].custLineItem"
+                  [(ngModel)]="purchaseItems[i].customerLineNumber"
                   class="form-control input-transparent disable"
                   name="purchaseItem[{{i}}].CUST_LINE_ITEM"
                   type="text"
@@ -241,7 +268,7 @@
               </td>
               <td>
                 <input
-                  [(ngModel)]="purchaseItems[i].materialTransferTicketNo"
+                  [(ngModel)]="purchaseItems[i].mttn"
                   class="form-control input-transparent disable"
                   name="purchaseItem[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER" type="text"
                 >
@@ -315,7 +342,7 @@
             <tr *ngFor="let purchaseSerializeItem of purchaseSerializeItems; index as i">
               <td>
                 <input
-                  [value]="purchaseSerializeItem.custLineItem"
+                  [value]="purchaseSerializeItem.customerLineNumber"
                   class="form-control input-transparent disable"
                   name="purchaseSerializeItem[{{i}}].CUST_LINE_ITEM"
                   readonly
@@ -343,7 +370,8 @@
                 <p-dropdown
                   placeholder="Select Site"
                   name="purchaseSerializeItem[{{i}}].SITE"
-                  [options]="siteData"
+                  [(ngModel)]="purchaseSerializeItems[i].locationId"
+                  [options]="locationsData"
                   appendTo="body"
                   [baseZIndex]="100001"
                   required

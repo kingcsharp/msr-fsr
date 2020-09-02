@@ -20,12 +20,13 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { PurchasesComponent } from './purchases/purchases.component';
 import { PurchaseCreateComponent } from './purchase-create/purchase-create.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 export const routes = [
   { path: '', redirectTo: 'invoices', pathMatch: 'prefix' },
   { path: 'invoices', component: InvoiceComponent, pathMatch: 'full' },
   { path: 'purchaseorder/purchases', component: PurchasesComponent, pathMatch: 'full'},
-  { path: 'purchaseorder/purchase-create', component: PurchaseCreateComponent, pathMatch: 'full'},
+  { path: 'purchaseorder/purchase-create/:id', component: PurchaseCreateComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
@@ -53,7 +54,8 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    PopoverModule.forRoot()
+    PopoverModule.forRoot(),
+    SelectButtonModule,
   ]
 })
 export class BillingModule {

@@ -23,7 +23,7 @@
       <div class="text-right">
         <button
           *ngIf="purchaseOrderPrivileges.canCreate"
-          [routerLink]="['../purchase-create']"
+          [routerLink]="['../../../pricing/purchaseorder-create']"
           class="btn btn-success width-100 mb-xs sm-mrg"
           role="button"
           data-cy="add-button"
@@ -147,22 +147,22 @@
           class="text-capitalize"
           [hidden]="!cg.isVisibleCol('custRefNumber',gridSettings)"
         >
-          {{purcahsemodel.custRefNo}}
+          {{purcahsemodel.mttn}}
         </td>
         <td
           [hidden]="!cg.isVisibleCol('orderDescription',gridSettings)"
         >
-          {{purcahsemodel.orderDescription}}
+          {{purcahsemodel.purchaseOrderProduct ? purcahsemodel.purchaseOrderProduct.name : ''}}
         </td>
         <td
           [hidden]="!cg.isVisibleCol('purchaseStatus',gridSettings)"
         >
-          {{purcahsemodel.purchaseStatus}}
+          {{purcahsemodel.status.name}}
         </td>
         <td
           [hidden]="!cg.isVisibleCol('createdDate',gridSettings)"
         >
-          {{purcahsemodel.createdDate | date :'short' }}
+          {{purcahsemodel.dueDate | userTimezone }}
         </td>
         <td>
           <i
@@ -193,114 +193,172 @@
   [style]="{width: '80vw'}"
   data-cy="purchase-detail-modal"
 >
+  <div *ngIf="currentPurchase" class="container">
+    <div class="row mx-0">
+      <div class="col-md-8 col-12">
+        <div class="form-group row">
+          <label
+            for="CustomerName"
+            class="col-md-4 text-right"
+          >
+            Po Name :
+          </label>
+          <div class="col-md-8">
+            <input
+              *ngIf="currentPurchase.purchaseOrder"
+              [value]="currentPurchase.purchaseOrder.name"
+              type="text"
+              class="form-control input-transparent"
+              name="PoName"
+              readonly
+            >
+          </div>
+        </div>
 
+        <div class="form-group row">
+          <label
+            for="POName"
+            class="col-md-4 text-right"
+          >
+            Purchase Status #:
+          </label>
+          <div class="col-md-8">
+            <input
+              [value]="currentPurchase.status.name"
+              type="text"
+              class="form-control input-transparent"
+              name="PurchaseStatus"
+              readonly
+            >
+          </div>
+        </div>
 
-  <h2 class="page-title my-4 px-3">
-    Purchase Items
-  </h2>
+        <div class="form-group row">
+          <label
+            for="RefCustPO"
+            class="col-md-4 text-right"
+          >
+            PO Number:
+          </label>
+          <div class="col-md-8">
+            <input
+              *ngIf="currentPurchase.purchaseOrder"
+              [value]="currentPurchase.purchaseOrder.id"
+              type="text"
+              class="form-control input-transparent"
+              name="PoNumber"
+              readonly
+            >
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <widget>
-    <table *ngIf="currentPurchase" class="table table-bordered">
-      <tbody>
-        <tr>
-          <th>Purchase Item Id</th>
-          <th>Description</th>
-          <th>Account</th>
-          <th>Cust Line</th>
-          <th>Material Transfer #</th>
-          <th>Due Date</th>
-          <th>Qty</th>
-          <th>Unit Price</th>
-          <th>Ext Price</th>
-        </tr>
+    <h2 class="page-title my-4 px-3">
+      Purchase Items
+    </h2>
 
-        <tr *ngFor="let purchaseItem of currentPurchase.purchaseItems; index as i">
-          <td>
-            <input
-              [value]="purchaseItem.id"
-              class="form-control input-transparent"
-              readonly
-              type="text"
-            >
-          </td>
-          <td>
-            <input
-              [value]="purchaseItem.description"
-              class="form-control input-transparent"
-              readonly
-              type="text"
-            >
-          </td>
-          <td>
-            <input
-              [value]="purchaseItem.account"
-              class="form-control input-transparent"
-              readonly
-              type="text"
-            >
-          </td>
-          <td>
-            <input
-              [value]="purchaseItem.custLine"
-              class="form-control input-transparent"
-              readonly
-              type="text"
-            >
-          </td>
-          <td>
-            <input
-              [value]="purchaseItem.materialTransferTicketNo"
-              class="form-control input-transparent"
-              readonly
-              type="text"
-            >
-          </td>
-          <td>
-            <div class="form-group row mx-0">
-              <p-calendar
-                [(ngModel)]="purchaseItem.dueDate"
-                name="purchaseItem[{{i}}].DUE_DATE"
-                showIcon="true"
-                styleClass="input-group input-group-transparent"
-                inputStyleClass="form-control input-transparent"
-              >
-              </p-calendar>
-            </div>
-          </td>
-          <td>
-            <input
-              [value]="purchaseItem.qty"
-              class="form-control input-transparent"
-              readonly
-              type="text"
-            >
-          </td>
-          <td>
-            <div class="input-group input-group-transparent">
-              <span class="input-group-addon bg-secondary">$</span>
+    <widget>
+      <table *ngIf="currentPurchase" class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Purchase Item Id</th>
+            <th>Description</th>
+            <th>Account</th>
+            <th>Cust Line</th>
+            <th>Material Transfer #</th>
+            <th>Due Date</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Ext Price</th>
+          </tr>
+
+          <tr *ngIf="currentPurchase.purchaseOrderProduct">
+            <td>
               <input
-                [value]="purchaseItem.unitPrice"
+                [value]="currentPurchase.purchaseOrderProduct.id"
                 class="form-control input-transparent"
                 readonly
                 type="text"
               >
-            </div>
-          </td>
-          <td>
-            <div class="input-group input-group-transparent">
-              <span class="input-group-addon bg-secondary">$</span>
+            </td>
+            <td>
               <input
-                [value]="purchaseItem.extPrice"
+                [value]="currentPurchase.purchaseOrderProduct.name"
                 class="form-control input-transparent"
                 readonly
                 type="text"
               >
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </widget>
+            </td>
+            <td>
+              <input
+                [value]="currentPurchase.customerPurchaseNumber"
+                class="form-control input-transparent"
+                readonly
+                type="text"
+              >
+            </td>
+            <td>
+              <input
+                [value]="currentPurchase.customerLineNumber"
+                class="form-control input-transparent"
+                readonly
+                type="text"
+              >
+            </td>
+            <td>
+              <input
+                [value]="currentPurchase.mttn"
+                class="form-control input-transparent"
+                readonly
+                type="text"
+              >
+            </td>
+            <td>
+              <div class="form-group row mx-0">
+                <input
+                  [value]="currentPurchase.dueDate | userTimezone"
+                  class="form-control input-transparent"
+                  readonly
+                  type="text"
+                >
+              </div>
+            </td>
+            <td>
+              <input
+                [value]="currentPurchase.qty"
+                class="form-control input-transparent"
+                readonly
+                type="text"
+              >
+            </td>
+            <td>
+              <div class="input-group input-group-transparent">
+                <span class="input-group-addon bg-secondary">$</span>
+                <input
+                  [value]="currentPurchase.purchasePrice"
+                  class="form-control input-transparent"
+                  readonly
+                  type="text"
+                >
+              </div>
+            </td>
+            <td>
+              <div class="input-group input-group-transparent">
+                <span class="input-group-addon bg-secondary">$</span>
+                <input
+                  [value]="currentPurchase.purchasePrice * currentPurchase.qty"
+                  class="form-control input-transparent"
+                  readonly
+                  type="text"
+                >
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </widget>
+  </div>
 
   <p-footer>
     <div class="pull-right">

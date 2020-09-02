@@ -1,28 +1,45 @@
 import { Component, OnInit } from '@angular/core';
+import { Globals } from '../../../models/lib/globals';
+import { take } from 'rxjs/operators';
+import { responseHandler } from '../../../utils/responseHandler';
+import { environment as env } from '../../../../environments/environment';
+import {
+  PurchaseOrderService,
+  PurchaseOrderView,
+  ProductService,
+  ProductModel,
+  LocationService,
+  CustomerService,
+  Customer,
+  PurchaseService,
+  CreatePurchaseRequest
+} from '../../../services/api.client.generated';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-purchase-create',
   templateUrl: './purchase-create.component.html',
-  styleUrls: ['./purchase-create.component.scss']
+  styleUrls: ['./purchase-create.component.scss'],
+  providers: [
+    PurchaseOrderService,
+    CustomerService,
+    PurchaseService,
+    LocationService,
+  ],
 })
 export class PurchaseCreateComponent implements OnInit {
-  purchaseOrderData: PurchaseOrder;
+  poId: number;
+  purchaseOrderData: PurchaseOrderView;
   getPurchaseOrderFlag: boolean = false;
+  customerData: Customer;
+  getCustomerFlag: boolean = false;
+  locationsData: any[] = [];
+  getLocationsFlag: boolean = false;
   purchaseProducts: any[] = [];
-  purchaseItems: PurchaseItem[] = [];
+  purchaseItems: any[] = [];
   purchaseSerializeItems: any[] = [];
   serialNumberModal: boolean = false;
-  siteData = [
-    {
-      label: 'Site 1',
-      value: 1566
-    },
-    {
-      label: 'Site 2',
-      value: 1574
-    }
-  ];
-
+  globalDueDate: Date;
   step: number;
   selectButtonOptions = [
     {
@@ -35,26 +52,74 @@ export class PurchaseCreateComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor(
+    public globals: Globals,
+    private route: ActivatedRoute,
+    private purchaseOrderService: PurchaseOrderService,
+    private customerService: CustomerService,
+    private purchaseService: PurchaseService,
+    private locationService: LocationService,
+  ) { }
 
   ngOnInit(): void {
-    this.step = 0;
-    this.getPurchaseOrderData();
+    this.route.paramMap.subscribe(params => {
+      this.poId = parseInt(params.get('id'), 10);
+      this.step = 0;
+      this.getPurchaseOrderData(this.poId);
+    });
+    this.getLocationsData();
   }
 
-  getPurchaseOrderData() {
-    //TODO: API integration
-    this.purchaseOrderData = mockPO;
-    mockPO.products.map(item => {
-      this.purchaseProducts.push({
-        id: item.id,
-        name: item.name,
-        qty: 0,
-        groupWO: false,
-        serializeIndividually: false
-      })
+  getPurchaseOrderData(id: number) {
+    this.globals.showLoader(true);
+    this.purchaseOrderService.purchaseOrderGet(id, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.purchaseOrderData = response.object[0];
+        this.purchaseProducts = [];
+        this.purchaseOrderData.products.map(product => {
+          this.purchaseProducts.push({
+            id: product.id,
+            name: product.name,
+            price: product.totalSalePrice,
+            qty: 0,
+            groupWO: false,
+            serializeIndividually: false
+          })
+        });
+        this.getPurchaseOrderFlag = true;
+        this.getCustomerData(this.purchaseOrderData.customerId);
+      }));
+  }
+
+  getCustomerData(id: number) {
+    this.customerService.customerGet(id, null, null, null, null, null, null, true, env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.customerData = response.object[0];
+        this.getCustomerFlag = true;
+        this.globals.showLoader(false);
+      }));
+  }
+
+  getCustomerLabel(customer: Customer): string {
+    return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`
+  }
+
+  getLocationsData() {
+    this.locationService.locationGet(null, null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        response.object.map((x) => {
+          this.locationsData.push({ label: x.name, value: x.id });
+        });
+        this.getLocationsFlag = true;
+      }));
+  }
+
+  applyGlobalDueDate() {
+    this.purchaseItems.forEach((item, index) => {
+      this.purchaseItems[index].dueDate = this.globalDueDate;
     });
-    this.getPurchaseOrderFlag = true;
   }
 
   goToNextStep() {
@@ -62,30 +127,32 @@ export class PurchaseCreateComponent implements OnInit {
       this.purchaseItems = [];
       this.purchaseProducts.map(product => {
         if (product.groupWO) {
-          this.purchaseItems.push(new PurchaseItem({
+          this.purchaseItems.push({
+            id: product.id,
             productName: product.name,
-            custLineItem: null,
-            materialTransferTicketNo: null,
+            customerLineNumber: null,
+            mttn: null,
             dueDate: null,
             qty: product.qty,
             unitPrice: product.price,
             extPrice: product.qty * product.price,
             groupWO: product.groupWO,
             serializeIndividually: product.serializeIndividually
-          }));
+          });
         } else {
           for (let i=0; i<product.qty; i++) {
-            this.purchaseItems.push(new PurchaseItem({
+            this.purchaseItems.push({
+              id: product.id,
               productName: product.name,
-              custLineItem: null,
-              materialTransferTicketNo: null,
+              customerLineNumber: null,
+              mttn: null,
               dueDate: null,
               qty: 1,
               unitPrice: product.price,
               extPrice: product.price,
               groupWO: product.groupWO,
               serializeIndividually: product.serializeIndividually
-            }));
+            });
           }
         }
       });
@@ -95,20 +162,26 @@ export class PurchaseCreateComponent implements OnInit {
       this.purchaseItems.map(item => {
         if (item.serializeIndividually) {
           this.purchaseSerializeItems.push({
-            custLineItem: item.custLineItem,
+            id: item.id,
+            dueDate: item.dueDate,
+            customerLineNumber: item.customerLineNumber,
+            mttn: item.mttn,
             serialKitNo: null,
             qty: item.qty,
-            site: null,
+            locationId: null,
             part: null,
             procedure: null
           });
         } else {
           for (let i=0; i<item.qty; i++) {
             this.purchaseSerializeItems.push({
-              custLineItem: item.custLineItem,
+              id: item.id,
+              dueDate: item.dueDate,
+              customerLineNumber: item.customerLineNumber,
+              mttn: item.mttn,
               serialKitNo: null,
               qty: 1,
-              site: null,
+              locationId: null,
               part: null,
               procedure: null
             })
@@ -117,7 +190,32 @@ export class PurchaseCreateComponent implements OnInit {
       });
       this.step = 2;
     } else {
-      this.showSerialNumberModal();
+      length = this.purchaseSerializeItems.length;
+      this.globals.showLoader(true);
+      this.purchaseSerializeItems.forEach(item => {
+        const requestData = new CreatePurchaseRequest(
+          {
+            purchaseOrderId: this.purchaseOrderData.id,
+            statusId: 0,
+            purchaseOrderProductId: item.id,
+            serialNumber: item.serialKitNo,
+            locationId: item.locationId,
+            qty: item.qty,
+            customerLineNumber: item.customerLineNumber,
+            mttn: item.mttn,
+            dueDate: item.dueDate,
+            purchasePrice: item.price,
+          }
+        );
+        this.purchaseService.purchasePost(env.apiVersion, requestData)
+        .pipe(take(1))
+        .subscribe(responseHandler((resp) => {
+          length--;
+          if (length === 0) {
+            this.globals.showLoader(false);
+          }
+        }));
+      });
     }
   }
 
@@ -134,114 +232,3 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
 }
-
-// Temp model
-interface IPurchaseOrder {
-  id: number;
-  name: string;
-  referencePo: string;
-  invoicedBalance?: number;
-  uninvoicedBalance?: number;
-  balance: number;
-  customerName: string;
-  customerId: number,
-  customerRef?: string;
-  openDate: Date;
-  closeDate?: Date;
-  totalPurchaseLimit: number;
-  unusedAmount: number;
-  revision: number;
-  status: 'Open' | 'Closed' | 'All';
-  products: any[]
-}
-
-class PurchaseOrder implements IPurchaseOrder {
-  id: number;
-  name: string;
-  referencePo: string;
-  invoicedBalance: number;
-  uninvoicedBalance: number;
-  balance: number;
-  customerName: string;
-  customerId: number;
-  customerRef?: string;
-  openDate: Date;
-  closeDate: Date;
-  totalPurchaseLimit: number;
-  unusedAmount: number;
-  revision: number;
-  status: 'Open' | 'Closed' | 'All';
-  products: any[]
-
-
-  constructor(data?: IPurchaseOrder) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-}
-
-interface IPurchaseItem {
-  productName: string;
-  custLineItem: string;
-  materialTransferTicketNo: string;
-  dueDate: Date;
-  qty: number;
-  unitPrice: number;
-  extPrice: number;
-  groupWO: boolean;
-  serializeIndividually: boolean;
-}
-
-class PurchaseItem implements IPurchaseItem {
-  productName: string;
-  custLineItem: string;
-  materialTransferTicketNo: string;
-  dueDate: Date;
-  qty: number;
-  unitPrice: number;
-  extPrice: number;
-  groupWO: boolean;
-  serializeIndividually: boolean;
-
-  constructor(data?: IPurchaseItem) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-}
-
-
-const mockPO = new PurchaseOrder({
-  id: 516481,
-  name: 'PO1590779276',
-  referencePo: 'refcustponum1223334444',
-  invoicedBalance: 0,
-  uninvoicedBalance: 0,
-  balance: 34775,
-  customerName: '[MSR-FSR] APPLIED MATERIALS - [ID:1566]',
-  customerId: 1566,
-  customerRef: null,
-  openDate: new Date(),
-  closeDate: null,
-  totalPurchaseLimit: 1234567,
-  unusedAmount: 1234567,
-  revision: 2,
-  status: 'All',
-  products: [
-    {
-      id: 1272,
-      name: '(INTEL F32 1272) Rex cd Kit 633016411 (R-1) [supplier: MSR-FSR]'
-    },
-    {
-      id: 2127,
-      name: '(INTEL F32 2127) Rex cd Kit 633016422 (R-1) [supplier: MSR-FSR]'
-    }
-  ]
-})
