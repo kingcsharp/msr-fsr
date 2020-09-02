@@ -8200,6 +8200,10 @@
             "type": "string",
             "nullable": true
           },
+          "inputTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "shouldBe": {
             "type": "string",
             "nullable": true
@@ -8275,8 +8279,8 @@
             "procedureStepId": 3,
             "description": "DESC1594442595",
             "faultHandling": "REJECT",
-            "monitorType": "1",
-            "inputType": "1",
+            "monitorType": "EQUIPMENT",
+            "inputType": "MANUAL",
             "targetValue": "LOOKSGOOD"
         }
       },
@@ -8313,7 +8317,12 @@
           },
           "inputType": {
             "type": "string",
-            "description": "Gets or Sets InputType",
+            "description": "Gets or Sets InputType string",
+            "nullable": true
+          },
+          "monitorType": {
+            "type": "string",
+            "description": "Gets or Sets MonitorType string",
             "nullable": true
           },
           "shouldBe": {
