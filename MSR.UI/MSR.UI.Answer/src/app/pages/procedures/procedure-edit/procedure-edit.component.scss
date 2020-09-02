@@ -1,8 +1,55 @@
 .monitorstable-column{
-    max-height: 300px;
-    overflow-y: scroll;
+    max-height: 25vh;
+    min-height:25vh;
+    overflow-y: auto;
+    border:1px solid
+}
+
+.roles-column{
+  display:block;
+  position: absolute;
+  bottom: -5px;
 }
 
 .ui-dialog-resizable .ui-dialog-content {
     overflow: hidden;
+}
+
+.ui-multiselect .ui-widget  {
+ width: 100% !important;
+ }
+
+.drag-handle {
+  margin-left: -45px;
+  margin-right: 10px;
+  display: inline-block;
+  cursor: grab;
+}
+.input-group-append {
+  margin-left: -1px;
+}
+.input-group-append, .input-group-prepend {
+  display: -ms-flexbox;
+  display: flex;
+}
+.input-group>.input-group-append>.btn, .input-group>.input-group-append>.input-group-text, .input-group>.input-group-prepend:first-child>.btn:not(:first-child), .input-group>.input-group-prepend:first-child>.input-group-text:not(:first-child), .input-group>.input-group-prepend:not(:first-child)>.btn, .input-group>.input-group-prepend:not(:first-child)>.input-group-text {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.input-group-text {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: .375rem .75rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
 }

@@ -1801,6 +1801,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
+              "nullable": true,
               "example": 3
             },
             "x-position": 1
@@ -2017,7 +2018,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -7396,8 +7398,13 @@
         "properties": {
           "base64Data": {
             "type": "string",
-            "minLength": 1
+            "description": "URL encoded base64 data",
+            "minLength": 1,
+            "example": "77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
           }
+        },
+        "example": {
+            "base64Data": "data:text/plain;base64,77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
         }
       },
       "AuditActionResultOfProcedure": {
@@ -8211,6 +8218,9 @@
         "type": "object",
         "description": " ",
         "additionalProperties": true,
+        "required": [
+          "monitorType"
+        ],
         "properties": {
           "inputType": {
             "type": "string",
@@ -8220,7 +8230,7 @@
           "monitorType": {
             "type": "string",
             "description": "Gets or Sets MonitorType",
-            "nullable": true
+            "minLength": 1
           },
           "procedureStepId": {
             "type": "integer",
@@ -8847,16 +8857,6 @@
             "type": "string",
             "description": "Gets or Sets Comments",
             "nullable": true
-          },
-          "referenceProcedures": {
-            "type": "array",
-            "description": "Gets or Sets ReferenceProcedures",
-            "nullable": true,
-            "items": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            }
           },
           "referenceDocuments": {
             "type": "array",

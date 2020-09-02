@@ -44,8 +44,10 @@ export class LocationCreateComponent implements OnInit {
     this.globals.showLoader(true);
     this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
-      this.parentLocationOptions = response.object.filter(s => s.id !== this.locationToEdit.id).map(m => ({ label: m.name, value: m.id }))
-        .sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0);
+      if (this.locationToEdit !== undefined) {
+        this.parentLocationOptions = response.object.filter(s => s.id !== this.locationToEdit.id).map(m => ({ label: m.name, value: m.id }))
+          .sort((a, b) => a.label < b.label ? -1 : a.label > b.label ? 1 : 0);
+      }
 
       this.timezoneService.timezone(env.apiVersion).subscribe(responseHandler((timezoneResponse) => {
 
@@ -62,14 +64,13 @@ export class LocationCreateComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.locationToEditId = params['id'] == null ? 0 : Number(params['id']);
 
+
       if (this.locationToEditId !== 0) {
 
         this.globals.showLoader(true);
         this.locationService.locationGet(null, this.locationToEditId, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
 
           this.locationToEdit = locationGetResponse.object[0];
-
-          this.getAvailableParentLocations();
 
           if (this.locationToEdit.parentId !== this.locationToEdit.id) {
 
@@ -89,6 +90,8 @@ export class LocationCreateComponent implements OnInit {
         this.locationToEdit = new LocationModel();
 
       }
+
+      this.getAvailableParentLocations();
 
     });
 

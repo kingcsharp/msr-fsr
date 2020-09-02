@@ -116,7 +116,7 @@
     "jquery.animate-number": "0.0.14",
     "metrojs": "0.9.77",
     "napa": "2.3.0",
-    "nswag": "^13.5.0",
+    "nswag": "13.6.0",
     "primeicons": "^2.0.0",
     "primeng": "^9.0.6",
     "rxjs-compat": "^6.5.2",

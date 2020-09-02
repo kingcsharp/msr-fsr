@@ -60,7 +60,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newproc.ToCreateProcedureStepTemplateCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>();
+            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>("New procedure template successfully submitted");
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = newproc.ToUpdateProcedureStepTemplateCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>();
+            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>("Procedure template successfully updated");
         }
     }
 }

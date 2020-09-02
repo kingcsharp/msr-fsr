@@ -52,7 +52,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureStepTemplate();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>();
+            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>("Procedure template successfully created");
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureStepTemplate() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<bool>();
+            return ret.ToOkObjectResponse<bool>("Procedure template deleted");
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToUpdateProcedureStepTemplate();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>();
+            return ret.ToOkObjectResponse<ProcedureStepTemplateModel>("Procedure template successfully updated");
         }
     }
 }
