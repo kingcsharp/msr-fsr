@@ -46,7 +46,7 @@ pipeline {
                         script {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
-                                    sh "sudo chmod 777 /var/run/docker.sock"
+                                    //sh "sudo chmod 777 /var/run/docker.sock"
                                     sh "docker build --build-arg ENV=dev -t msr-ui ."
                                     sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
@@ -89,7 +89,7 @@ pipeline {
                         script {
                             try {
                                 dir('reverseproxy') {
-                                    sh "sudo chmod 777 /var/run/docker.sock"
+                                    //sh "sudo chmod 777 /var/run/docker.sock"
                                     sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
                                     sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
 
@@ -103,7 +103,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo chmod 777 /var/run/docker.sock"
+                                //sh "sudo chmod 777 /var/run/docker.sock"
                                 //sh "git mv Msr.Infrastructure MSR.Infrastructure"
                                 sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
                                 sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
