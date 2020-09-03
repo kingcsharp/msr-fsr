@@ -147,7 +147,7 @@ export class ProductDefinitionComponent implements OnInit {
       default:
         break;
     }
-  } 
+  }
 
   getQuoteData(id: number) {
     this.getQuoteDataFlag = false;

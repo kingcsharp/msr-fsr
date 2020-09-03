@@ -4,13 +4,12 @@ import { DraggableItemService } from 'ngx-bootstrap/sortable';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService,
-ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, CreateProcedureStepMonitorRequest,
-FileRequest, UpdateProcedureStepRequest, RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest, Role } from '../../../services/api.client.generated';
+ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, CreateProcedureStepMonitorRequest, UpdateProcedureStepRequest,
+RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest, Role } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { LookUpItems } from '../../../utils/lookup-items';
 import { Globals } from '../../../models/lib/globals';
-import { ProcedureModel } from '../../../services/mockclasses';
 
 @Component({
   selector: 'app-procedure-edit',
@@ -22,7 +21,7 @@ import { ProcedureModel } from '../../../services/mockclasses';
 export class ProcedureEditComponent implements OnInit {
 
   privileges = EnumPrivilege;
-  procedure: Procedure = new ProcedureModel();
+  procedure: Procedure = new Procedure();
   procedureSteps: Array<any>;
   availableProcedureTypes: Array<SelectItem>;
   menuItems = EnumMenuItem;

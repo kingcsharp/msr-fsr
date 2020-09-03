@@ -32,7 +32,6 @@ export class QuoteCreateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
     this.initCreateQuoteRequestData();
     this.getCustomers();
   }

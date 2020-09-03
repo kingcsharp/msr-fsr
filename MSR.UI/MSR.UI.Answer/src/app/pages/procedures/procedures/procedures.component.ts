@@ -36,14 +36,18 @@ export class ProceduresComponent implements OnInit {
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
+      new ColumnsSaved({ id: 'id', label: 'Id', visible: true}),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
-      new ColumnsSaved({ id: 'creatorCompany', label: 'Creator Company', visible: true }),
-      new ColumnsSaved({ id: 'createdByDepartmentName', label: 'Created By Department', visible: true }),
-      new ColumnsSaved({ id: 'procedureType.name', label: 'Type', visible: true }),
-      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
-      new ColumnsSaved({ id: 'referenceFiles', label: 'Reference Files', visible: true }),
-      new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
+      new ColumnsSaved({ id: 'procedureType.name', label: 'Procedure Type', visible: true}),
+      new ColumnsSaved({ id: 'duration', label: 'Duration', visible: false}),
+      new ColumnsSaved({ id: 'durationType', label: 'Duration Type', visible: false}),
+      new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true}),
+      new ColumnsSaved({ id: 'referenceFiles', label: 'Reference Files', visible: true}),
+      new ColumnsSaved({ id: 'created.fullName', label: 'Created By', visible: false}),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
+      new ColumnsSaved({ id: 'lastUpdated.fullName', label: 'Last Updated By', visible: true}),
+      new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Last Updated On', visible: true}),
+      new ColumnsSaved({ id: 'Actions', label: 'Actions', visible: true})
       ];
 
     this.canAdd = this.hasPrivilege(this.privileges.CanCreate);
