@@ -407,7 +407,8 @@ namespace MSR.Infrastructure.Resources.Services
                     break;
                 case EnumApprovalTables.UserApproval:
                     var userApprovals = await _unitOfWork.UserApprovals.Query()
-                        .Include(x => x.Workflow).Include(x => x.Status).Include(x => x.WorkflowGroup).ToListAsync();
+                        .Include(x => x.Workflow).Include(x => x.Status).Include(x => x.WorkflowGroup)
+                        .Where(x => x.Status.Id == (int)ApprovalStatusEnum.Pending).ToListAsync();
                     var result = userApprovals.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
                     foreach (var approvalComment in approvalComments)
                     {
@@ -421,7 +422,8 @@ namespace MSR.Infrastructure.Resources.Services
                     break;
             }
 
-            var approvalEntityList = await approvalEntity.Include(x => x.Workflow).Include(x => x.Status).Include(x => x.WorkflowGroup).ToListAsync();
+            var approvalEntityList = await approvalEntity.Include(x => x.Workflow).Include(x => x.Status)
+                .Where(x => x.Status.Id == (int)ApprovalStatusEnum.Pending).Include(x => x.WorkflowGroup).ToListAsync();
             var pendingApprovalModelResult = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
 
             foreach (var approvalComment in approvalComments)
@@ -517,7 +519,7 @@ namespace MSR.Infrastructure.Resources.Services
 
                 var purchaseOrderProductApprovals = await _unitOfWork.PurchaseOrderProductApprovals.Query().Where(i => i.PurchaseOrderApprovalId == purchaseOrderApproval.Id).ToListAsync();
 
-                foreach(var purchaseOrderProduct in purchaseOrderProductApprovals)
+                foreach (var purchaseOrderProduct in purchaseOrderProductApprovals)
                 {
                     var map = new PurchaseOrderProduct()
                     {
@@ -526,7 +528,7 @@ namespace MSR.Infrastructure.Resources.Services
                     };
 
                     await _unitOfWork.PurchaseOrderProducts.AddAsync(map);
-                    _unitOfWork.PurchaseOrderProductApprovals.Delete(false,purchaseOrderProduct);
+                    _unitOfWork.PurchaseOrderProductApprovals.Delete(false, purchaseOrderProduct);
                 }
             }
             else
