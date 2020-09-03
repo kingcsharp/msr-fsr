@@ -112,7 +112,7 @@ export class LocationCreateComponent implements OnInit {
     updateLocationRequest.phone = this.locationToEdit.phone;
     updateLocationRequest.postalCode = this.locationToEdit.postalCode;
     updateLocationRequest.state = this.locationToEdit.state;
-    updateLocationRequest.timeZoneId = updateLocationRequest.timeZoneId === undefined ? null : this.selectedTimezone;
+    updateLocationRequest.timeZoneId = this.selectedTimezone === undefined || this.selectedTimezone === null ? null : this.selectedTimezone;
     this.globals.showLoader(true);
     this.locationService.locationPatch(env.apiVersion, updateLocationRequest).subscribe(responseHandler((response) => {
 
@@ -180,7 +180,7 @@ export class LocationCreateComponent implements OnInit {
     createLocationRequest.phone = this.locationToEdit.phone;
     createLocationRequest.postalCode = this.locationToEdit.postalCode;
     createLocationRequest.state = this.locationToEdit.state;
-    createLocationRequest.timeZoneId = this.selectedTimezone;
+    createLocationRequest.timeZoneId = this.selectedTimezone === undefined || this.selectedTimezone === null ? null : this.selectedTimezone;
     this.globals.showLoader(true);
     this.locationService.locationPost(env.apiVersion, createLocationRequest).subscribe(responseHandler((response) => {
 
