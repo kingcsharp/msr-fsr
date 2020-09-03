@@ -159,8 +159,9 @@
                                     <label for="title{{i}}" class="col-form-label text-left col-3">
                                         Title
                                     </label>
-                                    <input type="text" name="title{{i}}" [(ngModel)]="procedureStep.value.title" (keyup)="updateProcedurePredecessorAndOrder($event)"
-                                        data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                    <input type="text" name="title{{i}}" [(ngModel)]="procedureStep.value.title"
+                                        (keyup)="updateProcedurePredecessorAndOrder($event)" data-validate="parsley"
+                                        data-parsley-trigger="change" data-parsley-minlength="3"
                                         data-parsley-required="true" class="form-control input-transparent col-9"
                                         tooltip="Title of Procedure Step" data-cy="title-input">
                                 </div>
@@ -363,8 +364,9 @@
 
                 <bs-sortable *ngIf="procedureSteps !== undefined && procedureSteps?.length > 0"
                     [(ngModel)]="procedureSteps" [itemTemplate]="itemTemplate" itemClass="sortable-item"
-                    itemActiveClass="sortable-item-active" placeholderItem="Drag here" (onChange)="updateProcedurePredecessorAndOrder($event)"
-                    placeholderClass="placeholderStyle" wrapperClass="sortable-wrapper"></bs-sortable>
+                    itemActiveClass="sortable-item-active" placeholderItem="Drag here"
+                    (onChange)="updateProcedurePredecessorAndOrder($event)" placeholderClass="placeholderStyle"
+                    wrapperClass="sortable-wrapper"></bs-sortable>
 
             </div>
         </div>
@@ -414,7 +416,7 @@
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.type === 'Select'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.monitorType === 'Select'">
                 <label for="listsource" class="col-form-label text-left col-3">
                     List Source
                 </label>
@@ -425,7 +427,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToEdit.monitorType === 'Number' || monitorToEdit.monitorType === 'Pass or Fail'">
+                *ngIf="monitorToEdit.monitorType === 'Number' && monitorToEdit.monitorType !== 'Pass or Fail'">
                 <label for="shouldbe" class="col-form-label text-left col-3">
                     Should Be
                 </label>
@@ -435,32 +437,36 @@
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'">
                 <label for="lowvalue" class="col-form-label text-left col-3">
                     Low Value
                 </label>
                 <div class="col-9 px-0">
                     <input type="number" name="lowvalue" [(ngModel)]="monitorToEdit.lowTarget" data-validate="parsley"
-                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                    class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'">
                 <label for="highValue" class="col-form-label text-left col-3">
                     High Value
                 </label>
                 <div class="col-9 px-0">
                     <input type="number" name="highValue" [(ngModel)]="monitorToEdit.highTarget" data-validate="parsley"
-                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                    class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToEdit.type !== 'Select' && monitorToEdit.type !== 'Pass or Fail'">
+                *ngIf="monitorToEdit.type !== 'Select'">
                 <label for="targetvalue" class="col-form-label text-left col-3">
                     Target Value
                 </label>
-                <input type="text" name="targetvalue" [(ngModel)]="monitorToEdit.targetValue" data-validate="parsley"
+                <p-dropdown *ngIf="monitorToEdit.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="monitorToEdit.targetValue">
+                </p-dropdown>
+                <p-dropdown *ngIf="monitorToEdit.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="monitorToEdit.targetValue">
+                </p-dropdown>
+                <input type="number" name="targetvalue" [(ngModel)]="monitorToEdit.targetValue" data-validate="parsley" *ngIf="monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'"
                     data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                     class="form-control input-transparent" tooltip="Target Value" data-cy="targetvalue-input">
             </div>
@@ -518,8 +524,8 @@
                     Monitor Type
                 </label>
                 <div class="col-9 px-0">
-                    <p-dropdown name="monitortype" [options]="monitorTypeOptions" *ngIf="monitorToAdd.monitorType !== undefined"
-                        [(ngModel)]="monitorToAdd.type">
+                    <p-dropdown name="monitortype" [options]="monitorTypeOptions"
+                        *ngIf="monitorToAdd.monitorType !== undefined" [(ngModel)]="monitorToAdd.monitorType">
                     </p-dropdown>
                 </div>
             </div>
@@ -533,7 +539,7 @@
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.type === 'Select'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.monitorType === 'Select'">
                 <label for="listsource" class="col-form-label text-left col-3">
                     List Source
                 </label>
@@ -544,7 +550,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToAdd.type === 'Number' || monitorToAdd.type === 'Pass or Fail'">
+                *ngIf="monitorToAdd.monitorType === 'Number' && monitorToAdd.monitorType !== 'Pass or Fail'">
                 <label for="shouldbe" class="col-form-label text-left col-3">
                     Should Be
                 </label>
@@ -554,32 +560,36 @@
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN' && monitorToAdd.monitorType !== 'Pass or Fail'">
                 <label for="lowvalue" class="col-form-label text-left col-3">
                     Low Value
                 </label>
                 <div class="col-9 px-0">
                     <input type="number" name="lowvalue" [(ngModel)]="monitorToAdd.lowTarget" data-validate="parsley"
-                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                    class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN' && monitorToAdd.monitorType !== 'Pass or Fail'">
                 <label for="highValue" class="col-form-label text-left col-3">
                     High Value
                 </label>
                 <div class="col-9 px-0">
                     <input type="number" name="highValue" [(ngModel)]="monitorToAdd.highTarget" data-validate="parsley"
-                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                    class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToAdd.type !== 'Select' && monitorToAdd.type !== 'Pass or Fail'">
+                *ngIf="monitorToAdd.monitorType !== 'Select'">
                 <label for="targetvalue" class="col-form-label text-left col-3">
                     Target Value
                 </label>
-                <input type="text" name="targetvalue" [(ngModel)]="monitorToAdd.targetValue" data-validate="parsley"
+                <p-dropdown *ngIf="monitorToAdd.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="monitorToAdd.targetValue">
+                </p-dropdown>
+                <p-dropdown *ngIf="monitorToAdd.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="monitorToAdd.targetValue">
+                </p-dropdown>
+                <input *ngIf="monitorToAdd.monitorType !== 'Pass or Fail' && monitorToAdd.monitorType !== 'Yes or No'" type="number" name="targetvalue" [(ngModel)]="monitorToAdd.targetValue" data-validate="parsley"
                     data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                     class="form-control input-transparent col-9" tooltip="Target Value" data-cy="targetvalue-input">
             </div>
