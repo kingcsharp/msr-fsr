@@ -6,7 +6,6 @@ import { RoleService, ProcedureStepTemplateService  , ProcedureStepTemplateModel
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
-import { ProcedureStepTemplate } from '../../../services/mockclasses';
 
 @Component({
   selector: 'app-template',
@@ -18,7 +17,7 @@ import { ProcedureStepTemplate } from '../../../services/mockclasses';
 export class TemplateComponent implements OnInit {
 
   menuItems = EnumMenuItem;
-  procedureTemplate: ProcedureStepTemplate = new ProcedureStepTemplate();
+  procedureTemplate: ProcedureStepTemplateModel = new ProcedureStepTemplateModel();
   baseStartOnCounterOptions: Array<SelectItem>;
   procedureStepTypeOptions: Array<SelectItem>;
   availableRoles: Array<Role>;
