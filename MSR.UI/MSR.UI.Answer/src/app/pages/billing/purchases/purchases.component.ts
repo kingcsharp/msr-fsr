@@ -43,13 +43,13 @@ export class PurchasesComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridVersion = '1.0.0';
-    this.gridStorageId = 'quotesGrid' + this.elem.nativeElement.tagName.toLowerCase();
+    this.gridStorageId = 'purchaseGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
-      new ColumnsSaved({ id: 'purchaseNumber', label: 'Purchase Number', visible: true }),
-      new ColumnsSaved({ id: 'custRefNumber', label: 'Cust Ref Number', visible: true }),
-      new ColumnsSaved({ id: 'orderDescription', label: 'Order Description', visible: true }),
-      new ColumnsSaved({ id: 'purchaseStatus', label: 'Purchase Status', visible: true }),
-      new ColumnsSaved({ id: 'createdDate', label: 'Created Date', visible: true })
+      new ColumnsSaved({ id: 'id', label: 'Purchase Number', visible: true }),
+      new ColumnsSaved({ id: 'mttn', label: 'Cust Ref Number', visible: true }),
+      new ColumnsSaved({ id: 'purchaseOrderProduct.name', label: 'Order Description', visible: true }),
+      new ColumnsSaved({ id: 'statusId', label: 'Purchase Status', visible: true }),
+      new ColumnsSaved({ id: 'createdOn', label: 'Created Date', visible: true })
     ];
     this.purchasePrivileges = this.globals.getEnumPrivileges(this.menuItems.Purchases);
     this.purchaseOrderPrivileges = this.globals.getEnumPrivileges(this.menuItems.PurchaseOrders);
@@ -62,17 +62,15 @@ export class PurchasesComponent implements OnInit {
     this.purchaseService.purchaseGet(null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
         this.data = response.object;
 
         this.purchaseOrderStatus = this.data.filter(
           (thing, i, arr) => arr.findIndex(t => t.statusId === thing.statusId) === i
-        ).map(x => ({ label: x.status.name, value: x.status.id }));
+        ).map(x => ({ label: x.status.name, value: x.statusId }));
       }));
   }
 
   onClickViewPurchase(purchase: PurchaseModel) {
-    // TODO: view purchase detail
     this.currentPurchase = purchase;
     this.display = true;
   }

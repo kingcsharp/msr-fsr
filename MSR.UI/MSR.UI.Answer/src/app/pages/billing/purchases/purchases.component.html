@@ -23,7 +23,7 @@
       <div class="text-right">
         <button
           *ngIf="purchaseOrderPrivileges.canCreate"
-          [routerLink]="['../../../pricing/purchaseorder-create']"
+          [routerLink]="['../../../pricing/purchaseorder']"
           class="btn btn-success width-100 mb-xs sm-mrg"
           role="button"
           data-cy="add-button"
@@ -50,25 +50,25 @@
       </tr>
       <tr>
         <th
-          [hidden]="!cg.isVisibleCol('purchaseNumber',gridSettings)"
+          [hidden]="!cg.isVisibleCol('id',gridSettings)"
         >
           <div class="position-relative">
             <input
               pInputText
               type="text"
               tooltip="Search by Purchase Number"
-              (input)="dt.filter($event.target.value, 'purchaseNumber', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['purchaseNumber']?.value"
+              (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['id']?.value"
             >
             <i
-              *ngIf="dt.filters['purchaseNumber']?.value"
+              *ngIf="dt.filters['id']?.value"
               class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'purchaseNumber')"
+              (click)="cg.filter(dt,'id')"
             ></i>
           </div>
         </th>
         <th
-          [hidden]="!cg.isVisibleCol('custRefNumber',gridSettings)"
+          [hidden]="!cg.isVisibleCol('mttn',gridSettings)"
         >
           <div class="position-relative">
             <input
@@ -76,18 +76,18 @@
               type="text"
               tooltip="Search by Customer Reference Number"
               data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'custRefNumber', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['custRefNumber']?.value"
+              (input)="dt.filter($event.target.value, 'mttn', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['mttn']?.value"
             >
             <i
-              *ngIf="dt.filters['custRefNumber']?.value"
+              *ngIf="dt.filters['mttn']?.value"
               class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'custRefNumber')"
+              (click)="cg.filter(dt,'mttn')"
             ></i>
           </div>
         </th>
         <th
-          [hidden]="!cg.isVisibleCol('orderDescription',gridSettings)"
+          [hidden]="!cg.isVisibleCol('purchaseOrderProduct.name',gridSettings)"
         >
           <div class="position-relative">
             <input
@@ -95,23 +95,23 @@
               type="text"
               tooltip="Search by Order Description"
               data-cy="searchbypartnr-grid"
-              (input)="dt.filter($event.target.value, 'orderDescription', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['orderDescription']?.value"
+              (input)="dt.filter($event.target.value, 'purchaseOrderProduct.name', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['purchaseOrderProduct.name']?.value"
             >
             <i
-              *ngIf="dt.filters['orderDescription']?.value"
+              *ngIf="dt.filters['purchaseOrderProduct.name']?.value"
               class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'orderDescription')"
+              (click)="cg.filter(dt,'purchaseOrderProduct.name')"
             ></i>
           </div>
         </th>
         <th
-          [hidden]="!cg.isVisibleCol('purchaseStatus', gridSettings)"
+          [hidden]="!cg.isVisibleCol('statusId', gridSettings)"
         >
           <multiselect-wrapper
             [gridStorageId]="gridStorageId"
             [options]="purchaseOrderStatus"
-            [filterId]="'purchaseStatus'"
+            [filterId]="'statusId'"
             [defaultText]="'Select Status'"
             [defaultTextTooltip]="'Search by Purchase Status'"
             [datatable]="dt"
@@ -119,7 +119,7 @@
           </multiselect-wrapper>
         </th>
         <th
-          [hidden]="!cg.isVisibleCol('createdDate',gridSettings)"
+          [hidden]="!cg.isVisibleCol('createdOn',gridSettings)"
         >
           <div
             class="position-relative"
@@ -127,7 +127,7 @@
           >
             <pcalendar-wrapper
               [gridStorageId]="gridStorageId"
-              [filterId]="'createdDate'"
+              [filterId]="'createdOn'"
               [datatable]="dt"
             >
             </pcalendar-wrapper>
@@ -139,30 +139,30 @@
     <ng-template pTemplate="body" let-purcahsemodel>
       <tr class="ui-selectable-row">
         <td
-          [hidden]="!cg.isVisibleCol('purchaseNumber', gridSettings)"
+          [hidden]="!cg.isVisibleCol('id', gridSettings)"
         >
           {{purcahsemodel.id}}
         </td>
         <td
           class="text-capitalize"
-          [hidden]="!cg.isVisibleCol('custRefNumber',gridSettings)"
+          [hidden]="!cg.isVisibleCol('mttn',gridSettings)"
         >
           {{purcahsemodel.mttn}}
         </td>
         <td
-          [hidden]="!cg.isVisibleCol('orderDescription',gridSettings)"
+          [hidden]="!cg.isVisibleCol('purchaseOrderProduct.name',gridSettings)"
         >
           {{purcahsemodel.purchaseOrderProduct ? purcahsemodel.purchaseOrderProduct.name : ''}}
         </td>
         <td
-          [hidden]="!cg.isVisibleCol('purchaseStatus',gridSettings)"
+          [hidden]="!cg.isVisibleCol('statusId',gridSettings)"
         >
           {{purcahsemodel.status.name}}
         </td>
         <td
-          [hidden]="!cg.isVisibleCol('createdDate',gridSettings)"
+          [hidden]="!cg.isVisibleCol('createdOn',gridSettings)"
         >
-          {{purcahsemodel.dueDate | userTimezone }}
+          {{purcahsemodel.createdOn | userTimezone }}
         </td>
         <td>
           <i
@@ -194,7 +194,7 @@
   data-cy="purchase-detail-modal"
 >
   <div *ngIf="currentPurchase" class="container">
-    <div class="row mx-0">
+    <div class="row mx-0 mt-4">
       <div class="col-md-8 col-12">
         <div class="form-group row">
           <label
