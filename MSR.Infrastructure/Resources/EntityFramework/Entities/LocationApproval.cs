@@ -41,6 +41,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public bool IsActive { get; set; }
 
-        public int? TimeZoneId { get; set; }
+        public virtual int? TimeZoneId { get; set; }
+        [ForeignKey("TimeZoneId")]
+        public virtual TimeZone TimeZone { get; set; }
     }
 }

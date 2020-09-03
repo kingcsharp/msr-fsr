@@ -178,7 +178,7 @@
           {{purcahseordermodel.status}}
         </td>
         <td>
-          <i *ngIf="purchasePrivileges.canCreate" class="fa fa-dollar pointer" tooltip="Purchase" data-cy="purchaseRow"
+          <i *ngIf="purchasePrivileges.canCreate && purcahseordermodel.status !== 'Closed'" class="fa fa-dollar pointer" tooltip="Purchase" data-cy="purchaseRow"
           [routerLink]="['../../billing/purchaseorder/purchase-create/',purcahseordermodel.id]">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"

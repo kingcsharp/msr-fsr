@@ -53,6 +53,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<Sensor> Sensors { get; set; }
 
         public virtual int? TimeZoneId { get; set; }
+        [ForeignKey("TimeZoneId")]
         public virtual TimeZone TimeZone { get; set; }
     }
 }
