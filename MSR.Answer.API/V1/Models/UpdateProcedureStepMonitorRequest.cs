@@ -29,6 +29,7 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets InputType string
         /// </summary>
+        /// <example>manual</example>
         [DataMember(Name="inputType")]
         public string InputType { get; set; }
 
@@ -45,6 +46,7 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets MonitorType string
         /// </summary>
+        /// <example>equipment</example>
         [DataMember(Name="monitorType")]
         public string MonitorType { get; set; }
 

@@ -8361,7 +8361,8 @@
           "inputType": {
             "type": "string",
             "description": "Gets or Sets InputType string",
-            "nullable": true
+            "nullable": true,
+            "example": "manual"
           },
           "sensorName": {
             "type": "string",
@@ -8371,7 +8372,8 @@
           "monitorType": {
             "type": "string",
             "description": "Gets or Sets MonitorType string",
-            "nullable": true
+            "nullable": true,
+            "example": "equipment"
           },
           "shouldBe": {
             "type": "string",
