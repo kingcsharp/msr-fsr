@@ -9883,7 +9883,7 @@ export class MonitorModel implements IMonitorModel {
     passing?: boolean | undefined;
     taskCompleted?: Date | undefined;
     serialNumber?: string | undefined;
-    workerName?: UserModel[] | undefined;
+    workerName?: UserModel | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
 
@@ -9906,11 +9906,7 @@ export class MonitorModel implements IMonitorModel {
             this.passing = _data["passing"];
             this.taskCompleted = _data["taskCompleted"] ? new Date(_data["taskCompleted"].toString()) : <any>undefined;
             this.serialNumber = _data["serialNumber"];
-            if (Array.isArray(_data["workerName"])) {
-                this.workerName = [] as any;
-                for (let item of _data["workerName"])
-                    this.workerName!.push(UserModel.fromJS(item));
-            }
+            this.workerName = _data["workerName"] ? UserModel.fromJS(_data["workerName"]) : <any>undefined;
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
         }
@@ -9933,11 +9929,7 @@ export class MonitorModel implements IMonitorModel {
         data["passing"] = this.passing;
         data["taskCompleted"] = this.taskCompleted ? this.taskCompleted.toISOString() : <any>undefined;
         data["serialNumber"] = this.serialNumber;
-        if (Array.isArray(this.workerName)) {
-            data["workerName"] = [];
-            for (let item of this.workerName)
-                data["workerName"].push(item.toJSON());
-        }
+        data["workerName"] = this.workerName ? this.workerName.toJSON() : <any>undefined;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         return data; 
@@ -9953,7 +9945,7 @@ export interface IMonitorModel {
     passing?: boolean | undefined;
     taskCompleted?: Date | undefined;
     serialNumber?: string | undefined;
-    workerName?: UserModel[] | undefined;
+    workerName?: UserModel | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
 }
@@ -11888,6 +11880,7 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
     laborTime?: number | undefined;
     referenceProcedures?: number[] | undefined;
     referenceDocuments?: FileModel[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
     equipmentTime?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -11921,6 +11914,11 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
                 this.referenceDocuments = [] as any;
                 for (let item of _data["referenceDocuments"])
                     this.referenceDocuments!.push(FileModel.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
@@ -11960,6 +11958,11 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
             for (let item of this.referenceDocuments)
                 data["referenceDocuments"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
@@ -11983,6 +11986,7 @@ export interface IProcedureStepTemplateModel {
     laborTime?: number | undefined;
     referenceProcedures?: number[] | undefined;
     referenceDocuments?: FileModel[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
     equipmentTime?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -12041,6 +12045,8 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
+    /** ReferenceFiles */
+    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -12079,6 +12085,11 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
                 for (let item of _data["referenceDocuments"])
                     this.referenceDocuments!.push(item);
             }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(item);
+            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
@@ -12115,6 +12126,11 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
             for (let item of this.referenceDocuments)
                 data["referenceDocuments"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item);
+        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
@@ -12143,6 +12159,8 @@ export interface ICreateProcedureStepTemplateRequest {
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
+    /** ReferenceFiles */
+    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -12173,6 +12191,8 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
+    /** ReferenceFiles */
+    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -12212,6 +12232,11 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
                 for (let item of _data["referenceDocuments"])
                     this.referenceDocuments!.push(item);
             }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(item);
+            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
@@ -12249,6 +12274,11 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
             for (let item of this.referenceDocuments)
                 data["referenceDocuments"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item);
+        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
@@ -12279,6 +12309,8 @@ export interface IUpdateProcedureStepTemplateRequest {
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
+    /** ReferenceFiles */
+    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14223,24 +14255,24 @@ export interface IAuditActionResultOfIEnumerableOfPurchaseOrderView extends IAud
 }
 
 export class PurchaseOrderView extends CreatableModel implements IPurchaseOrderView {
-    id?: number;
     customerId?: number;
     customerName?: string | undefined;
     referenceName?: string | undefined;
     name?: string | undefined;
     customerReferencePO?: string | undefined;
     customerReferenceNo?: string | undefined;
-    invoicedBalance?: number | undefined;
-    uninvoicedBalance?: number | undefined;
-    balance?: number | undefined;
+    invoicedBalance?: number;
+    uninvoicedBalance?: number;
+    balance?: number;
     openDate?: Date;
     closeDate?: Date | undefined;
-    totalPurchaseLimit?: number | undefined;
+    totalPurchaseLimit?: number;
     customerReference?: string | undefined;
     products?: PurchaseOrderProductView[] | undefined;
     isDeletable?: boolean;
     status?: string | undefined;
     revision?: number | undefined;
+    unusedAmount?: number;
 
     constructor(data?: IPurchaseOrderView) {
         super(data);
@@ -14249,7 +14281,6 @@ export class PurchaseOrderView extends CreatableModel implements IPurchaseOrderV
     init(_data?: any) {
         super.init(_data);
         if (_data) {
-            this.id = _data["id"];
             this.customerId = _data["customerId"];
             this.customerName = _data["customerName"];
             this.referenceName = _data["referenceName"];
@@ -14271,6 +14302,7 @@ export class PurchaseOrderView extends CreatableModel implements IPurchaseOrderV
             this.isDeletable = _data["isDeletable"];
             this.status = _data["status"];
             this.revision = _data["revision"];
+            this.unusedAmount = _data["unusedAmount"];
         }
     }
 
@@ -14283,7 +14315,6 @@ export class PurchaseOrderView extends CreatableModel implements IPurchaseOrderV
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["customerId"] = this.customerId;
         data["customerName"] = this.customerName;
         data["referenceName"] = this.referenceName;
@@ -14305,30 +14336,31 @@ export class PurchaseOrderView extends CreatableModel implements IPurchaseOrderV
         data["isDeletable"] = this.isDeletable;
         data["status"] = this.status;
         data["revision"] = this.revision;
+        data["unusedAmount"] = this.unusedAmount;
         super.toJSON(data);
         return data; 
     }
 }
 
 export interface IPurchaseOrderView extends ICreatableModel {
-    id?: number;
     customerId?: number;
     customerName?: string | undefined;
     referenceName?: string | undefined;
     name?: string | undefined;
     customerReferencePO?: string | undefined;
     customerReferenceNo?: string | undefined;
-    invoicedBalance?: number | undefined;
-    uninvoicedBalance?: number | undefined;
-    balance?: number | undefined;
+    invoicedBalance?: number;
+    uninvoicedBalance?: number;
+    balance?: number;
     openDate?: Date;
     closeDate?: Date | undefined;
-    totalPurchaseLimit?: number | undefined;
+    totalPurchaseLimit?: number;
     customerReference?: string | undefined;
     products?: PurchaseOrderProductView[] | undefined;
     isDeletable?: boolean;
     status?: string | undefined;
     revision?: number | undefined;
+    unusedAmount?: number;
 }
 
 /** Base class for an API call with a typed result */
