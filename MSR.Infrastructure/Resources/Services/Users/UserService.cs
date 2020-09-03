@@ -60,7 +60,11 @@ namespace MSR.Infrastructure.Resources.Services.Users
             //supervisor location
             efUser.Supervisor = _unitOfWork.Users.Query().FirstOrDefault(x => x.Id == command.SupervisorId);
             efUser.Location = _unitOfWork.Locations.Query().FirstOrDefault(x => x.Id == command.LocationId);
-            efUser.TimeZoneId = command.TimeZoneId;
+            if (command.TimeZoneId != 0)
+            {
+                efUser.TimeZoneId = command.TimeZoneId;
+            }
+
 
             if (command.LocationId.HasValue && command.IsAnswerUser.HasValue && !command.IsAnswerUser.Value)
             {
@@ -142,6 +146,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
 
             command.Roles = null;
+            var timezone = efUser.TimeZoneId;
 
             foreach (var property in typeof(UpdateUser).GetProperties().Where(i => i.Name != nameof(command.Id)))
             {
@@ -153,6 +158,15 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
 
             efUser.Roles = rolesToAdd;
+
+            if (command.TimeZoneId != 0)
+            {
+                efUser.TimeZoneId = command.TimeZoneId;
+            }
+            else
+            {
+                efUser.TimeZoneId = timezone;
+            }
 
             _unitOfWork.Users.Update(efUser);
             await _unitOfWork.SaveChangesAsync();
