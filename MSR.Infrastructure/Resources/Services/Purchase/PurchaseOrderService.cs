@@ -38,7 +38,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             }
 
             // TODO: I think this should be a automap
-            var purchaseOrderList = await purchaseOrders.Select(po => new PurchaseOrderView
+            var purchaseOrderList = await purchaseOrders.Include(i => i.Status).Select(po => new PurchaseOrderView
             {
                 Id = po.Id,
                 Name = po.Name,
@@ -49,7 +49,8 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 OpenDate = po.OpenDate,
                 CloseDate = po.CloseDate,
                 Revision = po.Revision,
-                TotalPurchaseLimit = po.TotalPurchaseLimit.GetValueOrDefault(0)
+                TotalPurchaseLimit = po.TotalPurchaseLimit.GetValueOrDefault(0),
+                Status = po.Status.Name
             }).ToListAsync();
 
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id).ToList();
