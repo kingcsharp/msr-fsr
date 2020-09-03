@@ -266,6 +266,8 @@ export class ProcedureEditComponent implements OnInit {
     this.monitorToEdit.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
     this.monitorToEdit.id = monitor.id;
     this.monitorToEdit.sendEmailNotification = monitor.sendEmailNotification;
+    this.monitorToEdit.highTarget = monitor.highTarget;
+    this.monitorToEdit.lowTarget = monitor.lowTarget;
     this.showEditMonitorDialog = !this.showEditMonitorDialog;
   }
 
@@ -284,6 +286,8 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepMonitorRequest.description = this.monitorToEdit.description;
     updateProcedureStepMonitorRequest.sendEmailNotification = this.monitorToEdit.sendEmailNotification;
     updateProcedureStepMonitorRequest.id = this.monitorToEdit.id;
+    updateProcedureStepMonitorRequest.lowTarget = this.monitorToEdit.lowTarget;
+    updateProcedureStepMonitorRequest.highTarget = this.monitorToEdit.highTarget;
     this.globals.showLoader(true);
     this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion, updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
@@ -314,6 +318,8 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepMonitorRequest.description = this.monitorToAdd.description;
     createProcedureStepMonitorRequest.sendEmailNotification = this.monitorToAdd.sendEmailNotification;
     createProcedureStepMonitorRequest.procedureStepId = this.procedureStepToAddMonitorTo.id;
+    createProcedureStepMonitorRequest.lowTarget = this.monitorToAdd.lowTarget;
+    createProcedureStepMonitorRequest.highTarget = this.monitorToAdd.highTarget;
     this.globals.showLoader(true);
     this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 

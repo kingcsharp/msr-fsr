@@ -425,7 +425,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToEdit.type === 'Number' || monitorToEdit.type === 'Pass or Fail'">
+                *ngIf="monitorToEdit.monitorType === 'Number' || monitorToEdit.monitorType === 'Pass or Fail'">
                 <label for="shouldbe" class="col-form-label text-left col-3">
                     Should Be
                 </label>
@@ -433,6 +433,26 @@
                     <p-dropdown placeholder="Select Should Be" name="shouldbe" [options]="shouldBeOptions"
                         showClear="true" [(ngModel)]="monitorToEdit.shouldBe">
                     </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN'">
+                <label for="lowvalue" class="col-form-label text-left col-3">
+                    Low Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="lowvalue" [(ngModel)]="monitorToEdit.lowTarget" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN'">
+                <label for="highValue" class="col-form-label text-left col-3">
+                    High Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="highValue" [(ngModel)]="monitorToEdit.highTarget" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
@@ -532,6 +552,26 @@
                     <p-dropdown placeholder="Select Should Be" name="shouldbe" [options]="shouldBeOptions"
                         showClear="true" [(ngModel)]="monitorToAdd.shouldBe">
                     </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN'">
+                <label for="lowvalue" class="col-form-label text-left col-3">
+                    Low Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="lowvalue" [(ngModel)]="monitorToAdd.lowTarget" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN'">
+                <label for="highValue" class="col-form-label text-left col-3">
+                    High Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="highValue" [(ngModel)]="monitorToAdd.highTarget" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
