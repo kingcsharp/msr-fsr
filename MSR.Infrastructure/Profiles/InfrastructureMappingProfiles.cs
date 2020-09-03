@@ -71,12 +71,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
 
             #region Location
-            CreateMap<Location, LocationModel>().ReverseMap();
+            CreateMap<Location, LocationModel>().ReverseMap()
+                .ForMember(dest => dest.TimeZone, opts => opts.Ignore());
             CreateMap<GetLocations, Location>();
             CreateMap<LocationModel, Location>().ReverseMap();
             CreateMap<LocationModel, LocationApproval>();
             CreateMap<LocationApproval, LocationModel>()
-                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name));
+                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name))
+                .ForMember(dest => dest.TimeZone, opts => opts.Ignore());
             CreateMap<CreateLocation, LocationApproval>();
             CreateMap<CreateLocation, Location>();
             CreateMap<LocationApproval, Location>().ReverseMap()
@@ -94,7 +96,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<LocationImportItem, UpdateLocation>();
             #endregion
 
-            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZoneModel>().ReverseMap();
+            CreateMap<TimeZone, Domain.Models.TimeZoneModel>().ReverseMap();
            
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();

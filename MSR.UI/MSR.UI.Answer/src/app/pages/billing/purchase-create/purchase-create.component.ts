@@ -85,7 +85,7 @@ export class PurchaseCreateComponent implements OnInit {
             qty: 0,
             groupWO: false,
             serializeIndividually: false
-          })
+          });
         });
         this.getPurchaseOrderFlag = true;
         this.getCustomerData(this.purchaseOrderData.customerId);
@@ -103,7 +103,7 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   getCustomerLabel(customer: Customer): string {
-    return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`
+    return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`;
   }
 
   getLocationsData() {
@@ -128,7 +128,7 @@ export class PurchaseCreateComponent implements OnInit {
       let valid = true;
 
       this.purchaseProducts.map(product => {
-        if (product.qty < 1) valid = false;
+        if (product.qty < 1) { valid = false; }
         if (product.groupWO) {
           this.purchaseItems.push({
             id: product.id,
@@ -143,7 +143,7 @@ export class PurchaseCreateComponent implements OnInit {
             serializeIndividually: product.serializeIndividually
           });
         } else {
-          for (let i=0; i<product.qty; i++) {
+          for (let i = 0; i < product.qty; i++) {
             this.purchaseItems.push({
               id: product.id,
               productName: product.name,
@@ -159,7 +159,7 @@ export class PurchaseCreateComponent implements OnInit {
           }
         }
       });
-      if (valid) this.step = 1;
+      if (valid) { this.step = 1; }
     } else if (this.step === 1) {
       this.purchaseSerializeItems = [];
       this.purchaseItems.map(item => {
@@ -176,7 +176,7 @@ export class PurchaseCreateComponent implements OnInit {
             procedure: null
           });
         } else {
-          for (let i=0; i<item.qty; i++) {
+          for (let i = 0; i < item.qty; i++) {
             this.purchaseSerializeItems.push({
               id: item.id,
               dueDate: item.dueDate,
@@ -187,7 +187,7 @@ export class PurchaseCreateComponent implements OnInit {
               locationId: null,
               part: null,
               procedure: null
-            })
+            });
           }
         }
       });

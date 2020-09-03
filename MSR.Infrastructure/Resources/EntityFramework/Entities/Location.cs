@@ -51,5 +51,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<Location> Children { get; set; }
 
         public virtual ICollection<Sensor> Sensors { get; set; }
+
+        public virtual int? TimeZoneId { get; set; }
+        public virtual TimeZone TimeZone { get; set; }
     }
 }

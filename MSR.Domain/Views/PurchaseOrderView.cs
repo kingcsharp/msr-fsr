@@ -6,8 +6,6 @@ namespace MSR.Domain.Views
 {
     public class PurchaseOrderView : CreatableModel
     {
-        public int Id { get; set; }
-
         public int CustomerId { get; set; }
 
         public string CustomerName { get; set; }
@@ -19,17 +17,17 @@ namespace MSR.Domain.Views
 
         public string CustomerReferenceNo { get; set; }
 
-        public int? InvoicedBalance { get; set; }
+        public int InvoicedBalance { get; set; }
 
-        public int? UninvoicedBalance { get; set; }
+        public int UninvoicedBalance { get; set; }
 
-        public int? Balance { get; set; } 
+        public int Balance { get; set; } 
 
         public DateTime OpenDate { get; set; }
 
         public DateTime? CloseDate { get; set; }
 
-        public decimal? TotalPurchaseLimit { get; set; }
+        public decimal TotalPurchaseLimit { get; set; }
 
         public string CustomerReference { get; set; }
 
@@ -37,5 +35,6 @@ namespace MSR.Domain.Views
         public bool IsDeletable { get; set; }
         public string Status { get; set; }
         public int? Revision { get; set; }
+        public double UnusedAmount { get; set; }
     }
 }

@@ -15,7 +15,7 @@ import { EnumApprovalTables, MonitorService, MonitorModel } from '../../../servi
 })
 export class MonitorsComponent implements OnInit {
 
-  data: any[];
+  data: MonitorModel[];
   privileges = EnumPrivilege;
   approvalTables = EnumApprovalTables;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
@@ -35,7 +35,7 @@ export class MonitorsComponent implements OnInit {
       new ColumnsSaved({ id: 'passing', label: 'Passing', visible: true }),
       new ColumnsSaved({ id: 'workerName.fullName', label: 'Worker Name', visible: true }),
       new ColumnsSaved({ id: 'taskCompleted', label: 'Task Completed', visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true })
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial', visible: true })
     ];
 
     this.getMonitors();
@@ -46,7 +46,7 @@ export class MonitorsComponent implements OnInit {
     this.globals.showLoader(true);
 
     this.monitorsService.monitor(null, env.apiVersion).subscribe(responseHandler((response) => {
-      this.data = Array.isArray(response.object) ? response.object: [];
+      this.data = response.object;
       this.loading = false;
     }, () => {
 

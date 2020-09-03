@@ -78,7 +78,7 @@ export class ProductDefinitionComponent implements OnInit {
       this.mode = params.get('mode');
       this.globals.showLoader(true);
 
-      switch(this.mode) {
+      switch (this.mode) {
         case this.productPageModes.Create:
           this.initPageCreateMode();
           break;
@@ -116,7 +116,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   isLoading() {
-    switch(this.mode) {
+    switch (this.mode) {
       case this.productPageModes.Create:
         this.globals.showLoader(!(
           this.getQuoteDataFlag &&
@@ -204,7 +204,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getCustomerLabel(customer: Customer): string {
-    return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`
+    return `[MSR-FSR] ${customer.name} - [ID: ${customer.id}]`;
   }
 
   getParts(isRefresh: boolean = false) {
@@ -280,7 +280,7 @@ export class ProductDefinitionComponent implements OnInit {
         printOrder: index + 1,
         stepText: $event.value.stepText,
         title: $event.value.title
-      })
+      });
 
       const stepValues = this.calculateStepValues(step);
       this.procedureStepsData[index] = {...step, ...stepValues};
@@ -332,7 +332,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   onSelectProcedure($event) {
-    this.getProcedureSteps($event.target.value)
+    this.getProcedureSteps($event.target.value);
   }
 
   onAddProcedureStep() {
@@ -354,7 +354,7 @@ export class ProductDefinitionComponent implements OnInit {
       totalMachineMins: 0,
       totalLaborCharge: 0,
       totalEquipmentCharge: 0
-    }
+    };
     this.procedureStepsData.forEach(step => {
       values.totalLaborMins += step.laborTime ? step.laborTime : 0;
       values.totalMachineMins += step.equipmentTime ? step.equipmentTime : 0;
@@ -396,7 +396,7 @@ export class ProductDefinitionComponent implements OnInit {
       rm_per_min: rm_per_min,
       ex_per_min: ex_per_min,
       equipment_charge: equipment_charge
-    }
+    };
   }
 
   onToggle($event: boolean) {

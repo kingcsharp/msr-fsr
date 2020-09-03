@@ -41,5 +41,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public bool IsActive { get; set; }
 
+        public int? TimeZoneId { get; set; }
     }
 }
