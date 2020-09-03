@@ -54,6 +54,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     .Query()
                     .Where(x => x.Id == command.procedureStepMonitorId.Value)
                     .Include(x => x.MonitorType)
+                    .Include(x => x.InputType)
                     .ToListAsync();
                 if (procedures.Count == 0) {
                     throw new DomainException($"procedure ID {command.procedureStepMonitorId.Value} not found", DomainError.NotFound);
@@ -63,11 +64,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     .Query()
                     .Where(x => x.ProcedureStepId == command.procedureStepId.Value)
                     .Include(x => x.MonitorType)
+                    .Include(x => x.InputType)
                     .ToListAsync();
                 // note that the return here can be an empty list
             } else {
                 procedures = await _unitOfWork.ProcedureStepMonitors
                     .Query()
+                    .Include(x => x.MonitorType)
+                    .Include(x => x.InputType)
                     .ToListAsync();
             }
             var result = procedures.Select(x => _mapper.Map<Domain.Models.ProcedureStepMonitor>(x)).OrderBy(x => x.Description).ToList();

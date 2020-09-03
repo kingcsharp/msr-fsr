@@ -16,6 +16,7 @@ using Role = MSR.Infrastructure.Resources.EntityFramework.Entities.Role;
 using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 using System.Collections.Generic;
+using Castle.Core.Internal;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -361,9 +362,13 @@ namespace MSR.Infrastructure.Profiles
             List<int> ret;
 
             try {
-                ret = arg.Roles?.Split(',')
-                    .Select(x => Convert.ToInt32(x))
-                    .ToList();
+                if (arg.Roles.IsNullOrEmpty()) {
+                    ret = new List<int>();
+                } else {
+                    ret = arg.Roles.Split(',')
+                        .Select(x => Convert.ToInt32(x))
+                        .ToList();
+                }
             } catch(FormatException) {
                 // ignore bad data
                 ret = new List<int>();

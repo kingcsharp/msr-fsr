@@ -59,6 +59,11 @@ namespace MSR.Domain.Models
         public List<FileModel> ReferenceDocuments { get; set; }
 
         /// <summary>
+        /// Gets or Sets ReferenceFiles
+        /// </summary>
+        public List<FileModel> ReferenceFiles { get; set; }
+
+        /// <summary>
         /// EquipmentTime
         /// </summary>
         public double? EquipmentTime { get; set; }

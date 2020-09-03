@@ -84,12 +84,12 @@ namespace MSR.Answer.API.V1.Models
         /// HighTarget
         /// </summary>
         [DataMember(Name="highTarget")]
-        public double? HighTarget { get; set; }
+        public float? HighTarget { get; set; }
 
         /// <summary>
         /// LowTarget
         /// </summary>
         [DataMember(Name="lowTarget")]
-        public double? LowTarget { get; set; }
+        public float? LowTarget { get; set; }
     }
 }

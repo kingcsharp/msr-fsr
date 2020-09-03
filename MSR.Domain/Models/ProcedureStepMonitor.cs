@@ -69,11 +69,11 @@ namespace MSR.Domain.Models
         /// <summary>
         /// HighTarget
         /// </summary>
-        public double? HighTarget { get; set; }
+        public float? HighTarget { get; set; }
 
         /// <summary>
         /// LowTarget
         /// </summary>
-        public double? LowTarget { get; set; }
+        public float? LowTarget { get; set; }
     }
 }
