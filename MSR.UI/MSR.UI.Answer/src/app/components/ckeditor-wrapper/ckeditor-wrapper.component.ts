@@ -53,7 +53,7 @@ export class CkeditorWrapperComponent implements OnInit {
       },
       toolbar: {
         items: [
-          'insertTable','BlockQuote', 'Bold', 'CKFinder', 'FontBackgroundColor', 'FontColor', 'FontFamily', 'FontSize', 'Heading', 'Highlight', 'HorizontalLine',
+          'insertTable', 'BlockQuote', 'Bold', 'CKFinder', 'FontBackgroundColor', 'FontColor', 'FontFamily', 'FontSize', 'Heading', 'Highlight', 'HorizontalLine',
            'ImageUpload', 'Indent', 'Italic', 'Link', 'PageBreak', 'RemoveFormat', 'Strikethrough', 'Subscript', 'Superscript'
         ]
       },

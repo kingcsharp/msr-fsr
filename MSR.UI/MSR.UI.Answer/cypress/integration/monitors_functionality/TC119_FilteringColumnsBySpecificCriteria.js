@@ -77,7 +77,7 @@ describe('Procedure Types Functionality', () => {
             new ColumnsSaved({ id: 'passing', label: 'Passing', visible: true }),
             new ColumnsSaved({ id: 'workerName', label: 'Worker Name', visible: true }),
             new ColumnsSaved({ id: 'taskCompleted', label: 'Task Completed', visible: true }),
-            new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true })
+            new ColumnsSaved({ id: 'serialNumber', label: 'Serial', visible: true })
             ];
 
         cy.get('body').click('top')
