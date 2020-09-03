@@ -359,7 +359,7 @@ namespace MSR.Infrastructure.Profiles
             List<int> ret;
 
             try {
-                ret = arg.Roles.Split(',')
+                ret = arg.Roles?.Split(',')
                     .Select(x => Convert.ToInt32(x))
                     .ToList();
             } catch(FormatException) {

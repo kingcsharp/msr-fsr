@@ -36,13 +36,9 @@ export class ProcedureEditComponent implements OnInit {
   monitorToDelete: any;
   procedureStepToRemoveMonitorFrom: any;
   showEditMonitorDialog: boolean = false;
-  monitorToEdit: ProcedureStepMonitor;
-  monitorTypeOptions: Array<SelectItem>;
-  inputTypeOptions: Array<SelectItem>;
   faultHandlingOptions: Array<SelectItem>;
   shouldBeOptions: Array<SelectItem>;
   listSource: Array<SelectItem>;
-  monitorToAdd: any;
   procedureStepToAddMonitorTo: any;
   showAddMonitorDialog: boolean = false;
   showConfirmDeleteStepDialog: boolean = false;
@@ -50,6 +46,10 @@ export class ProcedureEditComponent implements OnInit {
   availableProcedureStepTemplates: Array<SelectItem>;
   selectedProcedureStepTemplate: number;
   lastSavedProcedureStepOrder: Array<number>;
+  monitorToAdd: ProcedureStepMonitor;
+  monitorToEdit: ProcedureStepMonitor;
+  monitorTypeOptions: Array<SelectItem>;
+  inputTypeOptions: Array<SelectItem>;
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
@@ -72,7 +72,6 @@ export class ProcedureEditComponent implements OnInit {
 
     this.inputTypeOptions = [
       { label: 'Manual', value: 'Manual' },
-      { label: 'QR Code', value: 'QR Code' },
       { label: 'Sensor', value: 'Sensor' }
     ];
 
@@ -265,6 +264,8 @@ export class ProcedureEditComponent implements OnInit {
     this.monitorToEdit.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType)?.value;
     this.monitorToEdit.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType)?.value;
     this.monitorToEdit.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
+    this.monitorToEdit.id = monitor.id;
+    this.monitorToEdit.sendEmailNotification = monitor.sendEmailNotification;
     this.showEditMonitorDialog = !this.showEditMonitorDialog;
   }
 
@@ -275,7 +276,7 @@ export class ProcedureEditComponent implements OnInit {
   updateMonitor() {
 
     let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest();
-    updateProcedureStepMonitorRequest.monitorType = this.monitorToAdd.type;
+    updateProcedureStepMonitorRequest.monitorType = this.monitorToEdit.monitorType;
     updateProcedureStepMonitorRequest.inputType = this.monitorToEdit.inputType;
     updateProcedureStepMonitorRequest.shouldBe = this.monitorToEdit.shouldBe;
     updateProcedureStepMonitorRequest.targetValue = this.monitorToEdit.targetValue;
@@ -295,7 +296,7 @@ export class ProcedureEditComponent implements OnInit {
     this.procedureStepToAddMonitorTo = procedureStep;
     this.monitorToAdd = new ProcedureStepMonitor();
     this.monitorToAdd.description = '';
-    this.monitorToAdd.type = this.monitorTypeOptions.find(s => s.label === 'Number').value;
+    this.monitorToAdd.monitorType = this.monitorTypeOptions.find(s => s.label === 'Number').value;
     this.showAddMonitorDialog = !this.showAddMonitorDialog;
   }
 
@@ -305,7 +306,7 @@ export class ProcedureEditComponent implements OnInit {
 
   addMonitorToStep() {
     let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest();
-    createProcedureStepMonitorRequest.monitorType = this.monitorToAdd.type;
+    createProcedureStepMonitorRequest.monitorType = this.monitorToAdd.monitorType;
     createProcedureStepMonitorRequest.inputType = this.monitorToAdd.inputType;
     createProcedureStepMonitorRequest.shouldBe = this.monitorToAdd.shouldBe;
     createProcedureStepMonitorRequest.targetValue = this.monitorToAdd.targetValue;
