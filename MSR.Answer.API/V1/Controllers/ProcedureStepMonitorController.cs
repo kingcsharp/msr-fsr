@@ -45,7 +45,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToCreateProcedureStepMonitorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepMonitor>();
+            return ret.ToOkObjectResponse<ProcedureStepMonitor>("ProcedureStepMonitor created successfully");
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureStepMonitor() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<bool>();
+            return ret.ToOkObjectResponse<bool>("ProcedureStepMonitor deleted successfully");
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = body.ToUpdateProcedureStepMonitorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepMonitor>();
+            return ret.ToOkObjectResponse<ProcedureStepMonitor>("ProcedureStepMonitor updated successfully");
         }
     }
 }

@@ -18,6 +18,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int EntityId { get; set; }
 
         public ProcedureStepTemplate ProcedureTemplate { get; set; }
+        public Procedure Procedure { get; set; }
         // Procedure
         // Part
         // Anything else files can be attached to

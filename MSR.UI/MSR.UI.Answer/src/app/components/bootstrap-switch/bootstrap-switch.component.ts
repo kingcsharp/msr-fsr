@@ -20,7 +20,6 @@ export class BootstrapSwitchComponent implements OnInit {
   }
 
   onClickToggle() {
-    console.log(this.isOn)
     this.onChange.emit(!this.isOn);
   }
 

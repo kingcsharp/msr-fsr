@@ -44,6 +44,11 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets ShouldBe
         /// </summary>
+        /// <description>
+        /// "Should be" is the relation between hi/low or target,
+        /// e.g. BETWEEN, EQUAL, and other strings
+        /// </description>
+        /// <example>BETWEEN</example>
         public string ShouldBe { get; set; }
 
         /// <summary>
@@ -69,11 +74,11 @@ namespace MSR.Domain.Models
         /// <summary>
         /// HighTarget
         /// </summary>
-        public double? HighTarget { get; set; }
+        public float? HighTarget { get; set; }
 
         /// <summary>
         /// LowTarget
         /// </summary>
-        public double? LowTarget { get; set; }
+        public float? LowTarget { get; set; }
     }
 }

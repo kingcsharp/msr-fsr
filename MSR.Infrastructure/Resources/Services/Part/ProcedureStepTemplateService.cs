@@ -53,12 +53,12 @@ namespace MSR.Infrastructure.Resources.Services.Role
             // map and attach the right files for this object, if any
             result = procedures.Select(x => {
                 var model = _mapper.Map<Domain.Models.ProcedureStepTemplateModel>(x);
-                model.ReferenceDocuments = new List<FileModel>();
+                model.ReferenceFiles = new List<FileModel>();
                 foreach (FileEntityMap map in x.ReferenceFiles) {
                     if (map.EntityTableName != nameof(EntityFramework.Entities.ProcedureStepTemplate)) {
                         continue;
                     }
-                    model.ReferenceDocuments.Add(
+                    model.ReferenceFiles.Add(
                         _mapper.Map<FileModel>(map.FileObject)
                     );
                 }

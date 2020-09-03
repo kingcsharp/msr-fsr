@@ -16,6 +16,7 @@ using Role = MSR.Infrastructure.Resources.EntityFramework.Entities.Role;
 using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 using System.Collections.Generic;
+using Castle.Core.Internal;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -70,12 +71,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
 
             #region Location
-            CreateMap<Location, LocationModel>().ReverseMap();
+            CreateMap<Location, LocationModel>().ReverseMap()
+                .ForMember(dest => dest.TimeZone, opts => opts.Ignore());
             CreateMap<GetLocations, Location>();
             CreateMap<LocationModel, Location>().ReverseMap();
             CreateMap<LocationModel, LocationApproval>();
             CreateMap<LocationApproval, LocationModel>()
-                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name));
+                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status.Name))
+                .ForMember(dest => dest.TimeZone, opts => opts.Ignore());
             CreateMap<CreateLocation, LocationApproval>();
             CreateMap<CreateLocation, Location>();
             CreateMap<LocationApproval, Location>().ReverseMap()
@@ -93,7 +96,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<LocationImportItem, UpdateLocation>();
             #endregion
 
-            CreateMap<Resources.EntityFramework.Entities.TimeZone, Domain.Models.TimeZoneModel>().ReverseMap();
+            CreateMap<TimeZone, Domain.Models.TimeZoneModel>().ReverseMap();
            
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
@@ -230,7 +233,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
                 .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputType.Name))
                 .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorType.Name))
-                .ForMember(dest => dest.ShouldBe, opt => opt.MapFrom(src =>src.ShouldBe))
                 .ForMember(dest => dest.TargetValue, opt => opt.MapFrom(src => src.Target.ToString()))
                 .ForMember(dest => dest.FaultHandling, opt => opt.MapFrom(src => src.FailAction))
                 .ForMember(dest => dest.SendEmailNotification, opt => opt.MapFrom(src => src.SendNCREmail));
@@ -359,9 +361,13 @@ namespace MSR.Infrastructure.Profiles
             List<int> ret;
 
             try {
-                ret = arg.Roles.Split(',')
-                    .Select(x => Convert.ToInt32(x))
-                    .ToList();
+                if (arg.Roles.IsNullOrEmpty()) {
+                    ret = new List<int>();
+                } else {
+                    ret = arg.Roles.Split(',')
+                        .Select(x => Convert.ToInt32(x))
+                        .ToList();
+                }
             } catch(FormatException) {
                 // ignore bad data
                 ret = new List<int>();

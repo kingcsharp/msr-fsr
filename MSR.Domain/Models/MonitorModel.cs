@@ -75,16 +75,16 @@ namespace MSR.Domain.Models
         /// Gets or Sets WorkerName
         /// </summary>
         [DataMember(Name="workerName")]
-        public List<UserModel> WorkerName { get; set; }
+        public UserModel WorkerName { get; set; }
 
         /// <summary>
         /// HighTarget
         /// </summary>
-        public double? HighTarget { get; set; }
+        public float? HighTarget { get; set; }
 
         /// <summary>
         /// LowTarget
         /// </summary>
-        public double? LowTarget { get; set; }
+        public float? LowTarget { get; set; }
     }
 }

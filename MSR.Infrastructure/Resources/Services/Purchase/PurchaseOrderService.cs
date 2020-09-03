@@ -38,7 +38,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             }
 
             // TODO: I think this should be a automap
-            var purchaseOrderList = await purchaseOrders.Select(po => new PurchaseOrderView
+            var purchaseOrderList = await purchaseOrders.Include(i => i.Status).Select(po => new PurchaseOrderView
             {
                 Id = po.Id,
                 Name = po.Name,
@@ -49,37 +49,45 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 OpenDate = po.OpenDate,
                 CloseDate = po.CloseDate,
                 Revision = po.Revision,
-                TotalPurchaseLimit = po.TotalPurchaseLimit
+                TotalPurchaseLimit = po.TotalPurchaseLimit.GetValueOrDefault(0),
+                Status = po.Status.Name
             }).ToListAsync();
 
-            var purchaseOrderIds = purchaseOrderList.Select(i => i.Id);
-            var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId);
+            var purchaseOrderIds = purchaseOrderList.Select(i => i.Id).ToList();
+            var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId).ToList();
 
-            var products = await _unitOfWork.PurchaseOrderProducts.Query()
-                .Include(i => i.Product)
-                .Where(i => i.Product != null && purchaseOrderIds.Contains(i.PurchaseOrderId))
-                .Select(x => new { PurchaseOrderId = x.PurchaseOrderId, ProductId = x.ProductId, ProductName = x.Product.Name, TotalSalePrice = x.Product.TotalSalePrice })
+            var products = await _unitOfWork.Products.Query().Where(x => _unitOfWork.PurchaseOrderProducts.Query()
+                    .Select(i => i.ProductId).Contains(x.Id))
+                .Select(i => _mapper.Map<PurchaseOrderProductView>(i))
                 .ToListAsync();
 
             var customers = await _unitOfWork.Customers.Query()
-                    .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
-                    .Select(i => new { i.Id, i.Name })
-                    .ToDictionaryAsync(i => i.Id, i => i.Name);
+                .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
+                .Select(i => new { i.Id, i.Name })
+                .ToDictionaryAsync(i => i.Id, i => i.Name);
 
-            var purchaseOrderIdsForDeletable = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
-                .Select(x => x.PurchaseOrderId).ToListAsync();
+            var purchases = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
+                .Select(x => new { x.PurchaseOrderId, x.Id }).ToListAsync();
+
+            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Where(i => i.PurchaseOrderId.HasValue && purchaseOrderIds.Contains(i.PurchaseOrderId.Value))
+                .Select(x => new { x.Invoice.Total, x.PurchaseOrderId }).ToListAsync();
+
+            var invoicedWorkOrders = await _unitOfWork.InvoiceItems.Query().Where(i => i.PurchaseOrderId.HasValue && purchaseOrderIds.Contains(i.PurchaseOrderId.Value)).Select(i => i.WorkOrderId).ToListAsync();
+
 
             foreach (var po in purchaseOrderList)
             {
                 customers.TryGetValue(po.CustomerId, out var name);
-                po.Products = products.Where(i => i.PurchaseOrderId == po.Id)
-                    .Select(i => new PurchaseOrderProductView() { Id = i.ProductId, Name = i.ProductName, TotalSalePrice = i.TotalSalePrice })
-                    .ToList();
+                po.Products = products.Where(i => i.Id == po.Id).ToList();
                 if (name != null)
                 {
                     po.CustomerName = name;
                 }
-                po.IsDeletable = purchaseOrderIdsForDeletable.All(i => i != po.Id);
+                po.IsDeletable = purchases.All(i => i.PurchaseOrderId != po.Id);
+                po.InvoicedBalance = 0;
+                po.Balance = 0;
+                po.UninvoicedBalance = 0;
+                po.UnusedAmount = 0;
             }
 
             return purchaseOrderList;

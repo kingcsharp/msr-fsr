@@ -2058,8 +2058,18 @@ grid-options>div .ui-widget.ui-widget-content{
 }
 
 p-dropdown {
+  width: 100%;
   .ui-dropdown-label {
     color: #f8f8f8;
     background-color: rgba(0, 0, 0, 0.24);
+  }
+}
+
+.product-form {
+  p-dropdown {
+    max-width: calc(100% - 66px);
+    .ui-dropdown-label-container {
+      width: 100%;
+    }
   }
 }

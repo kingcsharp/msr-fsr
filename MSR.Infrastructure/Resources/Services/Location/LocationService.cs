@@ -96,6 +96,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
                 retLocation = _mapper.Map<LocationModel>(location);
+                retLocation.TimeZone = location.TimeZoneId.HasValue ? _mapper.Map<TimeZoneModel>((await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == location.TimeZoneId.Value))) : null;
             }
             else
             {
@@ -109,6 +110,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 await _unitOfWork.SaveChangesAsync();
 
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
+                retLocation.TimeZone = locationApproval.TimeZoneId.HasValue ? _mapper.Map<TimeZoneModel>((await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == locationApproval.TimeZoneId.Value))) : null;
             }
 
             return retLocation;
@@ -134,6 +136,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
 
                 retLocation = _mapper.Map<LocationModel>(location);
+                retLocation.TimeZone = location.TimeZoneId.HasValue ? _mapper.Map<TimeZoneModel>((await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == location.TimeZoneId.Value))) : null;
             }
             else
             {
@@ -148,6 +151,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 await _unitOfWork.SaveChangesAsync();
                 
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
+                retLocation.TimeZone = locationApproval.TimeZoneId.HasValue ? _mapper.Map<TimeZoneModel>((await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == locationApproval.TimeZoneId.Value))) : null;
             }
 
             return retLocation;

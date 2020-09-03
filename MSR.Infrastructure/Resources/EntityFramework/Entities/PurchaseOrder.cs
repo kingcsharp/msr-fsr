@@ -37,5 +37,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         [ForeignKey("CustomerId")]
         public virtual Customer Customer { get; set; }
+
+        [ForeignKey("StatusId")]
+        public virtual Status Status { get; set; }
     }
 }

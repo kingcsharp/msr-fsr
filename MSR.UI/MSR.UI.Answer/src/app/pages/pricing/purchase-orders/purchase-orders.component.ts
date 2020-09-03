@@ -53,7 +53,7 @@ export class PurchaseOrdersComponent implements OnInit {
       label: 'Closed',
       value: 'Closed'
     }
-  ]
+  ];
 
   constructor(
     public globals: Globals,
@@ -107,7 +107,7 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   setCurrentCustomer(currentPO, purchaseOrder) {
-    currentPO.customer = this.customersData.find(x => x.id == purchaseOrder.customerId);
+    currentPO.customer = this.customersData.find(x => x.id === purchaseOrder.customerId);
   }
 
   onClickDelete(purchaseOrder: PurchaseOrderModel) {
@@ -141,7 +141,7 @@ export class PurchaseOrdersComponent implements OnInit {
     this.globals.showLoader(true);
     let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
     Object.assign(purchaseOrderRequest, purchaseOrder);
-    purchaseOrderRequest.products = purchaseOrder.products.map((elem) => { return elem.id });
+    purchaseOrderRequest.products = purchaseOrder.products.map((elem) => elem.id);
     purchaseOrderRequest.closeDate = new Date();
     // BACKEND ENDPOINT TBD
     this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
@@ -195,7 +195,7 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   setSelectedProductIds(to, from) {
-    to.products = from.selectedProducts.map((elem) => { return elem.id });
+    to.products = from.selectedProducts.map((elem) => elem.id);
   }
 
   onPurchaseSubmit() {
