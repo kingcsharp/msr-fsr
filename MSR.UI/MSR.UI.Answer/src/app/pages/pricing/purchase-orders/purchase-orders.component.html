@@ -188,7 +188,7 @@
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-close pointer" tooltip="Close" data-cy="closeRow" (click)="onClickClose(purcahseordermodel)">
           </i>
-          <i *ngIf="purchaseOrderPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete"
+          <i *ngIf="purchaseOrderPrivileges.canDelete && purcahseordermodel.isDeletable" class="far fa-trash-alt pointer" tooltip="Delete"
             data-cy="deleteRow" (click)="onClickDelete(purcahseordermodel)">
           </i>
         </td>
