@@ -22,7 +22,7 @@ declare let jQuery: any;
 export class QuoteCreateComponent implements OnInit {
   data: CreateQuoteRequest;
   customersData: any[] = [];
-  getCustomersFlag: boolean = false
+  getCustomersFlag: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -42,7 +42,7 @@ export class QuoteCreateComponent implements OnInit {
   }
 
   addQuoteItem() {
-    this.data.quoteItems.push(new CreateQuoteItemRequest())
+    this.data.quoteItems.push(new CreateQuoteItemRequest());
   }
 
   removeQuoteItem() {
@@ -56,7 +56,7 @@ export class QuoteCreateComponent implements OnInit {
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
       this.globals.showLoader(true);
-      this.data.quoteJson=JSON.stringify(this.data);
+      this.data.quoteJson = JSON.stringify(this.data);
       this.quoteService.quotePost(env.apiVersion, this.data)
         .pipe(take(1))
         .subscribe(responseHandler((resp) => {

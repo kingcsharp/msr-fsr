@@ -47,30 +47,31 @@ export class QuotesProductsView implements IQuotesProductsView {
 
   constructor(data?: IQuotesProductsView) {
       if (data) {
-          for (var property in data) {
-              if (data.hasOwnProperty(property))
+          for (let property in data) {
+              if (data.hasOwnProperty(property)) {
                   (<any>this)[property] = (<any>data)[property];
+              }
           }
       }
   }
 
   init(_data?: any) {
       if (_data) {
-          this.id = _data["id"];
-          this.isProduct = _data["isProduct"];
-          this.isDeletable = _data["isDeletable"];
-          this.submittedDate = _data["submittedDate"] ? new Date(_data["submittedDate"].toString()) : <any>undefined;
-          this.company = _data["company"];
-          this.submittedBy = _data["submittedBy"];
-          this.partKitNo = _data["partKitNo"];
-          this.procedureName = _data["procedureName"];
-          this.productName = _data["productName"];
-          this.revision = _data["revision"];
-          this.equipmentCost = _data["equipmentCost"];
-          this.materialCost = _data["materialCost"];
-          this.salesTax = _data["salesTax"];
-          this.totalPrice = _data["totalPrice"];
-          this.cycleTime = _data["cycleTime"];
+          this.id = _data['id'];
+          this.isProduct = _data['isProduct'];
+          this.isDeletable = _data['isDeletable'];
+          this.submittedDate = _data['submittedDate'] ? new Date(_data['submittedDate'].toString()) : <any>undefined;
+          this.company = _data['company'];
+          this.submittedBy = _data['submittedBy'];
+          this.partKitNo = _data['partKitNo'];
+          this.procedureName = _data['procedureName'];
+          this.productName = _data['productName'];
+          this.revision = _data['revision'];
+          this.equipmentCost = _data['equipmentCost'];
+          this.materialCost = _data['materialCost'];
+          this.salesTax = _data['salesTax'];
+          this.totalPrice = _data['totalPrice'];
+          this.cycleTime = _data['cycleTime'];
       }
   }
 
@@ -83,21 +84,21 @@ export class QuotesProductsView implements IQuotesProductsView {
 
   toJSON(data?: any) {
       data = typeof data === 'object' ? data : {};
-      data["id"] = this.id;
-      data["isProduct"] = this.isProduct;
-      data["isDeletable"] = this.isDeletable;
-      data["submittedDate"] = this.submittedDate ? this.submittedDate.toISOString() : <any>undefined;
-      data["company"] = this.company;
-      data["submittedBy"] = this.submittedBy;
-      data["partKitNo"] = this.partKitNo;
-      data["procedureName"] = this.procedureName;
-      data["productName"] = this.productName;
-      data["revision"] = this.revision;
-      data["equipmentCost"] = this.equipmentCost;
-      data["materialCost"] = this.materialCost;
-      data["salesTax"] = this.salesTax;
-      data["totalPrice"] = this.totalPrice;
-      data["cycleTime"] = this.cycleTime;
+      data['id'] = this.id;
+      data['isProduct'] = this.isProduct;
+      data['isDeletable'] = this.isDeletable;
+      data['submittedDate'] = this.submittedDate ? this.submittedDate.toISOString() : <any>undefined;
+      data['company'] = this.company;
+      data['submittedBy'] = this.submittedBy;
+      data['partKitNo'] = this.partKitNo;
+      data['procedureName'] = this.procedureName;
+      data['productName'] = this.productName;
+      data['revision'] = this.revision;
+      data['equipmentCost'] = this.equipmentCost;
+      data['materialCost'] = this.materialCost;
+      data['salesTax'] = this.salesTax;
+      data['totalPrice'] = this.totalPrice;
+      data['cycleTime'] = this.cycleTime;
       return data;
   }
 }
@@ -112,7 +113,7 @@ export const quotesproductsData = [
     partKitNo: null,
     procedureName: null,
     productName: 'Test_Part_Alpha',
-    representative:'Derek',
+    representative: 'Derek',
     revision: 0,
     equipmentCost: null,
     materialCost: null,
@@ -131,7 +132,7 @@ export const quotesproductsData = [
     partKitNo: '633014638',
     procedureName: 'REX SS KIT Cleaning',
     productName: '633014638 - REX Cu Small kit, 1272',
-    representative:'Derek',
+    representative: 'Derek',
     revision: 1,
     equipmentCost: 415.25,
     materialCost: 500.12,
@@ -139,4 +140,4 @@ export const quotesproductsData = [
     cycleTime: 2,
     lastUpdatedOn: new Date(),
   }),
-]
+];
