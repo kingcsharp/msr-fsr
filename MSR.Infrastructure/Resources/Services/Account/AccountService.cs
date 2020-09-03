@@ -206,7 +206,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtData.Secret);
             var userPrivileges = JsonConvert.SerializeObject(GetTokenUserRoles(efUser));
-            var approvalPrivileges = JsonConvert.SerializeObject(await GetTokenUserActivityRoles(efUser.Id));
+            
+            var approvalPrivileges = JsonConvert.SerializeObject(await GetTokenUserActivityRoles(efUser));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -228,9 +229,9 @@ namespace MSR.Infrastructure.Resources.Services.Account
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        private async Task<Dictionary<int, int[]>> GetTokenUserActivityRoles(int userId)
+        private async Task<Dictionary<int, int[]>> GetTokenUserActivityRoles(User user)
         {
-            var allMyActivitiesPrivileges = await _workflowService.GetAllMyActivitiesPrivileges(userId);
+            var allMyActivitiesPrivileges = await _workflowService.GetAllMyActivitiesPrivileges(user.Id, user.Roles.Select(x => x.RoleId).ToList());
             var canApproveMenuItemRoles = await _unitOfWork.MenuRoles.Query()
                 .Select(x => new { x.MenuItemId, x.RoleId, x.MenuRolePermission }).Distinct().ToListAsync();
 

@@ -42,7 +42,6 @@ export class PendingApprovalsComponent implements OnInit {
   canEdit: boolean = false;
   display: boolean = false;
   currWorkflow: any;
-  statuses: any[];
   memberStages: any[];
   activityMaps: any[];
   allStages: any[] = [];
@@ -80,7 +79,6 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
       new ColumnsSaved({ id: 'workflowCreatedByName', label: 'Initiatior', visible: true }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
     ];
@@ -95,7 +93,6 @@ export class PendingApprovalsComponent implements OnInit {
       new ColumnsSaved({ id: 'workflowName', label: 'Workflow Name', visible: true }),
       new ColumnsSaved({ id: 'workflowGroupName', label: 'Workflow Group', visible: true }),
       new ColumnsSaved({ id: 'workflowCreatedByName', label: 'Initiatior', visible: true }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true }),
       new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true })
     ];
@@ -129,7 +126,6 @@ export class PendingApprovalsComponent implements OnInit {
         ctrl.emptyArr(dataArr);
         dataArr.push(...response.object);
         dataArr.map((elem) => {
-          ctrl.addToGridStatusDropdown(elem);
           ctrl.addToGridTableDropdown(elem);
           return elem;
         });
@@ -140,13 +136,6 @@ export class PendingApprovalsComponent implements OnInit {
     const ctrl = this;
     if (ctrl.tables.findIndex(z => z.value === elem.activityType) === -1) {
       ctrl.tables.push({ label: elem.activityType, value: elem.activityType });
-    }
-  }
-
-  addToGridStatusDropdown(elem: any) {
-    const ctrl = this;
-    if (ctrl.statuss.findIndex(z => z.value === elem.status) === -1) {
-      ctrl.statuss.push({ label: elem.status, value: elem.status });
     }
   }
 
@@ -173,23 +162,22 @@ export class PendingApprovalsComponent implements OnInit {
     this.globals.showLoader(true);
     const ctrl = this;
     if (this.currAction.action === this.approveAction) {
-
       let postPendingApprovalRequest = new PostPendingApprovalRequest();
       postPendingApprovalRequest.comments = this.currAction.comments;
       postPendingApprovalRequest.id = this.currAction.id;
-      postPendingApprovalRequest.table = this.currAction.activityType;
+      postPendingApprovalRequest.table = parseInt(EnumApprovalTables[this.currAction.activityType]);
 
       this.workflowPendingApprovalService.workflowPendingApprovalPost(env.apiVersion, postPendingApprovalRequest)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          this.currAction.approval.status = resp.object.status;
-          this.addToGridStatusDropdown(resp.object);
+          const index = this.data.findIndex(x => x.id === this.currAction.id);
+          this.data.splice(index, 1);
           ctrl.clseDialog();
         }));
     } else {
       this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
-          this.currAction.approval.status = resp.object.status;
-          this.addToGridStatusDropdown(resp.object);
+          const index = this.data.findIndex(x => x.id === this.currAction.id);
+          this.data.splice(index, 1);
           ctrl.clseDialog();
         }));
     }

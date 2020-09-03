@@ -23,8 +23,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
-        public async Task<ICollection<WorkflowLinkModel>> GetAllMyActivitiesPrivileges(int? answerUserId)
+        
+        public async Task<ICollection<WorkflowLinkModel>> GetAllMyActivitiesPrivileges(int? answerUserId, ICollection<int> userRoleIds)
         {
             var workflowMenuRoles = new List<WorkflowLinkModel>();
             if (answerUserId == null)
@@ -36,14 +36,14 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                  .Where(y => y.UserId == answerUserId.Value)
                  .Select(x => x.WorkflowGroupId).Distinct()
                  .ToListAsync();
-
+            
             var workflowGroups = await _unitOfWork.WorkflowGroups.Query()
                  .Select(x => new { x.Id, Roles = x.GroupRoles })
-                 .Where(x => workflowGroupIds.Contains(x.Id))
+                 .Where(x => workflowGroupIds.Contains(x.Id) || x.Roles.Count(t1=> userRoleIds.Contains(t1.RoleId))> 0)
                  .ToListAsync();
 
             var workflowStages = await _unitOfWork.WorkflowGroupStageMaps.Query()
-                .Where(x => workflowGroupIds.Contains(x.WorkflowGroupId))
+                .Where(x => workflowGroups.Select(x=>x.Id).ToList().Contains(x.WorkflowGroupId))
                 .Select(x => new { x.WorkflowGroupId, x.WorkflowStageId }).ToListAsync();
 
             var stagesIds = workflowStages.Select(m => m.WorkflowStageId).ToList();

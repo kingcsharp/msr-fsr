@@ -47,6 +47,9 @@ namespace MSR.Answer.API.Extentions
                         string userPrivileges = context.Principal.FindFirst(c => c.Type == "Privileges").Value;
                         var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
 
+                        //string userRolesStr = context.Principal.FindFirst(c => c.Type == "Roles").Value;
+                        //var roles = JsonConvert.DeserializeObject<int[]>(userRolesStr);
+
                         CurrentUser.GetId = () => accountId;
                         CurrentUser.CanApproveActivity = (EnumApprovalTables) =>
                         {
@@ -56,6 +59,7 @@ namespace MSR.Answer.API.Extentions
 
                             return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
                         };
+
                         CurrentUser.CanReadActivity = (EnumApprovalTables) =>
                         {
                             var activityToBeApproved = (int)EnumApprovalTables;
