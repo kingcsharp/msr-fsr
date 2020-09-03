@@ -123,7 +123,6 @@ export class ProductDefinitionComponent implements OnInit {
           this.getCustomersFlag &&
           this.getPartsFlag &&
           this.getProceduresFlag &&
-          this.getProcedureStepsFlag &&
           this.getProcedureStepTemplatesFlag
         ));
         break;
@@ -148,7 +147,7 @@ export class ProductDefinitionComponent implements OnInit {
       default:
         break;
     }
-  }
+  } 
 
   getQuoteData(id: number) {
     this.getQuoteDataFlag = false;

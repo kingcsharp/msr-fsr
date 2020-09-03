@@ -66,7 +66,6 @@ export class Globals {
                             const elem = this.user.roles[length].menus.filter(x => x.url.toLowerCase() === urlTocheck);
                             if (elem !== undefined && elem.length > 0) {
                                 this.activeMenu = elem[0];
-                                console.log(this.activeMenu);
                                 length = 0;
                             }
                         }
