@@ -7147,11 +7147,12 @@
             "nullable": true
           },
           "workerName": {
-            "type": "array",
             "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/UserModel"
-            }
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UserModel"
+              }
+            ]
           },
           "highTarget": {
             "type": "number",
