@@ -7156,12 +7156,12 @@
           },
           "highTarget": {
             "type": "number",
-            "format": "double",
+            "format": "float",
             "nullable": true
           },
           "lowTarget": {
             "type": "number",
-            "format": "double",
+            "format": "float",
             "nullable": true
           }
         }
@@ -8242,12 +8242,12 @@
           },
           "highTarget": {
             "type": "number",
-            "format": "double",
+            "format": "float",
             "nullable": true
           },
           "lowTarget": {
             "type": "number",
-            "format": "double",
+            "format": "float",
             "nullable": true
           }
         }
@@ -8308,13 +8308,13 @@
           "highTarget": {
             "type": "number",
             "description": "HighTarget",
-            "format": "double",
+            "format": "float",
             "nullable": true
           },
           "lowTarget": {
             "type": "number",
             "description": "LowTarget",
-            "format": "double",
+            "format": "float",
             "nullable": true
           }
         },
@@ -8403,13 +8403,13 @@
           "highTarget": {
             "type": "number",
             "description": "HighTarget",
-            "format": "double",
+            "format": "float",
             "nullable": true
           },
           "lowTarget": {
             "type": "number",
             "description": "LowTarget",
-            "format": "double",
+            "format": "float",
             "nullable": true
           }
         },

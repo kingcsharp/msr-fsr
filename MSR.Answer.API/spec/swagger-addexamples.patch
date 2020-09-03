@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-09-03 07:19:31.343971800 -0700
-+++ swagger-work.json	2020-09-03 07:19:31.449000600 -0700
+--- swagger-work.json.orig	2020-09-03 08:00:16.890793100 -0700
++++ swagger-work.json	2020-09-03 08:00:17.266883400 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -1169,7 +1169,7 @@
        },
        "AuditActionResultOfProcedureStepMonitor": {
 @@ -8159,6 +8317,14 @@
-             "format": "double",
+             "format": "float",
              "nullable": true
            }
 +        },
@@ -1184,7 +1184,7 @@
        },
        "AuditActionResultOfICollectionOfProcedureStepMonitor": {
 @@ -8246,6 +8412,11 @@
-             "format": "double",
+             "format": "float",
              "nullable": true
            }
 +        },
