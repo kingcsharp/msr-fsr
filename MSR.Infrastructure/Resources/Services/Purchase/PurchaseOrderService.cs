@@ -50,7 +50,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 CloseDate = po.CloseDate,
                 Revision = po.Revision,
                 TotalPurchaseLimit = po.TotalPurchaseLimit.GetValueOrDefault(0)
-            }).Take(20).ToListAsync();
+            }).ToListAsync();
 
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id).ToList();
             var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId).ToList();
@@ -72,10 +72,6 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 .Select(x => new { x.Invoice.Total, x.PurchaseOrderId }).ToListAsync();
 
             var invoicedWorkOrders = await _unitOfWork.InvoiceItems.Query().Where(i => i.PurchaseOrderId.HasValue && purchaseOrderIds.Contains(i.PurchaseOrderId.Value)).Select(i => i.WorkOrderId).ToListAsync();
-
-            //var workOrdersNotInvoiced = _unitOfWork.WorkOrders.Query().Where(i => purchases.Any(j => j.Id == i.PurchaseId) && !invoicedWorkOrders.Contains(i.Id))
-            //    .Select(i => i.;
-
 
 
             foreach (var po in purchaseOrderList)

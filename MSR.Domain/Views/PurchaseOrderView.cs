@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MSR.Domain.Views
 {
-    public class PurchaseOrderView
+    public class PurchaseOrderView : CreatableModel
     {
         public int CustomerId { get; set; }
 
