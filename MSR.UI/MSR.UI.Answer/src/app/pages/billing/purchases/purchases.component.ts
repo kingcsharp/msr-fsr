@@ -72,7 +72,7 @@ export class PurchasesComponent implements OnInit {
   }
 
   onClickViewPurchase(purchase: PurchaseModel) {
-    //TODO: view purchase detail
+    // TODO: view purchase detail
     this.currentPurchase = purchase;
     this.display = true;
   }

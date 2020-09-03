@@ -14,7 +14,7 @@
   </div>
 
   <widget class="py-4">
-    <form data-parsley-validate data-cy="quote-create-form" class="parsleyjs" data-parsley-priority-enabled="false"
+    <form data-parsley-validate data-cy="quote-create-form" class="parsleyjs product-form" data-parsley-priority-enabled="false"
       (ngSubmit)="onSubmit()" novalidate="novalidate">
       <div class="row mx-0 mb-lg">
         <div class="col-md-5">
@@ -79,7 +79,7 @@
                 [filter]="true" filterBy="label">
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
-                <button type="button" class="btn btn-primary" [routerLink]="['../../parts/parts']"
+                <button type="button" class="btn btn-primary" (click)="openUrlWithNewTab('app/parts/parts')"
                   data-cy="btn-add-newpart">
                   <i class="fa fa-plus-circle" tooltip="Create a new Customer Part in a New Tab"></i>
                 </button>
@@ -108,7 +108,7 @@
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
                 <!-- TODO: Add routing to procedure creation page -->
-                <button type="button" class="btn btn-primary" data-cy="btn-add-newprocedure">
+                <button type="button" class="btn btn-primary" data-cy="btn-add-newprocedure" (click)="openUrlWithNewTab('app/procedures/procedures')">
                   <i class="fa fa-plus-circle" tooltip="Create an new Procedure in a new Tab"></i>
                 </button>
                 <button type="button" class="btn btn-default active" (click)="getProcedures(true)"
