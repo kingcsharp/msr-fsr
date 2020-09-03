@@ -137,12 +137,18 @@ export class Globals {
         if (approvalEnum === undefined) {
             console.error('tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables', EnumApprovalTables);
         }
-
+        
+        if (Object.keys(this.user.approvalPrivileges).length === 0) {
+            return false;
+        }
         const ret = this.user.approvalPrivileges[approvalEnum].indexOf(privilege) > -1;
         return ret;
     }
 
     hasActivityPrivilege(activityEnumVal: EnumApprovalTables, privilege) {
+        if (Object.keys(this.user.approvalPrivileges).length === 0) {
+            return false;
+        }
         const privileges = this.user.approvalPrivileges[activityEnumVal];
         if (privileges === undefined) {
             return false;

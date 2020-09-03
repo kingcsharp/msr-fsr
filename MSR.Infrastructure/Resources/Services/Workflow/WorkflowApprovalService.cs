@@ -352,11 +352,16 @@ namespace MSR.Infrastructure.Resources.Services
         public async Task<ICollection<PendingApprovalModel>> GetPendingApprovalAsync(GetPendingApprovalModel command)
         {
             var ret = new List<PendingApprovalModel>();
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.ApprovalWorkflows, EnumPrivilege.CanRead))
+            {
+                return ret;
+            }
+
             if (command.Table == EnumApprovalTables.All)
             {
                 foreach (int enumVal in Enum.GetValues(typeof(EnumApprovalTables)))
                 {
-                    if (enumVal != (int)EnumApprovalTables.All && CurrentUser.CanReadActivity((EnumApprovalTables)enumVal))
+                    if (enumVal != (int)EnumApprovalTables.All)
                     {
                         ret.AddRange(await GetPendingApprovalByTable((EnumApprovalTables)enumVal));
                     }
