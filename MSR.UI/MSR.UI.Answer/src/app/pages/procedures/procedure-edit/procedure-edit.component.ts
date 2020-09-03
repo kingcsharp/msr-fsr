@@ -261,10 +261,10 @@ export class ProcedureEditComponent implements OnInit {
 
   openEditMonitorDialog(monitor: ProcedureStepMonitor) {
     this.monitorToEdit = monitor;
-    this.monitorToEdit.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling).value;
-    this.monitorToEdit.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType).value;
-    this.monitorToEdit.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType).value;
-    this.monitorToEdit.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe).value;
+    this.monitorToEdit.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling)?.value;
+    this.monitorToEdit.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType)?.value;
+    this.monitorToEdit.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType)?.value;
+    this.monitorToEdit.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
     this.showEditMonitorDialog = !this.showEditMonitorDialog;
   }
 
@@ -275,7 +275,7 @@ export class ProcedureEditComponent implements OnInit {
   updateMonitor() {
 
     let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest();
-    //updateProcedureStepMonitorRequest.monitorType = this.monitorToAdd.type;
+    updateProcedureStepMonitorRequest.monitorType = this.monitorToAdd.type;
     updateProcedureStepMonitorRequest.inputType = this.monitorToEdit.inputType;
     updateProcedureStepMonitorRequest.shouldBe = this.monitorToEdit.shouldBe;
     updateProcedureStepMonitorRequest.targetValue = this.monitorToEdit.targetValue;

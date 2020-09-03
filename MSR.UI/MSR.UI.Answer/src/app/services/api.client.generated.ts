@@ -9883,7 +9883,7 @@ export class MonitorModel implements IMonitorModel {
     passing?: boolean | undefined;
     taskCompleted?: Date | undefined;
     serialNumber?: string | undefined;
-    workerName?: UserModel | undefined;
+    workerName?: UserModel[] | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
 
@@ -9906,7 +9906,11 @@ export class MonitorModel implements IMonitorModel {
             this.passing = _data["passing"];
             this.taskCompleted = _data["taskCompleted"] ? new Date(_data["taskCompleted"].toString()) : <any>undefined;
             this.serialNumber = _data["serialNumber"];
-            this.workerName = _data["workerName"]
+            if (Array.isArray(_data["workerName"])) {
+                this.workerName = [] as any;
+                for (let item of _data["workerName"])
+                    this.workerName!.push(UserModel.fromJS(item));
+            }
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
         }
@@ -9949,7 +9953,7 @@ export interface IMonitorModel {
     passing?: boolean | undefined;
     taskCompleted?: Date | undefined;
     serialNumber?: string | undefined;
-    workerName?: UserModel | undefined;
+    workerName?: UserModel[] | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
 }

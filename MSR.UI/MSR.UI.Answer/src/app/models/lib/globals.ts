@@ -56,7 +56,7 @@ export class Globals {
         router.events
             .subscribe((event) => {
                 if (event instanceof NavigationEnd) {
-                    console.log(event);
+                    
                     if (this.user !== undefined) {
                         let splitUrl = event.url.split('/');
                         const urlTocheck = splitUrl[splitUrl.length - 1];

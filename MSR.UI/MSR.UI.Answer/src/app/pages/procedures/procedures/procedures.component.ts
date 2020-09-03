@@ -64,7 +64,7 @@ export class ProceduresComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    return this.globals.hasPrivilege(EnumMenuItem.Procedures, privName);
+    return this.globals.hasPrivilege(EnumMenuItem.RunnableProcedures, privName);
   }
 
   openConfirmDeleteDialog(procedure) {
