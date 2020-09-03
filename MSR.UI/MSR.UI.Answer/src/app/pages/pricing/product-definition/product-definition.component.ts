@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  PartService, PartModel, SubPartModel, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel,
+  PartService,
+  PartModel,
   ProcedureService, Procedure,
-  ProcedureStepTemplateService, ProcedureStepTemplateModel,
-  ProductService, ProductModel, CreateProductRequest, UpdateProductRequest,
+  ProcedureStepTemplateService,
+  ProductService, CreateProductRequest, UpdateProductRequest,
   CustomerService, Customer,
   QuoteService, QuoteModel,
   ProcedureStepModel
@@ -11,8 +12,6 @@ import {
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
 import { Globals } from '../../../models/lib/globals';
 import { ActivatedRoute } from '@angular/router';
 import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
@@ -115,40 +114,6 @@ export class ProductDefinitionComponent implements OnInit {
     this.getProcedureStepTemplates();
   }
 
-  isLoading() {
-    switch (this.mode) {
-      case this.productPageModes.Create:
-        this.globals.showLoader(!(
-          this.getQuoteDataFlag &&
-          this.getCustomersFlag &&
-          this.getPartsFlag &&
-          this.getProceduresFlag &&
-          this.getProcedureStepTemplatesFlag
-        ));
-        break;
-      case this.productPageModes.Edit:
-        this.globals.showLoader(!(
-          this.getProductDataFlag &&
-          this.getQuoteDataFlag &&
-          this.getCustomersFlag &&
-          this.getPartsFlag &&
-          this.getProceduresFlag &&
-          this.getProcedureStepsFlag &&
-          this.getProcedureStepTemplatesFlag
-        ));
-        break;
-      case this.productPageModes.View:
-        this.globals.showLoader(!(
-          this.getProductDataFlag &&
-          this.getQuoteDataFlag &&
-          this.getProcedureStepsFlag
-        ));
-        break;
-      default:
-        break;
-    }
-  }
-
   getQuoteData(id: number) {
     this.getQuoteDataFlag = false;
     const isCreateMode = this.mode === this.productPageModes.Create;
@@ -166,13 +131,11 @@ export class ProductDefinitionComponent implements OnInit {
           this.productData.revision = 0;
           this.productData.laborCost = 0;
           this.productData.equipmentCost = 0;
+          this.productData.totalLaborMins = 0;
+          this.productData.totalMachineMins = 0;
+
+          this.getProductDataFlag = true;
         }
-
-        this.productData.totalLaborMins = 0;
-        this.productData.totalMachineMins = 0;
-
-        this.getProductDataFlag = true;
-        this.isLoading();
       }));
   }
 
@@ -183,23 +146,20 @@ export class ProductDefinitionComponent implements OnInit {
       .subscribe(responseHandler(response => {
         this.productData = response.object[0];
         this.getProductDataFlag = true;
-        this.isLoading();
         this.getProcedureSteps(this.productData.procedureId);
         this.getQuoteData(this.productData.quoteId);
       }));
   }
 
   getCustomers() {
-    const ctrl = this;
-    if (ctrl.getCustomersFlag) {
-      return ctrl.customersData;
+    if (this.getCustomersFlag) {
+      return this.customersData;
     }
     this.customerService.customerGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
       response.object.map((x) => {
-        ctrl.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
+        this.customersData.push({ label: `[MSR-FSR] ${x.name} - [ID: ${x.id}]`, value: x.id });
       });
-      ctrl.getCustomersFlag = true;
-      ctrl.isLoading();
+      this.getCustomersFlag = true;
     }));
   }
 
@@ -208,27 +168,25 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getParts(isRefresh: boolean = false) {
-    const ctrl = this;
-
     if (isRefresh) {
-      ctrl.isRefreshingPartsData = true;
-      ctrl.partsData = [];
+      this.isRefreshingPartsData = true;
+      this.globals.showLoader(true);
+      this.partsData = [];
     }
 
-    if (ctrl.getPartsFlag && !isRefresh) {
-      return ctrl.partsData;
+    if (this.getPartsFlag && !isRefresh) {
+      return this.partsData;
     }
 
     this.partsService.partGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          ctrl.partsData.push({ label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`, value: x.id });
+          this.partsData.push({ label: `${x.name} [${x.partNumber}] [ID: ${x.id}]`, value: x.id });
         });
-        ctrl.getPartsFlag = true;
+        this.getPartsFlag = true;
         if (isRefresh) {
-          ctrl.isRefreshingPartsData = false;
+          this.isRefreshingPartsData = false;
         }
-        ctrl.isLoading();
       }));
   }
 
@@ -237,25 +195,23 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getProcedures(isRefresh: boolean = false) {
-    const ctrl = this;
-
     if (isRefresh) {
-      ctrl.isRefreshingProceduresData = true;
-      ctrl.proceduresData = [];
+      this.isRefreshingProceduresData = true;
+      this.globals.showLoader(true);
+      this.proceduresData = [];
     }
-    if (ctrl.getProceduresFlag && !isRefresh) {
-      return ctrl.proceduresData;
+    if (this.getProceduresFlag && !isRefresh) {
+      return this.proceduresData;
     }
     this.procedureService.procedureGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          ctrl.proceduresData.push({ label: `${x.name} [ID: ${x.id}]`, value: x.id });
+          this.proceduresData.push({ label: `${x.name} [ID: ${x.id}]`, value: x.id });
         });
-        ctrl.getProceduresFlag = true;
+        this.getProceduresFlag = true;
         if (isRefresh) {
-          ctrl.isRefreshingProceduresData = false;
+          this.isRefreshingProceduresData = false;
         }
-        this.isLoading();
       }));
   }
 
@@ -289,18 +245,16 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getProcedureStepTemplates() {
-    const ctrl = this;
-    if (ctrl.getProcedureStepTemplatesFlag) {
-      return ctrl.procedureStepTemplatesData;
+    if (this.getProcedureStepTemplatesFlag) {
+      return this.procedureStepTemplatesData;
     }
     this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          ctrl.procedureStepTemplatesData.push({ label: x.title, value: x });
+          this.procedureStepTemplatesData.push({ label: x.title, value: x });
         });
-        ctrl.getProcedureStepTemplatesFlag = true;
-        this.isLoading();
+        this.getProcedureStepTemplatesFlag = true;
       }));
   }
 
@@ -308,26 +262,22 @@ export class ProductDefinitionComponent implements OnInit {
   * Get ProcedureSteps by procedure Id
   */
   getProcedureSteps(id: number) {
-    const ctrl = this;
-    ctrl.globals.showLoader(true);
+    this.getProcedureStepsFlag = false;
+    this.globals.showLoader(true);
+    this.procedureStepsData = [];
 
-    ctrl.getProcedureStepsFlag = false;
-    ctrl.procedureStepsData = [];
     this.procedureService.stepGet(id, null, env.apiVersion).pipe(take(1))
     .subscribe(responseHandler(response => {
       response.object.forEach(step => {
-
         // Calculate each step values
-        const stepValues = ctrl.calculateStepValues(step);
-        ctrl.procedureStepsData.push({...step, ...stepValues});
-
+        const stepValues = this.calculateStepValues(step);
+        this.procedureStepsData.push({...step, ...stepValues});
       });
-      ctrl.getProcedureStepsFlag = true;
+      this.getProcedureStepsFlag = true;
 
       // Calcuate total step values
-      ctrl.getStepsValues();
-      ctrl.newStepsCounts = 0;
-      this.isLoading();
+      this.getStepsValues();
+      this.newStepsCounts = 0;
     }));
   }
 
@@ -411,6 +361,13 @@ export class ProductDefinitionComponent implements OnInit {
     this.showQuoteViewModal = false;
   }
 
+  openUrlWithNewTab(urlTree: string) {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([urlTree])
+    );
+
+    window.open(url, '_blank');
+  }
 
   onSubmit() {
     jQuery('.parsleyjs').parsley().validate();
