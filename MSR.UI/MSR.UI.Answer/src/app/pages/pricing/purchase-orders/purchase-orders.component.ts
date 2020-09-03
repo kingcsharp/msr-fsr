@@ -107,7 +107,7 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   setCurrentCustomer(currentPO, purchaseOrder) {
-    currentPO.customer = this.customersData.find(x => x.id == purchaseOrder.customerId);
+    currentPO.customer = this.customersData.find(x => x.id === purchaseOrder.customerId);
   }
 
   onClickDelete(purchaseOrder: PurchaseOrderModel) {

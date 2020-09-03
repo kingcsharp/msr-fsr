@@ -19,6 +19,11 @@ import { Router } from '@angular/router';
 
 declare let jQuery: any;
 
+const RM_ANNUAL_RATE = 10;
+const LABOR_RATE_PER_MIN = 2.92;
+const YEAR_HOURS = 2080;
+const HOURS_MINUTES = 60;
+
 @Component({
   selector: 'app-product-definition',
   templateUrl: './product-definition.component.html',
@@ -400,9 +405,4 @@ export class ProductDefinitionComponent implements OnInit {
     }
   }
 }
-
-const RM_ANNUAL_RATE = 10;
-const LABOR_RATE_PER_MIN = 2.92;
-const YEAR_HOURS = 2080;
-const HOURS_MINUTES = 60;
 
