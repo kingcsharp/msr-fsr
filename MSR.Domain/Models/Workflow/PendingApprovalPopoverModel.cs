@@ -16,11 +16,11 @@ namespace MSR.Domain.Models
             {
                 if (oldValue == null)
                 {
-                    oldValue = "";
+                    oldValue = "N/A";
                 }
                 if (newValue == null)
                 {
-                    newValue = "";
+                    newValue = "N/A";
                 }
                 this.Rows.Add($"{name}: {oldValue} To: {newValue}");
             }
@@ -37,7 +37,7 @@ namespace MSR.Domain.Models
 
             if (!oldValue.HasValue)
             {
-                oldVal = "";
+                oldVal = "N/A";
             }
             else
             {
@@ -46,7 +46,7 @@ namespace MSR.Domain.Models
             }
             if (!newValue.HasValue)
             {
-                newVal = "";
+                newVal = "N/A";
             }
             else
             {

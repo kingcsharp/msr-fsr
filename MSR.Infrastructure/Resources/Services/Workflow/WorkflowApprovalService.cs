@@ -201,29 +201,30 @@ namespace MSR.Infrastructure.Resources.Services
                     documentApprovalChanges.AddRow("Role", document.RoleId, documentApproval.RoleId);
                     return documentApprovalChanges;
                 case EnumApprovalTables.LocationApproval:
-                    var locationApproval = await _unitOfWork.LocationApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var location = await _unitOfWork.Locations.Query().FirstOrDefaultAsync(x => x.Id == locationApproval.LocationId);
+                    var locationApproval = await _unitOfWork.LocationApprovals.Query().Include(x=>x.TimeZone).FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var location = await _unitOfWork.Locations.Query().Include(x => x.TimeZone).FirstOrDefaultAsync(x => x.Id == locationApproval.LocationId);
                     var locationApprovalChanges = new PendingApprovalPopoverModel();
                     locationApprovalChanges.AddRow("Name", location?.Name, locationApproval.Name);
                     locationApprovalChanges.AddRow("Address1", location?.Address1, locationApproval.Address1);
                     locationApprovalChanges.AddRow("Address2", location?.Address2, locationApproval.Address2);
                     locationApprovalChanges.AddRow("City", location?.City, locationApproval.City);
                     locationApprovalChanges.AddRow("State", location?.State, locationApproval.State);
-                    locationApprovalChanges.AddRow("PostalCode", location?.PostalCode, locationApproval.PostalCode);
+                    locationApprovalChanges.AddRow("Postal Code", location?.PostalCode, locationApproval.PostalCode);
                     locationApprovalChanges.AddRow("Country", location?.Country, locationApproval.Country);
                     locationApprovalChanges.AddRow("Phone", location?.Phone, locationApproval.Phone);
-                    locationApprovalChanges.AddRow("InternalAddress", location?.InternalAddress, locationApproval.InternalAddress);
-                    locationApprovalChanges.AddRow("InvoiceClass", location?.InvoiceClass, locationApproval.InvoiceClass);
+                    locationApprovalChanges.AddRow("Internal Address", location?.InternalAddress, locationApproval.InternalAddress);
+                    locationApprovalChanges.AddRow("Invoice Class", location?.InvoiceClass, locationApproval.InvoiceClass);
+                    locationApprovalChanges.AddRow("Timezone", location?.TimeZone?.Description, locationApproval?.TimeZone?.Description);
                     return locationApprovalChanges;
                 case EnumApprovalTables.PartApproval:
                     var partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == partApproval.PartId);
                     var partApprovalChanges = new PendingApprovalPopoverModel();
                     partApprovalChanges.AddRow("Name", part.Name, partApproval.Name);
-                    partApprovalChanges.AddRow("PartNumber", part.PartNumber, partApproval.PartNumber);
-                    partApprovalChanges.AddRow("OEMPartNumber", part.OEMPartNumber, partApproval.OEMPartNumber);
+                    partApprovalChanges.AddRow("Part Number", part.PartNumber, partApproval.PartNumber);
+                    partApprovalChanges.AddRow("OEM Part Number", part.OEMPartNumber, partApproval.OEMPartNumber);
                     partApprovalChanges.AddRow("NickName", part.NickName, partApproval.NickName);
-                    partApprovalChanges.AddRow("MaximumCycles", part.MaximumCycles, partApproval.MaximumCycles);
+                    partApprovalChanges.AddRow("Maximum Cycles", part.MaximumCycles, partApproval.MaximumCycles);
                     return partApprovalChanges;
                 case EnumApprovalTables.ProcedureApproval:
                     var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
@@ -270,8 +271,8 @@ namespace MSR.Infrastructure.Resources.Services
                     var currUser = await _unitOfWork.Users.Query()
                         .Include(x => x.Customer).Include(x => x.Location).Include(x => x.Roles).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Id == userApproval.UserId);
                     var userApprovalChanges = new PendingApprovalPopoverModel();
-                    userApprovalChanges.AddRow("FirstName", currUser.FirstName, userApproval.FirstName);
-                    userApprovalChanges.AddRow("LastName", currUser.LastName, userApproval.LastName);
+                    userApprovalChanges.AddRow("First Name", currUser.FirstName, userApproval.FirstName);
+                    userApprovalChanges.AddRow("Last Name", currUser.LastName, userApproval.LastName);
                     userApprovalChanges.AddRow("User Name", currUser.UserName, userApproval.UserName);
                     userApprovalChanges.AddRow("Title", currUser.Title, userApproval.Title);
                     userApprovalChanges.AddRow("Email", currUser.Email, userApproval.Email);
