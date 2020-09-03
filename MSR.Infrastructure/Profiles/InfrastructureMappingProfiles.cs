@@ -233,7 +233,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
                 .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputType.Name))
                 .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorType.Name))
-                .ForMember(dest => dest.ShouldBe, opt => opt.MapFrom(src =>src.ShouldBe))
                 .ForMember(dest => dest.TargetValue, opt => opt.MapFrom(src => src.Target.ToString()))
                 .ForMember(dest => dest.FaultHandling, opt => opt.MapFrom(src => src.FailAction))
                 .ForMember(dest => dest.SendEmailNotification, opt => opt.MapFrom(src => src.SendNCREmail));
