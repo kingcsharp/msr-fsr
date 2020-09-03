@@ -84,7 +84,6 @@ export class LoginService {
       .subscribe((result) => {
         Object.assign(user, result.object);
         const decodedToken = jwt.decodeToken(token);
-        debugger;
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
         user.privileges = JSON.parse(decodedToken.Privileges);
         this.globals.updateUser(user);
