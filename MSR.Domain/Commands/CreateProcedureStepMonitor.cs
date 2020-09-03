@@ -14,7 +14,7 @@ namespace MSR.Domain.Commands
         public float? LowTarget { get; set; }
         public float? Target { get; set; }
         public string FailAction { get; set; }
-        public int SensorMappingId { get; set; }
+        public string SensorName { get; set; }
         public bool? SendNCREmail { get; set; }
     }
 }
