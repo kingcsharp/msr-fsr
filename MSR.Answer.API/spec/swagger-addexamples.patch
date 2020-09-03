@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-09-03 08:00:16.890793100 -0700
-+++ swagger-work.json	2020-09-03 08:00:17.266883400 -0700
+--- swagger-work.json.orig	2020-09-03 08:38:20.030204300 -0700
++++ swagger-work.json	2020-09-03 08:38:20.106315600 -0700
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -1195,7 +1195,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTemplateModel": {
-@@ -8455,6 +8626,12 @@
+@@ -8471,6 +8642,12 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1208,7 +1208,7 @@
          }
        },
        "UpdateProcedureStepTemplateRequest": {
-@@ -8545,6 +8722,11 @@
+@@ -8570,6 +8747,11 @@
              "description": "Comments",
              "nullable": true
            }
@@ -1220,7 +1220,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureStepTypeModel": {
-@@ -8680,6 +8862,12 @@
+@@ -8705,6 +8887,12 @@
                "format": "int32"
              }
            }
@@ -1233,7 +1233,7 @@
          }
        },
        "UpdateProcedureTemplateRequest": {
-@@ -8776,6 +8964,11 @@
+@@ -8801,6 +8989,11 @@
                "format": "int32"
              }
            }
@@ -1245,7 +1245,7 @@
          }
        },
        "AuditActionResultOfProcedureType": {
-@@ -8813,6 +9006,9 @@
+@@ -8838,6 +9031,9 @@
              "description": "Gets or Sets Name",
              "minLength": 1
            }
@@ -1255,7 +1255,7 @@
          }
        },
        "AuditActionResultOfICollectionOfProcedureType": {
-@@ -8852,6 +9048,10 @@
+@@ -8877,6 +9073,10 @@
              "description": "Gets or Sets Name",
              "nullable": true
            }
@@ -1266,7 +1266,7 @@
          }
        },
        "AuditActionResultOfProductModel": {
-@@ -8900,6 +9100,7 @@
+@@ -8925,6 +9125,7 @@
                "customer": {
                  "nullable": true,
                  "oneOf": [
@@ -1274,7 +1274,7 @@
                    {
                      "$ref": "#/components/schemas/Customer"
                    }
-@@ -8969,6 +9170,7 @@
+@@ -8994,6 +9195,7 @@
                "quote": {
                  "nullable": true,
                  "oneOf": [
@@ -1282,7 +1282,7 @@
                    {
                      "$ref": "#/components/schemas/QuoteModel"
                    }
-@@ -9068,6 +9270,7 @@
+@@ -9093,6 +9295,7 @@
            "status": {
              "nullable": true,
              "oneOf": [
@@ -1290,7 +1290,7 @@
                {
                  "$ref": "#/components/schemas/StatusModel"
                }
-@@ -9109,6 +9312,10 @@
+@@ -9134,6 +9337,10 @@
              "type": "string",
              "nullable": true
            }
@@ -1301,7 +1301,7 @@
          }
        },
        "QuoteItemModel": {
-@@ -9205,6 +9412,7 @@
+@@ -9230,6 +9437,7 @@
            "location": {
              "nullable": true,
              "oneOf": [
@@ -1309,7 +1309,7 @@
                {
                  "$ref": "#/components/schemas/LocationModel"
                }
-@@ -9302,6 +9510,7 @@
+@@ -9327,6 +9535,7 @@
                "status": {
                  "nullable": true,
                  "oneOf": [
@@ -1317,7 +1317,7 @@
                    {
                      "$ref": "#/components/schemas/StatusModel"
                    }
-@@ -9317,6 +9526,7 @@
+@@ -9342,6 +9551,7 @@
                "location": {
                  "nullable": true,
                  "oneOf": [
@@ -1325,7 +1325,7 @@
                    {
                      "$ref": "#/components/schemas/LocationModel"
                    }
-@@ -9325,6 +9535,7 @@
+@@ -9350,6 +9560,7 @@
                "purchaseOrder": {
                  "nullable": true,
                  "oneOf": [
@@ -1333,7 +1333,7 @@
                    {
                      "$ref": "#/components/schemas/PurchaseOrderModel"
                    }
-@@ -9333,6 +9544,7 @@
+@@ -9358,6 +9569,7 @@
                "purchaseOrderProduct": {
                  "nullable": true,
                  "oneOf": [
@@ -1341,7 +1341,7 @@
                    {
                      "$ref": "#/components/schemas/PurchaseOrderProductView"
                    }
-@@ -9396,6 +9608,7 @@
+@@ -9421,6 +9633,7 @@
                "location": {
                  "nullable": true,
                  "oneOf": [
@@ -1349,7 +1349,7 @@
                    {
                      "$ref": "#/components/schemas/LocationModel"
                    }
-@@ -9547,6 +9760,7 @@
+@@ -9572,6 +9785,7 @@
            "status": {
              "nullable": true,
              "oneOf": [
@@ -1357,7 +1357,7 @@
                {
                  "$ref": "#/components/schemas/StatusModel"
                }
-@@ -9555,6 +9769,7 @@
+@@ -9580,6 +9794,7 @@
            "workOrder": {
              "nullable": true,
              "oneOf": [
@@ -1365,7 +1365,7 @@
                {
                  "$ref": "#/components/schemas/WorkOrderModel"
                }
-@@ -9580,6 +9795,7 @@
+@@ -9605,6 +9820,7 @@
            "workOrderTask": {
              "nullable": true,
              "oneOf": [
@@ -1373,7 +1373,7 @@
                {
                  "$ref": "#/components/schemas/WorkOrderTaskModel"
                }
-@@ -9901,6 +10117,19 @@
+@@ -9926,6 +10142,19 @@
              "description": "PurchasePrice",
              "format": "decimal"
            }
@@ -1393,7 +1393,7 @@
          }
        },
        "AuditActionResultOfIEnumerableOfPurchaseOrderView": {
-@@ -10218,6 +10447,7 @@
+@@ -10243,6 +10472,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1401,7 +1401,7 @@
                    {
                      "$ref": "#/components/schemas/QuoteModel"
                    }
-@@ -10420,6 +10650,10 @@
+@@ -10445,6 +10675,10 @@
                "format": "int32"
              }
            }
@@ -1412,7 +1412,7 @@
          }
        },
        "UpdateRoleRequest": {
-@@ -10494,6 +10728,7 @@
+@@ -10519,6 +10753,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1420,7 +1420,7 @@
                    {
                      "$ref": "#/components/schemas/UserModel"
                    }
-@@ -10633,11 +10868,16 @@
+@@ -10658,11 +10893,16 @@
            "file": {
              "nullable": true,
              "oneOf": [
@@ -1437,7 +1437,7 @@
          }
        },
        "UpdateUserRequest": {
-@@ -10658,7 +10898,11 @@
+@@ -10683,7 +10923,11 @@
                }
              }
            }
@@ -1450,7 +1450,7 @@
        },
        "CreateUserRoleRequest": {
          "type": "object",
-@@ -10839,6 +11083,7 @@
+@@ -10864,6 +11108,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1458,7 +1458,7 @@
                    {
                      "$ref": "#/components/schemas/PendingApprovalPopoverModel"
                    }
-@@ -11020,6 +11265,7 @@
+@@ -11045,6 +11290,7 @@
              "description": " ",
              "nullable": true,
              "oneOf": [
@@ -1466,7 +1466,7 @@
                {
                  "$ref": "#/components/schemas/UpdatePartRequest"
                }
-@@ -11203,6 +11449,7 @@
+@@ -11228,6 +11474,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1474,7 +1474,7 @@
                    {
                      "$ref": "#/components/schemas/PendingApprovalNotification"
                    }
-@@ -11398,6 +11645,7 @@
+@@ -11423,6 +11670,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1482,7 +1482,7 @@
                    {
                      "$ref": "#/components/schemas/WorkflowModel"
                    }
-@@ -11534,6 +11782,19 @@
+@@ -11559,6 +11807,19 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1502,7 +1502,7 @@
          }
        },
        "WorkflowGroupRoleMapModel": {
-@@ -11583,6 +11844,7 @@
+@@ -11608,6 +11869,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1510,7 +1510,7 @@
                    {
                      "$ref": "#/components/schemas/WorkflowGroupModel"
                    }
-@@ -11620,6 +11882,14 @@
+@@ -11645,6 +11907,14 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1525,7 +1525,7 @@
          }
        },
        "UpdateWorkflowGroupRequest": {
-@@ -11640,7 +11910,16 @@
+@@ -11665,7 +11935,16 @@
                }
              }
            }
@@ -1543,7 +1543,7 @@
        },
        "AuditActionResultOfICollectionOfWorkflowStageModel": {
          "allOf": [
-@@ -11708,6 +11987,10 @@
+@@ -11733,6 +12012,10 @@
              "type": "integer",
              "format": "int32"
            }
@@ -1554,7 +1554,7 @@
          }
        },
        "AuditActionResultOfWorkflowStageModel": {
-@@ -11723,6 +12006,7 @@
+@@ -11748,6 +12031,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1562,7 +1562,7 @@
                    {
                      "$ref": "#/components/schemas/WorkflowStageModel"
                    }
-@@ -11753,6 +12037,36 @@
+@@ -11778,6 +12062,36 @@
                "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
              }
            }
@@ -1599,7 +1599,7 @@
          }
        },
        "UpdateWorkflowStageRequest": {
-@@ -11773,7 +12087,12 @@
+@@ -11798,7 +12112,12 @@
                }
              }
            }

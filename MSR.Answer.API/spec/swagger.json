@@ -8482,6 +8482,13 @@
               "$ref": "#/components/schemas/FileModel"
             }
           },
+          "referenceFiles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FileModel"
+            }
+          },
           "equipmentTime": {
             "type": "number",
             "format": "double",
@@ -8588,6 +8595,15 @@
               "format": "int32"
             }
           },
+          "referenceFiles": {
+            "type": "array",
+            "description": "ReferenceFiles",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           "equipmentTime": {
             "type": "number",
             "description": "EquipmentTime",
@@ -8678,6 +8694,15 @@
           "referenceDocuments": {
             "type": "array",
             "description": "ReferenceDocuments",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "referenceFiles": {
+            "type": "array",
+            "description": "ReferenceFiles",
             "nullable": true,
             "items": {
               "type": "integer",

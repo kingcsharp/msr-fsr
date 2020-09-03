@@ -51,6 +51,12 @@ namespace MSR.Answer.API.V1.Models
         public List<int> ReferenceDocuments { get; set; }
 
         /// <summary>
+        /// ReferenceFiles
+        /// </summary>
+        [DataMember(Name="referenceFiles ")]
+        public List<int> ReferenceFiles { get; set; }
+
+        /// <summary>
         /// EquipmentTime
         /// </summary>
         [DataMember(Name="equipmentTime")]
