@@ -70,7 +70,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 };
                 foreach (var item in workflowStagesMap.Where(item => wfLink.WorkflowId == item.WorkflowId))
                 {
-                    wfLink.WorkflowStageId = item.WorkflowId;
+                    wfLink.WorkflowStageId = item.WorkflowStageId;
                     foreach (var wfStage in workflowStages.Where(wfStage => wfStage.WorkflowStageId == wfLink.WorkflowStageId))
                     {
                         wfLink.WorkflowGroupId = wfStage.WorkflowGroupId;
