@@ -33,7 +33,7 @@ pipeline {
                 script {
                     echo "Deploying to ${DEPLOY_ENV}"
                     if(DEPLOY_ENV == "STAGE")  {
-                        sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition ${QA_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
+                        sh "/snap/bin/aws ecs describe-task-definition --task-definition ${QA_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
                         def props = readJSON file: 'images.json'
                         def apiImage = props['taskDefinition']['containerDefinitions'][0].image
                         String[] api
@@ -43,7 +43,7 @@ pipeline {
                         sh "sudo sh update_image_api.sh Stage ${api[1]} ${API_COMPOSE}"
                         sh "cat ${API_COMPOSE}"
                     } else if(DEPLOY_ENV == "PRODUCTION") {
-                        sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition ${STAGE_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
+                        sh "/snap/bin/aws ecs describe-task-definition --task-definition ${STAGE_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
                         def props = readJSON file: 'images.json'
                         def apiImage = props['taskDefinition']['containerDefinitions'][0].image
                         String[] api
