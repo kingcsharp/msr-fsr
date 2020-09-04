@@ -138,7 +138,7 @@ export class Globals {
         if (approvalEnum === undefined) {
             console.error('tableName does not exist in EnumApprovalTables, please select an enum that exists in EnumApprovalTables', EnumApprovalTables);
         }
-        
+
         if (Object.keys(this.user.approvalPrivileges).length === 0) {
             return false;
         }
