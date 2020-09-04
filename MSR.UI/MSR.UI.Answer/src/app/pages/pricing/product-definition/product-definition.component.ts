@@ -98,7 +98,7 @@ export class ProductDefinitionComponent implements OnInit {
         this.getAdminCostSettingsFlag = true;
         this.initPage();
       }));
-  };
+  }
 
   initPage() {
     switch (this.mode) {
