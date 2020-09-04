@@ -53,6 +53,9 @@ export class LocationCreateComponent implements OnInit {
 
         this.timezonesAvailable = timezoneResponse.object.map(s => ({ label: s.description, value: s.id }));
 
+        if(this.locationToEdit?.timeZone !== undefined){
+          this.selectedTimezone = this.locationToEdit.timeZone.id;
+        }
       }));
 
     }));

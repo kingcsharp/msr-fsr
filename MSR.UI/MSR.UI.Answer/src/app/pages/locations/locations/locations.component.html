@@ -131,14 +131,8 @@
             <th grid-input-filter [dt]="dt" searchField="parent.name"
               [hidden]="!commonGrid.isVisibleCol('parent.name',gridSettings)" [gridSettings]="gridSettings">
             </th>
-            <th [hidden]="!commonGrid.isVisibleCol('timezone',gridSettings)">
-              <div class="position-relative">
-                <input id="timezone" pInputText type="text" tooltip="Search by Title"
-                  (input)="dt.filter($event.target.value, 'timezone', 'contains')" class="ui-column-filter"
-                  [value]="dt.filters['timezone']?.value">
-                <i *ngIf="dt.filters['timezone']?.value" class="fclear pi pi-times pointer"
-                  (click)="commonGrid.filter(dt,'timezone')"></i>
-              </div>
+            <th grid-input-filter [dt]="dt" searchField="timezone.description"
+              [hidden]="!commonGrid.isVisibleCol('timezone.description',gridSettings)" [gridSettings]="gridSettings">
             </th>
             <th grid-input-filter [dt]="dt" searchField="address2"
               [hidden]="!commonGrid.isVisibleCol('address2',gridSettings)" [gridSettings]="gridSettings">
@@ -198,8 +192,8 @@
             <td [hidden]="!commonGrid.isVisibleCol('parent.name', gridSettings)">
               {{ location.parent?.name }}
             </td>
-            <td [hidden]="!commonGrid.isVisibleCol('timezone', gridSettings)">
-              {{location.timezone}}
+            <td [hidden]="!commonGrid.isVisibleCol('timezone.description', gridSettings)">
+              {{location.timezone?.description}}
             </td>
             <td [hidden]="!commonGrid.isVisibleCol('address2', gridSettings)">
               {{location.address2}}

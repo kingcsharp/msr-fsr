@@ -47,7 +47,7 @@ export class LocationsComponent implements OnInit {
       new ColumnsSaved({ id: 'country', label: 'Country', visible: false }),
       new ColumnsSaved({ id: 'phone', label: 'Phone', visible: false }),
       new ColumnsSaved({ id: 'parent.name', label: 'Parent', visible: false }),
-      new ColumnsSaved({ id: 'timezone', label: 'Timezone', visible: false }),
+      new ColumnsSaved({ id: 'timezone.description', label: 'Timezone', visible: false }),
       new ColumnsSaved({ id: 'address2', label: 'Address 2', visible: false }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
       new ColumnsSaved({ id: 'actions', label: 'Actions', visible: true })
