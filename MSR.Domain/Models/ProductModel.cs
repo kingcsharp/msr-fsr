@@ -24,5 +24,8 @@ namespace MSR.Domain.Models
         public virtual QuoteModel Quote { get; set; }
         public string DivisionFab { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
+
+        // Set to "true" if the system put the data in approval table.
+        public bool IsPending;
     }
 }

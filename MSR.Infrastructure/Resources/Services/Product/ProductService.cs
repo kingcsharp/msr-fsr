@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 
 namespace MSR.Infrastructure.Resources.Services.Invoices
 {
@@ -39,14 +42,24 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<ProductModel> CreateProductAsync(CreateProduct command)
         {
             var product = _mapper.Map<Product>(command);
+            ProductModel retProduct;
 
-            // TODO: no CurrentUser permission check?  Workflow?
+            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanCreate)) {
 
-            // Save the new Product
-            await _unitOfWork.Products.AddAndSaveChangesAsync(product);
+                // Save the new Product
+                await _unitOfWork.Products.AddAndSaveChangesAsync(product);
+                await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
-            // Returning ProductModel from the inserted quote
-            var retProduct = _mapper.Map<ProductModel>(product);
+                // Returning ProductModel from the inserted quote
+                retProduct = _mapper.Map<ProductModel>(product);
+            } else {
+                var approval = _mapper.Map<ProductApproval>(command);
+                _unitOfWork.ProductApprovals.Add(approval);
+                await _unitOfWork.SaveChangesAsync();
+                retProduct = new ProductModel() {
+                    IsPending = true
+                };
+            }
 
             return retProduct;
         }
@@ -83,8 +96,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException($"{nameof(Product)} not found with ID: {command.Id}");
             }
 
-            // TODO: no CurrentUser permission check?  Workflow?
-
             // Update product details and items
             product.CustomerId = command.CustomerId ?? product.CustomerId;
             product.CycleTime = command.CycleTime ?? product.CycleTime;
@@ -99,10 +110,20 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.QuoteId = command.QuoteId ?? product.QuoteId;
             product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
-            // Save product changes
-            await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
-
-            var retProduct = _mapper.Map<ProductModel>(product);
+            ProductModel retProduct;
+            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanEdit)) {
+                // Save product changes
+                await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
+                await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
+                retProduct = _mapper.Map<ProductModel>(product);
+            } else {
+                var approval = _mapper.Map<ProductApproval>(command);
+                _unitOfWork.ProductApprovals.Add(approval);
+                await _unitOfWork.SaveChangesAsync();
+                retProduct = new ProductModel() {
+                    IsPending = true
+                };
+            }
 
             return retProduct;
         }

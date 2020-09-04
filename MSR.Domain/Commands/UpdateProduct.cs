@@ -21,5 +21,6 @@ namespace MSR.Domain.Commands
         public int? CycleTime { get; set; }
         public int? QuoteId { get; set; }
         public string DivisionFab { get; set; }
+        public string Comment { get; set; }
     }
 }
