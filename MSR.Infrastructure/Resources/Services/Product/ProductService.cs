@@ -40,6 +40,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             var product = _mapper.Map<Product>(command);
 
+            // TODO: no CurrentUser permission check?  Workflow?
+
             // Save the new Product
             await _unitOfWork.Products.AddAndSaveChangesAsync(product);
 
@@ -80,6 +82,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             {
                 throw new DomainException($"{nameof(Product)} not found with ID: {command.Id}");
             }
+
+            // TODO: no CurrentUser permission check?  Workflow?
 
             // Update product details and items
             product.CustomerId = command.CustomerId ?? product.CustomerId;
