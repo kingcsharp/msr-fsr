@@ -71,6 +71,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IQuoteService, QuoteService>();
             services.AddScoped<ITimezoneService, TimezoneService>();
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
+            services.AddScoped<IAdminCostSettingsService, AdminCostSettingsService>();
 
             return services;
         }
