@@ -96,13 +96,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<LocationImportItem, UpdateLocation>();
             #endregion
 
-            CreateMap<TimeZone, Domain.Models.TimeZoneModel>().ReverseMap();
+            CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
            
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
             CreateMap<GetLocations, Location>();
-            CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
             CreateMap<Invoice, InvoiceModel>().ReverseMap();
             CreateMap<InvoiceItem, InvoiceItemModel>().ReverseMap();
 
