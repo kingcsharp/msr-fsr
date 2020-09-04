@@ -10,7 +10,9 @@ using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Filters;
+using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -21,11 +23,13 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
+        private IHubContext<MessageHub> _messageHub;
         //PendingApprovals
-        public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher)
+        public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
         {
             _logger = logger;
             _dispatcher = dispatcher;
+            _messageHub = messageHub;
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<PendingApprovalModel>>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanRead)]
@@ -34,6 +38,9 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToGetPendingApprovalCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
+
+            // TODO: move to own controller
+            await _messageHub.Clients.All.SendAsync("WorkflowNotification", "ONE", "TWO");
 
             return ret.ToOkObjectResponse<ICollection<PendingApprovalModel>>();
         }

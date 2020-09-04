@@ -71,6 +71,7 @@ namespace MSR.Answer.API
                 app.UseHsts();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseCors(builder =>
             {
                 builder

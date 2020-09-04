@@ -19,6 +19,7 @@ import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
 import { CommonGrid } from './models/lib/CommonGrid';
 import { environment } from '../environments/environment';
+import { ChartsModule } from 'ng2-charts';
 
 
 import * as $ from 'jquery';
@@ -52,7 +53,8 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES, {
       useHash: true,
       preloadingStrategy: PreloadAllModules
-    })
+    }),
+    ChartsModule
   ],
   providers: [
     APP_PROVIDERS,
