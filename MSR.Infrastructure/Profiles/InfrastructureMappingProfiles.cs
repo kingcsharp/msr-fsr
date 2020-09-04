@@ -354,6 +354,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ContentType, opts => opts.MapFrom(src => src.FileObject.ContentType))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileObject.Name))
                 .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL));
+
+            CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)

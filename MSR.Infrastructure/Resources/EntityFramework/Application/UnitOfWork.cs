@@ -68,7 +68,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkOrder> _workOrders;
         private IRepository<WorkOrderPart> _workOrderParts;
         private IRepository<WorkOrderTask> _workOrderTasks;
-
+        private IRepository<AdminCostSetting> _adminCostSettings;
         private IRepository<File> _files;
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
@@ -138,6 +138,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
         public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
+        public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }
 
         #endregion Repositories
 
