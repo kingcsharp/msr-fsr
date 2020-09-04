@@ -307,6 +307,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Domain.Models.QuoteModel, QuotesProductsView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
                 .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name));
 
             #region PurchaseOrder
