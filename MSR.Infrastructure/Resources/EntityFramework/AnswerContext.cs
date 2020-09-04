@@ -62,6 +62,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Sensor> SensorItem { get; set; }
         public DbSet<Quote> Quote { get; set; }
         public DbSet<TimeZone> Timezone { get; set; }
+        public DbSet<AdminCostSetting> AdminCostSetting { get; set; }
 
         public AnswerContext() : base()
         {

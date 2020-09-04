@@ -24,5 +24,8 @@ namespace MSR.Domain.Models
         public virtual QuoteModel Quote { get; set; }
         public string DivisionFab { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
+
+        // Copy of the status field of the ProductApproval row
+        public string ApprovalStatus;
     }
 }

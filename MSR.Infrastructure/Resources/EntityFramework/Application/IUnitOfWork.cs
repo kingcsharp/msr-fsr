@@ -69,7 +69,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkOrderTask> WorkOrderTasks { get; }
         IRepository<File> Files { get; }
         IRepository<FileEntityMap> FileEntityMap { get; }
-
+        IRepository<AdminCostSetting> AdminCostSettings { get; }
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
         IRepository<Sensor> Sensors { get; }
         IRepository<Quote> Quotes { get; }
