@@ -54,6 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpDelete("{id}")]
+        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeleteProcedureStepMonitor([FromRoute][Required]int id)
         {
