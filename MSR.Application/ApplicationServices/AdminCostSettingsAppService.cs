@@ -21,9 +21,9 @@ namespace MSR.Application.ApplicationServices
             _service = service;
         }
 
-        public Task<ICommandResponse> HandleAsync(GetAdminCostSettingsCommand command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetAdminCostSettingsCommand command, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return new CommandResponse<AdminCostSettingsModel>(await _service.GetAdminCostSettings());
         }
     }
 }

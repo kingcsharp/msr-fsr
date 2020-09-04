@@ -1,6 +1,8 @@
 using AutoMapper;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 {
@@ -15,5 +17,9 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             _mapper = mapper;
         }
 
+        public async Task<AdminCostSettingsModel> GetAdminCostSettings()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
