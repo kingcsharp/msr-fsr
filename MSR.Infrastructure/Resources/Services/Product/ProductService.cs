@@ -26,7 +26,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<ICollection<ProductModel>> GetProductsAsync()
         {
-            var products = await _unitOfWork.Products.Query().Select(p=>_mapper.Map<ProductModel>(p)).ToListAsync();
+            var products = await _unitOfWork.Products
+                .Query()
+                .Include(x => x.Part)
+                .Select(p => _mapper.Map<ProductModel>(p))
+                .ToListAsync();
 
             return products;
         }
