@@ -88,6 +88,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.Revision = command.Revision ?? product.Revision;
             product.SalesTax = command.SalesTax ?? product.SalesTax;
             product.QuoteId = command.QuoteId ?? product.QuoteId;
+            product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
             // Save product changes
             await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);

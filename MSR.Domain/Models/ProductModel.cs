@@ -22,6 +22,7 @@ namespace MSR.Domain.Models
         public int CycleTime { get; set; }
         public int? QuoteId { get; set; }
         public virtual QuoteModel Quote { get; set; }
+        public string DivisionFab { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
     }
 }
