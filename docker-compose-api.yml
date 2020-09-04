@@ -5,6 +5,8 @@ services:
     image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:Dev19
     expose:
       - "5000"
+    ports:
+      - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     logging:

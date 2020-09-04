@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:17777",
+      "applicationUrl": "https://stage-api.answer.msr-fsr.com",
       "sslPort": 44398
     }
   },
