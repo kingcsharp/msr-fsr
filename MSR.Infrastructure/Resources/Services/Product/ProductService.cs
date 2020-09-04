@@ -44,7 +44,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var product = _mapper.Map<Product>(command);
             ProductModel retProduct;
 
-            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanCreate)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanCreate))
+            {
 
                 // Save the new Product
                 await _unitOfWork.Products.AddAndSaveChangesAsync(product);
@@ -52,12 +53,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 // Returning ProductModel from the inserted quote
                 retProduct = _mapper.Map<ProductModel>(product);
-            } else {
+            }
+            else
+            {
                 var approval = _mapper.Map<ProductApproval>(command);
                 _unitOfWork.ProductApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
                 retProduct = new ProductModel() {
-                    IsPending = true
+                    ApprovalStatus = approval.Status.Name
                 };
             }
 
@@ -111,17 +114,20 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
             ProductModel retProduct;
-            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanEdit)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanEdit))
+            {
                 // Save product changes
                 await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
                 retProduct = _mapper.Map<ProductModel>(product);
-            } else {
+            }
+            else
+            {
                 var approval = _mapper.Map<ProductApproval>(command);
                 _unitOfWork.ProductApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
                 retProduct = new ProductModel() {
-                    IsPending = true
+                    ApprovalStatus = approval.Status.Name
                 };
             }
 

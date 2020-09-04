@@ -5464,7 +5464,7 @@
           {
             "type": "object",
             "description": "Base class for an API call with a typed result",
-            "additionalProperties": false,
+            "additionalProperties": true,
             "properties": {
               "object": {
                 "nullable": true,
@@ -5480,7 +5480,7 @@
       },
       "AdminCostSettingsModel": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "rmAnnualRate": {
             "type": "number",
@@ -9195,6 +9195,10 @@
             "type": "object",
             "additionalProperties": true,
             "properties": {
+              "approvalStatus": {
+                "type": "string",
+                "nullable": true
+              },
               "name": {
                 "type": "string",
                 "nullable": true

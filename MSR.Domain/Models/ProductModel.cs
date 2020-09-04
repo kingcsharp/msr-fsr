@@ -25,7 +25,7 @@ namespace MSR.Domain.Models
         public string DivisionFab { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
 
-        // Set to "true" if the system put the data in approval table.
-        public bool IsPending;
+        // Copy of the status field of the ProductApproval row
+        public string ApprovalStatus;
     }
 }
