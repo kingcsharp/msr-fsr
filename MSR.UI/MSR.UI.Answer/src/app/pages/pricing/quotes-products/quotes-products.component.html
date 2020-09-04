@@ -89,20 +89,20 @@
               ></i>
           </div>
 				</th>
-				<th [hidden]="!cg.isVisibleCol('submittedBy',gridSettings)">
+				<th [hidden]="!cg.isVisibleCol('submittedBy.fullName',gridSettings)">
           <div class="position-relative">
             <input
               pInputText type="text"
               tooltip="Search by Submitted By"
               data-cy="searchbysubmittedby-grid"
-              (input)="dt.filter($event.target.value, 'submittedBy', 'contains')"
+              (input)="dt.filter($event.target.value, 'submittedBy.fullName', 'contains')"
               class="ui-column-filter"
-              [value]="dt.filters['submittedBy']?.value"
+              [value]="dt.filters['submittedBy.fullName']?.value"
             >
               <i
-                *ngIf="dt.filters['submittedBy']?.value"
+                *ngIf="dt.filters['submittedBy.fullName']?.value"
                 class="fclear pi pi-times pointer"
-                (click)="cg.filter(dt,'submittedBy')"
+                (click)="cg.filter(dt,'submittedBy.fullName')"
               ></i>
           </div>
 				</th>
@@ -317,8 +317,8 @@
 				<td [hidden]="!cg.isVisibleCol('company', gridSettings)">
           {{quoteproductmodel.company}}
 				</td>
-				<td [hidden]="!cg.isVisibleCol('submittedBy', gridSettings)">
-          {{quoteproductmodel.submittedBy}}
+				<td [hidden]="!cg.isVisibleCol('submittedBy.fullName', gridSettings)">
+          {{quoteproductmodel.submittedBy ? quoteproductmodel.submittedBy.fullName : ''}}
 				</td>
 				<td [hidden]="!cg.isVisibleCol('partKitNo', gridSettings)">
           {{quoteproductmodel.partKitNo}}
