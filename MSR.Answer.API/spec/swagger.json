@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://2421c96cbfde.ngrok.io"
+      "url": "https://qa-api.answer.msr-fsr.com"
     }
   ],
   "paths": {
