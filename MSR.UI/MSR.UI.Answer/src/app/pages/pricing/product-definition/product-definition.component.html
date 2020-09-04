@@ -73,7 +73,7 @@
         <div class="col-md-5" *ngIf="getProductDataFlag">
           <div class="form-group">
             <label for="partId">Part :</label>
-            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent">
+            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent" *ngIf="getPartsFlag">
               <p-dropdown placeholder="Select Part" name="partId" [options]="partsData" [baseZIndex]="100003"
                 [(ngModel)]="productData.partId" data-cy="product-select-partid" [virtualScroll]="true" itemSize="30"
                 [filter]="true" filterBy="label">
@@ -100,7 +100,7 @@
         <div class="col-md-5">
           <div class="form-group">
             <label for="procedureId">Procedure :</label>
-            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent">
+            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent" *ngIf="getProceduresFlag">
               <p-dropdown placeholder="Select Procedure" name="procedureId" [options]="proceduresData"
                 [baseZIndex]="100004" [(ngModel)]="productData.procedureId" (onChange)="onSelectProcedureId($event)"
                 data-cy="product-select-procedureid" [virtualScroll]="true" itemSize="30" [filter]="true"
