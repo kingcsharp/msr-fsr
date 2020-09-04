@@ -207,6 +207,39 @@
         }
       }
     },
+    "/v{version}/AdminCostSettings": {
+      "get": {
+        "tags": [
+          "AdminCostSettings"
+        ],
+        "summary": "Get all admin cost settings",
+        "operationId": "AdminCostSettings_GetAdminCostSettings",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfAdminCostSettingsModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Customer": {
       "get": {
         "tags": [
@@ -5423,6 +5456,32 @@
             "newPassword": "dummy"
         }
       },
+      "AuditActionResultOfAdminCostSettingsModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": false,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AdminCostSettingsModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AdminCostSettingsModel": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "AuditActionResultOfIEnumerableOfCustomer": {
         "allOf": [
           {
@@ -5655,6 +5714,14 @@
           "offset": {
             "type": "number",
             "format": "float"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "useDalightSavings": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -9201,6 +9268,10 @@
                   }
                 ]
               },
+              "divisionFab": {
+                "type": "string",
+                "nullable": true
+              },
               "workOrders": {
                 "type": "array",
                 "nullable": true,
@@ -9924,6 +9995,10 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "divisionFab": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -10021,6 +10096,10 @@
           "quoteId": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "divisionFab": {
+            "type": "string",
             "nullable": true
           }
         }
