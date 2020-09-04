@@ -380,8 +380,8 @@ export class ProductDefinitionComponent implements OnInit {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       this.globals.showLoader(true);
       if (ctrl.mode === ctrl.productPageModes.Create) {
-        const requestData = new CreateProductRequest();
-        requestData.init(ctrl.productData);
+        const requestData = new CreateProductRequest(ctrl.productData);
+        console.log(requestData.divisionFab);
         this.productService.productPost(env.apiVersion, requestData)
           .pipe(take(1))
           .subscribe(responseHandler((resp) => {
@@ -391,8 +391,8 @@ export class ProductDefinitionComponent implements OnInit {
             }
           }));
       } else if (ctrl.mode === ctrl.productPageModes.Edit) {
-        const updateData = new UpdateProductRequest();
-        updateData.init(ctrl.productData);
+        const updateData = new UpdateProductRequest(ctrl.productData);
+        console.log(updateData.divisionFab);
         this.productService.productPatch(env.apiVersion, updateData)
           .pipe(take(1))
           .subscribe(responseHandler((resp) => {
