@@ -262,7 +262,7 @@ export class ProductDefinitionComponent implements OnInit {
       });
 
       const stepValues = this.calculateStepValues(step);
-      this.procedureStepsData[index] = {...step, ...stepValues};
+      this.procedureStepsData[index] = { ...step, ...stepValues };
       this.getStepsValues(true);
     }
   }
@@ -281,27 +281,27 @@ export class ProductDefinitionComponent implements OnInit {
       }));
   }
 
- /**
-  * Get ProcedureSteps by procedure Id
-  */
+  /**
+   * Get ProcedureSteps by procedure Id
+   */
   getProcedureSteps(id: number) {
     this.getProcedureStepsFlag = false;
     this.globals.showLoader(true);
     this.procedureStepsData = [];
 
     this.procedureService.stepGet(id, null, env.apiVersion).pipe(take(1))
-    .subscribe(responseHandler(response => {
-      response.object.forEach(step => {
-        // Calculate each step values
-        const stepValues = this.calculateStepValues(step);
-        this.procedureStepsData.push({...step, ...stepValues});
-      });
-      this.getProcedureStepsFlag = true;
+      .subscribe(responseHandler(response => {
+        response.object.forEach(step => {
+          // Calculate each step values
+          const stepValues = this.calculateStepValues(step);
+          this.procedureStepsData.push({ ...step, ...stepValues });
+        });
+        this.getProcedureStepsFlag = true;
 
-      // Calcuate total step values
-      this.getStepsValues(this.mode === this.productPageModes.Create);
-      this.newStepsCounts = 0;
-    }));
+        // Calcuate total step values
+        this.getStepsValues(this.mode === this.productPageModes.Create);
+        this.newStepsCounts = 0;
+      }));
   }
 
   onSelectProcedure($event) {
@@ -360,7 +360,7 @@ export class ProductDefinitionComponent implements OnInit {
     const laboar_chage = step.laborTime * this.adminCostSettings.laborRateMinute;
     const annual_rm = step.replacementCost * this.adminCostSettings.rmAnnualRate;
     const rm_per_min = annual_rm / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
-    const ex_per_min = (step.replacementCost / step.usefulLife) /  (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
+    const ex_per_min = (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
     const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
 
     return {
@@ -388,8 +388,7 @@ export class ProductDefinitionComponent implements OnInit {
     const url = this.router.serializeUrl(
       this.router.createUrlTree([urlTree])
     );
-
-    window.open(url, '_blank');
+    window.open('#/'+url, '_blank');
   }
 
   onSubmit() {
