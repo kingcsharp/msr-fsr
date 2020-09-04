@@ -44,7 +44,7 @@ export class QuotesProductsComponent implements OnInit {
     this.gridSettings = [
       new ColumnsSaved({ id: 'submittedDate', label: 'Submitted Date', visible: true }),
       new ColumnsSaved({ id: 'company', label: 'Company', visible: true }),
-      new ColumnsSaved({ id: 'submittedBy', label: 'Submitted By', visible: true }),
+      new ColumnsSaved({ id: 'submittedBy.fullName', label: 'Submitted By', visible: true }),
       new ColumnsSaved({ id: 'partKitNo', label: 'Part/Kit Number', visible: true }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true }),
