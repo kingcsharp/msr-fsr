@@ -165,7 +165,7 @@ export class PendingApprovalsComponent implements OnInit {
       let postPendingApprovalRequest = new PostPendingApprovalRequest();
       postPendingApprovalRequest.comments = this.currAction.comments;
       postPendingApprovalRequest.id = this.currAction.id;
-      postPendingApprovalRequest.table = parseInt(EnumApprovalTables[this.currAction.activityType]);
+      postPendingApprovalRequest.table = parseInt(EnumApprovalTables[this.currAction.activityType], 10);
 
       this.workflowPendingApprovalService.workflowPendingApprovalPost(env.apiVersion, postPendingApprovalRequest)
         .pipe(take(1)).subscribe(responseHandler((resp) => {

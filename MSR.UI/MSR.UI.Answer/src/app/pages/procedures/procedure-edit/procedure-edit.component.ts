@@ -70,7 +70,7 @@ export class ProcedureEditComponent implements OnInit {
     this.passFailOptions = [
       { label: 'Pass', value: 1},
       { label: 'Fail', value: 0}
-    ]
+    ];
 
     this.monitorTypeOptions = [
       { label: 'Equipment', value: 'Equipment' },

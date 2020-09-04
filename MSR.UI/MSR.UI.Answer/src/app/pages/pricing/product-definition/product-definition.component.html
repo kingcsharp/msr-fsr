@@ -20,7 +20,7 @@
         <div class="col-md-5">
           <div class="form-group">
             <label for="customerId">Customer :</label>
-            <p-dropdown [class.hide]="mode === productPageModes.View" placeholder="Select Customer" name="customerId"
+            <p-dropdown *ngIf="getCustomersFlag" [class.hide]="mode === productPageModes.View" placeholder="Select Customer" name="customerId"
               [options]="customersData" appendTo="body" [baseZIndex]="100001" [(ngModel)]="productData.customerId"
               data-cy="product-select-customerid" [virtualScroll]="true" itemSize="30" [filter]="true" filterBy="label">
             </p-dropdown>
@@ -35,8 +35,8 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="productCustomerDivision">Division/Fab # :</label>
-            <input pInputText type="number" id="ProductCustomerDivision" class="form-control input-transparent"
-              name="ProductCustomerDivision" [(ngModel)]="productData.customerRequirementId"
+            <input pInputText class="form-control input-transparent"
+              name="ProductCustomerDivision" [(ngModel)]="productData.divisionFab"
               [readonly]="mode === productPageModes.View" data-cy="product-division">
           </div>
         </div>
@@ -73,7 +73,7 @@
         <div class="col-md-5" *ngIf="getProductDataFlag">
           <div class="form-group">
             <label for="partId">Part :</label>
-            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent">
+            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent" *ngIf="getPartsFlag">
               <p-dropdown placeholder="Select Part" name="partId" [options]="partsData" [baseZIndex]="100003"
                 [(ngModel)]="productData.partId" data-cy="product-select-partid" [virtualScroll]="true" itemSize="30"
                 [filter]="true" filterBy="label">
@@ -100,7 +100,7 @@
         <div class="col-md-5">
           <div class="form-group">
             <label for="procedureId">Procedure :</label>
-            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent">
+            <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent" *ngIf="getProceduresFlag">
               <p-dropdown placeholder="Select Procedure" name="procedureId" [options]="proceduresData"
                 [baseZIndex]="100004" [(ngModel)]="productData.procedureId" (onChange)="onSelectProcedureId($event)"
                 data-cy="product-select-procedureid" [virtualScroll]="true" itemSize="30" [filter]="true"
@@ -221,7 +221,7 @@
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <input pInputText class="form-control form-control input-transparent " readonly type="text"
-                      [value]="procedureStepsData[i].utilization || 0" data-cy="procedure-step-utilization">
+                      [value]="procedureStepsData[i].utilizationTime || 0" data-cy="procedure-step-utilization">
                     <span class="input-group-addon bg-secondary">%</span>
                   </div>
                 </td>
