@@ -35,8 +35,8 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="productCustomerDivision">Division/Fab # :</label>
-            <input pInputText type="number" id="ProductCustomerDivision" class="form-control input-transparent"
-              name="ProductCustomerDivision" [(ngModel)]="productData.customerRequirementId"
+            <input pInputText class="form-control input-transparent"
+              name="ProductCustomerDivision" [(ngModel)]="productData.divisionFab"
               [readonly]="mode === productPageModes.View" data-cy="product-division">
           </div>
         </div>
