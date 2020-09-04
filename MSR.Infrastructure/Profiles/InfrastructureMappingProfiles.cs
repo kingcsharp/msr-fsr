@@ -299,15 +299,15 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.ProductModel, Domain.Views.QuotesProductsView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
-                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.CreatedBy.ToString()))
+                .ForMember(dest => dest.SubmittedById, opt => opt.MapFrom(src => src.CreatedBy.GetValueOrDefault()))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
                 .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
 
             CreateMap<Domain.Models.QuoteModel, QuotesProductsView>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
-                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.SubmittedBy.FullName));
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name));
 
             #region PurchaseOrder
             CreateMap<PurchaseOrderProduct, PurchaseOrderView>()

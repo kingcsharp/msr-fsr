@@ -10409,9 +10409,17 @@
             "type": "string",
             "nullable": true
           },
+          "submittedById": {
+            "type": "integer",
+            "format": "int32"
+          },
           "submittedBy": {
-            "type": "string",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UserModel"
+              }
+            ]
           },
           "partKitNo": {
             "type": "string",
