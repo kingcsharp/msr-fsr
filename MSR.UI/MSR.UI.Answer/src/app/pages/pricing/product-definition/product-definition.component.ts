@@ -138,7 +138,7 @@ export class ProductDefinitionComponent implements OnInit {
           this.productData.equipmentCost = 0;
           this.productData.totalLaborMins = 0;
           this.productData.totalMachineMins = 0;
-
+          this.productData.materialCost = 0;
           this.getProductDataFlag = true;
         }
       }));
@@ -237,7 +237,7 @@ export class ProductDefinitionComponent implements OnInit {
         laborTime: $event.value.laborTime,
         replacementCost: $event.value.replacementCost,
         usefulLife: $event.value.usefulLife,
-        utilizationTime: $event.value.utilizationTime,
+        utilizationTime: $event.value.utilization,
         printOrder: index + 1,
         stepText: $event.value.stepText,
         title: $event.value.title
@@ -281,7 +281,7 @@ export class ProductDefinitionComponent implements OnInit {
       this.getProcedureStepsFlag = true;
 
       // Calcuate total step values
-      this.getStepsValues();
+      this.getStepsValues(this.mode === this.productPageModes.Create);
       this.newStepsCounts = 0;
     }));
   }

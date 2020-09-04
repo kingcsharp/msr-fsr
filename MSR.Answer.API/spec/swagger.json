@@ -10409,9 +10409,17 @@
             "type": "string",
             "nullable": true
           },
+          "submittedById": {
+            "type": "integer",
+            "format": "int32"
+          },
           "submittedBy": {
-            "type": "string",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UserModel"
+              }
+            ]
           },
           "partKitNo": {
             "type": "string",
@@ -10480,6 +10488,7 @@
       },
       "CreateQuoteRequest": {
         "type": "object",
+        "description": "CreateQuoteRequest",
         "additionalProperties": true,
         "required": [
           "customerId",
@@ -10488,63 +10497,78 @@
         "properties": {
           "customerId": {
             "type": "integer",
+            "description": "CustomerId",
             "format": "int32"
           },
           "contact": {
             "type": "string",
+            "description": "Contact",
             "nullable": true
           },
           "delivery": {
             "type": "string",
+            "description": "Delivery",
             "nullable": true
           },
           "title": {
             "type": "string",
+            "description": "Title",
             "nullable": true
           },
           "phone": {
             "type": "string",
+            "description": "Phone",
             "nullable": true
           },
           "processName": {
             "type": "string",
+            "description": "ProcessName, a.k.a Procedure Name",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Description",
             "nullable": true
           },
           "representative": {
             "type": "string",
+            "description": "Representative",
             "nullable": true
           },
           "representativeTitle": {
             "type": "string",
+            "description": "RepresentativeTitle",
             "nullable": true
           },
           "representativeAddress": {
             "type": "string",
+            "description": "RepresentativeAddress",
             "nullable": true
           },
           "quoteJson": {
             "type": "string",
+            "description": "QuoteJson",
             "nullable": true
           },
           "customerRequirementJson": {
             "type": "string",
+            "description": "CustomerRequirementJson",
             "nullable": true
           },
           "productId": {
             "type": "integer",
+            "description": "ProductId",
             "format": "int32",
             "nullable": true
           },
           "partKitNo": {
             "type": "string",
+            "description": "PartKitNo",
             "nullable": true
           },
           "quoteItems": {
             "type": "array",
+            "description": "QuoteItems",
             "items": {
               "$ref": "#/components/schemas/CreateQuoteItemRequest"
             }

@@ -65,5 +65,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
 
+        [MaxLength(50)]
+        public string DivisionFab { get; set; }
+
     }
 }

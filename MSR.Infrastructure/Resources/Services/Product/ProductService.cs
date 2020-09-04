@@ -26,7 +26,12 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<ICollection<ProductModel>> GetProductsAsync()
         {
-            var products = await _unitOfWork.Products.Query().Select(p=>_mapper.Map<ProductModel>(p)).ToListAsync();
+            var products = await _unitOfWork.Products
+                .Query()
+                .Include(x => x.Part)
+                .Include(x => x.Procedure)
+                .Select(p => _mapper.Map<ProductModel>(p))
+                .ToListAsync();
 
             return products;
         }
@@ -88,6 +93,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.Revision = command.Revision ?? product.Revision;
             product.SalesTax = command.SalesTax ?? product.SalesTax;
             product.QuoteId = command.QuoteId ?? product.QuoteId;
+            product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
             // Save product changes
             await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);

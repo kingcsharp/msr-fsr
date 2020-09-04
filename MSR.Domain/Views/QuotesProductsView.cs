@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSR.Domain.Models;
+using System;
 
 namespace MSR.Domain.Views
 {
@@ -9,7 +10,8 @@ namespace MSR.Domain.Views
         public bool IsDeletable { get; set; }
         public DateTime SubmittedDate { get; set; }
         public string Company { get; set; }
-        public string SubmittedBy { get; set; }
+        public int SubmittedById { get; set; }
+        public UserModel SubmittedBy { get; set; }
         public string PartKitNo { get; set; }
         public string ProcedureName { get; set; }
 

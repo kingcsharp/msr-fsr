@@ -30,10 +30,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<IEnumerable<QuoteModel>> GetQuotesAsync()
         {
             var quoteList = new List<QuoteModel>();
-            var quotes = _unitOfWork.Quotes
+            IQueryable<Quote> quotes = _unitOfWork.Quotes
                             .Query()
                             .Include(q => q.Products)
                             .Include(q => q.Customer)
+                            .Include(q => q.SubmittedBy)
                             .Include(q => q.Status);
 
             foreach (var quote in await quotes.ToListAsync())
@@ -52,6 +53,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                             .Query()
                             .Include(q => q.Customer)
                             .Include(q => q.Status)
+                            .Include(q => q.SubmittedBy)
                             .Where(q => q.Id == id)
                             .AsQueryable();
 
