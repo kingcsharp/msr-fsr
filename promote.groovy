@@ -38,9 +38,9 @@ pipeline {
                         def apiImage = props['taskDefinition']['containerDefinitions'][0].image
                         String[] api
                         api = apiImage.split(':')
-                        sh "sudo sh update_image.sh Stage ${api[1]} ${UI_COMPOSE}"
+                        sh "sh update_image.sh Stage ${api[1]} ${UI_COMPOSE}"
                         sh "cat ${UI_COMPOSE}"
-                        sh "sudo sh update_image_api.sh Stage ${api[1]} ${API_COMPOSE}"
+                        sh "sh update_image_api.sh Stage ${api[1]} ${API_COMPOSE}"
                         sh "cat ${API_COMPOSE}"
                     } else if(DEPLOY_ENV == "PRODUCTION") {
                         sh "/snap/bin/aws ecs describe-task-definition --task-definition ${STAGE_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
@@ -48,9 +48,9 @@ pipeline {
                         def apiImage = props['taskDefinition']['containerDefinitions'][0].image
                         String[] api
                         api = apiImage.split(':')
-                        sh "sudo sh update_image.sh Production ${api[1]} ${UI_COMPOSE}"
+                        sh "sh update_image.sh Production ${api[1]} ${UI_COMPOSE}"
                         sh "cat ${UI_COMPOSE}"
-                        sh "sudo sh update_image_api.sh Production ${api[1]} ${API_COMPOSE}"
+                        sh "sh update_image_api.sh Production ${api[1]} ${API_COMPOSE}"
                         sh "cat ${API_COMPOSE}"
                     } else {
                         echo "Only promoting stage and production!"
