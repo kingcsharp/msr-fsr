@@ -105,6 +105,23 @@
                 (click)="cg.filter(dt,'submittedBy.fullName')"
               ></i>
           </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('divisionFab',gridSettings)">
+          <div class="position-relative">
+            <input
+              pInputText type="text"
+              tooltip="Search by Division/Fab #"
+              data-cy="divisionfab-grid"
+              (input)="dt.filter($event.target.value, 'divisionFab', 'contains')"
+              class="ui-column-filter"
+              [value]="dt.filters['divisionFab']?.value"
+            >
+              <i
+                *ngIf="dt.filters['divisionFab']?.value"
+                class="fclear pi pi-times pointer"
+                (click)="cg.filter(dt,'divisionFab')"
+              ></i>
+          </div>
 				</th>
 				<th [hidden]="!cg.isVisibleCol('partKitNo',gridSettings)">
           <div class="position-relative">
@@ -319,6 +336,9 @@
 				</td>
 				<td [hidden]="!cg.isVisibleCol('submittedBy.fullName', gridSettings)">
           {{quoteproductmodel.submittedBy ? quoteproductmodel.submittedBy.fullName : ''}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('divisionFab', gridSettings)">
+          {{quoteproductmodel.divisionFab}}
 				</td>
 				<td [hidden]="!cg.isVisibleCol('partKitNo', gridSettings)">
           {{quoteproductmodel.partKitNo}}
