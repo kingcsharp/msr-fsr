@@ -5480,7 +5480,25 @@
       },
       "AdminCostSettingsModel": {
         "type": "object",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "properties": {
+          "rmAnnualRate": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "laborRateMinute": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "yearsHours": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hourMinutes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
       },
       "AuditActionResultOfIEnumerableOfCustomer": {
         "allOf": [
