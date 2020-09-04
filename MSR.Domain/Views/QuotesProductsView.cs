@@ -23,5 +23,6 @@ namespace MSR.Domain.Views
         public decimal SalesTax { get; set; }
         public decimal TotalPrice { get; set; }
         public int CycleTime { get; set; }
+        public string DivisionFab { get; set; }
     }
 }
