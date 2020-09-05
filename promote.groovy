@@ -64,7 +64,36 @@ pipeline {
                     steps {
                         script {
                             if(DEPLOY_ENV == "STAGE") {
-                                deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+
+                                try {
+                                    dir('MSR.UI/MSR.UI.Answer') {
+                                        //sh "sudo chmod 777 /var/run/docker.sock"
+                                        sh "docker build --build-arg ENV=dev -t msr-ui ."
+                                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+
+                                        sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                                    }
+                                } catch(e) {
+                                    office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                    currentBuild.result = 'FAILURE'
+                                    sh "exit 1"
+                                }
+
+                                try {
+                                    sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                                    sh "cat ${UI_COMPOSE}"
+
+                                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+
+                                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
+                                } catch (e) {
+                                    office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                    currentBuild.result = 'FAILURE'
+                                    sh "exit 1"
+                                }
+
                             } else if (DEPLOY_ENV == "PRODUCTION") {
                                 deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
                             }else {
