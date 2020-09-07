@@ -49,5 +49,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string InvoiceClass { get; set; }
 
         public virtual ICollection<Location> Children { get; set; }
+
+        public virtual ICollection<Sensor> Sensors { get; set; }
+
+        public virtual int? TimeZoneId { get; set; }
+        [ForeignKey("TimeZoneId")]
+        public virtual TimeZone TimeZone { get; set; }
     }
 }

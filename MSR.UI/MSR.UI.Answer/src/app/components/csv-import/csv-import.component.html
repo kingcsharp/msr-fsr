@@ -3,7 +3,6 @@
     + Import
 </button>
 
-
 <p-dialog *ngIf="display" header="Import" [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
     <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
         data-parsley-priority-enabled="false" (ngSubmit)="submitImport()" novalidate="novalidate">
@@ -23,7 +22,7 @@
                         <label class="col-md-2 col-form-label text-md-right">
                             Select Csv File
                         </label>
-                        <cmh-file-uploader class="col-md-10" *ngIf="uploadedFiles !==undefined" [menuItem]="menuItem"
+                        <cmh-file-uploader class="col-md-10" [menuItem]="menuItem"
                             [(files)]="uploadedFiles" accept=".csv" chooseLabel="Select CSV File">
                         </cmh-file-uploader>
                     </div>

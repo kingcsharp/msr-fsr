@@ -1,4 +1,4 @@
-<p-multiSelect name="{{multiselectName}}" [options]="options" [(ngModel)]="selectedColumns"
+<p-multiSelect name="{{multiselectName}}" [options]="currentOptions" [(ngModel)]="selectedColumns"
     (onChange)="filterGrid()" [itemSize]="15">
     <ng-template pTemplate="selectedItems">
         <div>{{defaultText}}</div>

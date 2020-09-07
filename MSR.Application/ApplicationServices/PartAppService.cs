@@ -31,9 +31,7 @@ namespace MSR.Application.ApplicationServices
         {
             ICollection<PartModel> ret = await _partService.GetPartsAsync(command);
 
-            ICollection<FileModel> files = new List<FileModel>();
-
-            files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
+            var files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
 
             foreach (var part in ret)
             {

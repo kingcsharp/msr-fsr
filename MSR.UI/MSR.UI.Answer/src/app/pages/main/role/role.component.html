@@ -1,0 +1,177 @@
+<h1 class="page-title" data-cy="page-title">
+    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+    {{globals.activeMenu.name}}
+</h1>
+
+<widget>
+    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
+        currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
+        stateKey="{{gridStorageId}}">
+        <ng-template pTemplate="caption">
+            <div class="text-right">
+                <button *ngIf="userPrivileges.canCreate" (click)="showDialog()"
+                    class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+                    + Add
+                </button>
+                <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+                    [gridVersion]="gridVersion" data-cy="usergrid-options">
+                </grid-options>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+                    data-cy="usertable-header">
+                    {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <th grid-input-filter [dt]="dt" searchField="id" [hidden]="!cg.isVisibleCol('id',gridSettings)"
+                    [gridSettings]="gridSettings">
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="name" [hidden]="!cg.isVisibleCol('name',gridSettings)"
+                    [gridSettings]="gridSettings">
+                </th>
+                <th [hidden]="!cg.isVisibleCol('isCertificationRole',gridSettings)" data-cy="isCertificationRole-grid">
+                    <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="isCertificationRole"
+                        filterId="isCertificationRole" defaultText="Select Is Certification Role" defaultTextTooltip=""
+                        [datatable]="dt">
+                    </multiselect-wrapper>
+                </th>
+                <th [hidden]="!cg.isVisibleCol('parentRoles',gridSettings)" data-cy="parentRoles-grid">
+                    <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="data" filterId="parentRoles"
+                        [multipleValues]="true" defaultText="Select Parent Roles" defaultTextTooltip=""
+                        [datatable]="dt">
+                    </multiselect-wrapper>
+                </th>
+                <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+                    <div class="position-relative" tooltip="Search by Created Date"  data-cy="createdOn-grid">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
+                        </pcalendar-wrapper>
+                    </div>
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="createdByName"
+                    [hidden]="!cg.isVisibleCol('createdByName',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)"  data-cy="lastUpdatedOn-grid">
+                    <div class="position-relative" tooltip="Search by Last Updated On Date">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="lastUpdatedOn" [datatable]="dt">
+                        </pcalendar-wrapper>
+                    </div>
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="lastUpdatedByName"
+                    [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-role>
+            <tr data-cy="row" class="ui-selectable-row">
+                <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
+                    {{role.id}}
+                </td>
+                <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
+                    {{role.name}}
+                </td>
+                <td class="text-capitalize" [hidden]="!cg.isVisibleCol('isCertificationRole',gridSettings)">
+                    {{role.isCertificationRole?'Yes':'No'}}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('parentRoles',gridSettings)">
+                    <span *ngFor="let role of role.parentRoles" class="badge mr-xs badge-secondary">{{role.name}}</span>
+                </td>
+                <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+                    {{role.createdOn | userTimezone }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+                    {{role.created?.fullName }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+                    {{role.lastUpdatedOn | userTimezone }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+                    {{role.lastUpdated?.fullName }}
+                </td>
+                <td>
+                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Role" data-cy="editRow"
+                        (click)="showDialog(role)"></i>
+                    <i *ngIf="userPrivileges.canDelete && role.hasAssignedUsers" class="far fa-trash-alt pointer"
+                        tooltip="Delete Role" data-cy="deleteRow" (click)="removeRow(role)"></i>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" style="text-align:left">No roles found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</widget>
+<p-dialog *ngIf="display" header="{{ currentRole.id === undefined ?'Create Role':'Edit Role'}}" [(visible)]="display"
+    [style]="{width: '50vw'}" data-cy="user-header">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="submitRole()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    Role Details
+                </h5>
+            </header>
+            <div class="widget-body">
+                <fieldset>
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <label for="name" class="col-md-2 col-form-label text-md-right">
+                            Name
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="text" id="name" name="name" [(ngModel)]="currentRole.name"
+                                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                data-parsley-required="true" class="form-control input-transparent"
+                                tooltip="Min length 3 characters" placeholder="Name" data-cy="name-input">
+                        </div>
+                        <label class="col-md-2  col-form-label text-md-right">
+                            Is Certification Role
+                        </label>
+                        <div class="col-md-4 ">
+                            <div class="display-inline-block isActive">
+                                <label class="form-check-label" for="isCertificationRole" class="switch">
+                                    <input class="form-check-input" [(ngModel)]="currentRole.isCertificationRole"
+                                        name="isCertificationRole" type="checkbox" class="ios" checked
+                                        id="isCertificationRole" /><i data-cy="isCertificationRole-checkbox"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                           Parent Roles
+                        </label>
+                        <div class="col-md-10 col-12" data-cy="parentroles-modal">
+                            <multiselect-wrapper-form [options]="availableRoles" defaultId="id" [limit]="30"
+                                [(model)]="currentRole.parentRoles"  defaultLabel="Select Parent Roles">
+                            </multiselect-wrapper-form>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                    data-cy="save-button">
+                    Save
+                </button>
+                <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Cancel
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

@@ -1,19 +1,17 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-  PartService, PartModel, SubPartModel, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
+  PartService, PartModel, SubPartModel, EnumMenuItem, EnumApprovalTables, AuditActionResultOfPartModel, CreatePartRequest, UpdatePartRequest, FileModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { debug } from 'console';
-
 
 declare let jQuery: any;
 
@@ -84,7 +82,10 @@ export class PartsComponent implements OnInit {
     this.partsService.partGet(null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.globals.showLoader(false);
-        this.data = response.object;
+        this.data = response.object.map((elem) => {
+          elem.isActive = elem.isActive === null ? false : elem.isActive;
+          return elem;
+        });
       }));
   }
 
@@ -110,7 +111,6 @@ export class PartsComponent implements OnInit {
         this.data.push(element);
       }
     });
-
   }
 
   getAllPartsAndUsedIn() {
@@ -151,9 +151,15 @@ export class PartsComponent implements OnInit {
     this.display = true;
   }
 
+  resetParsleyjs() {
+    if (jQuery('.parsleyjs').parsley() !== undefined) {
+      jQuery('.parsleyjs').parsley().reset();
+    }
+  }
+
   clseDialog() {
+    this.resetParsleyjs();
     this.display = false;
-    jQuery('.parsleyjs').parsley().reset();
   }
 
   emptyArr(arr) {
@@ -169,6 +175,7 @@ export class PartsComponent implements OnInit {
       ret.name = '';
       ret.createSubParts = [];
       ret.isActive = true;
+      ret.files = [];
       return ret;
     } else {
       let copyPart: PartModel = new PartModel();
@@ -219,29 +226,33 @@ export class PartsComponent implements OnInit {
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method: Observable<AuditActionResultOfPartModel> = null;
-      this.globals.showLoader(true);
-
       this.currPart.files.push(...this.uploadedFiles);
 
-      if (this.currPart.id === undefined) {
-        method = this.partsService.partPost(env.apiVersion, this.getCreatePartRequest(this.currPart));
-      } else {
-        method = this.partsService.partPatch(env.apiVersion, this.getUpdatePartRequest(this.currPart));
-      }
-      this.globals.showLoader(true);
-      method.pipe(take(1)).subscribe(responseHandler((resp) => {
-        if (!resp.hasErrors) {
-          if (ctrl.currPart.id === undefined) {
-            ctrl.data.push(resp.object);
-          } else {
-            const index = this.data.findIndex(x => x.id === this.currPart.id);
-            this.data.splice(index, 1);
-            this.data.splice(index, 0, resp.object);
-          }
-          ctrl.clseDialog();
+      this.globals.showApprovalCommentModal(this.currPart, EnumApprovalTables.PartApproval).then(() => {
+        if (this.currPart.id === undefined) {
+          let createPartRequest = this.getCreatePartRequest(this.currPart);
+          createPartRequest.comment = this.currPart.comment;
+          method = this.partsService.partPost(env.apiVersion, createPartRequest);
+        } else {
+          let updatePartRequest = this.getUpdatePartRequest(this.currPart);
+          updatePartRequest.comment = this.currPart.comment;
+          method = this.partsService.partPatch(env.apiVersion, updatePartRequest);
         }
-      }, () => {
-      }));
+
+        this.globals.showLoader(true);
+        method.pipe(take(1)).subscribe(responseHandler((resp) => {
+          if (!resp.hasErrors) {
+            if (ctrl.currPart.id === undefined) {
+              ctrl.data.push(resp.object);
+            } else {
+              const index = this.data.findIndex(x => x.id === this.currPart.id);
+              this.data.splice(index, 1);
+              this.data.splice(index, 0, resp.object);
+            }
+            ctrl.clseDialog();
+          }
+        }));
+      });
     }
   }
 

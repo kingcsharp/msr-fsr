@@ -9,8 +9,9 @@ namespace MSR.Domain.Abstractions.Services
     {
         Task<Customer> GetCustomerAsync(int id);
         Task<IEnumerable<Customer>> GetCustomersAsync(GetMultipleCustomers command);
-        Task<Customer> CreateCustomerAsync(CreateCustomer command);
-        Task<Customer> UpdateCustomerAsync(UpdateCustomer command);
-        Task DeleteCustomerAsync(int Id);
+        Task<Customer> CreateCustomerAsync(CreateCustomer command, bool import = false);
+        Task<Customer> UpdateCustomerAsync(UpdateCustomer command, bool import = false);
+        Task<Customer> DeleteCustomerAsync(int Id);
+        Task<IEnumerable<Customer>> ImportCustomers(string csvData);
     }
 }

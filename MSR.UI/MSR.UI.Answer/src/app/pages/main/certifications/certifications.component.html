@@ -1,0 +1,93 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <h1 class="page-title">
+                <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+                {{globals.activeMenu.name}}
+            </h1>
+        </div>
+        <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+            <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+        </div>
+    </div>
+ </div>
+        <widget>
+            <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+                [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+                [rowsPerPageOptions]="[10,25,50,100]"  [loading]="loading"  [paginator]="true"  [filterDelay]="0"
+                stateStorage="local"  stateKey="{{gridStorageId}}">
+                <ng-template pTemplate="caption">
+                    <div class="text-right">
+                        <button *ngIf="canAddHelpPage" class="btn btn-success width-100 mb-xs sm-mrg"  role="button"
+                             data-cy="add-button">
+                            + Add
+                        </button>
+                        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+                            [gridVersion]="gridVersion"  data-cy="usergrid-options"  [hidden]="false">
+                        </grid-options>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+                            data-cy="certifications-header">
+                            {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th grid-input-filter [dt]="dt" searchField="employeeName"
+                            [hidden]="!commonGrid.isVisibleCol('employeeName',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="certificationName"
+                            [hidden]="!commonGrid.isVisibleCol('certificationName',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th [hidden]="!commonGrid.isVisibleCol('certificationFromDate',gridSettings)">
+                            <div class="position-relative" tooltip="Search by From Date">
+                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="certificationFromDate"
+                                    [datatable]="dt">
+                                </pcalendar-wrapper>
+                            </div>
+                        </th>
+                        <th [hidden]="!commonGrid.isVisibleCol('certificationToDate',gridSettings)">
+                            <div class="position-relative" tooltip="Search by To Date">
+                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="certificationToDate"
+                                    [datatable]="dt">
+                                </pcalendar-wrapper>
+                            </div>
+                        </th>
+                        <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
+                            <div class="position-relative">
+                                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
+                                    [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
+                                    [datatable]="dt">
+                                </multiselect-wrapper>
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-certification>
+                    <tr class="ui-selectable-row">
+                        <td [hidden]="!commonGrid.isVisibleCol('employeeName', gridSettings)">
+                            {{certification.employeeName}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('certificationName', gridSettings)">
+                            {{certification.certificationName}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('certificationFromDate', gridSettings)">
+                            {{certification.certificationFromDate  | userTimezone}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('certificationToDate', gridSettings)">
+                            {{certification.certificationToDate  | userTimezone}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('status', gridSettings)">
+                            {{certification.status}}
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" style="text-align:left">No Certifications to Display</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </widget>

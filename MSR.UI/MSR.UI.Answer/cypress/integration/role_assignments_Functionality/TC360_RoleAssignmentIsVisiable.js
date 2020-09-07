@@ -5143,7 +5143,7 @@ describe('Role Assignment Functionality', () => {
                                 "url": "AdminCostSettings",
                                 "name": "Admin Cost Settings",
                                 "info": "System Wide Cost Settings",
-                                "icon": "fa fa-cog",
+                                "icon": "far fa-edit",
                                 "orderNumber": 2,
                                 "menuGroup": {
                                     "url": "#",
@@ -5546,7 +5546,7 @@ describe('Role Assignment Functionality', () => {
         
         cy.get('[data-cy=submit-button]').click()
 
-        cy.get('[data-cy=logout-link]', {timeout: 20000}).url().should('include', '/people/people')
+        cy.get('[data-cy=logout-link]', {timeout: 30000}).url().should('include', '/people/people')
 
         var menuBaseItemName = "People";
         var menuChildItemName = "Role Module Permission";
@@ -5580,7 +5580,7 @@ describe('Role Assignment Functionality', () => {
         
         cy.get('[data-cy=submit-button]').click()
 
-        cy.get('[data-cy=logout-link]', {timeout: 20000}).url().should('include', '/people/people')
+        cy.get('[data-cy=logout-link]', {timeout: 30000}).url().should('include', '/people/people')
 
         let menuBaseItemNameWIP = "WIP";
         let menuChildItemNameWIP = "WIP Menu";

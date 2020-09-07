@@ -1,12 +1,12 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { HelpService, RoleService, Role, HelpPage } from '../../../services/api.client.generated';
+import { HelpService, RoleService, Role, HelpPage, EnumMenuItem } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { EnumPrivilege, EnumMenuItem } from '../../../models/enums/privileges';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 import { Globals } from '../../../models/lib/globals';
 
 @Component({
@@ -52,9 +52,9 @@ export class HelpComponent implements OnInit {
   getHelpPages() {
 
     this.globals.showLoader(true);
-    this.helpService.helpGet(null,null, env.apiVersion).subscribe(responseHandler(response => {
+    this.helpService.helpGet(null, null, env.apiVersion).subscribe(responseHandler(response => {
       this.data = new Array<HelpPage>();
-      
+
       response.object.forEach(helpPage => {
         this.data.push(helpPage);
       });
@@ -87,7 +87,7 @@ export class HelpComponent implements OnInit {
     this.globals.showLoader(true);
     this.helpService.helpDelete(this.helpPageToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
 
-      const index: number = this.data.map(function(e) { return e.id; }).indexOf(this.helpPageToDelete.id);
+      const index: number = this.data.map(function (e) { return e.id; }).indexOf(this.helpPageToDelete.id);
       this.data.splice(index, 1);
 
     }));

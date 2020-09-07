@@ -1,5 +1,6 @@
 ﻿using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,15 +8,16 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IUserService
     {
-        Task<ICollection<User>> GetUsersAsync(GetUsers command);
-        Task<User> GetUserById(int id);
-        Task<User> CreateUserAsync(CreateUser command);
-        Task<User> UpdateUserAsync(UpdateUser command);
+        Task<ICollection<UserModel>> GetUsersAsync(GetUsers command);
+        Task<UserModel> GetUserById(int id);
+        Task<UserModel> CreateUserAsync(CreateUser command);
+        Task<UserModel> UpdateUserAsync(UpdateUser command);
         Task DeactivateUserAsync(DeactivateUser command);
-        Task<User> GetLoggedInUserData(int Id);
-        Task<User> GetUserAsync(int Id);
-        Task<User> CreateUserRoleAsync(CreateUserRole command);
+        Task<UserModel> GetLoggedInUserData(int Id);
+        Task<UserModel> GetUserAsync(int Id);
+        Task<UserModel> CreateUserRoleAsync(CreateUserRole command);
         Task UpdateUserRoleAsync(UpdateUserRole command);
         Task DeleteUserRoleAsync(DeleteUserRole command);
+        Task<IEnumerable<TrainingCertificationView>> GetTrainingCertificationAsync(GetTrainingCertification command);
     }
 }

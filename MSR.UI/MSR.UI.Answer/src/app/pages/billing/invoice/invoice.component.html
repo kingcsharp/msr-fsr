@@ -1,0 +1,338 @@
+<h1 class="page-title" data-cy="page-title">
+    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+    {{globals.activeMenu.name}}
+</h1>
+<widget>
+    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
+        currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
+        stateKey="{{gridStorageId}}">
+        <ng-template pTemplate="caption">
+            <div class="text-right">
+                <button *ngIf="userPrivileges.canRead" (click)="downloadFilteredInvoices()"
+                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="downloadFiltered-button">
+                    Download Filtered Invoices
+                </button>
+                <button *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices()"
+                    class="btn btn-success mb-xs sm-mrg" role="button" data-cy="downloadAll-button">
+                    Download All Invoices
+                </button>
+                <button *ngIf="userPrivileges.canCreate" (click)="showDialog()"
+                    class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+                    + Add
+                </button>
+                <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+                    [gridVersion]="gridVersion" data-cy="usergrid-options">
+                </grid-options>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+                    data-cy="usertable-header">
+                    {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <th grid-input-filter [dt]="dt" searchField="id" [hidden]="!cg.isVisibleCol('id',gridSettings)"
+                    [gridSettings]="gridSettings">
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="customerName"
+                    [hidden]="!cg.isVisibleCol('customerName',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="description"
+                    [hidden]="!cg.isVisibleCol('description',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="invoiceNumber"
+                    [hidden]="!cg.isVisibleCol('invoiceNumber',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="amount" [hidden]="!cg.isVisibleCol('amount',gridSettings)"
+                    [gridSettings]="gridSettings">
+                </th>
+                <th [hidden]="!cg.isVisibleCol('dueDate',gridSettings)">
+                    <div class="position-relative" tooltip="Search by Invoice Date">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="dueDate" [datatable]="dt">
+                        </pcalendar-wrapper>
+                    </div>
+                </th>
+                <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+                    <div class="position-relative" tooltip="Search by Created Date">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
+                        </pcalendar-wrapper>
+                    </div>
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="createdByName"
+                    [hidden]="!cg.isVisibleCol('createdByName',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+                    <div class="position-relative" tooltip="Search by Last Updated On Date">
+                        <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="lastUpdatedOn" [datatable]="dt">
+                        </pcalendar-wrapper>
+                    </div>
+                </th>
+                <th grid-input-filter [dt]="dt" searchField="lastUpdatedByName"
+                    [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)" [gridSettings]="gridSettings">
+                </th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-invoiceModel>
+            <tr data-cy="row" class="ui-selectable-row">
+                <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
+                    {{invoiceModel.id}}
+                </td>
+                <td class="text-capitalize" [hidden]="!cg.isVisibleCol('customerName',gridSettings)">
+                    {{invoiceModel.customerName}}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('description',gridSettings)">
+                    {{invoiceModel.description}}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('invoiceNumber',gridSettings)">
+                    {{invoiceModel.invoiceNumber }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('amount',gridSettings)">
+                    {{invoiceModel.amount | currency }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('dueDate',gridSettings)">
+                    {{invoiceModel.dueDate | userTimezone }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
+                    {{invoiceModel.createdOn | userTimezone }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
+                    {{invoiceModel.createdByName }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+                    {{invoiceModel.lastUpdatedOn | userTimezone }}
+                </td>
+                <td [hidden]="!cg.isVisibleCol('lastUpdatedByName',gridSettings)">
+                    {{invoiceModel.lastUpdatedByName }}
+                </td>
+                <td>
+                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
+                        (click)="showDialog(invoiceModel)"></i>
+                    <i *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices(invoiceModel.id)"
+                        tooltip="Download Invoice" class="far fa-download pointer"></i>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" style="text-align:left">No invoices found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</widget>
+<p-dialog *ngIf="display" header="{{ currentInvoice.id === undefined ?'Create Invoice':'Edit Invoice'}}"
+    [(visible)]="display" [style]="{width: '100vw'}" data-cy="user-header">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="onInvoiceSubmit()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    Invoice Details
+                </h5>
+            </header>
+            <div class="widget-body">
+                <fieldset>
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <label for="description" class="col-md-2 col-form-label text-md-right">
+                            Description
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="text" id="description" name="description"
+                                [(ngModel)]="currentInvoice.description" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                                class="form-control input-transparent" tooltip="Min length 3 characters"
+                                placeholder="Description" data-cy="description-input">
+                        </div>
+                        <label for="taxPercentage" class="col-md-2 col-form-label text-md-right">
+                            Tax Percentage
+                        </label>
+                        <div class="col-md-4 ">
+                            <input type="number" id="taxPercentage" name="taxPercentage"
+                                [(ngModel)]="currentInvoice.taxPercentage" data-validate="parsley"
+                                data-parsley-trigger="change" data-parsley-required="true"
+                                data-parsley-range="[0, 100]"	
+                                class="form-control input-transparent" placeholder="Tax Percentage"
+                                data-cy="taxPercentage-input">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+                            Location
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
+                                (onChange)="locationChanged()" optionLabel="name" placeholder="Select Location"
+                                name="locations" [options]="locations" dataKey="id" [virtualScroll]="true" itemSize="30"
+                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.location"
+                                [ngModelOptions]="{standalone: true}" data-cy="invoice-location">
+                            </p-dropdown>
+                        </div>
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
+                            Customer
+                        </label>
+                        <div class="col-md-4 col-12">
+                            <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
+                                (onChange)="customerChanged()" optionLabel="name" placeholder="Select Customer"
+                                name="customers" [options]="customers" dataKey="id" [virtualScroll]="true" itemSize="30"
+                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customer"
+                                [ngModelOptions]="{standalone: true}"  data-cy="invoice-customer">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2  col-form-label text-md-right">
+                            Invoice Date
+                        </label>
+                        <div class="col-md-4 ">
+                            <div  data-cy="actual-endDate" class="display-inline-block isActive">
+                                <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="currentInvoice.dueDate"
+                                    dataType="string" [locale]="calendarEn">
+                                </p-calendar>
+                            </div>
+                        </div>
+                        <label class="col-md-2  col-form-label text-md-right">
+                            Combine Selected
+                        </label>
+                        <div class="col-md-4 ">
+                            <div class="display-inline-block isActive">
+                                <label class="form-check-label" for="combineSelected" class="switch">
+                                    <input class="form-check-input" [(ngModel)]="combineSelected"
+                                        [ngModelOptions]="{standalone: true}" name="isKit" type="checkbox" class="ios"
+                                        checked id="combineSelected" />
+                                    <i data-cy="combineSelected-checkbox"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                            Work Orders
+                        </label>
+                        <div class="col-md-10 col-12">
+                            <multiselect-wrapper-form *ngIf="showInvoiceItems" [options]="invoiceItemOptions"
+                                [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId"
+                                defaultLabelProperty="purchaseNumber" defaultLabel="Select Work Orders">
+                            </multiselect-wrapper-form>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+        <section>
+            <header>
+                <h5>
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    Work Orders
+                </h5>
+            </header>
+            <widget>
+                <p-table #dt2 [value]="workorders" dataKey="id" styleClass="ui-table-customers formTbl"
+                    [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
+                    [paginator]="true" currentPageReportTemplate="Showing {first}-{last} of {{workorders?.length}}"
+                    [filterDelay]="0" stateStorage="local" stateKey="{{gridWoStorageId}}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th></th>
+                            <th *ngFor="let col of gridWoSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+                                data-cy="workorder-table-header">
+                                {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="purchase.customerPurchaseNumber"
+                                [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="purchase.customerLineNumber"
+                                [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="serialNumber"
+                                [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="location.name"
+                                [hidden]="!cg.isVisibleCol('location.name',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="product.name"
+                                [hidden]="!cg.isVisibleCol('product.name',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                            <th [hidden]="!cg.isVisibleCol('actualEndDate',gridWoSettings)">
+                                <div class="position-relative" tooltip="Search by Work Order Complete Date">
+                                    <pcalendar-wrapper [gridStorageId]="gridWoSettings" filterId="actualEndDate"
+                                        [datatable]="dt2">
+                                    </pcalendar-wrapper>
+                                </div>
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="product.totalSalePrice"
+                                [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-workOrderModel>
+                        <tr class="ui-selectable-row">
+                            <td data-cy="work-order-checkbox">
+                                <p-checkbox [(ngModel)]="workOrderModel.checked" [ngModelOptions]="{standalone: true}"
+                                    (onChange)="selectWorkOrder($event,workOrderModel)" binary="true"></p-checkbox>
+                            </td>
+                            <td class="text-capitalize"
+                                [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">
+                                {{workOrderModel.purchase.customerPurchaseNumber}}
+                            </td>
+                            <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)">
+                                {{workOrderModel.purchase.customerLineNumber}}
+                            </td>
+                            <td class="text-capitalize" [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)">
+                                {{workOrderModel.serialNumber}}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('location.name',gridWoSettings)" class="text-capitalize">
+                                {{workOrderModel.location.name}}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('product.name',gridWoSettings)" class="text-capitalize">
+                                {{workOrderModel.product.name }}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('actualEndDate',gridWoSettings)" class="text-capitalize">
+                                {{workOrderModel.actualEndDate | userTimezone }}
+                            </td>
+                            <td [hidden]="!cg.isVisibleCol('product.totalSalePrice',gridWoSettings)"
+                                class="text-capitalize">
+                                {{workOrderModel.product.totalSalePrice | currency}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8" style="text-align:left">No work orders found.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </widget>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                    data-cy="save-button">
+                    Save
+                </button>
+                <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Cancel
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

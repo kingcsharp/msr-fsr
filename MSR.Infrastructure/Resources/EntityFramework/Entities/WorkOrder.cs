@@ -32,10 +32,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? LocationId { get; set; }
 
+        [ForeignKey("LocationId")]
+
         public virtual Location Location { get; set; }
 
+        [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
 
+        [ForeignKey("PurchaseId")]
         public virtual Purchase Purchase { get; set; }
 
         public virtual ICollection<WorkOrderPart> WorkOrderParts { get; set; }

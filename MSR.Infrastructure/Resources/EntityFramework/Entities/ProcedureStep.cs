@@ -26,13 +26,19 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? GoToStepId { get; set; }
 
         public int PrintOrder { get; set; }
+        public double? LaborTime { get; set; }
+        public double? EquipmentTime { get; set; }
+
+        [ForeignKey("ProcedureStepTypeId")]
+        public ProcedureStepType StepType { get; set; }
+        public int? ProcedureStepTypeId { get; set; }
 
         [Column(TypeName = "money")]
         public decimal? ReplacementCost { get; set; }
 
         public float? Utilization { get; set; }
 
-        public double? EquipmentTime { get; set; }
+        public int? UsefulLife { get; set; }
 
         public virtual Procedure Procedure { get; set; }
 

@@ -32,5 +32,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ProcedureType ProcedureType { get; set; }
 
         public virtual ICollection<ProcedureStep> ProcedureSteps { get; set; }
+
+        // Because of EF limitations, this list of files will be all files with
+        // this entity ID OF ANY TYPE, and must be further filtered in the
+        // query to get the real list.
+        public ICollection<FileEntityMap> ReferenceFiles { get; set; }
     }
 }

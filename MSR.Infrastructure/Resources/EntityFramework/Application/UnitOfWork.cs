@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.EntityFramework.Repository;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
@@ -26,6 +27,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ProcedureStep> _procedureSteps;
         private IRepository<ProcedureStepMonitor> _monitors;
         private IRepository<ProcedureStepTemplate> _procedureStepTemplates;
+        private IRepository<ProcedureStepType> _procedureStepTypes;
         private IRepository<ProcedureType> _procedureTypes;
         private IRepository<Status> _status;
         private IRepository<UserRole> _userRoles;
@@ -39,6 +41,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<UserApproval> _userApproval;
         private IRepository<UserRoleApproval> _userRoleApproval;
         private IRepository<MonitorInputType> _monitorInputTypes;
+        private IRepository<MonitorType> _monitorTypes;
         private IRepository<MonitorListItem> _monitorListItems;
         private IRepository<WorkflowGroup> _workflowGroup;
         private IRepository<WorkflowStage> _workflowStage;
@@ -57,22 +60,29 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Document> _documents;
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
+        private IRepository<PurchaseOrderProduct> _purchaseOrderProducts;
+        private IRepository<Purchase> _purchases;
         private IRepository<PartSubPartMap> _partSubPartMap;
         private IRepository<Invoice> _invoices;
         private IRepository<InvoiceItem> _invoiceItems;
         private IRepository<WorkOrder> _workOrders;
         private IRepository<WorkOrderPart> _workOrderParts;
         private IRepository<WorkOrderTask> _workOrderTasks;
-
+        private IRepository<AdminCostSetting> _adminCostSettings;
         private IRepository<File> _files;
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
+        private IRepository<Sensor> _sensor;
+        private IRepository<Quote> _quotes;
+        private IRepository<TimeZone> _timezone;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }
         public IRepository<PurchaseOrder> PurchaseOrders { get { return _purchaseOrders ?? (_purchaseOrders = new EFRepository<PurchaseOrder>(Context)); } }
+        public IRepository<PurchaseOrderProduct> PurchaseOrderProducts { get { return _purchaseOrderProducts ?? (_purchaseOrderProducts = new EFRepository<PurchaseOrderProduct>(Context)); } }
+        public IRepository<Purchase> Purchases { get { return _purchases ?? (_purchases = new EFRepository<Purchase>(Context)); } }
         public IRepository<User> Users { get { return _users ??= new EFRepository<User>(Context); } }
         public IRepository<Customer> Customers { get { return _customers ??= new EFRepository<Customer>(Context); } }
         public IRepository<CustomerApproval> CustomerApprovals { get { return _customerApprovals ??= new EFRepository<CustomerApproval>(Context); } }
@@ -108,8 +118,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
         public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
+        public IRepository<ProcedureStepType> ProcedureStepTypes { get { return _procedureStepTypes ??= new EFRepository<ProcedureStepType>(Context); } }
         public IRepository<ProcedureType> ProcedureTypes { get { return _procedureTypes ??= new EFRepository<ProcedureType>(Context); } }
         public IRepository<MonitorInputType> MonitorInputTypes { get { return _monitorInputTypes ??= new EFRepository<MonitorInputType>(Context); } }
+        public IRepository<MonitorType> MonitorTypes { get { return _monitorTypes ??= new EFRepository<MonitorType>(Context); } }
         public IRepository<MonitorListItem> MonitorListItems { get { return _monitorListItems ??= new EFRepository<MonitorListItem>(Context); } }
         public IRepository<ApprovalTransactionLog> ApprovalTransactionLogs { get { return _approvalTransactionLog ??= new EFRepository<ApprovalTransactionLog>(Context); } }
         public IRepository<HelpPage> HelpPages { get { return _helpPage ??= new EFRepository<HelpPage>(Context); } }
@@ -123,6 +135,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkOrderTask> WorkOrderTasks { get { return _workOrderTasks ??= new EFRepository<WorkOrderTask>(Context); } }
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
+        public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
+        public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
+        public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
+        public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }
 
         #endregion Repositories
 
@@ -132,6 +148,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         }
 
         public AnswerContext Context { get; }
+
 
         public void Dispose()
         {
@@ -154,9 +171,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             {
                 await Context.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                var data = ex.Message;
+                throw;
             }
         }
 

@@ -9,6 +9,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Infrastructure.Resources.Services.Workflow
 {
@@ -32,7 +33,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 workflowStage = workflowStage.Where(i => i.Id == command.Id.Value);
             }
 
-            var result = await workflowStage.Include(x=>x.Group).ToListAsync();
+            var result = await workflowStage.Include(x => x.Group).ToListAsync();
             var ret = result.Select(workflowGrou => _mapper.Map<WorkflowStageModel>(workflowGrou)).ToList();
             return ret;
         }
@@ -49,7 +50,7 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task<WorkflowStageModel> UpdateWorkFlowStageAsync(UpdateWorkflowStageModel command)
         {
-            var efWorkFlow = await _unitOfWork.WorkflowStages.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            var efWorkFlow = await _unitOfWork.WorkflowStages.Query().Include(x => x.Group).FirstOrDefaultAsync(x => x.Id == command.Id);
 
             if (efWorkFlow == null)
             {
@@ -82,13 +83,26 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
 
         public async Task DeactivateWorkFlowStageAsync(DeactivateWorkflowStage command)
         {
-            var workFlow = await _unitOfWork.WorkflowStages.Query().Include(x => x.Group)
-           .FirstOrDefaultAsync(x => x.Id == command.Id);
-            if (workFlow == null)
+            var workFlowStage = await _unitOfWork.WorkflowStages.Query().Include(x => x.Group)
+                .FirstOrDefaultAsync(x => x.Id == command.Id);
+            var cannotBeDeleted = _unitOfWork.WorkflowStageMaps.Query().Any(x => x.WorkflowStageId == command.Id);
+            if (cannotBeDeleted)
+            {
+                throw new DomainException($"Can not remove {workFlowStage.Name} because it belongs to approval workflows.", DomainError.NotFound);
+            }
+            
+            if (workFlowStage == null)
             {
                 return;
             }
-            _unitOfWork.WorkflowStages.Delete(false, workFlow, true);
+
+            foreach (var item in workFlowStage.Group)
+            {
+                _unitOfWork.WorkflowGroupStageMaps.Delete(false, item, true);
+            }
+            await _unitOfWork.SaveChangesAsync();
+
+            _unitOfWork.WorkflowStages.Delete(false, workFlowStage, true);
 
             await _unitOfWork.SaveChangesAsync();
         }

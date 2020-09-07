@@ -3,7 +3,7 @@ import { take } from 'rxjs/operators';
 import { responseHandler } from '../../utils/responseHandler';
 
 import {
-  EnumMenuItem, PartService, ImportPartsRequest, PartModel
+  EnumMenuItem, PartService, ImportPartsRequest, PartModel, FileService, ImportRequest
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 
@@ -20,13 +20,11 @@ export class CsvImportComponent implements OnInit {
   @Output('onUpload') change = new EventEmitter<Array<any>>();
   @Input() showButton: boolean;
   @Input() title: string;
-  @Input() fileName: string; //file needs to be placed in assets/CsvFiles/yourfilename.csv
-  constructor(private partService: PartService) {
-
+  @Input() fileName: string; // file needs to be placed in assets/CsvFiles/yourfilename.csv
+  constructor(private partService: PartService, private fileService: FileService) {
   }
 
   ngOnInit(): void {
-
   }
 
   submitImport() {
@@ -35,6 +33,16 @@ export class CsvImportComponent implements OnInit {
         let imporPartReq = new ImportPartsRequest();
         imporPartReq.base64Data = this.uploadedFiles[0].base64String;
         this.partService.import(env.apiVersion, imporPartReq).pipe(take(1))
+          .subscribe(responseHandler((resp) => {
+            this.change.emit(resp.object);
+            this.clseDialog();
+          }));
+        break;
+      default:
+        let imporReq = new ImportRequest();
+        imporReq.base64Data = this.uploadedFiles[0].base64String;
+        imporReq.menuItem = this.menuItem;
+        this.fileService.import(env.apiVersion, imporReq).pipe(take(1))
           .subscribe(responseHandler((resp) => {
             this.change.emit(resp.object);
             this.clseDialog();

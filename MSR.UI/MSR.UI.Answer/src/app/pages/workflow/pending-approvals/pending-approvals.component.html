@@ -85,12 +85,6 @@
               (click)="cg.filter(dt,'workflowCreatedByName')"></i>
           </div>
         </th>
-
-        <th [hidden]="!cg.isVisibleCol('status',gridSettings)">
-          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuss" [filterId]="'status'"
-            [defaultText]="'Search by Status'" [defaultTextTooltip]="''" [datatable]="dt">
-          </multiselect-wrapper>
-        </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
           <div class="position-relative">
             <input id="createdOn" pInputText type="text" tooltip="Search by Created On"
@@ -128,7 +122,7 @@
             (onShown)="getApprovalInfo(approvalTables[approval.activityType],approval.id)"
             (onHidden)="clearGetApprovalInfo()" [popover]="popTemplate" [popoverContext]="approvalInfo"
             popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
-            View Details
+            Details
           </button>
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings)">
@@ -143,11 +137,8 @@
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings)">
           {{approval.workflowCreatedByName}}
         </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('status',gridSettings)">
-          {{approval.status}}
-        </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-          {{approval.createdOn | date :'short'}}
+          {{approval.createdOn | userTimezone}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdByName',gridSettings)">
           {{approval.createdByName}}
@@ -267,11 +258,6 @@
               (click)="cg.filter(dt2,'workflowCreatedByName')"></i>
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('status',gridSettings2)">
-          <multiselect-wrapper [gridStorageId]="gridStorageId2" [options]="statuss" [filterId]="'status'"
-            [defaultText]="'Search by Status'" [defaultTextTooltip]="''" [datatable]="dt2">
-          </multiselect-wrapper>
-        </th>
         <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
           <div class="position-relative">
             <input id="createdOn2" pInputText type="text" tooltip="Search by Created On"
@@ -309,7 +295,7 @@
             (onShown)="getApprovalInfo(approvalTables[approval.activityType],approval.id)"
             (onHidden)="clearGetApprovalInfo()" [popover]="popTemplate" [popoverContext]="approvalInfo"
             popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
-            View Details
+            Details
           </button>
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
@@ -324,11 +310,8 @@
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowCreatedByName',gridSettings2)">
           {{approval.workflowCreatedByName}}
         </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('status',gridSettings2)">
-          {{approval.status}}
-        </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdOn',gridSettings2)">
-          {{approval.createdOn | date :'short'}}
+          {{approval.createdOn | userTimezone}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('createdByName',gridSettings2)">
           {{approval.createdByName}}
@@ -373,10 +356,10 @@
               Comments
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="comments" name="comments" [(ngModel)]="currAction.comments" data-validate="parsley"
+              <textarea rows="4" cols="50" id="comments" name="comments" [(ngModel)]="currAction.comments" data-validate="parsley"
                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                 class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Comments"
-                data-cy="name-input">
+                data-cy="name-input"></textarea>
             </div>
           </div>
         </fieldset>

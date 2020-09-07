@@ -1,0 +1,1625 @@
+--- swagger-work.json.orig	2020-09-07 11:44:50.389109400 -0400
++++ swagger-work.json	2020-09-07 11:44:50.728091700 -0400
+@@ -8,7 +8,7 @@
+   },
+   "servers": [
+     {
+-      "url": "https://localhost:44398"
++      "url": "https://2421c96cbfde.ngrok.io"
+     }
+   ],
+   "paths": {
+@@ -25,7 +25,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -43,7 +44,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -69,7 +70,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -106,7 +108,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -124,7 +127,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "204": {
++          "404": {
+             "description": ""
+           }
+         }
+@@ -143,7 +146,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -161,7 +165,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "204": {
++          "404": {
+             "description": ""
+           }
+         }
+@@ -216,7 +220,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 1
+           }
+@@ -1366,7 +1371,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 3
+           }
+@@ -1661,7 +1667,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 1
+           }
+@@ -1774,7 +1781,8 @@
+             "in": "query",
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 3
+             },
+             "x-position": 1
+           },
+@@ -1826,7 +1834,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 3
+             },
+             "x-position": 1
+           },
+@@ -1835,7 +1844,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -1868,7 +1878,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -1877,13 +1888,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+         ],
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -1907,7 +1919,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -1949,7 +1962,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -1994,7 +2008,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -2003,13 +2018,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+         ],
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -2035,7 +2051,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2079,7 +2096,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2122,7 +2140,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 2
+             },
+             "x-position": 1
+           },
+@@ -2131,7 +2150,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2161,7 +2181,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2206,7 +2227,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 3
+             },
+             "x-position": 1
+           },
+@@ -2215,7 +2237,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 3
+           }
+@@ -2258,7 +2281,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 305
+             },
+             "x-position": 1
+           },
+@@ -2268,7 +2292,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 3
+             },
+             "x-position": 2
+           },
+@@ -2277,7 +2302,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 3
+           }
+@@ -2308,7 +2334,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 305
+             },
+             "x-position": 1
+           },
+@@ -2317,7 +2344,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 3
+           }
+@@ -2340,7 +2368,7 @@
+             "content": {
+               "application/json": {
+                 "schema": {
+-                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepModel"
++                  "$ref": "#/components/schemas/AuditActionResultOfProcedureStepRequest"
+                 }
+               }
+             }
+@@ -2362,7 +2390,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -2371,13 +2400,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": 1
+             },
+             "x-position": 2
+           }
+         ],
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -2404,7 +2434,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -2414,7 +2445,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 2
+           },
+@@ -2423,13 +2455,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 3
+           }
+         ],
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -2455,7 +2488,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2497,7 +2531,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2542,7 +2577,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -2551,13 +2587,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+         ],
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -2584,7 +2621,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 3
+             },
+             "x-position": 1
+           },
+@@ -2603,7 +2641,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 3
+           }
+@@ -2636,7 +2675,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 7
+             },
+             "x-position": 1
+           },
+@@ -2645,7 +2685,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2675,7 +2716,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2717,7 +2759,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2762,7 +2805,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 1
+             },
+             "x-position": 1
+           },
+@@ -2771,7 +2815,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2803,7 +2848,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2846,7 +2892,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 6
+             },
+             "x-position": 1
+           },
+@@ -2855,7 +2902,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2885,7 +2933,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -2930,7 +2979,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -2939,13 +2989,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+         ],
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -2971,7 +3022,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -3014,7 +3066,8 @@
+             "schema": {
+               "type": "integer",
+               "format": "int32",
+-              "nullable": true
++              "nullable": true,
++              "example": 25
+             },
+             "x-position": 1
+           },
+@@ -3023,7 +3076,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -3053,7 +3107,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -3098,7 +3153,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -3107,13 +3163,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+         ],
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -3139,7 +3196,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": 1
+             },
+             "x-position": 2
+           }
+@@ -3192,7 +3250,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -3276,7 +3335,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": 1
+             },
+             "x-position": 2
+           }
+@@ -3306,7 +3366,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -3515,7 +3576,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 1
+           }
+@@ -3671,7 +3733,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 1
+           }
+@@ -3845,7 +3908,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 3
+           }
+@@ -3982,7 +4046,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 9
+           }
+@@ -4012,7 +4077,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -4030,7 +4096,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "200": {
++          "409": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -4054,7 +4120,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -4072,7 +4139,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -4098,7 +4165,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 1
+           }
+@@ -4173,7 +4241,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -4182,13 +4251,14 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+         ],
+         "responses": {
+-          "200": {
++          "401": {
+             "description": ""
+           }
+         }
+@@ -4630,7 +4700,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 1
+           }
+@@ -4866,7 +4937,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -4895,7 +4967,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -4913,7 +4986,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -4936,7 +5009,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -4954,7 +5028,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -4980,7 +5054,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -4989,7 +5064,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -5030,7 +5106,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -5059,7 +5136,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -5100,7 +5178,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -5118,7 +5197,7 @@
+           "x-position": 1
+         },
+         "responses": {
+-          "200": {
++          "404": {
+             "description": "",
+             "content": {
+               "application/json": {
+@@ -5144,7 +5223,8 @@
+             "required": true,
+             "schema": {
+               "type": "integer",
+-              "format": "int32"
++              "format": "int32",
++              "example": 2147483647
+             },
+             "x-position": 1
+           },
+@@ -5153,7 +5233,8 @@
+             "in": "path",
+             "required": true,
+             "schema": {
+-              "type": "string"
++              "type": "string",
++              "example": "1"
+             },
+             "x-position": 2
+           }
+@@ -5258,6 +5339,7 @@
+       "Exception": {
+         "type": "object",
+         "additionalProperties": true,
++        "nullable": true,
+         "properties": {
+           "StackTrace": {
+             "type": "string",
+@@ -5313,6 +5395,9 @@
+             "type": "string",
+             "minLength": 1
+           }
++        },
++        "example": {
++            "userName": "91b3e0455f51f25b"
+         }
+       },
+       "ForgotUserNameRequest": {
+@@ -5326,6 +5411,9 @@
+             "type": "string",
+             "minLength": 1
+           }
++        },
++        "example": {
++            "email": "91b3e0455f51f25b@cmhworks.com"
+         }
+       },
+       "ResetPasswordRequest": {
+@@ -5362,6 +5450,10 @@
+             "type": "string",
+             "minLength": 1
+           }
++        },
++        "example": {
++            "token": "kvcNhL+3YY5K4WfYNxC31POQcgSvdpsnSgrsfqeAncE=",
++            "newPassword": "dummy"
+         }
+       },
+       "AuditActionResultOfAdminCostSettingsModel": {
+@@ -5587,6 +5679,7 @@
+           "timeZone": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null" },
+               {
+                 "$ref": "#/components/schemas/TimeZoneModel"
+               }
+@@ -5616,6 +5709,7 @@
+           "fileModel": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null" },
+               {
+                 "$ref": "#/components/schemas/FileModel"
+               }
+@@ -5918,6 +6012,7 @@
+               "lastUpdated": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/UserModel"
+                   }
+@@ -5948,6 +6043,7 @@
+               "created": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/UserModel"
+                   }
+@@ -6058,6 +6154,7 @@
+               "parent": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/LocationModel"
+                   }
+@@ -6074,6 +6171,7 @@
+               "timeZone": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/TimeZoneModel"
+                   }
+@@ -7023,6 +7121,10 @@
+             "type": "integer",
+             "format": "int32"
+           }
++        },
++        "example": {
++            "menuId": 2147483647,
++            "roleId": 2147483647
+         }
+       },
+       "UpdateMenuRoleMapRequest": {
+@@ -7059,6 +7161,15 @@
+           "canApprove": {
+             "type": "boolean"
+           }
++        },
++        "example": {
++          "menuRoleId": 1,
++          "canRead": true,
++          "canCreate": true,
++          "canEdit": true,
++          "canDelete": true,
++          "canActivate": true,
++          "canApprove": true
+         }
+       },
+       "AuditActionResultOfICollectionOfMonitorModel": {
+@@ -7322,6 +7433,11 @@
+               "$ref": "#/components/schemas/FileRequest"
+             }
+           }
++        },
++        "example": {
++            "name": "TESTNAME1594327234",
++            "partNumber": "TESTPARTNUM1594327234",
++            "oemPartNumber": "TESTOEMPARTNUM1594327234"
+         }
+       },
+       "FileRequest": {
+@@ -7365,7 +7481,12 @@
+               }
+             }
+           }
+-        ]
++        ],
++        "example": {
++          "id": 2,
++          "name": "TESTNAME1598380612",
++          "partNumber": "TESTNUMBER1598380612"
++        }
+       },
+       "ImportPartsRequest": {
+         "type": "object",
+@@ -7380,6 +7501,9 @@
+             "minLength": 1,
+             "example": "77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
+           }
++        },
++        "example": {
++            "base64Data": "data:text/plain;base64,77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
+         }
+       },
+       "AuditActionResultOfProcedure": {
+@@ -7472,7 +7596,14 @@
+               }
+             }
+           }
+-        ]
++        ],
++        "example": {
++            "name": "PROCNAME1594440933",
++            "procedureTypeId": 1,
++            "revision": 999,
++            "duration": 999,
++            "durationType": "DURTYPE"
++        }
+       },
+       "ProcedureType": {
+         "type": "object",
+@@ -7569,6 +7700,12 @@
+               "$ref": "#/components/schemas/FileRequest"
+             }
+           }
++        },
++        "example": {
++            "name": "PROC1598387581",
++            "comments": "This here is a comment Tue, Aug 25, 2020  1:33:18 PM",
++            "durationType": "hours",
++            "procedureTypeId": 1
+         }
+       },
+       "AuditActionResultOfProcedureStepModel": {
+@@ -7777,6 +7914,14 @@
+               "$ref": "#/components/schemas/RoleRequest"
+             }
+           }
++        },
++        "example": {
++            "title": "TITLE1594442130",
++            "text": "TEXT1594442130",
++            "procedureStepType": "TYPE1594442130",
++            "roles": [
++                { "id": 1 }
++            ]
+         }
+       },
+       "RoleRequest": {
+@@ -7992,6 +8137,14 @@
+               "$ref": "#/components/schemas/FileRequest"
+             }
+           }
++        },
++        "example": {
++            "id": 3,
++            "name": "PROCNAME1594440933",
++            "procedureTypeId": 1,
++            "revision": 999,
++            "duration": 999,
++            "durationType": "DURTYPE"
+         }
+       },
+       "UpdateProcedureStepRequest": {
+@@ -8094,6 +8247,12 @@
+               "$ref": "#/components/schemas/RoleRequest"
+             }
+           }
++        },
++        "example": {
++            "procedureStepId": 3,
++            "procedureId": 305,
++            "procedureStepType": "TYPE1594442130",
++            "title": "NEWTITLE1594442279"
+         }
+       },
+       "AuditActionResultOfProcedureStepMonitor": {
+@@ -8243,6 +8402,14 @@
+             "format": "float",
+             "nullable": true
+           }
++        },
++        "example" : {
++            "procedureStepId": 3,
++            "description": "DESC1594442595",
++            "faultHandling": "REJECT",
++            "monitorType": "EQUIPMENT",
++            "inputType": "MANUAL",
++            "targetValue": "LOOKSGOOD"
+         }
+       },
+       "AuditActionResultOfICollectionOfProcedureStepMonitor": {
+@@ -8330,6 +8497,11 @@
+             "format": "float",
+             "nullable": true
+           }
++        },
++        "example" : {
++            "id": 3,
++            "description": "DESC1594442664",
++            "targetValue": "TARGET1594442664"
+         }
+       },
+       "AuditActionResultOfICollectionOfProcedureStepTemplateModel": {
+@@ -8555,6 +8727,12 @@
+             "description": "Comments",
+             "nullable": true
+           }
++        },
++        "example": {
++            "title": "TESTTITLE1598384740",
++            "stepText": "TESTSTEPTEXT1598384740",
++            "comments": "here are some comments Tue, Aug 25, 2020 12:46:12 PM",
++            "roles": [ 1 ]
+         }
+       },
+       "UpdateProcedureStepTemplateRequest": {
+@@ -8654,6 +8832,11 @@
+             "description": "Comments",
+             "nullable": true
+           }
++        },
++        "example" :{
++            "id": 7,
++            "title": "TITLE1598384384",
++            "stepText": "STEPTEXT1598384384"
+         }
+       },
+       "AuditActionResultOfICollectionOfProcedureStepTypeModel": {
+@@ -8789,6 +8972,12 @@
+               "format": "int32"
+             }
+           }
++        },
++        "example": {
++            "title": "PROCTEMP1598415724",
++            "comments": "Here is a comment from Tue, Aug 25, 2020  9:24:25 PM",
++            "text": "TEXT1598415724",
++            "roles": [ 1 ]
+         }
+       },
+       "UpdateProcedureTemplateRequest": {
+@@ -8885,6 +9074,11 @@
+               "format": "int32"
+             }
+           }
++        },
++        "example": {
++            "id": 6,
++            "title": "UPDTITLE1598415399",
++            "roles": [ 1 ]
+         }
+       },
+       "AuditActionResultOfProcedureType": {
+@@ -8922,6 +9116,9 @@
+             "description": "Gets or Sets Name",
+             "minLength": 1
+           }
++        },
++        "example": {
++            "name": "PROCTYPE1598416853"
+         }
+       },
+       "AuditActionResultOfICollectionOfProcedureType": {
+@@ -8961,6 +9158,10 @@
+             "description": "Gets or Sets Name",
+             "nullable": true
+           }
++        },
++        "example": {
++            "id": 25,
++            "name": "PROCTYPE1598416546"
+         }
+       },
+       "AuditActionResultOfProductModel": {
+@@ -9013,6 +9214,7 @@
+               "customer": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/Customer"
+                   }
+@@ -9082,6 +9284,7 @@
+               "quote": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/QuoteModel"
+                   }
+@@ -9185,6 +9388,7 @@
+           "status": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null"},
+               {
+                 "$ref": "#/components/schemas/StatusModel"
+               }
+@@ -9226,6 +9430,10 @@
+             "type": "string",
+             "nullable": true
+           }
++        },
++        "example": {
++            "id": 25,
++            "name": "PROCTYPE1598416546"
+         }
+       },
+       "QuoteItemModel": {
+@@ -9322,6 +9530,7 @@
+           "location": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null"},
+               {
+                 "$ref": "#/components/schemas/LocationModel"
+               }
+@@ -9419,6 +9628,7 @@
+               "status": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/StatusModel"
+                   }
+@@ -9434,6 +9644,7 @@
+               "location": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/LocationModel"
+                   }
+@@ -9442,6 +9653,7 @@
+               "purchaseOrder": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/PurchaseOrderModel"
+                   }
+@@ -9450,6 +9662,7 @@
+               "purchaseOrderProduct": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/PurchaseOrderProductView"
+                   }
+@@ -9513,6 +9726,7 @@
+               "location": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/LocationModel"
+                   }
+@@ -9664,6 +9878,7 @@
+           "status": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null"},
+               {
+                 "$ref": "#/components/schemas/StatusModel"
+               }
+@@ -9672,6 +9887,7 @@
+           "workOrder": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null"},
+               {
+                 "$ref": "#/components/schemas/WorkOrderModel"
+               }
+@@ -9697,6 +9913,7 @@
+           "workOrderTask": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null"},
+               {
+                 "$ref": "#/components/schemas/WorkOrderTaskModel"
+               }
+@@ -10026,6 +10243,19 @@
+             "description": "PurchasePrice",
+             "format": "decimal"
+           }
++        },
++        "example" : {
++          "purchaseOrderId": 1,
++          "purchaseOrderProductId": 2,
++          "customerPurchaseNumber": "PURCHASE1598926122",
++          "locationId": 54,
++          "serialNumber": "SN1598926122",
++          "statusId": 1,
++          "qty": 1,
++          "customerLineNumber": 1,
++          "mttn": "1598926122",
++          "dueDate": "2099-12-31",
++          "purchasePrice": 123.45
+         }
+       },
+       "AuditActionResultOfIEnumerableOfPurchaseOrderView": {
+@@ -10351,6 +10581,7 @@
+               "object": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/QuoteModel"
+                   }
+@@ -10569,6 +10800,10 @@
+               "format": "int32"
+             }
+           }
++        },
++        "example": {
++            "username": "95f27a6f8b3ffa55",
++            "isActive": false
+         }
+       },
+       "UpdateRoleRequest": {
+@@ -10643,6 +10878,7 @@
+               "object": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/UserModel"
+                   }
+@@ -10782,11 +11018,16 @@
+           "file": {
+             "nullable": true,
+             "oneOf": [
++              { "type": "null"},
+               {
+                 "$ref": "#/components/schemas/FileModel"
+               }
+             ]
+           }
++        },
++        "example": {
++            "username": "95f27a6f8b3ffa55",
++            "isActive": false
+         }
+       },
+       "UpdateUserRequest": {
+@@ -10807,7 +11048,11 @@
+               }
+             }
+           }
+-        ]
++        ],
++        "example": {
++            "id": 2147483647,
++            "isActive": false
++        }
+       },
+       "CreateUserRoleRequest": {
+         "type": "object",
+@@ -10988,6 +11233,7 @@
+               "object": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/PendingApprovalPopoverModel"
+                   }
+@@ -11169,6 +11415,7 @@
+             "description": " ",
+             "nullable": true,
+             "oneOf": [
++              { "type": "null" },
+               {
+                 "$ref": "#/components/schemas/UpdatePartRequest"
+               }
+@@ -11352,6 +11599,7 @@
+               "object": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/PendingApprovalNotification"
+                   }
+@@ -11547,6 +11795,7 @@
+               "object": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/WorkflowModel"
+                   }
+@@ -11683,6 +11932,19 @@
+               "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
+             }
+           }
++        },
++        "example" : {
++          "purchaseOrderId": 1,
++          "purchaseOrderProductId": 2,
++          "customerPurchaseNumber": "PURCHASE1598926122",
++          "locationId": 54,
++          "serialNumber": "SN1598926122",
++          "statusId": 1,
++          "qty": 1,
++          "customerLineNumber": 1,
++          "mttn": "1598926122",
++          "dueDate": "2099-12-31",
++          "purchasePrice": 123.45
+         }
+       },
+       "WorkflowGroupRoleMapModel": {
+@@ -11732,6 +11994,7 @@
+               "object": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null"},
+                   {
+                     "$ref": "#/components/schemas/WorkflowGroupModel"
+                   }
+@@ -11769,6 +12032,14 @@
+               "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
+             }
+           }
++        },
++        "example": {
++            "name": "CreateWorkflowGroupRequest-8faf6491cf88817e",
++            "isActive": true,
++            "roles": [{
++                "roleId": 2147483647,
++                "name": "WorkflowGroupRoleMapModel-8faf6491cf88817e"
++            }]
+         }
+       },
+       "UpdateWorkflowGroupRequest": {
+@@ -11789,7 +12060,16 @@
+               }
+             }
+           }
+-        ]
++        ],
++        "example": {
++            "name": "CreateWorkflowGroupRequest-d416d136293debef",
++            "isActive": true,
++            "roles": [{
++                "roleId": 2147483647,
++                "name": "WorkflowGroupRoleMapModel-d416d136293debef"
++            }],
++            "id": 2147483647
++        }
+       },
+       "AuditActionResultOfICollectionOfWorkflowStageModel": {
+         "allOf": [
+@@ -11857,6 +12137,10 @@
+             "type": "integer",
+             "format": "int32"
+           }
++        },
++        "example": {
++            "menuId": 2147483647,
++            "roleId": 2147483647
+         }
+       },
+       "AuditActionResultOfWorkflowStageModel": {
+@@ -11872,6 +12156,7 @@
+               "object": {
+                 "nullable": true,
+                 "oneOf": [
++                  { "type": "null" },
+                   {
+                     "$ref": "#/components/schemas/WorkflowStageModel"
+                   }
+@@ -11902,6 +12187,36 @@
+               "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
+             }
+           }
++        },
++        "example" : {
++          "purchaseOrderId": 1,
++          "purchaseOrderProductId": 2,
++          "customerPurchaseNumber": "PURCHASE1598926122",
++          "locationId": 54,
++          "serialNumber": "SN1598926122",
++          "statusId": 1,
++          "qty": 1,
++          "customerLineNumber": 1,
++          "mttn": "1598926122",
++          "dueDate": "2099-12-31",
++          "purchasePrice": 123.45
++        },
++        "example": {
++            "username": "95f27a6f8b3ffa55",
++            "isActive": false
++        },
++        "example": {
++          "menuRoleId": 1,
++          "canRead": true,
++          "canCreate": true,
++          "canEdit": true,
++          "canDelete": true,
++          "canActivate": true,
++          "canApprove": true
++        },
++        "example": {
++            "name": "d8f75230c904a614",
++            "isActive": false
+         }
+       },
+       "UpdateWorkflowStageRequest": {
+@@ -11922,7 +12237,12 @@
+               }
+             }
+           }
+-        ]
++        ],
++        "example": {
++            "id": 2147483647,
++            "name": "5546379400b4c81a",
++            "isActive": false
++        }
+       }
+     },
+     "securitySchemes": {

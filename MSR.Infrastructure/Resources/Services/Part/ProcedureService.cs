@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -29,14 +30,38 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             List<EntityFramework.Entities.Procedure> procedures;
             if (command.procedureID.HasValue) {
-                procedures = await _unitOfWork.Procedures.Query().Where(x => x.Id == command.procedureID.Value).ToListAsync();
+                procedures = await _unitOfWork.Procedures
+                    .Query()
+                    .Where(x => x.Id == command.procedureID.Value)
+                    .Include(x => x.ProcedureType)
+                    .Include(x => x.ReferenceFiles)
+                    .ToListAsync();
                 if (procedures.Count == 0) {
                     throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
                 }
             } else {
-                procedures = await _unitOfWork.Procedures.Query().ToListAsync();
+                procedures = await _unitOfWork.Procedures
+                    .Query()
+                    .Include(x => x.ProcedureType)
+                    .Include(x => x.ReferenceFiles)
+                    .ToListAsync();
             }
-            var result = procedures.Select(x => _mapper.Map<Domain.Models.Procedure>(x)).OrderBy(x => x.Name).ToList();
+
+            // map and attach the right files for this object, if any
+            var result = procedures.Select(x => {
+                var model = _mapper.Map<Domain.Models.Procedure>(x);
+                model.ReferenceFiles = new List<Domain.Models.FileModel>();
+                foreach (FileEntityMap map in x.ReferenceFiles) {
+                    if (map.EntityTableName != nameof(EntityFramework.Entities.Procedure)) {
+                        continue;
+                    }
+                    model.ReferenceFiles.Add(
+                        _mapper.Map<Domain.Models.FileModel>(map.FileObject)
+                    );
+                }
+                return model;
+            }).OrderBy(x => x.Name).ToList();
+
             return result;
         }
         public async Task<Domain.Models.Procedure> CreateProcedureAsync(CreateProcedure command)
@@ -44,13 +69,16 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 Procedure procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
-                _unitOfWork.Procedures.Add(procedure);
+                var created = _unitOfWork.Procedures.Add(procedure);
                 await _unitOfWork.SaveChangesAsync();
+
+                // The API return expects the procedure type object to be loaded.
+                created.Context.Entry(procedure).Reference(x => x.ProcedureType).Load();
 
                 ret = _mapper.Map<Domain.Models.Procedure>(procedure);
             }
@@ -67,7 +95,11 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<Domain.Models.Procedure> UpdateProcedureAsync(UpdateProcedure command)
         {
-            var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var current = await _unitOfWork.Procedures
+                .Query()
+                .Where(i => i.Id == command.Id)
+                .Include(x => x.ProcedureType)
+                .FirstOrDefaultAsync();
 
             if(current is null)
             {
@@ -77,7 +109,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 var procedure = _mapper.Map(command, current);
                 _unitOfWork.Procedures.Update(procedure);
@@ -99,27 +131,35 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return ret;
 
         }
-        public async Task<ICollection<Domain.Models.ProcedureStep>> GetProcedureStepAsync(GetProcedureStep command)
+        public async Task<ICollection<Domain.Models.ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
         {
             List<EntityFramework.Entities.ProcedureStep> steps;
             if (command.stepId.HasValue) {
-                steps = await _unitOfWork.ProcedureSteps.Query().Where(x => x.Id == command.stepId.Value).ToListAsync();
+                steps = await _unitOfWork.ProcedureSteps
+                    .Query()
+                    .Where(x => x.Id == command.stepId.Value)
+                    .Include(x => x.StepType)
+                    .ToListAsync();
                 if (steps.Count == 0) {
                     throw new DomainException($"step ID {command.stepId.Value} not found", DomainError.NotFound);
                 }
             } else {
-                steps = await _unitOfWork.ProcedureSteps.Query().Where(x => x.ProcedureId == command.procedureId).ToListAsync();
+                steps = await _unitOfWork.ProcedureSteps
+                    .Query()
+                    .Where(x => x.ProcedureId == command.procedureId)
+                    .Include(x => x.StepType)
+                    .ToListAsync();
             }
-            var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStep>(x)).OrderBy(x => x.PrintOrder).ToList();
+            var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
             return result;
         }
 
-        public async Task<Domain.Models.ProcedureStep> CreateProcedureStepAsync(CreateProcedureStep command)
+        public async Task<Domain.Models.ProcedureStepModel> CreateProcedureStepAsync(CreateProcedureStep command)
         {
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStep ret;
+            Domain.Models.ProcedureStepModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 var procstep = _mapper.Map<ProcedureStep>(command);
                 _unitOfWork.ProcedureSteps.Add(procstep);
@@ -127,7 +167,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(procstep, procstep.Id);
 
-                ret = _mapper.Map<Domain.Models.ProcedureStep>(procstep);
+                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(procstep);
             }
             else
             {
@@ -135,25 +175,28 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.ProcedureStepApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.ProcedureStep>(approval);
+                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(approval);
             }
 
             return ret;
         }
 
-        public async Task<Domain.Models.ProcedureStep> UpdateProcedureStepAsync(UpdateProcedureStep command)
+        public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command)
         {
-            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i => i.Id == command.procedureStepId);
+            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i =>
+                i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
 
             if(current is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStep)} not found with ID: {command.procedureStepId}", DomainError.NotFound);
+                throw new DomainException($"{nameof(ProcedureStep)} not " +
+                    $"found with ID: {command.procedureId} / {command.procedureStepId}",
+                    DomainError.NotFound);
             }
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStep ret;
+            Domain.Models.ProcedureStepModel ret;
 
-            if (user.CanApprove(EnumMenuItem.Procedures))
+            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
             {
                 var step = _mapper.Map(command, current);
                 _unitOfWork.ProcedureSteps.Update(step);
@@ -161,7 +204,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(step, step.Id);
 
-                ret = _mapper.Map<Domain.Models.ProcedureStep>(step);
+                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(step);
             }
             else
             {
@@ -169,10 +212,64 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 _unitOfWork.ProcedureStepApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
-                ret = _mapper.Map<Domain.Models.ProcedureStep>(approval);
+                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(approval);
             }
 
             return ret;
+        }
+
+        public async Task<bool> DeleteProcedureAsync(DeleteProcedure command)
+        {
+            var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.procedureID);
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
+            }
+            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.Procedures.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.Procedure)} uid {CurrentUser.GetId()}");
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteProcedureStepAsync(DeleteProcedureStep command)
+        {
+            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
+                i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
+            );
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
+            }
+            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
+                _unitOfWork.ProcedureSteps.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepModel)} uid {CurrentUser.GetId()}");
+            }
+
+            return true;
+        }
+
+        public async Task<ICollection<Domain.Models.ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command)
+        {
+            List<ProcedureStepType> current;
+
+            if (command.Id.HasValue) {
+                current = await _unitOfWork.ProcedureStepTypes.Query().Where(
+                    i => i.Id == command.Id
+                ).ToListAsync();
+            } else {
+                current = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
+            }
+            if(current is null || current.Count == 0)
+            {
+                throw new DomainException($"{nameof(ProcedureStepType)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+            return current.Select(x => _mapper.Map<Domain.Models.ProcedureStepTypeModel>(x)).ToList();
         }
     }
 }

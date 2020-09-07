@@ -1,18 +1,13 @@
 import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  PartService, FileService, FileModel, EntityModel
+  FileService, FileModel, EnumMenuItem
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
-import { EnumPrivilege, EnumMenuItem } from '../../models/enums/privileges';
 import { responseHandler } from '../../utils/responseHandler';
-import { ViewSaved } from '../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../models/lib/CommonGrid';
-import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
-import { INFERRED_TYPE } from '@angular/compiler/src/output/output_ast';
+import { Utils } from 'ngx-bootstrap/utils';
+import { emptyArray } from '../../models/lib/Utils';
 
 @Component({
   selector: 'cmh-file-uploader',
@@ -22,11 +17,6 @@ import { INFERRED_TYPE } from '@angular/compiler/src/output/output_ast';
 export class CmhFileUploaderComponent implements OnInit {
   uploadedFiles: any = [];
   showLi: boolean = false;
-
-  // [showUploadButton]="false" [showCancelButton]="false" multiple="multiple"
-  //   accept="accept" maxFileSize="1000000000"
-
-
   constructor(private fileService: FileService, private globals: Globals) {
 
   }
@@ -41,8 +31,8 @@ export class CmhFileUploaderComponent implements OnInit {
   @Input() accept: string;
   @Input() chooseLabel: string;
   ngOnInit(): void {
-    if (this.chooseLabel === "" || this.chooseLabel === undefined) {
-      this.chooseLabel = "Select Files";
+    if (this.chooseLabel === '' || this.chooseLabel === undefined) {
+      this.chooseLabel = 'Select Files';
     }
 
     if (this.files.length > 0) {
@@ -78,6 +68,9 @@ export class CmhFileUploaderComponent implements OnInit {
 
   myUploader(event) {
     const ctrl = this;
+    if (ctrl.multiple !== 'multiple') {
+      emptyArray(ctrl.files);
+    }
     for (let file of event.files) {
       if (ctrl.files.findIndex(x => x.name === file.name) === -1) {
         let fileReader = new FileReader();

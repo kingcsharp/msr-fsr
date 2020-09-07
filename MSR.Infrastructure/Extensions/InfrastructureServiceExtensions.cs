@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Domain.Abstractions.Email;
@@ -21,11 +21,12 @@ using MSR.Infrastructure.Resources.Services.Users;
 using MSR.Infrastructure.Resources.Services.Workflow;
 using MSR.Infrastructure.Resources.Services.Help;
 using MSR.Infrastructure.Resources.Services.Invoices;
-using Amazon.S3;
 using MSR.Domain.Abstractions;
 using MSR.Infrastructure.Factories;
 using MSR.Infrastructure.Resources.AWS;
-using Amazon.Runtime;
+using MSR.Infrastructure.Resources.Services.Sensor;
+using MSR.Infrastructure.Resources.Services.PurchaseOrder;
+using MSR.Infrastructure.Resources.Services.Timezone;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -36,11 +37,8 @@ namespace MSR.Infrastructure.Extensions
             var dbConfig = config.GetSection(nameof(DatabaseInformation)).Get<DatabaseInformation>();
 
             services.AddDbContext<AnswerContext>(optionsBuilder => optionsBuilder.UseSqlServer(dbConfig.ConnectionString).EnableDetailedErrors().EnableSensitiveDataLogging());
-            var s3Config = config.GetSection(nameof(S3Information)).Get<S3Information>();
-            services.AddSingleton(s3Config);
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IUserService, UserService>();
@@ -51,6 +49,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IProcedureStepMonitorService, ProcedureStepMonitorService>();
             services.AddScoped<IProcedureStepTemplateService, ProcedureStepTemplateService>();
             services.AddScoped<IProcedureTypeService, ProcedureTypeService>();
+            services.AddScoped<IWorkOrderService, WorkOrderService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<IWorkflowApprovalService, WorkflowApprovalService>();
@@ -61,12 +60,18 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IHelpService, HelpService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IQuickbooksService, QuickbooksService>();
-            services.AddScoped<IAmazonS3>(i => new AmazonS3Client(new BasicAWSCredentials(s3Config.AWSAccessKey, s3Config.AWSSecretKey),Amazon.RegionEndpoint.USEast1));
             services.AddSingleton<IFileHandlerFactory, FileHandlerFactory>();
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<S3FileHandler>();
-
+            services.AddScoped<ISensorService, SensorService>();
+            services.AddScoped<IImportValidatorFactory, ImportValidatorFactory>();
+            services.AddTransient<S3FileHandler>();
+            services.AddScoped<IPurchaseService, PurchaseService>();
+            services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IQuoteService, QuoteService>();
+            services.AddScoped<ITimezoneService, TimezoneService>();
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
+            services.AddScoped<IAdminCostSettingsService, AdminCostSettingsService>();
 
             return services;
         }

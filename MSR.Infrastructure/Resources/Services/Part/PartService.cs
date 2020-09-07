@@ -138,14 +138,18 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
                 _mapper.Map(command, current);
 
-                current.Subparts = command.SubParts.Select(x =>
-                {
-                    x.ParentId = current.Id;
-                    x.Id = null;
-                    var subpart = _mapper.Map<PartSubPartMap>(x);
-                    _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
-                    return subpart;
-                }).ToList();
+                if (command.SubParts == null) {
+                    current.Subparts = new List<PartSubPartMap>();
+                } else {
+                    current.Subparts = command.SubParts.Select(x =>
+                    {
+                        x.ParentId = current.Id;
+                        x.Id = null;
+                        var subpart = _mapper.Map<PartSubPartMap>(x);
+                        _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
+                        return subpart;
+                    }).ToList();
+                }
 
                 _unitOfWork.Parts.Update(current);
                 // This will call SaveChangesAsync

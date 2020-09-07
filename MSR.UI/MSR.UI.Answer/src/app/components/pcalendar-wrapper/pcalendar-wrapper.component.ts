@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
 import * as moment from 'moment';
 import { CommonGrid } from '../../models/lib/CommonGrid';
-// import {  } from 'moment';
 
 @Component({
   selector: 'pcalendar-wrapper',
@@ -20,8 +19,6 @@ export class PcalendarWrapperComponent implements OnInit {
   constructor(public cg: CommonGrid) { }
 
   ngOnInit(): void {
-    // this.selectedColumns = [];
-    // this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
     this.en = {
       firstDayOfWeek: 0,
       dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],

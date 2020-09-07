@@ -6,5 +6,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     public partial class PurchaseOrderProductApproval: TrackableEntity
     {
         public int PurchaseOrderApprovalId { get; set; }
+        public int? PurchaseOrderProductId { get; set; }
+        public int ProductId { get; set; }
     }
 }

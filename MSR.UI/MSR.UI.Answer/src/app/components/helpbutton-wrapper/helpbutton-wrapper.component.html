@@ -2,7 +2,7 @@
  role="button" data-cy="help-button" (click)="this.display = !this.display">
 Help
 </button>
-<p-dialog header="Help" [(visible)]="display" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
+<p-dialog header="{{modalTitle}}" [(visible)]="display" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
   [style]="{width: '50vw'}" data-cy="user-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" novalidate="novalidate">
@@ -12,7 +12,7 @@ Help
     </section>
     <p-footer>
       <div class="pull-right">
-        <button type="button" (click)="this.display = !this.display" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        <button type="button" (click)="this.display = !this.display" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="helpmodalclose-button">
           Close
         </button>
       </div>
