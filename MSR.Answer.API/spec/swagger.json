@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://qa-api.answer.msr-fsr.com"
+      "url": "https://2421c96cbfde.ngrok.io"
     }
   ],
   "paths": {
@@ -10561,6 +10561,10 @@
           "cycleTime": {
             "type": "integer",
             "format": "int32"
+          },
+          "divisionFab": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
