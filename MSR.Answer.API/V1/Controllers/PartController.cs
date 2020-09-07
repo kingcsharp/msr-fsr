@@ -31,7 +31,6 @@ namespace MSR.Answer.API.V1.Controllers
         ///
         /// </summary>
         /// <param name="dispatcher"></param>
-        public PartController(ICommandDispatcher dispatcher)
         public PartController(ICommandDispatcher dispatcher, IHubContext<MessageHub> hub)
         {
             _dispatcher = dispatcher;

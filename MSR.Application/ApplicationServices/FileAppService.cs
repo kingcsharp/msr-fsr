@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Events;
+using MSR.Domain.SQSEventing.Models;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -27,9 +29,6 @@ namespace MSR.Application.ApplicationServices
         private readonly IMapper _mapper;
         private readonly IImportValidatorFactory _validationFactory;
         private readonly ISendSQSMessages _bus;
-        //This is only here until we get the full Async lifecycle in
-        private readonly ICustomerService _customerService;
-        private readonly ILocationService _locationService;
 
         public FileAppService(
             IFileService fileService,
@@ -44,8 +43,6 @@ namespace MSR.Application.ApplicationServices
             _mapper = mapper;
             _validationFactory = validationFactory;
             _bus = bus;
-            _customerService = customerService;
-            _locationService = locationService;
         }
 
         public Task<ICommandResponse> HandleAsync(GetFiles command, CancellationToken cancellationToken = default)
@@ -93,26 +90,16 @@ namespace MSR.Application.ApplicationServices
                 return new CommandResponse<IEnumerable<ImportError>>(importErrors);
             }
 
-            //var importEvent = new ImportEvent()
-            //{
-            //    CsvData = csvData,
-            //    TokenData = "",
-            //    MenuItem = command.MenuItem
-            //};
-
-            switch (command.MenuItem)
+            var importEvent = new ImportEvent()
             {
-                case EnumMenuItem.CustomersDepartments:
-                    var importedCustomers = await _customerService.ImportCustomers(csvData);
-                    break;
-                case EnumMenuItem.Locations:
-                    var importedLocations = await _locationService.ImportLocations(csvData);
-                    break;
-            }
+                CsvData = csvData,
+                TokenData = "",
+                MenuItem = command.MenuItem
+            };
 
-            //var envelope = new MessageEnvelope(importIntegrationEvent.GetType().Name, importIntegrationEvent);
+            var envelope = new MessageEnvelope(importEvent.GetType().Name, importEvent);
 
-            //await _bus.SendMessage(envelope);
+            await _bus.SendMessage(envelope);
 
             return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>)null);
         }

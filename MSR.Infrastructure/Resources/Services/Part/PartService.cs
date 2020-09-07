@@ -6,8 +6,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
-using MSR.Infrastructure.Helpers;
-using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -15,11 +13,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Role
@@ -228,13 +223,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
         private int importDataAsync(List<PartModel> parts)
         {
             var data = JsonConvert.SerializeObject(parts);
-            var b64data = Convert.ToBase64String(Encoding.UTF8.GetBytes(data));
+            byte[] dataBytes = Encoding.UTF8.GetBytes(data);
             string type = "text/plain";
             string importUniqueFile = "PARTIMPORT" + Guid.NewGuid();
             var uploadTask = _fileService.UploadImportFile(new UploadFile() {
                 Name = importUniqueFile,
                 ContentType = type,
-                Base64String = FileService.GetURLEncodedBase64(b64data, type)
+                FileContents = dataBytes
             });
 
             // TODO NEXT: hook into SQS

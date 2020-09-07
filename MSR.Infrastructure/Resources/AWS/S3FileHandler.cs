@@ -55,7 +55,7 @@ namespace MSR.Infrastructure.Resources.AWS
 
         public Task<string> UploadImportFile(FileModel file)
         {
-            return Upload(file.Base64String, _s3Information.FileBucketName, file.Name);
+            return Upload(file.FileContents, _s3Information.FileBucketName, _s3Information.FileBucketName, file.Name);
         }
 
         public string GetURL(string key, int expiresInSeconds)
