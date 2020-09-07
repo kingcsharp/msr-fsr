@@ -2038,51 +2038,6 @@
         }
       }
     },
-    "/v{version}/Part/import": {
-      "post": {
-        "tags": [
-          "Part"
-        ],
-        "summary": "Import parts by CSV",
-        "operationId": "Part_ImportParts",
-        "parameters": [
-          {
-            "name": "version",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1"
-            },
-            "x-position": 2
-          }
-        ],
-        "requestBody": {
-          "x-name": "req",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ImportPartsRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfPartModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v{version}/Procedure": {
       "post": {
         "tags": [
@@ -4558,7 +4513,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 3
             },
             "x-position": 2
           },
@@ -4587,7 +4543,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 5
           }
@@ -4887,7 +4844,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 305
             },
             "x-position": 1
           },
@@ -4896,7 +4854,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -7486,24 +7445,6 @@
           "id": 2,
           "name": "TESTNAME1598380612",
           "partNumber": "TESTNUMBER1598380612"
-        }
-      },
-      "ImportPartsRequest": {
-        "type": "object",
-        "additionalProperties": true,
-        "required": [
-          "base64Data"
-        ],
-        "properties": {
-          "base64Data": {
-            "type": "string",
-            "description": "URL encoded base64 data",
-            "minLength": 1,
-            "example": "77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
-          }
-        },
-        "example": {
-            "base64Data": "data:text/plain;base64,77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
         }
       },
       "AuditActionResultOfProcedure": {

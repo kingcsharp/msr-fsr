@@ -279,10 +279,6 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Status, StatusModel>().ReverseMap();
 
-            CreateMap<PartCSVRecord, Domain.Models.PartModel>();
-            CreateMap<PartCSVRecord, UpdatePart>();
-            CreateMap<PartCSVRecord, CreatePart>();
-            
             #region Product
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
             CreateMap<CreateProduct, Product>();

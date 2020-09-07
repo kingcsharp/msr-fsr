@@ -190,55 +190,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return ret;
         }
 
-        private readonly string _byteOrderMarkUtf8 =
-            Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-
-        public int ImportPartsAsync(ImportParts command)
-        {
-            var base64File = Base64Helper.Parse(command.base64Data);
-            string csvdata = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r","").Trim();
-            if (csvdata.StartsWith(_byteOrderMarkUtf8, StringComparison.Ordinal)) {
-                csvdata = csvdata.Remove(0, _byteOrderMarkUtf8.Length);
-            }
-            IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvdata);
-            List<PartModel> parts = new List<PartModel>();
-
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
-            {
-                // importing parts requiring appoval is not supported
-                throw new DomainException("Permission denied for import", DomainError.BadRequest);
-            }
-
-            // First: parse the file to ensure valid data
-            foreach (PartCSVRecord record in records)
-            {
-                var part = _mapper.Map<PartModel>(record);
-                parts.Add(part);
-            }
-
-            // Then submit the data for processing
-            return importDataAsync(parts);
-        }
-
-        private int importDataAsync(List<PartModel> parts)
-        {
-            var data = JsonConvert.SerializeObject(parts);
-            byte[] dataBytes = Encoding.UTF8.GetBytes(data);
-            string type = "text/plain";
-            string importUniqueFile = "PARTIMPORT" + Guid.NewGuid();
-            var uploadTask = _fileService.UploadImportFile(new UploadFile() {
-                Name = importUniqueFile,
-                ContentType = type,
-                FileContents = dataBytes
-            });
-
-            // TODO NEXT: hook into SQS
-            //throw new NotImplementedException();
-
-            Task.WhenAll(uploadTask);
-            return 0;
-        }
-
         private int GetWorkflowID()
         {
             var wfid = _unitOfWork.WorkflowActivityMaps

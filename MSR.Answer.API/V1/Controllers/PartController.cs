@@ -109,26 +109,5 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<PartModel>("Part was successfully removed.");
         }
-
-        /// <summary>
-        /// Import parts by CSV
-        /// </summary>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        [HttpPost("import")]
-        [HasPrivilegeApi("Parts", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
-        public async Task<IActionResult> ImportParts(ImportPartsRequest req)
-        {
-            var command = new ImportParts() {
-                base64Data = req.base64Data
-            };
-            var ret = await _dispatcher.DispatchAsync(command);
-
-            // TODO: move to own controller
-            await _messageHub.Clients.All.SendAsync("ReceiveMessage", "ONE", "TWO");
-
-            return ret.ToOkObjectResponse<int>("Parts successfully imported");
-        }
     }
 }
