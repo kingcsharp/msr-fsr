@@ -33,24 +33,24 @@ pipeline {
                 script {
                     echo "Deploying to ${DEPLOY_ENV}"
                     if(DEPLOY_ENV == "STAGE")  {
-                        sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition ${QA_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
+                        sh "/snap/bin/aws ecs describe-task-definition --task-definition ${QA_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
                         def props = readJSON file: 'images.json'
                         def apiImage = props['taskDefinition']['containerDefinitions'][0].image
                         String[] api
                         api = apiImage.split(':')
-                        sh "sudo sh update_image.sh Stage ${api[1]} ${UI_COMPOSE}"
+                        sh "sh update_image.sh Stage ${api[1]} ${UI_COMPOSE}"
                         sh "cat ${UI_COMPOSE}"
-                        sh "sudo sh update_image_api.sh Stage ${api[1]} ${API_COMPOSE}"
+                        sh "sh update_image_api.sh Stage ${api[1]} ${API_COMPOSE}"
                         sh "cat ${API_COMPOSE}"
                     } else if(DEPLOY_ENV == "PRODUCTION") {
-                        sh "/home/ubuntu/.local/bin/aws ecs describe-task-definition --task-definition ${STAGE_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
+                        sh "/snap/bin/aws ecs describe-task-definition --task-definition ${STAGE_PROJECT_API} --profile msrfsr --region us-west-2 > images.json"
                         def props = readJSON file: 'images.json'
                         def apiImage = props['taskDefinition']['containerDefinitions'][0].image
                         String[] api
                         api = apiImage.split(':')
-                        sh "sudo sh update_image.sh Production ${api[1]} ${UI_COMPOSE}"
+                        sh "sh update_image.sh Production ${api[1]} ${UI_COMPOSE}"
                         sh "cat ${UI_COMPOSE}"
-                        sh "sudo sh update_image_api.sh Production ${api[1]} ${API_COMPOSE}"
+                        sh "sh update_image_api.sh Production ${api[1]} ${API_COMPOSE}"
                         sh "cat ${API_COMPOSE}"
                     } else {
                         echo "Only promoting stage and production!"
@@ -64,7 +64,36 @@ pipeline {
                     steps {
                         script {
                             if(DEPLOY_ENV == "STAGE") {
-                                deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+
+                                try {
+                                    dir('MSR.UI/MSR.UI.Answer') {
+                                        //sh "sudo chmod 777 /var/run/docker.sock"
+                                        sh "docker build --build-arg ENV=stage -t msr-ui ."
+                                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+
+                                        sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                                    }
+                                } catch(e) {
+                                    office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                    currentBuild.result = 'FAILURE'
+                                    sh "exit 1"
+                                }
+
+                                try {
+                                    sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                                    sh "cat ${UI_COMPOSE}"
+
+                                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+
+                                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
+                                } catch (e) {
+                                    office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                    currentBuild.result = 'FAILURE'
+                                    sh "exit 1"
+                                }
+
                             } else if (DEPLOY_ENV == "PRODUCTION") {
                                 deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
                             }else {
@@ -94,7 +123,8 @@ pipeline {
 void deploy(composeFile,name,target, app) {
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
         sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
-        sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+        //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+        sh "ecs-cli configure profile --access-key AKIAWGEEZQATRVZEHMGB --secret-key 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 --profile-name answer-profile"
 
         sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
     }

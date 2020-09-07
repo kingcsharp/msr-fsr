@@ -7,7 +7,8 @@ import {
   ProductService, CreateProductRequest, UpdateProductRequest,
   CustomerService, Customer,
   QuoteService, QuoteModel,
-  ProcedureStepModel
+  ProcedureStepModel,
+  AdminCostSettingsService, AdminCostSettingsModel,
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -34,6 +35,7 @@ const HOURS_MINUTES = 60;
     ProductService,
     ProcedureStepTemplateService,
     QuoteService,
+    AdminCostSettingsService,
   ]
 })
 export class ProductDefinitionComponent implements OnInit {
@@ -63,6 +65,8 @@ export class ProductDefinitionComponent implements OnInit {
   getQuoteDataFlag: boolean = false;
   showQuoteViewModal: boolean = false;
   quoteJson: any;
+  adminCostSettings: AdminCostSettingsModel;
+  getAdminCostSettingsFlag: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -74,6 +78,7 @@ export class ProductDefinitionComponent implements OnInit {
     private quoteService: QuoteService,
     private route: ActivatedRoute,
     private router: Router,
+    private adminCostSettingsService: AdminCostSettingsService,
   ) { }
 
   ngOnInit(): void {
@@ -81,21 +86,34 @@ export class ProductDefinitionComponent implements OnInit {
       this.id = parseInt(params.get('id'), 10);
       this.mode = params.get('mode');
       this.globals.showLoader(true);
-
-      switch (this.mode) {
-        case this.productPageModes.Create:
-          this.initPageCreateMode();
-          break;
-        case this.productPageModes.Edit:
-          this.initPageEditMode();
-          break;
-        case this.productPageModes.View:
-          this.initPageViewMode();
-          break;
-        default:
-          break;
-      }
+      this.getAdminCostSettings();
     });
+  }
+
+  getAdminCostSettings() {
+    this.adminCostSettingsService.adminCostSettings(env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.adminCostSettings = response.object;
+        this.getAdminCostSettingsFlag = true;
+        this.initPage();
+      }));
+  }
+
+  initPage() {
+    switch (this.mode) {
+      case this.productPageModes.Create:
+        this.initPageCreateMode();
+        break;
+      case this.productPageModes.Edit:
+        this.initPageEditMode();
+        break;
+      case this.productPageModes.View:
+        this.initPageViewMode();
+        break;
+      default:
+        break;
+    }
   }
 
   initPageCreateMode() {
@@ -244,7 +262,7 @@ export class ProductDefinitionComponent implements OnInit {
       });
 
       const stepValues = this.calculateStepValues(step);
-      this.procedureStepsData[index] = {...step, ...stepValues};
+      this.procedureStepsData[index] = { ...step, ...stepValues };
       this.getStepsValues(true);
     }
   }
@@ -263,27 +281,27 @@ export class ProductDefinitionComponent implements OnInit {
       }));
   }
 
- /**
-  * Get ProcedureSteps by procedure Id
-  */
+  /**
+   * Get ProcedureSteps by procedure Id
+   */
   getProcedureSteps(id: number) {
     this.getProcedureStepsFlag = false;
     this.globals.showLoader(true);
     this.procedureStepsData = [];
 
     this.procedureService.stepGet(id, null, env.apiVersion).pipe(take(1))
-    .subscribe(responseHandler(response => {
-      response.object.forEach(step => {
-        // Calculate each step values
-        const stepValues = this.calculateStepValues(step);
-        this.procedureStepsData.push({...step, ...stepValues});
-      });
-      this.getProcedureStepsFlag = true;
+      .subscribe(responseHandler(response => {
+        response.object.forEach(step => {
+          // Calculate each step values
+          const stepValues = this.calculateStepValues(step);
+          this.procedureStepsData.push({ ...step, ...stepValues });
+        });
+        this.getProcedureStepsFlag = true;
 
-      // Calcuate total step values
-      this.getStepsValues(this.mode === this.productPageModes.Create);
-      this.newStepsCounts = 0;
-    }));
+        // Calcuate total step values
+        this.getStepsValues(this.mode === this.productPageModes.Create);
+        this.newStepsCounts = 0;
+      }));
   }
 
   onSelectProcedure($event) {
@@ -339,10 +357,10 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   calculateStepValues(step: ProcedureStepModel) {
-    const laboar_chage = step.laborTime * LABOR_RATE_PER_MIN;
-    const annual_rm = step.replacementCost * RM_ANNUAL_RATE;
-    const rm_per_min = annual_rm / (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
-    const ex_per_min = (step.replacementCost / step.usefulLife) /  (YEAR_HOURS * HOURS_MINUTES * step.utilizationTime);
+    const laboar_chage = step.laborTime * this.adminCostSettings.laborRateMinute;
+    const annual_rm = step.replacementCost * this.adminCostSettings.rmAnnualRate;
+    const rm_per_min = annual_rm / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
+    const ex_per_min = (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
     const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
 
     return {
@@ -370,8 +388,7 @@ export class ProductDefinitionComponent implements OnInit {
     const url = this.router.serializeUrl(
       this.router.createUrlTree([urlTree])
     );
-
-    window.open(url, '_blank');
+    window.open('#/'+url, '_blank');
   }
 
   onSubmit() {
@@ -380,8 +397,8 @@ export class ProductDefinitionComponent implements OnInit {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       this.globals.showLoader(true);
       if (ctrl.mode === ctrl.productPageModes.Create) {
-        const requestData = new CreateProductRequest();
-        requestData.init(ctrl.productData);
+        const requestData = new CreateProductRequest(ctrl.productData);
+        console.log(requestData.divisionFab);
         this.productService.productPost(env.apiVersion, requestData)
           .pipe(take(1))
           .subscribe(responseHandler((resp) => {
@@ -391,8 +408,8 @@ export class ProductDefinitionComponent implements OnInit {
             }
           }));
       } else if (ctrl.mode === ctrl.productPageModes.Edit) {
-        const updateData = new UpdateProductRequest();
-        updateData.init(ctrl.productData);
+        const updateData = new UpdateProductRequest(ctrl.productData);
+        console.log(updateData.divisionFab);
         this.productService.productPatch(env.apiVersion, updateData)
           .pipe(take(1))
           .subscribe(responseHandler((resp) => {
