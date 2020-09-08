@@ -475,6 +475,7 @@
         "tags": [
           "File"
         ],
+        "summary": "GetFiles",
         "operationId": "File_GetFiles",
         "parameters": [
           {
@@ -532,6 +533,7 @@
         "tags": [
           "File"
         ],
+        "summary": "AddFile",
         "operationId": "File_AddFile",
         "parameters": [
           {
@@ -573,6 +575,7 @@
         "tags": [
           "File"
         ],
+        "summary": "Detach a file from an entity.",
         "operationId": "File_DetachFile",
         "parameters": [
           {
@@ -632,6 +635,7 @@
         "tags": [
           "File"
         ],
+        "summary": "Import data file",
         "operationId": "File_ImportFile",
         "parameters": [
           {

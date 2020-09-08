@@ -17,6 +17,9 @@ using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
+    /// <summary>
+    /// FileController: generic file import, save, and export.
+    /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     public class FileController : BaseApiController
@@ -28,6 +31,11 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
+        /// <summary>
+        /// GetFiles
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<FileModel>>))]
         public async Task<IActionResult> GetFiles([FromQuery] GetFileRequest req)
@@ -43,6 +51,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<FileModel>>();
         }
 
+        /// <summary>
+        /// AddFile
+        /// </summary>
+        /// <param name="newfile"></param>
+        /// <returns></returns>
         [HttpPost]
         [SwaggerResponse(typeof(AuditActionResult<FileModel>))]
         public async Task<IActionResult> AddFile(CreateFileRequest newfile)
@@ -55,6 +68,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<FileModel>("File was successfully added.");
         }
 
+        /// <summary>
+        /// Upload Help File
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("Help")]
         [ApiExplorerSettings(IgnoreApi = true)]
         [SwaggerResponse(typeof(UploadResponse))]
@@ -69,6 +87,11 @@ namespace MSR.Answer.API.V1.Controllers
             return new OkObjectResult(((ICommandResponse<UploadResponse>)ret).Data);
         }
 
+        /// <summary>
+        /// Import data file
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("Import")]
         [SwaggerResponse(typeof(ImportAuditActionResult<IEnumerable<ImportError>>))]
         public async Task<IActionResult> ImportFile([FromBody, Required] ImportRequest request)
@@ -78,6 +101,11 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToImportOkObjectResponse<IEnumerable<ImportError>>("Data Validated and awaiting import.  System will notify you when complete.");
         }
 
+        /// <summary>
+        /// Detach a file from an entity.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         [HttpDelete]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DetachFile([FromQuery] DetachFileRequest req)
