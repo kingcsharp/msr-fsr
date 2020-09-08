@@ -27,6 +27,7 @@ namespace MSR.Domain.Extensions
             services.AddSingleton<IAmazonSQS>(i => new AmazonSQSClient(s3Config.AWSAccessKey, s3Config.AWSSecretKey, Amazon.RegionEndpoint.USEast1));
             services.AddTransient<CustomerImportValidator>();
             services.AddTransient<LocationImportValidator>();
+            services.AddTransient<PartValidator>();
 
             return services;
         }

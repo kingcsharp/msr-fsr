@@ -27,6 +27,7 @@ using MSR.Infrastructure.Resources.AWS;
 using MSR.Infrastructure.Resources.Services.Sensor;
 using MSR.Infrastructure.Resources.Services.PurchaseOrder;
 using MSR.Infrastructure.Resources.Services.Timezone;
+using MSR.Infrastructure.Resources.Services.Part;
 
 namespace MSR.Infrastructure.Extensions
 {
