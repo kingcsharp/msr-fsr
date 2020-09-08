@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Events;
 using MSR.Domain.SQSEventing.Models;
+using MSR.Domain.Exceptions;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -81,6 +82,13 @@ namespace MSR.Application.ApplicationServices
             if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
             {
                 csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
+            }
+
+            if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate)) {
+                // Importing data through workflow is not supported.
+                throw new DomainException("Permission denied for import " +
+                    Enum.GetName(command.MenuItem.GetType(), command.MenuItem),
+                    DomainError.BadRequest);
             }
 
             var validator = _validationFactory.Create(command.MenuItem);

@@ -17,6 +17,7 @@ using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 using System.Collections.Generic;
 using Castle.Core.Internal;
+using MSR.Domain.Validators;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -357,6 +358,10 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL));
 
             CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
+
+            CreateMap<PartCSVRecord, PartModel>();
+            CreateMap<PartCSVRecord, UpdatePart>();
+            CreateMap<PartCSVRecord, CreatePart>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)
