@@ -25,7 +25,6 @@ namespace MSR.Answer.API.V1.Controllers
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
-        private IHubContext<MessageHub> _messageHub;
 
         /// <summary>
         ///
@@ -34,7 +33,6 @@ namespace MSR.Answer.API.V1.Controllers
         public PartController(ICommandDispatcher dispatcher, IHubContext<MessageHub> hub)
         {
             _dispatcher = dispatcher;
-            _messageHub = hub;
         }
 
         /// <summary>
