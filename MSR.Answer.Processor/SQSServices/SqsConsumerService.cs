@@ -13,6 +13,11 @@ using MSR.Domain.SQSEventing.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding;
 using MSR.Domain.SQSEventing.Abstractions;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using MSR.Domain.Helpers;
+using MSR.Domain.Commanding.Enums;
+using System.Security.Claims;
 
 namespace MSR.Answer.Processor.SQSServices
 {
@@ -49,9 +54,18 @@ namespace MSR.Answer.Processor.SQSServices
         {
             if (!IsConsuming())
             {
-                _tokenSource = new CancellationTokenSource();
-                _queueURL = (await _sqsClient.GetQueueUrlAsync(_sQSInformation.QueueName)).QueueUrl;
-                ProcessAsync();
+                try
+                {
+                    _tokenSource = new CancellationTokenSource();
+                    _queueURL = "https://sqs.us-west-2.amazonaws.com/425480257575/LocalService-Answer-Inbox.fifo";// (await _sqsClient.GetQueueUrlAsync(_sQSInformation.QueueName)).QueueUrl;
+                    ProcessAsync();
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(ex, ex.Message);
+
+                    throw;
+                }
             }
         }
 
@@ -72,6 +86,8 @@ namespace MSR.Answer.Processor.SQSServices
         {
             try
             {
+                
+                
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {
                     try
@@ -91,11 +107,11 @@ namespace MSR.Answer.Processor.SQSServices
                         response.Messages.ForEach(async x => await ProcessMessageAsync(x));
 
                     }
-                    catch (TaskCanceledException)
+                    catch (TaskCanceledException e)
                     {
                         _logger.LogWarning($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName} because the task was canceled");
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         _logger.LogError($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}");
                     }
@@ -118,6 +134,8 @@ namespace MSR.Answer.Processor.SQSServices
                     throw new Exception($"Unable to handle Message.  Message is not of Type: {typeof(MessageEnvelope)}");
                 }
 
+                HandleUserToken(envelope.TokenData);
+
                 var messageType = _eventHandlers.GetReference(envelope.MessageType);
                 var @event = JsonConvert.DeserializeObject(envelope.Message.ToString(), messageType);
 
@@ -129,7 +147,49 @@ namespace MSR.Answer.Processor.SQSServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Cannot process message [id: {message.MessageId}, receiptHandle: {message.ReceiptHandle}, body: {message.Body}] from queue");
+                await _sqsClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle);
             }
+        }
+
+        private void HandleUserToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenData = tokenHandler.ReadJwtToken(token);
+            int.TryParse(tokenData.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value, out var accountId); 
+            string claimVal = tokenData.Claims.FirstOrDefault(c => c.Type == "ApprovalPrivileges").Value;
+            var approvalPrivilegesDic = JsonConvert.DeserializeObject<Dictionary<int, int[]>>(claimVal);
+
+            string userPrivileges = tokenData.Claims.FirstOrDefault(c => c.Type == "Privileges").Value;
+            var deserializedUserPrivileges = JsonConvert.DeserializeObject<int[][]>(userPrivileges);
+
+            CurrentUser.GetId = () => accountId;
+            CurrentUser.CanApproveActivity = (EnumApprovalTables) =>
+            {
+                var activityToBeApproved = (int)EnumApprovalTables;
+
+                approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
+            };
+            CurrentUser.CanReadActivity = (EnumApprovalTables) =>
+            {
+                var activityToBeApproved = (int)EnumApprovalTables;
+
+                approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanRead);
+            };
+            CurrentUser.HasPrivilege = (EnumMenuItem, EnumPrivilege) =>
+            {
+                var menuItemPrivileges = deserializedUserPrivileges[(int)EnumMenuItem];
+                if (Array.IndexOf(menuItemPrivileges, (int)EnumPrivilege) == -1)
+                {
+                    return false;
+                }
+
+                return true;
+            };
         }
     }
 }

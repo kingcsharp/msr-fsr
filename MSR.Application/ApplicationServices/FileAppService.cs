@@ -30,20 +30,21 @@ namespace MSR.Application.ApplicationServices
         private readonly IMapper _mapper;
         private readonly IImportValidatorFactory _validationFactory;
         private readonly ISendSQSMessages _bus;
+        private readonly IAccountService _accountService;
 
         public FileAppService(
             IFileService fileService,
             IMapper mapper,
             IImportValidatorFactory validationFactory,
             ISendSQSMessages bus,
-            ICustomerService customerService,
-            ILocationService locationService
+            IAccountService accountService
             )
         {
             _fileService = fileService;
             _mapper = mapper;
             _validationFactory = validationFactory;
             _bus = bus;
+            _accountService = accountService;
         }
 
         public Task<ICommandResponse> HandleAsync(GetFiles command, CancellationToken cancellationToken = default)
@@ -101,11 +102,10 @@ namespace MSR.Application.ApplicationServices
             var importEvent = new ImportEvent()
             {
                 CsvData = csvData,
-                TokenData = "",
                 MenuItem = command.MenuItem
             };
 
-            var envelope = new MessageEnvelope(importEvent.GetType().Name, importEvent);
+            var envelope = new MessageEnvelope(importEvent.GetType().Name, importEvent, await _accountService.GetJWTTokenAsync());
 
             await _bus.SendMessage(envelope);
 

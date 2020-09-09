@@ -201,7 +201,21 @@ namespace MSR.Infrastructure.Resources.Services.Account
             await _unitOfWork.SaveChangesAsync();
         }
 
-        private async Task<string> GetJWTToken(EntityFramework.Entities.User efUser)
+        public async Task<string> GetJWTTokenAsync()
+        {
+            var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuRolePermission)
+                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
+                .FirstOrDefaultAsync(i => i.Id == CurrentUser.GetId());
+
+            if(user is null)
+            {
+                throw new DomainException("Unable to get Current User", DomainError.InternalServerError);
+            }
+
+            return await GetJWTToken(user);
+        }
+
+        private async Task<string> GetJWTToken(User efUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtData.Secret);
