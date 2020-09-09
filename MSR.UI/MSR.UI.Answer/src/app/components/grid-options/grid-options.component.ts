@@ -10,9 +10,8 @@ import { TableState } from 'primeng/api';
     '(document:click)': 'onClick($event)',
   },
   selector: 'grid-options',
-  templateUrl: './grid-options.component.html',
-  // template: `<div>HIasfasf</div>`,
-  styleUrls: ['./grid-options.component.scss']
+  templateUrl: './grid-options.component.html'
+
 })
 export class GridOptionsComponent implements OnInit {
   gridSettings: ColumnsSaved[];
@@ -46,16 +45,21 @@ export class GridOptionsComponent implements OnInit {
       return { id: elem.id, name: elem.label, visible: elem.visible };
     });
 
-    this.viewToSave = new ViewSaved({
-      version: this.gridVersion, isDefault: false, gridId: this.gridStorageId
-    });
+    this.viewToSave = this.getNewView();
 
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
+  }
+
+  getNewView() {
+    return new ViewSaved({
+      version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, viewName: ''
+    });
   }
 
   onClick(event) {
     if (!this._eref.nativeElement.contains(event.target)) {
       this.columnDropdown = false;
+      this.viewToSave = this.getNewView();
     }
   }
 
@@ -177,9 +181,14 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public showSaveViewDiv() {
-    this.showSaveView = !this.showSaveView;
-    if (this.showSaveView) {
-      this.viewToSave = new ViewSaved({ version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, columns: this.defaultColumns });
+    try {
+      if (!this.showSaveView) {
+        const viewData = { version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, columns: this.defaultColumns };
+        this.viewToSave = new ViewSaved(viewData);
+      }
+      this.showSaveView = !this.showSaveView;
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -192,6 +201,7 @@ export class GridOptionsComponent implements OnInit {
     Object.assign(savedView, this.viewToSave);
     this.cg.addView(savedView);
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
+    this.viewToSave = this.getNewView();
   }
 
   public stopEvent(event) {

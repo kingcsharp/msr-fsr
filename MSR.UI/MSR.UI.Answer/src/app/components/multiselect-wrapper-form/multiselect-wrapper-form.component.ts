@@ -11,25 +11,41 @@ export class MultiselectWrapperFormComponent implements OnInit {
   @Input() model: any;
   @Input() defaultLabel: string;
   @Input() defaultLabelProperty: string;
+  @Input() defaultId: number;
+  @Input() limit: number;
   @Output() modelChange = new EventEmitter<any>();
-
   currentOptions: any = [];
   selectedObjs: any;
+  basicOptions: any;
   constructor() {
   }
 
   ngOnInit(): void {
+    const ctrl = this;
     this.selectedObjs = { items: [] };
+    this.basicOptions = {
+      name: this.defaultLabelProperty || 'name',
+      id: this.defaultId || 'id',
+      limit: this.limit || 4
+    };
+
     this.options.map((x) => {
-      this.currentOptions.push({ label: x.name, value: { id: x.id, name: x.name } });
+      this.currentOptions.push({ label: x[ctrl.basicOptions.name], value: { id: x[ctrl.basicOptions.id], name: x[ctrl.basicOptions.name] } });
     });
     this.setSelectedObjects();
   }
 
-  getElementValue(id) {
+  removeItem(elem) {
+    const index = this.model.findIndex(x => x[this.basicOptions.id] === elem.id);
+    const selectedObjIndex = this.selectedObjs.items.findIndex(x => x.id === elem.id);
+    this.selectedObjs.items.splice(selectedObjIndex, 1);
+    this.model.splice(index, 1);
+  }
+
+  getElementValue(elem) {
     let length = this.currentOptions.length;
     while (length--) {
-      if (this.currentOptions[length].value.id === id) {
+      if (this.currentOptions[length].value.id === elem[this.basicOptions.id]) {
         return this.currentOptions[length].value;
       }
     }
@@ -48,14 +64,23 @@ export class MultiselectWrapperFormComponent implements OnInit {
   }
 
   updateModelVal() {
-    if (this.model === undefined) {
-      this.model = [];
-    } else {
-      this.model.length = 0;
-    }
+    this.emptyArr(this.model);
+    const ctrl = this;
+
     this.selectedObjs.items.map((x) => {
-      this.model.push(x.id);
+      const elem = ctrl.options.find(u => u[this.basicOptions.id] === x.id);
+      this.model.push(elem);
     });
     this.modelChange.emit(this.model);
+  }
+
+  emptyArr(arr) {
+    if (arr === undefined) {
+      return;
+    }
+    let length = arr.length;
+    while (length--) {
+      arr.pop();
+    }
   }
 }

@@ -1,0 +1,658 @@
+<div class="container-flex">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="far fa-edit mx-2"></i>
+                <span>Edit Procedure</span>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row col-12 custom-panel">
+            <div class="col-6">
+                <div class="form-group form-row">
+                    <div class="col-3">
+                        <label for="proceduretype" class="col-form-label text-left">
+                            Procedure Type
+                        </label>
+                    </div>
+                    <div class="col-9">
+                        <p-dropdown placeholder="Select Procedure Type" name="proceduretype"
+                            [options]="availableProcedureTypes" showClear="true" [(ngModel)]="procedure.procedureTypeId"
+                            data-cy="proceduretype-dropdown">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-3">
+                        <label for="name" class="col-form-label text-left">
+                            Name
+                        </label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" name="name" [(ngModel)]="procedure.name" data-validate="parsley"
+                            data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                            class="form-control input-transparent" tooltip="Name of Procedure" data-cy="name-input">
+                    </div>
+                </div>
+                <div class="form-group form-row" *ngIf="availableRoles !== undefined">
+                    <label for="roles" class="col-3">
+                        Roles
+                    </label>
+                    <div class="col-9">
+                        <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="selectedRoles"
+                            defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles"
+                            data-cy="roles-multiselect">
+                        </multiselect-wrapper-form>
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-3">
+                        <label for="duration" class="col-form-label text-left">
+                            Estimated Procedure Time
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" name="duration" [(ngModel)]="procedure.duration" data-validate="parsley"
+                            data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                            class="form-control input-transparent" tooltip="Duration of Procedure"
+                            data-cy="duration-input">
+                    </div>
+                    <div class="col-3">
+                        <label for="durationType" class="col-form-label text-left">
+                            Duration Type
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <p-dropdown placeholder="Select Duration Type" name="durationType"
+                            [options]="durationTypeOptions" showClear="true" [(ngModel)]="procedure.durationType"
+                            data-cy="durationtype-dropdown">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-primary m-2" (click)="updateProcedure(procedure)"
+                        data-cy="update-button">Update</button>
+                    <button type="button" class="btn btn-warning m-2" data-cy="cancel-button"
+                        [routerLink]="['../procedures']">Cancel</button>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group form-row">
+                    <div class="col-2">
+                        <label for="referencefiles" class="col-form-label text-left">
+                            Reference Files
+                        </label>
+                    </div>
+                    <div class="col-10">
+                        <cmh-file-uploader name="referencefiles" class="col-12"
+                            *ngIf="procedure.referenceFiles !== undefined" [menuItem]="menuItems.Templates"
+                            multiple="multiple" [(files)]="procedure.referenceFiles">
+                        </cmh-file-uploader>
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-2">
+                        <label for="comment" class="col-form-label text-left">
+                            Comments
+                        </label>
+                    </div>
+                    <div class="col-10">
+                        <ckeditor-wrapper [editorcontent]="procedure.comment"
+                            (editorContentChange)="procedure.comment = $event"></ckeditor-wrapper>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <h1 class="page-title">
+                    <span>Steps</span>
+                </h1>
+            </div>
+            <div class="col-9">
+                <div class="form-group form-row">
+                    <div class="col-4 text-right">
+                        <label for="addprocedurestep" class="col-form-label mt-4">
+                            Add Procedure Step
+                        </label>
+                    </div>
+                    <div class="col-8 mt-3  d-flex flex-row ">
+                        <p-dropdown placeholder="Select Procedure Step Template" name="addprocedurestep" class="my-auto"
+                            [options]="availableProcedureStepTemplates" showClear="true"
+                            [(ngModel)]="selectedProcedureStepTemplate" data-cy="addprocedurestep-dropdown">
+                        </p-dropdown>
+                        <button type="button" class="btn btn-primary m-2" (click)="addProcedureStep()"
+                            data-cy="update-button">+ Add New Step</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <ng-template #itemTemplate let-procedureStep="item" let-i="index">
+                    <div class="row my-4 custom-panel">
+                        <div class="col-5">
+                            <div class="row form-row">
+                                <div class="col-3">
+                                    <div class="form-group ml-0">
+                                        <i class="fad fa-2x fa-expand-arrows-alt drag-handle"></i>
+                                        <label class="col-form-label text-left">
+                                            Step Number: {{procedureStep.value.printOrder}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="form-group d-flex flex-row justify-content-end">
+                                        <label class="col-form-label text-left">
+                                            Predecessor Step
+                                        </label>
+                                        <input type="text" name="title{{i}}"
+                                            [(ngModel)]="procedureStep.value.predecessorStepName"
+                                            data-validate="parsley" data-parsley-trigger="change"
+                                            data-parsley-minlength="3" data-parsley-required="true"
+                                            class="form-control input-transparent col-8 ml-4"
+                                            tooltip="Title of Procedure Step" data-cy="title-input" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-row">
+                                    <label for="title{{i}}" class="col-form-label text-left col-3">
+                                        Title
+                                    </label>
+                                    <input type="text" name="title{{i}}" [(ngModel)]="procedureStep.value.title"
+                                        (keyup)="updateProcedurePredecessorAndOrder($event)" data-validate="parsley"
+                                        data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-9"
+                                        tooltip="Title of Procedure Step" data-cy="title-input">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-row">
+                                    <label for="text{{i}}" class="col-form-label text-left col-3">
+                                        Text
+                                    </label>
+                                    <ckeditor-wrapper [editorcontent]="procedureStep.value.text"
+                                        (editorContentChange)="procedureStep.value.text = $event" style="width:75%">
+                                    </ckeditor-wrapper>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group form-row">
+                                    <label for="labortime{{i}}" class="col-form-label text-left col-3">
+                                        Labor Time
+                                    </label>
+                                    <div class="input-group col-3" style="margin-left:-15px">
+                                        <input type="text" name="labortime{{i}}"
+                                            [(ngModel)]="procedureStep.value.laborTime" data-validate="parsley"
+                                            data-parsley-trigger="change" data-parsley-minlength="3"
+                                            data-parsley-required="true" class="form-control input-transparent ml-2"
+                                            tooltip="Labor Time of Procedure Step" data-cy="labortime-input">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mins</span>
+                                        </div>
+                                    </div>
+                                    <label for="equipmenttime{{i}}" class="col-form-label text-right col-3">
+                                        Equipment Time
+                                    </label>
+                                    <div class="input-group col-3" style="margin-right:-15px">
+                                        <input type="text" name="equipmenttime{{i}}"
+                                            [(ngModel)]="procedureStep.value.equipmentTime" data-validate="parsley"
+                                            data-parsley-trigger="change" data-parsley-minlength="3"
+                                            data-parsley-required="true" class="form-control input-transparent"
+                                            tooltip="Equipment Time of Procedure Step" data-cy="equipmenttime-input">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mins</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group form-row">
+                                    <label for="replacementcost{{i}}" class="col-form-label text-left col-2">
+                                        Replacement Cost
+                                    </label>
+                                    <input type="text" name="replacementcost{{i}}"
+                                        [(ngModel)]="procedureStep.value.replacementCost" data-validate="parsley"
+                                        data-parsley-trigger="change" data-parsley-minlength="2"
+                                        data-parsley-required="true" class="form-control input-transparent col-2"
+                                        tooltip="Replacement Cost of Procedure Step" data-cy="replacementcost-input">
+                                    <label for="utilizationtime{{i}}" class="col-form-label text-right col-2">
+                                        Utilization Time
+                                    </label>
+                                    <input type="text" name="utilizationtime{{i}}"
+                                        [(ngModel)]="procedureStep.value.utilizationTime" data-validate="parsley"
+                                        data-parsley-trigger="change" data-parsley-minlength="2"
+                                        data-parsley-required="true" class="form-control input-transparent col-2"
+                                        tooltip="Utilization Time of Procedure Step" data-cy="utilizationtime-input">
+                                    <label for="usefullife{{i}}" class="col-form-label text-right col-2">
+                                        Useful Life
+                                    </label>
+                                    <input type="text" name="usefullife{{i}}"
+                                        [(ngModel)]="procedureStep.value.usefulLife" data-validate="parsley"
+                                        data-parsley-trigger="change" data-parsley-minlength="3"
+                                        data-parsley-required="true" class="form-control input-transparent col-2"
+                                        tooltip="Useful Life of Procedure Step" data-cy="usefullife-input">
+                                </div>
+                            </div>
+
+                            <div class="row ml-2">
+                                <button *ngIf="procedureStep.value.id === 0" type="button" name="savebutton{{i}}"
+                                    class="btn btn-primary m-2"
+                                    (click)="saveProcedureStep(procedureStep.value)">Save</button>
+                                <button *ngIf="procedureStep.value.id !== 0" type="button" name="updatebutton{{i}}"
+                                    class="btn btn-primary m-2" (click)="updateProcedureStep(procedureStep.value)"
+                                    data-cy="update-button">Update</button>
+                                <button type="button" name="deletebutton{{i}}" class="btn btn-danger m-2"
+                                    (click)="openConfirmDeleteStepDialog(procedureStep.value)"
+                                    data-cy="delete-button">Delete</button>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group form-row">
+                                <div class="col-3">
+                                    <label for="proceduresteptype{{i}}" class="col-form-label text-left">
+                                        Step Type
+                                    </label>
+                                </div>
+                                <div class="col-9">
+                                    <p-dropdown placeholder="Select Procedure Step Type" name="proceduresteptype{{i}}"
+                                        [options]="procedureStepTypeOptions" showClear="true"
+                                        [(ngModel)]="procedureStep.value.selectedProcedureStepTypeId"
+                                        data-cy="procedurestepyype-dropdown">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+                            <div class="form-group form-row">
+                                <div class="col-2">
+                                    <label for="referencefiles" class="col-form-label text-left">
+                                        Files
+                                    </label>
+                                </div>
+                                <div class="col-10">
+                                    <cmh-file-uploader name="referencefiles"
+                                        *ngIf="procedureStep.value.referenceFiles !== undefined"
+                                        [menuItem]="menuItems.Templates" multiple="multiple"
+                                        [(files)]="procedureStep.value.referenceFiles">
+                                    </cmh-file-uploader>
+                                </div>
+                            </div>
+                            <div class="form-group form-row">
+                                <div class="col-3">
+                                    <label for="referenceDocuments" class="col-form-label text-left">
+                                        Documents
+                                    </label>
+                                </div>
+                                <div class="col-9">
+                                    <div class="input-group">
+                                        <input type="text" name="documents" class="form-control input-transparent"
+                                            tooltip="Linked Documents">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" tooltip="Select Documents"><i
+                                                    class="fas fa-folder"></i></span>
+                                            <span class="input-group-text" tooltip="Remove Documents"><i
+                                                    class="far fa-trash-alt"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row form-row mb-2">
+                                <div class="col-9  pl-0">
+                                    <label class="col-form-label text-left">
+                                        Monitors
+                                    </label>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <button *ngIf="canEdit" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
+                                        (click)="openAddMonitorDialog(procedureStep.value)" data-cy="add-button">
+                                        Add Monitor
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row form-row monitorstable-column">
+                                <div class="col-12">
+                                    <table class="table table-condensed table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                                <th>Input Type</th>
+                                                <th>Input Target</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let procedureStepMonitor of procedureStep.value.monitors;">
+                                                <td>{{ procedureStepMonitor.monitorType }}</td>
+                                                <td>{{ procedureStepMonitor.description }}</td>
+                                                <td>{{ procedureStepMonitor.inputType }}</td>
+                                                <td>{{ procedureStepMonitor.targetValue }}</td>
+                                                <td>
+                                                    <i *ngIf="canEdit" class="far fa-edit pointer"
+                                                        tooltip="Edit Monitor" data-cy="edit-button"
+                                                        (click)="openEditMonitorDialog(procedureStepMonitor)"></i>
+                                                    <i *ngIf="canDelete" class="fa fa-trash pointer"
+                                                        tooltip="Delete Monitore" data-cy="delete-button"
+                                                        (click)="openConfirmDeleteMonitorDialog(procedureStep.value, procedureStepMonitor)"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row ml-0 my-2">
+                                <div class="form-group form-row">
+                                    <div class="col-3  pl-0">
+                                        <label for="roles{{i}}" class="col-form-label text-left">
+                                            Roles
+                                        </label>
+                                    </div>
+                                    <div class="col-9">
+                                        <multiselect-wrapper-form [options]="availableRoles" [limit]="10"
+                                            [(model)]="procedureStep.value.selectedRoles" defaultLabelProperty="name"
+                                            defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
+                                        </multiselect-wrapper-form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <bs-sortable *ngIf="procedureSteps !== undefined && procedureSteps?.length > 0"
+                    [(ngModel)]="procedureSteps" [itemTemplate]="itemTemplate" itemClass="sortable-item"
+                    itemActiveClass="sortable-item-active" placeholderItem="Drag here"
+                    (onChange)="updateProcedurePredecessorAndOrder($event)" placeholderClass="placeholderStyle"
+                    wrapperClass="sortable-wrapper"></bs-sortable>
+
+            </div>
+        </div>
+    </div>
+</div>
+<p-dialog header="Confirm Delete Monitor" [(visible)]="showConfirmDeleteMonitorDialog" [appendTo]="body"
+    [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <div class="container">
+        <div class="row">
+            Are you sure you want to Delete this Monitor?
+        </div>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="deleteMonitor()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="confirmdelete-button">
+                Delete
+            </button>
+            <button type="button" (click)="closeConfirmDeleteMonitorDialog()"
+                class="btn btn-outline-inverse width-100 mb-xs" role="button">
+                Cancel
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+<p-dialog header="Edit Monitor" [(visible)]="showEditMonitorDialog" [appendTo]="body" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <div class="container">
+        <div class="row" *ngIf="monitorToEdit !== undefined">
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="monitortype" class="col-form-label text-left col-3">
+                    Monitor Type
+                </label>
+                <div class="col-12 px-0">
+                    <p-dropdown placeholder="Select Monitor Type" name="monitortype" [options]="monitorTypeOptions"
+                        [(ngModel)]="monitorToEdit.monitorType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="inputtype" class="col-form-label text-left col-3">
+                    Input Type
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptions"
+                        showClear="true" [(ngModel)]="monitorToEdit.inputType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.monitorType === 'Select'">
+                <label for="listsource" class="col-form-label text-left col-3">
+                    List Source
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select List Source" name="listsource" [options]="listSource"
+                        showClear="true" [(ngModel)]="monitorToEdit.listSource">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row"
+                *ngIf="monitorToEdit.monitorType === 'Number' && monitorToEdit.monitorType !== 'Pass or Fail'">
+                <label for="shouldbe" class="col-form-label text-left col-3">
+                    Should Be
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Should Be" name="shouldbe" [options]="shouldBeOptions"
+                        showClear="true" [(ngModel)]="monitorToEdit.shouldBe">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'">
+                <label for="lowvalue" class="col-form-label text-left col-3">
+                    Low Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="lowvalue" [(ngModel)]="monitorToEdit.lowTarget" data-validate="parsley"
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'">
+                <label for="highValue" class="col-form-label text-left col-3">
+                    High Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="highValue" [(ngModel)]="monitorToEdit.highTarget" data-validate="parsley"
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row"
+                *ngIf="monitorToEdit.type !== 'Select'">
+                <label for="targetvalue" class="col-form-label text-left col-3">
+                    Target Value
+                </label>
+                <p-dropdown *ngIf="monitorToEdit.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="monitorToEdit.targetValue">
+                </p-dropdown>
+                <p-dropdown *ngIf="monitorToEdit.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="monitorToEdit.targetValue">
+                </p-dropdown>
+                <input type="number" name="targetvalue" [(ngModel)]="monitorToEdit.targetValue" data-validate="parsley" *ngIf="monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="Target Value" data-cy="targetvalue-input">
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="faulthandling" class="col-form-label text-left col-3">
+                    Fault Handling
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
+                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="monitorToEdit.faultHandling">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="description" class="col-form-label text-left col-3">
+                    Description
+                </label>
+                <ckeditor-wrapper [editorcontent]="monitorToEdit.description" class="col-9 px-0"
+                    (editorContentChange)="monitorToEdit.description = $event"></ckeditor-wrapper>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label class="col-3 col-form-label text-md-right">
+                    Send Email Notification
+                </label>
+                <div class="col-9 px-0 ">
+                    <div class="display-inline-block isActive">
+                        <label class="form-check-label" for="sendemailnotification" class="switch">
+                            <input class="form-check-input" [(ngModel)]="monitorToEdit.sendEmailNotification"
+                                name="sendemailnotification" type="checkbox" class="ios" checked
+                                id="sendemailnotification" /><i data-cy="sendemailnotification-checkbox"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="button" (click)="updateMonitor()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button">
+                Update</button>
+            <button type="button" (click)="closeEditMonitorDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button">
+                Cancel
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+<p-dialog header="Add Monitor" [(visible)]="showAddMonitorDialog" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
+    [style]="{width: '60vw'}" data-cy="user-header">
+    <div class="container-fluid">
+        <div class="row" *ngIf="monitorToAdd !== undefined">
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="monitortype" class="col-form-label text-left col-3">
+                    Monitor Type
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown name="monitortype" [options]="monitorTypeOptions"
+                        *ngIf="monitorToAdd.monitorType !== undefined" [(ngModel)]="monitorToAdd.monitorType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="inputtype" class="col-form-label text-left col-3">
+                    Input Type
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptions"
+                        showClear="true" [(ngModel)]="monitorToAdd.inputType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.monitorType === 'Select'">
+                <label for="listsource" class="col-form-label text-left col-3">
+                    List Source
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select List Source" name="listsource" [options]="listSource"
+                        showClear="true" [(ngModel)]="monitorToAdd.listSource">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row"
+                *ngIf="monitorToAdd.monitorType === 'Number' && monitorToAdd.monitorType !== 'Pass or Fail'">
+                <label for="shouldbe" class="col-form-label text-left col-3">
+                    Should Be
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Should Be" name="shouldbe" [options]="shouldBeOptions"
+                        showClear="true" [(ngModel)]="monitorToAdd.shouldBe">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN' && monitorToAdd.monitorType !== 'Pass or Fail'">
+                <label for="lowvalue" class="col-form-label text-left col-3">
+                    Low Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="lowvalue" [(ngModel)]="monitorToAdd.lowTarget" data-validate="parsley"
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN' && monitorToAdd.monitorType !== 'Pass or Fail'">
+                <label for="highValue" class="col-form-label text-left col-3">
+                    High Value
+                </label>
+                <div class="col-9 px-0">
+                    <input type="number" name="highValue" [(ngModel)]="monitorToAdd.highTarget" data-validate="parsley"
+                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                        class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row"
+                *ngIf="monitorToAdd.monitorType !== 'Select'">
+                <label for="targetvalue" class="col-form-label text-left col-3">
+                    Target Value
+                </label>
+                <p-dropdown *ngIf="monitorToAdd.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="monitorToAdd.targetValue">
+                </p-dropdown>
+                <p-dropdown *ngIf="monitorToAdd.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="monitorToAdd.targetValue">
+                </p-dropdown>
+                <input *ngIf="monitorToAdd.monitorType !== 'Pass or Fail' && monitorToAdd.monitorType !== 'Yes or No'" type="number" name="targetvalue" [(ngModel)]="monitorToAdd.targetValue" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent col-9" tooltip="Target Value" data-cy="targetvalue-input">
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="faulthandling" class="col-form-label text-left col-3">
+                    Fault Handling
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
+                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="monitorToAdd.faultHandling">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label for="description" class="col-form-label text-left col-3">
+                    Description
+                </label>
+                <ckeditor-wrapper [editorcontent]="monitorToAdd.description" class="col-9 px-0"
+                    (editorContentChange)="monitorToAdd.description = $event"></ckeditor-wrapper>
+            </div>
+            <div class="form-group col-12 d-flex flex-row">
+                <label class="col-3 col-form-label text-md-right">
+                    Send Email Notification
+                </label>
+                <div class="col-9 px-0 ">
+                    <div class="display-inline-block isActive">
+                        <label class="form-check-label" for="sendemailnotification" class="switch">
+                            <input class="form-check-input" [(ngModel)]="monitorToAdd.sendEmailNotification"
+                                name="sendemailnotification" type="checkbox" class="ios" checked
+                                id="sendemailnotification" /><i data-cy="sendemailnotification-checkbox"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="button" class="btn btn-primary m-2" (click)="addMonitorToStep()">Save</button>
+            <button type="button" (click)="closeAddMonitorDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button">
+                Cancel
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+<p-dialog header="Confirm Delete Procedure Step" [(visible)]="showConfirmDeleteStepDialog" [appendTo]="body"
+    [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <div class="container">
+        <div class="row">
+            Are you sure you want to Delete this Step?
+        </div>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="deleteStep()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                Delete
+            </button>
+            <button type="button" (click)="closeConfirmDeleteStepDialog()"
+                class="btn btn-outline-inverse width-100 mb-xs" role="button">
+                Cancel
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>

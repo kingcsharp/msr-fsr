@@ -44,8 +44,8 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(DeactivateCustomer command, CancellationToken cancellationToken = default)
         {
-            await _customerService.DeleteCustomerAsync(command.CustomerId);
-            return new CommandResponse();
+            var ret = await _customerService.DeleteCustomerAsync(command.CustomerId);
+            return new CommandResponse<Customer>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(UpdateCustomer command, CancellationToken cancellationToken = default)

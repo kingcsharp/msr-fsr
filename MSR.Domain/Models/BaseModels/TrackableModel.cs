@@ -2,13 +2,10 @@
 
 namespace MSR.Domain.Models.BaseModels
 {
-    public abstract class TrackableModel : EntityModel
+    public abstract class TrackableModel : CreatableModel
     {
         public DateTime? LastUpdatedOn { get; set; }
         public int? LastUpdatedBy { get; set; }
-        public User LastUpdated { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public int? CreatedBy { get; set; }
-        public User Created { get; set; }
+        public UserModel LastUpdated { get; set; }
     }
 }

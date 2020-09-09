@@ -2,10 +2,10 @@
   <form id="search-form" class="navbar-form" role="search">
     <div class="form-group mb-0">
       <div class="input-group-transparent input-group">
-        <div class="input-group-addon">
+        <!-- <div class="input-group-addon">
           <i class="fa fa-search text-white"></i>
-        </div>
-        <input placeholder="Search..." type="text" class="input-transparent form-control">
+        </div> -->
+        <!-- <input placeholder="Search..." type="text" class="input-transparent form-control"> -->
       </div>
     </div>
   </form>
@@ -56,30 +56,20 @@
     </li>
     <li class="divider"></li>
     <li class="nav-item dropdown d-sm-down-none">
-      <a href title="Account" id="account" class="nav-link dropdown-toggle" data-toggle="dropdown">
-        <i class="glyphicon glyphicon-user"></i>
+      <a href="javascript:;" id="account" data-cy="account-a"tooltip="Account" class="nav-link dropdown-toggle" data-toggle="dropdown">
+        <img *ngIf="globals.user.fileModel === undefined" width="34" src="assets/img/2.png" alt="">
+        <img *ngIf="globals.user.fileModel !== undefined" width="34" [src]="globals.user.fileModel.fileURL" alt="">
       </a>
       <ul id="account-menu" class="dropdown-menu dropdown-menu-right account" role="menu">
         <li role="presentation" class="account-picture">
-          <img src="assets/img/2.png" alt="">
+          <img *ngIf="globals.user.fileModel === undefined" width="34" src="assets/img/2.png" alt="">
+        <img *ngIf="globals.user.fileModel !== undefined" width="34" [src]="globals.user.fileModel.fileURL" alt="">
           {{globals.user.firstName + ' ' + globals.user.lastName}}
         </li>
         <li role="presentation">
-          <a routerLink="profile" class="dropdown-item">
-            <i class="fa fa-user"></i>
+          <a data-cy="profile-link" routerLink="../app/people/profile" class="dropdown-item">
+            <i class="fad fa-user"></i>
             Profile
-          </a>
-        </li>
-        <li role="presentation">
-          <a routerLink="calendar" class="dropdown-item">
-            <i class="fa fa-calendar"></i>
-            Calendar
-          </a>
-        </li>
-        <li role="presentation">
-          <a routerLink="inbox" class="dropdown-item">
-            <i class="fa fa-inbox"></i>
-            Inbox
           </a>
         </li>
       </ul>
@@ -90,7 +80,8 @@
       </a>
     </li>
     <li class="nav-item d-sm-down-none">
-      <a class="nav-link" (click)="logout()" data-cy="logout-link"><i class="glyphicon glyphicon-off"></i></a>
+      <a class="nav-link" (click)="logout()" tooltip="Logout" data-cy="logout-link"><i
+          class="glyphicon glyphicon-off"></i></a>
     </li>
   </ul>
 </nav>

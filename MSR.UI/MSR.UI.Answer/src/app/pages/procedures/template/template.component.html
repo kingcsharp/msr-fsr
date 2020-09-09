@@ -1,0 +1,96 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="far fa-edit mx-2" *ngIf="procedureTemplate?.id !== 0"></i>
+                <i class="fas fa-plus mx-2" *ngIf="procedureTemplate?.id === 0"></i>
+                <span *ngIf="procedureTemplate?.id !== 0">Edit Procedure Template</span>
+                <span *ngIf="procedureTemplate?.id === 0">Create Procedure Template</span>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <!-- 
+            Buttons like save, update, cancel go here if your page
+            requires scrolling on any size screen. 
+        -->
+    </div>
+    <div class="row">
+        <form class="col-12">
+            <div class="form-group">
+                <label for="title" class="col-form-label text-left">
+                    Title
+                </label>
+                <input type="text" name="title" [(ngModel)]="procedureTemplate.title" data-validate="parsley"
+                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                    class="form-control input-transparent" tooltip="Title of Procedure Template" data-cy="title-input">
+            </div>
+            <div class="form-group">
+                <label for="replacementcost" class="col-form-label text-left">
+                    Replacement Cost
+                </label>
+                <input type="number" name="replacementcost" [(ngModel)]="procedureTemplate.replacementCost"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Replacement Cost"
+                    data-cy="replacementcost-input">
+            </div>
+            <div class="form-group">
+                <label for="utilization" class="col-form-label text-left">
+                    Utilization
+                </label>
+                <input type="number" name="utilization" [(ngModel)]="procedureTemplate.utilization"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Utilization"
+                    data-cy="utilization-input">
+            </div>
+            <div class="form-group">
+                <label for="usefulLife" class="col-form-label text-left">
+                    Useful Life
+                </label>
+                <input type="number" name="usefulLife" [(ngModel)]="procedureTemplate.usefulLife"
+                    data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                    data-parsley-required="true" class="form-control input-transparent" tooltip="Useful Life"
+                    data-cy="usefulLife-input">
+            </div>
+            <div class="form-group" *ngIf='procedureTemplate !== undefined'>
+                <label for="text" class="col-form-label text-left">
+                    Text
+                </label>
+                <ckeditor-wrapper [editorcontent]="procedureTemplate.text"
+                    (editorContentChange)="procedureTemplate.text = $event"></ckeditor-wrapper>
+            </div>
+            <div class="form-group">
+                <label for="referencefiles" class="col-form-label text-left">
+                    Reference Files
+                </label>
+                <cmh-file-uploader name="referencefiles" class="col-12" *ngIf="procedureTemplate.referenceFiles !== undefined"
+                    [menuItem]="menuItems.Templates" multiple="multiple" [(files)]="procedureTemplate.referenceFiles">
+                </cmh-file-uploader>
+            </div>
+            <!-- TODO: Add Documents reference here when A3-164 is finished-->
+            <div class="form-group" *ngIf="availableRoles !== undefined && selectedRoles !== undefined">
+                <label for="roles" class="col-form-label text-left">
+                    Roles
+                </label>
+                <multiselect-wrapper-form [options]="availableRoles" [limit]="10" [(model)]="selectedRoles"
+                defaultLabelProperty="name" defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect">
+              </multiselect-wrapper-form>
+            </div>
+            <div class="form-group" *ngIf='procedureTemplate !== undefined'>
+                <label for="comment" class="col-form-label text-left">
+                    Comments
+                </label>
+                <ckeditor-wrapper [editorcontent]="procedureTemplate.comments"
+                    (editorContentChange)="procedureTemplate.comments = $event"></ckeditor-wrapper>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-primary m-2" (click)="save()"
+            *ngIf="procedureTemplate.id === 0" data-cy="save-button">Save</button>
+        <button type="button" class="btn btn-primary m-2" (click)="update()"
+            *ngIf="procedureTemplate.id !== 0" data-cy="update-button">Update</button>
+        <button type="button" class="btn btn-warning m-2" [routerLink]="['../proceduretemplates']"
+            data-cy="cancel-button">Cancel</button>
+    </div>
+</div>

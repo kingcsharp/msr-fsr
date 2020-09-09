@@ -15,7 +15,6 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetParts>,
         ICommandHandler<CreatePart>,
         ICommandHandler<DeletePart>,
-        ICommandHandler<ImportParts>,
         ICommandHandler<UpdatePart>
     {
         private readonly IPartService _partService;
@@ -31,9 +30,8 @@ namespace MSR.Application.ApplicationServices
         {
             ICollection<PartModel> ret = await _partService.GetPartsAsync(command);
 
-            ICollection<FileModel> files = new List<FileModel>();
+            var files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
 
-            files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
             foreach (var part in ret)
             {
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
@@ -73,12 +71,6 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _partService.DeletePartAsync(command);
             return new CommandResponse<PartModel>(ret);
-        }
-
-        public async Task<ICommandResponse> HandleAsync(ImportParts command, CancellationToken cancellationToken = default)
-        {
-            int ret = _partService.ImportPartsAsync(command);
-            return new CommandResponse<int>(ret);
         }
     }
 }

@@ -43,6 +43,13 @@ namespace MSR.Answer.API.Filters
             var value = JsonConvert.DeserializeObject<int[][]>(claimVal);
 
             var menuItemPrivileges = value[(int)EnumMenuItem];
+
+            if (menuItemPrivileges is null)
+            {
+                context.Result = new UnauthorizedResult();
+                return;
+            }
+
             if (Array.IndexOf(menuItemPrivileges,(int)EnumPrivilege) == -1)
             {
                 context.Result = new UnauthorizedResult();

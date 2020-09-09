@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
-    public class GetUsers: Command<ICollection<User>>
+    public class GetUsers: Command<ICollection<UserModel>>
     {
         public int? Id { get; set; }
         public string FirstName { get; set; }

@@ -16,6 +16,5 @@ namespace MSR.Domain.Models
         public int StatusId { get; set; }
         public string CreatedByName { get; set; }
         public DateTime CreatedOn { get; set; }
-
     }
 }

@@ -4,12 +4,18 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using MSR.Domain.Helpers;
+using MSR.Domain.SQSEventing.Abstractions;
 using MSR.Domain.Models;
-using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Events;
+using MSR.Domain.SQSEventing.Models;
+using MSR.Domain.Exceptions;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -17,15 +23,28 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetFiles>,
         ICommandHandler<CreateFile>,
         ICommandHandler<DetachFile>,
-        ICommandHandler<UploadFile>
+        ICommandHandler<UploadFile>,
+        ICommandHandler<ImportFile>
     {
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
+        private readonly IImportValidatorFactory _validationFactory;
+        private readonly ISendSQSMessages _bus;
+        private readonly IAccountService _accountService;
 
-        public FileAppService(IFileService fileService, IMapper mapper)
+        public FileAppService(
+            IFileService fileService,
+            IMapper mapper,
+            IImportValidatorFactory validationFactory,
+            ISendSQSMessages bus,
+            IAccountService accountService
+            )
         {
             _fileService = fileService;
             _mapper = mapper;
+            _validationFactory = validationFactory;
+            _bus = bus;
+            _accountService = accountService;
         }
 
         public Task<ICommandResponse> HandleAsync(GetFiles command, CancellationToken cancellationToken = default)
@@ -55,6 +74,42 @@ namespace MSR.Application.ApplicationServices
             var ret = await _fileService.UploadHelpFile(command);
             return new CommandResponse<UploadResponse>(ret);
 
+        }
+
+        public async Task<ICommandResponse> HandleAsync(ImportFile command, CancellationToken cancellationToken = default)
+        {
+            var base64File = Base64Helper.Parse(command.Base64Data);
+            var csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
+            if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
+            {
+                csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
+            }
+
+            if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate)) {
+                // Importing data through workflow is not supported.
+                throw new DomainException("Permission denied for import " +
+                    Enum.GetName(command.MenuItem.GetType(), command.MenuItem),
+                    DomainError.BadRequest);
+            }
+
+            var validator = _validationFactory.Create(command.MenuItem);
+
+            if (!validator.ValidateImportData(csvData, out var importErrors))
+            {
+                return new CommandResponse<IEnumerable<ImportError>>(importErrors);
+            }
+
+            var importEvent = new ImportEvent()
+            {
+                CsvData = csvData,
+                MenuItem = command.MenuItem
+            };
+
+            var envelope = new MessageEnvelope(importEvent.GetType().Name, importEvent, await _accountService.GetJWTTokenAsync());
+
+            await _bus.SendMessage(envelope);
+
+            return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>)null);
         }
     }
 }

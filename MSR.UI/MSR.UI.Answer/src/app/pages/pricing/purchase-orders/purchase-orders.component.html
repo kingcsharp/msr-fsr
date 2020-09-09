@@ -1,0 +1,343 @@
+<h1 class="page-title" data-cy="page-title">
+  <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+  {{globals.activeMenu.name}}
+</h1>
+
+<widget>
+  <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
+    currentPageReportTemplate="Showing {first}-{last} of {{data.length}}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId}}">
+    <ng-template pTemplate="caption">
+      <div class="text-right">
+        <button *ngIf="purchaseOrderPrivileges.canCreate" (click)="showPurchaseOrderModal()"
+          class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+          + Add
+        </button>
+        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+          [gridVersion]="gridVersion" data-cy="usergrid-options">
+        </grid-options>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+          data-cy="usertable-header">
+          {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
+        </th>
+        <th data-cy="usertable-header">Action</th>
+      </tr>
+      <tr>
+        <th [hidden]="!cg.isVisibleCol('id',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Id"
+              (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['id']?.value">
+            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('name',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Name" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['name']?.value">
+            <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('customerReferencePO',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by PO#" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'customerReferencePO', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['customerReferencePO']?.value">
+            <i *ngIf="dt.filters['customerReferencePO']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'customerReferencePO')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('invoicedBalance',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Invoiced Balance" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'invoicedBalance', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['invoicedBalance']?.value">
+            <i *ngIf="dt.filters['invoicedBalance']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'invoicedBalance')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('uninvoicedBalance',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Uninvoiced Balance" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'uninvoicedBalance', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['uninvoicedBalance']?.value">
+            <i *ngIf="dt.filters['uninvoicedBalance']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'uninvoicedBalance')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('balance',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Balance" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'balance', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['balance']?.value">
+            <i *ngIf="dt.filters['balance']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'balance')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('customerName',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Customer" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'customerName', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['customerName']?.value">
+            <i *ngIf="dt.filters['customerName']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'customerName')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('openDate',gridSettings)">
+          <div class="position-relative" tooltip="Search by Open Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'openDate'" [datatable]="dt">
+            </pcalendar-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('closeDate',gridSettings)">
+          <div class="position-relative" tooltip="Search by Close Date">
+            <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'close'" [datatable]="dt">
+            </pcalendar-wrapper>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('totalPurchaseLimit',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Total Purchase Limit" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'totalPurchaseLimit', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['totalPurchaseLimit']?.value">
+            <i *ngIf="dt.filters['totalPurchaseLimit']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'totalPurchaseLimit')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('unusedAmount',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Unused Amount" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'unusedAmount', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['unusedAmount']?.value">
+            <i *ngIf="dt.filters['unusedAmount']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'unusedAmount')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('revision',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" tooltip="Search by Revision" data-cy="searchbypartnr-grid"
+              (input)="dt.filter($event.target.value, 'revision', 'contains')" class="ui-column-filter"
+              [value]="dt.filters['revision']?.value">
+            <i *ngIf="dt.filters['revision']?.value" class="fclear pi pi-times pointer"
+              (click)="cg.filter(dt,'revision')"></i>
+          </div>
+        </th>
+        <th [hidden]="!cg.isVisibleCol('status', gridSettings)">
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="purchaseOrderStatus" filterId="status"
+            defaultText="Select Status" defaultTextTooltip="" [datatable]="dt">
+          </multiselect-wrapper>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-purcahseordermodel>
+      <tr class="ui-selectable-row">
+        <td [hidden]="!cg.isVisibleCol('id', gridSettings)">
+          {{purcahseordermodel.id}}
+        </td>
+        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('name',gridSettings)">
+          {{purcahseordermodel.name}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('customerReferencePO',gridSettings)">
+          {{purcahseordermodel.customerReferencePO}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('invoicedBalance',gridSettings)">
+          {{purcahseordermodel.invoicedBalance | currency }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('uninvoicedBalance',gridSettings)">
+          {{purcahseordermodel.uninvoicedBalance | currency}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('balance',gridSettings)">
+          {{purcahseordermodel.balance | currency}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('customerName',gridSettings)">
+          {{purcahseordermodel.customerName }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('openDate',gridSettings)">
+          {{purcahseordermodel.openDate | date :'short' }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('closeDate',gridSettings)">
+          {{purcahseordermodel.closeDate | date :'short' }}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('totalPurchaseLimit',gridSettings)">
+          {{purcahseordermodel.totalPurchaseLimit | currency}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('unusedAmount',gridSettings)">
+          {{purcahseordermodel.unusedAmount | currency}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('revision',gridSettings)">
+          {{purcahseordermodel.revision}}
+        </td>
+        <td [hidden]="!cg.isVisibleCol('status',gridSettings)">
+          {{purcahseordermodel.status}}
+        </td>
+        <td>
+          <i *ngIf="purchasePrivileges.canCreate && purcahseordermodel.status !== 'Closed'" class="fa fa-dollar pointer" tooltip="Purchase" data-cy="purchaseRow"
+          [routerLink]="['../../billing/purchaseorder/purchase-create/',purcahseordermodel.id]">
+          </i>
+          <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
+            class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
+            (click)="showPurchaseOrderModal(purcahseordermodel)">
+          </i>
+          <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
+            class="fa fa-close pointer" tooltip="Close" data-cy="closeRow" (click)="onClickClose(purcahseordermodel)">
+          </i>
+          <i *ngIf="purchaseOrderPrivileges.canDelete && purcahseordermodel.isDeletable" class="far fa-trash-alt pointer" tooltip="Delete"
+            data-cy="deleteRow" (click)="onClickDelete(purcahseordermodel)">
+          </i>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" style="text-align:left">No Purchase Order found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</widget>
+
+<p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle" acceptLabel="Yes" rejectLabel="No"
+  position="top">
+</p-confirmDialog>
+
+<p-dialog header="{{ currentPO.id === undefined ?'Create Purchase Order':'Edit Purchase Order'}}" *ngIf="display"
+  [(visible)]="display" [appendTo]="'body'" [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}"
+  data-cy="purchase-order-header">
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" (ngSubmit)="onPurchaseSubmit()" novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>Purchase Order Details</h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <label for="firstName" class="col-md-4 col-form-label text-md-right">
+              Customer:
+            </label>
+            <p-dropdown class="col-md-8" placeholder="Select Client" optionLabel="name" name="CutomerId"
+              [(ngModel)]="currentPO.customer" [options]="customersData" appendTo="body" [baseZIndex]="100002" required>
+            </p-dropdown>
+          </div>
+
+          <div class="form-group row">
+            <label for="POName" class="col-md-4  col-form-label text-md-right">
+              PO Name :
+            </label>
+            <div class="col-md-8 ">
+              <input placeholder="Enter PO Name" type="text" class="form-control input-transparent" name="POName"
+                [(ngModel)]="currentPO.name" data-parsley-trigger="change" data-parsley-required="true"
+                tooltip="PO Name" data-cy="poname-input">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="referenceName" class="col-md-4  col-form-label text-md-right">
+              Reference Name :
+            </label>
+            <div class="col-md-8 ">
+              <input placeholder="Enter Reference Name" type="text" class="form-control input-transparent"
+                name="referenceName" [(ngModel)]="currentPO.referenceName" data-parsley-trigger="change"
+                data-parsley-required="true" tooltip="Reference Name" data-cy="referenceName-input">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label col-md-4 col-12 text-md-right" for="RefCustPO">
+              Reference Cust PO #:
+            </label>
+            <div class="col-md-8 col-12">
+              <input placeholder="Enter Reference Customer PO # (typically a blanket PO)" type="text"
+                [(ngModel)]="currentPO.customerReferencePO" name="RefCustPO" class="form-control input-transparent"
+                data-parsley-trigger="change" data-parsley-required="true" data-parsley-validation-threshold="1"
+                data-cy="refcustpo-input">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="CustRefNum" class="col-md-4  col-form-label text-md-right">
+              Cust Ref# / MTTN:
+            </label>
+            <div class="col-md-8 col-12 ">
+              <input placeholder="Enter Reference Number" [(ngModel)]="currentPO.customerReferenceNo" type="text"
+                class="form-control input-transparent" name="CustRefNum" data-parsley-trigger="change"
+                data-parsley-required="true" tooltip="Customer Reference Number" data-cy="custrefnum-input">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label col-md-4 col-12 text-md-right" for="OpenDate">
+              Open Date:
+            </label>
+            <p-calendar [(ngModel)]="currentPO.openDate" placeholder="Select Open Date" class="col-md-8 col-12"
+              name="OpenDate" showIcon="true" styleClass="input-group input-group-transparent"
+              inputStyleClass="form-control input-transparent" data-parsley-trigger="change"
+              data-parsley-required="true" tooltip="Open Date" data-cy="opendate-input">
+            </p-calendar>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label col-md-4 col-12 text-md-right" for="ClosedDate">
+              Close Date:
+            </label>
+            <p-calendar [(ngModel)]="currentPO.closeDate" placeholder="Select Closed Date" class="col-md-8 col-12"
+              name="ClosedDate" showIcon="true" styleClass="input-group input-group-transparent"
+              inputStyleClass="form-control input-transparent" tooltip="Closed Date" data-cy="closedate-input">
+            </p-calendar>
+          </div>
+
+          <div class="form-group row">
+            <label for="TotalPurchaseLimit" class="form-control-label col-md-4 col-12 text-md-right">
+              Total Purchase Limit:
+            </label>
+            <div class="col-md-8 col-12 input-group input-group-transparent">
+              <span class="input-group-addon bg-secondary">$</span>
+              <input [(ngModel)]="currentPO.totalPurchaseLimit" placeholder="Enter total amount" type="number"
+                class="form-control input-transparent" name="TotalPurchaseLimit" data-cy="totalamount-input">
+              <span class="input-group-addon bg-secondary">.00</span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="Tax" class="form-control-label col-md-4 col-12 text-md-right">
+              Tax %:
+            </label>
+            <div class="col-md-8 col-12 input-group input-group-transparent">
+              <input placeholder="Enter Tax %" type="number" data-parsley-range="[0, 100]"
+                data-parsley-trigger="change" data-parsley-validation-threshold="1"
+                class="form-control input-transparent" name="Tax">
+              <span class="input-group-addon bg-secondary">%</span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="ProductId" class="col-md-2 text-right">
+              Products:
+            </label>
+            <div class="col-md-10 col-12">
+              <multiselect-wrapper-form [(model)]="currentPO.selectedProducts" defaultLabel="Select Products"
+                name="ProductId" defaultId="id" defaultLabelProperty="name" [options]="productsData" [limit]="30">
+              </multiselect-wrapper-form>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+          Save
+        </button>
+        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>

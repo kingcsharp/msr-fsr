@@ -4,6 +4,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
@@ -24,6 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ProcedureStep> ProcedureSteps { get; }
         IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get; }
         IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get; }
+        IRepository<ProcedureStepType> ProcedureStepTypes { get; }
         IRepository<ProcedureType> ProcedureTypes { get; }
         IRepository<Status> Status { get; }
         IRepository<UserRole> UserRoles { get; }
@@ -52,10 +54,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<HelpPage> HelpPages { get; }
         IRepository<HelpPageRoleMap> HelpPageRoles { get; }
         IRepository<MonitorInputType> MonitorInputTypes { get; }
+        IRepository<MonitorType> MonitorTypes { get; }
         IRepository<MonitorListItem> MonitorListItems { get; }
         IRepository<Document> Documents { get; }
         IRepository<Product> Products { get; }
+        IRepository<Purchase> Purchases { get; }
         IRepository<PurchaseOrder> PurchaseOrders { get; }
+        IRepository<PurchaseOrderProduct> PurchaseOrderProducts { get; }
         IRepository<PartSubPartMap> PartSubPartMaps { get ; }
         IRepository<Invoice> Invoices { get; }
         IRepository<InvoiceItem> InvoiceItems { get; }
@@ -64,10 +69,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<WorkOrderTask> WorkOrderTasks { get; }
         IRepository<File> Files { get; }
         IRepository<FileEntityMap> FileEntityMap { get; }
-
+        IRepository<AdminCostSetting> AdminCostSettings { get; }
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
-
-
+        IRepository<Sensor> Sensors { get; }
+        IRepository<Quote> Quotes { get; }
+        IRepository<TimeZone> Timezones { get; }
+        
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

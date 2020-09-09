@@ -11,8 +11,6 @@ namespace MSR.Domain.Commands
         public DateTime InvoiceDate { get; set; }
         public string InvoiceClass { get; set; }
         public decimal? TaxPercentage { get; set; }
-        public string Status { get; set; }
-        public int StatusId { get; set; }
         public ICollection<CreateUpdateInvoiceItem> InvoiceItems { get; set; }
     }
 }

@@ -6,8 +6,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
-using MSR.Infrastructure.Helpers;
-using MSR.Infrastructure.Resources.EntityFramework;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -15,14 +13,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace MSR.Infrastructure.Resources.Services.Role
+namespace MSR.Infrastructure.Resources.Services.Part
 {
     public class PartService : IPartService
     {
@@ -39,7 +34,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
         public async Task<ICollection<PartModel>> GetPartsAsync(GetParts command)
         {
-            List<Part> parts;
+            List<EntityFramework.Entities.Part> parts;
             if (command.partID.HasValue)
             {
                 parts = await _unitOfWork.Parts.Query().Where(x => x.Id == command.partID.Value).ToListAsync();
@@ -70,7 +65,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     ).ToList();
                 }
 
-                Part part = _mapper.Map<Part>(command);
+                EntityFramework.Entities.Part part =
+                    _mapper.Map<EntityFramework.Entities.Part>(command);
                 if (children.Count > 0)
                 {
                     part.IsKit = true;
@@ -114,7 +110,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> UpdatePartAsync(UpdatePart command)
         {
-            Part current = await _unitOfWork.Parts.Query()
+            EntityFramework.Entities.Part current = await _unitOfWork.Parts.Query()
                 .Include(x => x.Subparts)
                 .Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
@@ -138,14 +134,18 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
                 _mapper.Map(command, current);
 
-                current.Subparts = command.SubParts.Select(x =>
-                {
-                    x.ParentId = current.Id;
-                    x.Id = null;
-                    var subpart = _mapper.Map<PartSubPartMap>(x);
-                    _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
-                    return subpart;
-                }).ToList();
+                if (command.SubParts == null) {
+                    current.Subparts = new List<PartSubPartMap>();
+                } else {
+                    current.Subparts = command.SubParts.Select(x =>
+                    {
+                        x.ParentId = current.Id;
+                        x.Id = null;
+                        var subpart = _mapper.Map<PartSubPartMap>(x);
+                        _unitOfWork.PartSubPartMaps.AttachAndInsert(subpart);
+                        return subpart;
+                    }).ToList();
+                }
 
                 _unitOfWork.Parts.Update(current);
                 // This will call SaveChangesAsync
@@ -170,7 +170,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> DeletePartAsync(DeletePart command)
         {
-            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+            EntityFramework.Entities.Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
             if (current is null)
             {
@@ -189,55 +189,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var ret = _mapper.Map<PartModel>(current);
             return ret;
-        }
-
-        private readonly string _byteOrderMarkUtf8 =
-            Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-
-        public int ImportPartsAsync(ImportParts command)
-        {
-            var base64File = Base64Helper.Parse(command.base64Data);
-            string csvdata = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r","").Trim();
-            if (csvdata.StartsWith(_byteOrderMarkUtf8, StringComparison.Ordinal)) {
-                csvdata = csvdata.Remove(0, _byteOrderMarkUtf8.Length);
-            }
-            IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvdata);
-            List<PartModel> parts = new List<PartModel>();
-
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
-            {
-                // importing parts requiring appoval is not supported
-                throw new DomainException("Permission denied for import", DomainError.BadRequest);
-            }
-
-            // First: parse the file to ensure valid data
-            foreach (PartCSVRecord record in records)
-            {
-                var part = _mapper.Map<PartModel>(record);
-                parts.Add(part);
-            }
-
-            // Then submit the data for processing
-            return importDataAsync(parts);
-        }
-
-        private int importDataAsync(List<PartModel> parts)
-        {
-            var data = JsonConvert.SerializeObject(parts);
-            var b64data = Convert.ToBase64String(Encoding.UTF8.GetBytes(data));
-            string type = "text/plain";
-            string importUniqueFile = "PARTIMPORT" + Guid.NewGuid();
-            var uploadTask = _fileService.UploadImportFile(new UploadFile() {
-                Name = importUniqueFile,
-                ContentType = type,
-                Base64String = FileService.GetURLEncodedBase64(b64data, type)
-            });
-
-            // TODO NEXT: hook into SQS
-            //throw new NotImplementedException();
-
-            Task.WhenAll(uploadTask);
-            return 0;
         }
 
         private int GetWorkflowID()

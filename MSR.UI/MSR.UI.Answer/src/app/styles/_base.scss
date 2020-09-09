@@ -75,6 +75,7 @@
   padding-left: 15px;
   font-weight: 300;
   overflow-y: auto;
+  overflow-x:hidden;
   -moz-box-shadow: 3px 3px 5px 6px #222d3c;
   -webkit-box-shadow: 3px 3px 5px 6px #222d3c;
   box-shadow: 3px 3px 5px 6px #222d3c;
@@ -100,7 +101,8 @@
 
 .side-nav {
   margin: 0;
-
+  margin-bottom: 15px;
+  
   li {
     list-style: none;
     a:hover,

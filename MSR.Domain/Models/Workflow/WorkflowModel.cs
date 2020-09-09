@@ -14,7 +14,7 @@ namespace MSR.Domain.Models
         public string Name { get; set; }
         public string LastUpdatedByName { get; set; }
         public string CreatedByName { get; set; }
-        public virtual ICollection<WorkflowStageMapModel> MemberStages { get; set; }
-        public virtual ICollection<WorkflowActivityMapModel> ActivityMaps { get; set; }
+        public ICollection<WorkflowStageMapModel> MemberStages { get; set; }
+        public ICollection<WorkflowActivityMapModel> ActivityMaps { get; set; }
     }
 }

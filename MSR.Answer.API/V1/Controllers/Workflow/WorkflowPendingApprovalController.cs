@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Filters;
@@ -54,7 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPost, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanCreate)]
-        public async Task<IActionResult> Post([FromQuery, Required] PostPendingApprovalRequest request)
+        public async Task<IActionResult> Post([FromBody, Required] PostPendingApprovalRequest request)
         {
             var command = request.ToPostApprovalCommand();
 

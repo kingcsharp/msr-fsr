@@ -25,9 +25,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Extensions
             {
                 throw new Domain.Exceptions.DomainException("User not logged in", DomainError.BadRequest);
             }
+            var aent = entity.GetType().Name.Replace("Proxy", "");
+            if (aent.Length > 20) {
+                // FIXME: why is this varchar(20)?
+                aent = aent.Substring(0,20);
+            }
             var log = new ApprovalTransactionLog()
             {
-                ApprovalEntity = entity.GetType().Name.Replace("Proxy", ""),
+                ApprovalEntity = aent,
                 ApprovalEntityId = entityId,
                 ApprovalResult = status,
                 ProcessedById = CurrentUser.GetId(),

@@ -133,3 +133,14 @@ p-footer button[type="submit"] {
     margin-top: 5px;
   }
 }
+
+.custom-panel{
+  border-radius: 10px;
+  padding: 15px 17px;
+  color: #f8f8f8;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.taskcompleted > pcalendar-wrapper > p-calendar > span{
+  width:100%;
+} 

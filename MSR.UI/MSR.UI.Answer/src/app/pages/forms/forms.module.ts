@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 import { Autosize } from 'ng-autosize';
@@ -39,7 +38,6 @@ export const routes = [
     CommonModule,
     FormsModule,
     TextMaskModule,
-    TooltipModule.forRoot(),
     AlertModule.forRoot(),
     BsDropdownModule.forRoot(),
     WidgetModule,

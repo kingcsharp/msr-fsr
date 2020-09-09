@@ -27,7 +27,12 @@ export class CommonGrid {
     }
 
     isVisibleCol(id: string, gridSettings: ColumnsSaved[]) {
-        return gridSettings.filter(x => x.id === id)[0].visible;
+        try {
+            return gridSettings.filter(x => x.id === id)[0].visible;
+        } catch (error) {
+            console.log(id);
+            console.error(error);
+        }
     }
 
     filter(table, field: string) {

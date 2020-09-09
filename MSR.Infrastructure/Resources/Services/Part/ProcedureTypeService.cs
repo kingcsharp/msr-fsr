@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -11,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSR.Infrastructure.Resources.Services.Role
+namespace MSR.Infrastructure.Resources.Services.Part
 {
     public class ProcedureTypeService : IProcedureTypeService
     {
@@ -89,6 +90,26 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return ret;
 
+        }
+
+        public async Task<bool> DeleteProcedureTypeAsync(DeleteProcedureType command)
+        {
+            var current = await _unitOfWork.ProcedureTypes.FirstOrDefaultAsync(false, i => i.Id == command.id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureType)} not found with ID: {command.id}", DomainError.NotFound);
+            }
+
+            if (CurrentUser.HasPrivilege(EnumMenuItem.ProcedureTypes, EnumPrivilege.CanDelete))
+            {
+                _unitOfWork.ProcedureTypes.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
+            } else {
+                throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureType)} uid {CurrentUser.GetId()}");
+            }
+
+            return true;
         }
     }
 }
