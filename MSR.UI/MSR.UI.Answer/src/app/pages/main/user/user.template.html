@@ -262,7 +262,7 @@
               Location
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" [appendTo]="body"
+              <p-dropdown placeholder="Select Location" name="locations" [options]="locations" appendTo="body"
                 [baseZIndex]="100002" [(ngModel)]="currUser.locationId">
               </p-dropdown>
             </div>
@@ -270,7 +270,7 @@
               Supervisor
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" [appendTo]="body"
+              <p-dropdown placeholder="Select Supervisor" name="supervisor" [options]="allUsers" appendTo="body"
                 [baseZIndex]="100001" [(ngModel)]="currUser.supervisorId">
               </p-dropdown>
             </div>
@@ -310,7 +310,7 @@
               Customer
             </label>
             <div class="col-md-4 col-12">
-              <p-dropdown placeholder="Select Customer" name="customer" optionLabel="name" [options]="customers" [appendTo]="body"
+              <p-dropdown placeholder="Select Customer" name="customer" optionLabel="name" [options]="customers" appendTo="body"
                 [baseZIndex]="100001" [(ngModel)]="currUser.customer">
               </p-dropdown>
             </div>

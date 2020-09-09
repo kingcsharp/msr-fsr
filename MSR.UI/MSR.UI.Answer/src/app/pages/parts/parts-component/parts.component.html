@@ -310,7 +310,7 @@
                   <tr class="ui-selectable-row">
                     <td>
                       <p-dropdown placeholder="Select Sub Part" name="allpartsDropdown" [options]="allParts"
-                        [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" [appendTo]="body"
+                        [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
                         itemSize="30" [ngModelOptions]="{standalone: true}" data-cy="subpartitem-modal"></p-dropdown>
                     </td>
                     <td class="text-capitalize">

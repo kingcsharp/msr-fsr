@@ -115,7 +115,7 @@
                         <div class="col-md-4 col-12">
                             <p-dropdown placeholder="Select Time Zone" dataKey="id" name="timezone"
                                 [options]="allTimezones" [(ngModel)]="user.timeZone" [virtualScroll]="true"
-                                optionLabel="description" [appendTo]="body" itemSize="30"
+                                optionLabel="description" appendTo="body" itemSize="30"
                                 [ngModelOptions]="{standalone: true}" data-cy="timezone-dropdown">
                             </p-dropdown>
                         </div>
