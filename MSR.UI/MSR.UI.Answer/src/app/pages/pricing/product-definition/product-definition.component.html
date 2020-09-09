@@ -21,7 +21,7 @@
           <div class="form-group">
             <label for="customerId">Customer :</label>
             <p-dropdown *ngIf="getCustomersFlag" [class.hide]="mode === productPageModes.View" placeholder="Select Customer" name="customerId"
-              [options]="customersData" appendTo="body" [baseZIndex]="100001" [(ngModel)]="productData.customerId"
+              [options]="customersData" [appendTo]="body" [baseZIndex]="100001" [(ngModel)]="productData.customerId"
               data-cy="product-select-customerid" [virtualScroll]="true" itemSize="30" [filter]="true" filterBy="label">
             </p-dropdown>
             <input [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"

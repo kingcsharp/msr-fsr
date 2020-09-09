@@ -174,7 +174,7 @@
   </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currPart.id === undefined ?'Create Part':'Edit Part'}}" [(visible)]="display"
-  [style]="{width: '50vw'}" data-cy="user-header">
+  [style]="{width: '50vw'}" data-cy="user-header" [modal]='true'>
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onpartSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -310,7 +310,7 @@
                   <tr class="ui-selectable-row">
                     <td>
                       <p-dropdown placeholder="Select Sub Part" name="allpartsDropdown" [options]="allParts"
-                        [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" appendTo="body"
+                        [filter]="true" [(ngModel)]="partmodel.partId" [virtualScroll]="true" [appendTo]="body"
                         itemSize="30" [ngModelOptions]="{standalone: true}" data-cy="subpartitem-modal"></p-dropdown>
                     </td>
                     <td class="text-capitalize">

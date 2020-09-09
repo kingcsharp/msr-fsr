@@ -347,8 +347,7 @@ export class ProcedureEditComponent implements OnInit {
 
   }
 
-  closeConfirmDeleteStepDialog(procedureStep) {
-
+  closeConfirmDeleteStepDialog() {
     this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
   }
 
