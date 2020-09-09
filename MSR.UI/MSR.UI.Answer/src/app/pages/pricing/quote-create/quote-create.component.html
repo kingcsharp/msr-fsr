@@ -44,7 +44,7 @@
                     placeholder="Select Customer"
                     name="customerSelectId"
                     [options]="customersData"
-                    appendTo="body"
+                    [appendTo]="body"
                     [baseZIndex]="100001"
                     [(ngModel)]="data.customerId"
                     [virtualScroll]="true"

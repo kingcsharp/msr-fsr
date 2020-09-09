@@ -101,7 +101,7 @@ export class LocationsComponent implements OnInit {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(location: LocationModel) {
+  closeConfirmDeleteDialog() {
     this.locationToDelete = null;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }

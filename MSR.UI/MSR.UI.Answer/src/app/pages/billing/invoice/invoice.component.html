@@ -125,7 +125,7 @@
     </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currentInvoice.id === undefined ?'Create Invoice':'Edit Invoice'}}"
-    [(visible)]="display" [style]="{width: '100vw'}" data-cy="user-header">
+    [(visible)]="display" [style]="{width: '100vw'}" data-cy="user-header" [modal]='true'>
     <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
         data-parsley-priority-enabled="false" (ngSubmit)="onInvoiceSubmit()" novalidate="novalidate">
         <section class="widget mrg-btm-sm" widget>
@@ -171,7 +171,7 @@
                             <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
                                 (onChange)="locationChanged()" optionLabel="name" placeholder="Select Location"
                                 name="locations" [options]="locations" dataKey="id" [virtualScroll]="true" itemSize="30"
-                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.location"
+                                [appendTo]="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.location"
                                 [ngModelOptions]="{standalone: true}" data-cy="invoice-location">
                             </p-dropdown>
                         </div>
@@ -182,7 +182,7 @@
                             <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
                                 (onChange)="customerChanged()" optionLabel="name" placeholder="Select Customer"
                                 name="customers" [options]="customers" dataKey="id" [virtualScroll]="true" itemSize="30"
-                                appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customer"
+                                [appendTo]="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customer"
                                 [ngModelOptions]="{standalone: true}"  data-cy="invoice-customer">
                             </p-dropdown>
                         </div>

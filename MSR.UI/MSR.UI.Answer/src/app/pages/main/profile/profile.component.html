@@ -115,7 +115,7 @@
                         <div class="col-md-4 col-12">
                             <p-dropdown placeholder="Select Time Zone" dataKey="id" name="timezone"
                                 [options]="allTimezones" [(ngModel)]="user.timeZone" [virtualScroll]="true"
-                                optionLabel="description" appendTo="body" itemSize="30"
+                                optionLabel="description" [appendTo]="body" itemSize="30"
                                 [ngModelOptions]="{standalone: true}" data-cy="timezone-dropdown">
                             </p-dropdown>
                         </div>
@@ -190,7 +190,7 @@
                         </label>
                         <div class="col-md-5 ">
                             <input type="password" id="confirmpassword" name="confirmpassword"
-                                [(ngModel)]="userPwObj.confirmpassword" data-validate="parsley"
+                                [(ngModel)]="confirmpassword" data-validate="parsley"
                                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                                 data-parsley-minlength="8" data-parsley-special="1" data-parsley-uppercase="1"
                                 data-parsley-lowercase="1" data-parsley-number="1"

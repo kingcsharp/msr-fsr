@@ -78,13 +78,11 @@ export class TemplatesComponent implements OnInit {
   }
 
   openConfirmDeleteDialog(procedureTemplate) {
-
     this.procedureTemplateToDelete = procedureTemplate;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(procedureTemplate) {
-    this.procedureTemplateToDelete = procedureTemplate;
+  closeConfirmDeleteDialog() {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 

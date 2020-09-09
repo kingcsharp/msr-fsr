@@ -10,8 +10,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { DropdownModule } from 'primeng/dropdown';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { UtilsModule } from '../../../app/layout/utils/utils.module';
 
 export const routes = [
@@ -21,8 +19,7 @@ export const routes = [
 ];
 
 @NgModule({
-  declarations: [HelpComponent, HelpCreateComponent,
-    CkeditorWrapperComponent],
+  declarations: [HelpComponent, HelpCreateComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -33,7 +30,6 @@ export const routes = [
     TableModule,
     NewWidgetModule,
     DropdownModule,
-    CKEditorModule,
     UtilsModule
   ]
 })

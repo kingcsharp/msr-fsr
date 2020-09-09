@@ -57,7 +57,7 @@ export class InvoiceComponent implements OnInit {
   showInvoiceItems: boolean = true;
   workorders: Array<WorkOrderModel> = new Array<WorkOrderModel>();
   calendarEn: any;
-  constructor(private globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
+  constructor(public globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
     private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService,
     private locationService: LocationService, private workOrderService: WorkOrderService) {
 

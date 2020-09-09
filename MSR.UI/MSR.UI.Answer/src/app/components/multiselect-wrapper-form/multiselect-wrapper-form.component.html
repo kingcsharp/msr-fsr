@@ -1,4 +1,4 @@
-<p-multiSelect name="{{multiselectName}}" [options]="currentOptions" [(ngModel)]="selectedObjs.items" appendTo="body"
+<p-multiSelect name="{{multiselectName}}" [options]="currentOptions" [(ngModel)]="selectedObjs.items" [appendTo]="body"
     (onChange)="updateModelVal()" [baseZIndex]="100001">
     <ng-template let-items pTemplate="selectedItems">
         <div *ngIf="items!==undefined && items!==null && items.length>0 && items.length<basicOptions.limit">

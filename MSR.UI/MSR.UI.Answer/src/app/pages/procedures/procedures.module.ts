@@ -14,8 +14,6 @@ import { ProceduretypesComponent } from './proceduretypes/proceduretypes.compone
 import { ProcedureCreateComponent } from './procedure-create/procedure-create.component';
 import { ProceduretypeComponent } from './proceduretype/proceduretype.component';
 import { TemplateComponent } from './template/template.component';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { ProcedureViewComponent } from './procedure-view/procedure-view.component';
 import { ProcedureEditComponent } from './procedure-edit/procedure-edit.component';
 import { SortableModule } from 'ngx-bootstrap/sortable';
@@ -37,7 +35,7 @@ export const routes = [
 
 @NgModule({
   declarations: [ProceduresComponent, TemplatesComponent, ProceduretypesComponent, ProcedureCreateComponent,
-    ProceduretypeComponent, TemplateComponent, CkeditorWrapperComponent, ProcedureViewComponent, ProcedureEditComponent],
+    ProceduretypeComponent, TemplateComponent, ProcedureViewComponent, ProcedureEditComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -48,7 +46,6 @@ export const routes = [
     NewWidgetModule,
     MultiSelectModule,
     DialogModule,
-    CKEditorModule,
     SortableModule
   ]
 })

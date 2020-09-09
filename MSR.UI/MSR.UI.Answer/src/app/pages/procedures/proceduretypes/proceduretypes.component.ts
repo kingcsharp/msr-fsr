@@ -65,13 +65,11 @@ export class ProceduretypesComponent implements OnInit {
   }
 
   openConfirmDeleteDialog(procedureType) {
-
     this.procedureTypeToDelete = procedureType;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(procedureType) {
-    this.procedureTypeToDelete = procedureType;
+  closeConfirmDeleteDialog() {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 

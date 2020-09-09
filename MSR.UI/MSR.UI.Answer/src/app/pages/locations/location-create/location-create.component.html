@@ -88,7 +88,7 @@
                     Country
                 </label>
                 <div class="col-12">
-                    <p-dropdown placeholder="Select Country" name="country" [options]="countryOptions" appendTo="body"
+                    <p-dropdown placeholder="Select Country" name="country" [options]="countryOptions" [appendTo]="body"
                         [baseZIndex]="100001" [(ngModel)]="locationToEdit.country" data-cy="country-dropdown">
                     </p-dropdown>
                 </div>
@@ -125,7 +125,7 @@
                 </label>
                 <p-multiSelect name="sensors" [options]="sensorOptions" [(ngModel)]="selectedSensors"
                     optionLabel="sensorName" data-cy="sensors-multiselect" [itemSize]="15" [baseZIndex]="100002"
-                    appendTo="body">
+                    [appendTo]="body">
                     <ng-template let-value pTemplate="selectedItems">
                         <div *ngFor="let val of value" class="ui-multiselected-item-token ui-corner-all">
                             <span>{{val.sensorName}}</span>

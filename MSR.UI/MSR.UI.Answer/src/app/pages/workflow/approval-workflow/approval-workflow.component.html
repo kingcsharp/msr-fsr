@@ -154,7 +154,7 @@
   </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currWorkflow.id === undefined ?'Create Workflow ':'Edit Workflow '}}"
-  [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
+  [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header" [modal]='true'>
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
