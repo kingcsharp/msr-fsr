@@ -372,7 +372,7 @@
         </div>
     </div>
 </div>
-<p-dialog header="Confirm Delete Monitor" [(visible)]="showConfirmDeleteMonitorDialog" [appendTo]="body"
+<p-dialog header="Confirm Delete Monitor" [(visible)]="showConfirmDeleteMonitorDialog" appendTo="body"
     [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <div class="container">
         <div class="row">
@@ -392,7 +392,7 @@
         </div>
     </p-footer>
 </p-dialog>
-<p-dialog header="Edit Monitor" [(visible)]="showEditMonitorDialog" [appendTo]="body" [baseZIndex]="100001"
+<p-dialog header="Edit Monitor" [(visible)]="showEditMonitorDialog" appendTo="body" [baseZIndex]="100001"
     [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <div class="container">
         <div class="row" *ngIf="monitorToEdit !== undefined">
@@ -515,7 +515,7 @@
         </div>
     </p-footer>
 </p-dialog>
-<p-dialog header="Add Monitor" [(visible)]="showAddMonitorDialog" [appendTo]="body" [baseZIndex]="100001" [modal]='true'
+<p-dialog header="Add Monitor" [(visible)]="showAddMonitorDialog" appendTo="body" [baseZIndex]="100001" [modal]='true'
     [style]="{width: '60vw'}" data-cy="user-header">
     <div class="container-fluid">
         <div class="row" *ngIf="monitorToAdd !== undefined">
@@ -636,7 +636,7 @@
         </div>
     </p-footer>
 </p-dialog>
-<p-dialog header="Confirm Delete Procedure Step" [(visible)]="showConfirmDeleteStepDialog" [appendTo]="body"
+<p-dialog header="Confirm Delete Procedure Step" [(visible)]="showConfirmDeleteStepDialog" appendTo="body"
     [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <div class="container">
         <div class="row">
