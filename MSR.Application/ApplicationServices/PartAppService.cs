@@ -34,7 +34,6 @@ namespace MSR.Application.ApplicationServices
             ICollection<FileModel> files = new List<FileModel>();
 
             files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, ret.Select(x => x.Id).ToList());
-
             foreach (var part in ret)
             {
                 part.Files = files.Where(x => x.EntityId == part.Id).ToList();
