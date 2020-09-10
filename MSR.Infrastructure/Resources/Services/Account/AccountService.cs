@@ -203,12 +203,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task<string> GetJWTTokenAsync()
         {
-        /*
             var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuRolePermission)
                 .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
-                .FirstOrDefaultAsync(i => i.Id == CurrentUser.GetId());
-                */
-            var user = await _unitOfWork.Users.Query()
                 .FirstOrDefaultAsync(i => i.Id == CurrentUser.GetId());
 
             if(user is null)
