@@ -57,7 +57,7 @@ namespace MSR.Answer.Processor.SQSServices
                 try
                 {
                     _tokenSource = new CancellationTokenSource();
-                    _queueURL = "https://sqs.us-west-2.amazonaws.com/425480257575/LocalService-Answer-Inbox.fifo";// (await _sqsClient.GetQueueUrlAsync(_sQSInformation.QueueName)).QueueUrl;
+                    _queueURL = _sQSInformation.QueueURL;
                     ProcessAsync();
                 }
                 catch(Exception ex)
