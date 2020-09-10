@@ -101,6 +101,7 @@ namespace MSR.Application.ApplicationServices
 
             var importEvent = new ImportEvent()
             {
+                UserId = CurrentUser.GetId().ToString(),
                 CsvData = csvData,
                 MenuItem = command.MenuItem
             };

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using MSR.Domain.Abstractions.Services;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,13 +9,25 @@ using System.Web.Http;
 
 namespace MSR.Application.Hubs
 {
+    /// <summary>
+    /// Connection mapping
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ConnectionMapping<T>
     {
         private readonly Dictionary<T, HashSet<string>> _connections =
             new Dictionary<T, HashSet<string>>();
 
+        /// <summary>
+        /// Count
+        /// </summary>
         public int Count { get { return _connections.Count; } }
 
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="connectionId"></param>
         public void Add(T key, string connectionId)
         {
             lock (_connections) {
@@ -30,6 +43,11 @@ namespace MSR.Application.Hubs
             }
         }
 
+        /// <summary>
+        /// GetConnection
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public IEnumerable<string> GetConnections(T key)
         {
             HashSet<string> connections;
@@ -40,6 +58,11 @@ namespace MSR.Application.Hubs
             return Enumerable.Empty<string>();
         }
 
+        /// <summary>
+        /// Remove connection
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="connectionId"></param>
         public void Remove(T key, string connectionId)
         {
             lock (_connections) {
@@ -58,12 +81,21 @@ namespace MSR.Application.Hubs
         }
     }
 
+    /// <summary>
+    /// SignalR MessageHub
+    /// </summary>
     [Authorize]
     public class MessageHub : Hub
     {
         private readonly static ConnectionMapping<string> _connections = new
             ConnectionMapping<string>();
 
+        /// <summary>
+        /// Send message to user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task SendMessage(string user, string message)
         {
             foreach (var client in _connections.GetConnections(user)) {
@@ -71,6 +103,10 @@ namespace MSR.Application.Hubs
             }
         }
 
+        /// <summary>
+        /// Log the connection
+        /// </summary>
+        /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
             string name = Context.User.Identity.Name;
@@ -80,6 +116,12 @@ namespace MSR.Application.Hubs
             }
             await base.OnConnectedAsync();
         }
+
+        /// <summary>
+        /// Remove the connection
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception e)
         {
             string name = Context.User.Identity.Name;
