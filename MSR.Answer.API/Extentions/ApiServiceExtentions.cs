@@ -47,15 +47,9 @@ namespace MSR.Answer.API.Extentions
             {
                 builder.SetIsOriginAllowed(_ => true)
                     .AllowAnyMethod()
-                       //.AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowCredentials()
-                       .AllowAnyHeader();
-                //builder
-                //    .AllowAnyMethod()
-                //    .AllowAnyOrigin()
-                //    .AllowCredentials()
-                //    .AllowAnyHeader();
+                    .AllowAnyHeader();
             }));
 
             services.AddLogging();
