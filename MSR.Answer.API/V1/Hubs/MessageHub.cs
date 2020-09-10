@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using MSR.Domain.Hub;
 
 namespace MSR.Application.Hubs
 {
@@ -96,10 +97,10 @@ namespace MSR.Application.Hubs
         /// <param name="user"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string user, Toaster message)
         {
             foreach (var client in Connections.GetConnections(user)) {
-                await Clients.Clients(client).SendAsync("ReceiveMessage", message);
+                await Clients.Clients(client).SendAsync("ToasterMessage", message);
             }
         }
 

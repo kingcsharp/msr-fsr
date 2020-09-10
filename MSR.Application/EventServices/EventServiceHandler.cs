@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MSR.Domain.Hub;
 
 namespace MSR.Application.EventServices
 {
@@ -35,8 +36,9 @@ namespace MSR.Application.EventServices
             await _messageHub.Connect("https://localhost:44398/msg"); // TODO: hardcoded url
             int count;
 
-            try {
-                switch(handledEvent.MenuItem)
+            try
+            {
+                switch (handledEvent.MenuItem)
                 {
                     case EnumMenuItem.CustomersDepartments:
                         var importedCustomers = await _customerService.ImportCustomers(handledEvent.CsvData);
@@ -55,14 +57,21 @@ namespace MSR.Application.EventServices
                             Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem));
                 }
 
-                _messageHub.SendNotification(handledEvent.UserId,
-                    $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
-                    $"complete.  {count} items imported.");
-
-            } catch (Exception e) {
-                _messageHub.SendNotification(handledEvent.UserId,
-                    $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
-                    $"ERROR: {e.Message}");
+                _messageHub.SendNotification(handledEvent.UserId, new Toaster()
+                {
+                    Message = $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
+                              $"complete.  {count} items imported.",
+                    Status = EnumToasterStatus.Success
+                });
+            }
+            catch (Exception e)
+            {
+                _messageHub.SendNotification(handledEvent.UserId, new Toaster()
+                {
+                    Message = $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
+                              $"ERROR: {e.Message}",
+                    Status = EnumToasterStatus.Success
+                });
             }
         }
     }
