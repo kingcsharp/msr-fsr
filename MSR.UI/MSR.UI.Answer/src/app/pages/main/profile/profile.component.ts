@@ -14,6 +14,7 @@ declare let Parsley: any;
 })
 export class ProfileComponent implements OnInit {
 
+  confirmpassword: string = '';
   user: UserModel;
   userPwObj: ResetMyPasswordRequest;
   parsleyInstance: any;
@@ -28,6 +29,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.user = copyObj(this.globals.user);
     this.userPwObj = new ResetMyPasswordRequest({ newPassword: '', oldPassword: '' });
+    this.confirmpassword = '';
     this.getUser();
     this.getTimeZones();
 
@@ -104,6 +106,7 @@ export class ProfileComponent implements OnInit {
       this.accountService.resetmypassword(env.apiVersion, this.userPwObj).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.userPwObj = new ResetMyPasswordRequest({ newPassword: '', oldPassword: '' });
+          this.confirmpassword = '';
         }));
     } else {
       this.globals.showLoader(false);

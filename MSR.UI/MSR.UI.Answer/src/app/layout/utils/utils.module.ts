@@ -31,6 +31,8 @@ import { GridInputFilterComponent } from '../../../app/components/grid-input-fil
 import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
 import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-switch/bootstrap-switch.component';
+import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-swit
     GridOptionsComponent,
     TimeZonePipe,
     BootstrapSwitchComponent,
+    CkeditorWrapperComponent
   ],
   exports: [
     ProgressAnimateDirective,
@@ -71,7 +74,8 @@ import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-swit
     GridOptionsComponent,
     HelpbuttonWrapperComponent,
     TimeZonePipe,
-    BootstrapSwitchComponent
+    BootstrapSwitchComponent,
+    CkeditorWrapperComponent
   ],
   imports: [
     CommonModule,
@@ -82,7 +86,8 @@ import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-swit
     FileUploadModule,
     CheckboxModule,
     TooltipModule.forRoot(),
-    NgxDocViewerModule
+    NgxDocViewerModule,
+    CKEditorModule
   ],
   providers: [DatePipe]
 })

@@ -141,7 +141,7 @@
 </widget>
 
 <p-dialog *ngIf="display" header="{{ currWorkflowGroup.id === undefined ?'Create Workflow Group':'Edit Workflow Group'}}"
-  [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header">
+  [(visible)]="display" [style]="{width: '50vw'}" data-cy="user-header" [modal]='true'>
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>

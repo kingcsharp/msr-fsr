@@ -8,7 +8,7 @@ RUN npm install
 ARG ENV
 
 COPY . .
-RUN npm run build$ENV
+RUN npm run $ENV
 
 ### STAGE 2: Run ###
 FROM nginx:1.17.1-alpine

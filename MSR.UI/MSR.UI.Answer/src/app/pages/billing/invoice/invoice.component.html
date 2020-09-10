@@ -125,7 +125,7 @@
     </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currentInvoice.id === undefined ?'Create Invoice':'Edit Invoice'}}"
-    [(visible)]="display" [style]="{width: '100vw'}" data-cy="user-header">
+    [(visible)]="display" [style]="{width: '100vw'}" data-cy="user-header" [modal]='true'>
     <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
         data-parsley-priority-enabled="false" (ngSubmit)="onInvoiceSubmit()" novalidate="novalidate">
         <section class="widget mrg-btm-sm" widget>

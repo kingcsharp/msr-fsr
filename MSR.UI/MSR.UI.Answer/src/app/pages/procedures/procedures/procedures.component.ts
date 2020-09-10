@@ -77,8 +77,7 @@ export class ProceduresComponent implements OnInit {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(procedure) {
-    this.procedureToDelete = procedure;
+  closeConfirmDeleteDialog() {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
