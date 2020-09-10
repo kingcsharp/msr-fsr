@@ -6,15 +6,14 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Validators;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Part
@@ -229,6 +228,41 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             return -1;
 
+        }
+
+        private readonly object synclock = new object();
+
+        public async Task<ICollection<PartModel>> ImportLocations(string csvData)
+        {
+            IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvData);
+            List<UpdatePart> updates = new List<UpdatePart>();
+            List<CreatePart> inserts = new List<CreatePart>();
+            List<PartModel> results = new List<PartModel>();
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove)) {
+                throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
+            }
+
+            // First parse the file to ensure valid data
+            foreach (PartCSVRecord record in records) {
+                if (record.Id.HasValue) {
+                    var part = _mapper.Map<UpdatePart>(record);
+                    updates.Add(part);
+                } else {
+                    var part = _mapper.Map<CreatePart>(record);
+                    inserts.Add(part);
+                }
+            }
+
+            // Then perform the update
+            foreach (UpdatePart model in updates) {
+                results.Add(await UpdatePartAsync(model));
+            }
+            foreach (CreatePart model in inserts) {
+                results.Add(await CreatePartAsync(model));
+            }
+
+            return results;
         }
     }
 }

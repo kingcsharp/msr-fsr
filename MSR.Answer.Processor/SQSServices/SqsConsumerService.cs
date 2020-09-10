@@ -57,7 +57,7 @@ namespace MSR.Answer.Processor.SQSServices
                 try
                 {
                     _tokenSource = new CancellationTokenSource();
-                    _queueURL = "https://sqs.us-west-2.amazonaws.com/425480257575/LocalService-Answer-Inbox.fifo";// (await _sqsClient.GetQueueUrlAsync(_sQSInformation.QueueName)).QueueUrl;
+                    _queueURL = _sQSInformation.QueueURL;
                     ProcessAsync();
                 }
                 catch(Exception ex)
@@ -141,8 +141,13 @@ namespace MSR.Answer.Processor.SQSServices
 
                 var dispatcher = (EventDispatcher)(_serviceProvider.GetService(typeof(EventDispatcher<>).MakeGenericType(messageType)));
 
-                _ = dispatcher.Dispatch((IEvent)@event);
+                Task opr = dispatcher.Dispatch((IEvent)@event);
                 await _sqsClient.DeleteMessageAsync(_queueURL, message.ReceiptHandle);
+
+                // The process thread must wait for operation to complete before
+                // going on to the next one, otherwise the database context
+                // will complain about threading errors.
+                Task.WaitAll(opr);
             }
             catch (Exception ex)
             {

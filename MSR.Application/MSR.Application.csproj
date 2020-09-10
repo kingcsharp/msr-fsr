@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MSR.Domain\MSR.Domain.csproj" />
     <ProjectReference Include="..\MSR.Infrastructure\MSR.Infrastructure.csproj" />
   </ItemGroup>
