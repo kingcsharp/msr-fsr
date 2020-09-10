@@ -34,8 +34,8 @@ namespace MSR.Answer.Processor.SQSServices
         private CancellationTokenSource _tokenSource;
 
         public SqsConsumerService(
-            IAmazonSQS sqsClient, 
-            SQSInformation sQSInformation, 
+            IAmazonSQS sqsClient,
+            SQSInformation sQSInformation,
             ICommandDispatcher dispatcher,
             IServiceProvider serviceProvider,
             IEventHandlers eventHandlers,
@@ -58,7 +58,9 @@ namespace MSR.Answer.Processor.SQSServices
                 {
                     _tokenSource = new CancellationTokenSource();
                     _queueURL = _sQSInformation.QueueURL;
-                    ProcessAsync();
+                    // This must be await-ed and processed in order, because
+                    // there is only one DbContext to use.
+                    await ProcessAsync();
                 }
                 catch(Exception ex)
                 {
@@ -82,12 +84,10 @@ namespace MSR.Answer.Processor.SQSServices
             return _tokenSource != null && !_tokenSource.Token.IsCancellationRequested;
         }
 
-        private async void ProcessAsync()
+        private async Task ProcessAsync()
         {
             try
             {
-                
-                
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {
                     try
@@ -104,8 +104,13 @@ namespace MSR.Answer.Processor.SQSServices
                         {
                             throw new AmazonSQSException($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}. Response: {response.HttpStatusCode}");
                         }
-                        response.Messages.ForEach(async x => await ProcessMessageAsync(x));
 
+                        // Need to use foreach keyword here to ensure that
+                        // processing stops and the entire SQS item completes before
+                        // moving on to the next one.
+                        foreach (Message x in response.Messages) {
+                            await ProcessMessageAsync(x);
+                        }
                     }
                     catch (TaskCanceledException e)
                     {
@@ -161,7 +166,7 @@ namespace MSR.Answer.Processor.SQSServices
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var tokenData = tokenHandler.ReadJwtToken(token);
-            int.TryParse(tokenData.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value, out var accountId); 
+            int.TryParse(tokenData.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value, out var accountId);
             string claimVal = tokenData.Claims.FirstOrDefault(c => c.Type == "ApprovalPrivileges").Value;
             var approvalPrivilegesDic = JsonConvert.DeserializeObject<Dictionary<int, int[]>>(claimVal);
 

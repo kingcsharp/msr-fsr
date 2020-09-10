@@ -33,7 +33,7 @@ namespace MSR.Application.EventServices
         public async Task HandleAsync(ImportEvent handledEvent, CancellationToken cancellationToken = default)
         {
             await _messageHub.Connect("https://localhost:44398/msg"); // TODO: hardcoded url
-            int count = 0;
+            int count;
 
             try {
                 switch(handledEvent.MenuItem)
