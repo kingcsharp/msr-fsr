@@ -26,7 +26,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             if (!CurrentUser.CanApproveActivity(approvalTable))
             {
-                await messageHub.Clients.All.SendAsync("WorkflowNotification", new Guid(), new PendingNotificationItem()
+                await messageHub.Clients.All.SendAsync("WorkflowNotification", Guid.NewGuid(), new PendingNotificationItem()
                 {
                     Table = (int)approvalTable,
                     Count = count
