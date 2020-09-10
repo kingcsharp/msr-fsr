@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using System;
+using Amazon.Runtime.Internal;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -29,6 +30,9 @@ namespace MSR.Application.ApplicationServices
         public void SendNotification(string userId, string message)
         {
             connection.InvokeAsync("SendMessage", userId, message);
+
+            // TODO: it would be useful to hook in additional message logging
+            // here to capture all import messages
         }
     }
 }
