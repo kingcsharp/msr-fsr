@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MSR.Domain.Hub;
 using MSR.Domain.Models.Config;
+using MSR.Domain.Helpers;
 
 namespace MSR.Application.EventServices
 {
@@ -63,7 +64,10 @@ namespace MSR.Application.EventServices
                             Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem));
                 }
 
-                _messageHub.SendNotification(handledEvent.UserId, new Toaster()
+                // Note that the current user is set during the message envelope decoding process.
+                // This means that the security hole of impersonating a user simply by setting the ID
+                // in the SQS message is mitigated.
+                _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
                 {
                     Message = $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
                               $"complete.  {count} items imported.",
@@ -72,7 +76,7 @@ namespace MSR.Application.EventServices
             }
             catch (Exception e)
             {
-                _messageHub.SendNotification(handledEvent.UserId, new Toaster()
+                _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
                 {
                     Message = $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
                               $"ERROR: {e.Message}",
