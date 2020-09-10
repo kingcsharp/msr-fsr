@@ -98,12 +98,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            //TODO HANDLE WORKFLOW TO SEND THIS NOTIFICATION
-            //await _messageHub.Clients.All.SendAsync("WorkflowNotification",  new Guid(), new PendingNotificationItem()
-            //{
-            //    Table = (int)EnumApprovalTables.UserApproval,
-            //    Count = 1
-            //});
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval,_messageHub);
 
             return ret.ToOkObjectResponse<UserModel>("User has been successfully created.");
         }
@@ -119,12 +114,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
-            //TODO HANDLE WORKFLOW TO SEND THIS NOTIFICATION
-            //await _messageHub.Clients.All.SendAsync("WorkflowNotification",  new Guid(), new PendingNotificationItem()
-            //{
-            //    Table = (int)EnumApprovalTables.UserApproval,
-            //    Count = 1
-            //});
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse<UserModel>("User has been successfully updated.");
         }
@@ -145,12 +135,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            //TODO HANDLE WORKFLOW TO SEND THIS NOTIFICATION
-            //await _messageHub.Clients.All.SendAsync("WorkflowNotification",  new Guid(), new PendingNotificationItem()
-            //{
-            //    Table = (int)EnumApprovalTables.UserApproval,
-            //    Count = 1
-            //});
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse("User has been Deactivated");
         }
