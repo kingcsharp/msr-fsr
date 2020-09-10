@@ -87,7 +87,7 @@ namespace MSR.Application.Hubs
     [Authorize]
     public class MessageHub : Hub
     {
-        private readonly static ConnectionMapping<string> _connections = new
+        private static readonly ConnectionMapping<string> Connections = new
             ConnectionMapping<string>();
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace MSR.Application.Hubs
         /// <returns></returns>
         public async Task SendMessage(string user, string message)
         {
-            foreach (var client in _connections.GetConnections(user)) {
+            foreach (var client in Connections.GetConnections(user)) {
                 await Clients.Clients(client).SendAsync("ReceiveMessage", message);
             }
         }
@@ -109,10 +109,10 @@ namespace MSR.Application.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-            string name = Context.User.Identity.Name;
+            var name = Context.User.Identity.Name;
             if (name != null) {
                 await Groups.AddToGroupAsync(Context.ConnectionId, "answer");
-                _connections.Add(name, Context.ConnectionId);
+                Connections.Add(name, Context.ConnectionId);
             }
             await base.OnConnectedAsync();
         }
@@ -124,10 +124,10 @@ namespace MSR.Application.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception e)
         {
-            string name = Context.User.Identity.Name;
+            var name = Context.User.Identity.Name;
             if (name != null) {
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, "answer");
-                _connections.Remove(name, Context.ConnectionId);
+                Connections.Remove(name, Context.ConnectionId);
             }
             await base.OnDisconnectedAsync(e);
         }

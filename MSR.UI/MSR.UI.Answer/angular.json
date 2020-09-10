@@ -60,7 +60,8 @@
               "node_modules/jquery-flot/jquery.flot.time.js",
               "node_modules/jquery.flot.animator/jquery.flot.animator.min.js",
               "node_modules/morris.js/morris.js",
-              "node_modules/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"
+              "node_modules/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js",
+              "node_modules/chart.js/dist/Chart.js"
             ]
           },
           "configurations": {
@@ -74,6 +75,14 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "prod": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
