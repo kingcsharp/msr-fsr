@@ -230,8 +230,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         }
 
-        private readonly object synclock = new object();
-
         public async Task<ICollection<PartModel>> ImportLocations(string csvData)
         {
             IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvData);

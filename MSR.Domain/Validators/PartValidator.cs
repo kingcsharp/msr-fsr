@@ -40,10 +40,12 @@ namespace MSR.Domain.Validators
             List<PartModel> parts = new List<PartModel>();
             List<ImportError> errors = new List<ImportError>();
             IEnumerable records = null;
-            try {
+            try
+            {
                 records = CSVHelper.ParseRecords<PartCSVRecord>(csvData);
-
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 var ie = new ImportError() { Line = line };
                 ie.Errors.Add(e.Message);
                 errors.Add(ie);
@@ -53,10 +55,13 @@ namespace MSR.Domain.Validators
             foreach (PartCSVRecord record in records)
             {
                 line += 1;
-                try {
+                try
+                {
                     var part = _mapper.Map<PartModel>(record);
                     parts.Add(part);
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     var ie = new ImportError() { Line = line };
                     ie.Errors.Add(e.Message);
                     errors.Add(ie);
