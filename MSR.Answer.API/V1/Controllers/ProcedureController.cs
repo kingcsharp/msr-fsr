@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
@@ -12,6 +13,9 @@ using NSwag.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using MSR.Application.Hubs;
+using MSR.Domain.Helpers;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -23,13 +27,15 @@ namespace MSR.Answer.API.V1.Controllers
     public class ProcedureController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private readonly IHubContext<MessageHub> _messageHub;
 
         /// <summary>
         /// Procedure Controller
         /// </summary>
-        public ProcedureController(ICommandDispatcher dispatcher)
+        public ProcedureController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
         {
             _dispatcher = dispatcher;
+            _messageHub = messageHub;
         }
 
         /// <summary>
@@ -41,10 +47,12 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPost]
         [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
-        public async Task<IActionResult> ProcedureAddProcedure([FromBody]CreateProcedureRequest body)
+        public async Task<IActionResult> ProcedureAddProcedure([FromBody] CreateProcedureRequest body)
         {
             var command = body.ToCreateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
+
             return ret.ToOkObjectResponse<Procedure>("Procedure successfully added");
         }
 
@@ -72,9 +80,9 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpDelete("{id}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureDeleteProcedure([FromRoute][Required]int id)
+        public async Task<IActionResult> ProcedureDeleteProcedure([FromRoute][Required] int id)
         {
-            var command = new DeleteProcedure(){ procedureID = id };
+            var command = new DeleteProcedure() { procedureID = id };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse("Procedure successfully deleted");
         }
@@ -87,9 +95,9 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpDelete("{id}/step/{stepid}")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> ProcedureDeleteProcedureStep([FromRoute][Required]int id, [FromRoute][Required]int stepid)
+        public async Task<IActionResult> ProcedureDeleteProcedureStep([FromRoute][Required] int id, [FromRoute][Required] int stepid)
         {
-            var command = new DeleteProcedureStep(){ procedureID = id, procedureStepID = stepid };
+            var command = new DeleteProcedureStep() { procedureID = id, procedureStepID = stepid };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse("Procedure step successfully deleted");
         }
@@ -104,7 +112,8 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
         public async Task<IActionResult> ProcedureGetProcedure(int? id)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedure() {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedure()
+            {
                 procedureID = id
             });
             return ret.ToOkObjectResponse<ICollection<Procedure>>();
@@ -121,7 +130,8 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepModel>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetProcedureStep() {
+            var ret = await _dispatcher.DispatchAsync(new GetProcedureStep()
+            {
                 procedureId = id,
                 stepId = stepid
             });
@@ -135,10 +145,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [SwaggerResponse(typeof(AuditActionResult<Procedure>))]
-        public async Task<IActionResult> ProcedureUpdateProcedure([FromBody]UpdateProcedureRequest body)
+        public async Task<IActionResult> ProcedureUpdateProcedure([FromBody] UpdateProcedureRequest body)
         {
             var command = body.ToUpdateProcedureCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
             return ret.ToOkObjectResponse<Procedure>("Procedure successfully updated");
         }
 
@@ -158,5 +169,7 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureStepModel>("Procedure step successfully updated");
         }
+
+
     }
 }

@@ -59,11 +59,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await _messageHub.Clients.All.SendAsync("WorkflowNotification", new Guid(), new PendingNotificationItem()
-            {
-                Table = (int)request.Table,
-                Count = -1
-            });
+            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
             return ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was approved successfully.");
         }
@@ -75,11 +71,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
-            await _messageHub.Clients.All.SendAsync("WorkflowNotification", new Guid(), new PendingNotificationItem()
-            {
-                Table = (int)request.Table,
-                Count = -1
-            });
+            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
             var result = ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was cancelled successfully.");
             return result;
