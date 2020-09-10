@@ -22,7 +22,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// Sends message to the ui notifying of a pending approval
         /// </summary>
         /// <returns></returns>
-        public async Task SendApprovalNotificationHubMessage(EnumApprovalTables approvalTable, IHubContext<MessageHub> messageHub, int count = 1)
+        protected async Task SendApprovalNotificationHubMessage(EnumApprovalTables approvalTable, IHubContext<MessageHub> messageHub, int count = 1)
         {
             if (!CurrentUser.CanApproveActivity(approvalTable))
             {
