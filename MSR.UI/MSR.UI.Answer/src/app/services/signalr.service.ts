@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
 import { NotificationService } from '../layout/navbar/notification.service';
 import { environment as env } from '../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalRService {
   workflowNotificationIds: Array<number>;
-  constructor(private notificationService: NotificationService) {
+  constructor(private notificationService: NotificationService, private toastr: ToastrService) {
     this.workflowNotificationIds = new Array<number>();
-  
+
   }
 
   private hubConnection: signalR.HubConnection
@@ -29,6 +30,19 @@ export class SignalRService {
       if (index === -1) {
         this.workflowNotificationIds.push(evId);
         this.notificationService.addNotification(data);
+      }
+    });
+  }
+
+  public addToasterMessageNotificationListener = () => {
+    this.hubConnection.on('ToasterMessage', (data) => {
+      switch (data.status) {
+        case 0:
+          this.toastr.warning(data.message);
+        case 1:
+          this.toastr.success(data.message);
+        case 2:
+          this.toastr.error(data.message);
       }
     });
   }

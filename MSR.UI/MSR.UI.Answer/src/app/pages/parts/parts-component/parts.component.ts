@@ -102,15 +102,15 @@ export class PartsComponent implements OnInit {
   }
 
   uploadParts(ev) {
-    ev.forEach((element: PartModel) => {
-      const index = this.data.findIndex(x => x.id === element.id);
-      if (index !== -1) {
-        this.data.splice(index, 1);
-        this.data.splice(index, 0, element);
-      } else {
-        this.data.push(element);
-      }
-    });
+    // ev.forEach((element: PartModel) => {
+    //   const index = this.data.findIndex(x => x.id === element.id);
+    //   if (index !== -1) {
+    //     this.data.splice(index, 1);
+    //     this.data.splice(index, 0, element);
+    //   } else {
+    //     this.data.push(element);
+    //   }
+    // });
   }
 
   getAllPartsAndUsedIn() {

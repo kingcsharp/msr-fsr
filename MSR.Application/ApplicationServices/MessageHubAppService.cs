@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using System;
 using Amazon.Runtime.Internal;
+using MSR.Domain.Hub;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -27,7 +28,7 @@ namespace MSR.Application.ApplicationServices
             await connection.StartAsync();
         }
 
-        public void SendNotification(string userId, string message)
+        public void SendNotification(string userId, Toaster message)
         {
             connection.InvokeAsync("SendMessage", userId, message);
 
