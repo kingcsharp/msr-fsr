@@ -2,13 +2,14 @@
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Events;
 using MSR.Domain.Exceptions;
-using MSR.Domain.Helpers;
+using Microsoft.Extensions.Configuration;
 using MSR.Domain.SQSEventing.Abstractions;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MSR.Domain.Hub;
+using MSR.Domain.Models.Config;
 
 namespace MSR.Application.EventServices
 {
@@ -18,22 +19,27 @@ namespace MSR.Application.EventServices
         private ILocationService _locationService;
         private IPartService _partService;
         private IMessageHubClient _messageHub;
+        private GeneralInformation _processorConfig;
 
         public EventServiceHandler(
             ICustomerService customerService,
             ILocationService locationService,
             IPartService partService,
+            GeneralInformation processorConfig,
             IMessageHubClient messageHub)
         {
             _customerService = customerService;
             _locationService = locationService;
             _partService = partService;
+            _processorConfig = processorConfig;
             _messageHub = messageHub;
         }
 
         public async Task HandleAsync(ImportEvent handledEvent, CancellationToken cancellationToken = default)
         {
-            await _messageHub.Connect("https://localhost:44398/msg"); // TODO: hardcoded url
+            Uri baseUri = new Uri(_processorConfig.APIURL);
+            UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
+            await _messageHub.Connect(hubUri.ToString());
             int count;
 
             try
