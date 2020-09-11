@@ -27,6 +27,7 @@ namespace MSR.Infrastructure.Resources.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _partService = partService;
+
         }
 
         public async Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command)
@@ -35,6 +36,7 @@ namespace MSR.Infrastructure.Resources.Services
             var status = await _unitOfWork.Status.Query().FirstOrDefaultAsync(x => x.Name == "Approved");
             switch (command.Table)
             {
+                
                 case EnumApprovalTables.CustomerApproval:
                     result = await ApproveCustomer(command, status);
                     break;
@@ -159,7 +161,7 @@ namespace MSR.Infrastructure.Resources.Services
                     approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query();
                     break;
                 case EnumApprovalTables.UserApproval:
-                    var userApprovals = _unitOfWork.UserApprovals.Query().Where(x => x.Id == command.Id).FirstOrDefault();
+                    var userApprovals = _unitOfWork.UserApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
                     userApprovals.Status = status;
                     _unitOfWork.SaveChanges();
                     var result = _mapper.Map<PendingApprovalModel>(userApprovals);
@@ -168,7 +170,7 @@ namespace MSR.Infrastructure.Resources.Services
                     break;
             }
 
-            var toCancel = approvalEntity.Where(x => x.Id == command.Id).FirstOrDefault();
+            var toCancel = approvalEntity.FirstOrDefault(x => x.Id == command.Id);
             toCancel.Status = status;
             _unitOfWork.SaveChanges();
             var ret = _mapper.Map<PendingApprovalModel>(toCancel);

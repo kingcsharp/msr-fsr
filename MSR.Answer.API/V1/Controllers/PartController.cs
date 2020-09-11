@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using NSwag.Annotations;
 using System.Collections.Generic;
@@ -21,14 +26,16 @@ namespace MSR.Answer.API.V1.Controllers
     public class PartController : BaseApiController
     {
         private ICommandDispatcher _dispatcher;
+        private readonly IHubContext<MessageHub> _messageHub;
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="dispatcher"></param>
-        public PartController(ICommandDispatcher dispatcher)
+        public PartController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
         {
             _dispatcher = dispatcher;
+            _messageHub = messageHub;
         }
 
         /// <summary>
@@ -41,7 +48,8 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
         public async Task<IActionResult> GetPart([FromQuery] GetPartRequest req)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetParts() {
+            var ret = await _dispatcher.DispatchAsync(new GetParts()
+            {
                 partID = req.Id,
             });
             return ret.ToOkObjectResponse<ICollection<PartModel>>();
@@ -64,6 +72,11 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 message = "Part was successfully added.";
             }
+            else
+            {
+                await SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
+
+            }
             return ret.ToOkObjectResponse<PartModel>(message);
         }
 
@@ -84,6 +97,10 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 message = "Part was successfully updated.";
             }
+            else
+            {
+                await SendApprovalNotificationHubMessage(EnumApprovalTables.PartApproval, _messageHub);
+            }
             return ret.ToOkObjectResponse<PartModel>(message);
         }
 
@@ -97,28 +114,12 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> DeletePart(int id)
         {
-            var command = new DeletePart() {
+            var command = new DeletePart()
+            {
                 Id = id
             };
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<PartModel>("Part was successfully removed.");
-        }
-
-        /// <summary>
-        /// Import parts by CSV
-        /// </summary>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        [HttpPost("import")]
-        [HasPrivilegeApi("Parts", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
-        public async Task<IActionResult> ImportParts(ImportPartsRequest req)
-        {
-            var command = new ImportParts() {
-                base64Data = req.base64Data
-            };
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<PartModel>>("Parts successfully imported");
         }
     }
 }

@@ -10,8 +10,6 @@ namespace MSR.Domain.Helpers
         public static Func<EnumApprovalTables, bool> CanApproveActivity;
         public static Func<EnumApprovalTables, bool> CanReadActivity;
         public static Func<EnumMenuItem, EnumPrivilege, bool> HasPrivilege;
-
-        //public static Func<ICollection<int>> GetRoles;
-        public static Func<string> TokenString;
+        public static Func<string, bool> SetCurrentUser; 
     }
 }

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -27,16 +29,18 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
+        private readonly IHubContext<MessageHub> _messageHub;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="dispatcher"></param>
-        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher)
+        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
         {
             _logger = logger;
             _dispatcher = dispatcher;
+            _messageHub = messageHub;
         }
 
         /// <summary>
@@ -67,14 +71,14 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse<UserModel>();
         }
-                       
+
         /// <summary>
         /// Get training certificates
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGetAttribute("TrainingCertification"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<TrainingCertificationView>>))]
-        public async Task<IActionResult> GetTrainingCertificationData([FromQuery]GetTrainingCertificationRequest request)
+        public async Task<IActionResult> GetTrainingCertificationData([FromQuery] GetTrainingCertificationRequest request)
         {
             var command = new GetTrainingCertification { Id = request.UserId };
             var ret = await _dispatcher.DispatchAsync(command);
@@ -94,6 +98,8 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval,_messageHub);
+
             return ret.ToOkObjectResponse<UserModel>("User has been successfully created.");
         }
 
@@ -107,6 +113,8 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse<UserModel>("User has been successfully updated.");
         }
@@ -126,6 +134,8 @@ namespace MSR.Answer.API.V1.Controllers
             };
 
             var ret = await _dispatcher.DispatchAsync(command);
+
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.UserApproval, _messageHub);
 
             return ret.ToOkObjectResponse("User has been Deactivated");
         }
@@ -163,7 +173,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("/Role/{id}"), HasPrivilegeApi("Users",EnumPrivilege.CanDelete)]
+        [HttpDelete("/Role/{id}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete)]
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> RemoveUserRole(int id)
         {

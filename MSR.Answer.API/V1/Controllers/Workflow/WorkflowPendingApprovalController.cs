@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
@@ -9,7 +10,9 @@ using MSR.Answer.API.V1.Models;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Filters;
+using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Enums;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -20,11 +23,13 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
+        private readonly IHubContext<MessageHub> _messageHub;
         //PendingApprovals
-        public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher)
+        public WorkflowPendingApprovalController(ILogger<WorkflowPendingApprovalController> logger, ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
         {
             _logger = logger;
             _dispatcher = dispatcher;
+            _messageHub = messageHub;
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<PendingApprovalModel>>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanRead)]
@@ -54,6 +59,8 @@ namespace MSR.Answer.API.V1.Controllers
 
             var ret = await _dispatcher.DispatchAsync(command);
 
+            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
+
             return ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was approved successfully.");
         }
 
@@ -63,6 +70,8 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToDeleteApprovalCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
+
+            await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
             var result = ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was cancelled successfully.");
             return result;

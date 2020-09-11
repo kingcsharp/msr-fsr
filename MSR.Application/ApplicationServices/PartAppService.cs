@@ -15,7 +15,6 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetParts>,
         ICommandHandler<CreatePart>,
         ICommandHandler<DeletePart>,
-        ICommandHandler<ImportParts>,
         ICommandHandler<UpdatePart>
     {
         private readonly IPartService _partService;
@@ -72,12 +71,6 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _partService.DeletePartAsync(command);
             return new CommandResponse<PartModel>(ret);
-        }
-
-        public async Task<ICommandResponse> HandleAsync(ImportParts command, CancellationToken cancellationToken = default)
-        {
-            var ret = await _partService.ImportPartsAsync(command);
-            return new CommandResponse<ICollection<PartModel>>(ret);
         }
     }
 }

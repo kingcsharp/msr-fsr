@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "MSR.Answer.Processor": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Localhost"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -22,6 +22,8 @@ namespace MSR.Infrastructure.Factories
                     return _serviceProvider.GetService<CustomerImportValidator>();
                 case EnumMenuItem.Locations:
                     return _serviceProvider.GetService<LocationImportValidator>();
+                case EnumMenuItem.Parts:
+                    return _serviceProvider.GetService<PartValidator>();
                 default:
                     throw new NotImplementedException($"No Validator for Menu Item: {menuItem}");
             }

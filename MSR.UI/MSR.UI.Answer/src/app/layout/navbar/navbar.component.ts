@@ -1,11 +1,8 @@
 import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { LoginService } from '../../pages/login/login.service';
-import { take } from 'rxjs/operators';
-import { WorkflowService, PendingApprovalNotification, PendingNotificationItem } from '../../services/api.client.generated';
-import { environment as env } from '../../../environments/environment';
-import { responseHandler } from '../../utils/responseHandler';
-import { Observable } from 'rxjs';
 import { Globals } from '../../models/lib/globals';
+import { NotificationService } from './notification.service';
+
 
 @Component({
   selector: '[navbar]',
@@ -19,38 +16,21 @@ export class Navbar implements OnInit {
   display: string = 'Left';
   radioModel: string = 'Left';
   searchFormState: boolean = true;
-  notificationCount: number = 0;
   settings: any = {
     isOpen: false
   };
-  notificationData: PendingApprovalNotification = new PendingApprovalNotification();
-
-
 
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
     private loginService: LoginService,
-    private workflowService: WorkflowService,
-    public globals: Globals
+    public globals: Globals,
+    public notificationservice: NotificationService
   ) { }
 
+
   ngOnInit(): void {
-    this.workflowService.pending(env.apiVersion)
-      .pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.notificationData = response.object;
-        this.notificationCount = this.getNotificationCount(this.notificationData);
-      }));
-
-  }
-
-  getNotificationCount(notificationData: PendingApprovalNotification) {
-    let total = 0;
-    notificationData.items.forEach(element => {
-      total += element.count;
-    });
-    return total;
+    this.notificationservice.getNotifications();
   }
 
   sidebarPosition(position): void {

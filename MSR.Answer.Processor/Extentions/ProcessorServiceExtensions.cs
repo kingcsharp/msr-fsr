@@ -3,7 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Answer.Processor.SQSServices;
 using MSR.Answer.Processor.SQSServices.Abstractions;
+using MSR.Application.ApplicationServices;
 using MSR.Application.Extentions;
+using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Extensions;
 using MSR.Domain.Helpers;
@@ -88,6 +90,8 @@ namespace MSR.Answer.Processor.Extentions
 
             Log.Logger = loggerConfig.CreateLogger();
             services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
+
+            services.AddScoped<IMessageHubClient, MessageHubAppService>();
 
             return services;
         }

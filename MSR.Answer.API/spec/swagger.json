@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://qa-api.answer.msr-fsr.com"
+      "url": "https://2421c96cbfde.ngrok.io"
     }
   ],
   "paths": {
@@ -475,6 +475,7 @@
         "tags": [
           "File"
         ],
+        "summary": "GetFiles",
         "operationId": "File_GetFiles",
         "parameters": [
           {
@@ -532,6 +533,7 @@
         "tags": [
           "File"
         ],
+        "summary": "AddFile",
         "operationId": "File_AddFile",
         "parameters": [
           {
@@ -573,6 +575,7 @@
         "tags": [
           "File"
         ],
+        "summary": "Detach a file from an entity.",
         "operationId": "File_DetachFile",
         "parameters": [
           {
@@ -632,6 +635,7 @@
         "tags": [
           "File"
         ],
+        "summary": "Import data file",
         "operationId": "File_ImportFile",
         "parameters": [
           {
@@ -2031,51 +2035,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuditActionResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v{version}/Part/import": {
-      "post": {
-        "tags": [
-          "Part"
-        ],
-        "summary": "Import parts by CSV",
-        "operationId": "Part_ImportParts",
-        "parameters": [
-          {
-            "name": "version",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1"
-            },
-            "x-position": 2
-          }
-        ],
-        "requestBody": {
-          "x-name": "req",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ImportPartsRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfPartModel"
                 }
               }
             }
@@ -4558,7 +4517,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 3
             },
             "x-position": 2
           },
@@ -4587,7 +4547,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 5
           }
@@ -4887,7 +4848,8 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "example": 305
             },
             "x-position": 1
           },
@@ -4896,7 +4858,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -6464,6 +6427,10 @@
           "menuItem": {
             "$ref": "#/components/schemas/EnumMenuItem"
           }
+        },
+        "example": {
+            "menuItem": 14,
+            "base64Data": "text/plain;base64,77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
         }
       },
       "AuditActionResultOfIEnumerableOfHelpPage": {
@@ -7486,24 +7453,6 @@
           "id": 2,
           "name": "TESTNAME1598380612",
           "partNumber": "TESTNUMBER1598380612"
-        }
-      },
-      "ImportPartsRequest": {
-        "type": "object",
-        "additionalProperties": true,
-        "required": [
-          "base64Data"
-        ],
-        "properties": {
-          "base64Data": {
-            "type": "string",
-            "description": "URL encoded base64 data",
-            "minLength": 1,
-            "example": "77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
-          }
-        },
-        "example": {
-            "base64Data": "data:text/plain;base64,77u/SWQsTmFtZSxQYXJ0TnVtYmVyLE9FTVBhcnROdW1iZXIsTmlja05hbWUsTWF4aW11bUN5Y2xlcw0KMzMzNyxJbXBvcnRQYXJ0LEltcG9ydE51bWJlcixPZW1JbXBvcnQsTmlja25hbWUsMTINCg=="
         }
       },
       "AuditActionResultOfProcedure": {
@@ -10561,6 +10510,10 @@
           "cycleTime": {
             "type": "integer",
             "format": "int32"
+          },
+          "divisionFab": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

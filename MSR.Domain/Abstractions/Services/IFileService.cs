@@ -15,5 +15,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<FileModel>> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files);
         Task<bool> CreateDocumentAsync<T>(T entity, int entityId, FileModel file) where T : class;
         Task<UploadResponse> UploadHelpFile(UploadFile command);
+        Task<UploadResponse> UploadImportFile(UploadFile command);
     }
 }
