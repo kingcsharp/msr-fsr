@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSR.Domain.Exceptions;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -32,6 +33,10 @@ namespace MSR.Domain.Helpers
             {
                 int indexOfSemiColon = base64Content.IndexOf(";", StringComparison.OrdinalIgnoreCase);
 
+                if (indexOfSemiColon < 0) {
+                    throw new Exception("Content not in base64 URL encoded format");
+                }
+
                 string dataLabel = base64Content.Substring(0, indexOfSemiColon);
 
                 base64file.ContentType = dataLabel.Split(':').Last();
@@ -42,9 +47,9 @@ namespace MSR.Domain.Helpers
 
                 base64file.FileContents = Convert.FromBase64String(fileContents);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                throw new DomainException(e.Message, Commanding.Enums.DomainError.BadRequest);
             }
 
             return base64file;

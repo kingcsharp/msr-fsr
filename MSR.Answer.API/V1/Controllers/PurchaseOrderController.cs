@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using NSwag.Annotations;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Models;
@@ -14,6 +15,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
+using MSR.Application.Hubs;
 using MSR.Domain.Commands;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -22,15 +24,17 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class PurchaseOrderController : BaseApiController
     {
-        private const string privilegeApiName = "PurchaseOrder";
+        private const string PrivilegeApiName = "PurchaseOrder";
         private readonly ICommandDispatcher _dispatcher;
+        private readonly IHubContext<MessageHub> _messageHub;
 
-        public PurchaseOrderController(ICommandDispatcher dispatcher)
+        public PurchaseOrderController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
         {
             _dispatcher = dispatcher;
+            _messageHub = messageHub;
         }
 
-        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [HttpGet, HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderView>>))]
         public async Task<IActionResult> GetPurchaseOrders([FromQuery] GetPurchaseOrderRequest filters)
         {
@@ -39,13 +43,13 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<IEnumerable<PurchaseOrderView>>();
         }
 
-        [HttpPost, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
+        [HttpPost, HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanCreate)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseOrderView>))]
         public async Task<IActionResult> CreatePurchaseOrder([FromBody]CreatePurchaseOrderRequest request)
         {
             var command = request.ToCreatePurchaseOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Create"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(await DetermineResponseMessage(ret, "Create"));
         }
 
         /// <summary>
@@ -53,13 +57,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
+        [HttpPatch, HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanEdit)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<PurchaseOrderView>))]
         public async Task<IActionResult> UpdatePurchaseOrder([FromBody] UpdatePurchaseOrderRequest request)
         {
             var command = request.ToUpdatePurchaseOrderCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Update"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(await DetermineResponseMessage(ret, "Update"));
         }
         
         /// <summary>
@@ -67,16 +71,16 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id}"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanDelete)]
+        [HttpDelete("{id}"), HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanDelete)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult))]
         public async Task<IActionResult> DeletePurchaseOrder([FromRoute, Required]int id)
         {
             var command = new DeletePurchaseOrder() { Id = id };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<PurchaseOrderView>(DetermineResponseMessage(ret, "Delete"));
+            return ret.ToOkObjectResponse<PurchaseOrderView>(await DetermineResponseMessage(ret, "Delete"));
         }
 
-        private string DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        private async Task<string> DetermineResponseMessage(ICommandResponse commandResponse, string action)
         {
             var poView = commandResponse.ToEntity<PurchaseOrderView>();
             var response = $"PurchaseOrder {action} Pending Approval";
@@ -86,6 +90,7 @@ namespace MSR.Answer.API.V1.Controllers
                 response = $"PurchaseOrder {action} Successfull";
                 poView.Status = "Approved";
             }
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.PurchaseOrderApproval, _messageHub);
 
             return response;
         }

@@ -95,7 +95,7 @@ export class CustomersComponent implements OnInit {
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }
 
-  closeConfirmDeleteDialog(customer: Customer) {
+  closeConfirmDeleteDialog() {
     this.customerToDelete = null;
     this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
   }

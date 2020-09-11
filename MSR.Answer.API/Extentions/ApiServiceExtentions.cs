@@ -45,16 +45,18 @@ namespace MSR.Answer.API.Extentions
             services.AddJWTServices(config);
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
-                builder.AllowAnyMethod()
-                       .AllowAnyOrigin()
-                       .AllowAnyHeader();
+                builder.SetIsOriginAllowed(_ => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyHeader();
             }));
 
             services.AddLogging();
             var loggerConfig = new LoggerConfiguration()
                 .WriteTo.Console(new JsonFormatter())
                 .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
-            
+
             Log.Logger = loggerConfig.CreateLogger();
             services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
 

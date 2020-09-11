@@ -6,33 +6,34 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Validators;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MSR.Infrastructure.Resources.Services.Role
+namespace MSR.Infrastructure.Resources.Services.Part
 {
     public class PartService : IPartService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public PartService(IUnitOfWork unitOfWork, IMapper mapper)
+        public PartService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<ICollection<PartModel>> GetPartsAsync(GetParts command)
         {
-            List<Part> parts;
+            List<EntityFramework.Entities.Part> parts;
             if (command.partID.HasValue)
             {
                 parts = await _unitOfWork.Parts.Query().Where(x => x.Id == command.partID.Value).ToListAsync();
@@ -63,7 +64,8 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     ).ToList();
                 }
 
-                Part part = _mapper.Map<Part>(command);
+                EntityFramework.Entities.Part part =
+                    _mapper.Map<EntityFramework.Entities.Part>(command);
                 if (children.Count > 0)
                 {
                     part.IsKit = true;
@@ -107,7 +109,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> UpdatePartAsync(UpdatePart command)
         {
-            Part current = await _unitOfWork.Parts.Query()
+            EntityFramework.Entities.Part current = await _unitOfWork.Parts.Query()
                 .Include(x => x.Subparts)
                 .Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
@@ -167,7 +169,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
         }
         public async Task<PartModel> DeletePartAsync(DeletePart command)
         {
-            Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
+            EntityFramework.Entities.Part current = await _unitOfWork.Parts.Query().Include(x => x.Subparts).Where(x => x.Id == command.Id)
                 .FirstOrDefaultAsync();
             if (current is null)
             {
@@ -186,45 +188,6 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var ret = _mapper.Map<PartModel>(current);
             return ret;
-        }
-
-        private readonly string _byteOrderMarkUtf8 =
-            Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
-
-        public async Task<ICollection<PartModel>> ImportPartsAsync(ImportParts command)
-        {
-            var base64File = Base64Helper.Parse(command.base64Data);
-            string csvdata = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r","").Trim();
-            if (csvdata.StartsWith(_byteOrderMarkUtf8, StringComparison.Ordinal)) {
-                csvdata = csvdata.Remove(0, _byteOrderMarkUtf8.Length);
-            }
-            IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvdata);
-            List<PartModel> parts = new List<PartModel>();
-
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
-            {
-                // importing parts requiring appoval is not supported
-                throw new DomainException("Permission denied for import", DomainError.BadRequest);
-            }
-
-            foreach (PartCSVRecord record in records)
-            {
-                if (record.Id > 0)
-                {
-                    var part = await UpdatePartAsync(
-                        _mapper.Map<UpdatePart>(record)
-                    );
-                    parts.Add(_mapper.Map<PartModel>(part));
-                } else {
-                    var part = await CreatePartAsync(
-                        _mapper.Map<CreatePart>(record)
-                    );
-                    parts.Add(_mapper.Map<PartModel>(part));
-
-                }
-            }
-
-            return parts;
         }
 
         private int GetWorkflowID()
@@ -265,6 +228,39 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             return -1;
 
+        }
+
+        public async Task<ICollection<PartModel>> ImportLocations(string csvData)
+        {
+            IEnumerable records = CSVHelper.ParseRecords<PartCSVRecord>(csvData);
+            List<UpdatePart> updates = new List<UpdatePart>();
+            List<CreatePart> inserts = new List<CreatePart>();
+            List<PartModel> results = new List<PartModel>();
+
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove)) {
+                throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
+            }
+
+            // First parse the file to ensure valid data
+            foreach (PartCSVRecord record in records) {
+                if (record.Id.HasValue) {
+                    var part = _mapper.Map<UpdatePart>(record);
+                    updates.Add(part);
+                } else {
+                    var part = _mapper.Map<CreatePart>(record);
+                    inserts.Add(part);
+                }
+            }
+
+            // Then perform the update
+            foreach (UpdatePart model in updates) {
+                results.Add(await UpdatePartAsync(model));
+            }
+            foreach (CreatePart model in inserts) {
+                results.Add(await CreatePartAsync(model));
+            }
+
+            return results;
         }
     }
 }

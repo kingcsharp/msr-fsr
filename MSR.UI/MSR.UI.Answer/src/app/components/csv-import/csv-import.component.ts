@@ -1,9 +1,8 @@
 import { Component, OnInit, Output, Input, EventEmitter, ElementRef } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { responseHandler } from '../../utils/responseHandler';
-
 import {
-  EnumMenuItem, PartService, ImportPartsRequest, PartModel, FileService, ImportRequest
+  EnumMenuItem, PartService, FileService, ImportRequest
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 
@@ -28,27 +27,14 @@ export class CsvImportComponent implements OnInit {
   }
 
   submitImport() {
-    switch (this.menuItem) {
-      case EnumMenuItem.Parts:
-        let imporPartReq = new ImportPartsRequest();
-        imporPartReq.base64Data = this.uploadedFiles[0].base64String;
-        this.partService.import(env.apiVersion, imporPartReq).pipe(take(1))
-          .subscribe(responseHandler((resp) => {
-            this.change.emit(resp.object);
-            this.clseDialog();
-          }));
-        break;
-      default:
-        let imporReq = new ImportRequest();
-        imporReq.base64Data = this.uploadedFiles[0].base64String;
-        imporReq.menuItem = this.menuItem;
-        this.fileService.import(env.apiVersion, imporReq).pipe(take(1))
-          .subscribe(responseHandler((resp) => {
-            this.change.emit(resp.object);
-            this.clseDialog();
-          }));
-        break;
-    }
+    let imporReq = new ImportRequest();
+    imporReq.base64Data = this.uploadedFiles[0].base64String;
+    imporReq.menuItem = this.menuItem;
+    this.fileService.import(env.apiVersion, imporReq).pipe(take(1))
+      .subscribe(responseHandler((resp) => {
+        this.change.emit(resp.object);
+        this.clseDialog();
+      }));
   }
 
   showDialog() {

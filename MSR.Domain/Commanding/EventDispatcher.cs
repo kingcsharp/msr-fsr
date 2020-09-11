@@ -12,13 +12,11 @@ namespace MSR.Domain.Commanding
         public EventDispatcher(IServiceProvider serviceProvider) : base(serviceProvider)
         { }
 
-        public override Task Dispatch(IEvent integrationEvent)
+        public async override Task Dispatch(IEvent integrationEvent)
         {
             var handler = _provider.GetService<IEventHandler<T>>();
 
-            handler.HandleAsync((T)integrationEvent, new CancellationToken());
-
-            return Task.CompletedTask;
+            await handler.HandleAsync((T)integrationEvent, new CancellationToken());
         }
     }
 

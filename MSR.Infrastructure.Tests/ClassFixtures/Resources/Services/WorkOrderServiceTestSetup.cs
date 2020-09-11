@@ -5,7 +5,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
-using MSR.Infrastructure.Resources.Services.Role;
+using MSR.Infrastructure.Resources.Services.Part;
 using MSR.Infrastructure.Tests.TestFixtures;
 using System;
 using System.Collections.Generic;
