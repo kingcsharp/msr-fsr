@@ -126,7 +126,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sh update_image_api.sh Development ${env.GIT_COMMIT} ${API_COMPOSE}"
+                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
                                 sh "cat ${API_COMPOSE}"
 
                                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
