@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { UtilsModule } from '../../layout/utils/utils.module';
 import { WipComponent } from './wip/wip.component';
 import { WiphistoryComponent } from './wiphistory/wiphistory.component';
 import { WipstatusComponent } from './wipstatus/wipstatus.component';
+import {TooltipModule} from 'primeng/tooltip';
+
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -14,10 +18,12 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [WipComponent, WiphistoryComponent],
+  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    MultiSelectModule,
+    UtilsModule
   ]
 })
 export class WipModule { static routes = routes; }
