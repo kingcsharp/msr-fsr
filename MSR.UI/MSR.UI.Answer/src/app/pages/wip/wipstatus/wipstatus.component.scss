@@ -1,8 +1,0 @@
-.fa-exclamation-circle, .fa-cog, .fa-hourglass{
-    cursor: pointer;
-}
-
-//Removes max-width of Tooltip. Becomes an issue on WIP Status tooltips. Tested other tooltips in the app and no issue was seen
-:host ::ng-deep .tooltip-inner{
-    max-width: none;
-}

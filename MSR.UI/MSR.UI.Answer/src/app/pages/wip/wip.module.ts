@@ -7,6 +7,7 @@ import { WipComponent } from './wip/wip.component';
 import { WiphistoryComponent } from './wiphistory/wiphistory.component';
 import { WipstatusComponent } from './wipstatus/wipstatus.component';
 import {TooltipModule} from 'primeng/tooltip';
+import {WipstatusWrapperComponent} from '../../components/wipstatus-wrapper/wipstatus.component'
 
 
 export const routes = [
@@ -18,7 +19,7 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent],
+  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
