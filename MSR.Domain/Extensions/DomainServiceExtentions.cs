@@ -29,7 +29,6 @@ namespace MSR.Domain.Extensions
             services.AddTransient<CustomerImportValidator>();
             services.AddTransient<LocationImportValidator>();
             services.AddTransient<PartValidator>();
-            services.AddScoped<IMessageHubClient, IMessageHubClient>();
 
             return services;
         }

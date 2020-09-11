@@ -8,6 +8,7 @@ using System.IO;
 using MSR.Domain.Helpers;
 using MSR.Application.ApplicationServices;
 using MSR.Application.EventServices;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Application.Extentions
 {
@@ -31,6 +32,7 @@ namespace MSR.Application.Extentions
             services.AddScoped<WorkflowAppService>();
             services.AddScoped<EventServiceHandler>();
             services.AddScoped<TimezoneAppService>();
+            services.AddScoped<IMessageHubClient, MessageHubAppService>();
 
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
