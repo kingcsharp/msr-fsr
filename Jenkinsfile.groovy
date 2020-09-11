@@ -140,6 +140,24 @@ pipeline {
                         }
                     }
                 }
+                stage('Build and Deploy Processor to QA') {
+                    agent { label 'master'}
+                    steps {
+                        script {
+                            try {
+                                sh "docker build -f MSR.Answer.Processor/Dockerfile -t msr-processor ."
+                                sh "docker tag msr-processor ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
+
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+                        }
+                    }
+                }
             }
         }
 
