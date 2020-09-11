@@ -47,7 +47,7 @@ pipeline {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
                                     //sh "sudo chmod 777 /var/run/docker.sock"
-                                    sh "docker build --build-arg ENV=builddev -t msr-ui ."
+                                    sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
                                     sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
                                     sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
