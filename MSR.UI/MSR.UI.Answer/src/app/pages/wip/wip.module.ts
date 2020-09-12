@@ -6,9 +6,11 @@ import { UtilsModule } from '../../layout/utils/utils.module';
 import { WipComponent } from './wip/wip.component';
 import { WiphistoryComponent } from './wiphistory/wiphistory.component';
 import { WipstatusComponent } from './wipstatus/wipstatus.component';
-import {TooltipModule} from 'primeng/tooltip';
-import {WipstatusWrapperComponent} from '../../components/wipstatus-wrapper/wipstatus.component'
-
+import { WipstatusWrapperComponent } from '../../components/wipstatus-wrapper/wipstatus.component'
+import { TableModule } from 'primeng/table';
+import { NewWidgetModule } from '../../layout/new-widget/widget.module';
+import { CalendarModule } from 'primeng/calendar';
+import { WidgetModule } from '../../layout/widget/widget.module';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -24,7 +26,11 @@ export const routes = [
     CommonModule,
     RouterModule.forChild(routes),
     MultiSelectModule,
-    UtilsModule
+    TableModule,
+    CalendarModule,
+    UtilsModule,
+    WidgetModule,
+    NewWidgetModule,
   ]
 })
 export class WipModule { static routes = routes; }
