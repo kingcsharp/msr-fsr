@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace MSR.Domain.Models
 {
     public class WorkOrderTaskMonitorModel

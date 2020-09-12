@@ -1,5 +1,6 @@
 using MSR.Domain.Models.BaseModels;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace MSR.Domain.Models
 {

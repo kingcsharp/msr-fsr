@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace MSR.Domain.Models
 {
     /// <summary>
-    /// WorkOrderPartModel 
+    /// WorkOrderPartModel
     /// </summary>
     public class WorkOrderPartModel
     {
