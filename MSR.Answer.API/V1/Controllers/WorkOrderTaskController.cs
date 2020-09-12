@@ -32,16 +32,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPost]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
-        public virtual IActionResult WorkOrderTaskCreateWorkOrderTask([FromBody]CreateWorkOrderTaskRequest body, [FromRoute][Required]string version)
+        public virtual IActionResult WorkOrderTaskCreateWorkOrderTask([FromBody]CreateWorkOrderTaskRequest body)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfWorkOrderTask));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<WorkOrderTaskModel>>(exampleJson)
-                        : default(AuditActionResult<WorkOrderTaskModel>);            //TODO: Change the data returned
+            var example = new WorkOrderTaskModel() {
+                WorkOrderId = 1,
+                ProcedureStepId = 2,
+                ProcedureStepTypeId = 3,
+                StatusId = 1
+            };
             return new ObjectResult(example);
         }
 
@@ -53,16 +51,14 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
-        public virtual IActionResult WorkOrderTaskUpdateWorkOrderTask([FromBody]UpdateWorkOrderTaskRequest body, [FromRoute][Required]string version)
+        public virtual IActionResult WorkOrderTaskUpdateWorkOrderTask([FromBody]UpdateWorkOrderTaskRequest body)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfWorkOrderTask));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<WorkOrderTaskModel>>(exampleJson)
-                        : default(AuditActionResult<WorkOrderTaskModel>);            //TODO: Change the data returned
+            var example = new WorkOrderTaskModel() {
+                WorkOrderId = 10,
+                ProcedureStepId = 20,
+                ProcedureStepTypeId = 30,
+                StatusId = 1
+            };
             return new ObjectResult(example);
         }
     }

@@ -17,6 +17,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -49,6 +50,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet]
         [Route("WorkOrder/History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetHistory([FromRoute][Required]string version)
         {
         /*
@@ -56,15 +58,30 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
             */
+            WorkOrderGridSummary w = new WorkOrderGridSummary() {
+                Id = 1,
+                PurchaseId = 2,
+                WorkOrderItemNumber  = "WorkOrderItemNumber",
+                CustomerName = "CustomerName",
+                LocationName = "LocationName",
+                SerialNumber = "SerialNumber",
+                PurchaseOrderNumber = 3,
+                 Quantity = 1234,
+                ScheduledStartDate = DateTime.Now,
+                ScheduledEndDate = DateTime.Now,
+                ActualStartDate = DateTime.Now.AddMinutes(30),
+                ActualEndDate = DateTime.Now.AddMinutes(30),
+                ProductName = "ProductName",
+                ProcedureName = "ProcedureName",
+                Status = "Status",
+                Disposition = "Disposition",
+                CurrentActiveTaskName = "CurrentActiveTaskName",
+                PercentageOfTasksCompleted = (decimal)12.34,
+                PercentageOfExpectedDurationTimeLogged = (decimal)23.45
+            };
+            List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
+            example.Add(w);
 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfICollectionOfWorkOrderGridSummary));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<ICollection<WorkOrderGridSummary>>>(exampleJson)
-                        : default(AuditActionResult<ICollection<WorkOrderGridSummary>>);            //TODO: Change the data returned
             return new ObjectResult(example);
         }
 
@@ -76,16 +93,35 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet]
         [Route("WorkOrder/Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetMenu([FromRoute][Required]string version)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfICollectionOfWorkOrderGridSummary));
-            string exampleJson = null;
-            exampleJson = "\"\"";
+            // what's the difference?
+            WorkOrderGridSummary w = new WorkOrderGridSummary() {
+                Id = 1,
+                PurchaseId = 2,
+                WorkOrderItemNumber  = "WorkOrderItemNumber",
+                CustomerName = "CustomerName",
+                LocationName = "LocationName",
+                SerialNumber = "SerialNumber",
+                PurchaseOrderNumber = 3,
+                 Quantity = 1234,
+                ScheduledStartDate = DateTime.Now,
+                ScheduledEndDate = DateTime.Now,
+                ActualStartDate = DateTime.Now.AddMinutes(30),
+                ActualEndDate = DateTime.Now.AddMinutes(30),
+                ProductName = "ProductName",
+                ProcedureName = "ProcedureName",
+                Status = "Status",
+                Disposition = "Disposition",
+                CurrentActiveTaskName = "CurrentActiveTaskName",
+                PercentageOfTasksCompleted = (decimal)12.34,
+                PercentageOfExpectedDurationTimeLogged = (decimal)23.45
+            };
+            List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
+            example.Add(w);
 
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<ICollection<WorkOrderGridSummary>>>(exampleJson)
-                        : default(AuditActionResult<ICollection<WorkOrderGridSummary>>);            //TODO: Change the data returned
+
             return new ObjectResult(example);
         }
 
@@ -97,16 +133,20 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet]
         [Route("WorkOrder/Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
-        public virtual IActionResult WorkOrderGetStatus([FromRoute][Required]string version)
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
+        public virtual IActionResult WorkOrderGetStatus()
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfICollectionOfWorkOrderStatus));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<ICollection<WorkOrderStatus>>>(exampleJson)
-                        : default(AuditActionResult<ICollection<WorkOrderStatus>>);            //TODO: Change the data returned
+            WorkOrderStatus w = new WorkOrderStatus() {
+                LocationName = "LocationName",
+                ProductName = "ProductName",
+                ProcedureName = "ProcedureName",
+                PartNumber = "PartNumber",
+                WorkOrderSummary = new WorkOrderSummary() {
+                    WorkOrderStatus = "In Progress"
+                }
+            };
+            List<WorkOrderStatus> example = new List<WorkOrderStatus>();
+            example.Add(w);
             return new ObjectResult(example);
         }
 
@@ -121,16 +161,27 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
-        public virtual IActionResult WorkOrderGetWorkOrder([FromRoute][Required]string version, [FromQuery]GetWorkOrderRequest request)
+        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
+        public virtual IActionResult WorkOrderGetWorkOrder([FromQuery]GetWorkOrderRequest request)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfICollectionOfWorkOrderModel));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<ICollection<WorkOrderModel>>>(exampleJson)
-                        : default(AuditActionResult<ICollection<WorkOrderModel>>);            //TODO: Change the data returned
+            WorkOrderModel w = new WorkOrderModel() {
+                Id = 1,
+                ProductId = 2,
+                Price = 123.45m,
+                ScheduledStartDate = DateTime.Now,
+                ScheduledEndDate = DateTime.Now,
+                ActualStartDate = DateTime.Now,
+                ActualEndDate = DateTime.Now,
+                HasNCR = true,
+                LocationId = 99,
+                Location = new LocationModel(),
+                Product = new ProductModel(),
+                Purchase = new PurchaseModel(),
+                WorkOrderParts = new List<WorkOrderPartModel>(),
+                WorkOrderTasks = new List<WorkOrderTaskModel>()
+            };
+            List<WorkOrderModel> example = new List<WorkOrderModel>();
+            example.Add(w);
             return new ObjectResult(example);
         }
     }

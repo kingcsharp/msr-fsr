@@ -13,6 +13,7 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -34,14 +35,16 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderPartModel>))]
         public virtual IActionResult WorkOrderPartUpdateWorkOrderPart([FromBody]UpdateWorkOrderPartRequest body, [FromRoute][Required]string version)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfWorkOrderPart));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<WorkOrderPartModel>>(exampleJson)
-                        : default(AuditActionResult<WorkOrderPartModel>);            //TODO: Change the data returned
+            var example = new WorkOrderPartModel() {
+                WorkOrderId = 1,
+                PartId = 2,
+                ParentId = null,
+                SerialNumber = "SERIAL12345",
+                Part = new PartModel(),
+                WorkOrder = new WorkOrderModel(),
+                Children = new List<WorkOrderPartModel>(),
+                Parent = null
+            };
             return new ObjectResult(example);
         }
     }

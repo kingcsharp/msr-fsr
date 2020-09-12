@@ -35,14 +35,17 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskMonitorModel>))]
         public virtual IActionResult WorkOrderTaskMonitorUpdateWorkOrderTaskMonitor([FromBody]UpdateWorkOrderTaskMonitorRequest body, [FromRoute][Required]string version)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(AuditActionResultOfWorkOrderTaskMonitor));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<AuditActionResult<WorkOrderTaskMonitorModel>>(exampleJson)
-                        : default(AuditActionResult<WorkOrderTaskMonitorModel>);            //TODO: Change the data returned
+            var example = new WorkOrderTaskMonitorModel() {
+                WorkOrderTaskId = 1,
+                ProcedureMonitorId = 2,
+                NumVal = 333,
+                TextVal = "LOOKIEHERE",
+                MultiVal = "MULTIPASS",
+                SensorMappingId = 1,
+                Comment = "Comment This",
+                SensorValue = "SensorValue",
+                SensorName = "SensorName "
+            };
             return new ObjectResult(example);
         }
     }
