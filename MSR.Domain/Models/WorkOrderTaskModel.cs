@@ -20,5 +20,12 @@ namespace MSR.Domain.Models
         public virtual StatusModel Status { get; set; }
         public virtual WorkOrderModel WorkOrder { get; set; }
         public virtual ICollection<WorkOrderTaskMonitorModel> WorkOrderTaskMonitors { get; set; }
+
+        /// <summary>
+        /// This needs to be added
+        /// </summary>
+        /// <value>This needs to be added</value>
+        [DataMember(Name="referenceFiles")]
+        public List<FileModel> ReferenceFiles { get; set; }
     }
 }

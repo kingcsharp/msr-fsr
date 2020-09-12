@@ -10,5 +10,18 @@ namespace MSR.Domain.Models
         public string MultiVal { get; set; }
         public int SensorMappingId { get; set; }
         public string Comment { get; set; }
+        /// <summary>
+        /// This needs to be added
+        /// </summary>
+        /// <value>This needs to be added</value>
+        [DataMember(Name="sensorValue")]
+        public string SensorValue { get; set; }
+
+        /// <summary>
+        /// This needs to be added
+        /// </summary>
+        /// <value>This needs to be added</value>
+        [DataMember(Name="sensorName")]
+        public string SensorName { get; set; }
     }
 }
