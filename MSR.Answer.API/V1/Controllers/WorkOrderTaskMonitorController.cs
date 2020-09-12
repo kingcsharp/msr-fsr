@@ -32,7 +32,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPatch]
-        [Route("/v{version}/WorkOrderTaskMonitor")]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskMonitorModel>))]
         public virtual IActionResult WorkOrderTaskMonitorUpdateWorkOrderTaskMonitor([FromBody]UpdateWorkOrderTaskMonitorRequest body, [FromRoute][Required]string version)
         {

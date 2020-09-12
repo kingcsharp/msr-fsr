@@ -4494,54 +4494,113 @@
         }
       }
     },
+    "/v{version}/WorkOrder/WorkOrder/History": {
+      "get": {
+        "tags": [
+          "WorkOrder"
+        ],
+        "summary": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+        "operationId": "WorkOrder_WorkOrderGetHistory",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfWorkOrderGridSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/WorkOrder/WorkOrder/Menu": {
+      "get": {
+        "tags": [
+          "WorkOrder"
+        ],
+        "summary": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+        "operationId": "WorkOrder_WorkOrderGetMenu",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfWorkOrderGridSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/WorkOrder/WorkOrder/Status": {
+      "get": {
+        "tags": [
+          "WorkOrder"
+        ],
+        "summary": "This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]",
+        "operationId": "WorkOrder_WorkOrderGetStatus",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfWorkOrderStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/WorkOrder": {
       "get": {
         "tags": [
           "WorkOrder"
         ],
-        "operationId": "WorkOrder_GetWorkOrder",
+        "summary": " ",
+        "operationId": "WorkOrder_WorkOrderGetWorkOrder",
         "parameters": [
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "CustomerId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true,
-              "example": 3
-            },
-            "x-position": 2
-          },
-          {
-            "name": "LocationId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
-            "name": "InvoiceDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "nullable": true
-            },
-            "x-position": 4
-          },
           {
             "name": "version",
             "in": "path",
@@ -4550,7 +4609,20 @@
               "type": "string",
               "example": "1"
             },
-            "x-position": 5
+            "x-position": 1
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/GetWorkOrderRequest"
+                }
+              ]
+            },
+            "x-position": 2
           }
         ],
         "responses": {
@@ -4565,29 +4637,33 @@
             }
           }
         }
-      },
-      "post": {
+      }
+    },
+    "/v{version}/WorkOrderPart": {
+      "patch": {
         "tags": [
-          "WorkOrder"
+          "WorkOrderPart"
         ],
-        "operationId": "WorkOrder_AddWorkOrder",
+        "summary": "WorkOrderPartUpdateWorkOrderPart",
+        "operationId": "WorkOrderPart_WorkOrderPartUpdateWorkOrderPart",
         "parameters": [
           {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 2
           }
         ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "body",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWorkOrderRequest"
+                "$ref": "#/components/schemas/UpdateWorkOrderPartRequest"
               }
             }
           },
@@ -4600,7 +4676,52 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfWorkOrderModel"
+                  "$ref": "#/components/schemas/AuditActionResultOfWorkOrderPartModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/WorkOrderTask": {
+      "post": {
+        "tags": [
+          "WorkOrderTask"
+        ],
+        "summary": " ",
+        "operationId": "WorkOrderTask_WorkOrderTaskCreateWorkOrderTask",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkOrderTaskRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfWorkOrderTaskModel"
                 }
               }
             }
@@ -4609,26 +4730,28 @@
       },
       "patch": {
         "tags": [
-          "WorkOrder"
+          "WorkOrderTask"
         ],
-        "operationId": "WorkOrder_UpdateWorkOrder",
+        "summary": " ",
+        "operationId": "WorkOrderTask_WorkOrderTaskUpdateWorkOrderTask",
         "parameters": [
           {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "x-position": 2
           }
         ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "body",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateWorkOrderRequest"
+                "$ref": "#/components/schemas/UpdateWorkOrderTaskRequest"
               }
             }
           },
@@ -4641,7 +4764,52 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditActionResultOfWorkOrderModel"
+                  "$ref": "#/components/schemas/AuditActionResultOfWorkOrderTaskModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/WorkOrderTaskMonitor": {
+      "patch": {
+        "tags": [
+          "WorkOrderTaskMonitor"
+        ],
+        "summary": " ",
+        "operationId": "WorkOrderTaskMonitor_WorkOrderTaskMonitorUpdateWorkOrderTaskMonitor",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkOrderTaskMonitorRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfWorkOrderTaskMonitorModel"
                 }
               }
             }
@@ -4725,7 +4893,8 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "nullable": true
+              "nullable": true,
+              "example": 3
             },
             "x-position": 1
           },
@@ -4763,7 +4932,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -5118,7 +5288,7 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -5203,7 +5373,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -9249,6 +9419,14 @@
                 "items": {
                   "$ref": "#/components/schemas/WorkOrderModel"
                 }
+              },
+              "productImage": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/FileModel"
+                  }
+                ]
               }
             }
           }
@@ -9436,27 +9614,28 @@
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int32"
-          },
-          "purchaseId": {
-            "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "productId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "price": {
             "type": "number",
-            "format": "decimal"
+            "format": "decimal",
+            "nullable": true
           },
           "scheduledStartDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "scheduledEndDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "actualStartDate": {
             "type": "string",
@@ -9469,7 +9648,8 @@
             "nullable": true
           },
           "hasNCR": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "locationId": {
             "type": "integer",
@@ -9848,6 +10028,13 @@
             "items": {
               "$ref": "#/components/schemas/WorkOrderTaskMonitorModel"
             }
+          },
+          "referenceFiles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FileModel"
+            }
           }
         }
       },
@@ -9890,6 +10077,14 @@
             "format": "int32"
           },
           "comment": {
+            "type": "string",
+            "nullable": true
+          },
+          "sensorValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "sensorName": {
             "type": "string",
             "nullable": true
           }
@@ -11244,6 +11439,220 @@
           }
         }
       },
+      "AuditActionResultOfICollectionOfWorkOrderGridSummary": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/WorkOrderGridSummary"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WorkOrderGridSummary": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "purchaseId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "workOrderItemNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseOrderNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "scheduledStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "scheduledEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "actualStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "actualEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedureName": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "disposition": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentActiveTaskName": {
+            "type": "string",
+            "nullable": true
+          },
+          "percentageOfTasksCompleted": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLogged": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfICollectionOfWorkOrderStatus": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/WorkOrderStatus"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WorkOrderStatus": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "productName",
+          "partNumber",
+          "procedureName",
+          "locationName"
+        ],
+        "properties": {
+          "productName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "partNumber": {
+            "type": "string",
+            "minLength": 1
+          },
+          "procedureName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locationName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workOrderSummary": {
+            "nullable": true,
+            "oneOf": [
+              { "type": "null" },
+              {
+                "$ref": "#/components/schemas/WorkOrderSummary"
+              }
+            ]
+          }
+        }
+      },
+      "WorkOrderSummary": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "workOrderId",
+          "workOrderStatus",
+          "workOrderHasNcr"
+        ],
+        "properties": {
+          "workOrderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workOrderItemNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseOrderLineNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "workOrderPartSerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "workOrderStatus": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workOrderAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "workOrderHasNcr": {
+            "type": "boolean"
+          },
+          "workOrderScheduledEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "AuditActionResultOfICollectionOfWorkOrderModel": {
         "allOf": [
           {
@@ -11265,7 +11674,37 @@
           }
         ]
       },
-      "AuditActionResultOfWorkOrderModel": {
+      "GetWorkOrderRequest": {
+        "type": "object",
+        "description": "GetWorkOrderRequest",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Get work order by ID",
+            "format": "int32",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "description": "Get work orders by customer ID",
+            "format": "int32",
+            "nullable": true
+          },
+          "locationId": {
+            "type": "integer",
+            "description": "Get work orders by location ID",
+            "format": "int32",
+            "nullable": true
+          },
+          "invoiceDate": {
+            "type": "string",
+            "description": "Get work orders by invoice Date",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfWorkOrderPartModel": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuditActionResult"
@@ -11279,7 +11718,7 @@
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/WorkOrderModel"
+                    "$ref": "#/components/schemas/WorkOrderPartModel"
                   }
                 ]
               }
@@ -11287,250 +11726,168 @@
           }
         ]
       },
-      "CreateWorkOrderRequest": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "purchaseId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "productId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "price": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "scheduledStartDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "scheduledEndDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "hasNCR": {
-            "type": "boolean"
-          },
-          "locationId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "workOrderParts": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderPartRequest"
-            }
-          },
-          "workOrderTasks": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderTaskRequest"
-            }
-          }
-        }
-      },
-      "WorkOrderPartRequest": {
+      "UpdateWorkOrderPartRequest": {
         "type": "object",
         "description": " ",
         "additionalProperties": true,
         "properties": {
-          "workOrderId": {
-            "type": "integer",
-            "description": " ",
-            "format": "int32"
-          },
-          "partId": {
-            "type": "integer",
-            "description": " ",
-            "format": "int32"
-          },
-          "parentId": {
-            "type": "integer",
-            "description": " ",
-            "format": "int32",
-            "nullable": true
-          },
           "serialNumber": {
             "type": "string",
-            "description": " ",
+            "description": "Gets or Sets SerialNumber",
             "nullable": true
-          },
-          "part": {
-            "description": " ",
-            "nullable": true,
-            "oneOf": [
-              { "type": "null" },
-              {
-                "$ref": "#/components/schemas/UpdatePartRequest"
-              }
-            ]
-          },
-          "workOrder": {
-            "description": " ",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/UpdateWorkOrderRequest"
-              }
-            ]
-          },
-          "children": {
-            "type": "array",
-            "description": " ",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderPartRequest"
-            }
-          },
-          "parent": {
-            "description": " ",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/WorkOrderPartRequest"
-              }
-            ]
           }
         }
       },
-      "UpdateWorkOrderRequest": {
+      "AuditActionResultOfWorkOrderTaskModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/CreateWorkOrderRequest"
+            "$ref": "#/components/schemas/AuditActionResult"
           },
           {
             "type": "object",
+            "description": "Base class for an API call with a typed result",
             "additionalProperties": true,
             "properties": {
-              "id": {
-                "type": "integer",
-                "format": "int32"
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/WorkOrderTaskModel"
+                  }
+                ]
               }
             }
           }
         ]
       },
-      "WorkOrderTaskRequest": {
+      "CreateWorkOrderTaskRequest": {
         "type": "object",
         "description": " ",
         "additionalProperties": true,
         "properties": {
           "workOrderId": {
             "type": "integer",
-            "description": " ",
-            "format": "int32"
+            "description": "WorkOrder we are adding the Procedure Step to",
+            "format": "int32",
+            "nullable": true
+          },
+          "procedureId": {
+            "type": "integer",
+            "description": "The Procedure the ProcedureStep is related to",
+            "format": "int32",
+            "nullable": true
           },
           "procedureStepId": {
             "type": "integer",
-            "description": " ",
-            "format": "int32"
-          },
-          "procedureStepTypeId": {
-            "type": "integer",
-            "description": " ",
-            "format": "int32"
-          },
-          "statusId": {
-            "type": "integer",
-            "description": " ",
-            "format": "int32"
+            "description": "The ProcedureStep we are adding which will be a task of the WorkOrder",
+            "format": "int32",
+            "nullable": true
           },
           "taskStepOrder": {
             "type": "integer",
-            "description": " ",
-            "format": "int32"
-          },
-          "assignedTo": {
-            "type": "integer",
-            "description": " ",
+            "description": "The Task Step Order number of the Procedure Step. Tasks after this will use another request to update their order",
             "format": "int32",
             "nullable": true
-          },
-          "userId": {
-            "type": "integer",
-            "description": " ",
-            "format": "int32",
-            "nullable": true
-          },
-          "totalTaskTime": {
-            "type": "number",
-            "description": " ",
-            "format": "decimal",
-            "nullable": true
-          },
-          "taskIsRunning": {
-            "type": "boolean",
-            "description": " ",
-            "nullable": true
-          },
-          "taskRunningSince": {
-            "type": "string",
-            "description": " ",
-            "format": "date-time",
-            "nullable": true
-          },
-          "workOrderTaskMonitors": {
-            "type": "array",
-            "description": " ",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/WorkOrderTaskMonitorRequest"
-            }
           }
         }
       },
-      "WorkOrderTaskMonitorRequest": {
+      "UpdateWorkOrderTaskRequest": {
         "type": "object",
+        "description": " ",
         "additionalProperties": true,
         "properties": {
           "workOrderTaskId": {
             "type": "integer",
-            "description": " ",
-            "format": "int32"
+            "description": "Gets or Sets WorkOrderTaskId",
+            "format": "int32",
+            "nullable": true
           },
-          "workOrderTask": {
-            "description": " ",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/WorkOrderTaskRequest"
-              }
-            ]
-          },
-          "procedureMonitorId": {
+          "taskStepOrder": {
             "type": "integer",
-            "description": " ",
-            "format": "int32"
+            "description": "Gets or Sets TaskStepOrder",
+            "format": "int32",
+            "nullable": true
+          },
+          "assignedUserId": {
+            "type": "integer",
+            "description": "Gets or Sets AssignedUserId",
+            "format": "int32",
+            "nullable": true
+          },
+          "taskIsRunning": {
+            "type": "boolean",
+            "description": "Gets or Sets TaskIsRunning",
+            "nullable": true
+          },
+          "taskRunningSince": {
+            "type": "boolean",
+            "description": "Gets or Sets TaskRunningSince",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Gets or Sets Status",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfWorkOrderTaskMonitorModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/WorkOrderTaskMonitorModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "UpdateWorkOrderTaskMonitorRequest": {
+        "type": "object",
+        "description": " ",
+        "additionalProperties": true,
+        "properties": {
+          "workOrderTaskMonitorId": {
+            "type": "integer",
+            "description": "Gets or Sets WorkOrderTaskMonitorId",
+            "format": "int32",
+            "nullable": true
           },
           "numVal": {
             "type": "integer",
-            "description": " ",
+            "description": "Gets or Sets NumVal",
             "format": "int32",
             "nullable": true
           },
           "textVal": {
             "type": "string",
-            "description": " ",
+            "description": "Gets or Sets TextVal",
             "nullable": true
           },
           "multiVal": {
             "type": "string",
-            "description": " ",
+            "description": "Gets or Sets MultiVal",
             "nullable": true
           },
-          "sensorMappingId": {
-            "type": "integer",
-            "description": " ",
-            "format": "int32"
+          "sensorValue": {
+            "type": "string",
+            "description": "Gets or Sets SensorValue",
+            "nullable": true
           },
           "comment": {
             "type": "string",
-            "description": " ",
+            "description": "Gets or Sets Comment",
             "nullable": true
           }
         }

@@ -14,7 +14,6 @@ using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
-using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
@@ -33,39 +32,13 @@ namespace MSR.Answer.API.V1.Controllers
     {
         private ICommandDispatcher _dispatcher;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="dispatcher"></param>
         public WorkOrderController(ICommandDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
-        }
-
-        [HttpGet()]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
-        public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest request)
-        {
-            var command = request.ToGetWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
-        }
-
-        [HttpPost]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
-        public async Task<IActionResult> AddWorkOrder(CreateWorkOrderRequest request)
-        {
-            var command = request.ToCreateWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderModel>("WorkOrder created succesfully");
-        }
-
-        [HttpPatch]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanEdit)]
-        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
-        public async Task<IActionResult> UpdateWorkOrder(UpdateWorkOrderRequest request)
-        {
-            var command = request.ToUpdateWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderModel>("WorkOrder updated successfully");
         }
 
         /// <summary>
@@ -74,10 +47,16 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
         [HttpGet]
-        [Route("/v{version}/WorkOrder/History")]
+        [Route("WorkOrder/History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         public virtual IActionResult WorkOrderGetHistory([FromRoute][Required]string version)
         {
+        /*
+            var command = request.ToGetWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
+            */
+
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(AuditActionResultOfICollectionOfWorkOrderGridSummary));
             string exampleJson = null;
@@ -95,7 +74,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
         [HttpGet]
-        [Route("/v{version}/WorkOrder/Menu")]
+        [Route("WorkOrder/Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         public virtual IActionResult WorkOrderGetMenu([FromRoute][Required]string version)
         {
@@ -116,7 +95,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]</response>
         [HttpGet]
-        [Route("/v{version}/WorkOrder/Status")]
+        [Route("WorkOrder/Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
         public virtual IActionResult WorkOrderGetStatus([FromRoute][Required]string version)
         {
@@ -141,7 +120,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="invoiceDate"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [Route("/v{version}/WorkOrder")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
         public virtual IActionResult WorkOrderGetWorkOrder([FromRoute][Required]string version, [FromQuery]GetWorkOrderRequest request)
         {

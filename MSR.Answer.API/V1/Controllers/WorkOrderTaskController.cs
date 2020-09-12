@@ -31,7 +31,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPost]
-        [Route("/v{version}/WorkOrderTask")]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
         public virtual IActionResult WorkOrderTaskCreateWorkOrderTask([FromBody]CreateWorkOrderTaskRequest body, [FromRoute][Required]string version)
         {
@@ -53,7 +52,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpPatch]
-        [Route("/v{version}/WorkOrderTask")]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
         public virtual IActionResult WorkOrderTaskUpdateWorkOrderTask([FromBody]UpdateWorkOrderTaskRequest body, [FromRoute][Required]string version)
         {
