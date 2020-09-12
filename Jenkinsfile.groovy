@@ -47,7 +47,7 @@ pipeline {
                             try {
                                 dir('MSR.UI/MSR.UI.Answer') {
                                     //sh "sudo chmod 777 /var/run/docker.sock"
-                                    sh "docker build --build-arg ENV=builddev -t msr-ui ."
+                                    sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui ."
                                     sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
                                     sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
@@ -90,6 +90,7 @@ pipeline {
                             try {
                                 dir('reverseproxy') {
                                     //sh "sudo chmod 777 /var/run/docker.sock"
+                                    echo "Building server container...."
                                     sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
                                     sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.GIT_COMMIT}"
 
@@ -105,11 +106,19 @@ pipeline {
                             try {
                                 //sh "sudo chmod 777 /var/run/docker.sock"
                                 //sh "git mv Msr.Infrastructure MSR.Infrastructure"
+                                echo "Building API container...."
                                 sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
                                 sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
 
                                 sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                 sh "docker push ${ACCOUNT_URL}/msr-api:${env.GIT_COMMIT}"
+
+                                echo "Building Processor container...."
+                                sh "docker build -f MSR.Answer.Processor/Dockerfile -t msr-processor ."
+                                sh "docker tag msr-processor ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
+
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-processor:${env.GIT_COMMIT}"
                             } catch(e) {
                                 office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                                 currentBuild.result = 'FAILURE'
@@ -117,7 +126,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sh update_image_api.sh Development ${env.GIT_COMMIT} ${API_COMPOSE}"
+                                sh "sh update_image_api.sh QA ${env.GIT_COMMIT} ${API_COMPOSE}"
                                 sh "cat ${API_COMPOSE}"
 
                                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
