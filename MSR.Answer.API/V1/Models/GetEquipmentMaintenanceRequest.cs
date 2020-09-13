@@ -1,4 +1,4 @@
-﻿namespace MSR.Answer.API.V1.Models
+namespace MSR.Answer.API.V1.Models
 {
     public class GetEquipmentMaintenanceRequest
     {
