@@ -74,6 +74,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Sensor> Sensors { get; }
         IRepository<Quote> Quotes { get; }
         IRepository<TimeZone> Timezones { get; }
+        IRepository<EquipmentMaintenance> EquipmentMaintenances { get; }
         
         void SaveChanges();
         Task SaveChangesAsync();

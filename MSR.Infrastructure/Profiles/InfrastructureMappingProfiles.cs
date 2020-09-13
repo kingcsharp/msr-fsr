@@ -366,6 +366,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.Product.TotalSalePrice));
+            CreateMap<EquipmentMaintenance, EquipmentMaintenanceModel>().ReverseMap();
+            CreateMap<CreateEquipmentMaintenance, EquipmentMaintenance>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)

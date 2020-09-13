@@ -73,6 +73,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<ITimezoneService, TimezoneService>();
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
             services.AddScoped<IAdminCostSettingsService, AdminCostSettingsService>();
+            services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
 
             return services;
         }
