@@ -6,8 +6,6 @@ namespace MSR.Answer.API.V1.Models
 {
     public class CreateEquipmentMaintenanceRequest
     {
-        public int? Id { get; set; }
-
         [Required]
         public int? LocationId { get; set; }
 
