@@ -362,6 +362,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, PartModel>();
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
+            CreateMap<EquipmentMaintenance, EquipmentMaintenanceModel>().ReverseMap();
+            CreateMap<CreateEquipmentMaintenance, EquipmentMaintenance>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)
