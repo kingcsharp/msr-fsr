@@ -358,6 +358,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.FileURL, opts => opts.MapFrom(src => src.FileObject.FileURL));
 
             CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
+
+            CreateMap<EquipmentMaintenance, EquipmentMaintenanceModel>().ReverseMap();
+            CreateMap<CreateEquipmentMaintenance, EquipmentMaintenance>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)

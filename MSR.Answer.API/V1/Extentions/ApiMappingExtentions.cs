@@ -928,5 +928,19 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateAdminCostSetting>(request);
         }
+
+        public static GetEquipmentMaintenance ToGetEquipmentMaintenanceCommand(this GetEquipmentMaintenanceRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetEquipmentMaintenance>(request);
+        }
+
+        public static CreateEquipmentMaintenance ToCreateEquipmentMaintenanceCommand(this CreateEquipmentMaintenanceRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateEquipmentMaintenance>(request);
+        }
+        public static UpdateEquipmentMaintenance ToUpdateEquipmentMaintenanceCommand(this UpdateEquipmentMaintenanceRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateEquipmentMaintenance>(request);
+        }
     }
 }
