@@ -91,7 +91,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getAdminCostSettings() {
-    this.adminCostSettingsService.adminCostSettings(env.apiVersion)
+    this.adminCostSettingsService.adminCostSettingsGet(env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.adminCostSettings = response.object;

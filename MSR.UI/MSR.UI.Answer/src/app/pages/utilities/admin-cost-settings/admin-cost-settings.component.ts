@@ -3,7 +3,7 @@ import { Globals } from '../../../models/lib/globals';
 import { take } from 'rxjs/operators';
 import { responseHandler } from '../../../utils/responseHandler';
 import { environment as env } from '../../../../environments/environment';
-import { AdminCostSettingsService, AdminCostSettingsModel, } from '../../../services/api.client.generated';
+import { AdminCostSettingsService, AdminCostSettingsModel, UpdateAdminCostSettingRequest } from '../../../services/api.client.generated';
 declare let jQuery: any;
 
 @Component({
@@ -29,7 +29,7 @@ export class AdminCostSettingsComponent implements OnInit {
 
   getAdminCostSettings() {
     this.globals.showLoader(true);
-    this.adminCostSettingsService.adminCostSettings(env.apiVersion)
+    this.adminCostSettingsService.adminCostSettingsGet(env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.adminCostSettings = response.object;
@@ -40,15 +40,19 @@ export class AdminCostSettingsComponent implements OnInit {
   onSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      const RequestData = {
+      const RequestData = new UpdateAdminCostSettingRequest({
         rmAnnualRate: parseFloat(this.adminCostSettings.rmAnnualRate),
         laborRateMinute: parseFloat(this.adminCostSettings.laborRateMinute),
         yearsHours: parseInt(this.adminCostSettings.yearsHours),
         hourMinutes: parseInt(this.adminCostSettings.hourMinutes)
-      }
-      console.log('_____', RequestData)
-      // TODO: PATCH API
-
+      });
+      this.globals.showLoader(true);
+      this.adminCostSettingsService.adminCostSettingsPatch(env.apiVersion, RequestData)
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.adminCostSettings = response.object;
+        this.getAdminCostSettingsFlag = true;
+      }));
     }
   }
 
