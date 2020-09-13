@@ -6,8 +6,6 @@ namespace MSR.Domain.Commands
 {
     public class CreateEquipmentMaintenance : Command
     {
-        public int? Id { get; set; }
-
         public int? LocationId { get; set; }
 
         public int? AssignedToId { get; set; }
