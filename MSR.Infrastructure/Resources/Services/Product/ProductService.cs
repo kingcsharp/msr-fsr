@@ -44,7 +44,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var product = _mapper.Map<Product>(command);
             ProductModel retProduct;
 
-            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanCreate))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
 
                 // Save the new Product
@@ -114,7 +114,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
             ProductModel retProduct;
-            if (CurrentUser.HasPrivilege(EnumMenuItem.QuotesProducts, EnumPrivilege.CanEdit))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
                 // Save product changes
                 await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
