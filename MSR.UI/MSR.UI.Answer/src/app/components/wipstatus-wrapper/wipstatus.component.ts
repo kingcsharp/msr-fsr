@@ -23,7 +23,7 @@ export class WipstatusWrapperComponent implements OnInit {
     this.getMockData();
     this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map( s => ({ label: s, value: s}));
     
-    if(localStorage.getItem['wipstatus'] === undefined || localStorage.getItem['wipstatus'] === null){
+    if(localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null){
       this.selectedLocations = this.locationOptions.map(s => s.value);
       localStorage.setItem('wipstatus',this.selectedLocations.toString());
     }else{
