@@ -6,10 +6,19 @@ services:
       context: .
       dockerfile: MSR.Answer.API/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=QA
     expose:
       - "5000"
     restart: always
+  processor:
+    build:
+      context: .
+      dockerfile: MSR.Answer.Processor/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=QA
+    restart: always
+    links:
+      - api
   reverseproxy:
     build:
       context: ./reverseproxy
@@ -25,7 +34,7 @@ services:
       context: ./MSR.UI/MSR.UI.Answer
       dockerfile: Dockerfile
       args:
-        - 'ENV=dev'
+        - 'ENV=builddev'
     ports:
       - "3000:80"
 
