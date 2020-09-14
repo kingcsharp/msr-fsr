@@ -45,6 +45,7 @@ export class WiphistoryComponent implements OnInit {
 
 
     this.getMockData();
+    
     this.statusOptions = this.data.filter(
       (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
     ).map(x => ({ label: x.status, value: x.status }));
