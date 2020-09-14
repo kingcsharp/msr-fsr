@@ -104,7 +104,7 @@
                         <th [hidden]="!commonGrid.isVisibleCol('status',gridSettings)">
                             <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statusOptions"
                                 [filterId]="'status'" [defaultText]="'Select Status'" [defaultTextTooltip]="''"
-                                [datatable]="dt">
+                                [datatable]="dt" data-cy="wipmenustatus-multiselect">
                             </multiselect-wrapper>
                         </th>
                         <th grid-input-filter [dt]="dt" searchField="disposition"
