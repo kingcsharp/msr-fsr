@@ -4541,7 +4541,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "example": "1"
             },
             "x-position": 1
           }
@@ -4574,7 +4574,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "example": "1"
             },
             "x-position": 1
           }
@@ -4602,16 +4602,6 @@
         "operationId": "WorkOrder_WorkOrderGetWorkOrder",
         "parameters": [
           {
-            "name": "version",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1"
-            },
-            "x-position": 1
-          },
-          {
             "name": "request",
             "in": "query",
             "schema": {
@@ -4621,6 +4611,15 @@
                   "$ref": "#/components/schemas/GetWorkOrderRequest"
                 }
               ]
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             },
             "x-position": 2
           }
@@ -4698,7 +4697,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "example": "1"
             },
             "x-position": 2
           }
@@ -4741,7 +4740,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "example": "1"
             },
             "x-position": 2
           }
