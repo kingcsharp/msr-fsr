@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
   InvoiceService, InvoiceView, InvoiceItemView, CustomerService, LocationService, EnumMenuItem,
-  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest
+  UpdateInvoiceRequest, CreateInvoiceRequest, EnumApprovalTables, Customer, LocationModel, WorkOrderService, WorkOrderModel, AuditActionResultOfInvoiceView, CreateInvoiceItemRequest, UpdateInvoiceItemRequest, GetWorkOrderRequest
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -103,8 +103,12 @@ export class InvoiceComponent implements OnInit {
 
   getWorkOrders() {
     if (this.currentInvoice.customerId !== undefined && this.currentInvoice.locationId !== undefined) {
-      this.workOrderService.workOrderGet(null, this.currentInvoice.customerId,
-        this.currentInvoice.locationId, null, env.apiVersion).pipe(take(1))
+      let req = new GetWorkOrderRequest({
+        customerId: this.currentInvoice.customerId,
+        locationId: this.currentInvoice.locationId
+      });
+
+      this.workOrderService.workOrder(req, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           response.object.forEach((wo) => {
             const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
