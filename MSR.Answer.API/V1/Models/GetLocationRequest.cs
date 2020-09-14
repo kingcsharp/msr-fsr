@@ -4,5 +4,6 @@
     {
         public int? ParentId { get; set; }
         public int? Id { get; set; }
+        public string? InternalAddress { get; set; }
     }
 }
