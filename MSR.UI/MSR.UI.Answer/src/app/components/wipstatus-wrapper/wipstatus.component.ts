@@ -55,7 +55,7 @@ export class WipstatusWrapperComponent implements OnInit {
     for(let index = 1; index < 14; index++){
 
       let workOrderStatus = new WorkOrderStatus();
-      workOrderStatus.locationName = 'Location ' + (Math.random() >= 0.5);
+      workOrderStatus.locationName = ['Chandler', 'Hillsboro', 'Kiryat Gat', 'Naas'][Math.floor(Math.random() * Math.floor(4))];
       workOrderStatus.partNumber = '1321231' + index;
       workOrderStatus.procedureName = 'Procedure' + index;
       workOrderStatus.productName = 'Product' + index;
