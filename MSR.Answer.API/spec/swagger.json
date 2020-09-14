@@ -4494,7 +4494,7 @@
         }
       }
     },
-    "/v{version}/WorkOrder/WorkOrder/History": {
+    "/v{version}/WorkOrder/History": {
       "get": {
         "tags": [
           "WorkOrder"
@@ -4527,7 +4527,7 @@
         }
       }
     },
-    "/v{version}/WorkOrder/WorkOrder/Menu": {
+    "/v{version}/WorkOrder/Menu": {
       "get": {
         "tags": [
           "WorkOrder"
@@ -4560,7 +4560,7 @@
         }
       }
     },
-    "/v{version}/WorkOrder/WorkOrder/Status": {
+    "/v{version}/WorkOrder/Status": {
       "get": {
         "tags": [
           "WorkOrder"
@@ -4598,8 +4598,8 @@
         "tags": [
           "WorkOrder"
         ],
-        "summary": " ",
-        "operationId": "WorkOrder_WorkOrderGetWorkOrder",
+        "summary": "Get work order list by id, customerid, locationid, or date",
+        "operationId": "WorkOrder_GetWorkOrder",
         "parameters": [
           {
             "name": "request",

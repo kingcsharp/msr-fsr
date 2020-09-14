@@ -47,17 +47,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
-        [HttpGet]
-        [Route("WorkOrder/History")]
+        [HttpGet("History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetHistory([FromRoute][Required]string version)
         {
-        /*
-            var command = request.ToGetWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
-            */
             WorkOrderGridSummary w = new WorkOrderGridSummary() {
                 Id = 1,
                 PurchaseId = 2,
@@ -90,8 +84,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
-        [HttpGet]
-        [Route("WorkOrder/Menu")]
+        [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetMenu([FromRoute][Required]string version)
@@ -130,8 +123,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]</response>
-        [HttpGet]
-        [Route("WorkOrder/Status")]
+        [HttpGet("Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetStatus()
@@ -151,38 +143,19 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        ///
+        /// Get work order list by id, customerid, locationid, or date
         /// </summary>
-        /// <param name="version"></param>
-        /// <param name="id"></param>
-        /// <param name="customerId"></param>
-        /// <param name="locationId"></param>
-        /// <param name="invoiceDate"></param>
-        /// <response code="200"></response>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet]
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        public virtual IActionResult WorkOrderGetWorkOrder([FromQuery]GetWorkOrderRequest request)
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
+        public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest request)
         {
-            WorkOrderModel w = new WorkOrderModel() {
-                Id = 1,
-                ProductId = 2,
-                Price = 123.45m,
-                ScheduledStartDate = DateTime.Now,
-                ScheduledEndDate = DateTime.Now,
-                ActualStartDate = DateTime.Now,
-                ActualEndDate = DateTime.Now,
-                HasNCR = true,
-                LocationId = 99,
-                Location = new LocationModel(),
-                Product = new ProductModel(),
-                Purchase = new PurchaseModel(),
-                WorkOrderParts = new List<WorkOrderPartModel>(),
-                WorkOrderTasks = new List<WorkOrderTaskModel>()
-            };
-            List<WorkOrderModel> example = new List<WorkOrderModel>();
-            example.Add(w);
-            return new ObjectResult(example);
+            var command = request.ToGetWorkOrderCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
         }
+
     }
 }

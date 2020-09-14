@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-09-14 11:08:28.282105400 -0400
-+++ swagger-work.json	2020-09-14 11:08:28.345777800 -0400
+--- swagger-work.json.orig	2020-09-14 12:13:19.249951400 -0400
++++ swagger-work.json	2020-09-14 12:13:19.314042100 -0400
 @@ -53,12 +53,7 @@
                }
              }
@@ -1357,7 +1357,7 @@
 +        }
        }
      },
-     "/v{version}/WorkOrder/WorkOrder/History": {
+     "/v{version}/WorkOrder/History": {
 @@ -4940,12 +4455,7 @@
                }
              }
@@ -1371,7 +1371,7 @@
 +        }
        }
      },
-     "/v{version}/WorkOrder/WorkOrder/Menu": {
+     "/v{version}/WorkOrder/Menu": {
 @@ -4978,12 +4488,7 @@
                }
              }
@@ -1385,7 +1385,7 @@
 +        }
        }
      },
-     "/v{version}/WorkOrder/WorkOrder/Status": {
+     "/v{version}/WorkOrder/Status": {
 @@ -5015,12 +4520,7 @@
                }
              }
