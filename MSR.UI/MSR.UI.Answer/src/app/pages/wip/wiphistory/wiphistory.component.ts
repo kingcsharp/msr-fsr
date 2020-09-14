@@ -21,6 +21,7 @@ export class WiphistoryComponent implements OnInit {
   statusOptions: Array<SelectItem>;
   canRead: boolean = false;
   privileges = EnumPrivilege;
+  locationOptions: Array<SelectItem>;
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router) { }
 
@@ -59,6 +60,9 @@ export class WiphistoryComponent implements OnInit {
     this.statusOptions = this.data.filter(
       (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
     ).map(x => ({ label: x.status, value: x.status }));
+    this.locationOptions = this.data.filter(
+      (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
+    ).map(x => ({ label: x.locationName, value: x.locationName }));
     this.loading = false;
 
   }

@@ -50,9 +50,11 @@
                             [hidden]="!commonGrid.isVisibleCol('customerName',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="locationName"
-                            [hidden]="!commonGrid.isVisibleCol('locationName',gridSettings)"
-                            [gridSettings]="gridSettings">
+                        <th [hidden]="!commonGrid.isVisibleCol('locationName',gridSettings)">
+                            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="locationOptions"
+                                [filterId]="'locationName'" [defaultText]="'Select Location'" [defaultTextTooltip]="''"
+                                [datatable]="dt" data-cy="locationname-input">
+                            </multiselect-wrapper>
                         </th>
                         <th grid-input-filter [dt]="dt" searchField="serialNumber"
                             [hidden]="!commonGrid.isVisibleCol('serialNumber',gridSettings)"

@@ -18,6 +18,7 @@ export class WipComponent implements OnInit {
   gridStorageId: string;
   data: Array<any> = new Array<any>();
   statusOptions: Array<SelectItem>;
+  locationOptions: Array<SelectItem>;
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
@@ -73,6 +74,9 @@ export class WipComponent implements OnInit {
       }
 
     });
+    this.locationOptions = this.data.filter(
+      (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
+    ).map(x => ({ label: x.locationName, value: x.locationName }));
     this.loading = false;
 
   }
