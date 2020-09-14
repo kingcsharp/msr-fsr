@@ -1,10 +1,11 @@
 <table class="table table-striped">
     <thead class="thead-dark">
-        <tr>
+        <tr data-cy="wipstatus-header">
             <th>Product</th>
             <th>Part Number</th>
             <th>Procedure</th>
             <th>
+                Location<br />
                 <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1" 
                 (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect"></p-multiSelect>
             </th>
