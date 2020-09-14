@@ -120,10 +120,10 @@
                             {{model.purchaseId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)">
-                            <alert type="warning" class="px-0 py-1 my-0 text-center" *ngIf="model.hasNcr">
+                            <alert type="warning" class="px-0 py-1 my-0 text-center" *ngIf="model.hasNcr" [routerLink]="['/wip/details',model.id]">
                                 {{model.workOrderItemNumber}}
                             </alert>
-                            <alert type="info" class="px-0 py-1 my-0 text-center" *ngIf="!model.hasNcr">
+                            <alert type="info" class="px-0 py-1 my-0 text-center" *ngIf="!model.hasNcr"  [routerLink]="['/wip/details',model.id]">
                                 {{model.workOrderItemNumber}}
                             </alert>
                         </td>
@@ -165,21 +165,19 @@
                                 {{model.status}}
                             </span>
                             <div *ngIf=" model.status === 'In Progress'">
-                                <div>{{model.currentActiveTaskName}}</div>
+                                <div class="activetask-container">{{model.currentActiveTaskName}}</div>
                                 <div class="progressbar-container">
                                     <progressbar [value]="model.percentageOfTasksCompleted"
-                                        [type]="model.tasksCompletedType" [striped]="true" [animate]="true"
-                                        [tooltip]="percentOfTaskCompletedTemplate"></progressbar>
-                                    <div class="percentage">{{model.percentageOfTasksCompleted | number : '1.2-2'}}%
+                                        [type]="model.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
+                                    <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">{{model.percentageOfTasksCompleted | number : '1.2-2'}}%
                                     </div>
                                     <ng-template #percentOfTaskCompletedTemplate>Percentage of Tasks Completed
                                     </ng-template>
                                 </div>
                                 <div class="progressbar-container">
                                     <progressbar [value]="model.percentageOfExpectedDurationTimeLogged"
-                                        [type]="model.timeLoggedType" [striped]="true" [animate]="true"
-                                        [tooltip]="percentageOfExpectedDurationTimeLogged"></progressbar>
-                                    <div class="percentage">
+                                        [type]="model.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
+                                    <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
                                         {{model.percentageOfExpectedDurationTimeLogged | number : '1.2-2'}}%</div>
                                     <ng-template #percentageOfExpectedDurationTimeLogged>Percentage of Tasks Completed
                                     </ng-template>
