@@ -100,7 +100,8 @@ export class WipComponent implements OnInit {
       workOrderGridSummary.scheduledStartDate = new Date();
       workOrderGridSummary.serialNumber = '234232' + index;
       workOrderGridSummary.status = ['In Progress','Waiting to Start'][Math.floor(Math.random() * Math.floor(2))];
-      workOrderGridSummary.workOrderItemNumber = '232423' + index;
+      workOrderGridSummary.workOrderItemNumber = 'INTEL 32-F-232423' + index;
+      workOrderGridSummary.hasNcr = Math.random() > .5 ? true : false;
 
       this.data.push(workOrderGridSummary);
 

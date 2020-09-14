@@ -120,7 +120,12 @@
                             {{model.purchaseId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)">
-                            {{model.workOrderItemNumber}}
+                            <alert type="warning" class="px-0 py-1 my-0 text-center" *ngIf="model.hasNcr">
+                                {{model.workOrderItemNumber}}
+                            </alert>
+                            <alert type="info" class="px-0 py-1 my-0 text-center" *ngIf="!model.hasNcr">
+                                {{model.workOrderItemNumber}}
+                            </alert>
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('customerName', gridSettings)">
                             {{model.customerName}}

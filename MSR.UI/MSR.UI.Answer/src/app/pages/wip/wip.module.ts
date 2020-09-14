@@ -12,6 +12,7 @@ import { NewWidgetModule } from '../../layout/new-widget/widget.module';
 import { CalendarModule } from 'primeng/calendar';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -32,7 +33,8 @@ export const routes = [
     UtilsModule,
     WidgetModule,
     NewWidgetModule,
-    ProgressbarModule
+    ProgressbarModule,
+    AlertModule
   ]
 })
 export class WipModule { static routes = routes; }

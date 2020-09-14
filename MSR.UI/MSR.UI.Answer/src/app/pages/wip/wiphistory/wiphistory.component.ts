@@ -76,7 +76,7 @@ export class WiphistoryComponent implements OnInit {
       workOrderGridSummary.serialNumber = '234232' + index;
       workOrderGridSummary.status = 'Completed';
       workOrderGridSummary.workOrderItemNumber = '232423' + index;
-
+      workOrderGridSummary.hasNcr = Math.random() > .5 ? true : false;
       this.data.push(workOrderGridSummary);
 
 
@@ -107,4 +107,5 @@ export class WorkOrderGridSummary {
   currentActiveTaskName: string;
   percentageOfTasksCompleted: number;
   percentageOfExpectedDurationTimeLogged: number;
+  hasNcr: boolean;
 }
