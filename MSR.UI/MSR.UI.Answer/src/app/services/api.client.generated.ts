@@ -6028,15 +6028,24 @@ export class WorkOrderService {
 
     /**
      * Get work order list by id, customerid, locationid, or date
-     * @param request (optional) 
+     * @param id (optional) Get work order by ID
+     * @param customerId (optional) Get work orders by customer ID
+     * @param locationId (optional) Get work orders by location ID
+     * @param invoiceDate (optional) Get work orders by invoice Date
      */
-    workOrder(request: GetWorkOrderRequest | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
+    workOrder(id: number | null | undefined, customerId: number | null | undefined, locationId: number | null | undefined, invoiceDate: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
-        if (request !== undefined && request !== null)
-            url_ += "request=" + encodeURIComponent("" + request) + "&";
+        if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (customerId !== undefined && customerId !== null)
+            url_ += "customerId=" + encodeURIComponent("" + customerId) + "&";
+        if (locationId !== undefined && locationId !== null)
+            url_ += "locationId=" + encodeURIComponent("" + locationId) + "&";
+        if (invoiceDate !== undefined && invoiceDate !== null)
+            url_ += "invoiceDate=" + encodeURIComponent("" + invoiceDate) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -16633,64 +16642,6 @@ export class AuditActionResultOfICollectionOfWorkOrderModel extends AuditActionR
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfICollectionOfWorkOrderModel extends IAuditActionResult {
     object?: WorkOrderModel[] | undefined;
-}
-
-/** GetWorkOrderRequest */
-export class GetWorkOrderRequest implements IGetWorkOrderRequest {
-    /** Get work order by ID */
-    id?: number | undefined;
-    /** Get work orders by customer ID */
-    customerId?: number | undefined;
-    /** Get work orders by location ID */
-    locationId?: number | undefined;
-    /** Get work orders by invoice Date */
-    invoiceDate?: string | undefined;
-
-    constructor(data?: IGetWorkOrderRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.customerId = _data["customerId"];
-            this.locationId = _data["locationId"];
-            this.invoiceDate = _data["invoiceDate"];
-        }
-    }
-
-    static fromJS(data: any): GetWorkOrderRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetWorkOrderRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["customerId"] = this.customerId;
-        data["locationId"] = this.locationId;
-        data["invoiceDate"] = this.invoiceDate;
-        return data; 
-    }
-}
-
-/** GetWorkOrderRequest */
-export interface IGetWorkOrderRequest {
-    /** Get work order by ID */
-    id?: number | undefined;
-    /** Get work orders by customer ID */
-    customerId?: number | undefined;
-    /** Get work orders by location ID */
-    locationId?: number | undefined;
-    /** Get work orders by invoice Date */
-    invoiceDate?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
