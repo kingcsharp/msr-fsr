@@ -198,7 +198,7 @@
             </i> -->
             <i
               class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
-              (click)="showEMModal()">
+              (click)="showEMModal(emmodel)">
             </i>
           </td>
         </tr>
@@ -217,17 +217,191 @@
   [(visible)]="displayEMDialog"
   [baseZIndex]="100001"
   [modal]='true'
-  [style]="{width: '50vw'}"
+  [style]="{width: '70vw'}"
   data-cy="user-header"
 >
   <form
     *ngIf="currentEM"
     data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    (ngSubmit)="onEMFormSubmit()"
     data-parsley-priority-enabled="false"
     novalidate="novalidate"
   >
+    <section class="widget m-4 p-4" widget>
+      <div class="widget-body">
+        <fieldset>
+          <div class="form-group row">
+            <label for="locationId" class="col-md-3 col-12 col-form-label text-md-right">
+              Room/Equipment
+            </label>
+            <p-dropdown
+              *ngIf="getLocationsFlag"
+              class="col-md-9 col-12"
+              placeholder="Select Room/Equipment"
+              name="locationId"
+              [(ngModel)]="currentEM.locationId"
+              [options]="locations"
+              appendTo="body"
+              [baseZIndex]="100002"
+              [virtualScroll]="true"
+              itemSize="30"
+              [filter]="true"
+              filterBy="label"
+              data-cy="em-select-locationid"
+              required
+            >
+            </p-dropdown>
+          </div>
+
+          <div class="form-group row">
+            <label for="troubleState" class="col-md-3 col-12 col-form-label text-md-right">
+              Trouble State
+            </label>
+            <div class="col-md-9 col-12">
+              <bootstrap-switch
+                name="troubleState"
+                (onChange)="onTroubleStateToggle($event)"
+                [isOn]="currentEM.troubleState" data-cy="em-toogle-troublestate"
+              ></bootstrap-switch>
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="currentEM.troubleState">
+            <label for="maintenanceTask" class="col-md-3 col-12 col-form-label text-md-right">
+              Maintenance Task
+            </label>
+            <p-dropdown
+              class="col-md-3"
+              placeholder="Select Maintenance Task"
+              name="maintenanceTask"
+              [(ngModel)]="currentEM.maintenanceTask"
+              [options]="maintenanceTasks"
+              appendTo="body"
+              [baseZIndex]="100003"
+              [filter]="true"
+              filterBy="label"
+              data-cy="em-select-maintenanceTask"
+              required
+            >
+            </p-dropdown>
+            <label for="status" class="col-md-3 col-12 col-form-label text-md-right">
+              Status <i class="fa fa-info-circle" tooltip="When Status is set to &quot;Assigned&quot;, Assigned To should appear and display names of Maintenance Technicians"></i>
+            </label>
+            <p-dropdown
+              class="col-md-3 col-12"
+              placeholder="Select Status"
+              name="status"
+              [(ngModel)]="currentEM.statusId"
+              [options]="allStatus"
+              appendTo="body"
+              [baseZIndex]="100003"
+              [filter]="true"
+              filterBy="label"
+              data-cy="em-select-status"
+              required
+            >
+            </p-dropdown>
+          </div>
+
+          <div class="form-group row" *ngIf="currentEM.troubleState">
+            <label for="assignedTo" class="col-md-3 col-12 col-form-label text-md-right">
+              Assigned To
+            </label>
+            <p-dropdown
+              class="col-md-9 col-12"
+              placeholder="Select Assigned To User"
+              name="assignedTo"
+              [(ngModel)]="currentEM.assignedToId"
+              [options]="users"
+              appendTo="body"
+              [baseZIndex]="100004"
+              [filter]="true"
+              filterBy="label"
+              data-cy="em-select-assignedto"
+              required
+            >
+            </p-dropdown>
+          </div>
+
+          <div *ngIf="currentEM.troubleState" class="form-group row">
+            <label class="form-control-label col-md-3 col-12 text-md-right" for="lastCompleted">
+              Maintenance Last Completed
+            </label>
+            <p-calendar
+              [(ngModel)]="currentEM.pemLastCompletedDate"
+              placeholder="Select Last Completed Date"
+              class="col-md-3 col-12"
+              name="lastCompleted"
+              showIcon="true"
+              styleClass="input-group input-group-transparent"
+              inputStyleClass="form-control input-transparent" data-parsley-trigger="change"
+              data-parsley-required="true"
+              tooltip="Open Date"
+              data-cy="em-input-lastcompleted"
+            >
+            </p-calendar>
+            <label class="form-control-label col-md-3 col-12 text-md-right" for="frequencyField">
+              Maintenance Frequency
+            </label>
+            <div class="input-group input-group-transparent col-md-3 col-12">
+              <input
+                pInputText
+                type="text"
+                class="form-control input-transparent"
+                name="frequencyField"
+                [(ngModel)]="currentEM.frequencyField"
+                data-cy="em-input-frequencyfield"
+                data-validate="parsley"
+                data-parsley-trigger="change"
+                data-parsley-type="number"
+              >
+              <span class="input-group-addon bg-secondary">
+                Days
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="comments" class="col-md-3 col-form-label text-md-right">
+              Comments
+            </label>
+            <div class="col-md-9 ">
+              <textarea
+                pTextArea
+                rows="8"
+                type="text"
+                name="comments"
+                [(ngModel)]="currentEM.comments"
+                data-validate="parsley"
+                data-parsley-trigger="change"
+                class="form-control input-transparent"
+                placeholder="Comments"
+                data-cy="em-input-comments"
+                style="resize:none;"
+              ></textarea>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+
     <p-footer>
-      <div class="pull-right">
+      <div class="row mx-4 px-4 pb-2 justify-content-end">
+        <button
+          type="submit"
+          class="btn btn-outline-inverse width-100 mb-xs"
+          role="button" data-cy="btn-submit"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          (click)="closeEMModal()"
+          class="btn btn-outline-inverse width-100 mb-xs"
+          role="button"
+        >
+          Cancel
+        </button>
       </div>
     </p-footer>
   </form>
