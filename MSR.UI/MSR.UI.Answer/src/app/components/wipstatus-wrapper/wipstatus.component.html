@@ -24,7 +24,7 @@
                 'fa-cog': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
                 'fa-spin': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
                 'fa-hourglass': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start'
-                } " placement="bottom" 
+                } " placement="bottom" data-cy="workordersummary-icon"
                 [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
                 <ng-template #workOrderSummaryToolTipTemplate>
                     WorkOrder Item Number: {{workOrderStatus.workOrderSummary.workOrderItemNumber}}<br />
