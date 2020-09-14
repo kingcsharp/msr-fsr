@@ -66,7 +66,7 @@ export class ApproveEntityComponent implements OnInit {
           ctrl.clseDialog();
         }));
     } else {
-      this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.activityType, this.entityId, env.apiVersion)
+      this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.activityType, this.entityId, this.comments, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.status = 'Cancelled';
           this.statusChange.emit(this.status);
