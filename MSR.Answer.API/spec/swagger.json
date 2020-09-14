@@ -4602,17 +4602,47 @@
         "operationId": "WorkOrder_GetWorkOrder",
         "parameters": [
           {
-            "name": "request",
+            "name": "id",
             "in": "query",
+            "description": "Get work order by ID",
             "schema": {
-              "nullable": true,
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/GetWorkOrderRequest"
-                }
-              ]
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
             },
             "x-position": 1
+          },
+          {
+            "name": "customerId",
+            "in": "query",
+            "description": "Get work orders by customer ID",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "locationId",
+            "in": "query",
+            "description": "Get work orders by location ID",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "invoiceDate",
+            "in": "query",
+            "description": "Get work orders by invoice Date",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           },
           {
             "name": "version",
@@ -4621,7 +4651,7 @@
             "schema": {
               "type": "string"
             },
-            "x-position": 2
+            "x-position": 5
           }
         ],
         "responses": {
@@ -11672,36 +11702,6 @@
             }
           }
         ]
-      },
-      "GetWorkOrderRequest": {
-        "type": "object",
-        "description": "GetWorkOrderRequest",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Get work order by ID",
-            "format": "int32",
-            "nullable": true
-          },
-          "customerId": {
-            "type": "integer",
-            "description": "Get work orders by customer ID",
-            "format": "int32",
-            "nullable": true
-          },
-          "locationId": {
-            "type": "integer",
-            "description": "Get work orders by location ID",
-            "format": "int32",
-            "nullable": true
-          },
-          "invoiceDate": {
-            "type": "string",
-            "description": "Get work orders by invoice Date",
-            "nullable": true
-          }
-        }
       },
       "AuditActionResultOfWorkOrderPartModel": {
         "allOf": [
