@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Domain.Exceptions;
 
 namespace MSR.Infrastructure.Resources.Services
 {
@@ -36,7 +37,7 @@ namespace MSR.Infrastructure.Resources.Services
             var status = await _unitOfWork.Status.Query().FirstOrDefaultAsync(x => x.Name == "Approved");
             switch (command.Table)
             {
-                
+
                 case EnumApprovalTables.CustomerApproval:
                     result = await ApproveCustomer(command, status);
                     break;
@@ -133,48 +134,65 @@ namespace MSR.Infrastructure.Resources.Services
             return ret;
         }
 
-        public async Task<PendingApprovalModel> DeactivateApprovalAsync(DeactivateApprovalModel command)
+        public async Task DeactivateApprovalAsync(DeactivateApprovalModel command)
         {
-            var status = _unitOfWork.Status.Query().FirstOrDefault(x => x.Name == "Cancelled");
-            IQueryable<ApprovalEntity> approvalEntity = null;
             switch (command.Table)
             {
                 case EnumApprovalTables.CustomerApproval:
-                    approvalEntity = _unitOfWork.CustomerApprovals.Query();
+                    var customerApproval = _unitOfWork.CustomerApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.CustomerApprovals.Delete(false, customerApproval, true);
+                    await _unitOfWork.SaveChangesAsync();
+                    await _unitOfWork.LogApprovalTransaction(customerApproval, customerApproval.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 case EnumApprovalTables.DocumentApproval:
-                    approvalEntity = _unitOfWork.DocumentApprovals.Query();
+                    var documentApproval = _unitOfWork.DocumentApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.DocumentApprovals.Delete(false, documentApproval, true);
+                    await _unitOfWork.LogApprovalTransaction(documentApproval, documentApproval.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 case EnumApprovalTables.LocationApproval:
-                    approvalEntity = _unitOfWork.LocationApprovals.Query();
+                    var locationApprovals = _unitOfWork.LocationApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.LocationApprovals.Delete(false, locationApprovals, true);
+                    await _unitOfWork.LogApprovalTransaction(locationApprovals, locationApprovals.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 case EnumApprovalTables.PartApproval:
-                    approvalEntity = _unitOfWork.PartApprovals.Query();
+                    var partApproval = _unitOfWork.PartApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.PartApprovals.Delete(false, partApproval, true);
+                    await _unitOfWork.LogApprovalTransaction(partApproval, partApproval.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 case EnumApprovalTables.ProcedureApproval:
-                    approvalEntity = _unitOfWork.ProcedureApprovals.Query();
+                    var procedureApproval = _unitOfWork.ProcedureApprovals.Query()
+                        .Include(x => x.ProcedureStepApprovals)
+                        .ThenInclude(x => x.ProcedureStepDocumentApprovals)
+                        .Include(x => x.ProcedureStepApprovals)
+                        .ThenInclude(x => x.ProcedureStepMonitorApprovals)
+                        .FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.ProcedureApprovals.Delete(false, procedureApproval, true);
+                    await _unitOfWork.LogApprovalTransaction(procedureApproval, procedureApproval.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 case EnumApprovalTables.ProductApproval:
-                    approvalEntity = _unitOfWork.ProductApprovals.Query();
+                    var productApproval = _unitOfWork.ProductApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.ProductApprovals.Delete(false, productApproval, true);
+                    await _unitOfWork.LogApprovalTransaction(productApproval, productApproval.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 case EnumApprovalTables.PurchaseOrderApproval:
-                    approvalEntity = _unitOfWork.PurchaseOrderApprovals.Query();
+                    var purchaseApproval = _unitOfWork.PurchaseOrderApprovals.Query()
+                        .FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.PurchaseOrderApprovals.Delete(false, purchaseApproval, true);
+                    await _unitOfWork.LogApprovalTransaction(purchaseApproval, purchaseApproval.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
                 case EnumApprovalTables.UserApproval:
-                    var userApprovals = _unitOfWork.UserApprovals.Query().FirstOrDefault(x => x.Id == command.Id);
-                    userApprovals.Status = status;
-                    _unitOfWork.SaveChanges();
-                    var result = _mapper.Map<PendingApprovalModel>(userApprovals);
-                    return result;
-                default:
+                    var userApprovals = _unitOfWork.UserApprovals.Query()
+                        .Include(x => x.UserRoleApprovals)
+                        .FirstOrDefault(x => x.Id == command.Id);
+                    _unitOfWork.UserApprovals.Delete(false, userApprovals, true);
+                    await _unitOfWork.LogApprovalTransaction(userApprovals, userApprovals.Id, EnumUtils.GetDescription(ApprovalStatusEnum.Cancelled), command.Comment);
                     break;
+                default:
+                    throw new DomainException("Deactivate Action Does Not Exists", DomainError.NotFound);
             }
 
-            var toCancel = approvalEntity.FirstOrDefault(x => x.Id == command.Id);
-            toCancel.Status = status;
-            _unitOfWork.SaveChanges();
-            var ret = _mapper.Map<PendingApprovalModel>(toCancel);
-            return ret;
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<PendingApprovalPopoverModel> GetApprovalChangesAsync(GetPendingApprovalDetailsModel command)
@@ -198,12 +216,12 @@ namespace MSR.Infrastructure.Resources.Services
                     var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var document = await _unitOfWork.Documents.Query().FirstOrDefaultAsync(x => x.Id == documentApproval.DocumentId);
                     var documentApprovalChanges = new PendingApprovalPopoverModel();
-                    documentApprovalChanges.AddRow("Name", document.Name, documentApproval.Name);
-                    documentApprovalChanges.AddRow("Revision", document.Revision, documentApproval.Revision);
-                    documentApprovalChanges.AddRow("Role", document.RoleId, documentApproval.RoleId);
+                    documentApprovalChanges.AddRow("Name", document?.Name, documentApproval.Name);
+                    documentApprovalChanges.AddRow("Revision", document?.Revision, documentApproval.Revision);
+                    documentApprovalChanges.AddRow("Role", document?.RoleId, documentApproval.RoleId);
                     return documentApprovalChanges;
                 case EnumApprovalTables.LocationApproval:
-                    var locationApproval = await _unitOfWork.LocationApprovals.Query().Include(x=>x.TimeZone).FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var locationApproval = await _unitOfWork.LocationApprovals.Query().Include(x => x.TimeZone).FirstOrDefaultAsync(x => x.Id == command.Id);
                     var location = await _unitOfWork.Locations.Query().Include(x => x.TimeZone).FirstOrDefaultAsync(x => x.Id == locationApproval.LocationId);
                     var locationApprovalChanges = new PendingApprovalPopoverModel();
                     locationApprovalChanges.AddRow("Name", location?.Name, locationApproval.Name);
@@ -222,11 +240,11 @@ namespace MSR.Infrastructure.Resources.Services
                     var partApproval = await _unitOfWork.PartApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == partApproval.PartId);
                     var partApprovalChanges = new PendingApprovalPopoverModel();
-                    partApprovalChanges.AddRow("Name", part.Name, partApproval.Name);
-                    partApprovalChanges.AddRow("Part Number", part.PartNumber, partApproval.PartNumber);
-                    partApprovalChanges.AddRow("OEM Part Number", part.OEMPartNumber, partApproval.OEMPartNumber);
-                    partApprovalChanges.AddRow("NickName", part.NickName, partApproval.NickName);
-                    partApprovalChanges.AddRow("Maximum Cycles", part.MaximumCycles, partApproval.MaximumCycles);
+                    partApprovalChanges.AddRow("Name", part?.Name, partApproval.Name);
+                    partApprovalChanges.AddRow("Part Number", part?.PartNumber, partApproval.PartNumber);
+                    partApprovalChanges.AddRow("OEM Part Number", part?.OEMPartNumber, partApproval.OEMPartNumber);
+                    partApprovalChanges.AddRow("NickName", part?.NickName, partApproval.NickName);
+                    partApprovalChanges.AddRow("Maximum Cycles", part?.MaximumCycles, partApproval.MaximumCycles);
                     return partApprovalChanges;
                 case EnumApprovalTables.ProcedureApproval:
                     var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
@@ -234,38 +252,38 @@ namespace MSR.Infrastructure.Resources.Services
                     var procedure = await _unitOfWork.Procedures.Query()
                         .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == procedureApproval.ProcedureId);
                     var procedureApprovalChanges = new PendingApprovalPopoverModel();
-                    procedureApprovalChanges.AddRow("Name", procedure.Name, procedureApproval.Name);
-                    procedureApprovalChanges.AddRow("Duration Type", procedure.DurationType, procedureApproval.DurationType);
-                    procedureApprovalChanges.AddRow("Procedure Type", procedure.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
-                    procedureApprovalChanges.AddRow("Name", procedure.Name, procedureApproval.Name);
-                    procedureApprovalChanges.AddRow("Name", procedure.Name, procedureApproval.Name);
-                    this.GetProcedureStepApprovals(procedureApprovalChanges, procedure.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
+                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
+                    procedureApprovalChanges.AddRow("Duration Type", procedure?.DurationType, procedureApproval.DurationType);
+                    procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
+                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
+                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
+                    this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
                     return procedureApprovalChanges;
                 case EnumApprovalTables.ProductApproval:
                     var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
                     var productApprovalChanges = new PendingApprovalPopoverModel();
-                    productApprovalChanges.AddRow("Name", product.Name, productApproval.Name);
-                    productApprovalChanges.AddRow("Revision", product.Revision, productApproval.Revision);
+                    productApprovalChanges.AddRow("Name", product?.Name, productApproval.Name);
+                    productApprovalChanges.AddRow("Revision", product?.Revision, productApproval.Revision);
                     // TODO: there is no such field
                     //productApprovalChanges.AddRow("Customer Requirement Id", product.CustomerRequirementId, productApproval.CustomerRequirementId);
-                    productApprovalChanges.AddRow("Equipment Cost", product.EquipmentCost, productApproval.EquipmentCost);
-                    productApprovalChanges.AddRow("Material Cost", product.MaterialCost, productApproval.MaterialCost);
-                    productApprovalChanges.AddRow("Sales Tax", product.SalesTax, productApproval.SalesTax);
-                    productApprovalChanges.AddRow("Total Sale Price", product.TotalSalePrice, productApproval.TotalSalePrice);
-                    productApprovalChanges.AddRow("Cycle Time", product.CycleTime, productApproval.CycleTime);
+                    productApprovalChanges.AddRow("Equipment Cost", product?.EquipmentCost, productApproval.EquipmentCost);
+                    productApprovalChanges.AddRow("Material Cost", product?.MaterialCost, productApproval.MaterialCost);
+                    productApprovalChanges.AddRow("Sales Tax", product?.SalesTax, productApproval.SalesTax);
+                    productApprovalChanges.AddRow("Total Sale Price", product?.TotalSalePrice, productApproval.TotalSalePrice);
+                    productApprovalChanges.AddRow("Cycle Time", product?.CycleTime, productApproval.CycleTime);
                     return productApprovalChanges;
                 case EnumApprovalTables.PurchaseOrderApproval:
                     var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == purchaseOrderApproval.PurchaseOrderId);
                     var purchaseOrderApprovalChanges = new PendingApprovalPopoverModel();
-                    purchaseOrderApprovalChanges.AddRow("Name", purchaseOrder.Name, purchaseOrderApproval.Name);
-                    purchaseOrderApprovalChanges.AddRow("Reference PO", purchaseOrder.ReferencePO, purchaseOrderApproval.ReferencePO);
-                    purchaseOrderApprovalChanges.AddRow("Reference Name", purchaseOrder.ReferenceName, purchaseOrderApproval.ReferenceName);
-                    purchaseOrderApprovalChanges.AddRow("Open Date", purchaseOrder.OpenDate, purchaseOrderApproval.OpenDate);
-                    purchaseOrderApprovalChanges.AddRow("Close Date", purchaseOrder.CloseDate, purchaseOrderApproval.CloseDate);
-                    purchaseOrderApprovalChanges.AddRow("Total Purchase Limit", purchaseOrder.TotalPurchaseLimit, purchaseOrderApproval.TotalPurchaseLimit);
-                    purchaseOrderApprovalChanges.AddRow("CustomerReference", purchaseOrder.CustomerReference, purchaseOrderApproval.CustomerReference);
+                    purchaseOrderApprovalChanges.AddRow("Name", purchaseOrder?.Name, purchaseOrderApproval.Name);
+                    purchaseOrderApprovalChanges.AddRow("Reference PO", purchaseOrder?.ReferencePO, purchaseOrderApproval.ReferencePO);
+                    purchaseOrderApprovalChanges.AddRow("Reference Name", purchaseOrder?.ReferenceName, purchaseOrderApproval.ReferenceName);
+                    purchaseOrderApprovalChanges.AddRow("Open Date", purchaseOrder?.OpenDate, purchaseOrderApproval.OpenDate);
+                    purchaseOrderApprovalChanges.AddRow("Close Date", purchaseOrder?.CloseDate, purchaseOrderApproval.CloseDate);
+                    purchaseOrderApprovalChanges.AddRow("Total Purchase Limit", purchaseOrder?.TotalPurchaseLimit, purchaseOrderApproval.TotalPurchaseLimit);
+                    purchaseOrderApprovalChanges.AddRow("CustomerReference", purchaseOrder?.CustomerReference, purchaseOrderApproval.CustomerReference);
                     return purchaseOrderApprovalChanges;
                 case EnumApprovalTables.UserApproval:
                     var userApproval = await _unitOfWork.UserApprovals.Query()
@@ -273,20 +291,20 @@ namespace MSR.Infrastructure.Resources.Services
                     var currUser = await _unitOfWork.Users.Query()
                         .Include(x => x.Customer).Include(x => x.Location).Include(x => x.Roles).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Id == userApproval.UserId);
                     var userApprovalChanges = new PendingApprovalPopoverModel();
-                    userApprovalChanges.AddRow("First Name", currUser.FirstName, userApproval.FirstName);
-                    userApprovalChanges.AddRow("Last Name", currUser.LastName, userApproval.LastName);
-                    userApprovalChanges.AddRow("User Name", currUser.UserName, userApproval.UserName);
-                    userApprovalChanges.AddRow("Title", currUser.Title, userApproval.Title);
-                    userApprovalChanges.AddRow("Email", currUser.Email, userApproval.Email);
-                    userApprovalChanges.AddRow("Phone", currUser.Phone, userApproval.Phone);
-                    userApprovalChanges.AddRow("Name", currUser.Location?.Name, userApproval.Location?.Name);
-                    userApprovalChanges.AddBoolRow("Answer User", currUser.IsAnswerUser, userApproval.IsAnswerUser);
-                    userApprovalChanges.AddRow("Customer Name", currUser.Customer?.Name, userApproval.Customer?.Name);
-                    userApprovalChanges.AddRow("Lockout End Date Utc", currUser.LockoutEndDateUtc, userApproval.LockoutEndDateUtc);
-                    userApprovalChanges.AddRow("Access Failed Count", currUser.AccessFailedCount, userApproval.AccessFailedCount);
-                    userApprovalChanges.AddRow("Time Zone Id", currUser.TimeZoneId, userApproval.TimeZoneId);
-                    userApprovalChanges.AddRow("Roles", currUser.UserName, userApproval.UserName);
-                    this.GetUserRoleApprovals(userApprovalChanges, currUser.Roles, userApproval.UserRoleApprovals);
+                    userApprovalChanges.AddRow("First Name", currUser?.FirstName, userApproval.FirstName);
+                    userApprovalChanges.AddRow("Last Name", currUser?.LastName, userApproval.LastName);
+                    userApprovalChanges.AddRow("User Name", currUser?.UserName, userApproval.UserName);
+                    userApprovalChanges.AddRow("Title", currUser?.Title, userApproval.Title);
+                    userApprovalChanges.AddRow("Email", currUser?.Email, userApproval.Email);
+                    userApprovalChanges.AddRow("Phone", currUser?.Phone, userApproval.Phone);
+                    userApprovalChanges.AddRow("Name", currUser?.Location?.Name, userApproval.Location?.Name);
+                    userApprovalChanges.AddBoolRow("Answer User", currUser?.IsAnswerUser, userApproval.IsAnswerUser);
+                    userApprovalChanges.AddRow("Customer Name", currUser?.Customer?.Name, userApproval.Customer?.Name);
+                    userApprovalChanges.AddRow("Lockout End Date Utc", currUser?.LockoutEndDateUtc, userApproval.LockoutEndDateUtc);
+                    userApprovalChanges.AddRow("Access Failed Count", currUser?.AccessFailedCount, userApproval.AccessFailedCount);
+                    userApprovalChanges.AddRow("Time Zone Id", currUser?.TimeZoneId, userApproval.TimeZoneId);
+                    userApprovalChanges.AddRow("Roles", currUser?.UserName, userApproval.UserName);
+                    this.GetUserRoleApprovals(userApprovalChanges, currUser?.Roles, userApproval.UserRoleApprovals);
                     return userApprovalChanges;
                 default:
                     break;
@@ -410,8 +428,8 @@ namespace MSR.Infrastructure.Resources.Services
                     break;
                 case EnumApprovalTables.UserApproval:
                     var userApprovals = await _unitOfWork.UserApprovals.Query()
-                        .Include(x => x.Workflow).Include(x => x.Status).Include(x => x.WorkflowGroup)
-                        .Where(x => x.Status.Id == (int)ApprovalStatusEnum.Pending).ToListAsync();
+                        .Include(x => x.Workflow).Include(x => x.WorkflowGroup)
+                        .ToListAsync();
                     var result = userApprovals.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
                     foreach (var approvalComment in approvalComments)
                     {
@@ -425,8 +443,7 @@ namespace MSR.Infrastructure.Resources.Services
                     break;
             }
 
-            var approvalEntityList = await approvalEntity.Include(x => x.Workflow).Include(x => x.Status)
-                .Where(x => x.Status.Id == (int)ApprovalStatusEnum.Pending).Include(x => x.WorkflowGroup).ToListAsync();
+            var approvalEntityList = await approvalEntity.Include(x => x.Workflow).Include(x => x.WorkflowGroup).ToListAsync();
             var pendingApprovalModelResult = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
 
             foreach (var approvalComment in approvalComments)

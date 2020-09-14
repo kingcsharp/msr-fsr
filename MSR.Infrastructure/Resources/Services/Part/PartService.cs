@@ -133,9 +133,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 _mapper.Map(command, current);
 
-                if (command.SubParts == null) {
+                if (command.SubParts == null)
+                {
                     current.Subparts = new List<PartSubPartMap>();
-                } else {
+                }
+                else
+                {
                     current.Subparts = command.SubParts.Select(x =>
                     {
                         x.ParentId = current.Id;
@@ -237,26 +240,33 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<CreatePart> inserts = new List<CreatePart>();
             List<PartModel> results = new List<PartModel>();
 
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.Parts, EnumPrivilege.CanApprove))
+            {
                 throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
             }
 
             // First parse the file to ensure valid data
-            foreach (PartCSVRecord record in records) {
-                if (record.Id.HasValue) {
+            foreach (PartCSVRecord record in records)
+            {
+                if (record.Id.HasValue)
+                {
                     var part = _mapper.Map<UpdatePart>(record);
                     updates.Add(part);
-                } else {
+                }
+                else
+                {
                     var part = _mapper.Map<CreatePart>(record);
                     inserts.Add(part);
                 }
             }
 
             // Then perform the update
-            foreach (UpdatePart model in updates) {
+            foreach (UpdatePart model in updates)
+            {
                 results.Add(await UpdatePartAsync(model));
             }
-            foreach (CreatePart model in inserts) {
+            foreach (CreatePart model in inserts)
+            {
                 results.Add(await CreatePartAsync(model));
             }
 
