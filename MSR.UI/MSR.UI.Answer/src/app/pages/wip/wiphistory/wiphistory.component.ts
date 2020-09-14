@@ -3,6 +3,9 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
+import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-wiphistory',
@@ -16,8 +19,10 @@ export class WiphistoryComponent implements OnInit {
   gridStorageId: string;
   data: Array<WorkOrderGridSummary> = new Array<WorkOrderGridSummary>();
   statusOptions: Array<SelectItem>;
+  canRead: boolean = false;
+  privileges = EnumPrivilege;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
 
@@ -43,9 +48,14 @@ export class WiphistoryComponent implements OnInit {
     ];
 
 
+    this.canRead = this.globals.hasPrivilege(EnumMenuItem.WIPHistory, this.privileges.CanRead);
+
+    if(this.canRead === false){
+      this.router.navigate(['app/people/people']);
+    }
 
     this.getMockData();
-    
+
     this.statusOptions = this.data.filter(
       (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
     ).map(x => ({ label: x.status, value: x.status }));
@@ -75,7 +85,7 @@ export class WiphistoryComponent implements OnInit {
       workOrderGridSummary.scheduledEndDate = new Date();
       workOrderGridSummary.scheduledStartDate = new Date();
       workOrderGridSummary.serialNumber = '234232' + index;
-      workOrderGridSummary.status = 'Completed';
+      workOrderGridSummary.status = ['Completed','Cancelled'][Math.floor(Math.random() * Math.floor(2))];
       workOrderGridSummary.workOrderItemNumber = '232423' + index;
       workOrderGridSummary.hasNcr = Math.random() > .5 ? true : false;
       this.data.push(workOrderGridSummary);
