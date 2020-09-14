@@ -5866,7 +5866,7 @@ export class WorkOrderService {
      * @return This endpoint returns a View which is a Summary of WorkOrders for Grids
      */
     history(version: string | null): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/WorkOrder/History";
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/History";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -5921,7 +5921,7 @@ export class WorkOrderService {
      * @return This endpoint returns a View which is a Summary of WorkOrders for Grids
      */
     menu(version: string | null): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/WorkOrder/Menu";
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -5976,7 +5976,7 @@ export class WorkOrderService {
      * @return This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]
      */
     status(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderStatus> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/WorkOrder/Status";
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Status";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -6026,6 +6026,10 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderStatus>(<any>null);
     }
 
+    /**
+     * Get work order list by id, customerid, locationid, or date
+     * @param request (optional) 
+     */
     workOrder(request: GetWorkOrderRequest | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder?";
         if (version === undefined || version === null)
