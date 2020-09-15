@@ -18,6 +18,11 @@ namespace MSR.Domain.Models
         public int Id { get; set; }
 
         /// <summary>
+        /// Procedure that contains this step
+        /// </summary>
+        public Procedure Procedure { get; set; }
+
+        /// <summary>
         /// Gets or Sets ProcedureId
         /// </summary>
         public int? ProcedureId { get; set; }

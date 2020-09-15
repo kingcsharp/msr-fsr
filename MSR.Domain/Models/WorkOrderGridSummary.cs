@@ -109,7 +109,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Status of Work Order, case-sensitive string
         /// </summary>
-        /// <value>['Waiting Start', 'In Progress', 'Cancelled', 'Completed'</value>
+        /// <value>['Waiting Start', 'In Progress', 'Cancelled', 'Completed']</value>
         [DataMember(Name="status")]
         public string Status { get; set; }
 

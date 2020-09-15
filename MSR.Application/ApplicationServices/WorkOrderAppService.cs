@@ -86,21 +86,60 @@ namespace MSR.Application.ApplicationServices
                 }
                 sum.WorkOrderItemNumber = $"{sum.CustomerName}-{customerPNum}";
 
+                // PurchaseOrderNumber
+                sum.PurchaseOrderNumber = m.Purchase?.PurchaseOrder?.Id;
+
+                // Quantity
+                sum.Quantity = m.Purchase.Qty;
+
+                // ProcedureName
+                var firstProc =
+                    m.WorkOrderTasks.FirstOrDefault();
+                if (firstProc == null) {
+                    sum.ProcedureName = "";
+                } else {
+                    sum.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
+                }
+
+                // Status ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
+                // This field is calculated based on the summation of the statuses
+                // of the steps.
+                // 1   Approved
+                // 2   In Progress
+                // 3   Complete
+                // 4   Cancelled
+                // 5   Pending
+                // 6   Rejected
+                // 7   Open
+                // 8   Closed
+                // 9   Requested
+                // 10  Assigned
+                int[] completed = { 3, 6, 8 };
+                if (m.WorkOrderTasks.Where(x => x.StatusId == 2).Any()) {
+                    sum.Status = "In Progress";
+                } else if (m.WorkOrderTasks.Where(x => x.StatusId == 4).Any()) {
+                    sum.Status = "Cancelled";
+                } else if (m.WorkOrderTasks.All(x => completed.Contains(x.StatusId))) {
+                    sum.Status = "Completed";
+                } else {
+                    sum.Status = "Waiting Start";
+                }
+
 /*
 DONE public int? PurchaseId { get; set; }
 DONE public string WorkOrderItemNumber { get; set; }
 DONE public string CustomerName { get; set; }
 DONE public string LocationName { get; set; }
 DONE public string SerialNumber { get; set; }
-     public int? PurchaseOrderNumber { get; set; }
-     public int? Quantity { get; set; }
+DONE public int? PurchaseOrderNumber { get; set; }
+DONE public int? Quantity { get; set; }
 DONE public DateTime? ScheduledStartDate { get; set; }
 DONE public DateTime? ScheduledEndDate { get; set; }
 DONE public DateTime? ActualStartDate { get; set; }
 DONE public DateTime? ActualEndDate { get; set; }
 DONE public string ProductName { get; set; }
-     public string ProcedureName { get; set; }
-     public string Status { get; set; }
+DONE public string ProcedureName { get; set; }
+DONE public string Status { get; set; }
      public string Disposition { get; set; }
 DONE public string CurrentActiveTaskName { get; set; }
      public decimal? PercentageOfTasksCompleted { get; set; }

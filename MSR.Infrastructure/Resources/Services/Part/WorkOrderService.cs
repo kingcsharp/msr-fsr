@@ -56,6 +56,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.WorkOrderParts)
                 .Include(x => x.WorkOrderTasks)
                     .ThenInclude(y => y.ProcedureStep)
+                    .ThenInclude(y => y.Procedure)
                 .Include(x => x.Product)
                 .Include(x => x.Purchase)
                     .ThenInclude(y => y.PurchaseOrder)
