@@ -14,20 +14,22 @@ import { Globals } from '../../models/lib/globals';
 })
 export class WipstatusWrapperComponent implements OnInit {
 
-  workOrderStatuses: Array<WorkOrderStatus> = new Array<WorkOrderStatus>();
+  workOrderStatuses: Array<WorkOrderStatus>;// = new Array<WorkOrderStatus>();
   displayWorkOrderStatuses: Array<WorkOrderStatus> = new Array<WorkOrderStatus>();
   locationOptions: Array<SelectItem> = new Array<SelectItem>();
   selectedLocations: Array<string>;
   showTakeOverAsUserConfirmationDialog: boolean = false;
   workOrderToTakeOver: number;
-  constructor(private router: Router, private workOrderService: WorkOrderService) { }
+  constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals) { }
 
   
   ngOnInit(): void {
 
+    this.globals.showLoader(true);
     this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
 
       this.workOrderStatuses = response.object;
+      this.displayWorkOrderStatuses = response.object;
 
       this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map( s => ({ label: s, value: s}));
     

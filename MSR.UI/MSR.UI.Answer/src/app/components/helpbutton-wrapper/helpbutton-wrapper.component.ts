@@ -28,6 +28,7 @@ export class HelpbuttonWrapperComponent implements OnInit {
       this.helpMenuUrl = '/wip/details/:id';
     }
 
+    this.globals.showLoader(true);
     this.helpService.helpGet(null, this.helpMenuUrl, env.apiVersion).subscribe(responseHandler(response => {
 
       if ( response.object.length !== 0 ) {
