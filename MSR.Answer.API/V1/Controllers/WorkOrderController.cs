@@ -126,10 +126,10 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        /// This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]
+        /// Returns the WorkOrders that are either waiting to start or in Process.
         /// </summary>
         /// <param name="version"></param>
-        /// <response code="200">This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]</response>
+        /// <response code="200">The WorkOrders that are either waiting to start or in Process</response>
         [HttpGet("Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
