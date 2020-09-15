@@ -41,8 +41,8 @@ namespace MSR.Application.ApplicationServices.Workflow
 
         public async Task<ICommandResponse> HandleAsync(DeactivateApprovalModel command, CancellationToken cancellationToken = default)
         {
-            var ret = await _workflowApprovalService.DeactivateApprovalAsync(command);
-            return new CommandResponse<PendingApprovalModel>(ret);
+            await _workflowApprovalService.DeactivateApprovalAsync(command);
+            return new CommandResponse();
         }
     }
 }

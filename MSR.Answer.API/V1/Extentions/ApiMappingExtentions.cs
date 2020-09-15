@@ -195,7 +195,8 @@ namespace MSR.Answer.API.V1.Extentions
             return new DeactivateApprovalModel()
             {
                 Id = request.Id,
-                Table = request.Table
+                Table = request.Table,
+                Comment=request.Comment
             };
         }
 
