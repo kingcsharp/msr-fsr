@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
+import { WorkOrderService, WorkOrderStatus } from '../../services/api.client.generated';
+import { environment as env } from '../../../environments/environment';
+import { responseHandler } from '../../utils/responseHandler';
+import { Globals } from '../../models/lib/globals';
 
 @Component({
   selector: 'wipstatus',
   templateUrl: './wipstatus.component.html',
-  styleUrls: ['./wipstatus.component.scss']
+  styleUrls: ['./wipstatus.component.scss'],
+  providers: [WorkOrderService]
 })
 export class WipstatusWrapperComponent implements OnInit {
 
@@ -15,20 +20,25 @@ export class WipstatusWrapperComponent implements OnInit {
   selectedLocations: Array<string>;
   showTakeOverAsUserConfirmationDialog: boolean = false;
   workOrderToTakeOver: number;
-  constructor(private router: Router) { }
+  constructor(private router: Router, private workOrderService: WorkOrderService) { }
 
   
   ngOnInit(): void {
 
-    this.getMockData();
-    this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map( s => ({ label: s, value: s}));
+    this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
+
+      this.workOrderStatuses = response.object;
+
+      this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map( s => ({ label: s, value: s}));
     
-    if(localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null){
-      this.selectedLocations = this.locationOptions.map(s => s.value);
-      localStorage.setItem('wipstatus',this.selectedLocations.toString());
-    }else{
-      this.selectedLocations = localStorage.getItem('wipstatus').split(',');
-    }
+      if(localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null){
+        this.selectedLocations = this.locationOptions.map(s => s.value);
+        localStorage.setItem('wipstatus',this.selectedLocations.toString());
+      }else{
+        this.selectedLocations = localStorage.getItem('wipstatus').split(',');
+      }
+
+    }));
 
   }
 
@@ -50,48 +60,4 @@ export class WipstatusWrapperComponent implements OnInit {
     this.displayWorkOrderStatuses = this.workOrderStatuses.filter(s => this.selectedLocations.includes(s.locationName));
   }
 
-  getMockData(){
-
-    for(let index = 1; index < 14; index++){
-
-      let workOrderStatus = new WorkOrderStatus();
-      workOrderStatus.locationName = ['Chandler', 'Hillsboro', 'Kiryat Gat', 'Naas'][Math.floor(Math.random() * Math.floor(4))];
-      workOrderStatus.partNumber = '1321231' + index;
-      workOrderStatus.procedureName = 'Procedure' + index;
-      workOrderStatus.productName = 'Product' + index;
-      workOrderStatus.workOrderSummary = new WorkOrderSummary();
-      workOrderStatus.workOrderSummary.purchaseOrderLineNumber = '131231231' + index;
-      workOrderStatus.workOrderSummary.workOrderAssignedTo = 'Robert Lara';
-      workOrderStatus.workOrderSummary.workOrderHasNcr = Math.random() >= 0.5;
-      workOrderStatus.workOrderSummary.workOrderId = index;
-      workOrderStatus.workOrderSummary.workOrderItemNumber = '123123132' + index;
-      workOrderStatus.workOrderSummary.workOrderPartSerialNumber = '2998723982' + index;
-      workOrderStatus.workOrderSummary.workOrderScheduledEndDate = new Date();
-      workOrderStatus.workOrderSummary.workOrderStatus = ['Waiting to Start', 'In Progress'][Math.floor(Math.random() * Math.floor(2))]
-      this.displayWorkOrderStatuses.push(workOrderStatus);
-      this.workOrderStatuses.push(workOrderStatus);
-
-    }
-
-  }
-
-}
-
-export class WorkOrderStatus{
-  productName: string;
-  partNumber: string;
-  procedureName: string;
-  locationName: string;
-  workOrderSummary: WorkOrderSummary;
-}
-
-export class WorkOrderSummary{
-  workOrderId: number;
-  workOrderItemNumber: string;
-  purchaseOrderLineNumber: string;
-  workOrderPartSerialNumber: string;
-  workOrderStatus: string;
-  workOrderAssignedTo: string;
-  workOrderHasNcr: boolean;
-  workOrderScheduledEndDate: Date;
 }
