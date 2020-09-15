@@ -12,6 +12,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -56,7 +57,7 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView(){
                 IsHistory = true
             });
-            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
+            return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
         }
 
         /// <summary>
@@ -72,14 +73,14 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView(){
                 IsHistory = false
             });
-            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
+            return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
         }
 
         /// <summary>
-        /// This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]
+        /// Returns the WorkOrders that are either waiting to start or in Process.
         /// </summary>
         /// <param name="version"></param>
-        /// <response code="200">This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]</response>
+        /// <response code="200">The WorkOrders that are either waiting to start or in Process</response>
         [HttpGet("Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
@@ -92,12 +93,20 @@ namespace MSR.Answer.API.V1.Controllers
                 ProcedureName = "ProcedureName",
                 PartNumber = "PartNumber",
                 WorkOrderSummary = new WorkOrderSummary() {
-                    WorkOrderStatus = "In Progress"
+                    WorkOrderId = 123,
+                    WorkOrderItemNumber = "NUM123",
+                    PurchaseOrderLineNumber = "LINE1",
+                    WorkOrderPartSerialNumber = "SERIAL1600187570",
+                    WorkOrderStatus = "In Progress",
+                    WorkOrderAssignedTo = "Frank",
+                    WorkOrderHasNcr = true,
+                    WorkOrderScheduledEndDate = DateTime.Now.AddDays(1)
                 }
             };
             List<WorkOrderStatus> example = new List<WorkOrderStatus>();
             example.Add(w);
-            return new ObjectResult(example);
+            var ret = new CommandResponse<ICollection<WorkOrderStatus>>(example);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderStatus>>();
         }
 
         /// <summary>
