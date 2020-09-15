@@ -62,6 +62,7 @@ namespace MSR.Application.ApplicationServices
                 // Map the work order database entity to the WIP grid view
                 //
 
+                // CurrentActiveTaskName
                 var curProc =
                     m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
                 if (curProc.Any()) {
@@ -69,12 +70,25 @@ namespace MSR.Application.ApplicationServices
                     sum.CurrentActiveTaskName = proc.ProcedureStep.Title;
                 }
 
+                // SerialNumber (entered at purchase time, if any)
                 sum.SerialNumber = m.Purchase?.SerialNumber;
+
+                // CustomerName
                 sum.CustomerName = m.Purchase?.PurchaseOrder?.Customer?.Name;
+                if (string.IsNullOrEmpty(sum.CustomerName)) {
+                    sum.CustomerName = "";
+                }
+
+                // WorkOrderItemNumber
+                string customerPNum = m.Purchase?.CustomerPurchaseNumber;
+                if (string.IsNullOrEmpty(customerPNum)) {
+                    customerPNum = "";
+                }
+                sum.WorkOrderItemNumber = $"{sum.CustomerName}-{customerPNum}";
 
 /*
 DONE public int? PurchaseId { get; set; }
-     public string WorkOrderItemNumber { get; set; }
+DONE public string WorkOrderItemNumber { get; set; }
 DONE public string CustomerName { get; set; }
 DONE public string LocationName { get; set; }
 DONE public string SerialNumber { get; set; }
