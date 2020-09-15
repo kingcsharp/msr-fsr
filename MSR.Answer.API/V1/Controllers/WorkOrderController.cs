@@ -43,10 +43,10 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        /// This endpoint returns a View which is a Summary of COMPLETED WorkOrders for Grids
+        /// Returns a summary of COMPLETED or CANCELLED WorkOrders
         /// </summary>
         /// <param name="version"></param>
-        /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
+        /// <response code="200"></response>
         [HttpGet("History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
@@ -83,10 +83,10 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        /// This endpoint returns a View which is a Summary of WorkOrders NOT COMPLETED for Grids
+        /// Returns a summary of WorkOrders IN PROGRESS or WAITING
         /// </summary>
         /// <param name="version"></param>
-        /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
+        /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
