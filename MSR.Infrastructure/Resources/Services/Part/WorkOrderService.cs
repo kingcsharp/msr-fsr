@@ -58,6 +58,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ThenInclude(y => y.ProcedureStep)
                 .Include(x => x.Product)
                 .Include(x => x.Purchase)
+                    .ThenInclude(y => y.PurchaseOrder)
+                    .ThenInclude(y => y.Customer)
                 .Include(x => x.Location)
                 .ToListAsync();
 
