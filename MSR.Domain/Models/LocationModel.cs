@@ -1,4 +1,4 @@
-﻿using MSR.Domain.Models.BaseModels;
+using MSR.Domain.Models.BaseModels;
 
 namespace MSR.Domain.Models
 {

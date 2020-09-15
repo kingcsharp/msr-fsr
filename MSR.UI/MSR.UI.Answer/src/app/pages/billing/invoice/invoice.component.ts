@@ -103,7 +103,7 @@ export class InvoiceComponent implements OnInit {
 
   getWorkOrders() {
     if (this.currentInvoice.customerId !== undefined && this.currentInvoice.locationId !== undefined) {
-      this.workOrderService.workOrderGet(null, this.currentInvoice.customerId,
+      this.workOrderService.workOrder(null, this.currentInvoice.customerId,
         this.currentInvoice.locationId, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           response.object.forEach((wo) => {
