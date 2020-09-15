@@ -45,9 +45,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ToList();
                 // if the invertStatusSet flag is set, then include
                 // the elements NOT in the set of status ids.
-                if (command.invertStatusSet) {
+                if (command.invertStatusSet)
+                {
                     query = query.Where(x => !woIds.Contains(x.Id));
-                } else {
+                }
+                else
+                {
                     query = query.Where(x => woIds.Contains(x.Id));
                 }
             }

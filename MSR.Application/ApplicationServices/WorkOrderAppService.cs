@@ -6,6 +6,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,6 +56,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetWorkOrderView command, CancellationToken cancellationToken = default)
         {
             var gwo = _mapper.Map<GetWorkOrder>(command);
+
             gwo.statuses = _workOrderService.GetActiveStatusList();
             gwo.invertStatusSet = command.IsHistory;
             ICollection<WorkOrderModel> models = await _workOrderService.GetWorkOrderAsync(gwo);
@@ -137,20 +139,33 @@ namespace MSR.Application.ApplicationServices
                     var nc = m.WorkOrderTasks.Where(x =>
                         x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC);
                     if (nc.Any()) {
+                        string disp = "";
                         foreach (WorkOrderTaskModel task in nc) {
-                            sum.Disposition =
+                            disp +=
                                 String.Join(" ",
                                     task.WorkOrderTaskMonitors.Select(x =>
                                         x.TextVal
                                     ).ToList()
-                                );
+                                ) + " ";
                         }
+                        sum.Disposition = disp;
                     }
                 }
 
                 // PercentageOfTasksCompleted
+                int[] pctCompletedIds = { 3, 4, 6, 8 };
                 int denom = m.WorkOrderTasks.Count();
-                //int numer =
+                int numer = m.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
+                decimal pctComplete;
+                if (denom > 0) {
+                    pctComplete = numer / denom;
+                } else {
+                    pctComplete = 0m;
+                }
+                sum.PercentageOfTasksCompleted = pctComplete;
+
+                // PercentageOfExpectedDurationTimeLogged
+                //int denom = m.WorkOrderTasks.Select(x => x.ProcedureStep.)
 
 /*
 DONE public int? PurchaseId { get; set; }
@@ -167,11 +182,11 @@ DONE public DateTime? ActualEndDate { get; set; }
 DONE public string ProductName { get; set; }
 DONE public string ProcedureName { get; set; }
 DONE public string Status { get; set; }
-     public string Disposition { get; set; }
+DONE public string Disposition { get; set; }
 DONE public string CurrentActiveTaskName { get; set; }
-     public decimal? PercentageOfTasksCompleted { get; set; }
+DONE public decimal? PercentageOfTasksCompleted { get; set; }
      public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
-     public bool HasNcr { get; set; }
+DONE public bool HasNcr { get; set; }
 */
 
                 ret.Add(sum);
