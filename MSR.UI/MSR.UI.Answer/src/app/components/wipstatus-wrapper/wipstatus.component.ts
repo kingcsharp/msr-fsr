@@ -42,7 +42,7 @@ export class WipstatusWrapperComponent implements OnInit {
   }
 
   takeOverAsUserConfirmationDialog(){
-    this.router.navigate(['/wip/details',this.workOrderToTakeOver]);
+    this.router.navigate(['app/wip/details',this.workOrderToTakeOver]);
   }
 
   locationsSelectedUpdated(){

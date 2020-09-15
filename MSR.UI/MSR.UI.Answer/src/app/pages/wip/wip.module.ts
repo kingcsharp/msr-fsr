@@ -13,17 +13,19 @@ import { CalendarModule } from 'primeng/calendar';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { WipdetailsComponent } from './wipdetails/wipdetails.component';
 
 export const routes = [
-  { path: '', redirectTo: 'people', pathMatch: 'full' },
+  { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
   { path: 'wip', component: WipComponent, pathMatch: 'full' },
   { path: 'wiphistory', component: WiphistoryComponent, pathMatch: 'full' },
-  { path: 'wipstatus', component: WipstatusComponent, pathMatch: 'full' }
+  { path: 'wipstatus', component: WipstatusComponent, pathMatch: 'full' },
+  { path: 'details/:id', component: WipdetailsComponent, pathMatch: 'full'}
 ];
 
 
 @NgModule({
-  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent],
+  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

@@ -122,10 +122,10 @@
                             {{model.purchaseId}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('workOrderItemNumber', gridSettings)">
-                            <alert type="warning" class="px-0 py-1 my-0 text-center" *ngIf="model.hasNcr" [routerLink]="['/wip/details',model.id]">
+                            <alert type="warning" class="px-0 py-1 my-0 text-center" *ngIf="model.hasNcr" [routerLink]="['../details',model.id]">
                                 {{model.workOrderItemNumber}}
                             </alert>
-                            <alert type="info" class="px-0 py-1 my-0 text-center" *ngIf="!model.hasNcr" [routerLink]="['/wip/details',model.id]">
+                            <alert type="info" class="px-0 py-1 my-0 text-center" *ngIf="!model.hasNcr" [routerLink]="['../details',model.id]">
                                 {{model.workOrderItemNumber}}
                             </alert>
                         </td>
