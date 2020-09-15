@@ -98,6 +98,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateRoleRequest, UpdateRole>();
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
+            CreateMap<GetWorkOrderView, GetWorkOrder>();
         }
     }
 }

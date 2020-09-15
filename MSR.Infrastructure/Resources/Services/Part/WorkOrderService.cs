@@ -35,6 +35,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (command.Id.HasValue) {
                 query = query.Where(x => x.Id == command.Id.Value);
             }
+            List<int> woIds;
+            if (command.statuses != null && command.statuses.Count > 0) {
+                List<int> statusIds = command.statuses.Select(x => x.Id).ToList();
+                woIds = _unitOfWork.WorkOrderTasks.Query()
+                    .Where(x => statusIds.Contains(x.StatusId))
+                    .Select(x => x.WorkOrderId)
+                    .Distinct()
+                    .ToList();
+                query = query.Where(x => woIds.Contains(x.Id));
+            }
+
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .Include(x => x.WorkOrderTasks)
@@ -120,6 +131,36 @@ namespace MSR.Infrastructure.Resources.Services.Part
             await _unitOfWork.LogApprovalTransaction(current, current.Id);
 
             return true;
+        }
+
+        /// <summary>
+        /// Return a list of statuses for work order tasks (and by extension, work order). 
+        /// </summary>
+        /// <param name="isHistory">
+        /// If true, return statuses that are equal to "complete", "cancelled"
+        /// "rejected", or "closed".  Otherwise return the opposite set.
+        /// </param>
+        /// <returns></returns>
+        public ICollection<StatusModel> GetStatusList(bool isHistory)
+        {
+            var query = _unitOfWork.Status.Query();
+            List<Status> rows;
+            if (isHistory) {
+                rows = query.Where(x => 
+                    x.Name.ToUpper().Equals("complete") ||
+                    x.Name.ToUpper().Equals("cancelled") ||
+                    x.Name.ToUpper().Equals("rejected") ||
+                    x.Name.ToUpper().Equals("closed")
+                ).ToList();
+            } else {
+                rows = query.Where(x => !(
+                    x.Name.ToUpper().Equals("complete") ||
+                    x.Name.ToUpper().Equals("cancelled") ||
+                    x.Name.ToUpper().Equals("rejected") ||
+                    x.Name.ToUpper().Equals("closed"))
+                ).ToList();
+            }
+            return rows.Select(x => _mapper.Map<StatusModel>(x)).ToList();
         }
 
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)

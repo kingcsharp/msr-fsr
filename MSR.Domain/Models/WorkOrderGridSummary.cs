@@ -107,8 +107,9 @@ namespace MSR.Domain.Models
         public string ProcedureName { get; set; }
 
         /// <summary>
-        /// Gets or Sets Status
+        /// Status of Work Order, case-sensitive string
         /// </summary>
+        /// <value>['Waiting Start', 'In Progress', 'Cancelled', 'Completed'</value>
         [DataMember(Name="status")]
         public string Status { get; set; }
 

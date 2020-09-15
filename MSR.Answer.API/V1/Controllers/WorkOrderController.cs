@@ -14,6 +14,7 @@ using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
@@ -50,37 +51,12 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        public virtual IActionResult WorkOrderGetHistory([FromRoute][Required]string version)
+        public async Task<IActionResult> WorkOrderGetHistory([FromRoute][Required]string version)
         {
-            // TODO: MOCKED
-            List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
-            for (int i = 0; i < 100; i++) {
-                WorkOrderGridSummary w = new WorkOrderGridSummary() {
-                    Id = 1,
-                    PurchaseId = 2,
-                    WorkOrderItemNumber  = $"WOIN{i}",
-                    CustomerName = "CustomerName",
-                    LocationName = "LocationName",
-                    SerialNumber = "SerialNumber",
-                    PurchaseOrderNumber = 3,
-                     Quantity = 1234,
-                    ScheduledStartDate = DateTime.Now,
-                    ScheduledEndDate = DateTime.Now,
-                    ActualStartDate = DateTime.Now.AddMinutes(30),
-                    ActualEndDate = DateTime.Now.AddMinutes(30),
-                    ProductName = "ProductName",
-                    ProcedureName = "ProcedureName",
-                    Status = "complete",
-                    Disposition = "Disposition",
-                    CurrentActiveTaskName = "CurrentActiveTaskName",
-                    PercentageOfTasksCompleted = (decimal)12.34,
-                    PercentageOfExpectedDurationTimeLogged = (decimal)23.45,
-                    HasNcr = (i%2) == 0
-                };
-                example.Add(w);
-            }
-
-            return new ObjectResult(example);
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView(){
+                IsHistory = true
+            });
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
         }
 
         /// <summary>
@@ -91,37 +67,12 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        public virtual IActionResult WorkOrderGetMenu([FromRoute][Required]string version)
+        public async Task<IActionResult> WorkOrderGetMenu([FromRoute][Required]string version)
         {
-            // TODO: MOCKED
-            List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
-            for (int i = 0; i < 100; i++) {
-                WorkOrderGridSummary w = new WorkOrderGridSummary() {
-                    Id = 1,
-                    PurchaseId = 2,
-                    WorkOrderItemNumber  = $"WOIN{i}",
-                    CustomerName = "CustomerName",
-                    LocationName = "LocationName",
-                    SerialNumber = "SerialNumber",
-                    PurchaseOrderNumber = 3,
-                     Quantity = 1234,
-                    ScheduledStartDate = DateTime.Now,
-                    ScheduledEndDate = DateTime.Now,
-                    ActualStartDate = DateTime.Now.AddMinutes(30),
-                    ActualEndDate = DateTime.Now.AddMinutes(30),
-                    ProductName = "ProductName",
-                    ProcedureName = "ProcedureName",
-                    Status = "inprogress",
-                    Disposition = "Disposition",
-                    CurrentActiveTaskName = "CurrentActiveTaskName",
-                    PercentageOfTasksCompleted = (decimal)12.34,
-                    PercentageOfExpectedDurationTimeLogged = (decimal)23.45,
-                    HasNcr = (i%2) == 0
-                };
-                example.Add(w);
-            }
-
-            return new ObjectResult(example);
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView(){
+                IsHistory = false
+            });
+            return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
         }
 
         /// <summary>
