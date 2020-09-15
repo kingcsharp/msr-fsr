@@ -99,6 +99,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
             CreateMap<GetWorkOrderView, GetWorkOrder>();
+            CreateMap<WorkOrderModel, WorkOrderGridSummary>();
         }
     }
 }

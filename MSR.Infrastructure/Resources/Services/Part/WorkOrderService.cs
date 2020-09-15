@@ -55,6 +55,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .Include(x => x.WorkOrderTasks)
+                    .ThenInclude(y => y.ProcedureStep)
                 .Include(x => x.Product)
                 .Include(x => x.Purchase)
                 .Include(x => x.Location)

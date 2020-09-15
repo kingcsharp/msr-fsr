@@ -5,6 +5,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,8 +53,47 @@ namespace MSR.Application.ApplicationServices
             var gwo = _mapper.Map<GetWorkOrder>(command);
             gwo.statuses = _workOrderService.GetActiveStatusList();
             gwo.invertStatusSet = command.IsHistory;
-            var ret = await _workOrderService.GetWorkOrderAsync(gwo);
-            return new CommandResponse<ICollection<WorkOrderModel>>(ret);
+            ICollection<WorkOrderModel> models = await _workOrderService.GetWorkOrderAsync(gwo);
+            List<WorkOrderGridSummary> ret = new List<WorkOrderGridSummary>();
+            foreach (WorkOrderModel m in models) {
+                var sum = _mapper.Map<WorkOrderGridSummary>(m);
+
+                //
+                // Map the work order database entity to the WIP grid view
+                //
+
+                var curProc =
+                    m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
+                if (curProc.Any()) {
+                    var proc = curProc.First();
+                    sum.CurrentActiveTaskName = proc.ProcedureStep.Title;
+                }
+
+/*
+DONE public int? PurchaseId { get; set; }
+     public string WorkOrderItemNumber { get; set; }
+     public string CustomerName { get; set; }
+DONE public string LocationName { get; set; }
+     public string SerialNumber { get; set; }
+     public int? PurchaseOrderNumber { get; set; }
+     public int? Quantity { get; set; }
+DONE public DateTime? ScheduledStartDate { get; set; }
+DONE public DateTime? ScheduledEndDate { get; set; }
+DONE public DateTime? ActualStartDate { get; set; }
+DONE public DateTime? ActualEndDate { get; set; }
+DONE public string ProductName { get; set; }
+     public string ProcedureName { get; set; }
+     public string Status { get; set; }
+     public string Disposition { get; set; }
+DONE public string CurrentActiveTaskName { get; set; }
+     public decimal? PercentageOfTasksCompleted { get; set; }
+     public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
+     public bool HasNcr { get; set; }
+*/
+
+                ret.Add(sum);
+            }
+            return new CommandResponse<ICollection<WorkOrderGridSummary>>(ret);
         }
     }
 }
