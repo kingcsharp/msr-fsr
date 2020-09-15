@@ -141,7 +141,14 @@ namespace MSR.Answer.API.V1.Controllers
                 ProcedureName = "ProcedureName",
                 PartNumber = "PartNumber",
                 WorkOrderSummary = new WorkOrderSummary() {
-                    WorkOrderStatus = "In Progress"
+                    WorkOrderId = 123,
+                    WorkOrderItemNumber = "NUM123",
+                    PurchaseOrderLineNumber = "LINE1",
+                    WorkOrderPartSerialNumber = "SERIAL1600187570",
+                    WorkOrderStatus = "In Progress",
+                    WorkOrderAssignedTo = "Frank",
+                    WorkOrderHasNcr = true,
+                    WorkOrderScheduledEndDate = DateTime.Now.AddDays(1)
                 }
             };
             List<WorkOrderStatus> example = new List<WorkOrderStatus>();
