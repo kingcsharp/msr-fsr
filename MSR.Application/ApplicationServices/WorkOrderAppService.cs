@@ -50,7 +50,8 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(GetWorkOrderView command, CancellationToken cancellationToken = default)
         {
             var gwo = _mapper.Map<GetWorkOrder>(command);
-            gwo.statuses = _workOrderService.GetStatusList(command.IsHistory);
+            gwo.statuses = _workOrderService.GetActiveStatusList();
+            gwo.invertStatusSet = command.IsHistory;
             var ret = await _workOrderService.GetWorkOrderAsync(gwo);
             return new CommandResponse<ICollection<WorkOrderModel>>(ret);
         }
