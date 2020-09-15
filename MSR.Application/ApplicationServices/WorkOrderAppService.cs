@@ -69,12 +69,14 @@ namespace MSR.Application.ApplicationServices
                     sum.CurrentActiveTaskName = proc.ProcedureStep.Title;
                 }
 
+                sum.SerialNumber = m.Purchase.SerialNumber;
+
 /*
 DONE public int? PurchaseId { get; set; }
      public string WorkOrderItemNumber { get; set; }
      public string CustomerName { get; set; }
 DONE public string LocationName { get; set; }
-     public string SerialNumber { get; set; }
+DONE public string SerialNumber { get; set; }
      public int? PurchaseOrderNumber { get; set; }
      public int? Quantity { get; set; }
 DONE public DateTime? ScheduledStartDate { get; set; }
