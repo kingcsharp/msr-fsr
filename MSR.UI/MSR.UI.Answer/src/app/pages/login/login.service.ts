@@ -112,7 +112,7 @@ export class LoginService {
   receiveLogin() {
     this.isFetching = false;
     this.errorMessage = '';
-    this.router.navigate(['/app/people/people']);
+    this.router.navigate(['/app/wip/wipstatus']);
   }
 
   requestLogin() {

@@ -1,28 +1,30 @@
 <table class="table table-striped">
     <thead class="thead-dark">
-        <tr>
+        <tr data-cy="wipstatus-header">
             <th>Product</th>
             <th>Part Number</th>
             <th>Procedure</th>
             <th>
-                <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1" (onChange)="locationsSelectedUpdated($event)"></p-multiSelect>
+                Location<br />
+                <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1" 
+                (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect"></p-multiSelect>
             </th>
             <th>Open WorkOrders</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let workOrderStatus of displayWorkOrderStatuses">
+        <tr *ngFor="let workOrderStatus of displayWorkOrderStatuses" data-cy="wipstatus-row">
             <td> {{ workOrderStatus.productName }} </td>
             <td> {{ workOrderStatus.partNumber }} </td>
             <td> {{ workOrderStatus.procedureName }} </td>
-            <td> {{ workOrderStatus.locationName }} </td>
+            <td data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
             <td>
                 <i [ngClass]="{'fa': true, 'fa-2x': true, 
                 'fa-exclamation-circle': workOrderStatus.workOrderSummary.workOrderHasNcr === true,
                 'fa-cog': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
                 'fa-spin': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
                 'fa-hourglass': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start'
-                } " placement="bottom" 
+                } " placement="bottom" data-cy="workordersummary-icon"
                 [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
                 <ng-template #workOrderSummaryToolTipTemplate>
                     WorkOrder Item Number: {{workOrderStatus.workOrderSummary.workOrderItemNumber}}<br />

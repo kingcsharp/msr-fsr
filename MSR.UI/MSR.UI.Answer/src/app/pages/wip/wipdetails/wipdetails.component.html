@@ -1,0 +1,13 @@
+<div class="container-flex">
+    <div class="row">
+      <div class="col-6">
+          Customer Part Number {{parentPart.part.partNumber}}, (Serial Number: {{parentPart.serialNumber}}), {{parentPart.part.name}}
+      </div>
+      <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+        <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Your Grid will go here -->
+    </div>
+  </div>

@@ -23,7 +23,7 @@ export class WipstatusWrapperComponent implements OnInit {
     this.getMockData();
     this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map( s => ({ label: s, value: s}));
     
-    if(localStorage.getItem['wipstatus'] === undefined || localStorage.getItem['wipstatus'] === null){
+    if(localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null){
       this.selectedLocations = this.locationOptions.map(s => s.value);
       localStorage.setItem('wipstatus',this.selectedLocations.toString());
     }else{
@@ -42,7 +42,7 @@ export class WipstatusWrapperComponent implements OnInit {
   }
 
   takeOverAsUserConfirmationDialog(){
-    this.router.navigate(['/wip/details',this.workOrderToTakeOver]);
+    this.router.navigate(['app/wip/details',this.workOrderToTakeOver]);
   }
 
   locationsSelectedUpdated(){
@@ -55,7 +55,7 @@ export class WipstatusWrapperComponent implements OnInit {
     for(let index = 1; index < 14; index++){
 
       let workOrderStatus = new WorkOrderStatus();
-      workOrderStatus.locationName = 'Location ' + (Math.random() >= 0.5);
+      workOrderStatus.locationName = ['Chandler', 'Hillsboro', 'Kiryat Gat', 'Naas'][Math.floor(Math.random() * Math.floor(4))];
       workOrderStatus.partNumber = '1321231' + index;
       workOrderStatus.procedureName = 'Procedure' + index;
       workOrderStatus.productName = 'Product' + index;
