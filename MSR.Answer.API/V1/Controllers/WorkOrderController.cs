@@ -52,6 +52,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetHistory([FromRoute][Required]string version)
         {
+            // TODO: MOCKED
             List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
             for (int i = 0; i < 100; i++) {
                 WorkOrderGridSummary w = new WorkOrderGridSummary() {
@@ -92,6 +93,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetMenu([FromRoute][Required]string version)
         {
+            // TODO: MOCKED
             List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
             for (int i = 0; i < 100; i++) {
                 WorkOrderGridSummary w = new WorkOrderGridSummary() {
@@ -132,6 +134,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetStatus()
         {
+            // TODO: MOCKED
             WorkOrderStatus w = new WorkOrderStatus() {
                 LocationName = "LocationName",
                 ProductName = "ProductName",

@@ -35,6 +35,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderPartModel>))]
         public virtual IActionResult WorkOrderPartUpdateWorkOrderPart([FromBody]UpdateWorkOrderPartRequest body, [FromRoute][Required]string version)
         {
+            // TODO: MOCKED
             var example = new WorkOrderPartModel() {
                 WorkOrderId = 1,
                 PartId = 2,

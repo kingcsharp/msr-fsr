@@ -34,6 +34,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
         public virtual IActionResult WorkOrderTaskCreateWorkOrderTask([FromBody]CreateWorkOrderTaskRequest body)
         {
+            // TODO: MOCKED
             var example = new WorkOrderTaskModel() {
                 WorkOrderId = 1,
                 ProcedureStepId = 2,
@@ -53,6 +54,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
         public virtual IActionResult WorkOrderTaskUpdateWorkOrderTask([FromBody]UpdateWorkOrderTaskRequest body)
         {
+            // TODO: MOCKED
             var example = new WorkOrderTaskModel() {
                 WorkOrderId = 10,
                 ProcedureStepId = 20,
