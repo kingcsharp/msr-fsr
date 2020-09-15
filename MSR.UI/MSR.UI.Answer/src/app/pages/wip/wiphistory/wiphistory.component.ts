@@ -52,7 +52,7 @@ export class WiphistoryComponent implements OnInit {
     this.canRead = this.globals.hasPrivilege(EnumMenuItem.WIPHistory, this.privileges.CanRead);
 
     if(this.canRead === false){
-      this.router.navigate(['app/people/people']);
+      this.router.navigate(['app/wip/wipstatus']);
     }
 
     this.getMockData();

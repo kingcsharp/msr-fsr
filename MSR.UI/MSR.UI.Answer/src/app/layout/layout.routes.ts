@@ -5,7 +5,7 @@ import { Layout } from './layout.component';
 const routes: Routes = [
   {
     path: '', component: Layout, children: [
-      { path: '', redirectTo: 'people', pathMatch: 'full' },
+      { path: '', redirectTo: 'wip', pathMatch: 'full' },
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
       { path: 'workflow', loadChildren: () => import('../pages/workflow/workflow.module').then(m => m.WorkflowModule) },
       { path: 'parts', loadChildren: () => import('../pages/parts/parts.module').then(m => m.PartsModule) },
