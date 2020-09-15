@@ -8,6 +8,7 @@ import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest,
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
+import { SignalRService } from '../../services/signalr.service';
 
 const jwt = new JwtHelperService();
 
@@ -21,7 +22,7 @@ export class LoginService {
     appConfig: AppConfig,
     private globals: Globals,
     private http: HttpClient,
-    private router: Router, private accountService: AccountService, private userService: UserService
+    private router: Router, private accountService: AccountService, private userService: UserService, private signalrService: SignalRService
   ) {
     this.config = appConfig.getConfig();
   }
@@ -87,6 +88,9 @@ export class LoginService {
           this.isFetching = false;
           return;
         }
+
+        this.signalrService.startConnection();
+
         this.receiveLogin();
       });
   }

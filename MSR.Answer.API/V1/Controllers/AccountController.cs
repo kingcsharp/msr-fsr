@@ -93,7 +93,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var result = await _dispatcher.DispatchAsync(command);
 
-            return result.ToOkObjectResponse("Password reset email sent");
+            return result.ToOkObjectResponse("Password was updated!");
         }
 
         [HttpPatch("resetmypassword")]
