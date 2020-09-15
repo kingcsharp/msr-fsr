@@ -139,5 +139,11 @@ namespace MSR.Domain.Models
         /// <value>Sum of time logged per a task / Sum of the expected duration time of all tasks</value>
         [DataMember(Name="percentageOfExpectedDurationTimeLogged")]
         public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
+
+        /// <summary>
+        /// Has NCR
+        /// </summary>
+        [DataMember(Name="HasNcr")]
+        public bool HasNcr { get; set; }
     }
 }

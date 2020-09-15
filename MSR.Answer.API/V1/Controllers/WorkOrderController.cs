@@ -43,7 +43,7 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         /// <summary>
-        /// This endpoint returns a View which is a Summary of WorkOrders for Grids
+        /// This endpoint returns a View which is a Summary of COMPLETED WorkOrders for Grids
         /// </summary>
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
@@ -52,35 +52,38 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetHistory([FromRoute][Required]string version)
         {
-            WorkOrderGridSummary w = new WorkOrderGridSummary() {
-                Id = 1,
-                PurchaseId = 2,
-                WorkOrderItemNumber  = "WorkOrderItemNumber",
-                CustomerName = "CustomerName",
-                LocationName = "LocationName",
-                SerialNumber = "SerialNumber",
-                PurchaseOrderNumber = 3,
-                 Quantity = 1234,
-                ScheduledStartDate = DateTime.Now,
-                ScheduledEndDate = DateTime.Now,
-                ActualStartDate = DateTime.Now.AddMinutes(30),
-                ActualEndDate = DateTime.Now.AddMinutes(30),
-                ProductName = "ProductName",
-                ProcedureName = "ProcedureName",
-                Status = "Status",
-                Disposition = "Disposition",
-                CurrentActiveTaskName = "CurrentActiveTaskName",
-                PercentageOfTasksCompleted = (decimal)12.34,
-                PercentageOfExpectedDurationTimeLogged = (decimal)23.45
-            };
             List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
-            example.Add(w);
+            for (int i = 0; i < 100; i++) {
+                WorkOrderGridSummary w = new WorkOrderGridSummary() {
+                    Id = 1,
+                    PurchaseId = 2,
+                    WorkOrderItemNumber  = $"WOIN{i}",
+                    CustomerName = "CustomerName",
+                    LocationName = "LocationName",
+                    SerialNumber = "SerialNumber",
+                    PurchaseOrderNumber = 3,
+                     Quantity = 1234,
+                    ScheduledStartDate = DateTime.Now,
+                    ScheduledEndDate = DateTime.Now,
+                    ActualStartDate = DateTime.Now.AddMinutes(30),
+                    ActualEndDate = DateTime.Now.AddMinutes(30),
+                    ProductName = "ProductName",
+                    ProcedureName = "ProcedureName",
+                    Status = "complete",
+                    Disposition = "Disposition",
+                    CurrentActiveTaskName = "CurrentActiveTaskName",
+                    PercentageOfTasksCompleted = (decimal)12.34,
+                    PercentageOfExpectedDurationTimeLogged = (decimal)23.45,
+                    HasNcr = (i%2) == 0
+                };
+                example.Add(w);
+            }
 
             return new ObjectResult(example);
         }
 
         /// <summary>
-        /// This endpoint returns a View which is a Summary of WorkOrders for Grids
+        /// This endpoint returns a View which is a Summary of WorkOrders NOT COMPLETED for Grids
         /// </summary>
         /// <param name="version"></param>
         /// <response code="200">This endpoint returns a View which is a Summary of WorkOrders for Grids</response>
@@ -89,31 +92,32 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public virtual IActionResult WorkOrderGetMenu([FromRoute][Required]string version)
         {
-            // what's the difference?
-            WorkOrderGridSummary w = new WorkOrderGridSummary() {
-                Id = 1,
-                PurchaseId = 2,
-                WorkOrderItemNumber  = "WorkOrderItemNumber",
-                CustomerName = "CustomerName",
-                LocationName = "LocationName",
-                SerialNumber = "SerialNumber",
-                PurchaseOrderNumber = 3,
-                 Quantity = 1234,
-                ScheduledStartDate = DateTime.Now,
-                ScheduledEndDate = DateTime.Now,
-                ActualStartDate = DateTime.Now.AddMinutes(30),
-                ActualEndDate = DateTime.Now.AddMinutes(30),
-                ProductName = "ProductName",
-                ProcedureName = "ProcedureName",
-                Status = "Status",
-                Disposition = "Disposition",
-                CurrentActiveTaskName = "CurrentActiveTaskName",
-                PercentageOfTasksCompleted = (decimal)12.34,
-                PercentageOfExpectedDurationTimeLogged = (decimal)23.45
-            };
             List<WorkOrderGridSummary> example = new List<WorkOrderGridSummary>();
-            example.Add(w);
-
+            for (int i = 0; i < 100; i++) {
+                WorkOrderGridSummary w = new WorkOrderGridSummary() {
+                    Id = 1,
+                    PurchaseId = 2,
+                    WorkOrderItemNumber  = $"WOIN{i}",
+                    CustomerName = "CustomerName",
+                    LocationName = "LocationName",
+                    SerialNumber = "SerialNumber",
+                    PurchaseOrderNumber = 3,
+                     Quantity = 1234,
+                    ScheduledStartDate = DateTime.Now,
+                    ScheduledEndDate = DateTime.Now,
+                    ActualStartDate = DateTime.Now.AddMinutes(30),
+                    ActualEndDate = DateTime.Now.AddMinutes(30),
+                    ProductName = "ProductName",
+                    ProcedureName = "ProcedureName",
+                    Status = "inprogress",
+                    Disposition = "Disposition",
+                    CurrentActiveTaskName = "CurrentActiveTaskName",
+                    PercentageOfTasksCompleted = (decimal)12.34,
+                    PercentageOfExpectedDurationTimeLogged = (decimal)23.45,
+                    HasNcr = (i%2) == 0
+                };
+                example.Add(w);
+            }
 
             return new ObjectResult(example);
         }
