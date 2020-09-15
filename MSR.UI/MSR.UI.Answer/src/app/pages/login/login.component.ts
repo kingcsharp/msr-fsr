@@ -18,13 +18,13 @@ export class Login {
   username: string = '';
   forgotUsername: boolean = false;
   showLogin: boolean = true;
-  forgotPassword: boolean = false;
+  forgotPassword: boolean = false; 
 
   constructor(public loginService: LoginService, private route: ActivatedRoute, private accountService: AccountService) {
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
     }
-
+    
     this.route.queryParams.subscribe((params) => {
       if (params.token) {
         this.loginService.receiveToken(params.token);
@@ -38,12 +38,15 @@ export class Login {
       return;
     }
     const ctrl = this;
+    this.loginService.isFetching = true;
     this.accountService.forgotpassword(env.apiVersion, new ForgotPasswordRequest({ userName: this.username }))
       .pipe(take(1))
       .subscribe(responseHandler(() => {
+        this.loginService.isFetching = false;
         ctrl.loginService.loginError('Reset password email has been sent.');
         ctrl.showLoginDiv();
       }, () => {
+        this.loginService.isFetching = false;
         ctrl.fogotPassword();
       }));
   }
@@ -54,12 +57,15 @@ export class Login {
       return;
     }
     const ctrl = this;
+    this.loginService.isFetching = true;
     this.accountService.forgotusername(env.apiVersion, new ForgotUserNameRequest({ email: this.email }))
       .pipe(take(1))
       .subscribe(responseHandler(() => {
+        this.loginService.isFetching = false;
         ctrl.loginService.loginError('An email has been sent with your information.');
         ctrl.showLoginDiv();
       }, () => {
+        this.loginService.isFetching = false;
         ctrl.fogotUserName();
       }));
   }
