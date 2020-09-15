@@ -12,6 +12,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Models;
@@ -79,7 +80,8 @@ namespace MSR.Answer.API.V1.Controllers
                 example.Add(w);
             }
 
-            return new ObjectResult(example);
+            var ret = new CommandResponse<ICollection<WorkOrderGridSummary>>(example);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
         }
 
         /// <summary>
@@ -119,7 +121,8 @@ namespace MSR.Answer.API.V1.Controllers
                 example.Add(w);
             }
 
-            return new ObjectResult(example);
+            var ret = new CommandResponse<ICollection<WorkOrderGridSummary>>(example);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
         }
 
         /// <summary>
@@ -143,7 +146,8 @@ namespace MSR.Answer.API.V1.Controllers
             };
             List<WorkOrderStatus> example = new List<WorkOrderStatus>();
             example.Add(w);
-            return new ObjectResult(example);
+            var ret = new CommandResponse<ICollection<WorkOrderStatus>>(example);
+            return ret.ToOkObjectResponse<ICollection<WorkOrderStatus>>();
         }
 
         /// <summary>

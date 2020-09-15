@@ -9,7 +9,9 @@
  */
 using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
+using MSR.Domain.Commanding;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
@@ -40,7 +42,8 @@ namespace MSR.Answer.API.V1.Controllers
                 ProcedureStepTypeId = 3,
                 StatusId = 1
             };
-            return new ObjectResult(example);
+            var ret = new CommandResponse<WorkOrderTaskModel>(example);
+            return ret.ToOkObjectResponse<WorkOrderTaskModel>();
         }
 
         /// <summary>
@@ -59,7 +62,8 @@ namespace MSR.Answer.API.V1.Controllers
                 ProcedureStepTypeId = 30,
                 StatusId = 1
             };
-            return new ObjectResult(example);
+            var ret = new CommandResponse<WorkOrderTaskModel>(example);
+            return ret.ToOkObjectResponse<WorkOrderTaskModel>();
         }
     }
 }
