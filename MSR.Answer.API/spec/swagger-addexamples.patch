@@ -1,5 +1,5 @@
---- swagger-work.json.orig	2020-09-14 14:52:49.668846700 -0400
-+++ swagger-work.json	2020-09-14 14:52:49.742660500 -0400
+--- swagger-work.json.orig	2020-09-15 09:44:35.052774000 -0400
++++ swagger-work.json	2020-09-15 09:44:35.176904800 -0400
 @@ -8,7 +8,7 @@
    },
    "servers": [
@@ -1554,7 +1554,7 @@
                    {
                      "$ref": "#/components/schemas/PendingApprovalPopoverModel"
                    }
-@@ -11378,6 +11631,7 @@
+@@ -11381,6 +11634,7 @@
            "workOrderSummary": {
              "nullable": true,
              "oneOf": [
@@ -1562,7 +1562,7 @@
                {
                  "$ref": "#/components/schemas/WorkOrderSummary"
                }
-@@ -11650,6 +11904,7 @@
+@@ -11653,6 +11907,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1570,7 +1570,7 @@
                    {
                      "$ref": "#/components/schemas/PendingApprovalNotification"
                    }
-@@ -11845,6 +12100,7 @@
+@@ -11848,6 +12103,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1578,7 +1578,7 @@
                    {
                      "$ref": "#/components/schemas/WorkflowModel"
                    }
-@@ -11981,6 +12237,19 @@
+@@ -11984,6 +12240,19 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1598,7 +1598,7 @@
          }
        },
        "WorkflowGroupRoleMapModel": {
-@@ -12030,6 +12299,7 @@
+@@ -12033,6 +12302,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1606,7 +1606,7 @@
                    {
                      "$ref": "#/components/schemas/WorkflowGroupModel"
                    }
-@@ -12067,6 +12337,14 @@
+@@ -12070,6 +12340,14 @@
                "$ref": "#/components/schemas/WorkflowGroupUserMapModel"
              }
            }
@@ -1621,7 +1621,7 @@
          }
        },
        "UpdateWorkflowGroupRequest": {
-@@ -12087,7 +12365,16 @@
+@@ -12090,7 +12368,16 @@
                }
              }
            }
@@ -1639,7 +1639,7 @@
        },
        "AuditActionResultOfICollectionOfWorkflowStageModel": {
          "allOf": [
-@@ -12155,6 +12442,10 @@
+@@ -12158,6 +12445,10 @@
              "type": "integer",
              "format": "int32"
            }
@@ -1650,7 +1650,7 @@
          }
        },
        "AuditActionResultOfWorkflowStageModel": {
-@@ -12170,6 +12461,7 @@
+@@ -12173,6 +12464,7 @@
                "object": {
                  "nullable": true,
                  "oneOf": [
@@ -1658,7 +1658,7 @@
                    {
                      "$ref": "#/components/schemas/WorkflowStageModel"
                    }
-@@ -12200,6 +12492,36 @@
+@@ -12203,6 +12495,36 @@
                "$ref": "#/components/schemas/WorkflowGroupStageMapModel"
              }
            }
@@ -1695,7 +1695,7 @@
          }
        },
        "UpdateWorkflowStageRequest": {
-@@ -12220,7 +12542,12 @@
+@@ -12223,7 +12545,12 @@
                }
              }
            }

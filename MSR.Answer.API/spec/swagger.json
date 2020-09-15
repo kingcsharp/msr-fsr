@@ -4499,7 +4499,7 @@
         "tags": [
           "WorkOrder"
         ],
-        "summary": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+        "summary": "Returns a summary of COMPLETED or CANCELLED WorkOrders",
         "operationId": "WorkOrder_WorkOrderGetHistory",
         "parameters": [
           {
@@ -4515,7 +4515,7 @@
         ],
         "responses": {
           "200": {
-            "description": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -4532,7 +4532,7 @@
         "tags": [
           "WorkOrder"
         ],
-        "summary": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+        "summary": "Returns a summary of WorkOrders IN PROGRESS or WAITING",
         "operationId": "WorkOrder_WorkOrderGetMenu",
         "parameters": [
           {
@@ -4548,7 +4548,7 @@
         ],
         "responses": {
           "200": {
-            "description": "This endpoint returns a View which is a Summary of WorkOrders for Grids",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -11578,6 +11578,9 @@
             "type": "number",
             "format": "decimal",
             "nullable": true
+          },
+          "hasNcr": {
+            "type": "boolean"
           }
         }
       },

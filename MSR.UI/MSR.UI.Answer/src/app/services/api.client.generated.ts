@@ -5862,8 +5862,7 @@ export class WorkOrderService {
     }
 
     /**
-     * This endpoint returns a View which is a Summary of WorkOrders for Grids
-     * @return This endpoint returns a View which is a Summary of WorkOrders for Grids
+     * Returns a summary of COMPLETED or CANCELLED WorkOrders
      */
     history(version: string | null): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History";
@@ -5917,8 +5916,7 @@ export class WorkOrderService {
     }
 
     /**
-     * This endpoint returns a View which is a Summary of WorkOrders for Grids
-     * @return This endpoint returns a View which is a Summary of WorkOrders for Grids
+     * Returns a summary of WorkOrders IN PROGRESS or WAITING
      */
     menu(version: string | null): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu";
@@ -16354,6 +16352,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    hasNcr?: boolean;
 
     constructor(data?: IWorkOrderGridSummary) {
         if (data) {
@@ -16385,6 +16384,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.currentActiveTaskName = _data["currentActiveTaskName"];
             this.percentageOfTasksCompleted = _data["percentageOfTasksCompleted"];
             this.percentageOfExpectedDurationTimeLogged = _data["percentageOfExpectedDurationTimeLogged"];
+            this.hasNcr = _data["hasNcr"];
         }
     }
 
@@ -16416,6 +16416,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["currentActiveTaskName"] = this.currentActiveTaskName;
         data["percentageOfTasksCompleted"] = this.percentageOfTasksCompleted;
         data["percentageOfExpectedDurationTimeLogged"] = this.percentageOfExpectedDurationTimeLogged;
+        data["hasNcr"] = this.hasNcr;
         return data; 
     }
 }
@@ -16440,6 +16441,7 @@ export interface IWorkOrderGridSummary {
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    hasNcr?: boolean;
 }
 
 /** Base class for an API call with a typed result */
