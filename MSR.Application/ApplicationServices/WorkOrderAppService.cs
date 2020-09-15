@@ -4,6 +4,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace MSR.Application.ApplicationServices
 {
+
     public class WorkOrderAppService :
         ICommandHandler<GetWorkOrder>,
         ICommandHandler<GetWorkOrderView>,
@@ -18,6 +20,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<DeleteWorkOrder>,
         ICommandHandler<UpdateWorkOrder>
     {
+        public const int PROCEDURE_STEP_TYPE_NC = 3;
+
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
 
@@ -124,6 +128,29 @@ namespace MSR.Application.ApplicationServices
                 } else {
                     sum.Status = "Waiting Start";
                 }
+
+                // Disposition
+                // This is a string join of the text values of
+                // all procedure steps with a type of "NC Disposition"
+                sum.Disposition = "";
+                if (m.HasNCR.GetValueOrDefault()) {
+                    var nc = m.WorkOrderTasks.Where(x =>
+                        x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC);
+                    if (nc.Any()) {
+                        foreach (WorkOrderTaskModel task in nc) {
+                            sum.Disposition =
+                                String.Join(" ",
+                                    task.WorkOrderTaskMonitors.Select(x =>
+                                        x.TextVal
+                                    ).ToList()
+                                );
+                        }
+                    }
+                }
+
+                // PercentageOfTasksCompleted
+                int denom = m.WorkOrderTasks.Count();
+                //int numer =
 
 /*
 DONE public int? PurchaseId { get; set; }
