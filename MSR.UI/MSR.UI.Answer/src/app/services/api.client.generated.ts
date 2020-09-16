@@ -5970,8 +5970,8 @@ export class WorkOrderService {
     }
 
     /**
-     * This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]
-     * @return This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]
+     * Returns the WorkOrders that are either waiting to start or in Process.
+     * @return The WorkOrders that are either waiting to start or in Process
      */
     status(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderStatus> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Status";

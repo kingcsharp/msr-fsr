@@ -1,13 +1,19 @@
 <div class="container-flex">
     <div class="row">
       <div class="col-6">
-          Customer Part Number {{parentPart.part.partNumber}}, (Serial Number: {{parentPart.serialNumber}}), {{parentPart.part.name}}
+          Customer Part Number {{parentPart?.part?.partNumber}}, (Serial Number: {{parentPart?.serialNumber}}), {{parentPart?.part?.name}}
       </div>
       <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
         <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
       </div>
     </div>
     <div class="row">
-      <!-- Your Grid will go here -->
+      <div class="row">
+        <div class="col-6">Reports go here</div>
+        <div class="col-6">Tabs go here</div>
+      </div>
+      <div class="row">Step Selector Goes Here</div>
+      <div class="row">Timer goes here</div>
+      <div class="row">Tabs go here</div>
     </div>
   </div>
