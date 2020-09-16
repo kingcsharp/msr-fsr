@@ -11,12 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
-using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -25,8 +26,19 @@ namespace MSR.Answer.API.V1.Controllers
     /// </summary>
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class WorkOrderPartController : ControllerBase
+    public class WorkOrderPartController : BaseApiController
     {
+        private ICommandDispatcher _dispatcher;
+
+        /// <summary>
+        /// WorkOrderPartController Constructor
+        /// </summary>
+        /// <param name="dispatcher"></param>
+        public WorkOrderPartController(ICommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
         /// <summary>
         /// WorkOrderPartUpdateWorkOrderPart
         /// </summary>
@@ -35,20 +47,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderPartModel>))]
-        public virtual IActionResult WorkOrderPartUpdateWorkOrderPart([FromBody]UpdateWorkOrderPartRequest body, [FromRoute][Required]string version)
+        public async Task<IActionResult> WorkOrderPartUpdateWorkOrderPart([FromBody]UpdateWorkOrderPartRequest body, [FromRoute][Required]string version)
         {
-            // TODO: MOCKED
-            var example = new WorkOrderPartModel() {
-                WorkOrderId = 1,
-                PartId = 2,
-                ParentId = null,
-                SerialNumber = "SERIAL12345",
-                Part = new PartModel(),
-                WorkOrder = new WorkOrderModel(),
-                Children = new List<WorkOrderPartModel>(),
-                Parent = null
-            };
-            var ret = new CommandResponse<WorkOrderPartModel>(example);
+            UpdateWorkOrderPart command = body.ToUpdateWorkOrderPartCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderPartModel>();
         }
     }

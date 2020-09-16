@@ -917,11 +917,21 @@ namespace MSR.Answer.API.V1.Extentions
         /// <param name="request"></param>
         /// <returns></returns>
         public static CreatePurchaseOrder ToCreatePurchaseOrderCommand(this CreatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<CreatePurchaseOrder>(request);
+
         /// <summary>
         ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         public static UpdatePurchaseOrder ToUpdatePurchaseOrderCommand(this UpdatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<UpdatePurchaseOrder>(request);
+
+        /// <summary>
+        /// ToUpdateWorkOrderPartCommand
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static UpdateWorkOrderPart ToUpdateWorkOrderPartCommand(this UpdateWorkOrderPartRequest request) =>
+            AutoMapperHelper.Mapper.Map<UpdateWorkOrderPart>(request);
+
     }
 }

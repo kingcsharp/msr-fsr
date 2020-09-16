@@ -27,6 +27,12 @@ namespace MSR.Answer.API.V1.Models
     public class UpdateWorkOrderPartRequest
     {
         /// <summary>
+        /// Work Order Part ID
+        /// </summary>
+        [DataMember(Name="workOrderPartId ")]
+        public int WorkOrderPartId { get; set; }
+
+        /// <summary>
         /// Gets or Sets SerialNumber
         /// </summary>
         [DataMember(Name="serialNumber")]

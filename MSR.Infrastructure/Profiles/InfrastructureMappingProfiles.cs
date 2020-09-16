@@ -362,6 +362,9 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, PartModel>();
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
+
+            CreateMap<UpdateWorkOrderPart, WorkOrderPart>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderPartId));
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)
