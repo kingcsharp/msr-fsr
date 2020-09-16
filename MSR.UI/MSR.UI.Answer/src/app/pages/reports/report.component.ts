@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  WorkflowGroupService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, UserService, WorkflowGroupUserMapModel,
-  Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest, EnumMenuItem
+    WorkflowGroupService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, UserService, WorkflowGroupUserMapModel,
+    Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest, EnumMenuItem, ReportService
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
@@ -23,15 +23,16 @@ declare let jQuery: any;
     encapsulation: ViewEncapsulation.None
 })
 export class ReportComponent implements OnInit {
+    data: any;
+    constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
+        private elem: ElementRef, private reportService: ReportService) {
 
-    
-    constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService, private userService: UserService,
-        private elem: ElementRef, private roleService: RoleService, private workflowGroupService: WorkflowGroupService) {
-        
-        
     }
 
     ngOnInit(): void {
-        throw new Error('Method not implemented.');
+        this.reportService.report(env.apiVersion).subscribe(responseHandler(response => {
+            this.data = response.object;
+        }));
     }
+    
 }

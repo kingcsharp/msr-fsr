@@ -4720,6 +4720,69 @@ export class QuoteService {
 }
 
 @Injectable()
+export class ReportService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    report(version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
+        let url_ = this.baseUrl + "/v{version}/Report";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processReport(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processReport(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfReportModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfReportModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processReport(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfReportModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfReportModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfReportModel>(<any>null);
+    }
+}
+
+@Injectable()
 export class RoleService {
     private http: HttpClient;
     private baseUrl: string;
@@ -15029,6 +15092,201 @@ export class AuditActionResultOfIEnumerableOfQuoteModel extends AuditActionResul
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfIEnumerableOfQuoteModel extends IAuditActionResult {
     object?: QuoteModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfReportModel extends AuditActionResult implements IAuditActionResultOfICollectionOfReportModel {
+    object?: ReportModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfReportModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(ReportModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfReportModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfReportModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfReportModel extends IAuditActionResult {
+    object?: ReportModel[] | undefined;
+}
+
+export class ReportModel implements IReportModel {
+    id?: number;
+    name?: string | undefined;
+    subtitle?: string | undefined;
+    description?: string | undefined;
+    apiEndPointURL?: string | undefined;
+    imageUrl?: string | undefined;
+    categories?: ReportCategoryMapModel[] | undefined;
+
+    constructor(data?: IReportModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.subtitle = _data["subtitle"];
+            this.description = _data["description"];
+            this.apiEndPointURL = _data["apiEndPointURL"];
+            this.imageUrl = _data["imageUrl"];
+            if (Array.isArray(_data["categories"])) {
+                this.categories = [] as any;
+                for (let item of _data["categories"])
+                    this.categories!.push(ReportCategoryMapModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ReportModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReportModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["subtitle"] = this.subtitle;
+        data["description"] = this.description;
+        data["apiEndPointURL"] = this.apiEndPointURL;
+        data["imageUrl"] = this.imageUrl;
+        if (Array.isArray(this.categories)) {
+            data["categories"] = [];
+            for (let item of this.categories)
+                data["categories"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IReportModel {
+    id?: number;
+    name?: string | undefined;
+    subtitle?: string | undefined;
+    description?: string | undefined;
+    apiEndPointURL?: string | undefined;
+    imageUrl?: string | undefined;
+    categories?: ReportCategoryMapModel[] | undefined;
+}
+
+export class ReportCategoryMapModel implements IReportCategoryMapModel {
+    reportId?: number;
+    reportCategoryId?: number;
+    reportCategory?: ReportCategoryModel | undefined;
+
+    constructor(data?: IReportCategoryMapModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.reportId = _data["reportId"];
+            this.reportCategoryId = _data["reportCategoryId"];
+            this.reportCategory = _data["reportCategory"] ? ReportCategoryModel.fromJS(_data["reportCategory"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ReportCategoryMapModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReportCategoryMapModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["reportId"] = this.reportId;
+        data["reportCategoryId"] = this.reportCategoryId;
+        data["reportCategory"] = this.reportCategory ? this.reportCategory.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IReportCategoryMapModel {
+    reportId?: number;
+    reportCategoryId?: number;
+    reportCategory?: ReportCategoryModel | undefined;
+}
+
+export class ReportCategoryModel implements IReportCategoryModel {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IReportCategoryModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): ReportCategoryModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReportCategoryModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IReportCategoryModel {
+    id?: number;
+    name?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
