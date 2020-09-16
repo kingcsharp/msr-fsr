@@ -11753,6 +11753,11 @@
         "description": " ",
         "additionalProperties": true,
         "properties": {
+          "workOrderPartId": {
+            "type": "integer",
+            "description": "Work Order Part ID",
+            "format": "int32"
+          },
           "serialNumber": {
             "type": "string",
             "description": "Gets or Sets SerialNumber",
