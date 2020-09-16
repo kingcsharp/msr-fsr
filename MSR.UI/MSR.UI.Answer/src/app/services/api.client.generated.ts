@@ -8887,7 +8887,6 @@ export interface IAuditActionResultOfEquipmentMaintenanceModel extends IAuditAct
 }
 
 export class CreateEquipmentMaintenanceRequest implements ICreateEquipmentMaintenanceRequest {
-    id?: number | undefined;
     locationId!: number;
     assignedToId?: number | undefined;
     troubleState!: boolean;
@@ -8908,7 +8907,6 @@ export class CreateEquipmentMaintenanceRequest implements ICreateEquipmentMainte
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.locationId = _data["locationId"];
             this.assignedToId = _data["assignedToId"];
             this.troubleState = _data["troubleState"];
@@ -8929,7 +8927,6 @@ export class CreateEquipmentMaintenanceRequest implements ICreateEquipmentMainte
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["locationId"] = this.locationId;
         data["assignedToId"] = this.assignedToId;
         data["troubleState"] = this.troubleState;
@@ -8943,7 +8940,6 @@ export class CreateEquipmentMaintenanceRequest implements ICreateEquipmentMainte
 }
 
 export interface ICreateEquipmentMaintenanceRequest {
-    id?: number | undefined;
     locationId: number;
     assignedToId?: number | undefined;
     troubleState: boolean;

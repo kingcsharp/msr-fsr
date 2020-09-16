@@ -26,8 +26,6 @@ declare let jQuery: any;
   styleUrls: ['./equipment-maintenance.component.scss'],
   providers: [
     EquipmentMaintenanceService,
-    CreateEquipmentMaintenanceRequest,
-    UpdateEquipmentMaintenanceRequest,
     LocationService,
     UserService,
   ],

@@ -20,11 +20,7 @@
     >
       <ng-template pTemplate="caption">
         <div class="text-right">
-          <!-- <button *ngIf="emPrivileges.canCreate" (click)="showEMModal()"
-            class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
-            + Add
-          </button> -->
-          <button (click)="showEMModal()"
+          <button *ngIf="emPrivileges.canCreate" (click)="showEMModal()"
             class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
             + Add
           </button>
@@ -192,13 +188,9 @@
             {{emmodel.status.name}}
           </td>
           <td>
-            <!-- <i *ngIf="emPrivileges.canEdit"
+            <i *ngIf="emPrivileges.canEdit"
               class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
               (click)="showEMModal()">
-            </i> -->
-            <i
-              class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
-              (click)="showEMModal(emmodel)">
             </i>
           </td>
         </tr>
