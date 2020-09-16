@@ -4,26 +4,29 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { EnumMenuItem, EnumApprovalTables } from '../../../services/api.client.generated';
+import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary } from '../../../services/api.client.generated';
 import { Router } from '@angular/router';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
 
 @Component({
   selector: 'app-wiphistory',
   templateUrl: './wiphistory.component.html',
-  styleUrls: ['./wiphistory.component.scss']
+  styleUrls: ['./wiphistory.component.scss'],
+  providers: [WorkOrderService]
 })
 export class WiphistoryComponent implements OnInit {
 
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
-  data: Array<WorkOrderGridSummary> = new Array<WorkOrderGridSummary>();
+  data: Array<WorkOrderGridSummary>;
   statusOptions: Array<SelectItem>;
   canRead: boolean = false;
   privileges = EnumPrivilege;
   locationOptions: Array<SelectItem>;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router) { }
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
 
@@ -51,76 +54,21 @@ export class WiphistoryComponent implements OnInit {
 
     this.canRead = this.globals.hasPrivilege(EnumMenuItem.WIPHistory, this.privileges.CanRead);
 
-    if(this.canRead === false){
+    if (this.canRead === false) {
       this.router.navigate(['app/wip/wipstatus']);
     }
 
-    this.getMockData();
-
-    this.statusOptions = this.data.filter(
-      (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-    ).map(x => ({ label: x.status, value: x.status }));
-    this.locationOptions = this.data.filter(
-      (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
-    ).map(x => ({ label: x.locationName, value: x.locationName }));
-    this.loading = false;
-
-  }
-
-  getMockData() {
-
-    for (let index = 1; index < 25; index++) {
-
-      let workOrderGridSummary = new WorkOrderGridSummary();
-      workOrderGridSummary.locationName = 'Location' + index;
-      workOrderGridSummary.percentageOfExpectedDurationTimeLogged = Math.random();
-      workOrderGridSummary.percentageOfTasksCompleted = Math.random();
-      workOrderGridSummary.actualEndDate = new Date();
-      workOrderGridSummary.actualStartDate = new Date();
-      workOrderGridSummary.currentActiveTaskName = 'Active Task Name' + index;
-      workOrderGridSummary.customerName = 'INTEL 32-F';
-      workOrderGridSummary.disposition = 'This is some random disposition text';
-      workOrderGridSummary.id = index;
-      workOrderGridSummary.procedureName = 'Procedure' + index;
-      workOrderGridSummary.productName = 'Product Name' + index;
-      workOrderGridSummary.purchaseId = index;
-      workOrderGridSummary.purchaseOrderNumber = index;
-      workOrderGridSummary.quantity = index;
-      workOrderGridSummary.scheduledEndDate = new Date();
-      workOrderGridSummary.scheduledStartDate = new Date();
-      workOrderGridSummary.serialNumber = '234232' + index;
-      workOrderGridSummary.status = ['Completed','Cancelled'][Math.floor(Math.random() * Math.floor(2))];
-      workOrderGridSummary.workOrderItemNumber = '232423' + index;
-      workOrderGridSummary.hasNcr = Math.random() > .5 ? true : false;
-      this.data.push(workOrderGridSummary);
-
-
-    }
-
+    this.workOrderService.history(env.apiVersion).subscribe(responseHandler(response => {
+      this.data = response.object;
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
+      this.locationOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
+      ).map(x => ({ label: x.locationName, value: x.locationName }));
+      this.loading = false;
+    }));
 
   }
 
-}
-
-export class WorkOrderGridSummary {
-  id: number;
-  purchaseId: number;
-  workOrderItemNumber: string;
-  customerName: string;
-  locationName: string;
-  serialNumber: string;
-  purchaseOrderNumber: number;
-  quantity: number;
-  scheduledStartDate: Date;
-  scheduledEndDate: Date;
-  actualStartDate: Date;
-  actualEndDate: Date;
-  productName: string;
-  procedureName: string;
-  status: string;
-  disposition: string;
-  currentActiveTaskName: string;
-  percentageOfTasksCompleted: number;
-  percentageOfExpectedDurationTimeLogged: number;
-  hasNcr: boolean;
 }

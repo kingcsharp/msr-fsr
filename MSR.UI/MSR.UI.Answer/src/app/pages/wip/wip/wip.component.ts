@@ -1,15 +1,17 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { WorkOrderGridSummary } from '../wiphistory/wiphistory.component';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-
+import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary } from '../../../services/api.client.generated';
+import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
 
 @Component({
   selector: 'app-wip',
   templateUrl: './wip.component.html',
-  styleUrls: ['./wip.component.scss']
+  styleUrls: ['./wip.component.scss'],
+  providers: [WorkOrderService]
 })
 export class WipComponent implements OnInit {
 
@@ -20,7 +22,7 @@ export class WipComponent implements OnInit {
   statusOptions: Array<SelectItem>;
   locationOptions: Array<SelectItem>;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
 
@@ -47,70 +49,42 @@ export class WipComponent implements OnInit {
 
 
 
-    this.getMockData();
-    this.statusOptions = this.data.filter(
-      (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-    ).map(x => ({ label: x.status, value: x.status }));
-    this.data.map((elem) => {
-      
-      elem.timeLoggedType = 'danger';
+    this.workOrderService.menu(env.apiVersion).subscribe(responseHandler(response => {
 
-      if (elem.percentageOfExpectedDurationTimeLogged < 25) {
-        elem.timeLoggedType = 'warning';
-      } else if (elem.percentageOfExpectedDurationTimeLogged < 50) {
-        elem.timeLoggedType = 'info';
-      } else if (elem.percentageOfExpectedDurationTimeLogged < 75) {
-        elem.timeLoggedType = 'success';
-      }
+      this.data = response.object;
 
-      elem.tasksCompletedType = 'danger';
+      this.statusOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
+      ).map(x => ({ label: x.status, value: x.status }));
+      this.data.map((elem) => {
 
-      if (elem.percentageOfTasksCompleted < 25) {
-        elem.tasksCompletedType = 'warning';
-      } else if (elem.percentageOfTasksCompleted < 50) {
-        elem.tasksCompletedType = 'info';
-      } else if (elem.percentageOfTasksCompleted < 75) {
-        elem.tasksCompletedType = 'success';
-      }
+        elem.timeLoggedType = 'danger';
 
-    });
-    this.locationOptions = this.data.filter(
-      (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
-    ).map(x => ({ label: x.locationName, value: x.locationName }));
-    this.loading = false;
+        if (elem.percentageOfExpectedDurationTimeLogged < 25) {
+          elem.timeLoggedType = 'warning';
+        } else if (elem.percentageOfExpectedDurationTimeLogged < 50) {
+          elem.timeLoggedType = 'info';
+        } else if (elem.percentageOfExpectedDurationTimeLogged < 75) {
+          elem.timeLoggedType = 'success';
+        }
 
-  }
+        elem.tasksCompletedType = 'danger';
 
-  getMockData() {
+        if (elem.percentageOfTasksCompleted < 25) {
+          elem.tasksCompletedType = 'warning';
+        } else if (elem.percentageOfTasksCompleted < 50) {
+          elem.tasksCompletedType = 'info';
+        } else if (elem.percentageOfTasksCompleted < 75) {
+          elem.tasksCompletedType = 'success';
+        }
 
-    for (let index = 1; index < 25; index++) {
+      });
+      this.locationOptions = this.data.filter(
+        (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
+      ).map(x => ({ label: x.locationName, value: x.locationName }));
+      this.loading = false;
 
-      let workOrderGridSummary = new WorkOrderGridSummary();
-      workOrderGridSummary.locationName = 'Location' + index;
-      workOrderGridSummary.percentageOfExpectedDurationTimeLogged = Math.random() * 100;
-      workOrderGridSummary.percentageOfTasksCompleted = Math.random() * 100;
-      workOrderGridSummary.actualEndDate = new Date();
-      workOrderGridSummary.actualStartDate = new Date();
-      workOrderGridSummary.currentActiveTaskName = 'Active Task';
-      workOrderGridSummary.customerName = 'INTEL 32-F';
-      workOrderGridSummary.disposition = 'This is some random disposition text';
-      workOrderGridSummary.id = index;
-      workOrderGridSummary.procedureName = 'Procedure' + index;
-      workOrderGridSummary.productName = 'Product Name' + index;
-      workOrderGridSummary.purchaseId = index;
-      workOrderGridSummary.purchaseOrderNumber = index;
-      workOrderGridSummary.quantity = index;
-      workOrderGridSummary.scheduledEndDate = new Date();
-      workOrderGridSummary.scheduledStartDate = new Date();
-      workOrderGridSummary.serialNumber = '234232' + index;
-      workOrderGridSummary.status = ['In Progress','Waiting to Start','Waiting to Start'][Math.floor(Math.random() * Math.floor(2))];
-      workOrderGridSummary.workOrderItemNumber = 'INTEL 32-F-232423' + index;
-      workOrderGridSummary.hasNcr = Math.random() > .5 ? true : false;
-
-      this.data.push(workOrderGridSummary);
-
-
-    }
+    }));
 
 
   }

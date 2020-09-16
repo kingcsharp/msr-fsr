@@ -60,10 +60,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ThenInclude(y => y.Part)
                 .Include(x => x.WorkOrderTasks)
                     .ThenInclude(y => y.ProcedureStep)
-                    .ThenInclude(y => y.Procedure)
+                .Include(x => x.WorkOrderTasks)
+                    .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.Product)
+                    .ThenInclude(y => y.Part)
+                .Include(x => x.Product)
+                    .ThenInclude(y => y.Customer)
+                .Include(x => x.Product)
+                    .ThenInclude(y => y.Procedure)
                 .Include(x => x.Purchase)
                     .ThenInclude(y => y.PurchaseOrder)
+                .Include(x => x.Purchase)
                     .ThenInclude(y => y.Customer)
                 .Include(x => x.Location)
                 .ToListAsync();
@@ -74,7 +81,67 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             var result = workorders.Select(x => {
                 var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
+
+                // FIXME: MOCKED DATA
+                List<WorkOrderPartModel> mock1 = new List<WorkOrderPartModel>();
+                mock1.Add(new WorkOrderPartModel() {
+                    WorkOrderId = wom.Id.GetValueOrDefault(),
+                    PartId = 123,
+                    SerialNumber = "SERIAL1600264772",
+                    Part = new PartModel() {
+                        Id = 123,
+                        PartNumber = "NUMBER1600264772",
+                        OEMPartNumber = "OEMNUMBER1600264772",
+                        Name = "PART1600264772",
+                        IsKit = false,
+                        IsActive = true,
+                    },
+                    WorkOrder = null
+                });
+                mock1.Add(new WorkOrderPartModel() {
+                    WorkOrderId = wom.Id.GetValueOrDefault(),
+                    PartId = 124,
+                    SerialNumber = "SERIAL1600264773",
+                    Part = new PartModel() {
+                        Id = 124,
+                        PartNumber = "NUMBER1600264773",
+                        OEMPartNumber = "OEMNUMBER1600264773",
+                        Name = "PART1600264773",
+                        IsKit = false,
+                        IsActive = true,
+                    },
+                    WorkOrder = null
+                });
+                wom.WorkOrderParts = mock1;
+
+                foreach (var wot in wom.WorkOrderTasks) {
+                    List<WorkOrderTaskMonitorModel> mock2 = new List<WorkOrderTaskMonitorModel>();
+                    mock2.Add(new WorkOrderTaskMonitorModel(){
+                        WorkOrderTaskId = wot.Id,
+                        ProcedureMonitorId = 17938,
+                        NumVal = 1,
+                        TextVal = "TEXT1600264773",
+                        MultiVal = "MULTI1600264773",
+                        SensorMappingId = 0,
+                        Comment = "COMMENT1600264773",
+                        SensorValue = "SENSORVALUE1600264773",
+                        SensorName = "SENSORNAME1600264773"
+                    });
+                    mock2.Add(new WorkOrderTaskMonitorModel(){
+                        WorkOrderTaskId = wot.Id,
+                        ProcedureMonitorId = 17939,
+                        NumVal = 1,
+                        TextVal = "TEXT1600264774",
+                        MultiVal = "MULTI1600264774",
+                        SensorMappingId = 0,
+                        Comment = "COMMENT1600264774",
+                        SensorValue = "SENSORVALUE1600264774",
+                        SensorName = "SENSORNAME1600264774"
+                    });
+                    wot.WorkOrderTaskMonitors = mock2;
+                }
                 return DetachBackPointers(wom);
+
             }).OrderBy(x => x.Id).ToList();
 
             return result;

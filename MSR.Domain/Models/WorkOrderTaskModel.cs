@@ -6,6 +6,7 @@ namespace MSR.Domain.Models
 {
     public class WorkOrderTaskModel
     {
+        public int Id { get; set; }
         public int WorkOrderId { get; set; }
         public int ProcedureStepId { get; set; }
         public int ProcedureStepTypeId { get; set; }
