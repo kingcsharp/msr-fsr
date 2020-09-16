@@ -39,7 +39,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.WorkOrderParts)
                     .ThenInclude(y => y.Part)
                 .Include(x => x.WorkOrderTasks)
+                    .ThenInclude(y => y.ProcedureStep)
+                .Include(x => x.WorkOrderTasks)
+                    .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.Product)
+                    .ThenInclude(y => y.Part)
                 .Include(x => x.Purchase)
                 .Include(x => x.Location)
                 .ToListAsync();
