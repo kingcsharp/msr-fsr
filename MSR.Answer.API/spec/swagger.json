@@ -4565,7 +4565,7 @@
         "tags": [
           "WorkOrder"
         ],
-        "summary": "This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]",
+        "summary": "Returns the WorkOrders that are either waiting to start or in Process.",
         "operationId": "WorkOrder_WorkOrderGetStatus",
         "parameters": [
           {
@@ -4581,7 +4581,7 @@
         ],
         "responses": {
           "200": {
-            "description": "This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]",
+            "description": "The WorkOrders that are either waiting to start or in Process",
             "content": {
               "application/json": {
                 "schema": {
@@ -7886,6 +7886,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "procedure": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Procedure"
+              }
+            ]
+          },
           "procedureId": {
             "type": "integer",
             "format": "int32",
@@ -9843,6 +9851,14 @@
                 "type": "integer",
                 "format": "int32"
               },
+              "customer": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                ]
+              },
               "customerId": {
                 "type": "integer",
                 "format": "int32"
@@ -9970,6 +9986,10 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "workOrderId": {
             "type": "integer",
             "format": "int32"
