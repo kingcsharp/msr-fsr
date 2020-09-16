@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
+import { EnumEMStatus } from '../../../models/enums/EMStatus';
 import {
   EquipmentMaintenanceService,
   EquipmentMaintenanceModel,
@@ -77,22 +78,23 @@ export class EquipmentMaintenanceComponent implements OnInit {
       value: 'Repair'
     }
   ];
+  enumEMStatus = EnumEMStatus;
   allStatus: any[] = [
     {
       label: 'Requested',
-      value: 1
+      value: EnumEMStatus.Requested
     },
     {
       label: 'Assigned',
-      value: 2
+      value: EnumEMStatus.Assigned
     },
     {
       label: 'Completed',
-      value: 3
+      value: EnumEMStatus.Completed
     },
     {
       label: 'Scheduled',
-      value: 5
+      value: EnumEMStatus.Scheduled
     }
   ];
   currentEM: EquipmentMaintenanceModel;
@@ -100,6 +102,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   getLocationsFlag: boolean = false;
   users: any[] = [];
   getUsersFlag: boolean = false;
+  internalAddress: string;
 
   constructor(
     public globals: Globals,
@@ -130,7 +133,6 @@ export class EquipmentMaintenanceComponent implements OnInit {
     this.data = [];
     this.globals.showLoader(true);
     this.getEMData();
-    this.getLocations();
     this.getUsers();
   }
 
@@ -146,7 +148,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, [21], env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.users = [];
@@ -157,22 +159,31 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getLocations() {
-    this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
-    .subscribe(responseHandler(response => {
-      this.locations = [];
-      response.object.map((x) => {
-        this.locations.push({ label: x.name, value: x.id });
-      });
-      this.getLocationsFlag = true;
-    }));
+    if (this.internalAddress) {
+      this.getLocationsFlag = false;
+      this.locationService.locationGet(null, null, this.internalAddress, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.locations = [];
+        response.object.map((x) => {
+          this.locations.push({ label: x.name, value: x.id });
+        });
+        this.getLocationsFlag = true;
+      }));
+    }
   }
 
   showEMModal(em: EquipmentMaintenanceModel) {
     if (em) {
       this.currentEM = em;
+      this.locations = [{
+        label: em.location.name,
+        value: em.location.id
+      }];
+      this.getLocationsFlag = true;
     } else {
       this.currentEM = new EquipmentMaintenanceModel();
       this.currentEM.troubleState = true;
+      this.currentEM.statusId = this.enumEMStatus.Requested;
     }
 
     this.displayEMDialog = true;
@@ -181,6 +192,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   closeEMModal() {
     this.displayEMDialog = false;
     this.currentEM = null;
+    this.internalAddress = null;
     jQuery('.parsleyjs').parsley().reset();
   }
 

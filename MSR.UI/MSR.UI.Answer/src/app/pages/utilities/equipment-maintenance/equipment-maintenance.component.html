@@ -190,7 +190,7 @@
           <td>
             <i *ngIf="emPrivileges.canEdit"
               class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
-              (click)="showEMModal()">
+              (click)="showEMModal(emmodel)">
             </i>
           </td>
         </tr>
@@ -222,6 +222,29 @@
     <section class="widget m-4 p-4" widget>
       <div class="widget-body">
         <fieldset>
+          <div class="form-group row">
+            <label class="form-control-label col-md-3 col-12 text-md-right" for="frequencyField">
+              Scan/Enter Barcode
+            </label>
+            <div class="input-group input-group-transparent col-md-9 col-12">
+              <input
+                pInputText
+                type="text"
+                class="form-control input-transparent"
+                name="frequencyField"
+                [(ngModel)]="internalAddress"
+                data-cy="em-input-address"
+              >
+              <button
+                type="button"
+                class="input-group-addon bg-secondary"
+                (click)="getLocations()"
+              >
+                Lookup
+              </button>
+            </div>
+          </div>
+
           <div class="form-group row">
             <label for="locationId" class="col-md-3 col-12 col-form-label text-md-right">
               Room/Equipment
@@ -258,7 +281,7 @@
             </div>
           </div>
 
-          <div class="form-group row" *ngIf="currentEM.troubleState">
+          <div class="form-group row" *ngIf="!currentEM.troubleState">
             <label for="maintenanceTask" class="col-md-3 col-12 col-form-label text-md-right">
               Maintenance Task
             </label>
@@ -277,9 +300,10 @@
             >
             </p-dropdown>
             <label for="status" class="col-md-3 col-12 col-form-label text-md-right">
-              Status <i class="fa fa-info-circle" tooltip="When Status is set to &quot;Assigned&quot;, Assigned To should appear and display names of Maintenance Technicians"></i>
+              Status
             </label>
             <p-dropdown
+              *ngIf="currentEM.statusId"
               class="col-md-3 col-12"
               placeholder="Select Status"
               name="status"
@@ -295,7 +319,7 @@
             </p-dropdown>
           </div>
 
-          <div class="form-group row" *ngIf="currentEM.troubleState">
+          <div class="form-group row" *ngIf="!currentEM.troubleState && currentEM.statusId === enumEMStatus.Assigned">
             <label for="assignedTo" class="col-md-3 col-12 col-form-label text-md-right">
               Assigned To
             </label>
@@ -315,7 +339,7 @@
             </p-dropdown>
           </div>
 
-          <div *ngIf="currentEM.troubleState" class="form-group row">
+          <div *ngIf="!currentEM.troubleState" class="form-group row">
             <label class="form-control-label col-md-3 col-12 text-md-right" for="lastCompleted">
               Maintenance Last Completed
             </label>
