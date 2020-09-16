@@ -1,19 +1,53 @@
 <div class="container-flex">
-    <div class="row">
-      <div class="col-6">
-          Customer Part Number {{parentPart?.part?.partNumber}}, (Serial Number: {{parentPart?.serialNumber}}), {{parentPart?.part?.name}}
-      </div>
-      <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
-        <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
-      </div>
+  <div class="row">
+    <div class="col-6">
+      Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: {{parentPart?.serialNumber}}),
+      {{parentPart?.part?.name}}
     </div>
-    <div class="row">
-      <div class="row">
+    <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+      <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
         <div class="col-6">Reports go here</div>
-        <div class="col-6">Tabs go here</div>
+        <div class="col-6">
+          <p-tabView>
+            <p-tabPanel header="Header 1">
+              <ul>
+                <li *ngFor="let part of workOrderParts">
+                  Customer Part #{{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
+                  (Qty: {{part.part.Quantity}})
+                </li>
+              </ul>
+            </p-tabPanel>
+            <p-tabPanel header="Header 2">
+              <ul>
+                <li>Customer: {{ customer.name}}</li>
+                <li>Product: {{ product.name}}</li>
+                <li>Procedure: {{procedure.name}}</li>
+                <li>Purchase Item #: {{purchase.customerPurchaseNumber}} </li>
+              </ul>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
       </div>
-      <div class="row">Step Selector Goes Here</div>
+      <div class="row justify-content-start">
+        <carousel [itemsPerSlide]="8"
+        [singleSlideOffset]="false"
+        [noWrap]="true"
+        [interval]="false"
+        [startFromIndex]="0" *ngIf="workOrderTasks !== undefined">
+          <slide *ngFor="let workOrderTask of workOrderTasks; let index=index">
+            <div class="m-auto">
+              {{ workOrderTask.procedureStep?.title}}
+            </div>
+          </slide>
+        </carousel>
+      </div>
       <div class="row">Timer goes here</div>
       <div class="row">Tabs go here</div>
     </div>
   </div>
+</div>

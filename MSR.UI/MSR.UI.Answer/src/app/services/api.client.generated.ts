@@ -14061,6 +14061,7 @@ export interface IWorkOrderPartModel {
 }
 
 export class WorkOrderTaskModel implements IWorkOrderTaskModel {
+    id?: number;
     workOrderId?: number;
     procedureStepId?: number;
     procedureStepTypeId?: number;
@@ -14089,6 +14090,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.workOrderId = _data["workOrderId"];
             this.procedureStepId = _data["procedureStepId"];
             this.procedureStepTypeId = _data["procedureStepTypeId"];
@@ -14125,6 +14127,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["workOrderId"] = this.workOrderId;
         data["procedureStepId"] = this.procedureStepId;
         data["procedureStepTypeId"] = this.procedureStepTypeId;
@@ -14154,6 +14157,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
 }
 
 export interface IWorkOrderTaskModel {
+    id?: number;
     workOrderId?: number;
     procedureStepId?: number;
     procedureStepTypeId?: number;

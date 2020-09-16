@@ -1,0 +1,19 @@
+slide {
+    width: 200px !important;
+    height: 80px !important;
+    border: solid 1px #FFFFFF;
+}
+
+:host ::ng-deep carousel > div > div > slide > div {
+    height: 100% !important;
+    width: 100% !important;
+    display: flex;
+}
+
+:host ::ng-deep.carousel-indicators{
+    display:none !important;
+}
+
+:host ::ng-deep.carousel-control{
+    width:3%;
+}
