@@ -165,7 +165,13 @@ namespace MSR.Application.ApplicationServices
                 sum.PercentageOfTasksCompleted = pctComplete;
 
                 // PercentageOfExpectedDurationTimeLogged
-                //int denom = m.WorkOrderTasks.Select(x => x.ProcedureStep.)
+                decimal denomTime = m.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
+                decimal numerTime = m.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
+                if (denomTime > 0) {
+                    sum.PercentageOfExpectedDurationTimeLogged = numerTime / denomTime;
+                } else {
+                    sum.PercentageOfExpectedDurationTimeLogged = 0;
+                }
 
 /*
 DONE public int? PurchaseId { get; set; }
@@ -185,7 +191,7 @@ DONE public string Status { get; set; }
 DONE public string Disposition { get; set; }
 DONE public string CurrentActiveTaskName { get; set; }
 DONE public decimal? PercentageOfTasksCompleted { get; set; }
-     public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
+DONE public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
 DONE public bool HasNcr { get; set; }
 */
 
