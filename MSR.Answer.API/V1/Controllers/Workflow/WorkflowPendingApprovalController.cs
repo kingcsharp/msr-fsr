@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.SignalR;
 using MSR.Answer.API.Filters;
 using MSR.Application.Hubs;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -52,9 +54,14 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PendingApprovalPopoverModel>();
         }
 
-        [HttpPost, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanCreate)]
+        [HttpPost, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>))]
         public async Task<IActionResult> Post([FromBody, Required] PostPendingApprovalRequest request)
         {
+            if (!CurrentUser.CanApproveActivity(request.Table))
+            {
+                throw new DomainException("You do not have privileges for this action.", DomainError.BadRequest);
+            }
+
             var command = request.ToPostApprovalCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
@@ -64,16 +71,21 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was approved successfully.");
         }
 
-        [HttpDelete, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanDelete)]
+        [HttpDelete, SwaggerResponse(typeof(AuditActionResult<PendingApprovalModel>))]
         public async Task<IActionResult> Delete([FromQuery, Required] DeletePendingApprovalRequest request)
         {
+            if (!CurrentUser.CanDeleteActivity(request.Table))
+            {
+                throw new DomainException("You do not have privileges for this action.",DomainError.BadRequest);
+            }
+
             var command = request.ToDeleteApprovalCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
 
             await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
-            var result = ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was cancelled successfully.");
+            var result = ret.ToOkObjectResponse("Pending Approval was cancelled successfully.");
             return result;
         }
 

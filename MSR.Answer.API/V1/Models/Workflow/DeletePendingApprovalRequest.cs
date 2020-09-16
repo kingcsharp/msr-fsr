@@ -6,5 +6,6 @@ namespace MSR.Answer.API.V1.Models
     {
         public EnumApprovalTables Table { get; set; }
         public int Id { get; set; }
+        public string Comment { get; set; }
     }
 }

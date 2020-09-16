@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
 import { NotificationService } from '../layout/navbar/notification.service';
 import { environment as env } from '../../environments/environment';
@@ -7,14 +7,14 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root'
 })
-export class SignalRService {
+export class SignalRService implements OnDestroy {
   workflowNotificationIds: Array<number>;
+  hubConnection: signalR.HubConnection;
   constructor(private notificationService: NotificationService, private toastr: ToastrService) {
     this.workflowNotificationIds = new Array<number>();
 
   }
 
-  private hubConnection: signalR.HubConnection
   public startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(env.url + '/msg')
@@ -24,6 +24,12 @@ export class SignalRService {
       .then(() => console.log('Signalr Connection started'))
       .catch(err => console.log('Error while starting connection: ' + err))
   }
+
+  public discconecctHub = () => {
+    this.hubConnection.stop();
+    console.log('Signalr Connection stopped');
+  }
+
   public addWorkflowNotificationListener = () => {
     this.hubConnection.on('WorkflowNotification', (evId, data) => {
       var index = this.workflowNotificationIds.findIndex(x => x === evId);
@@ -46,4 +52,9 @@ export class SignalRService {
       }
     });
   }
+
+  ngOnDestroy() {
+    this.discconecctHub();
+  }
+
 }
