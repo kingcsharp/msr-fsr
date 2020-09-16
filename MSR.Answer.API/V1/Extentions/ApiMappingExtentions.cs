@@ -2,7 +2,6 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -195,8 +194,7 @@ namespace MSR.Answer.API.V1.Extentions
             return new DeactivateApprovalModel()
             {
                 Id = request.Id,
-                Table = request.Table,
-                Comment=request.Comment
+                Table = request.Table
             };
         }
 

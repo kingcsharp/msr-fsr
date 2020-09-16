@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MSR.Domain.Commanding;
-using MSR.Domain.Models;
 using Newtonsoft.Json;
 
 namespace MSR.Domain.Commands
