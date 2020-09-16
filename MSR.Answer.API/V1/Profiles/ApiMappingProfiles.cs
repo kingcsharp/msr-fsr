@@ -111,7 +111,10 @@ namespace MSR.Answer.API.V1.Profiles
                         : 0))
                 // Quantity
                 .ForMember(dest => dest.Quantity, opts => opts.MapFrom(src => src.Purchase != null ? src.Purchase.Qty : 0));
-            CreateMap<WorkOrderModel, WorkOrderStatus>();
+            CreateMap<WorkOrderModel, WorkOrderStatus>()
+                .ForMember(dest => dest.ProductName, opts => opts.MapFrom(src => src.Product.Name))
+                .ForMember(dest => dest.LocationName, opts => opts.MapFrom(src => src.Location.Name));
+
         }
     }
 }

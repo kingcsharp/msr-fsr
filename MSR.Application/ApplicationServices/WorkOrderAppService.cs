@@ -158,10 +158,6 @@ namespace MSR.Application.ApplicationServices
             foreach (WorkOrderModel m in models) {
                 var sum = _mapper.Map<WorkOrderStatus>(m);
 
-                // TODO: move to mapper
-                sum.ProductName = m.Product.Name;
-                sum.LocationName = m.Location.Name;
-
                 // PartNumber
                 // Lists the first part in the set (this follows
                 // the behavior of Answer 2).
@@ -216,22 +212,6 @@ namespace MSR.Application.ApplicationServices
                 wosum.WorkOrderScheduledEndDate = m.ScheduledEndDate;
 
                 sum.WorkOrderSummary = wosum;
-
-/*
-DONE public string ProductName { get; set; }
-DONE public string PartNumber { get; set; }
-DONE public string ProcedureName { get; set; }
-DONE public string LocationName { get; set; }
-     public WorkOrderSummary WorkOrderSummary { get; set; }
-DONE    public int WorkOrderId { get; set; }
-DONE    public string WorkOrderItemNumber { get; set; }
-DONE    public string PurchaseOrderLineNumber { get; set; }
-DONE    public string WorkOrderPartSerialNumber { get; set; }
-DONE    public string WorkOrderStatus { get; set; }
-DONE    public string WorkOrderAssignedTo { get; set; }
-DONE    public bool WorkOrderHasNcr { get; set; }
-DONE    public DateTime? WorkOrderScheduledEndDate { get; set; }
-*/
 
                 ret.Add(sum);
             }
