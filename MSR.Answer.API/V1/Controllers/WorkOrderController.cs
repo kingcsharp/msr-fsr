@@ -84,28 +84,9 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        public virtual IActionResult WorkOrderGetStatus()
+        public async Task<IActionResult> WorkOrderGetStatus()
         {
-            // TODO: MOCKED
-            WorkOrderStatus w = new WorkOrderStatus() {
-                LocationName = "LocationName",
-                ProductName = "ProductName",
-                ProcedureName = "ProcedureName",
-                PartNumber = "PartNumber",
-                WorkOrderSummary = new WorkOrderSummary() {
-                    WorkOrderId = 123,
-                    WorkOrderItemNumber = "NUM123",
-                    PurchaseOrderLineNumber = "LINE1",
-                    WorkOrderPartSerialNumber = "SERIAL1600187570",
-                    WorkOrderStatus = "In Progress",
-                    WorkOrderAssignedTo = "Frank",
-                    WorkOrderHasNcr = true,
-                    WorkOrderScheduledEndDate = DateTime.Now.AddDays(1)
-                }
-            };
-            List<WorkOrderStatus> example = new List<WorkOrderStatus>();
-            example.Add(w);
-            var ret = new CommandResponse<ICollection<WorkOrderStatus>>(example);
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderStatusView());
             return ret.ToOkObjectResponse<ICollection<WorkOrderStatus>>();
         }
 

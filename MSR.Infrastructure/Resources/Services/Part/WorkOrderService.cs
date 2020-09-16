@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Amazon.CloudWatchLogs;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -175,6 +176,47 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 x.Name.ToUpper().Equals("closed"))
             ).ToList();
             return rows.Select(x => _mapper.Map<StatusModel>(x)).ToList();
+        }
+
+        public static string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks) {
+            // Status ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
+            // This field is calculated based on the summation of the statuses
+            // of the steps.
+            // 1   Approved
+            // 2   In Progress
+            // 3   Complete
+            // 4   Cancelled
+            // 5   Pending
+            // 6   Rejected
+            // 7   Open
+            // 8   Closed
+            // 9   Requested
+            // 10  Assigned
+            int[] completed = { 3, 6, 8 };
+            string status;
+            if (tasks.Where(x => x.StatusId == 2).Any()) {
+                status = "In Progress";
+            } else if (tasks.Where(x => x.StatusId == 4).Any()) {
+                status = "Cancelled";
+            } else if (tasks.All(x => completed.Contains(x.StatusId))) {
+                status = "Completed";
+            } else {
+                status = "Waiting Start";
+            }
+            return status;
+        }
+
+        public static string GetWorkOrderItemNumber(WorkOrderModel model)
+        {
+            string customerName = model.Purchase?.PurchaseOrder?.Customer?.Name;
+            if (string.IsNullOrEmpty(customerName)) {
+                customerName = "";
+            }
+            string customerPNum = model.Purchase?.CustomerPurchaseNumber;
+            if (string.IsNullOrEmpty(customerPNum)) {
+                customerPNum = "";
+            }
+            return $"{customerName}-{customerPNum}";
         }
 
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)

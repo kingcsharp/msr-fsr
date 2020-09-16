@@ -4,10 +4,12 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Infrastructure.Resources.Services.Part;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +21,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetWorkOrderView>,
         ICommandHandler<CreateWorkOrder>,
         ICommandHandler<DeleteWorkOrder>,
+        ICommandHandler<GetWorkOrderStatusView>,
         ICommandHandler<UpdateWorkOrder>
     {
         public const int PROCEDURE_STEP_TYPE_NC = 3;
@@ -83,11 +86,7 @@ namespace MSR.Application.ApplicationServices
                 }
 
                 // WorkOrderItemNumber
-                string customerPNum = m.Purchase?.CustomerPurchaseNumber;
-                if (string.IsNullOrEmpty(customerPNum)) {
-                    customerPNum = "";
-                }
-                sum.WorkOrderItemNumber = $"{sum.CustomerName}-{customerPNum}";
+                sum.WorkOrderItemNumber = WorkOrderService.GetWorkOrderItemNumber(m);
 
                 // ProcedureName
                 var firstProc =
@@ -99,28 +98,7 @@ namespace MSR.Application.ApplicationServices
                 }
 
                 // Status ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
-                // This field is calculated based on the summation of the statuses
-                // of the steps.
-                // 1   Approved
-                // 2   In Progress
-                // 3   Complete
-                // 4   Cancelled
-                // 5   Pending
-                // 6   Rejected
-                // 7   Open
-                // 8   Closed
-                // 9   Requested
-                // 10  Assigned
-                int[] completed = { 3, 6, 8 };
-                if (m.WorkOrderTasks.Where(x => x.StatusId == 2).Any()) {
-                    sum.Status = "In Progress";
-                } else if (m.WorkOrderTasks.Where(x => x.StatusId == 4).Any()) {
-                    sum.Status = "Cancelled";
-                } else if (m.WorkOrderTasks.All(x => completed.Contains(x.StatusId))) {
-                    sum.Status = "Completed";
-                } else {
-                    sum.Status = "Waiting Start";
-                }
+                sum.Status = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
 
                 // Disposition
                 // This is a string join of the text values of
@@ -167,6 +145,97 @@ namespace MSR.Application.ApplicationServices
                 ret.Add(sum);
             }
             return new CommandResponse<ICollection<WorkOrderGridSummary>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrderStatusView command, CancellationToken cancellationToken = default)
+        {
+            var gwo = _mapper.Map<GetWorkOrder>(command);
+
+            gwo.statuses = _workOrderService.GetActiveStatusList();
+            gwo.invertStatusSet = false;
+            ICollection<WorkOrderModel> models = await _workOrderService.GetWorkOrderAsync(gwo);
+            List<WorkOrderStatus> ret = new List<WorkOrderStatus>();
+            foreach (WorkOrderModel m in models) {
+                var sum = _mapper.Map<WorkOrderStatus>(m);
+
+                // TODO: move to mapper
+                sum.ProductName = m.Product.Name;
+                sum.LocationName = m.Location.Name;
+
+                // PartNumber
+                // Lists the first part in the set (this follows
+                // the behavior of Answer 2).
+                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0) {
+                    sum.PartNumber = m.WorkOrderParts.First().Part.PartNumber;
+                } else {
+                    sum.PartNumber = "";
+                }
+
+                // ProcedureName
+                if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0) {
+                    sum.ProcedureName = m.WorkOrderTasks.First().ProcedureStep?.Procedure?.Name;
+                } else {
+                    sum.ProcedureName = "";
+                }
+
+                WorkOrderSummary wosum = new WorkOrderSummary();
+
+                // WorkOrderId
+                wosum.WorkOrderId = m.Id.GetValueOrDefault();
+
+                // WorkOrderItemNumber
+                wosum.WorkOrderItemNumber = WorkOrderService.GetWorkOrderItemNumber(m);
+
+                // PurchaseOrderLineNumber
+                wosum.PurchaseOrderLineNumber = m.Purchase.CustomerLineNumber.ToString();
+
+                // WorkOrderPartSerialNumber
+                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0) {
+                    wosum.WorkOrderPartSerialNumber = m.WorkOrderParts.First().SerialNumber;
+                } else {
+                    wosum.WorkOrderPartSerialNumber = "";
+                }
+
+                // WorkOrderStatus ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
+                wosum.WorkOrderStatus = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
+
+                // WorkOrderAssignedTo
+                var curstep = m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
+                if (curstep.Count() > 0) {
+                    wosum.WorkOrderAssignedTo = curstep.First().AssignedToUser.FullName;
+                } else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0) {
+                    wosum.WorkOrderAssignedTo = m.WorkOrderTasks.First().AssignedToUser.FullName;
+                } else {
+                    wosum.WorkOrderAssignedTo = "";
+                }
+
+                // WorkOrderHasNcr
+                wosum.WorkOrderHasNcr = m.HasNCR.GetValueOrDefault();
+
+                // WorkOrderScheduledEndDate
+                wosum.WorkOrderScheduledEndDate = m.ScheduledEndDate;
+
+                sum.WorkOrderSummary = wosum;
+
+/*
+DONE public string ProductName { get; set; }
+DONE public string PartNumber { get; set; }
+DONE public string ProcedureName { get; set; }
+DONE public string LocationName { get; set; }
+     public WorkOrderSummary WorkOrderSummary { get; set; }
+DONE    public int WorkOrderId { get; set; }
+DONE    public string WorkOrderItemNumber { get; set; }
+DONE    public string PurchaseOrderLineNumber { get; set; }
+DONE    public string WorkOrderPartSerialNumber { get; set; }
+DONE    public string WorkOrderStatus { get; set; }
+DONE    public string WorkOrderAssignedTo { get; set; }
+DONE    public bool WorkOrderHasNcr { get; set; }
+DONE    public DateTime? WorkOrderScheduledEndDate { get; set; }
+*/
+
+                ret.Add(sum);
+            }
+            return new CommandResponse<ICollection<WorkOrderStatus>>(ret);
         }
     }
 }
