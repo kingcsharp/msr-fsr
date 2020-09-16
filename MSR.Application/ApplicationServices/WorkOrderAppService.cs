@@ -76,9 +76,6 @@ namespace MSR.Application.ApplicationServices
                     sum.CurrentActiveTaskName = proc.ProcedureStep.Title;
                 }
 
-                // SerialNumber (entered at purchase time, if any)
-                sum.SerialNumber = m.Purchase?.SerialNumber;
-
                 // CustomerName
                 sum.CustomerName = m.Purchase?.PurchaseOrder?.Customer?.Name;
                 if (string.IsNullOrEmpty(sum.CustomerName)) {
@@ -91,12 +88,6 @@ namespace MSR.Application.ApplicationServices
                     customerPNum = "";
                 }
                 sum.WorkOrderItemNumber = $"{sum.CustomerName}-{customerPNum}";
-
-                // PurchaseOrderNumber
-                sum.PurchaseOrderNumber = m.Purchase?.PurchaseOrder?.Id;
-
-                // Quantity
-                sum.Quantity = m.Purchase.Qty;
 
                 // ProcedureName
                 var firstProc =
@@ -172,28 +163,6 @@ namespace MSR.Application.ApplicationServices
                 } else {
                     sum.PercentageOfExpectedDurationTimeLogged = 0;
                 }
-
-/*
-DONE public int? PurchaseId { get; set; }
-DONE public string WorkOrderItemNumber { get; set; }
-DONE public string CustomerName { get; set; }
-DONE public string LocationName { get; set; }
-DONE public string SerialNumber { get; set; }
-DONE public int? PurchaseOrderNumber { get; set; }
-DONE public int? Quantity { get; set; }
-DONE public DateTime? ScheduledStartDate { get; set; }
-DONE public DateTime? ScheduledEndDate { get; set; }
-DONE public DateTime? ActualStartDate { get; set; }
-DONE public DateTime? ActualEndDate { get; set; }
-DONE public string ProductName { get; set; }
-DONE public string ProcedureName { get; set; }
-DONE public string Status { get; set; }
-DONE public string Disposition { get; set; }
-DONE public string CurrentActiveTaskName { get; set; }
-DONE public decimal? PercentageOfTasksCompleted { get; set; }
-DONE public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
-DONE public bool HasNcr { get; set; }
-*/
 
                 ret.Add(sum);
             }

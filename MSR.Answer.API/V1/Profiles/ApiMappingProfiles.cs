@@ -99,7 +99,20 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
             CreateMap<GetWorkOrderView, GetWorkOrder>();
-            CreateMap<WorkOrderModel, WorkOrderGridSummary>();
+            CreateMap<WorkOrderModel, WorkOrderGridSummary>()
+                // SerialNumber (entered at purchase time, if any)
+                .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.Purchase != null ? src.Purchase.SerialNumber : ""))
+                // PurchaseOrderNumber
+                .ForMember(dest => dest.PurchaseOrderNumber, opts => opts.MapFrom(src =>
+                    src.Purchase != null ?
+                        src.Purchase.PurchaseOrder != null ?
+                            src.Purchase.PurchaseOrder.Id : 0
+                        : 0))
+                // Quantity
+                .ForMember(dest => dest.Quantity, opts => opts.MapFrom(src => src.Purchase != null ? src.Purchase.Qty : 0));
+
+
+
         }
     }
 }
