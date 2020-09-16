@@ -50,7 +50,33 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             var result = workorders.Select(x => {
                 var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
+
+                // FIXME: MOCKED DATA
+                List<WorkOrderPartModel> mock1 = new List<WorkOrderPartModel>();
+                mock1.Add(new WorkOrderPartModel() {
+                    WorkOrderId = wom.Id.GetValueOrDefault(),
+                    PartId = 123,
+                    SerialNumber = "SERIAL1600264772",
+                    Part = new PartModel(),
+                    WorkOrder = null
+                });
+                mock1.Add(new WorkOrderPartModel() {
+                    WorkOrderId = wom.Id.GetValueOrDefault(),
+                    PartId = 124,
+                    SerialNumber = "SERIAL1600264773",
+                    Part = new PartModel(),
+                    WorkOrder = null
+                });
+                wom.WorkOrderParts = mock1;
+
+                List<WorkOrderTaskMonitorModel> mock2 = new List<WorkOrderTaskMonitorModel>();
+                mock2.Add(new WorkOrderTaskMonitorModel(){ SensorName = "SENSORNAME1600264773" });
+                mock2.Add(new WorkOrderTaskMonitorModel(){ SensorName = "SENSORNAME1600264774" });
+                foreach (var wot in wom.WorkOrderTasks) {
+                    wot.WorkOrderTaskMonitors = mock2;
+                }
                 return DetachBackPointers(wom);
+
             }).OrderBy(x => x.Id).ToList();
 
             return result;
