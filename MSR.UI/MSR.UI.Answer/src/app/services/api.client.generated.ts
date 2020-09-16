@@ -1774,7 +1774,7 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1783,6 +1783,8 @@ export class LocationService {
             url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (internalAddress !== undefined && internalAddress !== null)
+            url_ += "InternalAddress=" + encodeURIComponent("" + internalAddress) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5330,8 +5332,9 @@ export class UserService {
      * @param supervisor (optional) 
      * @param primaryPhone (optional) 
      * @param email (optional) 
+     * @param hasRoleIDs (optional) 
      */
-    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
+    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5352,6 +5355,8 @@ export class UserService {
             url_ += "PrimaryPhone=" + encodeURIComponent("" + primaryPhone) + "&";
         if (email !== undefined && email !== null)
             url_ += "Email=" + encodeURIComponent("" + email) + "&";
+        if (hasRoleIDs !== undefined && hasRoleIDs !== null)
+            hasRoleIDs && hasRoleIDs.forEach(item => { url_ += "HasRoleIDs=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

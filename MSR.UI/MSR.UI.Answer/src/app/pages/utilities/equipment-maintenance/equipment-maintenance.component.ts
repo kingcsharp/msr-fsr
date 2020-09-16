@@ -146,7 +146,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getUsers() {
-    this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)
+    this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.users = [];
@@ -157,7 +157,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getLocations() {
-    this.locationService.locationGet(null, null, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
     .subscribe(responseHandler(response => {
       this.locations = [];
       response.object.map((x) => {
