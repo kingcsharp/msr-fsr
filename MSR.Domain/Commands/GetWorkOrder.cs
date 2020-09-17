@@ -28,5 +28,15 @@ namespace MSR.Domain.Commands
         /// to accomplish this.
         /// </description>
         public bool invertStatusSet { get; set; }
+
+        /// <summary>
+        /// Option to return only compelted work orders.
+        /// </summary>
+        /// <description>
+        /// If True, return work orders where ActualEndDate is NOT null.
+        /// If False, return work orders where ActualEndDate is null.
+        /// If null, do not filter.
+        /// </description>
+        public bool? completedOnly { get; set; }
     }
 }

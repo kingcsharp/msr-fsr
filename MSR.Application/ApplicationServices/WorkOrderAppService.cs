@@ -64,8 +64,8 @@ namespace MSR.Application.ApplicationServices
         {
             var gwo = _mapper.Map<GetWorkOrder>(command);
 
-            gwo.statuses = _workOrderService.GetActiveStatusList();
-            gwo.invertStatusSet = command.IsHistory;
+            gwo.completedOnly = command.IsHistory;
+
             ICollection<WorkOrderModel> models = await _workOrderService.GetWorkOrderAsync(gwo);
             List<WorkOrderGridSummary> ret = new List<WorkOrderGridSummary>();
             foreach (WorkOrderModel m in models) {

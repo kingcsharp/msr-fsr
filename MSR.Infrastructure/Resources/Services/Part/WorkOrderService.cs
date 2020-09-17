@@ -56,6 +56,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
+            if (command.completedOnly.HasValue) {
+                if (command.completedOnly.Value) {
+                    query = query.Where(x => x.ActualEndDate.HasValue);
+                } else {
+                    query = query.Where(x => !x.ActualEndDate.HasValue);
+                }
+            }
+
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                     .ThenInclude(y => y.Part)
