@@ -5731,7 +5731,7 @@ export class WorkflowPendingApprovalService {
         return _observableOf<AuditActionResultOfPendingApprovalModel>(<any>null);
     }
 
-    workflowPendingApprovalDelete(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
+    workflowPendingApprovalDelete(table: EnumApprovalTables | undefined, id: number | undefined, comment: string | null | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5744,6 +5744,8 @@ export class WorkflowPendingApprovalService {
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (comment !== undefined && comment !== null)
+            url_ += "Comment=" + encodeURIComponent("" + comment) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -6172,6 +6174,9 @@ export class WorkOrderTaskService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
+    /**
+     * WorkOrderTaskCreateWorkOrderTask
+     */
     workOrderTaskPost(version: string, body: CreateWorkOrderTaskRequest): Observable<AuditActionResultOfWorkOrderTaskModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrderTask";
         if (version === undefined || version === null)
@@ -11087,6 +11092,7 @@ export interface IAuditActionResultOfProcedureStepModel extends IAuditActionResu
 
 export class ProcedureStepModel implements IProcedureStepModel {
     id?: number;
+    procedure?: Procedure | undefined;
     procedureId?: number | undefined;
     title?: string | undefined;
     stepText?: string | undefined;
@@ -11116,6 +11122,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.procedure = _data["procedure"] ? Procedure.fromJS(_data["procedure"]) : <any>undefined;
             this.procedureId = _data["procedureId"];
             this.title = _data["title"];
             this.stepText = _data["stepText"];
@@ -11153,6 +11160,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["procedure"] = this.procedure ? this.procedure.toJSON() : <any>undefined;
         data["procedureId"] = this.procedureId;
         data["title"] = this.title;
         data["stepText"] = this.stepText;
@@ -11183,6 +11191,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
 
 export interface IProcedureStepModel {
     id?: number;
+    procedure?: Procedure | undefined;
     procedureId?: number | undefined;
     title?: string | undefined;
     stepText?: string | undefined;
@@ -13873,6 +13882,7 @@ export interface IPurchaseModel extends ICreatableModel {
 
 export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrderModel {
     id?: number;
+    customer?: Customer | undefined;
     customerId?: number;
     name?: string | undefined;
     referencePO?: string | undefined;
@@ -13892,6 +13902,7 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
         super.init(_data);
         if (_data) {
             this.id = _data["id"];
+            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
             this.customerId = _data["customerId"];
             this.name = _data["name"];
             this.referencePO = _data["referencePO"];
@@ -13915,6 +13926,7 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["customer"] = this.customer ? this.customer.toJSON() : <any>undefined;
         data["customerId"] = this.customerId;
         data["name"] = this.name;
         data["referencePO"] = this.referencePO;
@@ -13932,6 +13944,7 @@ export class PurchaseOrderModel extends CreatableModel implements IPurchaseOrder
 
 export interface IPurchaseOrderModel extends ICreatableModel {
     id?: number;
+    customer?: Customer | undefined;
     customerId?: number;
     name?: string | undefined;
     referencePO?: string | undefined;
@@ -13989,6 +14002,7 @@ export interface IPurchaseOrderProductView {
 }
 
 export class WorkOrderPartModel implements IWorkOrderPartModel {
+    id?: number;
     workOrderId?: number;
     partId?: number;
     parentId?: number | undefined;
@@ -14009,6 +14023,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.workOrderId = _data["workOrderId"];
             this.partId = _data["partId"];
             this.parentId = _data["parentId"];
@@ -14033,6 +14048,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["workOrderId"] = this.workOrderId;
         data["partId"] = this.partId;
         data["parentId"] = this.parentId;
@@ -14050,6 +14066,7 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
 }
 
 export interface IWorkOrderPartModel {
+    id?: number;
     workOrderId?: number;
     partId?: number;
     parentId?: number | undefined;
@@ -14176,7 +14193,7 @@ export interface IWorkOrderTaskModel {
     referenceFiles?: FileModel[] | undefined;
 }
 
-export class WorkOrderTaskMonitorModel implements IWorkOrderTaskMonitorModel {
+export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOrderTaskMonitorModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureMonitorId?: number;
@@ -14189,15 +14206,11 @@ export class WorkOrderTaskMonitorModel implements IWorkOrderTaskMonitorModel {
     sensorName?: string | undefined;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+        super(data);
     }
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
             this.workOrderTaskId = _data["workOrderTaskId"];
             this.workOrderTask = _data["workOrderTask"] ? WorkOrderTaskModel.fromJS(_data["workOrderTask"]) : <any>undefined;
@@ -14231,11 +14244,12 @@ export class WorkOrderTaskMonitorModel implements IWorkOrderTaskMonitorModel {
         data["comment"] = this.comment;
         data["sensorValue"] = this.sensorValue;
         data["sensorName"] = this.sensorName;
+        super.toJSON(data);
         return data; 
     }
 }
 
-export interface IWorkOrderTaskMonitorModel {
+export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
     procedureMonitorId?: number;
@@ -16687,6 +16701,8 @@ export interface IAuditActionResultOfWorkOrderPartModel extends IAuditActionResu
 
 /**  */
 export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
+    /** Work Order Part ID */
+    workOrderPartId?: number;
     /** Gets or Sets SerialNumber */
     serialNumber?: string | undefined;
 
@@ -16701,6 +16717,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
 
     init(_data?: any) {
         if (_data) {
+            this.workOrderPartId = _data["workOrderPartId"];
             this.serialNumber = _data["serialNumber"];
         }
     }
@@ -16714,6 +16731,7 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["workOrderPartId"] = this.workOrderPartId;
         data["serialNumber"] = this.serialNumber;
         return data; 
     }
@@ -16721,6 +16739,8 @@ export class UpdateWorkOrderPartRequest implements IUpdateWorkOrderPartRequest {
 
 /**  */
 export interface IUpdateWorkOrderPartRequest {
+    /** Work Order Part ID */
+    workOrderPartId?: number;
     /** Gets or Sets SerialNumber */
     serialNumber?: string | undefined;
 }
@@ -16829,7 +16849,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     /** Gets or Sets TaskIsRunning */
     taskIsRunning?: boolean | undefined;
     /** Gets or Sets TaskRunningSince */
-    taskRunningSince?: boolean | undefined;
+    taskRunningSince?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
 
@@ -16848,7 +16868,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             this.taskStepOrder = _data["taskStepOrder"];
             this.assignedUserId = _data["assignedUserId"];
             this.taskIsRunning = _data["taskIsRunning"];
-            this.taskRunningSince = _data["taskRunningSince"];
+            this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
             this.status = _data["status"];
         }
     }
@@ -16866,7 +16886,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
         data["taskStepOrder"] = this.taskStepOrder;
         data["assignedUserId"] = this.assignedUserId;
         data["taskIsRunning"] = this.taskIsRunning;
-        data["taskRunningSince"] = this.taskRunningSince;
+        data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
         data["status"] = this.status;
         return data; 
     }
@@ -16883,7 +16903,7 @@ export interface IUpdateWorkOrderTaskRequest {
     /** Gets or Sets TaskIsRunning */
     taskIsRunning?: boolean | undefined;
     /** Gets or Sets TaskRunningSince */
-    taskRunningSince?: boolean | undefined;
+    taskRunningSince?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
 }

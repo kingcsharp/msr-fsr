@@ -1,25 +1,41 @@
-﻿using MSR.Domain.Abstractions.Services;
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoMapper;
+using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using MSR.Infrastructure.Resources.Services.Part;
 
 namespace MSR.Application.ApplicationServices
 {
+
     public class WorkOrderAppService :
         ICommandHandler<GetWorkOrder>,
+        ICommandHandler<GetWorkOrderHistory>,
+        ICommandHandler<GetWorkOrderMenu>,
         ICommandHandler<CreateWorkOrder>,
         ICommandHandler<DeleteWorkOrder>,
+        ICommandHandler<GetWorkOrderStatus>,
+        ICommandHandler<UpdateWorkOrderPart>,
+        ICommandHandler<CreateWorkOrderTask>,
+        ICommandHandler<UpdateWorkOrderTask>,
+        ICommandHandler<UpdateWorkOrderTaskMonitor>,
         ICommandHandler<UpdateWorkOrder>
     {
         private readonly IWorkOrderService _workOrderService;
+        private readonly IMapper _mapper;
 
-        public WorkOrderAppService(IWorkOrderService procedureService)
+        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper)
         {
             _workOrderService = procedureService;
+            _mapper = mapper;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
@@ -41,6 +57,48 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.DeleteWorkOrderAsync(command);
             return new CommandResponse<bool>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrderHistory command, CancellationToken cancellationToken = default)
+        {
+            ICollection<WorkOrderGridSummary> ret = await _workOrderService.GetWorkOrderGridSummaryAsync(command);
+            return new CommandResponse<ICollection<WorkOrderGridSummary>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrderMenu command, CancellationToken cancellationToken = default)
+        {
+            ICollection<WorkOrderGridSummary> ret = await _workOrderService.GetWorkOrderGridSummaryAsync(command);
+            return new CommandResponse<ICollection<WorkOrderGridSummary>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrderStatus command, CancellationToken cancellationToken = default)
+        {
+            ICollection<WorkOrderStatus> ret = await _workOrderService.GetWorkOrderStatusAsync(command);
+            return new CommandResponse<ICollection<WorkOrderStatus>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderPart command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.UpdateWorkOrderPartAsync(command);
+            return new CommandResponse<WorkOrderPartModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateWorkOrderTask command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.CreateWorkOrderTaskAsync(command);
+            return new CommandResponse<WorkOrderTaskModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTask command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.UpdateWorkOrderTaskAsync(command);
+            return new CommandResponse<WorkOrderTaskModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateWorkOrderTaskMonitor command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.UpdateWorkOrderTaskMonitorAsync(command);
+            return new CommandResponse<WorkOrderTaskMonitorModel>(ret);
         }
     }
 }

@@ -8,30 +8,23 @@ import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest,
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
+import { SignalRService } from '../../services/signalr.service';
 
 const jwt = new JwtHelperService();
 
 @Injectable()
 export class LoginService {
   config: any;
-  _isFetching: boolean = false;
+  isFetching: boolean = false;
   _errorMessage: string = '';
 
   constructor(
     appConfig: AppConfig,
     private globals: Globals,
     private http: HttpClient,
-    private router: Router, private accountService: AccountService, private userService: UserService
+    private router: Router, private accountService: AccountService, private userService: UserService, private signalrService: SignalRService
   ) {
     this.config = appConfig.getConfig();
-  }
-
-  get isFetching() {
-    return this._isFetching;
-  }
-
-  set isFetching(val: boolean) {
-    this._isFetching = val;
   }
 
   get errorMessage() {
@@ -63,12 +56,13 @@ export class LoginService {
     if (creds.email.length <= 0 || creds.password.length <= 0) {
       this.loginError('Something was wrong. Try again');
     }
-
+    this.isFetching = true;
     this.accountService.login(env.apiVersion, new SystemLoginRequest({ userName: creds.email, password: creds.password }))
       .pipe(take(1))
       .subscribe(responseHandler((result) => {
         ctrl.receiveToken(result.object);
       }, () => {
+        this.isFetching = false;
         ctrl.loginError('Username or Password is invalid.');
       }));
   }
@@ -91,8 +85,12 @@ export class LoginService {
         if (user.roles.length === 0) {
           this.logoutUser();
           this.loginError('Sorry you do not have roles associated with your user.');
+          this.isFetching = false;
           return;
         }
+
+        this.signalrService.startConnection();
+
         this.receiveLogin();
       });
   }
@@ -101,6 +99,7 @@ export class LoginService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    this.isFetching = false;
     this.router.navigate(['/login']);
   }
 

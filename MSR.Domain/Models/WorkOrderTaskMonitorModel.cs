@@ -1,8 +1,9 @@
+using MSR.Domain.Models.BaseModels;
 using System.Runtime.Serialization;
 
 namespace MSR.Domain.Models
 {
-    public class WorkOrderTaskMonitorModel
+    public class WorkOrderTaskMonitorModel : TrackableModel
     {
         public int WorkOrderTaskId { get; set; }
         public virtual WorkOrderTaskModel WorkOrderTask { get; set; }

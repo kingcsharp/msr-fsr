@@ -28,8 +28,9 @@ namespace MSR.Domain.Models
         public int WorkOrderId { get; set; }
 
         /// <summary>
-        /// Gets or Sets WorkOrderItemNumber
+        /// This is a combination of: {CustomerName}-{CustomerPurchaseNumber}
         /// </summary>
+        /// <value>This is a combination of: {CustomerName}-{CustomerPurchaseNumber}</value>
         [DataMember(Name="workOrderItemNumber")]
         public string WorkOrderItemNumber { get; set; }
 

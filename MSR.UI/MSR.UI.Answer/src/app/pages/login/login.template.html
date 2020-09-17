@@ -22,14 +22,15 @@
           <div class="input-group-addon">
             <i class="la la-lock text-white"></i>
           </div>
-          <input id="password" class="form-control input-transparent pl-3" [(ngModel)]="password" type="password"
+          <input id="password" autocomplete="on" class="form-control input-transparent pl-3" [(ngModel)]="password" type="password"
             required name="password" placeholder="Password" data-cy="password-input"/>
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="login()" type="submit" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button">
+        <button (click)="login()" type="submit" [disabled]="loginService.isFetching" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button">
           <span class="auth-btn-circle">
-            <i class="la la-caret-right"></i>
+            <i *ngIf="!loginService.isFetching" class="la la-caret-right"></i>
+            <i *ngIf="loginService.isFetching" class="fas fa-spinner-third fa-spin"></i>
           </span>
           Login
         </button>
@@ -58,9 +59,10 @@
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="forgotUserName()" type="submit" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button">
+        <button (click)="forgotUserName()" type="submit" [disabled]="loginService.isFetching" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button">
           <span class="auth-btn-circle">
-            <i class="la la-caret-right"></i>
+            <i *ngIf="!loginService.isFetching" class="la la-caret-right"></i>
+            <i *ngIf="loginService.isFetching" class="fas fa-spinner-third fa-spin"></i>
           </span>
           Submit
         </button>
@@ -88,9 +90,10 @@
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="forgotUserPassword()" type="submit" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button"> 
+        <button (click)="forgotUserPassword()" type="submit" [disabled]="loginService.isFetching" class="btn btn-sm btn-danger auth-btn" data-cy="submit-button"> 
           <span class="auth-btn-circle">
-            <i class="la la-caret-right"></i>
+            <i *ngIf="!loginService.isFetching" class="la la-caret-right"></i>
+            <i *ngIf="loginService.isFetching" class="fas fa-spinner-third fa-spin"></i>
           </span>
           Reset Password
         </button>

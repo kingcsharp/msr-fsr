@@ -155,7 +155,7 @@
           <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove) && approval.status !=='Approved'"
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
             class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
             (click)="showDialog(approveAction,approval)"></i>
         </td>
@@ -348,7 +348,7 @@
         </h5>
       </header>
       <div class="widget-body">
-        <fieldset *ngIf="currAction.action === approveAction">
+        <fieldset>
           <legend>
           </legend>
           <div class="form-group row">

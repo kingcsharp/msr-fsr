@@ -76,8 +76,8 @@ namespace MSR.Domain.Models
         {
             if (oldValue != newValue && newValue.HasValue)
             {
-                var from = oldValue.HasValue ? "" : oldValue.Value.ToString();
-                var to = newValue.HasValue ? "" : newValue.Value.ToString();
+                var from = !oldValue.HasValue ? "" : oldValue.Value.ToString();
+                var to = !newValue.HasValue ? "" : newValue.Value.ToString();
                 this.Rows.Add($"{name}: {from} To: {to}");
             }
         }
@@ -86,8 +86,8 @@ namespace MSR.Domain.Models
         {
             if (oldValue != newValue && newValue.HasValue)
             {
-                var from = oldValue.HasValue ? "" : oldValue.Value.ToString();
-                var to = newValue.HasValue ? "" : newValue.Value.ToString();
+                var from = !oldValue.HasValue ? "" : oldValue.Value.ToString();
+                var to = !newValue.HasValue ? "" : newValue.Value.ToString();
                 this.Rows.Add($"{name}: {from} To: {to}");
             }
         }
