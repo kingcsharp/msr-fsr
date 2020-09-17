@@ -19,7 +19,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.workOrderTaskInProgress);
   }
 
   startTask(){

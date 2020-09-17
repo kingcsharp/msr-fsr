@@ -53,10 +53,45 @@
       <div class="row">
         <p-tabView class="w-100">
           <p-tabPanel header="Task Description">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Assignee:</td>
+                  <td>{{ workOrderTaskToView?.assignedToUser?.fullName }}</td>
+                </tr>
+                <tr>
+                  <td>Task:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.title }}</td>
+                </tr>
+                <tr>
+                  <td>Description:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.stepText }}</td>
+                </tr>
+                <tr>
+                  <td>Related Documents:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.documents }}</td>
+                </tr>
+                <tr>
+                  <td>Reference Files:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.referenceFiles }}</td>
+                </tr>
+              </tbody>
+            </table>
           </p-tabPanel>
           <p-tabPanel header="Monitors">
+            <div class="d-flex">
+              <div class="card" *ngFor="let workOrderTask of workOrderMonitorsToView">
+                <div class="card-header">
+                  {{ workOrderTask.procedureStepMonitor.description }}
+                </div>
+                <div class="card-body">
+                  
+                </div>
+              </div>
+            </div>
           </p-tabPanel>
           <p-tabPanel header="Files">
+
           </p-tabPanel>
         </p-tabView>
       </div>

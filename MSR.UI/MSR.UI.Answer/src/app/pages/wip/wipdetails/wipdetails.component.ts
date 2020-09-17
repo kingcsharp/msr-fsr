@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Customer, IStatusModel, PartModel, Procedure, ProductModel, PurchaseModel, StatusModel, WorkOrderModel, WorkOrderPartModel, WorkOrderService, WorkOrderTaskModel } from '../../../services/api.client.generated';
+import { Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, 
+  WorkOrderModel, WorkOrderPartModel, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Product } from '../../ecommerce/products.service';
+import {forkJoin} from "rxjs";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-wipdetails',
   templateUrl: './wipdetails.component.html',
   styleUrls: ['./wipdetails.component.scss'],
-  providers: [WorkOrderService]
+  providers: [WorkOrderService, ProcedureStepMonitorService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -22,8 +25,10 @@ export class WipdetailsComponent implements OnInit {
   workOrderParts: Array<WorkOrderPartModel> = new Array<WorkOrderPartModel>()
   workOrderTasks: Array<WorkOrderTaskModel>;
   workOrderTaskInProgress: WorkOrderTaskModel;
+  workOrderTaskToView: WorkOrderTaskModel;
+  workOrderMonitorsToView: Array<any>;
 
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService) { }
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService) { }
 
   ngOnInit(): void {
 
@@ -40,15 +45,55 @@ export class WipdetailsComponent implements OnInit {
         this.customer = this.workOrderModel.product.customer;
         this.product = this.workOrderModel.product;
         this.purchase = this.workOrderModel.purchase;
+
         this.workOrderTaskInProgress = this.workOrderTasks[0];
+        this.workOrderTaskToView = this.workOrderTasks[0];
+
+        this.getAllMonitorsForTask();
+
       }));
 
     });
 
   }
 
+  getAllMonitorsForTask(){
+
+    if(this.workOrderMonitorsToView === undefined){
+      this.workOrderMonitorsToView = new Array<any>();
+    }else{
+      this.workOrderMonitorsToView.length = 0;
+    }
+
+    let arrayOfRequests = new Array<any>();
+
+    this.workOrderTaskToView.workOrderTaskMonitors.forEach(workOrderTaskMonitor => {
+
+      arrayOfRequests.push(
+        this.procedureStepMonitorService.procedurestep(this.workOrderTaskToView.procedureStepId, 
+          workOrderTaskMonitor.procedureMonitorId, env.apiVersion).pipe(tap(response => {
+
+            this.workOrderMonitorsToView.push(({
+              procedureStepMonitor: response.object[0],
+              workOrderTaskMonitor: workOrderTaskMonitor
+            }));
+
+          }))
+      )
+
+      
+
+    });
+
+    forkJoin(arrayOfRequests).subscribe(allResults => {
+      //console.log(allResults);
+      //console.log(this.workOrderMonitorsToView);
+    });
+  }
+
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel){
-    
+    this.workOrderTaskToView = workOrderTask;
+    this.getAllMonitorsForTask();
   }
 
   dataCleanup(){
