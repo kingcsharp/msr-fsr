@@ -12,10 +12,14 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -26,23 +30,33 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class WorkOrderTaskController : ControllerBase
     {
+        private ICommandDispatcher _dispatcher;
+
         /// <summary>
-        ///
+        /// WorkOrderTaskController Constructor
+        /// </summary>
+        /// <param name="dispatcher"></param>
+        public WorkOrderTaskController(ICommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
+        /// <summary>
+        /// WorkOrderTaskCreateWorkOrderTask
         /// </summary>
         /// <param name="body"></param>
         /// <response code="200"></response>
         [HttpPost]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
-        public virtual IActionResult WorkOrderTaskCreateWorkOrderTask([FromBody]CreateWorkOrderTaskRequest body)
+        public async Task<IActionResult> WorkOrderTaskCreateWorkOrderTask([FromBody]CreateWorkOrderTaskRequest body)
         {
-            // TODO: MOCKED
-            var example = new WorkOrderTaskModel() {
-                WorkOrderId = 1,
-                ProcedureStepId = 2,
-                ProcedureStepTypeId = 3,
-                StatusId = 1
-            };
-            var ret = new CommandResponse<WorkOrderTaskModel>(example);
+            CreateWorkOrderTask command = body.ToCreateWorkOrderTaskCommand();
+
+            // some additional defaults
+            command.StatusId = 1;
+            command.ProcedureStepTypeId = 1;
+
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderTaskModel>();
         }
 

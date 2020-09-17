@@ -933,5 +933,12 @@ namespace MSR.Answer.API.V1.Extentions
         public static UpdateWorkOrderPart ToUpdateWorkOrderPartCommand(this UpdateWorkOrderPartRequest request) =>
             AutoMapperHelper.Mapper.Map<UpdateWorkOrderPart>(request);
 
+        /// <summary>
+        /// ToCreateWorkOrderTaskCommand
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static CreateWorkOrderTask ToCreateWorkOrderTaskCommand(this CreateWorkOrderTaskRequest request) =>
+            AutoMapperHelper.Mapper.Map<CreateWorkOrderTask>(request);
     }
 }

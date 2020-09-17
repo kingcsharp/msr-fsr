@@ -13,5 +13,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command);
         Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command);
         ICollection<StatusModel> GetActiveStatusList();
+        Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command);
     }
 }

@@ -365,6 +365,8 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<UpdateWorkOrderPart, WorkOrderPart>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderPartId));
+
+            CreateMap<CreateWorkOrderTask, WorkOrderTask>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)

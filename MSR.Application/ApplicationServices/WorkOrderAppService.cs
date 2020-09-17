@@ -23,6 +23,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<DeleteWorkOrder>,
         ICommandHandler<GetWorkOrderStatusView>,
         ICommandHandler<UpdateWorkOrderPart>,
+        ICommandHandler<CreateWorkOrderTask>,
         ICommandHandler<UpdateWorkOrder>
     {
         public const int PROCEDURE_STEP_TYPE_NC = 3;
@@ -223,6 +224,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.UpdateWorkOrderPartAsync(command);
             return new CommandResponse<WorkOrderPartModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateWorkOrderTask command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _workOrderService.CreateWorkOrderTaskAsync(command);
+            return new CommandResponse<WorkOrderTaskModel>(ret);
         }
     }
 }

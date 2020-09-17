@@ -159,7 +159,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command)
         {
-            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderPart)} uid {CurrentUser.GetId()}");
             }
 
@@ -178,6 +178,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
             await _unitOfWork.LogApprovalTransaction(updatedWOPart, updatedWOPart.Id);
 
             return _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+        }
+
+        public async Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command)
+        {
+            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
+                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+            }
+
+            WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
+
+            _unitOfWork.WorkOrderTasks.Add(newTask);
+
+            // This will call SaveChangesAsync
+            await _unitOfWork.LogApprovalTransaction(newTask, newTask.Id);
+
+            return _mapper.Map<WorkOrderTaskModel>(newTask);
         }
 
         /// <summary>
