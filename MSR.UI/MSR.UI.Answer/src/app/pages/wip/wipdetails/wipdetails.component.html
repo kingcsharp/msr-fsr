@@ -36,22 +36,32 @@
       <div class="row justify-content-start">
         <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [interval]="false"
           [startFromIndex]="0" *ngIf="workOrderTasks !== undefined">
-          <slide *ngFor="let workOrderTask of workOrderTasks; let index=index">
-            <div class="m-auto">
+          <slide *ngFor="let workOrderTask of workOrderTasks; let index=index" 
+          [ngClass]="{ 'bg-warning': workOrderTask.status.name === 'Waiting to Start', 
+           'bg-light': workOrderTask.status.name === 'In Progress', 
+           'text-dark': workOrderTask.status.name === 'In Progress',
+           'bg-success': workOrderTask.status.name === 'Completed'}">
+            <div [ngClass]="{ 'm-auto': true}" (click)="selectTask(workOrderTask)">
               {{ workOrderTask.procedureStep?.title}}
             </div>
           </slide>
         </carousel>
       </div>
-      <div class="row">
-        <div style="height: 60px; width:240px;background-color: black;"></div>
-        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn start-step hidden">
+      <div class="row" *ngIf="workOrderTaskInProgress !== undefined">
+        <div style="height: 60px; width:240px;background-color: black;">
+          {{ stepHours }} : {{ stepMinutes - (60*stepHours)  }} : {{ stepSeconds - (60*stepMinutes) }}
+        </div>
+        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn start-step hidden"
+          *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0" (click)="startTask()">
           <i class="glyphicon glyphicon-step-forward"></i> Start</button>
-        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden">
+        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden"
+          *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds !== 0" (click)="startTask()">
           <i class="glyphicon glyphicon-step-forward"></i> Resume</button>
-        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left">
+        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left"
+          *ngIf="workOrderTaskInProgress.taskIsRunning === true" (click)="pauseTask()">
           <i class="glyphicon glyphicon-pause"></i> Pause</button>
-        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left">
+        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left"
+          *ngIf="stepSeconds !== 0" (click)="completeTask()">
           <i class="glyphicon glyphicon-stop"></i> Done
         </button>
       </div>
