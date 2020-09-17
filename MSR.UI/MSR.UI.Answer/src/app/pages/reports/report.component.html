@@ -3,28 +3,35 @@
     Adhoc Reports
 </h1>
 <widget>
-    <div class="row card-deck mt-3">
-        <div class="card mb-4 workorder part" *ngFor="let item of data">
-            <img class="card-img-top img-fluid" src="{{item.imageUrl}}" alt="Card image cap">
-            <div class="card-body">
-                <h4 class="card-title">{{item.name}}</h4>
-                <div class="card-subtitle mb-1 font-italic font-weight-bold text-muted">{{item.subtitle}}</div>
-                <p class="card-text">{{item.description}}</p>
-            </div>
-            <div class="card-category"><small class="text-muted">
-                    Categories:
-                    <span class="badge badge-dark rounded-0" *ngFor="let category of data.categories">
-                        {{category.reportCategory.name}}
-                    </span>
-                </small>
-            </div>
-            <div class="card-footer">
-                <div class="card-actions">
-                    <a href="#" class="btn btn-primary rounded-0"><i class="fa fa-eye"></i> View</a>
-                    <a href="#" class="btn btn-success rounded-0"><i class="fa fa-print"></i> Print</a>
-                </div>
-            </div>
+    <div class="row card-deck mt-3" *ngIf="data">
+        <div class="row card-deck mt-3">
+            <ng-container *ngFor="let items of data; index as i; " [ngTemplateOutlet]="rowView"
+                [ngTemplateOutletContext]="{elem: { item: items, index: i} }"></ng-container>
         </div>
-
     </div>
 </widget>
+
+<ng-template #rowView let-data='elem'>
+    <div class="card mb-4">
+        <img class="card-img-top img-fluid" src="{{elem.item?.imageUrl}}" alt="Card image cap">
+        <div class="card-body">
+            <h4 class="card-title">{{elem.item?.name}}</h4>
+            <div class="card-subtitle mb-1 font-italic font-weight-bold text-muted">{{elem.item?.subtitle}}</div>
+            <p class="card-text">{{elem.item?.description}}</p>
+        </div>
+        <div class="card-category"><small class="text-muted">
+                Categories:
+                <span class="badge badge-dark rounded-0" *ngFor="let category of data.categories">
+                    {{category.name}}
+                </span>
+            </small>
+        </div>
+        <div class="card-footer">
+            <div class="card-actions">
+                <a href="#" class="btn btn-primary rounded-0"><i class="fa fa-eye"></i> View</a>
+                <a href="#" class="btn btn-success rounded-0"><i class="fa fa-print"></i> Print</a>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="elem.index === 3"> solo en el div </div>
+</ng-template>
