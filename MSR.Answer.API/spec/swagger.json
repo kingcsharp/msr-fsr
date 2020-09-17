@@ -4718,7 +4718,7 @@
         "tags": [
           "WorkOrderTask"
         ],
-        "summary": " ",
+        "summary": "WorkOrderTaskCreateWorkOrderTask",
         "operationId": "WorkOrderTask_WorkOrderTaskCreateWorkOrderTask",
         "parameters": [
           {
@@ -10092,56 +10092,63 @@
         }
       },
       "WorkOrderTaskMonitorModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "workOrderTaskId": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
           },
-          "workOrderTask": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null"},
-              {
-                "$ref": "#/components/schemas/WorkOrderTaskModel"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "workOrderTaskId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "workOrderTask": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/WorkOrderTaskModel"
+                  }
+                ]
+              },
+              "procedureMonitorId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "numVal": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "textVal": {
+                "type": "string",
+                "nullable": true
+              },
+              "multiVal": {
+                "type": "string",
+                "nullable": true
+              },
+              "sensorMappingId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              },
+              "sensorValue": {
+                "type": "string",
+                "nullable": true
+              },
+              "sensorName": {
+                "type": "string",
+                "nullable": true
               }
-            ]
-          },
-          "procedureMonitorId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "numVal": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "textVal": {
-            "type": "string",
-            "nullable": true
-          },
-          "multiVal": {
-            "type": "string",
-            "nullable": true
-          },
-          "sensorMappingId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          },
-          "sensorValue": {
-            "type": "string",
-            "nullable": true
-          },
-          "sensorName": {
-            "type": "string",
-            "nullable": true
+            }
           }
-        }
+        ]
       },
       "CreateProductRequest": {
         "type": "object",
@@ -10714,6 +10721,7 @@
           "submittedBy": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/UserModel"
               }
@@ -10998,9 +11006,18 @@
             }
           }
         },
-        "example": {
-            "username": "95f27a6f8b3ffa55",
-            "isActive": false
+        "example" : {
+          "purchaseOrderId": 1,
+          "purchaseOrderProductId": 2,
+          "customerPurchaseNumber": "PURCHASE1598926122",
+          "locationId": 54,
+          "serialNumber": "SN1598926122",
+          "statusId": 1,
+          "qty": 1,
+          "customerLineNumber": 1,
+          "mttn": "1598926122",
+          "dueDate": "2099-12-31",
+          "purchasePrice": 123.45
         }
       },
       "UpdateRoleRequest": {
@@ -11451,6 +11468,10 @@
               "type": "string"
             }
           }
+        },
+        "example": {
+            "username": "95f27a6f8b3ffa55",
+            "isActive": false
         }
       },
       "AuditActionResultOfPendingApprovalModel": {
@@ -11466,6 +11487,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/PendingApprovalModel"
                   }
@@ -11627,7 +11649,11 @@
               }
             }
           }
-        ]
+        ],
+        "example": {
+            "id": 2147483647,
+            "isActive": false
+        }
       },
       "WorkOrderStatus": {
         "type": "object",
@@ -11782,6 +11808,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/WorkOrderTaskModel"
                   }
@@ -11851,9 +11878,9 @@
             "nullable": true
           },
           "taskRunningSince": {
-            "type": "boolean",
+            "type": "string",
             "description": "Gets or Sets TaskRunningSince",
-            "nullable": true
+            "format": "date-time"
           },
           "status": {
             "type": "string",
