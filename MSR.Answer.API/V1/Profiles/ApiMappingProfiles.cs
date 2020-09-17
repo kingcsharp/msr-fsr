@@ -116,6 +116,7 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.LocationName, opts => opts.MapFrom(src => src.Location.Name));
             CreateMap<UpdateWorkOrderPartRequest, UpdateWorkOrderPart>();
             CreateMap<CreateWorkOrderTaskRequest, CreateWorkOrderTask>();
+            CreateMap<UpdateWorkOrderTaskRequest, UpdateWorkOrderTask>();
         }
     }
 }

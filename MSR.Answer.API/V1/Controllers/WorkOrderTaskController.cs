@@ -68,16 +68,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskModel>))]
-        public virtual IActionResult WorkOrderTaskUpdateWorkOrderTask([FromBody]UpdateWorkOrderTaskRequest body)
+        public async Task<IActionResult> WorkOrderTaskUpdateWorkOrderTask([FromBody]UpdateWorkOrderTaskRequest body)
         {
-            // TODO: MOCKED
-            var example = new WorkOrderTaskModel() {
-                WorkOrderId = 10,
-                ProcedureStepId = 20,
-                ProcedureStepTypeId = 30,
-                StatusId = 1
-            };
-            var ret = new CommandResponse<WorkOrderTaskModel>(example);
+            UpdateWorkOrderTask command = body.ToUpdateWorkOrderTaskCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderTaskModel>();
         }
     }

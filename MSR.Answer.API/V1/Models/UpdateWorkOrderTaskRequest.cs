@@ -54,7 +54,7 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets TaskRunningSince
         /// </summary>
         [DataMember(Name="taskRunningSince")]
-        public bool? TaskRunningSince { get; set; }
+        public DateTime TaskRunningSince { get; set; }
 
         /// <summary>
         /// Gets or Sets Status

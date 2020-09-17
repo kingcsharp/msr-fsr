@@ -112,16 +112,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<Domain.Models.WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            {
+                throw new DomainException($"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}");
+            }
+
             var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
             if(current is null)
             {
                 throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
-            }
-
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
-            {
-                throw new DomainException($"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}");
             }
 
             WorkOrderModel ret;
@@ -194,6 +194,32 @@ namespace MSR.Infrastructure.Resources.Services.Part
             await _unitOfWork.LogApprovalTransaction(newTask, newTask.Id);
 
             return _mapper.Map<WorkOrderTaskModel>(newTask);
+        }
+
+        public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
+        {
+            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanDelete)) {
+                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+            }
+
+            var current = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(WorkOrderTask)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            WorkOrderTaskModel ret;
+            var workordertask = _mapper.Map(command, current);
+            _unitOfWork.WorkOrderTasks.Update(workordertask);
+
+            // This will call SaveChangesAsync
+            await _unitOfWork.LogApprovalTransaction(workordertask, workordertask.Id);
+
+            ret = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workordertask);
+
+            return ret;
+
         }
 
         /// <summary>
