@@ -163,10 +163,10 @@
             {{emmodel.createdOn | userTimezone }}
           </td>
           <td [hidden]="!cg.isVisibleCol('created.fullName',gridSettings)">
-            {{emmodel.created.fullName}}
+            {{emmodel.created ? emmodel.created.fullName : ''}}
           </td>
           <td [hidden]="!cg.isVisibleCol('assignedTo.fullName',gridSettings)">
-            {{emmodel.assignedTo.fullName}}
+            {{emmodel.assignedTo ? emmodel.assignedTo.fullName : null}}
           </td>
           <td [hidden]="!cg.isVisibleCol('troubleState',gridSettings)">
             <p-inputSwitch disabled="true" [(ngModel)]="emmodel.troubleState">
@@ -245,158 +245,160 @@
             </div>
           </div>
 
-          <div class="form-group row">
-            <label for="locationId" class="col-md-3 col-12 col-form-label text-md-right">
-              Room/Equipment
-            </label>
-            <p-dropdown
-              *ngIf="getLocationsFlag"
-              class="col-md-9 col-12"
-              placeholder="Select Room/Equipment"
-              name="locationId"
-              [(ngModel)]="currentEM.locationId"
-              [options]="locations"
-              appendTo="body"
-              [baseZIndex]="100002"
-              [virtualScroll]="true"
-              itemSize="30"
-              [filter]="true"
-              filterBy="label"
-              data-cy="em-select-locationid"
-              required
-            >
-            </p-dropdown>
-          </div>
-
-          <div class="form-group row">
-            <label for="troubleState" class="col-md-3 col-12 col-form-label text-md-right">
-              Trouble State
-            </label>
-            <div class="col-md-9 col-12">
-              <bootstrap-switch
-                name="troubleState"
-                (onChange)="onTroubleStateToggle($event)"
-                [isOn]="currentEM.troubleState" data-cy="em-toogle-troublestate"
-              ></bootstrap-switch>
-            </div>
-          </div>
-
-          <div class="form-group row" *ngIf="!currentEM.troubleState">
-            <label for="maintenanceTask" class="col-md-3 col-12 col-form-label text-md-right">
-              Maintenance Task
-            </label>
-            <p-dropdown
-              class="col-md-3"
-              placeholder="Select Maintenance Task"
-              name="maintenanceTask"
-              [(ngModel)]="currentEM.maintenanceTask"
-              [options]="maintenanceTasks"
-              appendTo="body"
-              [baseZIndex]="100003"
-              [filter]="true"
-              filterBy="label"
-              data-cy="em-select-maintenanceTask"
-              required
-            >
-            </p-dropdown>
-            <label for="status" class="col-md-3 col-12 col-form-label text-md-right">
-              Status
-            </label>
-            <p-dropdown
-              *ngIf="currentEM.statusId"
-              class="col-md-3 col-12"
-              placeholder="Select Status"
-              name="status"
-              [(ngModel)]="currentEM.statusId"
-              [options]="allStatus"
-              appendTo="body"
-              [baseZIndex]="100003"
-              [filter]="true"
-              filterBy="label"
-              data-cy="em-select-status"
-              required
-            >
-            </p-dropdown>
-          </div>
-
-          <div class="form-group row" *ngIf="!currentEM.troubleState && currentEM.statusId === enumEMStatus.Assigned">
-            <label for="assignedTo" class="col-md-3 col-12 col-form-label text-md-right">
-              Assigned To
-            </label>
-            <p-dropdown
-              class="col-md-9 col-12"
-              placeholder="Select Assigned To User"
-              name="assignedTo"
-              [(ngModel)]="currentEM.assignedToId"
-              [options]="users"
-              appendTo="body"
-              [baseZIndex]="100004"
-              [filter]="true"
-              filterBy="label"
-              data-cy="em-select-assignedto"
-              required
-            >
-            </p-dropdown>
-          </div>
-
-          <div *ngIf="!currentEM.troubleState" class="form-group row">
-            <label class="form-control-label col-md-3 col-12 text-md-right" for="lastCompleted">
-              Maintenance Last Completed
-            </label>
-            <p-calendar
-              [(ngModel)]="currentEM.pemLastCompletedDate"
-              placeholder="Select Last Completed Date"
-              class="col-md-3 col-12"
-              name="lastCompleted"
-              showIcon="true"
-              styleClass="input-group input-group-transparent"
-              inputStyleClass="form-control input-transparent" data-parsley-trigger="change"
-              data-parsley-required="true"
-              tooltip="Open Date"
-              data-cy="em-input-lastcompleted"
-            >
-            </p-calendar>
-            <label class="form-control-label col-md-3 col-12 text-md-right" for="frequencyField">
-              Maintenance Frequency
-            </label>
-            <div class="input-group input-group-transparent col-md-3 col-12">
-              <input
-                pInputText
-                type="text"
-                class="form-control input-transparent"
-                name="frequencyField"
-                [(ngModel)]="currentEM.frequencyField"
-                data-cy="em-input-frequencyfield"
-                data-validate="parsley"
-                data-parsley-trigger="change"
-                data-parsley-type="number"
+          <ng-container *ngIf="getLocationsFlag && locations.length > 0">
+            <div class="form-group row">
+              <label for="locationId" class="col-md-3 col-12 col-form-label text-md-right">
+                Room/Equipment
+              </label>
+              <p-dropdown
+                *ngIf="getLocationsFlag"
+                class="col-md-9 col-12"
+                placeholder="Select Room/Equipment"
+                name="locationId"
+                [(ngModel)]="currentEM.locationId"
+                [options]="locations"
+                appendTo="body"
+                [baseZIndex]="100002"
+                [virtualScroll]="true"
+                itemSize="30"
+                [filter]="true"
+                filterBy="label"
+                data-cy="em-select-locationid"
+                required
               >
-              <span class="input-group-addon bg-secondary">
-                Days
-              </span>
+              </p-dropdown>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="comments" class="col-md-3 col-form-label text-md-right">
-              Comments
-            </label>
-            <div class="col-md-9 ">
-              <textarea
-                pTextArea
-                rows="8"
-                type="text"
-                name="comments"
-                [(ngModel)]="currentEM.comments"
-                data-validate="parsley"
-                data-parsley-trigger="change"
-                class="form-control input-transparent"
-                placeholder="Comments"
-                data-cy="em-input-comments"
-                style="resize:none;"
-              ></textarea>
+            <div class="form-group row">
+              <label for="troubleState" class="col-md-3 col-12 col-form-label text-md-right">
+                Trouble State
+              </label>
+              <div class="col-md-9 col-12">
+                <bootstrap-switch
+                  name="troubleState"
+                  (onChange)="onTroubleStateToggle($event)"
+                  [isOn]="currentEM.troubleState" data-cy="em-toogle-troublestate"
+                ></bootstrap-switch>
+              </div>
             </div>
-          </div>
+
+            <div class="form-group row" *ngIf="!currentEM.troubleState">
+              <label for="maintenanceTask" class="col-md-3 col-12 col-form-label text-md-right">
+                Maintenance Task
+              </label>
+              <p-dropdown
+                class="col-md-3"
+                placeholder="Select Maintenance Task"
+                name="maintenanceTask"
+                [(ngModel)]="currentEM.maintenanceTask"
+                [options]="maintenanceTasks"
+                appendTo="body"
+                [baseZIndex]="100003"
+                [filter]="true"
+                filterBy="label"
+                data-cy="em-select-maintenanceTask"
+                required
+              >
+              </p-dropdown>
+              <label for="status" class="col-md-3 col-12 col-form-label text-md-right">
+                Status
+              </label>
+              <p-dropdown
+                *ngIf="currentEM.statusId"
+                class="col-md-3 col-12"
+                placeholder="Select Status"
+                name="status"
+                [(ngModel)]="currentEM.statusId"
+                [options]="allStatus"
+                appendTo="body"
+                [baseZIndex]="100003"
+                [filter]="true"
+                filterBy="label"
+                data-cy="em-select-status"
+                required
+              >
+              </p-dropdown>
+            </div>
+
+            <div class="form-group row" *ngIf="!currentEM.troubleState && currentEM.statusId === enumEMStatus.Assigned">
+              <label for="assignedTo" class="col-md-3 col-12 col-form-label text-md-right">
+                Assigned To
+              </label>
+              <p-dropdown
+                class="col-md-9 col-12"
+                placeholder="Select Assigned To User"
+                name="assignedTo"
+                [(ngModel)]="currentEM.assignedToId"
+                [options]="users"
+                appendTo="body"
+                [baseZIndex]="100004"
+                [filter]="true"
+                filterBy="label"
+                data-cy="em-select-assignedto"
+                required
+              >
+              </p-dropdown>
+            </div>
+
+            <div *ngIf="!currentEM.troubleState" class="form-group row">
+              <label class="form-control-label col-md-3 col-12 text-md-right" for="lastCompleted">
+                Maintenance Last Completed
+              </label>
+              <p-calendar
+                [(ngModel)]="currentEM.pemLastCompletedDate"
+                placeholder="Select Last Completed Date"
+                class="col-md-3 col-12"
+                name="lastCompleted"
+                showIcon="true"
+                styleClass="input-group input-group-transparent"
+                inputStyleClass="form-control input-transparent" data-parsley-trigger="change"
+                data-parsley-required="true"
+                tooltip="Open Date"
+                data-cy="em-input-lastcompleted"
+              >
+              </p-calendar>
+              <label class="form-control-label col-md-3 col-12 text-md-right" for="frequencyField">
+                Maintenance Frequency
+              </label>
+              <div class="input-group input-group-transparent col-md-3 col-12">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="frequencyField"
+                  [(ngModel)]="currentEM.frequencyField"
+                  data-cy="em-input-frequencyfield"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-type="number"
+                >
+                <span class="input-group-addon bg-secondary">
+                  Days
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="comments" class="col-md-3 col-form-label text-md-right">
+                Comments
+              </label>
+              <div class="col-md-9 ">
+                <textarea
+                  pTextArea
+                  rows="8"
+                  type="text"
+                  name="comments"
+                  [(ngModel)]="currentEM.comments"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  class="form-control input-transparent"
+                  placeholder="Comments"
+                  data-cy="em-input-comments"
+                  style="resize:none;"
+                ></textarea>
+              </div>
+            </div>
+          </ng-container>
         </fieldset>
       </div>
     </section>
@@ -404,6 +406,7 @@
     <p-footer>
       <div class="row mx-4 px-4 pb-2 justify-content-end">
         <button
+          *ngIf="currentEM.locationId"
           type="submit"
           class="btn btn-outline-inverse width-100 mb-xs"
           role="button" data-cy="btn-submit"

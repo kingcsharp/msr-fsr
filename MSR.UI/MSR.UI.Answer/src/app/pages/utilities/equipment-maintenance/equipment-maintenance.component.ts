@@ -184,6 +184,8 @@ export class EquipmentMaintenanceComponent implements OnInit {
       this.currentEM = new EquipmentMaintenanceModel();
       this.currentEM.troubleState = true;
       this.currentEM.statusId = this.enumEMStatus.Requested;
+      this.locations = [];
+      this.getLocationsFlag = true;
     }
 
     this.displayEMDialog = true;
@@ -206,17 +208,35 @@ export class EquipmentMaintenanceComponent implements OnInit {
       let requestData;
       this.globals.showLoader(true);
       if (this.currentEM.id === undefined) {
-        requestData = new CreateEquipmentMaintenanceRequest();
-        Object.assign(requestData, this.currentEM);
-        this.equipmentMaintenanceService.equipmentMaintenancePost(env.apiVersion, requestData).pipe(take(1))
+        requestData = {
+          locationId: this.currentEM.locationId,
+          troubleState: this.currentEM.troubleState,
+          statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
+          maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
+          pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
+          frequencyField:  this.currentEM.troubleState ? null : this.currentEM.frequencyField,
+          assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
+          comments: this.currentEM.comments,
+        }
+
+        this.equipmentMaintenanceService.equipmentMaintenancePost(env.apiVersion, new CreateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.data.push(response.object);
             this.closeEMModal();
           }));
       } else {
-        requestData = new UpdateEquipmentMaintenanceRequest();
-        Object.assign(requestData, this.currentEM);
-        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, requestData).pipe(take(1))
+        requestData = {
+          id: this.currentEM.id,
+          locationId: this.currentEM.locationId,
+          troubleState: this.currentEM.troubleState,
+          statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
+          maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
+          pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
+          frequencyField:  this.currentEM.troubleState ? null : this.currentEM.frequencyField,
+          assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
+          comments: this.currentEM.comments,
+        }
+        this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
           .subscribe(responseHandler(response => {
             const index = this.data.findIndex(x => x.id === this.currentEM.id);
             this.data.splice(index, 1);
