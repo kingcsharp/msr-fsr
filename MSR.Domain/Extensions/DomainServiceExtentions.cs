@@ -16,7 +16,7 @@ namespace MSR.Domain.Extensions
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
+            services.AddScoped<ICommandDispatcher, CommandDispatcher>();
             services.AddSingleton<ISendSQSMessages, BusSender>();
 
             var s3Config = config.GetSection(nameof(S3Information)).Get<S3Information>();

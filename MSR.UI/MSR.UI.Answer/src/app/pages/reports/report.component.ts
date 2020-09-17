@@ -34,5 +34,7 @@ export class ReportComponent implements OnInit {
             this.data = response.object;
         }));
     }
+    
+    
 
 }

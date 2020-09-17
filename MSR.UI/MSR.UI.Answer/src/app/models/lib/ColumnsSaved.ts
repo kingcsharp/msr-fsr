@@ -1,12 +1,16 @@
+import { EnumColumnType } from '../enums/EnumColumnType';
+
 export interface IColumnsSaved {
     id?: string | undefined;
     label?: string | undefined;
     visible?: boolean | undefined;
+    type?:EnumColumnType | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
     label?: string | undefined;
     visible?: boolean | undefined;
+    type: EnumColumnType | undefined;
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -30,6 +34,7 @@ export class ColumnsSaved implements IColumnsSaved {
             this.id = _data['id'];
             this.label = _data['label'];
             this.visible = _data['visible'];
+            this.type = _data['type'];
         }
     }
 
@@ -38,6 +43,7 @@ export class ColumnsSaved implements IColumnsSaved {
         data['id'] = this.id;
         data['label'] = this.label;
         data['visible'] = this.visible;
+        data['type'] = this.type;
         return data;
     }
 }
