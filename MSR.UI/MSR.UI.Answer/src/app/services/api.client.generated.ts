@@ -5731,7 +5731,7 @@ export class WorkflowPendingApprovalService {
         return _observableOf<AuditActionResultOfPendingApprovalModel>(<any>null);
     }
 
-    workflowPendingApprovalDelete(table: EnumApprovalTables | undefined, id: number | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
+    workflowPendingApprovalDelete(table: EnumApprovalTables | undefined, id: number | undefined, comment: string | null | undefined, version: string): Observable<AuditActionResultOfPendingApprovalModel> {
         let url_ = this.baseUrl + "/v{version}/WorkflowPendingApproval?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5744,6 +5744,8 @@ export class WorkflowPendingApprovalService {
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (comment !== undefined && comment !== null)
+            url_ += "Comment=" + encodeURIComponent("" + comment) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
