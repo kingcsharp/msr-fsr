@@ -269,11 +269,21 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return ret;
         }
 
-        public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderView command)
+        public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command)
         {
-            var gwo = _mapper.Map<GetWorkOrder>(command);
+            return await GetWorkOrderGridSummaryImpl(true);
+        }
 
-            gwo.completedOnly = command.IsHistory;
+        public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command)
+        {
+            return await GetWorkOrderGridSummaryImpl(false);
+        }
+
+        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
+        {
+            var gwo = new GetWorkOrder() {
+                completedOnly = isHistory
+            };
 
             ICollection<WorkOrderModel> models = await GetWorkOrderAsync(gwo);
             List<WorkOrderGridSummary> ret = new List<WorkOrderGridSummary>();

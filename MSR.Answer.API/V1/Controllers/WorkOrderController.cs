@@ -51,10 +51,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public async Task<IActionResult> WorkOrderGetHistory()
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView()
-            {
-                IsHistory = true
-            });
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderHistory());
             return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
         }
 
@@ -67,10 +64,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public async Task<IActionResult> WorkOrderGetMenu()
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView()
-            {
-                IsHistory = false
-            });
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderMenu());
             return ret.ToOkObjectResponse<ICollection<WorkOrderGridSummary>>();
         }
 
