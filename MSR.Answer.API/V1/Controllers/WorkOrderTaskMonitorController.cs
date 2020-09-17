@@ -13,10 +13,13 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -27,6 +30,17 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class WorkOrderTaskMonitorController : BaseApiController
     {
+        private ICommandDispatcher _dispatcher;
+
+        /// <summary>
+        /// WorkOrderTaskMonitorController Constructor
+        /// </summary>
+        /// <param name="dispatcher"></param>
+        public WorkOrderTaskMonitorController(ICommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
+
         /// <summary>
         ///
         /// </summary>
@@ -35,21 +49,10 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpPatch]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderTaskMonitorModel>))]
-        public virtual IActionResult WorkOrderTaskMonitorUpdateWorkOrderTaskMonitor([FromBody]UpdateWorkOrderTaskMonitorRequest body, [FromRoute][Required]string version)
+        public async Task<IActionResult> WorkOrderTaskMonitorUpdateWorkOrderTaskMonitor([FromBody]UpdateWorkOrderTaskMonitorRequest body, [FromRoute][Required]string version)
         {
-            // TODO: MOCKED
-            var example = new WorkOrderTaskMonitorModel() {
-                WorkOrderTaskId = 1,
-                ProcedureMonitorId = 2,
-                NumVal = 333,
-                TextVal = "LOOKIEHERE",
-                MultiVal = "MULTIPASS",
-                SensorMappingId = 1,
-                Comment = "Comment This",
-                SensorValue = "SensorValue",
-                SensorName = "SensorName "
-            };
-            var ret = new CommandResponse<WorkOrderTaskMonitorModel>(example);
+            UpdateWorkOrderTaskMonitor command = body.ToUpdateWorkOrderTaskMonitorCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderTaskMonitorModel>();
         }
     }

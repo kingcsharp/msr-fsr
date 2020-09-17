@@ -72,6 +72,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
+            CreateMap<UpdateWorkOrderTaskMonitor, WorkOrderTaskMonitor>();
 
             #region Location
             CreateMap<Location, LocationModel>().ReverseMap()

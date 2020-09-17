@@ -198,7 +198,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
         {
-            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanDelete)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
             }
 
@@ -219,7 +219,31 @@ namespace MSR.Infrastructure.Resources.Services.Part
             ret = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workordertask);
 
             return ret;
+        }
 
+        public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
+        {
+            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
+                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+            }
+
+            var current = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+
+            if(current is null)
+            {
+                throw new DomainException($"{nameof(WorkOrderTaskMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
+            }
+
+            WorkOrderTaskMonitorModel ret;
+            var workordertaskmonitor = _mapper.Map(command, current);
+            _unitOfWork.WorkOrderTaskMonitors.Update(workordertaskmonitor);
+
+            // This will call SaveChangesAsync
+            await _unitOfWork.LogApprovalTransaction(workordertaskmonitor, workordertaskmonitor.Id);
+
+            ret = _mapper.Map<Domain.Models.WorkOrderTaskMonitorModel>(workordertaskmonitor);
+
+            return ret;
         }
 
         /// <summary>
