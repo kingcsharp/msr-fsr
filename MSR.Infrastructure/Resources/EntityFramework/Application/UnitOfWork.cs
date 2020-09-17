@@ -75,6 +75,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Sensor> _sensor;
         private IRepository<Quote> _quotes;
         private IRepository<TimeZone> _timezone;
+        private IRepository<WorkOrderTaskMonitor> _workOrderTasksMonitors;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
@@ -139,6 +140,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
         public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
         public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }
+        public IRepository<WorkOrderTaskMonitor> WorkOrderTaskMonitors { get { return _workOrderTasksMonitors ??= new EFRepository<WorkOrderTaskMonitor>(Context); } }
 
         #endregion Repositories
 

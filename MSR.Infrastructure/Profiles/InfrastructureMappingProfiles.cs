@@ -72,6 +72,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
+            CreateMap<UpdateWorkOrderTaskMonitor, WorkOrderTaskMonitor>();
 
             #region Location
             CreateMap<Location, LocationModel>().ReverseMap()
@@ -362,6 +363,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, PartModel>();
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
+
+            CreateMap<UpdateWorkOrderPart, WorkOrderPart>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderPartId));
+
+            CreateMap<CreateWorkOrderTask, WorkOrderTask>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)

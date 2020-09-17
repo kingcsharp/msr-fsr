@@ -4423,13 +4423,22 @@
             "x-position": 2
           },
           {
+            "name": "Comment",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "x-position": 3
+            "x-position": 4
           }
         ],
         "responses": {
@@ -4507,8 +4516,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             },
             "x-position": 1
           }
@@ -4565,7 +4573,7 @@
         "tags": [
           "WorkOrder"
         ],
-        "summary": "This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]",
+        "summary": "Returns the WorkOrders that are either waiting to start or in Process.",
         "operationId": "WorkOrder_WorkOrderGetStatus",
         "parameters": [
           {
@@ -4581,7 +4589,7 @@
         ],
         "responses": {
           "200": {
-            "description": "This endpoint returns a ViewModel of data from various Domain Objects. Naming is [domainobject][PropertyOfDomainObject]",
+            "description": "The WorkOrders that are either waiting to start or in Process",
             "content": {
               "application/json": {
                 "schema": {
@@ -4718,7 +4726,7 @@
         "tags": [
           "WorkOrderTask"
         ],
-        "summary": " ",
+        "summary": "WorkOrderTaskCreateWorkOrderTask",
         "operationId": "WorkOrderTask_WorkOrderTaskCreateWorkOrderTask",
         "parameters": [
           {
@@ -5003,7 +5011,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -7886,6 +7895,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "procedure": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Procedure"
+              }
+            ]
+          },
           "procedureId": {
             "type": "integer",
             "format": "int32",
@@ -9843,6 +9860,14 @@
                 "type": "integer",
                 "format": "int32"
               },
+              "customer": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                ]
+              },
               "customerId": {
                 "type": "integer",
                 "format": "int32"
@@ -9916,6 +9941,10 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "workOrderId": {
             "type": "integer",
             "format": "int32"
@@ -9970,6 +9999,10 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "workOrderId": {
             "type": "integer",
             "format": "int32"
@@ -10068,56 +10101,63 @@
         }
       },
       "WorkOrderTaskMonitorModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "workOrderTaskId": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
           },
-          "workOrderTask": {
-            "nullable": true,
-            "oneOf": [
-              { "type": "null"},
-              {
-                "$ref": "#/components/schemas/WorkOrderTaskModel"
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "workOrderTaskId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "workOrderTask": {
+                "nullable": true,
+                "oneOf": [
+                  { "type": "null"},
+                  {
+                    "$ref": "#/components/schemas/WorkOrderTaskModel"
+                  }
+                ]
+              },
+              "procedureMonitorId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "numVal": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "textVal": {
+                "type": "string",
+                "nullable": true
+              },
+              "multiVal": {
+                "type": "string",
+                "nullable": true
+              },
+              "sensorMappingId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              },
+              "sensorValue": {
+                "type": "string",
+                "nullable": true
+              },
+              "sensorName": {
+                "type": "string",
+                "nullable": true
               }
-            ]
-          },
-          "procedureMonitorId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "numVal": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "textVal": {
-            "type": "string",
-            "nullable": true
-          },
-          "multiVal": {
-            "type": "string",
-            "nullable": true
-          },
-          "sensorMappingId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          },
-          "sensorValue": {
-            "type": "string",
-            "nullable": true
-          },
-          "sensorName": {
-            "type": "string",
-            "nullable": true
+            }
           }
-        }
+        ]
       },
       "CreateProductRequest": {
         "type": "object",
@@ -10690,6 +10730,7 @@
           "submittedBy": {
             "nullable": true,
             "oneOf": [
+              { "type": "null"},
               {
                 "$ref": "#/components/schemas/UserModel"
               }
@@ -10974,9 +11015,18 @@
             }
           }
         },
-        "example": {
-            "username": "95f27a6f8b3ffa55",
-            "isActive": false
+        "example" : {
+          "purchaseOrderId": 1,
+          "purchaseOrderProductId": 2,
+          "customerPurchaseNumber": "PURCHASE1598926122",
+          "locationId": 54,
+          "serialNumber": "SN1598926122",
+          "statusId": 1,
+          "qty": 1,
+          "customerLineNumber": 1,
+          "mttn": "1598926122",
+          "dueDate": "2099-12-31",
+          "purchasePrice": 123.45
         }
       },
       "UpdateRoleRequest": {
@@ -11427,6 +11477,10 @@
               "type": "string"
             }
           }
+        },
+        "example": {
+            "username": "95f27a6f8b3ffa55",
+            "isActive": false
         }
       },
       "AuditActionResultOfPendingApprovalModel": {
@@ -11442,6 +11496,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/PendingApprovalModel"
                   }
@@ -11603,7 +11658,11 @@
               }
             }
           }
-        ]
+        ],
+        "example": {
+            "id": 2147483647,
+            "isActive": false
+        }
       },
       "WorkOrderStatus": {
         "type": "object",
@@ -11733,6 +11792,11 @@
         "description": " ",
         "additionalProperties": true,
         "properties": {
+          "workOrderPartId": {
+            "type": "integer",
+            "description": "Work Order Part ID",
+            "format": "int32"
+          },
           "serialNumber": {
             "type": "string",
             "description": "Gets or Sets SerialNumber",
@@ -11753,6 +11817,7 @@
               "object": {
                 "nullable": true,
                 "oneOf": [
+                  { "type": "null" },
                   {
                     "$ref": "#/components/schemas/WorkOrderTaskModel"
                   }
@@ -11822,9 +11887,9 @@
             "nullable": true
           },
           "taskRunningSince": {
-            "type": "boolean",
+            "type": "string",
             "description": "Gets or Sets TaskRunningSince",
-            "nullable": true
+            "format": "date-time"
           },
           "status": {
             "type": "string",

@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   url: 'https://stage-api.answer.msr-fsr.com',
   API_BASE_URL: 'https://stage-api.answer.msr-fsr.com',
   hmr: false,
