@@ -1,0 +1,18 @@
+<div class="row">
+    <div style="height: 60px; width:240px;background-color: black;">
+        {{ stepHours }} : {{ stepMinutes - (60*stepHours)  }} : {{ stepSeconds - (60*stepMinutes) }}
+      </div>
+      <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn start-step hidden"
+        *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0" (click)="startTask()">
+        <i class="glyphicon glyphicon-step-forward"></i> Start</button>
+      <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden"
+        *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds !== 0" (click)="startTask()">
+        <i class="glyphicon glyphicon-step-forward"></i> Resume</button>
+      <button class="timer-btn btn btn-warning btn-lg print-btn pull-left"
+        *ngIf="workOrderTaskInProgress.taskIsRunning === true" (click)="pauseTask()">
+        <i class="glyphicon glyphicon-pause"></i> Pause</button>
+      <button class="timer-btn btn btn-primary btn-lg print-btn pull-left"
+        *ngIf="stepSeconds !== 0" (click)="completeTask()">
+        <i class="glyphicon glyphicon-stop"></i> Done
+      </button>
+</div>

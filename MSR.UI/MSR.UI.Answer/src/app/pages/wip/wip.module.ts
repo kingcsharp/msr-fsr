@@ -16,6 +16,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { WipdetailsComponent } from './wipdetails/wipdetails.component';
 import {TabViewModule} from 'primeng/tabview';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { WorkordertasktimerWrapperComponent } from '../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component'
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -27,7 +28,7 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent],
+  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent, WorkordertasktimerWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
