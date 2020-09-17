@@ -45,12 +45,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Returns a summary of COMPLETED or CANCELLED WorkOrders
         /// </summary>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpGet("History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> WorkOrderGetHistory([FromRoute][Required] string version)
+        public async Task<IActionResult> WorkOrderGetHistory()
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView()
             {
@@ -62,12 +61,11 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Returns a summary of WorkOrders IN PROGRESS or WAITING
         /// </summary>
-        /// <param name="version"></param>
         /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> WorkOrderGetMenu([FromRoute][Required] string version)
+        public async Task<IActionResult> WorkOrderGetMenu()
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrderView()
             {
@@ -79,7 +77,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Returns the WorkOrders that are either waiting to start or in Process.
         /// </summary>
-        /// <param name="version"></param>
         /// <response code="200">The WorkOrders that are either waiting to start or in Process</response>
         [HttpGet("Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
