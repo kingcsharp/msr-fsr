@@ -34,11 +34,8 @@
         </div>
       </div>
       <div class="row justify-content-start">
-        <carousel [itemsPerSlide]="8"
-        [singleSlideOffset]="false"
-        [noWrap]="true"
-        [interval]="false"
-        [startFromIndex]="0" *ngIf="workOrderTasks !== undefined">
+        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [interval]="false"
+          [startFromIndex]="0" *ngIf="workOrderTasks !== undefined">
           <slide *ngFor="let workOrderTask of workOrderTasks; let index=index">
             <div class="m-auto">
               {{ workOrderTask.procedureStep?.title}}
@@ -46,8 +43,28 @@
           </slide>
         </carousel>
       </div>
-      <div class="row">Timer goes here</div>
-      <div class="row">Tabs go here</div>
+      <div class="row">
+        <div style="height: 60px; width:240px;background-color: black;"></div>
+        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn start-step hidden">
+          <i class="glyphicon glyphicon-step-forward"></i> Start</button>
+        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden">
+          <i class="glyphicon glyphicon-step-forward"></i> Resume</button>
+        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left">
+          <i class="glyphicon glyphicon-pause"></i> Pause</button>
+        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left">
+          <i class="glyphicon glyphicon-stop"></i> Done
+        </button>
+      </div>
+      <div class="row">
+        <p-tabView class="w-100">
+          <p-tabPanel header="Task Description">
+          </p-tabPanel>
+          <p-tabPanel header="Monitors">
+          </p-tabPanel>
+          <p-tabPanel header="Files">
+          </p-tabPanel>
+        </p-tabView>
+      </div>
     </div>
   </div>
 </div>
