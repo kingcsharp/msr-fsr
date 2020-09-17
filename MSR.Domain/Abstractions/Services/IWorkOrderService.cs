@@ -18,6 +18,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command);
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command);
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command);
-        Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatusView command);
+        Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command);
     }
 }

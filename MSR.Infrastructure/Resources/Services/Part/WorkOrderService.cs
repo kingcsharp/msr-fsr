@@ -386,7 +386,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return ret;
         }
 
-        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatusView command)
+        public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
         {
             var gwo = _mapper.Map<GetWorkOrder>(command);
 

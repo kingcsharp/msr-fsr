@@ -77,7 +77,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public async Task<IActionResult> WorkOrderGetStatus()
         {
-            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderStatusView());
+            var ret = await _dispatcher.DispatchAsync(new GetWorkOrderStatus());
             return ret.ToOkObjectResponse<ICollection<WorkOrderStatus>>();
         }
 

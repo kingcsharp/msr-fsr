@@ -98,7 +98,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdateRoleRequest, UpdateRole>();
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
-            CreateMap<GetWorkOrderStatusView, GetWorkOrder>();
+            CreateMap<GetWorkOrderStatus, GetWorkOrder>();
             CreateMap<WorkOrderModel, WorkOrderGridSummary>()
                 // SerialNumber (entered at purchase time, if any)
                 .ForMember(dest => dest.SerialNumber, opts => opts.MapFrom(src => src.Purchase != null ? src.Purchase.SerialNumber : ""))

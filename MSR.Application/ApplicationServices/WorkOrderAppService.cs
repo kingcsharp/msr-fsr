@@ -22,7 +22,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetWorkOrderMenu>,
         ICommandHandler<CreateWorkOrder>,
         ICommandHandler<DeleteWorkOrder>,
-        ICommandHandler<GetWorkOrderStatusView>,
+        ICommandHandler<GetWorkOrderStatus>,
         ICommandHandler<UpdateWorkOrderPart>,
         ICommandHandler<CreateWorkOrderTask>,
         ICommandHandler<UpdateWorkOrderTask>,
@@ -71,7 +71,7 @@ namespace MSR.Application.ApplicationServices
             return new CommandResponse<ICollection<WorkOrderGridSummary>>(ret);
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetWorkOrderStatusView command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrderStatus command, CancellationToken cancellationToken = default)
         {
             ICollection<WorkOrderStatus> ret = await _workOrderService.GetWorkOrderStatusAsync(command);
             return new CommandResponse<ICollection<WorkOrderStatus>>(ret);
