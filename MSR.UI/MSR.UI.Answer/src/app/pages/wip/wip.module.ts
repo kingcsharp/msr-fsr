@@ -14,6 +14,8 @@ import { WidgetModule } from '../../layout/widget/widget.module';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { WipdetailsComponent } from './wipdetails/wipdetails.component';
+import {TabViewModule} from 'primeng/tabview';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -36,7 +38,9 @@ export const routes = [
     WidgetModule,
     NewWidgetModule,
     ProgressbarModule,
-    AlertModule
+    AlertModule,
+    TabViewModule,
+    CarouselModule
   ]
 })
 export class WipModule { static routes = routes; }
