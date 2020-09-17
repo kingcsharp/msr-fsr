@@ -2,9 +2,9 @@
 
 namespace MSR.Answer.API.V1.Models
 {
-    public class UpdatePurchaseOrderRequest: CreatePurchaseOrderRequest
+    public class GetSearchRequest
     {
         [Required]
-        public int Id { get; set; }
+        public string SearchTerm { get; set; }
     }
 }

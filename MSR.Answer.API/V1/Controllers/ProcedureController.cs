@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
@@ -15,7 +14,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Application.Hubs;
-using MSR.Domain.Helpers;
 
 namespace MSR.Answer.API.V1.Controllers
 {
