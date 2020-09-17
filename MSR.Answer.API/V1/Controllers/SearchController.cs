@@ -31,7 +31,6 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var response = new AuditActionResult<IEnumerable<SearchView>>()
             {
-                SuccessMessage = "Search Successfully returned 2 results",
                 Object = new List<SearchView>() {
                     new SearchView()
                     {

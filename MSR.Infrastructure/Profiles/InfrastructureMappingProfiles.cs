@@ -362,6 +362,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, PartModel>();
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
+
+            #region Reporting
+            CreateMap<Report, ReportModel>();
+            CreateMap<ReportCategory, ReportCategoryModel>();
+            #endregion
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)

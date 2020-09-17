@@ -75,6 +75,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Sensor> _sensor;
         private IRepository<Quote> _quotes;
         private IRepository<TimeZone> _timezone;
+        private IRepository<Report> _report;
+        private IRepository<ReportCategory> _reportCategory;
+        private IRepository<ReportCategoryMap> _reportCategoryMap;
+        private IRepository<ReportDashboard> _reportDashboard;
+        private IRepository<ReportDashboardMap> _reportDashboardMap;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
@@ -139,6 +144,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
         public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
         public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }
+
+        public IRepository<Report> Reports { get { return _report ??= new EFRepository<Report>(Context); } }
+        public IRepository<ReportCategory> ReportCategories { get { return _reportCategory ??= new EFRepository<ReportCategory>(Context); } }
+        public IRepository<ReportCategoryMap> ReportCategoryMaps { get { return _reportCategoryMap ??= new EFRepository<ReportCategoryMap>(Context); } }
+        public IRepository<ReportDashboard> ReportDashboards { get { return _reportDashboard ??= new EFRepository<ReportDashboard>(Context); } }
+        public IRepository<ReportDashboardMap> ReportDashboardMaps { get { return _reportDashboardMap ??= new EFRepository<ReportDashboardMap>(Context); } }
 
         #endregion Repositories
 

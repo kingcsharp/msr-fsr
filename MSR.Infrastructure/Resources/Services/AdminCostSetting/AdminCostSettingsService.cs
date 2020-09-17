@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
-using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System.Threading.Tasks;
 
-namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
+namespace MSR.Infrastructure.Resources.Services.AdminCostSetting
 {
     public class AdminCostSettingsService : IAdminCostSettingsService
     {
@@ -21,7 +20,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 
         public async Task<AdminCostSettingsModel> GetAdminCostSettings()
         {
-            AdminCostSetting ret = await _unitOfWork.AdminCostSettings.Query().FirstOrDefaultAsync();
+            var ret = await _unitOfWork.AdminCostSettings.Query().FirstOrDefaultAsync();
             return _mapper.Map<AdminCostSettingsModel>(ret);
         }
     }

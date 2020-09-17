@@ -63,6 +63,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Quote> Quote { get; set; }
         public DbSet<TimeZone> Timezone { get; set; }
         public DbSet<AdminCostSetting> AdminCostSetting { get; set; }
+        public DbSet<Report> Report { get; set; }
+        public DbSet<ReportCategory> ReportCategory { get; set; }
+        public DbSet<ReportCategoryMap> ReportCategoryMap { get; set; }
+        public DbSet<ReportDashboard> ReportDashboard { get; set; }
+        public DbSet<ReportDashboardMap> ReportDashboardMap { get; set; }
+
 
         public AnswerContext() : base()
         {

@@ -5,7 +5,7 @@ namespace MSR.Domain.Models
     {
         public ReportModel()
         {
-            Categories = new HashSet<ReportCategoryMapModel>();
+            Categories = new HashSet<ReportCategoryModel>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,6 +13,6 @@ namespace MSR.Domain.Models
         public string Description { get; set; }
         public string APIEndPointURL { get; set; }
         public string ImageUrl { get; set; }
-        public ICollection<ReportCategoryMapModel> Categories { get; set; }
+        public ICollection<ReportCategoryModel> Categories { get; set; }
     }
 }
