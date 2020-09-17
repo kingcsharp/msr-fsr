@@ -1,4 +1,7 @@
-﻿using Amazon.CloudWatchLogs;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Amazon.CloudWatchLogs;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
@@ -11,9 +14,6 @@ using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -33,11 +33,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<EntityFramework.Entities.WorkOrder> workorders;
             IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
-            if (command.Id.HasValue) {
+            if (command.Id.HasValue)
+            {
                 query = query.Where(x => x.Id == command.Id.Value);
             }
             List<int> woIds;
-            if (command.statuses != null && command.statuses.Count > 0) {
+            if (command.statuses != null && command.statuses.Count > 0)
+            {
                 List<int> statusIds = command.statuses.Select(x => x.Id).ToList();
                 woIds = _unitOfWork.WorkOrderTasks.Query()
                     .Where(x => statusIds.Contains(x.StatusId))
@@ -56,40 +58,46 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            if (command.completedOnly.HasValue) {
-                if (command.completedOnly.Value) {
+            if (command.completedOnly.HasValue)
+            {
+                if (command.completedOnly.Value)
+                {
                     query = query.Where(x => x.ActualEndDate.HasValue);
-                } else {
+                }
+                else
+                {
                     query = query.Where(x => !x.ActualEndDate.HasValue);
                 }
             }
 
             workorders = await query
                 .Include(x => x.WorkOrderParts)
-                    .ThenInclude(y => y.Part)
+                .ThenInclude(y => y.Part)
                 .Include(x => x.WorkOrderTasks)
-                    .ThenInclude(y => y.ProcedureStep)
-                    .ThenInclude(y => y.Procedure)
+                .ThenInclude(y => y.ProcedureStep)
+                .ThenInclude(y => y.Procedure)
                 .Include(x => x.WorkOrderTasks)
-                    .ThenInclude(y => y.ProcedureStepType)
+                .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.WorkOrderTasks)
-                    .ThenInclude(y => y.Status)
+                .ThenInclude(y => y.Status)
                 .Include(x => x.Product)
-                    .ThenInclude(y => y.Part)
+                .ThenInclude(y => y.Part)
                 .Include(x => x.Product)
-                    .ThenInclude(y => y.Customer)
+                .ThenInclude(y => y.Customer)
                 .Include(x => x.Product)
-                    .ThenInclude(y => y.Procedure)
+                .ThenInclude(y => y.Procedure)
                 .Include(x => x.Purchase)
-                    .ThenInclude(y => y.PurchaseOrder)
+                .ThenInclude(y => y.PurchaseOrder)
                 .Include(x => x.Location)
                 .ToListAsync();
 
-            if (workorders.Count == 0 && command.Id.HasValue) {
+            if (workorders.Count == 0 && command.Id.HasValue)
+            {
                 throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
             }
 
-            var result = workorders.Select(x => {
+            var result = workorders.Select(x =>
+            {
                 var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
                 return DetachBackPointers(wom);
             }).OrderBy(x => x.Id).ToList();
@@ -127,7 +135,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
@@ -148,12 +156,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.WorkOrder)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
             }
 
@@ -167,13 +176,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command)
         {
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderPart)} uid {CurrentUser.GetId()}");
             }
 
             var current = _unitOfWork.WorkOrderParts.Query().Where(x => x.Id == command.WorkOrderPartId);
 
-            if (current == null || !current.Any()) {
+            if (current == null || !current.Any())
+            {
                 throw new DomainException($"{nameof(WorkOrderPart)} not found with ID: {command.WorkOrderPartId}", DomainError.NotFound);
             }
 
@@ -190,7 +201,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command)
         {
-            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
+            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
             }
 
@@ -206,13 +218,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
         {
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
             }
 
             var current = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(WorkOrderTask)} not found with ID: {command.Id}", DomainError.NotFound);
             }
@@ -231,13 +244,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
         {
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit)) {
+            if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
+            {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
             }
 
             var current = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(WorkOrderTaskMonitor)} not found with ID: {command.Id}", DomainError.NotFound);
             }
@@ -271,12 +285,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 x.Name.ToUpper().Equals("complete") ||
                 x.Name.ToUpper().Equals("cancelled") ||
                 x.Name.ToUpper().Equals("rejected") ||
-                x.Name.ToUpper().Equals("closed"))
-            ).ToList();
+                x.Name.ToUpper().Equals("closed"))).ToList();
             return rows.Select(x => _mapper.Map<StatusModel>(x)).ToList();
         }
 
-        public static string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks) {
+        public static string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks)
+        {
             // Status ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
             // This field is calculated based on the summation of the statuses
             // of the steps.
@@ -292,13 +306,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 10  Assigned
             int[] completed = { 3, 6, 8 };
             string status;
-            if (tasks.Where(x => x.StatusId == 2).Any()) {
+            if (tasks.Where(x => x.StatusId == 2).Any())
+            {
                 status = "In Progress";
-            } else if (tasks.Where(x => x.StatusId == 4).Any()) {
+            }
+            else if (tasks.Where(x => x.StatusId == 4).Any())
+            {
                 status = "Cancelled";
-            } else if (tasks.All(x => completed.Contains(x.StatusId))) {
+            }
+            else if (tasks.All(x => completed.Contains(x.StatusId)))
+            {
                 status = "Completed";
-            } else {
+            }
+            else
+            {
                 status = "Waiting Start";
             }
             return status;
@@ -307,11 +328,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public static string GetWorkOrderItemNumber(WorkOrderModel model)
         {
             string customerName = model.Purchase?.PurchaseOrder?.Customer?.Name;
-            if (string.IsNullOrEmpty(customerName)) {
+            if (string.IsNullOrEmpty(customerName))
+            {
                 customerName = "";
             }
             string customerPNum = model.Purchase?.CustomerPurchaseNumber;
-            if (string.IsNullOrEmpty(customerPNum)) {
+            if (string.IsNullOrEmpty(customerPNum))
+            {
                 customerPNum = "";
             }
             return $"{customerName}-{customerPNum}";
@@ -322,18 +345,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var model = _mapper.Map<WorkOrderModel>(wom);
             // unlink the backpointers to the work order model,
             // which causes loops.
-            if (model.Purchase != null) {
+            if (model.Purchase != null)
+            {
                 model.Purchase.WorkOrders = null;
             }
-            if (model.Product != null) {
+            if (model.Product != null)
+            {
                 model.Product.WorkOrders = null;
             }
-            foreach (var wop in model.WorkOrderParts) {
+            foreach (var wop in model.WorkOrderParts)
+            {
                 wop.WorkOrder = null;
                 wop.Parent = null;
                 wop.Children = null;
             }
-            foreach (var wot in model.WorkOrderTasks) {
+            foreach (var wot in model.WorkOrderTasks)
+            {
                 wot.WorkOrder = null;
             }
             return model;

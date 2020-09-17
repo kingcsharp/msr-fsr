@@ -1,10 +1,3 @@
-﻿using AutoMapper;
-using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding;
-using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
-using MSR.Domain.Models;
-using MSR.Infrastructure.Resources.Services.Part;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -12,6 +5,13 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
+using MSR.Domain.Models;
+using MSR.Infrastructure.Resources.Services.Part;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -68,7 +68,8 @@ namespace MSR.Application.ApplicationServices
 
             ICollection<WorkOrderModel> models = await _workOrderService.GetWorkOrderAsync(gwo);
             List<WorkOrderGridSummary> ret = new List<WorkOrderGridSummary>();
-            foreach (WorkOrderModel m in models) {
+            foreach (WorkOrderModel m in models)
+            {
                 var sum = _mapper.Map<WorkOrderGridSummary>(m);
 
                 //
@@ -78,14 +79,16 @@ namespace MSR.Application.ApplicationServices
                 // CurrentActiveTaskName
                 var curProc =
                     m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
-                if (curProc.Any()) {
+                if (curProc.Any())
+                {
                     var proc = curProc.First();
                     sum.CurrentActiveTaskName = proc.ProcedureStep.Title;
                 }
 
                 // CustomerName
                 sum.CustomerName = m.Purchase?.PurchaseOrder?.Customer?.Name;
-                if (string.IsNullOrEmpty(sum.CustomerName)) {
+                if (string.IsNullOrEmpty(sum.CustomerName))
+                {
                     sum.CustomerName = "";
                 }
 
@@ -95,9 +98,12 @@ namespace MSR.Application.ApplicationServices
                 // ProcedureName
                 var firstProc =
                     m.WorkOrderTasks.FirstOrDefault();
-                if (firstProc == null) {
+                if (firstProc == null)
+                {
                     sum.ProcedureName = "";
-                } else {
+                }
+                else
+                {
                     sum.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
                 }
 
@@ -108,12 +114,15 @@ namespace MSR.Application.ApplicationServices
                 // This is a string join of the text values of
                 // all procedure steps with a type of "NC Disposition"
                 sum.Disposition = "";
-                if (m.HasNCR.GetValueOrDefault()) {
+                if (m.HasNCR.GetValueOrDefault())
+                {
                     var nc = m.WorkOrderTasks.Where(x =>
                         x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC);
-                    if (nc.Any()) {
+                    if (nc.Any())
+                    {
                         string disp = "";
-                        foreach (WorkOrderTaskModel task in nc) {
+                        foreach (WorkOrderTaskModel task in nc)
+                        {
                             disp +=
                                 String.Join(" ",
                                     task.WorkOrderTaskMonitors.Select(x =>
@@ -130,9 +139,12 @@ namespace MSR.Application.ApplicationServices
                 int denom = m.WorkOrderTasks.Count();
                 int numer = m.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
                 decimal pctComplete;
-                if (denom > 0) {
+                if (denom > 0)
+                {
                     pctComplete = numer / denom;
-                } else {
+                }
+                else
+                {
                     pctComplete = 0m;
                 }
                 sum.PercentageOfTasksCompleted = pctComplete;
@@ -140,9 +152,12 @@ namespace MSR.Application.ApplicationServices
                 // PercentageOfExpectedDurationTimeLogged
                 decimal denomTime = m.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
                 decimal numerTime = m.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
-                if (denomTime > 0) {
+                if (denomTime > 0)
+                {
                     sum.PercentageOfExpectedDurationTimeLogged = numerTime / denomTime;
-                } else {
+                }
+                else
+                {
                     sum.PercentageOfExpectedDurationTimeLogged = 0;
                 }
 
@@ -159,22 +174,29 @@ namespace MSR.Application.ApplicationServices
             gwo.invertStatusSet = false;
             ICollection<WorkOrderModel> models = await _workOrderService.GetWorkOrderAsync(gwo);
             List<WorkOrderStatus> ret = new List<WorkOrderStatus>();
-            foreach (WorkOrderModel m in models) {
+            foreach (WorkOrderModel m in models)
+            {
                 var sum = _mapper.Map<WorkOrderStatus>(m);
 
                 // PartNumber
                 // Lists the first part in the set (this follows
                 // the behavior of Answer 2).
-                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0) {
+                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0)
+                {
                     sum.PartNumber = m.WorkOrderParts.First().Part.PartNumber;
-                } else {
+                }
+                else
+                {
                     sum.PartNumber = "";
                 }
 
                 // ProcedureName
-                if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0) {
+                if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
+                {
                     sum.ProcedureName = m.WorkOrderTasks.First().ProcedureStep?.Procedure?.Name;
-                } else {
+                }
+                else
+                {
                     sum.ProcedureName = "";
                 }
 
@@ -190,9 +212,12 @@ namespace MSR.Application.ApplicationServices
                 wosum.PurchaseOrderLineNumber = m.Purchase.CustomerLineNumber.ToString();
 
                 // WorkOrderPartSerialNumber
-                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0) {
+                if (m.WorkOrderParts != null && m.WorkOrderParts.Count > 0)
+                {
                     wosum.WorkOrderPartSerialNumber = m.WorkOrderParts.First().SerialNumber;
-                } else {
+                }
+                else
+                {
                     wosum.WorkOrderPartSerialNumber = "";
                 }
 
@@ -201,11 +226,16 @@ namespace MSR.Application.ApplicationServices
 
                 // WorkOrderAssignedTo
                 var curstep = m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
-                if (curstep.Count() > 0) {
+                if (curstep.Count() > 0)
+                {
                     wosum.WorkOrderAssignedTo = curstep.First().AssignedToUser.FullName;
-                } else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0) {
+                }
+                else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
+                {
                     wosum.WorkOrderAssignedTo = m.WorkOrderTasks.First().AssignedToUser.FullName;
-                } else {
+                }
+                else
+                {
                     wosum.WorkOrderAssignedTo = "";
                 }
 
