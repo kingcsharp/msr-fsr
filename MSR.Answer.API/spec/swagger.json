@@ -4423,13 +4423,22 @@
             "x-position": 2
           },
           {
+            "name": "Comment",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "x-position": 3
+            "x-position": 4
           }
         ],
         "responses": {
