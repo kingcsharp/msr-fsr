@@ -53,8 +53,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             var em = _mapper.Map<EquipmentMaintenance>(command);
 
-            em.StatusId = _unitOfWork.Status.FirstOrDefault(false, i => i.Name == nameof(ApprovalStatusEnum.Pending)).Id;
-
             // Save the new equipment maintenance entry
             await _unitOfWork.EquipmentMaintenances.AddAndSaveChangesAsync(em);
 
