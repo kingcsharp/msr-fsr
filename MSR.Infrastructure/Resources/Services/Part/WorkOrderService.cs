@@ -448,11 +448,25 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var curstep = m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
                 if (curstep.Count() > 0)
                 {
-                    wosum.WorkOrderAssignedTo = curstep.First().AssignedToUser.FullName;
+                    if (curstep.First().AssignedToUser == null)
+                    {
+                        wosum.WorkOrderAssignedTo = "";
+                    }
+                    else
+                    {
+                        wosum.WorkOrderAssignedTo = curstep.First().AssignedToUser.FullName;
+                    }
                 }
                 else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
                 {
-                    wosum.WorkOrderAssignedTo = m.WorkOrderTasks.First().AssignedToUser.FullName;
+                    if (m.WorkOrderTasks.First().AssignedToUser == null)
+                    {
+                        wosum.WorkOrderAssignedTo = "";
+                    }
+                    else
+                    {
+                        wosum.WorkOrderAssignedTo = m.WorkOrderTasks.First().AssignedToUser.FullName;
+                    }
                 }
                 else
                 {
