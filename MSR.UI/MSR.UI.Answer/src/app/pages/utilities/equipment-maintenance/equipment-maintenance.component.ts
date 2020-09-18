@@ -89,8 +89,8 @@ export class EquipmentMaintenanceComponent implements OnInit {
       value: EnumEMStatus.Assigned
     },
     {
-      label: 'Completed',
-      value: EnumEMStatus.Completed
+      label: 'Complete',
+      value: EnumEMStatus.Complete
     },
     {
       label: 'Scheduled',
@@ -214,7 +214,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
           statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
           maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
           pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
-          frequencyField:  this.currentEM.troubleState ? null : this.currentEM.frequencyField,
+          frequencyField:  this.currentEM.troubleState ? null : parseInt(this.currentEM.frequencyField.toString(), 10),
           assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
           comments: this.currentEM.comments,
         }
@@ -232,7 +232,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
           statusId: this.currentEM.troubleState ? this.enumEMStatus.Requested : this.currentEM.statusId,
           maintenanceTask: this.currentEM.troubleState ? null : this.currentEM.maintenanceTask,
           pemLastCompletedDate:  this.currentEM.troubleState ? null : this.currentEM.pemLastCompletedDate,
-          frequencyField:  this.currentEM.troubleState ? null : this.currentEM.frequencyField,
+          frequencyField:  this.currentEM.troubleState ? null : parseInt(this.currentEM.frequencyField.toString(), 10),
           assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
           comments: this.currentEM.comments,
         }

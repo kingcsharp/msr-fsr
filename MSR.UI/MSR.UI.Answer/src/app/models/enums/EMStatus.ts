@@ -1,6 +1,6 @@
 export enum EnumEMStatus {
   Requested = 9,
   Assigned = 10,
-  Completed = 11,
+  Complete = 3,
   Scheduled = 12,
 }
