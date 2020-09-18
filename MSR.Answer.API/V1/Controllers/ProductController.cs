@@ -13,6 +13,8 @@ using MSR.Answer.API.Filters;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
 using System.Net;
+using Microsoft.AspNetCore.SignalR;
+using MSR.Application.Hubs;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -23,16 +25,20 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class ProductController : BaseApiController
     {
-        private const string privilegeApiName = "QuotesProducts";
+        private const string PrivilegeApiName = "QuotesProducts";
         private readonly ICommandDispatcher _dispatcher;
+        private readonly IHubContext<MessageHub> _messageHub;
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="dispatcher"></param>
-        public ProductController(ICommandDispatcher dispatcher)
+        /// <param name="messageHub" />
+        /// 
+        public ProductController(ICommandDispatcher dispatcher, IHubContext<MessageHub> messageHub)
         {
             _dispatcher = dispatcher;
+            _messageHub = messageHub;
         }
 
         /// <summary>
@@ -42,12 +48,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <permission>CanCreate Privilege required</permission>
         /// <returns>Product DTO</returns>
         [HttpPost]
-        [HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
+        [HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanCreate)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ProductModel>))]
         public async Task<IActionResult> CreateProduct([FromBody, Required] CreateProductRequest product)
         {
             var command = product.ToCreateProductCommand();
             var ret = await _dispatcher.DispatchAsync(command);
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.ProductApproval, _messageHub);
             return ret.ToOkObjectResponse<ProductModel>("Product was successfully added.");
         }
 
@@ -56,7 +63,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [HttpGet, HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<ProductModel>>))]
         public async Task<IActionResult> GetProduct([FromQuery] GetProductRequest filters)
         {
@@ -70,12 +77,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
+        [HttpPatch, HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanEdit)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ProductModel>))]
         public async Task<IActionResult> UpdateProduct([FromBody, Required] UpdateProductRequest request)
         {
             var updateProduct = request.ToUpdateProductCommand();
             var ret = await _dispatcher.DispatchAsync(updateProduct);
+            await SendApprovalNotificationHubMessage(EnumApprovalTables.ProductApproval, _messageHub);
             return ret.ToOkObjectResponse<ProductModel>("Product has been successfully updated.");
         }
     }

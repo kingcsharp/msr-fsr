@@ -16,7 +16,7 @@ import { AppGuard } from './app.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
-
+import { NotificationService } from './layout/navbar/notification.service';
 import { CommonGrid } from './models/lib/CommonGrid';
 import { environment } from '../environments/environment';
 
@@ -35,7 +35,8 @@ const APP_PROVIDERS = [
   AppConfig,
   ResetpasswordService,
   Globals,
-  CommonGrid
+  CommonGrid,
+  NotificationService
 ];
 
 @NgModule({

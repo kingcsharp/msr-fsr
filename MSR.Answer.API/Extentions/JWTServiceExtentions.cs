@@ -32,6 +32,19 @@ namespace MSR.Answer.API.Extentions
             {
                 x.Events = new JwtBearerEvents
                 {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // Check if the request is for our SignalR hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/msg"))) {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    },
                     OnTokenValidated = context =>
                     {
                         var accountService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
@@ -58,6 +71,15 @@ namespace MSR.Answer.API.Extentions
                             approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
 
                             return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
+                        };
+
+                        CurrentUser.CanDeleteActivity = (EnumApprovalTables) =>
+                        {
+                            var activityToBeApproved = (int)EnumApprovalTables;
+
+                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
+
+                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanDelete);
                         };
 
                         CurrentUser.CanReadActivity = (EnumApprovalTables) =>

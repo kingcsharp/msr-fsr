@@ -243,7 +243,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return userList;
         }
 
-        private static void SetRolesToUser(EntityFramework.Entities.User user, Domain.Models.UserModel userToAdd)
+        private static void SetRolesToUser(User user, Domain.Models.UserModel userToAdd)
         {
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
@@ -291,7 +291,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     Name = efRole.Name
                 };
 
-                foreach (var menuItem in (efRole ?? new EntityFramework.Entities.Role()).Menus)
+                foreach (var menuItem in efRole.Menus)
                 {
                     if (menuItem.MenuItem == null) continue;
                     var efMenuItem = menuItem.MenuItem;
@@ -334,14 +334,14 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             if (user is null || role is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.User)} OR {nameof(Role)} not found.", DomainError.NotFound);
+                throw new DomainException($"{nameof(User)} OR {nameof(Role)} not found.", DomainError.NotFound);
             }
 
             var curUserRole = await _unitOfWork.UserRoles.FirstOrDefaultAsync(false, i => i.RoleId == command.RoleId && i.UserId == command.UserId);
 
             if (curUserRole != null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.User)} already assigned to {nameof(Role)}", DomainError.Conflict);
+                throw new DomainException($"{nameof(User)} already assigned to {nameof(Role)}", DomainError.Conflict);
             }
 
             if (curUser.CanApprove(EnumMenuItem.Users))
@@ -387,7 +387,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             if (curUserRole is null)
             {
-                throw new DomainException($"{nameof(EntityFramework.Entities.User)} not assigned to {nameof(Role)}", DomainError.BadRequest);
+                throw new DomainException($"{nameof(User)} not assigned to {nameof(Role)}", DomainError.BadRequest);
             }
 
             if (curUser.CanApprove(EnumMenuItem.Users))

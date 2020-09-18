@@ -114,7 +114,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task ResetPasswordAsync(ResetPassword command)
         {
-            var userName = EncryptionHelper.Decrypt(command.Token);
+            var userName = EncryptionHelper.Decrypt(command.Token.Replace('*', '/'));
             var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == userName);
 
             if (user == null)
@@ -201,12 +201,26 @@ namespace MSR.Infrastructure.Resources.Services.Account
             await _unitOfWork.SaveChangesAsync();
         }
 
-        private async Task<string> GetJWTToken(EntityFramework.Entities.User efUser)
+        public async Task<string> GetJWTTokenAsync()
+        {
+            var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuRolePermission)
+                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
+                .FirstOrDefaultAsync(i => i.Id == CurrentUser.GetId());
+
+            if (user is null)
+            {
+                throw new DomainException("Unable to get Current User", DomainError.InternalServerError);
+            }
+
+            return await GetJWTToken(user);
+        }
+
+        private async Task<string> GetJWTToken(User efUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtData.Secret);
             var userPrivileges = JsonConvert.SerializeObject(GetTokenUserRoles(efUser));
-            
+
             var approvalPrivileges = JsonConvert.SerializeObject(await GetTokenUserActivityRoles(efUser));
             var tokenDescriptor = new SecurityTokenDescriptor
             {

@@ -13,6 +13,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Events;
+using MSR.Domain.SQSEventing.Models;
+using MSR.Domain.Exceptions;
 
 namespace MSR.Application.ApplicationServices
 {
@@ -27,25 +30,21 @@ namespace MSR.Application.ApplicationServices
         private readonly IMapper _mapper;
         private readonly IImportValidatorFactory _validationFactory;
         private readonly ISendSQSMessages _bus;
-        //This is only here until we get the full Async lifecycle in
-        private readonly ICustomerService _customerService;
-        private readonly ILocationService _locationService;
+        private readonly IAccountService _accountService;
 
         public FileAppService(
             IFileService fileService,
             IMapper mapper,
             IImportValidatorFactory validationFactory,
             ISendSQSMessages bus,
-            ICustomerService customerService,
-            ILocationService locationService
+            IAccountService accountService
             )
         {
             _fileService = fileService;
             _mapper = mapper;
             _validationFactory = validationFactory;
             _bus = bus;
-            _customerService = customerService;
-            _locationService = locationService;
+            _accountService = accountService;
         }
 
         public Task<ICommandResponse> HandleAsync(GetFiles command, CancellationToken cancellationToken = default)
@@ -86,6 +85,13 @@ namespace MSR.Application.ApplicationServices
                 csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
             }
 
+            if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate)) {
+                // Importing data through workflow is not supported.
+                throw new DomainException("Permission denied for import " +
+                    Enum.GetName(command.MenuItem.GetType(), command.MenuItem),
+                    DomainError.BadRequest);
+            }
+
             var validator = _validationFactory.Create(command.MenuItem);
 
             if (!validator.ValidateImportData(csvData, out var importErrors))
@@ -93,26 +99,15 @@ namespace MSR.Application.ApplicationServices
                 return new CommandResponse<IEnumerable<ImportError>>(importErrors);
             }
 
-            //var importEvent = new ImportEvent()
-            //{
-            //    CsvData = csvData,
-            //    TokenData = "",
-            //    MenuItem = command.MenuItem
-            //};
-
-            switch (command.MenuItem)
+            var importEvent = new ImportEvent()
             {
-                case EnumMenuItem.CustomersDepartments:
-                    var importedCustomers = await _customerService.ImportCustomers(csvData);
-                    break;
-                case EnumMenuItem.Locations:
-                    var importedLocations = await _locationService.ImportLocations(csvData);
-                    break;
-            }
+                CsvData = csvData,
+                MenuItem = command.MenuItem
+            };
 
-            //var envelope = new MessageEnvelope(importIntegrationEvent.GetType().Name, importIntegrationEvent);
+            var envelope = new MessageEnvelope(importEvent.GetType().Name, importEvent, await _accountService.GetJWTTokenAsync());
 
-            //await _bus.SendMessage(envelope);
+            await _bus.SendMessage(envelope);
 
             return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>)null);
         }

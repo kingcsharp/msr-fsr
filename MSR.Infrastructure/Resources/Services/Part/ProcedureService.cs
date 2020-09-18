@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSR.Infrastructure.Resources.Services.Role
+namespace MSR.Infrastructure.Resources.Services.Part
 {
     public class ProcedureService : IProcedureService
     {
@@ -29,17 +29,21 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
         {
             List<EntityFramework.Entities.Procedure> procedures;
-            if (command.procedureID.HasValue) {
+            if (command.procedureID.HasValue)
+            {
                 procedures = await _unitOfWork.Procedures
                     .Query()
                     .Where(x => x.Id == command.procedureID.Value)
                     .Include(x => x.ProcedureType)
                     .Include(x => x.ReferenceFiles)
                     .ToListAsync();
-                if (procedures.Count == 0) {
+                if (procedures.Count == 0)
+                {
                     throw new DomainException($"procedure ID {command.procedureID.Value} not found", DomainError.NotFound);
                 }
-            } else {
+            }
+            else
+            {
                 procedures = await _unitOfWork.Procedures
                     .Query()
                     .Include(x => x.ProcedureType)
@@ -48,11 +52,14 @@ namespace MSR.Infrastructure.Resources.Services.Role
             }
 
             // map and attach the right files for this object, if any
-            var result = procedures.Select(x => {
+            var result = procedures.Select(x =>
+            {
                 var model = _mapper.Map<Domain.Models.Procedure>(x);
                 model.ReferenceFiles = new List<Domain.Models.FileModel>();
-                foreach (FileEntityMap map in x.ReferenceFiles) {
-                    if (map.EntityTableName != nameof(EntityFramework.Entities.Procedure)) {
+                foreach (FileEntityMap map in x.ReferenceFiles)
+                {
+                    if (map.EntityTableName != nameof(EntityFramework.Entities.Procedure))
+                    {
                         continue;
                     }
                     model.ReferenceFiles.Add(
@@ -69,7 +76,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure ret;
 
-            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
                 Procedure procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
@@ -101,7 +108,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                 .Include(x => x.ProcedureType)
                 .FirstOrDefaultAsync();
 
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.Id}", DomainError.NotFound);
             }
@@ -109,7 +116,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.Procedure ret;
 
-            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
                 var procedure = _mapper.Map(command, current);
                 _unitOfWork.Procedures.Update(procedure);
@@ -134,16 +141,20 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<ICollection<Domain.Models.ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
         {
             List<EntityFramework.Entities.ProcedureStep> steps;
-            if (command.stepId.HasValue) {
+            if (command.stepId.HasValue)
+            {
                 steps = await _unitOfWork.ProcedureSteps
                     .Query()
                     .Where(x => x.Id == command.stepId.Value)
                     .Include(x => x.StepType)
                     .ToListAsync();
-                if (steps.Count == 0) {
+                if (steps.Count == 0)
+                {
                     throw new DomainException($"step ID {command.stepId.Value} not found", DomainError.NotFound);
                 }
-            } else {
+            }
+            else
+            {
                 steps = await _unitOfWork.ProcedureSteps
                     .Query()
                     .Where(x => x.ProcedureId == command.procedureId)
@@ -159,7 +170,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepModel ret;
 
-            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
                 var procstep = _mapper.Map<ProcedureStep>(command);
                 _unitOfWork.ProcedureSteps.Add(procstep);
@@ -186,7 +197,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i =>
                 i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
 
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(ProcedureStep)} not " +
                     $"found with ID: {command.procedureId} / {command.procedureStepId}",
@@ -196,7 +207,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepModel ret;
 
-            if (user.CanApprove(EnumMenuItem.RunnableProcedures))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
                 var step = _mapper.Map(command, current);
                 _unitOfWork.ProcedureSteps.Update(step);
@@ -221,14 +232,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
         public async Task<bool> DeleteProcedureAsync(DeleteProcedure command)
         {
             var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.procedureID);
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
             }
-            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
+            {
                 _unitOfWork.Procedures.Delete(false, current);
                 await _unitOfWork.SaveChangesAsync();
-            } else {
+            }
+            else
+            {
                 throw new DomainException($"Permission deined for {nameof(Domain.Models.Procedure)} uid {CurrentUser.GetId()}");
             }
 
@@ -240,14 +254,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
                 i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
             );
-            if(current is null)
+            if (current is null)
             {
                 throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
             }
-            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
+            {
                 _unitOfWork.ProcedureSteps.Delete(false, current);
                 await _unitOfWork.SaveChangesAsync();
-            } else {
+            }
+            else
+            {
                 throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepModel)} uid {CurrentUser.GetId()}");
             }
 
@@ -258,14 +275,17 @@ namespace MSR.Infrastructure.Resources.Services.Role
         {
             List<ProcedureStepType> current;
 
-            if (command.Id.HasValue) {
+            if (command.Id.HasValue)
+            {
                 current = await _unitOfWork.ProcedureStepTypes.Query().Where(
                     i => i.Id == command.Id
                 ).ToListAsync();
-            } else {
+            }
+            else
+            {
                 current = await _unitOfWork.ProcedureStepTypes.Query().ToListAsync();
             }
-            if(current is null || current.Count == 0)
+            if (current is null || current.Count == 0)
             {
                 throw new DomainException($"{nameof(ProcedureStepType)} not found with ID: {command.Id}", DomainError.NotFound);
             }

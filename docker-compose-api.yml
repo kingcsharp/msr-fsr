@@ -8,13 +8,23 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=QA
     logging:
       driver: awslogs
       options:
         awslogs-group: answer3
         awslogs-region: us-west-2
         awslogs-stream-prefix: answer3-api-dev
+  processor:
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-processor:Dev19
+    environment:
+      - ASPNETCORE_ENVIRONMENT=QA
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: answer3
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: answer3-processor-dev
   reverseproxy:
     image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-rp:Dev04
     ports:

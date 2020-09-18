@@ -17,6 +17,7 @@ using TimeZone = MSR.Infrastructure.Resources.EntityFramework.Entities.TimeZone;
 using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 using System.Collections.Generic;
 using Castle.Core.Internal;
+using MSR.Domain.Validators;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -172,6 +173,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.PartId, opts => opts.MapFrom(src => src.Id));
             CreateMap<UpdatePart, Part>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Domain.Models.PartModel, CreatePart>();
+            CreateMap<Domain.Models.PartModel, UpdatePart>();
             #endregion
 
             #region Procedure
@@ -277,9 +280,6 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Status, StatusModel>().ReverseMap();
 
-            CreateMap<PartCSVRecord, UpdatePart>();
-            CreateMap<PartCSVRecord, CreatePart>();
-            
             #region Product
             CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
             CreateMap<CreateProduct, Product>();
@@ -359,6 +359,9 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<AdminCostSetting, AdminCostSettingsModel>().ReverseMap();
 
+            CreateMap<PartCSVRecord, PartModel>();
+            CreateMap<PartCSVRecord, UpdatePart>();
+            CreateMap<PartCSVRecord, CreatePart>();
             CreateMap<EquipmentMaintenance, EquipmentMaintenanceModel>().ReverseMap();
             CreateMap<CreateEquipmentMaintenance, EquipmentMaintenance>();
         }

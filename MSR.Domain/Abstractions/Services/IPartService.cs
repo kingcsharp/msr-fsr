@@ -11,6 +11,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<PartModel> CreatePartAsync(CreatePart command);
         Task<PartModel> UpdatePartAsync(UpdatePart command);
         Task<PartModel> DeletePartAsync(DeletePart command);
-        Task<ICollection<PartModel>> ImportPartsAsync(ImportParts command);
+        Task<ICollection<PartModel>> ImportLocations(string csvData);
     }
 }

@@ -174,7 +174,7 @@ export class PendingApprovalsComponent implements OnInit {
           ctrl.clseDialog();
         }));
     } else {
-      this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, env.apiVersion)
+      this.workflowPendingApprovalService.workflowPendingApprovalDelete(this.currAction.activityType, this.currAction.id, this.currAction.comments, env.apiVersion)
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           const index = this.data.findIndex(x => x.id === this.currAction.id);
           this.data.splice(index, 1);
