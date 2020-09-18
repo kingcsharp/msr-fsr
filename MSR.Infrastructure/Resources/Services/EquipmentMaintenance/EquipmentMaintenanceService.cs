@@ -58,9 +58,15 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Save the new equipment maintenance entry
             await _unitOfWork.EquipmentMaintenances.AddAndSaveChangesAsync(em);
 
-            var retInvoice = _mapper.Map<EquipmentMaintenanceModel>(em);
+            em = await _unitOfWork.EquipmentMaintenances.Query()
+                            .Include(i => i.Location)
+                            .Include(i => i.Status)
+                            .Include(i => i.AssignedTo)
+                            .SingleOrDefaultAsync(i => i.Id == em.Id);
 
-            return retInvoice;
+            var retEm = _mapper.Map<EquipmentMaintenanceModel>(em);
+
+            return retEm;
         }
 
 
@@ -86,6 +92,12 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             // Save equipment maintenance changes
             await _unitOfWork.EquipmentMaintenances.UpdateAndSaveChangesAsync(em);
+
+            em = await _unitOfWork.EquipmentMaintenances.Query()
+                            .Include(i => i.Location)
+                            .Include(i => i.Status)
+                            .Include(i => i.AssignedTo)
+                            .SingleOrDefaultAsync(i => i.Id == em.Id);
 
             var retEm = _mapper.Map<EquipmentMaintenanceModel>(em);
 
