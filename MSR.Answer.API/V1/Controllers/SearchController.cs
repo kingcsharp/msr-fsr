@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Views;
@@ -26,34 +27,13 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet(), SwaggerResponse(typeof(AuditActionResult<IEnumerable<SearchView>>))]
+        [HttpGet(), SwaggerResponse(typeof(AuditActionResult<ICollection<SearchView>>))]
         public async Task<IActionResult> Search([FromQuery]GetSearchRequest request)
         {
-            var response = new AuditActionResult<IEnumerable<SearchView>>()
-            {
-                Object = new List<SearchView>() {
-                    new SearchView()
-                    {
-                        ItemId = 1,
-                        ItemName = "WorkOrder 123",
-                        Description = "WorkOrder 123",
-                        ItemType = "WorkOrder",
-                        LastUpdatedBy = "James Bridgeford",
-                        LastUpdatedOn = DateTime.UtcNow
-                    },
-                    new SearchView()
-                    {
-                        ItemId = 1,
-                        ItemName = "Part 123",
-                        Description = "Part 123",
-                        ItemType = "Part",
-                        LastUpdatedBy = "James Bridgeford",
-                        LastUpdatedOn = DateTime.UtcNow
-                    }
-                }.AsEnumerable()
-            };
+            var command = request.ToGetSearchCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
 
-            return new OkObjectResult(response);
+            return ret.ToOkObjectResponse<ICollection<SearchView>>();
         }
     }
 }

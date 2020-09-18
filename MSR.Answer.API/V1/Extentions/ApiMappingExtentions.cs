@@ -922,5 +922,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// <param name="request"></param>
         /// <returns></returns>
         public static UpdatePurchaseOrder ToUpdatePurchaseOrderCommand(this UpdatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<UpdatePurchaseOrder>(request);
+
+        public static GetSearch ToGetSearchCommand(this GetSearchRequest request) => AutoMapperHelper.Mapper.Map<GetSearch>(request);
     }
 }

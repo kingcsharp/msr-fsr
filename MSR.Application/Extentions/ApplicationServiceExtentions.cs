@@ -34,6 +34,7 @@ namespace MSR.Application.Extentions
             services.AddScoped<TimezoneAppService>();
             services.AddScoped<IMessageHubClient, MessageHubAppService>();
             services.AddScoped<ReportAppService>();
+            services.AddScoped<SearchAppService>();
             
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
