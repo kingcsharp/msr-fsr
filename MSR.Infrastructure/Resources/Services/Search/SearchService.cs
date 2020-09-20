@@ -8,7 +8,6 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +23,7 @@ namespace MSR.Infrastructure.Resources.Services.Search
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<ICollection<SearchView>> Search(GetSearch command, CancellationToken cancellationToken = default)
         {
             var retSearch = new List<SearchView>();

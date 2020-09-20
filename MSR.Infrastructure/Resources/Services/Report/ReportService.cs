@@ -5,10 +5,8 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,6 +45,20 @@ namespace MSR.Infrastructure.Resources.Services.Report
             }
 
             return domReports;
+        }
+
+        public async Task<ReportDashboardModel> GetDashboard(GetDashboard command, CancellationToken cancellationToken = default)
+        {
+            var dashboard = _unitOfWork.ReportDashboards.Query().Include(i => i.Reports).ThenInclude(j => j.Report).FirstOrDefault(i => i.Id == command.Id);
+
+            var domDashboard = _mapper.Map<ReportDashboardModel>(dashboard);
+
+            foreach(var report in dashboard.Reports.Select(i => i.Report))
+            {
+                domDashboard.Reports.Add(_mapper.Map<ReportModel>(report));
+            }
+
+            return domDashboard;
         }
     }
 }

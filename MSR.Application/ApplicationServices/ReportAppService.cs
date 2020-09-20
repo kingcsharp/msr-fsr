@@ -3,16 +3,15 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSR.Application.ApplicationServices
 {
-    public class ReportAppService
-        : ICommandHandler<GetReport>
+    public class ReportAppService: 
+        ICommandHandler<GetReport>,
+        ICommandHandler<GetDashboard>
     {
         private readonly IReportService _reportService;
 
@@ -25,6 +24,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _reportService.GetReports(command, cancellationToken);
             return new CommandResponse<ICollection<ReportModel>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetDashboard command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _reportService.GetDashboard(command, cancellationToken);
+            return new CommandResponse<ReportDashboardModel>(ret);
         }
     }
 }
