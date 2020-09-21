@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import * as signalR from "@aspnet/signalr";
+import * as signalR from '@aspnet/signalr';
 import { NotificationService } from '../layout/navbar/notification.service';
 import { environment as env } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -22,7 +22,7 @@ export class SignalRService implements OnDestroy {
     this.hubConnection
       .start()
       .then(() => console.log('Signalr Connection started'))
-      .catch(err => console.log('Error while starting connection: ' + err))
+      .catch(err => console.log('Error while starting connection: ' + err));
   }
 
   public discconecctHub = () => {
@@ -32,7 +32,7 @@ export class SignalRService implements OnDestroy {
 
   public addWorkflowNotificationListener = () => {
     this.hubConnection.on('WorkflowNotification', (evId, data) => {
-      var index = this.workflowNotificationIds.findIndex(x => x === evId);
+      let index = this.workflowNotificationIds.findIndex(x => x === evId);
       if (index === -1) {
         this.workflowNotificationIds.push(evId);
         this.notificationService.addNotification(data);

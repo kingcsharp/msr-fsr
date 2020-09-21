@@ -157,16 +157,16 @@
             {{emmodel.id}}
           </td>
           <td class="text-capitalize" [hidden]="!cg.isVisibleCol('location.name',gridSettings)">
-            {{emmodel.location.name}}
+            {{emmodel.location?.name}}
           </td>
           <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
             {{emmodel.createdOn | userTimezone }}
           </td>
           <td [hidden]="!cg.isVisibleCol('created.fullName',gridSettings)">
-            {{emmodel.created ? emmodel.created.fullName : ''}}
+            {{emmodel.created?.fullName}}
           </td>
           <td [hidden]="!cg.isVisibleCol('assignedTo.fullName',gridSettings)">
-            {{emmodel.assignedTo ? emmodel.assignedTo.fullName : null}}
+            {{emmodel.assignedTo?.fullName}}
           </td>
           <td [hidden]="!cg.isVisibleCol('troubleState',gridSettings)">
             <p-inputSwitch disabled="true" [(ngModel)]="emmodel.troubleState">
@@ -185,7 +185,7 @@
             {{emmodel.frequencyField}}
           </td>
           <td [hidden]="!cg.isVisibleCol('status.name',gridSettings)">
-            {{emmodel.status.name}}
+            {{emmodel.status?.name}}
           </td>
           <td>
             <i *ngIf="emPrivileges.canEdit"

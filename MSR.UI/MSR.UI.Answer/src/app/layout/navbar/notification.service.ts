@@ -15,7 +15,7 @@ export class NotificationService {
   }
 
   addNotification(notificationItem: PendingNotificationItem) {
-    var itemFound = this.notificationData.items.find(x => x.table === notificationItem.table);
+    let itemFound = this.notificationData.items.find(x => x.table === notificationItem.table);
     if (itemFound) {
       itemFound.count += notificationItem.count;
     } else {

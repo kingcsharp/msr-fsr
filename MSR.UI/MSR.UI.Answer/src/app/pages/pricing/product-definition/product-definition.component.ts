@@ -388,7 +388,7 @@ export class ProductDefinitionComponent implements OnInit {
     const url = this.router.serializeUrl(
       this.router.createUrlTree([urlTree])
     );
-    window.open('#/'+url, '_blank');
+    window.open('#/' + url, '_blank');
   }
 
   onSubmit() {

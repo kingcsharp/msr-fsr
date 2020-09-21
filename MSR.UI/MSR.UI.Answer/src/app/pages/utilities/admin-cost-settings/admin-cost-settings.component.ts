@@ -43,8 +43,8 @@ export class AdminCostSettingsComponent implements OnInit {
       const RequestData = new UpdateAdminCostSettingRequest({
         rmAnnualRate: parseFloat(this.adminCostSettings.rmAnnualRate),
         laborRateMinute: parseFloat(this.adminCostSettings.laborRateMinute),
-        yearsHours: parseInt(this.adminCostSettings.yearsHours),
-        hourMinutes: parseInt(this.adminCostSettings.hourMinutes)
+        yearsHours: parseInt(this.adminCostSettings.yearsHours, 10),
+        hourMinutes: parseInt(this.adminCostSettings.hourMinutes, 10)
       });
       this.globals.showLoader(true);
       this.adminCostSettingsService.adminCostSettingsPatch(env.apiVersion, RequestData)

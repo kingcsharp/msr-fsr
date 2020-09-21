@@ -217,7 +217,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
           frequencyField:  this.currentEM.troubleState ? null : parseInt(this.currentEM.frequencyField.toString(), 10),
           assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
           comments: this.currentEM.comments,
-        }
+        };
 
         this.equipmentMaintenanceService.equipmentMaintenancePost(env.apiVersion, new CreateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
           .subscribe(responseHandler(response => {
@@ -235,7 +235,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
           frequencyField:  this.currentEM.troubleState ? null : parseInt(this.currentEM.frequencyField.toString(), 10),
           assignedToId: !this.currentEM.troubleState && this.currentEM.statusId === this.enumEMStatus.Assigned ? this.currentEM.assignedToId : null,
           comments: this.currentEM.comments,
-        }
+        };
         this.equipmentMaintenanceService.equipmentMaintenancePatch(env.apiVersion, new UpdateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
           .subscribe(responseHandler(response => {
             const index = this.data.findIndex(x => x.id === this.currentEM.id);
