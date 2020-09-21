@@ -18,6 +18,7 @@ using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 using System.Collections.Generic;
 using Castle.Core.Internal;
 using MSR.Domain.Validators;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -281,9 +282,31 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Status, StatusModel>().ReverseMap();
 
             #region Product
-            CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
-            CreateMap<CreateProduct, Product>();
-            CreateMap<Domain.Models.ProductModel, Product>();
+            CreateMap<Product, ProductModel>().ReverseMap();
+            CreateMap<CreateProduct, Product>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<ProductModel, Product>();
+            CreateMap<CreateProduct, ProductApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<UpdateProduct, ProductApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<Product, ProductApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProductId, opts => opts.MapFrom(i => i.Id));
+            CreateMap<ProductModel, QuotesProductsView>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedById, opt => opt.MapFrom(src => src.CreatedBy.GetValueOrDefault()))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
+            CreateMap<QuoteModel, QuotesProductsView>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name));
+            CreateMap<ProductApproval, ProductModel>()
+                .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => src.Status.Name));
             #endregion
 
             #region Quote
@@ -296,20 +319,6 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<UploadFile, FileModel>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
-
-            CreateMap<Domain.Models.ProductModel, Domain.Views.QuotesProductsView>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
-                .ForMember(dest => dest.SubmittedById, opt => opt.MapFrom(src => src.CreatedBy.GetValueOrDefault()))
-                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
-                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
-                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
-
-            CreateMap<Domain.Models.QuoteModel, QuotesProductsView>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
-                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name));
 
             #region PurchaseOrder
             CreateMap<PurchaseOrderProduct, PurchaseOrderView>()
