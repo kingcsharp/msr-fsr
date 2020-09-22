@@ -10122,6 +10122,14 @@
                   }
                 ]
               },
+              "procedureStepMonitor": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ProcedureStepMonitor"
+                  }
+                ]
+              },
               "procedureMonitorId": {
                 "type": "integer",
                 "format": "int32"
@@ -10154,6 +10162,10 @@
               "sensorName": {
                 "type": "string",
                 "nullable": true
+              },
+              "monitorNumber": {
+                "type": "integer",
+                "format": "int32"
               }
             }
           }

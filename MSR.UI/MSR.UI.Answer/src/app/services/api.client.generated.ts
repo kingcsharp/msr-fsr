@@ -14196,6 +14196,7 @@ export interface IWorkOrderTaskModel {
 export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOrderTaskMonitorModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
+    procedureStepMonitor?: ProcedureStepMonitor | undefined;
     procedureMonitorId?: number;
     numVal?: number | undefined;
     textVal?: string | undefined;
@@ -14204,6 +14205,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
     comment?: string | undefined;
     sensorValue?: string | undefined;
     sensorName?: string | undefined;
+    monitorNumber?: number;
 
     constructor(data?: IWorkOrderTaskMonitorModel) {
         super(data);
@@ -14214,6 +14216,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         if (_data) {
             this.workOrderTaskId = _data["workOrderTaskId"];
             this.workOrderTask = _data["workOrderTask"] ? WorkOrderTaskModel.fromJS(_data["workOrderTask"]) : <any>undefined;
+            this.procedureStepMonitor = _data["procedureStepMonitor"] ? ProcedureStepMonitor.fromJS(_data["procedureStepMonitor"]) : <any>undefined;
             this.procedureMonitorId = _data["procedureMonitorId"];
             this.numVal = _data["numVal"];
             this.textVal = _data["textVal"];
@@ -14222,6 +14225,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
             this.comment = _data["comment"];
             this.sensorValue = _data["sensorValue"];
             this.sensorName = _data["sensorName"];
+            this.monitorNumber = _data["monitorNumber"];
         }
     }
 
@@ -14236,6 +14240,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data = typeof data === 'object' ? data : {};
         data["workOrderTaskId"] = this.workOrderTaskId;
         data["workOrderTask"] = this.workOrderTask ? this.workOrderTask.toJSON() : <any>undefined;
+        data["procedureStepMonitor"] = this.procedureStepMonitor ? this.procedureStepMonitor.toJSON() : <any>undefined;
         data["procedureMonitorId"] = this.procedureMonitorId;
         data["numVal"] = this.numVal;
         data["textVal"] = this.textVal;
@@ -14244,6 +14249,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
         data["comment"] = this.comment;
         data["sensorValue"] = this.sensorValue;
         data["sensorName"] = this.sensorName;
+        data["monitorNumber"] = this.monitorNumber;
         super.toJSON(data);
         return data; 
     }
@@ -14252,6 +14258,7 @@ export class WorkOrderTaskMonitorModel extends TrackableModel implements IWorkOr
 export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     workOrderTaskId?: number;
     workOrderTask?: WorkOrderTaskModel | undefined;
+    procedureStepMonitor?: ProcedureStepMonitor | undefined;
     procedureMonitorId?: number;
     numVal?: number | undefined;
     textVal?: string | undefined;
@@ -14260,6 +14267,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     comment?: string | undefined;
     sensorValue?: string | undefined;
     sensorName?: string | undefined;
+    monitorNumber?: number;
 }
 
 export class CreateProductRequest implements ICreateProductRequest {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.Configuration.Conventions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -78,6 +79,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.ProcedureStep)
                 .ThenInclude(y => y.Procedure)
                 .Include(x => x.WorkOrderTasks)
+                .ThenInclude(x => x.WorkOrderTaskMonitors)
+                .ThenInclude(x => x.ProcedureStepMonitor)
+                .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.Status)
@@ -97,13 +101,26 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
             }
 
-            var result = workorders.Select(x =>
-            {
-                var wom = _mapper.Map<Domain.Models.WorkOrderModel>(x);
-                return DetachBackPointers(wom);
-            }).OrderBy(x => x.Id).ToList();
+            var result = new List<WorkOrderModel>();
 
-            return result;
+            foreach (var wo in workorders)
+            {
+                var wom = _mapper.Map<WorkOrderModel>(wo);
+                foreach (var wot in wom.WorkOrderTasks) {
+                    var wotmList = new List<WorkOrderTaskMonitorModel>();
+                    int i = 1; // Monitor Number starts at 1
+                    foreach (var wotm in wot.WorkOrderTaskMonitors.OrderBy(x => x.Id)) {
+                        wotm.MonitorNumber = i;
+                        wotm.WorkOrderTask = null; // avoid loops
+                        wotmList.Add(wotm);
+                        i += 1;
+                    }
+                    wot.WorkOrderTaskMonitors = wotmList;
+                }
+                result.Add(DetachBackPointers(wom));
+            };
+
+            return result.OrderBy(x => x.Id).ToList();
         }
         public async Task<Domain.Models.WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
