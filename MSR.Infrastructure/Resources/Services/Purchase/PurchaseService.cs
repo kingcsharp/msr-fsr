@@ -78,6 +78,8 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 created.Context.Entry(purchase.PurchaseOrderProduct)
                     .Reference(x => x.Product).Load();
 
+                // TODO NEXT: submit request to SQS and implement work order creation.
+
                 ret = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
             }
             else
