@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+namespace MSR.Domain.Models
 {
-    public class ReportDashboard: Entity
+    public class ReportDashboardModel
     {
-        public ReportDashboard()
+        public ReportDashboardModel()
         {
-            Reports = new HashSet<ReportDashboardMap>();
+            Reports = new HashSet<ReportModel>();
         }
         public string Name { get; set; }
         public string SubTitle { get; set; }
@@ -14,6 +14,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string APIEndPointURL { get; set; }
         public string ImageURL { get; set; }
 
-        public virtual ICollection<ReportDashboardMap> Reports { get; set; }
+        public virtual ICollection<ReportModel> Reports { get; set; }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MSR.Domain.Commanding;
 
 namespace MSR.Domain.Commands
 {
-    public class GetSearch
+    public class GetSearch: Command
     {
         public string SearchTerm { get; set; }
     }

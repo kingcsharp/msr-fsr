@@ -2,7 +2,8 @@
 
 namespace MSR.Domain.Commands
 {
-    public class GetReport: Command
+    public class GetDashboard: Command
     {
+        public int Id { get; set; }
     }
 }

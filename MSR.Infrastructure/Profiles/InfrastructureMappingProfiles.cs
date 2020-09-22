@@ -366,6 +366,8 @@ namespace MSR.Infrastructure.Profiles
             #region Reporting
             CreateMap<Report, ReportModel>();
             CreateMap<ReportCategory, ReportCategoryModel>();
+            CreateMap<ReportDashboard, ReportDashboardModel>()
+                .ForMember(dest => dest.Reports, opts => opts.Ignore());
             #endregion
         }
 

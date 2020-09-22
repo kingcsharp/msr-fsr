@@ -30,6 +30,7 @@ using MSR.Infrastructure.Resources.Services.Timezone;
 using MSR.Infrastructure.Resources.Services.Part;
 using MSR.Infrastructure.Resources.Services.AdminCostSetting;
 using MSR.Infrastructure.Resources.Services.Report;
+using MSR.Infrastructure.Resources.Services.Search;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -76,6 +77,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
             services.AddScoped<IAdminCostSettingsService, AdminCostSettingsService>();
             services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<ISearchService, SearchService>();
 
             return services;
         }
