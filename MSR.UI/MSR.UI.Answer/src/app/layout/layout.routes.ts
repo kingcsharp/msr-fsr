@@ -23,7 +23,8 @@ const routes: Routes = [
       { path: 'procedures', loadChildren: () =>  import('../pages/procedures/procedures.module').then(m => m.ProceduresModule) },
       { path: 'monitors', loadChildren: () =>  import('../pages/monitors/monitors.module').then(m => m.MonitorsModule) },
       { path: 'pricing', loadChildren: () =>  import('../pages/pricing/pricing.module').then(m => m.PricingModule) },
-      { path: 'reporting', loadChildren: () => import('../pages/reports/report.module').then(m => m.ReportModule) }
+      { path: 'reporting', loadChildren: () => import('../pages/reports/report.module').then(m => m.ReportModule) },
+      { path: 'search', loadChildren: () => import('../pages/search/search.module').then(m => m.SearchModule) }
     ]
   }
 ];

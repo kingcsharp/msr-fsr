@@ -35,10 +35,7 @@ export class AdhocComponent implements OnInit {
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private workflowService: WorkflowService, private route: ActivatedRoute,
         private workflowGroupService: WorkflowGroupService, private workflowStageService: WorkflowStageService) {
-
     }
-
-
 
     ngOnInit(): void {
         this.route.params.subscribe(routeParams => {
@@ -48,29 +45,17 @@ export class AdhocComponent implements OnInit {
         this.gridSaved = new GridSaved({
             columnsSaved: [new ColumnsSaved({ id: 'id', label: 'Id', visible: true, type: this.enumColumnType.Number }),
             new ColumnsSaved({ id: 'name', label: 'Approval Group Name', visible: true, type: this.enumColumnType.String }),
-            new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false, type: this.enumColumnType.Date }),
-            new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false, type: this.enumColumnType.String }),
-            new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false, type: this.enumColumnType.Date }),
-            new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false, type: this.enumColumnType.String })
+            new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: true, type: this.enumColumnType.Date }),
+            new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: true, type: this.enumColumnType.String }),
+            new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: true, type: this.enumColumnType.Date }),
+            new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: true, type: this.enumColumnType.String })
             ],
             storageId: 'avaca' + this.elem.nativeElement.tagName.toLowerCase(),
-            version:'1.0.0'
+            version: '1.0.0'
         });
 
-
-
-        // this.gridStorageId = 'avaca' + this.elem.nativeElement.tagName.toLowerCase();
-        // this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true, type: EnumColumnType.Number }),
-        // new ColumnsSaved({ id: 'isActive', label: 'Active', visible: true, type: EnumColumnType.Boolean }),
-        // new ColumnsSaved({ id: 'name', label: 'Approval Group Name', visible: true, type: EnumColumnType.String }),
-        // new ColumnsSaved({ id: 'groupRoles', label: 'Group Roles', visible: true, type: EnumColumnType.String }),
-        // new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false, type: EnumColumnType.Date }),
-        // new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false, type: EnumColumnType.String }),
-        // new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false, type: EnumColumnType.Date }),
-        // new ColumnsSaved({ id: 'lastUpdatedByName', label: 'Updated By', visible: false, type: EnumColumnType.String })
-        // ];
-
         this.getWorkflowGroups();
+        
     }
 
     getWorkflowGroups() {

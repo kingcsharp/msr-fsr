@@ -20,13 +20,13 @@
                     data-cy="usertable-header">
                     {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
                 </th>
-                <th></th>
+                <th>Actions</th>
             </tr>
             <tr>
                 <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowView"
                     [ngTemplateOutletContext]="{colsAndSettings: { col: col,dt:dt,gridSaved:gridSaved} }">
                 </ng-container>
-                <th>Actions</th>
+                <th></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-itemData>
@@ -34,6 +34,7 @@
                 <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowViewData"
                     [ngTemplateOutletContext]="{colsDataAndSettings: { col: col,colData:itemData,colsSaved:gridSaved.columnsSaved} }">
                 </ng-container>
+                <td></td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">

@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit } from '
 import { LoginService } from '../../pages/login/login.service';
 import { Globals } from '../../models/lib/globals';
 import { NotificationService } from './notification.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,17 +20,20 @@ export class Navbar implements OnInit {
   settings: any = {
     isOpen: false
   };
+  searchValue:string;
 
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
     private loginService: LoginService,
     public globals: Globals,
-    public notificationservice: NotificationService
+    public notificationservice: NotificationService,
+    private router: Router
   ) { }
 
 
   ngOnInit(): void {
+    this.searchValue = '';
     this.notificationservice.getNotifications();
   }
 
@@ -54,6 +58,12 @@ export class Navbar implements OnInit {
       this.changeStyleElement('.notifications ', 'top', '46px');
     }
     this.searchFormState = !this.searchFormState;
+  }
+
+  search() {
+    debugger;
+    this.router.navigate(['app/search'], { queryParams: { search: this.searchValue }, queryParamsHandling: 'merge' });
+    // this.router.navigate(['app/search', { search: this.searchValue }]);
   }
 
   private changeStyleElement(selector, styleName, styleValue): void {
