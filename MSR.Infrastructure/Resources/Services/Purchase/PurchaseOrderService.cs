@@ -37,29 +37,24 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 purchaseOrders = purchaseOrders.Where(i => i.Id == command.Id);
             }
 
-            // TODO: I think this should be a automap
-            var purchaseOrderList = await purchaseOrders.Include(i => i.Status).Select(po => new PurchaseOrderView
+            var purchaseOrderModelList = await purchaseOrders
+                .Include(i => i.Status)
+                .Include(i => i.PurchaseOrderProducts)
+                .ThenInclude(x => x.Product)
+                .ToListAsync();
+
+            var purchaseOrderList = new List<PurchaseOrderView>();
+            foreach (var pom in purchaseOrderModelList)
             {
-                Id = po.Id,
-                Name = po.Name,
-                CustomerId = po.CustomerId,
-                CustomerReferencePO = po.ReferencePO,
-                CustomerReference = po.CustomerReference,
-                ReferenceName = po.ReferenceName,
-                OpenDate = po.OpenDate,
-                CloseDate = po.CloseDate,
-                Revision = po.Revision,
-                TotalPurchaseLimit = po.TotalPurchaseLimit.GetValueOrDefault(0),
-                Status = po.Status.Name
-            }).ToListAsync();
+                var pov = _mapper.Map<PurchaseOrderView>(pom);
+                pov.Products = pom.PurchaseOrderProducts
+                    .Select(x => _mapper.Map<PurchaseOrderProductView>(x))
+                    .ToList();
+                purchaseOrderList.Add(pov);
+            }
 
             var purchaseOrderIds = purchaseOrderList.Select(i => i.Id).ToList();
             var purchaseOrderCustomerIds = purchaseOrderList.Select(i => i.CustomerId).ToList();
-
-            var products = await _unitOfWork.Products.Query().Where(x => _unitOfWork.PurchaseOrderProducts.Query()
-                    .Select(i => i.ProductId).Contains(x.Id))
-                .Select(i => _mapper.Map<PurchaseOrderProductView>(i))
-                .ToListAsync();
 
             var customers = await _unitOfWork.Customers.Query()
                 .Where(i => purchaseOrderCustomerIds.Contains(i.Id))
@@ -69,16 +64,9 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             var purchases = await _unitOfWork.Purchases.Query().Where(i => purchaseOrderIds.Contains(i.PurchaseOrderId))
                 .Select(x => new { x.PurchaseOrderId, x.Id }).ToListAsync();
 
-            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Where(i => i.PurchaseOrderId.HasValue && purchaseOrderIds.Contains(i.PurchaseOrderId.Value))
-                .Select(x => new { x.Invoice.Total, x.PurchaseOrderId }).ToListAsync();
-
-            var invoicedWorkOrders = await _unitOfWork.InvoiceItems.Query().Where(i => i.PurchaseOrderId.HasValue && purchaseOrderIds.Contains(i.PurchaseOrderId.Value)).Select(i => i.WorkOrderId).ToListAsync();
-
-
             foreach (var po in purchaseOrderList)
             {
                 customers.TryGetValue(po.CustomerId, out var name);
-                po.Products = products.Where(i => i.Id == po.Id).ToList();
                 if (name != null)
                 {
                     po.CustomerName = name;
