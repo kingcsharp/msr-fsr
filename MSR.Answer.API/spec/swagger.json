@@ -9702,6 +9702,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "name": {
             "type": "string",
             "nullable": true

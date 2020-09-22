@@ -13629,6 +13629,7 @@ export interface IPurchaseOrderModel extends ICreatableModel {
 
 export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     id?: number;
+    productId?: number;
     name?: string | undefined;
     totalSalePrice?: number;
 
@@ -13644,6 +13645,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.productId = _data["productId"];
             this.name = _data["name"];
             this.totalSalePrice = _data["totalSalePrice"];
         }
@@ -13659,6 +13661,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["productId"] = this.productId;
         data["name"] = this.name;
         data["totalSalePrice"] = this.totalSalePrice;
         return data; 
@@ -13667,6 +13670,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
 
 export interface IPurchaseOrderProductView {
     id?: number;
+    productId?: number;
     name?: string | undefined;
     totalSalePrice?: number;
 }
