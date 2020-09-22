@@ -363,7 +363,6 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
             CreateMap<PurchaseOrderProduct, PurchaseOrderProductView>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.Product.TotalSalePrice));
         }

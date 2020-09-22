@@ -59,6 +59,10 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
         {
             Domain.Models.PurchaseModel ret;
 
+            if (command.StatusId == 0) {
+                throw new DomainException("Invalid Status of 0", DomainError.BadRequest);
+            }
+
             if (CurrentUser.HasPrivilege(EnumMenuItem.Purchases, EnumPrivilege.CanCreate)) {
                 var purchase = _mapper.Map<Purchase>(command);
                 var created = _unitOfWork.Purchases.Add(purchase);

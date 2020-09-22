@@ -5,9 +5,14 @@ namespace MSR.Domain.Views
     public class PurchaseOrderProductView
     {
         /// <summary>
-        /// Product Id
+        /// Purchase Order Product Id
         /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Product Id
+        /// </summary>
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Product Name
