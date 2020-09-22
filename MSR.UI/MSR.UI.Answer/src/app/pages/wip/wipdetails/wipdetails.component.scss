@@ -18,3 +18,17 @@ slide {
 :host ::ng-deep.carousel-control{
     width:3%;
 }
+
+.card{
+    min-width: 500px;
+    min-height: 300px;
+}
+
+.card-header{
+    background-color: #116fbf;
+}
+
+.card-body{
+    background-color: #FFFFFF;
+    color: #000000;
+}

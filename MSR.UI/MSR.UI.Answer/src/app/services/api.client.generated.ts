@@ -5866,7 +5866,7 @@ export class WorkOrderService {
     /**
      * Returns a summary of COMPLETED or CANCELLED WorkOrders
      */
-    history(version: string | null): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+    history(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/History";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5920,7 +5920,7 @@ export class WorkOrderService {
     /**
      * Returns a summary of WorkOrders IN PROGRESS or WAITING
      */
-    menu(version: string | null): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
+    menu(version: string): Observable<AuditActionResultOfICollectionOfWorkOrderGridSummary> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Menu";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");

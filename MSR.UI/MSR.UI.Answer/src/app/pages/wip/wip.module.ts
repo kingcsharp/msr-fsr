@@ -17,6 +17,8 @@ import { WipdetailsComponent } from './wipdetails/wipdetails.component';
 import {TabViewModule} from 'primeng/tabview';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { WorkordertasktimerWrapperComponent } from '../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component'
+import {DropdownModule} from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -41,7 +43,9 @@ export const routes = [
     ProgressbarModule,
     AlertModule,
     TabViewModule,
-    CarouselModule
+    CarouselModule,
+    DropdownModule,
+    FormsModule
   ]
 })
 export class WipModule { static routes = routes; }
