@@ -18,14 +18,26 @@ import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
 import { NotificationService } from './layout/navbar/notification.service';
 import { CommonGrid } from './models/lib/CommonGrid';
+import { CSVConverterService } from '../app/services/csvconverter.service';
 import { environment } from '../environments/environment';
+import { CubejsClientModule } from '@cubejs-client/ngx';
+
+// const cubejsOptions = {
+//   token: environment.CUBEJS_API_TOKEN,
+//   options: { apiUrl: environment.CUBEJS_API_URL }
+// };
+const cubejsOptions = {
+  token: '9nyEf9X3gjVQqryBAYKcMSefrkCZ7m8bCHJSXeXCYsfhCqcRJt',
+  options: { apiUrl: 'https://report-api.cmhworks.com/answer/dev/v1/workinprocess' }
+  // options: { apiUrl: 'https://report-api.cmhworks.com/answer/dev/cubejs-api/v1' }
+};
 
 
 import * as $ from 'jquery';
 import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
-  FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService,ReportService
+  FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService, ReportService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -36,6 +48,7 @@ const APP_PROVIDERS = [
   ResetpasswordService,
   Globals,
   CommonGrid,
+  CSVConverterService,
   NotificationService
 ];
 
@@ -54,7 +67,8 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES, {
       useHash: true,
       preloadingStrategy: PreloadAllModules
-    })
+    }),
+    CubejsClientModule.forRoot(cubejsOptions)
   ],
   providers: [
     APP_PROVIDERS,
