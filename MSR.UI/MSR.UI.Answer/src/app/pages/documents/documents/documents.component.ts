@@ -55,10 +55,8 @@ export class DocumentsComponent implements OnInit {
       new ColumnsSaved({ id: 'id', label: 'ID', visible: true }),
       new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
       new ColumnsSaved({ id: 'revision', label: 'Revision', visible: true }),
-      new ColumnsSaved({ id: 'status.name', label: 'Approval Status', visible: true }),
-      new ColumnsSaved({ id: 'approvalDate', label: 'Approval Date', visible: true }),
+      new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Approval Date', visible: true }),
       new ColumnsSaved({ id: 'lastUpdated.fullName', label: 'Updated By', visible: true }),
-      new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated Date', visible: true }),
       new ColumnsSaved({ id: 'referenceFiles', label: 'Reference Files', visible: true }),
     ];
     this.documentsPrivileges = this.globals.getEnumPrivileges(this.menuItems.Documents);

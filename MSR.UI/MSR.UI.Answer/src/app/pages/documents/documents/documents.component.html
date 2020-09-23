@@ -20,7 +20,7 @@
     >
       <ng-template pTemplate="caption">
         <div class="text-right">
-          <button *ngIf="documentsPrivileges.canCreate" (click)="showDocumentModal()"
+          <button *ngIf="documentsPrivileges.canCreate" [routerLink]="['../document-create']"
             class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
             + Add
           </button>
@@ -67,14 +67,9 @@
               <i *ngIf="dt.filters['revision']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'revision')"></i>
             </div>
           </th>
-          <th [hidden]="!cg.isVisibleCol('status.name', gridSettings)">
-            <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="approvalStatus" filterId="statusId"
-              defaultText="Select Status" defaultTextTooltip="" [datatable]="dt">
-            </multiselect-wrapper>
-          </th>
-          <th [hidden]="!cg.isVisibleCol('approvalDate',gridSettings)">
+          <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
             <div class="position-relative" tooltip="Search by Approval Date">
-              <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'approvalDate'" [datatable]="dt">
+              <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'" [datatable]="dt">
               </pcalendar-wrapper>
             </div>
           </th>
@@ -89,12 +84,6 @@
               >
               <i *ngIf="dt.filters['lastUpdated.fullName']?.value" class="fclear pi pi-times pointer"
                 (click)="cg.filter(dt,'lastUpdated.fullName')"></i>
-            </div>
-          </th>
-          <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-            <div class="position-relative" tooltip="Search by Updated Date">
-              <pcalendar-wrapper [gridStorageId]="gridStorageId" [filterId]="'lastUpdatedOn'" [datatable]="dt">
-              </pcalendar-wrapper>
             </div>
           </th>
           <th></th>
@@ -112,22 +101,14 @@
           <td [hidden]="!cg.isVisibleCol('revision',gridSettings)">
             {{documentmodel.revision}}
           </td>
-          <td [hidden]="!cg.isVisibleCol('status.name',gridSettings)">
-            {{documentmodel.status.name}}
-          </td>
-          <td [hidden]="!cg.isVisibleCol('approvalDate',gridSettings)">
-            {{documentmodel.approvalDate | userTimezone }}
+          <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
+            {{documentmodel.lastUpdatedOn | userTimezone }}
           </td>
           <td [hidden]="!cg.isVisibleCol('lastUpdated.fullName',gridSettings)">
             {{documentmodel.lastUpdated ? documentmodel.lastUpdated.fullName : ''}}
           </td>
-          <td [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)">
-            {{documentmodel.lastUpdatedOn | userTimezone }}
-          </td>
           <td [hidden]="!cg.isVisibleCol('referenceFiles',gridSettings)">
-
           </td>
-
           <td>
             <i *ngIf="documentsPrivileges.canEdit"
               class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"

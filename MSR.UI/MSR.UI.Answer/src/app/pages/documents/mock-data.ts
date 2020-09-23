@@ -26,10 +26,7 @@ export const gridDemoData = [
     id: 1,
     name: 'Document -1',
     revision: 123,
-    statusId: 1,
-    status: new StatusModel({id: 1, name: "Approved"}),
     comments: 'Comment',
-    approvalDate: new Date(),
     roles: undefined,
     referenceFiles: undefined,
     created: {
