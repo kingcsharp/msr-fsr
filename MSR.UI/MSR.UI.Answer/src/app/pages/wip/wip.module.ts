@@ -19,6 +19,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { WorkordertasktimerWrapperComponent } from '../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component'
 import {DropdownModule} from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { WorkordertaskmonitosWrapperComponent } from '../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component'
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -30,7 +31,8 @@ export const routes = [
 
 
 @NgModule({
-  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent, WorkordertasktimerWrapperComponent],
+  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent, 
+    WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
