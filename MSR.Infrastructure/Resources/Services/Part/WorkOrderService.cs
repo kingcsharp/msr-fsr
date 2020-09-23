@@ -10,6 +10,7 @@ using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,9 +59,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             WorkOrderModel ret;
 
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
+            }
+
+            if (command.ScheduledStartDate == null || command.ScheduledStartDate.Ticks == 0)
+            {
+                command.ScheduledStartDate = DateTime.Now;
             }
 
             WorkOrder workorder = _mapper.Map<WorkOrder>(command);

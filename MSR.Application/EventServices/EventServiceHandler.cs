@@ -11,22 +11,31 @@ using System.Threading.Tasks;
 using MSR.Domain.Hub;
 using MSR.Domain.Models.Config;
 using MSR.Domain.Helpers;
+using AutoMapper;
+using MSR.Domain.Commands;
+using MSR.Domain.Models;
 
 namespace MSR.Application.EventServices
 {
-    public class EventServiceHandler : IEventHandler<ImportEvent>
+    public class EventServiceHandler :
+        IEventHandler<ImportEvent>,
+        IEventHandler<WorkOrderCreateEvent>
     {
         private ICustomerService _customerService;
         private ILocationService _locationService;
         private IPartService _partService;
         private IMessageHubClient _messageHub;
         private GeneralInformation _processorConfig;
+        private IWorkOrderService _workOrderService;
+        private IMapper _mapper;
 
         public EventServiceHandler(
             ICustomerService customerService,
             ILocationService locationService,
             IPartService partService,
             GeneralInformation processorConfig,
+            IWorkOrderService workOrderService,
+            IMapper mapper,
             IMessageHubClient messageHub)
         {
             _customerService = customerService;
@@ -34,6 +43,8 @@ namespace MSR.Application.EventServices
             _partService = partService;
             _processorConfig = processorConfig;
             _messageHub = messageHub;
+            _workOrderService = workOrderService;
+            _mapper = mapper;
         }
 
         public async Task HandleAsync(ImportEvent handledEvent, CancellationToken cancellationToken = default)
@@ -80,8 +91,28 @@ namespace MSR.Application.EventServices
                 {
                     Message = $"Import {Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem)} " +
                               $"ERROR: {e.Message}",
-                    Status = EnumToasterStatus.Success
+                    Status = EnumToasterStatus.Error
                 });
+            }
+        }
+
+        public async Task HandleAsync(WorkOrderCreateEvent handledEvent, CancellationToken cancellationToken = default)
+        {
+            try {
+                var command = _mapper.Map<CreateWorkOrder>(handledEvent.purchaseInfo);
+                command.ScheduledStartDate = DateTime.Now;
+                WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
+            }
+            catch (Exception e)
+            {
+                _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
+                {
+                    Message = "Work Order Creation FAILED. " +
+                              $"ERROR: {e.Message}",
+                    Status = EnumToasterStatus.Error
+                });
+                // propogate up to log the error
+                throw;
             }
         }
     }

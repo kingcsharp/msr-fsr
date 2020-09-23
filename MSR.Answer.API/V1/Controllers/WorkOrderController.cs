@@ -34,16 +34,6 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<WorkOrderModel>>();
         }
 
-        [HttpPost]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanCreate)]
-        [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]
-        public async Task<IActionResult> AddWorkOrder(CreateWorkOrderRequest request)
-        {
-            var command = request.ToCreateWorkOrderCommand();
-            var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderModel>("WorkOrder created succesfully");
-        }
-
         [HttpPatch]
         [HasPrivilegeApi("WipStatus", EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<WorkOrderModel>))]

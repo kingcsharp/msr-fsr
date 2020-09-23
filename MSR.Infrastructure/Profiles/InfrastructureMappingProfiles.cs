@@ -365,6 +365,12 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.ProductId, opts => opts.MapFrom(src => src.Product.Id))
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.Product.TotalSalePrice));
+
+            CreateMap<PurchaseModel, CreateWorkOrder>()
+                .ForMember(dest => dest.PurchaseId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ProductId, opts => opts.MapFrom(src => src.PurchaseOrderProduct.ProductId))
+                .ForMember(dest => dest.Price, opts => opts.MapFrom(src => src.PurchasePrice))
+                .ForMember(dest => dest.ScheduledEndDate, opts => opts.MapFrom(src => src.DueDate));
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)
