@@ -202,7 +202,6 @@
             <i *ngIf="dt2.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt2,'id')"></i>
           </div>
         </th>
-
         <th [hidden]="!cg.isVisibleCol('activityType',gridSettings2)">
           <multiselect-wrapper [gridStorageId]="gridStorageId2" [options]="tables" [filterId]="'activityType'"
             [defaultText]="'Search by Activity type'" [defaultTextTooltip]="''" [datatable]="dt2">

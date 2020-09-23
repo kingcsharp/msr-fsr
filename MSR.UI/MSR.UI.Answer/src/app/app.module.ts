@@ -32,12 +32,12 @@ const cubejsOptions = {
   // options: { apiUrl: 'https://report-api.cmhworks.com/answer/dev/cubejs-api/v1' }
 };
 
-
 import * as $ from 'jquery';
 import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
-  FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService, ReportService
+  FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService, ReportService,
+  SearchService, ProcedureService 
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -96,7 +96,7 @@ const APP_PROVIDERS = [
     },
     LocationService,
     RoleService,
-    PurchaseOrderService, CustomerService, ProductService, ReportService
+    PurchaseOrderService, CustomerService, ProductService, ReportService, SearchService,ProcedureService
   ]
 })
 // { //we have this bse url set in the app.config that's why we define as ''

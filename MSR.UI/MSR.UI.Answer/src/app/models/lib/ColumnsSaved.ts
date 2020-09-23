@@ -4,13 +4,15 @@ export interface IColumnsSaved {
     id?: string | undefined;
     label?: string | undefined;
     visible?: boolean | undefined;
-    type?:EnumColumnType | undefined;
+    type?: EnumColumnType | undefined;
+    dropdownHeader?: boolean | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
     label?: string | undefined;
     visible?: boolean | undefined;
-    type: EnumColumnType | undefined;
+    type?: EnumColumnType | undefined;
+    dropdownHeader?: boolean | undefined;
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -35,6 +37,7 @@ export class ColumnsSaved implements IColumnsSaved {
             this.label = _data['label'];
             this.visible = _data['visible'];
             this.type = _data['type'];
+            this.dropdownHeader = _data['dropdownHeader'];
         }
     }
 
@@ -44,6 +47,8 @@ export class ColumnsSaved implements IColumnsSaved {
         data['label'] = this.label;
         data['visible'] = this.visible;
         data['type'] = this.type;
+        data['dropdownHeader'] = this.dropdownHeader;
+        
         return data;
     }
 }

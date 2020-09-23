@@ -1,0 +1,10 @@
+fieldset > .form-group.row {
+    margin-bottom: 0;
+    & > label {
+        font-weight: bold;
+        padding-right: 5px;
+    }
+    & > div{
+        padding-left: 0px;
+    }
+}

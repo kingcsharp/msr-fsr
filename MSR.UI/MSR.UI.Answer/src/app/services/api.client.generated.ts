@@ -4780,6 +4780,60 @@ export class ReportService {
         }
         return _observableOf<AuditActionResultOfICollectionOfReportModel>(<any>null);
     }
+
+    dashboard(id: number | null, version: string): Observable<AuditActionResultOfReportDashboardModel> {
+        let url_ = this.baseUrl + "/v{version}/Report/Dashboard/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{Id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDashboard(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDashboard(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfReportDashboardModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfReportDashboardModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDashboard(response: HttpResponseBase): Observable<AuditActionResultOfReportDashboardModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfReportDashboardModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfReportDashboardModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -5020,7 +5074,7 @@ export class SearchService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    search(searchTerm: string | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfSearchView> {
+    search(searchTerm: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfSearchView> {
         let url_ = this.baseUrl + "/v{version}/Search?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5044,14 +5098,14 @@ export class SearchService {
                 try {
                     return this.processSearch(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResultOfIEnumerableOfSearchView>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfICollectionOfSearchView>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResultOfIEnumerableOfSearchView>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfICollectionOfSearchView>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSearch(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfSearchView> {
+    protected processSearch(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfSearchView> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5062,7 +5116,7 @@ export class SearchService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResultOfIEnumerableOfSearchView.fromJS(resultData200);
+            result200 = AuditActionResultOfICollectionOfSearchView.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -5070,7 +5124,7 @@ export class SearchService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResultOfIEnumerableOfSearchView>(<any>null);
+        return _observableOf<AuditActionResultOfICollectionOfSearchView>(<any>null);
     }
 }
 
@@ -15311,6 +15365,105 @@ export interface IReportCategoryModel {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfReportDashboardModel extends AuditActionResult implements IAuditActionResultOfReportDashboardModel {
+    object?: ReportDashboardModel | undefined;
+
+    constructor(data?: IAuditActionResultOfReportDashboardModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? ReportDashboardModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfReportDashboardModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfReportDashboardModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfReportDashboardModel extends IAuditActionResult {
+    object?: ReportDashboardModel | undefined;
+}
+
+export class ReportDashboardModel implements IReportDashboardModel {
+    name?: string | undefined;
+    subTitle?: string | undefined;
+    description?: string | undefined;
+    apiEndPointURL?: string | undefined;
+    imageURL?: string | undefined;
+    reports?: ReportModel[] | undefined;
+
+    constructor(data?: IReportDashboardModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.subTitle = _data["subTitle"];
+            this.description = _data["description"];
+            this.apiEndPointURL = _data["apiEndPointURL"];
+            this.imageURL = _data["imageURL"];
+            if (Array.isArray(_data["reports"])) {
+                this.reports = [] as any;
+                for (let item of _data["reports"])
+                    this.reports!.push(ReportModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ReportDashboardModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ReportDashboardModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["subTitle"] = this.subTitle;
+        data["description"] = this.description;
+        data["apiEndPointURL"] = this.apiEndPointURL;
+        data["imageURL"] = this.imageURL;
+        if (Array.isArray(this.reports)) {
+            data["reports"] = [];
+            for (let item of this.reports)
+                data["reports"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IReportDashboardModel {
+    name?: string | undefined;
+    subTitle?: string | undefined;
+    description?: string | undefined;
+    apiEndPointURL?: string | undefined;
+    imageURL?: string | undefined;
+    reports?: ReportModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfRole extends AuditActionResult implements IAuditActionResultOfICollectionOfRole {
     object?: Role[] | undefined;
 
@@ -15474,10 +15627,10 @@ export interface IUpdateRoleRequest extends ICreateRoleRequest {
 }
 
 /** Base class for an API call with a typed result */
-export class AuditActionResultOfIEnumerableOfSearchView extends AuditActionResult implements IAuditActionResultOfIEnumerableOfSearchView {
+export class AuditActionResultOfICollectionOfSearchView extends AuditActionResult implements IAuditActionResultOfICollectionOfSearchView {
     object?: SearchView[] | undefined;
 
-    constructor(data?: IAuditActionResultOfIEnumerableOfSearchView) {
+    constructor(data?: IAuditActionResultOfICollectionOfSearchView) {
         super(data);
     }
 
@@ -15492,9 +15645,9 @@ export class AuditActionResultOfIEnumerableOfSearchView extends AuditActionResul
         }
     }
 
-    static fromJS(data: any): AuditActionResultOfIEnumerableOfSearchView {
+    static fromJS(data: any): AuditActionResultOfICollectionOfSearchView {
         data = typeof data === 'object' ? data : {};
-        let result = new AuditActionResultOfIEnumerableOfSearchView();
+        let result = new AuditActionResultOfICollectionOfSearchView();
         result.init(data);
         return result;
     }
@@ -15512,7 +15665,7 @@ export class AuditActionResultOfIEnumerableOfSearchView extends AuditActionResul
 }
 
 /** Base class for an API call with a typed result */
-export interface IAuditActionResultOfIEnumerableOfSearchView extends IAuditActionResult {
+export interface IAuditActionResultOfICollectionOfSearchView extends IAuditActionResult {
     object?: SearchView[] | undefined;
 }
 

@@ -61,9 +61,7 @@ export class Navbar implements OnInit {
   }
 
   search() {
-    debugger;
     this.router.navigate(['app/search'], { queryParams: { search: this.searchValue }, queryParamsHandling: 'merge' });
-    // this.router.navigate(['app/search', { search: this.searchValue }]);
   }
 
   private changeStyleElement(selector, styleName, styleValue): void {

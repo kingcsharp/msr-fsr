@@ -29,7 +29,7 @@ declare let jQuery: any;
 export class AdhocComponent implements OnInit {
     privileges = EnumPrivilege;
     enumColumnType = EnumColumnType;
-    defaultView: ViewSaved;
+    // defaultView: ViewSaved;
     data: any;
     gridSaved: GridSaved;
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
