@@ -133,6 +133,45 @@ namespace MSR.Infrastructure.Resources.Services
                 FileURL = url
             };
         }
+
+        /// <summary>
+        /// Map an uploaded file to an entity name + id
+        /// </summary>
+        /// <param name="entityName"></param>
+        /// <param name="entityId"></param>
+        /// <param name="uploadedFileId"></param>
+        /// <returns></returns>
+        public async Task<FileModel> MapUploadedFileAsync(string entityName, int entityId, int uploadedFileId)
+        {
+            var tableName = mapEntityToTable(entityName);
+
+            var fileEntityMap = new FileEntityMap()
+            {
+                EntityId = entityId,
+                EntityTableName = tableName,
+                FileId = uploadedFileId
+            };
+
+            _unitOfWork.FileEntityMap.Add(fileEntityMap);
+            await _unitOfWork.SaveChangesAsync();
+
+            var fileModel = await _unitOfWork.Files
+                                    .Query()
+                                    .Where(x => x.Id == uploadedFileId)
+                                    .Select(x => new FileModel()
+                                    {
+                                        FileId = x.Id,
+                                        EntityId = entityId,
+                                        Name = x.Name,
+                                        Base64String = "",
+                                        ContentType = x.ContentType,
+                                        FileURL = x.FileURL
+                                    })
+                                    .SingleOrDefaultAsync();
+
+            return fileModel;
+        }
+
         public async Task<int> DetachFilesAsync(string entityName, int entityId, int? fileId = null)
         {
             string tableName = mapEntityToTable(entityName);

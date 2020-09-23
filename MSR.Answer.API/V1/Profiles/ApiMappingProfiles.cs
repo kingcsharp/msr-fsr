@@ -101,6 +101,9 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetEquipmentMaintenanceRequest, GetEquipmentMaintenance>();
             CreateMap<CreateEquipmentMaintenanceRequest, CreateEquipmentMaintenance>();
             CreateMap<UpdateEquipmentMaintenanceRequest, UpdateEquipmentMaintenance>();
+            CreateMap<GetDocumentRequest, GetDocument>();
+            CreateMap<CreateDocumentRequest, CreateDocument>();
+            CreateMap<UpdateDocumentRequest, UpdateDocument>();
         }
     }
 }
