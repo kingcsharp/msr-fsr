@@ -148,16 +148,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<ProcedureStep> steps = await _unitOfWork.ProcedureSteps.Query()
                 .Where(x => x.ProcedureId == product.ProcedureId)
                 .Include(x => x.ProcedureStepMonitors)
+                .OrderBy(x => x.PrintOrder)
                 .ToListAsync();
 
             List<WorkOrderTask> tasks = new List<WorkOrderTask>();
+            int taskStepOrder = 10;
             foreach (var step in steps)
             {
                 var wot = _mapper.Map<WorkOrderTask>(step);
                 wot.WorkOrderTaskMonitors = step.ProcedureStepMonitors
                     .Select(x => _mapper.Map<WorkOrderTaskMonitor>(x))
                     .ToList();
+                wot.TaskStepOrder = taskStepOrder;
                 tasks.Add(wot);
+                taskStepOrder += 10;
             }
 
             return tasks.Select(x =>
