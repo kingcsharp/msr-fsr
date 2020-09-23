@@ -470,6 +470,70 @@
     </fieldset>
 </ng-template>
 
+<ng-template #partDialog let-selectedItem='selectedItem'>
+    <fieldset>
+        <legend>
+        </legend>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Id:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.id}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Name:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.name}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Maximum Cycles:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.maximumCycles}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Is Kit:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.isKit?'Yes':'No'}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Is Active:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.isActive?'Yes':'No'}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Nickname:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.nickName}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Oem part number:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.oemPartNumber}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Part number:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.partNumber}}
+            </div>
+        </div>
+    </fieldset>
+</ng-template>
+
+
 <p-dialog *ngIf="display" header="{{ selectedItem.itemType + ' Details'}}" [(visible)]="display" [appendTo]="'body'"
     [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
@@ -487,9 +551,9 @@
                 <ng-container *ngIf="selectedItem.itemType === 'WorkOrder'" [ngTemplateOutlet]="workOrderDialog"
                     [ngTemplateOutletContext]="{selectedItem:selectedItem}">
                 </ng-container>
-                <!-- <ng-container *ngIf="selectedItem.itemType === 'Procedure'" [ngTemplateOutlet]="procedureDialog"
+                <ng-container *ngIf="selectedItem.itemType === 'Part'" [ngTemplateOutlet]="partDialog"
                     [ngTemplateOutletContext]="{selectedItem:selectedItem}">
-                </ng-container> -->
+                </ng-container>
             </div>
         </section>
         <p-footer>

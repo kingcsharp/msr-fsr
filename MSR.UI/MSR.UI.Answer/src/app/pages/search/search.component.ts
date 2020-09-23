@@ -7,7 +7,7 @@ import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
 import { Globals } from '../../models/lib/globals';
 import {
-  SearchService, ProcedureService, WorkOrderService
+  SearchService, ProcedureService, WorkOrderService, PartService
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
@@ -29,7 +29,7 @@ export class SearchComponent implements OnInit {
   display: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute, private elem: ElementRef, public cg: CommonGrid, private workOrderService: WorkOrderService,
-    private globals: Globals, private searchService: SearchService, private procedureService: ProcedureService) {
+    private globals: Globals, private searchService: SearchService, private procedureService: ProcedureService, private partService: PartService) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.getSearchData(params['search'])
     });
@@ -70,23 +70,36 @@ export class SearchComponent implements OnInit {
       case 'Procedure':
         this.procedureService.procedureGet(rowData.itemId, env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
-            this.selectedItem = response?.object[0];
-            this.selectedItem.itemType = rowData.itemType;
-            this.display = true;
+            this.setGridData(response, rowData);
+            // this.selectedItem = response?.object[0];
+            // this.selectedItem.itemType = rowData.itemType;
+            // this.display = true;
           }));
         break;
       case 'WorkOrder':
         this.workOrderService.workOrderGet(rowData.itemId, null, null, null, env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
-            this.selectedItem = response?.object[0];
-            this.selectedItem.itemType = rowData.itemType;
-            this.display = true;
+            this.setGridData(response, rowData);
+            // this.selectedItem = response?.object[0];
+            // this.selectedItem.itemType = rowData.itemType;
+            // this.display = true;
           }));
-
-
+      case 'Part':
+        this.partService.partGet(rowData.itemId, env.apiVersion).pipe(take(1))
+          .subscribe(responseHandler(response => {
+            this.setGridData(response, rowData);
+          }));
       default:
         break;
     }
-    
+
+
+
+  }
+
+  setGridData(data: any, rowData: any) {
+    this.selectedItem = data?.object[0];
+    this.selectedItem.itemType = rowData.itemType;
+    this.display = true;
   }
 }
