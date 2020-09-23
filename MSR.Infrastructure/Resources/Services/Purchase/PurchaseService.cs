@@ -95,6 +95,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                     .Reference(x => x.Product).Load();
 
                 ret = _mapper.Map<Domain.Models.PurchaseModel>(purchase);
+                ret.SerializeIndividually = command.SerializeIndividually;
 
                 WorkOrderCreateEvent woEvent = new WorkOrderCreateEvent();
                 woEvent.purchaseInfo = ret;
