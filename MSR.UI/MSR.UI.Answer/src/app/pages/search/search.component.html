@@ -90,6 +90,385 @@
     </th>
 </ng-template>
 
+<ng-template #procedureDialog let-selectedItem='selectedItem'>
+    <fieldset>
+        <legend>
+        </legend>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Name:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem.name}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Id:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.id}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="lastName" class="col-md-3 col-form-label text-md-right">
+                Is related to a product:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem.isRelatedToAProduct?'Yes':'No'}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Revision:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.revision}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Company Creator:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.creatorCompany}}
+            </div>
+            <label for="lastName" class="col-md-3  col-form-label text-md-right">
+                Created by department:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.createdByDepartmentName}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Duration Type:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.durationType}}
+            </div>
+            <label for="lastName" class="col-md-3  col-form-label text-md-right">
+                Duration:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.duration}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Created by:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.created?.fullName}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Created on:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.createdOn | userTimezone}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Last Updated by:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.lastUpdated?.fullName}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Last updated on:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.lastUpdatedOn | userTimezone}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Procedure Type:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.procedureType?.name}}
+            </div>
+        </div>
+    </fieldset>
+</ng-template>
+
+<ng-template #workOrderParts let-workOrderPart='workOrderPart'>
+    <div class="form-group row">
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Part Id:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderPart?.partId}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Serial Number:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderPart?.serialNumber}}
+        </div>
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Part:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderPart?.part?.name}}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #workOrderTasks let-workOrderTask='workOrderTask'>
+    <div class="form-group row">
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Procedure step Id:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderTask?.procedureStepId}}
+        </div>
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Procedure step type:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderTask?.procedureStepType?.name}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Status:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderTask?.status?.name}}
+        </div>
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Assigned to user:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderTask?.assignedToUser?.fullName}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Total task time:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderTask?.totalTaskTime}}
+        </div>
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Task is running:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderTask?.taskIsRunning?'Yes':'No'}}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="name" class="col-md-3 col-form-label text-md-right">
+            Task running since:
+        </label>
+        <div class="col-md-3 col-form-label">
+            {{workOrderTask?.taskRunningSince}}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #workOrderDialog let-selectedItem='selectedItem'>
+    <fieldset>
+        <legend>
+        </legend>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Id:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.id}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Product Id:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.productId}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Purchase Id:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchaseId}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Price:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.price | currency}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Scheduled start date:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.scheduledStartDate | userTimezone}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Scheduled end date:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.scheduledEndDate | userTimezone}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Actual start date:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.actualStartDate | userTimezone}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Actual end date:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.actualEndDate | userTimezone}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Has NCR:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.hasNCR?'Yes':'No'}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Location:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.location.name}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Product:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.product?.name}}
+            </div>
+            <!-- <label for="name" class="col-md-3 col-form-label text-md-right">
+                Location:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.location.name}}
+            </div> -->
+        </div>
+    </fieldset>
+    <h5>
+        Purchase
+    </h5>
+    <fieldset>
+        <legend>
+        </legend>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Id:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.id}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Customer purchase number:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.customerPurchaseNumber}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Serial Number:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.serialNumber}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Qty:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.qty}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Customer line number:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.customerLineNumber}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Mttn:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.mttn}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Due Date:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.dueDate | userTimezone}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Purchase Price:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.purchasePrice}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Status:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.status}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Location:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.location?.name}}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Created by:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.created?.fullName}}
+            </div>
+            <label for="name" class="col-md-3 col-form-label text-md-right">
+                Created on:
+            </label>
+            <div class="col-md-3 col-form-label">
+                {{selectedItem?.purchase?.createdOn | userTimezone}}
+            </div>
+        </div>
+    </fieldset>
+    <h5>
+        Work Order Parts
+    </h5>
+    <fieldset>
+        <legend>
+        </legend>
+        <ng-container *ngFor="let workOrderPart of selectedItem?.workOrderParts" [ngTemplateOutlet]="workOrderParts"
+            [ngTemplateOutletContext]="{workOrderPart: workOrderPart}">
+        </ng-container>
+    </fieldset>
+    <h5>
+        Work Order Tasks
+    </h5>
+    <fieldset>
+        <legend>
+        </legend>
+        <ng-container *ngFor="let workOrderTask of selectedItem?.workOrderTasks; let idx = index"
+            [ngTemplateOutlet]="workOrderTasks" [ngTemplateOutletContext]="{workOrderTask: workOrderTask}">
+            <hr *ngIf="idx>0" class="separator" />
+        </ng-container>
+    </fieldset>
+</ng-template>
 
 <p-dialog *ngIf="display" header="{{ selectedItem.itemType + ' Details'}}" [(visible)]="display" [appendTo]="'body'"
     [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
@@ -98,108 +477,19 @@
         <section class="widget mrg-btm-sm" widget>
             <header>
                 <h5>
-                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
-                    </span>
                     {{selectedItem.itemType}}
                 </h5>
             </header>
             <div class="widget-body">
-                <fieldset>
-                    <legend>
-                    </legend>
-                    <div class="form-group row">
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Name:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem.name}}
-                        </div>
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Id:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.id}}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="lastName" class="col-md-3 col-form-label text-md-right">
-                            Is related to a product:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem.isRelatedToAProduct?'Yes':'No'}}
-                        </div>
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Revision:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.revision}}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Company Creator:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.creatorCompany}}
-                        </div>
-                        <label for="lastName" class="col-md-3  col-form-label text-md-right">
-                            Created by department:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.createdByDepartmentName}}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Duration Type:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.durationType}}
-                        </div>
-                        <label for="lastName" class="col-md-3  col-form-label text-md-right">
-                            Duration:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.duration}}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Created by:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.created?.fullName}}
-                        </div>
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Created on:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.createdOn | userTimezone}}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Last Updated by:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.lastUpdated?.fullName}}
-                        </div>
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Last updated on:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.lastUpdatedOn | userTimezone}}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="name" class="col-md-3 col-form-label text-md-right">
-                            Procedure Type:
-                        </label>
-                        <div class="col-md-3 col-form-label">
-                            {{selectedItem?.procedureType?.name}}
-                        </div>
-                    </div>
-                </fieldset>
+                <ng-container *ngIf="selectedItem.itemType === 'Procedure'" [ngTemplateOutlet]="procedureDialog"
+                    [ngTemplateOutletContext]="{selectedItem:selectedItem}">
+                </ng-container>
+                <ng-container *ngIf="selectedItem.itemType === 'WorkOrder'" [ngTemplateOutlet]="workOrderDialog"
+                    [ngTemplateOutletContext]="{selectedItem:selectedItem}">
+                </ng-container>
+                <!-- <ng-container *ngIf="selectedItem.itemType === 'Procedure'" [ngTemplateOutlet]="procedureDialog"
+                    [ngTemplateOutletContext]="{selectedItem:selectedItem}">
+                </ng-container> -->
             </div>
         </section>
         <p-footer>

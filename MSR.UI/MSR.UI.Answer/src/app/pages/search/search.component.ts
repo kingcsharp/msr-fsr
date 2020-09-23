@@ -7,7 +7,7 @@ import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
 import { Globals } from '../../models/lib/globals';
 import {
-  SearchService, ProcedureService
+  SearchService, ProcedureService, WorkOrderService
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
@@ -28,7 +28,7 @@ export class SearchComponent implements OnInit {
   selectedItem: any;
   display: boolean = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private elem: ElementRef, public cg: CommonGrid,
+  constructor(private activatedRoute: ActivatedRoute, private elem: ElementRef, public cg: CommonGrid, private workOrderService: WorkOrderService,
     private globals: Globals, private searchService: SearchService, private procedureService: ProcedureService) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.getSearchData(params['search'])
@@ -66,19 +66,27 @@ export class SearchComponent implements OnInit {
   }
 
   viewFunction(rowData) {
-    
     switch (rowData.itemType) {
       case 'Procedure':
         this.procedureService.procedureGet(rowData.itemId, env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.selectedItem = response?.object[0];
             this.selectedItem.itemType = rowData.itemType;
+            this.display = true;
           }));
         break;
+      case 'WorkOrder':
+        this.workOrderService.workOrderGet(rowData.itemId, null, null, null, env.apiVersion).pipe(take(1))
+          .subscribe(responseHandler(response => {
+            this.selectedItem = response?.object[0];
+            this.selectedItem.itemType = rowData.itemType;
+            this.display = true;
+          }));
+
 
       default:
         break;
     }
-    this.display = true;
+    
   }
 }
