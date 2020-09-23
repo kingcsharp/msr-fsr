@@ -4,7 +4,7 @@ namespace MSR.Answer.API.V1.Models
 {
     public class GetSearchRequest
     {
-        [Required]
+        [Required, MinLength(3)]
         public string SearchTerm { get; set; }
     }
 }
