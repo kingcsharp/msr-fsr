@@ -35,12 +35,12 @@
       </div>
       <div class="row justify-content-start">
         <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [interval]="false"
-          [startFromIndex]="0" *ngIf="workOrderTasks !== undefined">
+          [startFromIndex]="0" *ngIf="workOrderTasks !== undefined" [showIndicators]="false">
           <slide *ngFor="let workOrderTask of workOrderTasks; let index=index" [ngClass]="{ 'bg-warning': workOrderTask.status.name === 'Waiting to Start', 
            'bg-light': workOrderTask.status.name === 'In Progress', 
            'text-dark': workOrderTask.status.name === 'In Progress',
-           'bg-success': workOrderTask.status.name === 'Completed'}">
-            <div [ngClass]="{ 'm-auto': true}" (click)="selectTaskForViewing(workOrderTask)">
+           'bg-success': workOrderTask.status.name === 'Completed'}" (click)="selectTaskForViewing(workOrderTask)">
+            <div [ngClass]="{ 'm-auto': true}">
               {{ workOrderTask.procedureStep?.title}}
             </div>
           </slide>

@@ -11,10 +11,6 @@ slide {
     display: flex;
 }
 
-:host ::ng-deep.carousel-indicators{
-    display:none !important;
-}
-
 :host ::ng-deep.carousel-control{
     width:3%;
 }
