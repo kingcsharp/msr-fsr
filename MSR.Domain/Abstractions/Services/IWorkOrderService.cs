@@ -11,5 +11,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command);
         Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command);
         Task<bool> DeleteWorkOrderAsync(DeleteWorkOrder command);
+        Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(CreateWorkOrder command);
+        Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command);
     }
 }

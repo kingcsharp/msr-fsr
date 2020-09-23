@@ -182,6 +182,13 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization))
                 .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
                 .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.StepType.Id));
+            CreateMap<ProcedureStep, WorkOrderTask>()
+                .ForMember(dest => dest.ProcedureStepId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Created, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedOn, opts => opts.Ignore())
+                .ForMember(dest => dest.StatusId, opts => opts.MapFrom(src => 1))
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<ProcedureStepType, ProcedureStepTypeModel>().ReverseMap();
 
             // This mapping is correct according to the requirements
@@ -233,6 +240,9 @@ namespace MSR.Infrastructure.Profiles
 
             // Monitor
             CreateMap<Domain.Models.ProcedureStepMonitor, MonitorModel>();
+            CreateMap<ProcedureStepMonitor, WorkOrderTaskMonitor>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProcedureMonitorId, opts => opts.MapFrom(src => src.Id));
             CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
                 .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputType.Name))
                 .ForMember(dest => dest.MonitorType, opt => opt.MapFrom(src => src.MonitorType.Name))
@@ -367,6 +377,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.Product.TotalSalePrice));
 
             CreateMap<PurchaseModel, CreateWorkOrder>()
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => src.Qty > 0 ? src.Qty : 1))
                 .ForMember(dest => dest.PurchaseId, opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ProductId, opts => opts.MapFrom(src => src.PurchaseOrderProduct.ProductId))
                 .ForMember(dest => dest.Price, opts => opts.MapFrom(src => src.PurchasePrice))

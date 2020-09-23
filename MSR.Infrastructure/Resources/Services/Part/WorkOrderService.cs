@@ -57,7 +57,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<Domain.Models.WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-            WorkOrderModel ret;
+            WorkOrderModel ret = null;
 
             if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
@@ -71,9 +71,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrder workorder = _mapper.Map<WorkOrder>(command);
 
-            _unitOfWork.WorkOrders.Add(workorder);
+            var created = _unitOfWork.WorkOrders.Add(workorder);
 
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+
+            // load required navigation fields
+            created.Context.Entry(workorder)
+                .Collection(x => x.WorkOrderParts).Load();
+            created.Context.Entry(workorder)
+                .Collection(x => x.WorkOrderTasks).Load();
 
             ret = DetachBackPointers(
                 _mapper.Map<Domain.Models.WorkOrderModel>(workorder)
@@ -128,6 +134,60 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return true;
         }
 
+        /// <summary>
+        /// Create the EF objects based on the Procedure, ProcedureStep, and
+        /// ProcedureStepMonitor definitions in the database.
+        /// This does not do the insert.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public async Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(CreateWorkOrder command)
+        {
+            var product = await _unitOfWork.Products.Query()
+                .FirstAsync(x => x.Id == command.ProductId);
+            List<ProcedureStep> steps = await _unitOfWork.ProcedureSteps.Query()
+                .Where(x => x.ProcedureId == product.ProcedureId)
+                .Include(x => x.ProcedureStepMonitors)
+                .ToListAsync();
+
+            List<WorkOrderTask> tasks = new List<WorkOrderTask>();
+            foreach (var step in steps)
+            {
+                var wot = _mapper.Map<WorkOrderTask>(step);
+                wot.WorkOrderTaskMonitors = step.ProcedureStepMonitors
+                    .Select(x => _mapper.Map<WorkOrderTaskMonitor>(x))
+                    .ToList();
+                tasks.Add(wot);
+            }
+
+            return tasks.Select(x =>
+                _mapper.Map<WorkOrderTaskModel>(x))
+                .ToList();
+        }
+
+        public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
+        {
+            var product = await _unitOfWork.Products.Query()
+                .FirstAsync(x => x.Id == command.ProductId);
+            int count = 1;
+            int quantity = command.Qty;
+
+            if (command.SerializeIndividually && command.Qty > 1) {
+                count = command.Qty;
+                quantity = 1;
+            }
+
+            List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
+            for (int i = 0; i < count; i++) {
+                var n = new WorkOrderPartModel() {
+                    PartId = product.PartId
+                };
+                parts.Add(n);
+            }
+
+            return parts;
+        }
+
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)
         {
             var model = _mapper.Map<WorkOrderModel>(wom);
@@ -138,12 +198,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (model.Product != null) {
                 model.Product.WorkOrders = null;
             }
-            foreach (var wop in model.WorkOrderParts) {
+
+            foreach (var wop in model.WorkOrderParts)
+            {
                 wop.WorkOrder = null;
                 wop.Parent = null;
                 wop.Children = null;
             }
-            foreach (var wot in model.WorkOrderTasks) {
+
+            foreach (var wot in model.WorkOrderTasks)
+            {
                 wot.WorkOrder = null;
             }
             return model;

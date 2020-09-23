@@ -14,6 +14,7 @@ using MSR.Domain.Helpers;
 using AutoMapper;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using System.Collections.Generic;
 
 namespace MSR.Application.EventServices
 {
@@ -101,6 +102,13 @@ namespace MSR.Application.EventServices
             try {
                 var command = _mapper.Map<CreateWorkOrder>(handledEvent.purchaseInfo);
                 command.ScheduledStartDate = DateTime.Now;
+
+                ICollection<WorkOrderTaskModel> tasks = await _workOrderService.GetWorkOrderTasksAsync(command);
+                command.WorkOrderTasks = tasks;
+
+                ICollection<WorkOrderPartModel> parts = await _workOrderService.GetWorkOrderPartsAsync(command);
+                command.WorkOrderParts = parts;
+
                 WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
             }
             catch (Exception e)
