@@ -124,14 +124,14 @@ namespace MSR.Infrastructure.Resources.Services.Search
             {
                 var workOrders = await _unitOfWork.WorkOrders.Query().Include(i => i.WorkOrderParts).ThenInclude(j => j.Part)
                                                                     .Include(i => i.Product)
-                                                                    .Where(i => i.WorkOrderParts.Any(j => j.SerialNumber == command.SearchTerm)
-                                                                            || i.WorkOrderParts.Any(j => j.Part != null && (j.Part.Name == command.SearchTerm) || j.Part.PartNumber == command.SearchTerm || j.Part.OEMPartNumber == command.SearchTerm)
-                                                                            || i.Product != null && i.Product.Name == command.SearchTerm).ToListAsync();
+                                                                    .Where(i => i.WorkOrderParts.Any(j => j.SerialNumber.Contains(command.SearchTerm))
+                                                                            || i.WorkOrderParts.Any(j => j.Part != null && (j.Part.Name.Contains(command.SearchTerm)) || j.Part.PartNumber.Contains(command.SearchTerm) || j.Part.OEMPartNumber.Contains(command.SearchTerm))
+                                                                            || i.Product != null && i.Product.Name.Contains(command.SearchTerm)).ToListAsync();
 
-                var parts = await _unitOfWork.Parts.Query().Where(i => i.Name == command.SearchTerm || i.PartNumber == command.SearchTerm || i.OEMPartNumber == command.SearchTerm).ToListAsync();
-                var products = await _unitOfWork.Products.Query().Where(i => i.Name == command.SearchTerm).ToListAsync();
-                var procedures = await _unitOfWork.Procedures.Query().Where(i => i.Name == command.SearchTerm).ToListAsync();
-                var documents = await _unitOfWork.Documents.Query().Where(i => i.Name == command.SearchTerm).ToListAsync();
+                var parts = await _unitOfWork.Parts.Query().Where(i => i.Name.Contains(command.SearchTerm) || i.PartNumber.Contains(command.SearchTerm) || i.OEMPartNumber.Contains(command.SearchTerm)).ToListAsync();
+                var products = await _unitOfWork.Products.Query().Where(i => i.Name.Contains(command.SearchTerm)).ToListAsync();
+                var procedures = await _unitOfWork.Procedures.Query().Where(i => i.Name.Contains(command.SearchTerm)).ToListAsync();
+                var documents = await _unitOfWork.Documents.Query().Where(i => i.Name.Contains(command.SearchTerm)).ToListAsync();
 
                 foreach (var workOrder in workOrders)
                 {
