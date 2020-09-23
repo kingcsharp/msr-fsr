@@ -57,6 +57,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<MonitorType> MonitorTypes { get; }
         IRepository<MonitorListItem> MonitorListItems { get; }
         IRepository<Document> Documents { get; }
+        IRepository<DocumentRoleMap> DocumentRoles { get; }
         IRepository<Product> Products { get; }
         IRepository<Purchase> Purchases { get; }
         IRepository<PurchaseOrder> PurchaseOrders { get; }

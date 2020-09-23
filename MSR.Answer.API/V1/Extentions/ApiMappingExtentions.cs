@@ -933,5 +933,17 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateEquipmentMaintenance>(request);
         }
+        public static GetDocument ToGetDocumentCommand(this GetDocumentRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetDocument>(request);
+        }
+        public static CreateDocument ToCreateDocumentCommand(this CreateDocumentRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateDocument>(request);
+        }
+        public static UpdateDocument ToUpdateDocumentCommand(this UpdateDocumentRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateDocument>(request);
+        }
     }
 }

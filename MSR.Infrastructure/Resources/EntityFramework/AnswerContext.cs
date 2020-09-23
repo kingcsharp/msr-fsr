@@ -51,6 +51,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<ProcedureStepTemplate> ProcedureStepTemplate { get; set; }
         public DbSet<ProcedureType> ProcedureType { get; set; }
         public DbSet<Document> Document { get; set; }
+        public DbSet<DocumentApproval> DocumentApproval { get; set; }
+        public DbSet<DocumentRoleMap> DocumentRoleMap { get; set; }
         public DbSet<Part> Part { get; set; }
         public DbSet<Procedure> Procedure { get; set; }
         public DbSet<Product> Product { get; set; }

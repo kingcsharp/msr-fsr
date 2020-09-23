@@ -100,7 +100,7 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
-           
+
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
@@ -218,11 +218,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',', src.Roles)))
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',', src.Roles)))
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
@@ -364,21 +364,36 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, CreatePart>();
             CreateMap<EquipmentMaintenance, EquipmentMaintenanceModel>().ReverseMap();
             CreateMap<CreateEquipmentMaintenance, EquipmentMaintenance>();
+            CreateMap<Document, DocumentView>();
+            CreateMap<CreateDocument, Document>();
+            CreateMap<CreateDocument, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<DocumentApproval, DocumentView>();
+            CreateMap<DocumentApproval, DocumentView>();
+            CreateMap<UpdateDocument, Document>();
+            CreateMap<UpdateDocument, DocumentApproval>();
+            CreateMap<DocumentRoleMap, RoleView>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)
         {
             List<int> ret;
 
-            try {
-                if (arg.Roles.IsNullOrEmpty()) {
+            try
+            {
+                if (arg.Roles.IsNullOrEmpty())
+                {
                     ret = new List<int>();
-                } else {
+                }
+                else
+                {
                     ret = arg.Roles.Split(',')
                         .Select(x => Convert.ToInt32(x))
                         .ToList();
                 }
-            } catch(FormatException) {
+            }
+            catch (FormatException)
+            {
                 // ignore bad data
                 ret = new List<int>();
             }
