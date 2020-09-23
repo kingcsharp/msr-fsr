@@ -63,8 +63,8 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskToView = workOrderTask;
   }
 
-  saveMonitorsAndCloseTask(){
-
+  closeCurrentTask(){
+    alert('Close Current Task');
   }
 
   cleanData(){

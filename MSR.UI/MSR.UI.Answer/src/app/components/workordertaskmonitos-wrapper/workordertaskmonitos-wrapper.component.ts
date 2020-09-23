@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { ProcedureStepMonitor, WorkOrderTaskMonitorModel, SensorService, SensorModel } from '../../services/api.client.generated';
+import { ProcedureStepMonitor, WorkOrderTaskMonitorModel, SensorService, SensorModel, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
+import { forkJoin } from 'rxjs';
 
 declare let jQuery: any;
 
@@ -10,19 +11,20 @@ declare let jQuery: any;
   selector: 'workordertaskmonitos-wrapper',
   templateUrl: './workordertaskmonitos-wrapper.component.html',
   styleUrls: ['./workordertaskmonitos-wrapper.component.scss'],
-  providers: [SensorService]
+  providers: [SensorService,WorkOrderTaskMonitorService]
 })
 export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   @Input() workOrderTaskMonitors: Array<WorkOrderTaskMonitorModel>;
   @Input() locationId: number;
+  @Output() closeCurrentTaskInProgress = new EventEmitter();
   workOrderMonitorsToView: Array<any>;
   workOrderMonitorYesOrNoOptions: Array<SelectItem>;
   monitorListItemOptions: Array<SelectItem>;
   sensorsAvailable: Array<SelectItem>;
   workOrderMonitorPassOrFailOptions: Array<SelectItem>;
 
-  constructor(private sensorService: SensorService) { }
+  constructor(private sensorService: SensorService, private workOrderTaskMonitorService: WorkOrderTaskMonitorService) { }
 
   ngOnInit(): void {
 
@@ -110,11 +112,47 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       return dropDownsAreValid;
   }
 
+  updateMonitors(closeTask: boolean = false){
+
+    let updateMonitorsRequests = new Array<any>();
+
+      this.workOrderMonitorsToView.forEach(monitor => {
+
+        let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
+          comment: monitor.comment === undefined ? '' : monitor.comment,
+          multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
+          sensorValue: monitor.sensorValue === undefined ? '' : monitor.sensorValue,
+          textVal: monitor.textVal === undefined ? '' : monitor.textVal,
+          numVal: monitor.numVal === undefined ? undefined : monitor.numVal,
+          workOrderTaskMonitorId: monitor.id
+        } as IUpdateWorkOrderTaskMonitorRequest);
+
+        updateMonitorsRequests.push(this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion,updateWorkOrderTaskMonitorRequest));
+
+      });
+      //TODO: Remove when you fix permission issue
+      this.closeCurrentTaskInProgress.emit();
+
+      /*
+      forkJoin(updateMonitorsRequests).subscribe(responses => {
+        console.log(closeTask);
+        if(closeTask){
+          this.closeCurrentTaskInProgress.emit();
+        }
+      });
+      */
+
+  }
+
+
+
   saveMonitors() {
     jQuery('.parsleyjs').parsley().validate();
 
     if (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid()) {
-      alert('valid');
+      
+      this.updateMonitors(false);
+
     } else {
       alert('invalid');
     }
@@ -124,7 +162,9 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
 
     if (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid()) {
-      alert('valid');
+      
+      this.updateMonitors(true);
+
     } else {
       alert('invalid');
     }

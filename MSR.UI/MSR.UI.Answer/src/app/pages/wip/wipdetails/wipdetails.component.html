@@ -81,7 +81,7 @@
           </p-tabPanel>
           <p-tabPanel header="Monitors">
             <span  *ngIf="workOrderTaskToView !== undefined">
-              <workordertaskmonitos-wrapper [workOrderTaskMonitors]="workOrderTaskToView.workOrderTaskMonitors"></workordertaskmonitos-wrapper>
+              <workordertaskmonitos-wrapper [workOrderTaskMonitors]="workOrderTaskToView.workOrderTaskMonitors" (closeCurrentTaskInProgress)="closeCurrentTask()"></workordertaskmonitos-wrapper>
             </span>
           </p-tabPanel>
           <p-tabPanel header="Files">
