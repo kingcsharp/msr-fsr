@@ -3,7 +3,7 @@ import { LoginService } from '../../pages/login/login.service';
 import { Globals } from '../../models/lib/globals';
 import { NotificationService } from './notification.service';
 import { Router } from '@angular/router';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: '[navbar]',
@@ -28,7 +28,8 @@ export class Navbar implements OnInit {
     private loginService: LoginService,
     public globals: Globals,
     public notificationservice: NotificationService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
 
@@ -61,7 +62,11 @@ export class Navbar implements OnInit {
   }
 
   search() {
-    this.router.navigate(['app/search'], { queryParams: { search: this.searchValue }, queryParamsHandling: 'merge' });
+    if(this.searchValue.length<3){
+      this.toastr.error("Search value is too short. It should have 3 characters or more.");
+    }else{
+      this.router.navigate(['app/search'], { queryParams: { search: this.searchValue }, queryParamsHandling: 'merge' });
+    }
   }
 
   private changeStyleElement(selector, styleName, styleValue): void {

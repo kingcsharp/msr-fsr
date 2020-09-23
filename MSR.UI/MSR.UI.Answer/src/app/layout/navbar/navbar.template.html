@@ -5,7 +5,7 @@
         <div class="input-group-addon">
           <i class="fa fa-search text-white" (click)="search()"></i>
         </div>
-        <input placeholder="Search" type="text" [(ngModel)]="searchValue" class="input-transparent form-control"
+        <input placeholder="Search" type="text" tooltip="Min length 3 characters" [(ngModel)]="searchValue" class="input-transparent form-control"
           [ngModelOptions]="{standalone: true}" (keyup.enter)="search()">
       </div>
     </div>
