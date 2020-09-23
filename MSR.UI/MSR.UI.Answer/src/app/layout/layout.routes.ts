@@ -5,7 +5,7 @@ import { Layout } from './layout.component';
 const routes: Routes = [
   {
     path: '', component: Layout, children: [
-      { path: '', redirectTo: 'people', pathMatch: 'full' },
+      { path: '', redirectTo: 'wip', pathMatch: 'full' },
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
       { path: 'workflow', loadChildren: () => import('../pages/workflow/workflow.module').then(m => m.WorkflowModule) },
       { path: 'parts', loadChildren: () => import('../pages/parts/parts.module').then(m => m.PartsModule) },
@@ -22,7 +22,8 @@ const routes: Routes = [
       { path: 'locations', loadChildren: () =>  import('../pages/locations/locations.module').then(m => m.LocationsModule) },
       { path: 'procedures', loadChildren: () =>  import('../pages/procedures/procedures.module').then(m => m.ProceduresModule) },
       { path: 'monitors', loadChildren: () =>  import('../pages/monitors/monitors.module').then(m => m.MonitorsModule) },
-      { path: 'pricing', loadChildren: () =>  import('../pages/pricing/pricing.module').then(m => m.PricingModule) }
+      { path: 'pricing', loadChildren: () =>  import('../pages/pricing/pricing.module').then(m => m.PricingModule) },
+      { path: 'wip', loadChildren: () =>  import('../pages/wip/wip.module').then(m => m.WipModule) }
     ]
   }
 ];

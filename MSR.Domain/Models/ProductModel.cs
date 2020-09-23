@@ -1,5 +1,6 @@
-﻿using MSR.Domain.Models.BaseModels;
+using MSR.Domain.Models.BaseModels;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace MSR.Domain.Models
 {
@@ -24,6 +25,12 @@ namespace MSR.Domain.Models
         public virtual QuoteModel Quote { get; set; }
         public string DivisionFab { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ProductImage
+        /// </summary>
+        [DataMember(Name="productImage")]
+        public FileModel ProductImage { get; set; }
 
         // Copy of the status field of the ProductApproval row
         public string ApprovalStatus;

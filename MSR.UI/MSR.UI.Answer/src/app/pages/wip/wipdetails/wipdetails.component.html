@@ -1,0 +1,93 @@
+<div class="container-flex">
+  <div class="row">
+    <div class="col-6">
+      Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: {{parentPart?.serialNumber}}),
+      {{parentPart?.part?.name}}
+    </div>
+    <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+      <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+    </div>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-6">Reports go here</div>
+        <div class="col-6">
+          <p-tabView>
+            <p-tabPanel header="Header 1">
+              <ul>
+                <li *ngFor="let part of workOrderParts">
+                  Customer Part #{{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
+                  (Qty: {{part.part.Quantity}})
+                </li>
+              </ul>
+            </p-tabPanel>
+            <p-tabPanel header="Header 2">
+              <ul>
+                <li>Customer: {{ customer.name}}</li>
+                <li>Product: {{ product.name}}</li>
+                <li>Procedure: {{procedure.name}}</li>
+                <li>Purchase Item #: {{purchase.customerPurchaseNumber}} </li>
+              </ul>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+      </div>
+      <div class="row justify-content-start">
+        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [interval]="false"
+          [startFromIndex]="0" *ngIf="workOrderTasks !== undefined">
+          <slide *ngFor="let workOrderTask of workOrderTasks; let index=index" [ngClass]="{ 'bg-warning': workOrderTask.status.name === 'Waiting to Start', 
+           'bg-light': workOrderTask.status.name === 'In Progress', 
+           'text-dark': workOrderTask.status.name === 'In Progress',
+           'bg-success': workOrderTask.status.name === 'Completed'}">
+            <div [ngClass]="{ 'm-auto': true}" (click)="selectTaskForViewing(workOrderTask)">
+              {{ workOrderTask.procedureStep?.title}}
+            </div>
+          </slide>
+        </carousel>
+      </div>
+      <div class="row" *ngIf="workOrderTaskInProgress !== undefined">
+        <workordertasktimer-wrapper [workOrderTasks]="workOrderTasks"
+          [workOrderTaskInProgress]="workOrderTaskInProgress"
+          (workOrderTaskInProgressUpdateParent)="workOrderTaskInProgress = $event"></workordertasktimer-wrapper>
+      </div>
+      <div class="row">
+        <p-tabView class="w-100">
+          <p-tabPanel header="Task Description">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Assignee:</td>
+                  <td>{{ workOrderTaskToView?.assignedToUser?.fullName }}</td>
+                </tr>
+                <tr>
+                  <td>Task:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.title }}</td>
+                </tr>
+                <tr>
+                  <td>Description:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.stepText }}</td>
+                </tr>
+                <tr>
+                  <td>Related Documents:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.documents }}</td>
+                </tr>
+                <tr>
+                  <td>Reference Files:</td>
+                  <td>{{ workOrderTaskToView?.procedureStep?.referenceFiles }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </p-tabPanel>
+          <p-tabPanel header="Monitors">
+            <span  *ngIf="workOrderTaskToView !== undefined">
+              <workordertaskmonitos-wrapper [workOrderTaskMonitors]="workOrderTaskToView.workOrderTaskMonitors"></workordertaskmonitos-wrapper>
+            </span>
+          </p-tabPanel>
+          <p-tabPanel header="Files">
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </div>
+  </div>
+</div>

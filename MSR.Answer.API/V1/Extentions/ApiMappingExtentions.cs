@@ -918,11 +918,44 @@ namespace MSR.Answer.API.V1.Extentions
         /// <param name="request"></param>
         /// <returns></returns>
         public static CreatePurchaseOrder ToCreatePurchaseOrderCommand(this CreatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<CreatePurchaseOrder>(request);
+
         /// <summary>
         ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         public static UpdatePurchaseOrder ToUpdatePurchaseOrderCommand(this UpdatePurchaseOrderRequest request) => AutoMapperHelper.Mapper.Map<UpdatePurchaseOrder>(request);
+
+        /// <summary>
+        /// ToUpdateWorkOrderPartCommand
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static UpdateWorkOrderPart ToUpdateWorkOrderPartCommand(this UpdateWorkOrderPartRequest request) =>
+            AutoMapperHelper.Mapper.Map<UpdateWorkOrderPart>(request);
+
+        /// <summary>
+        /// ToCreateWorkOrderTaskCommand
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static CreateWorkOrderTask ToCreateWorkOrderTaskCommand(this CreateWorkOrderTaskRequest request) =>
+            AutoMapperHelper.Mapper.Map<CreateWorkOrderTask>(request);
+
+        /// <summary>
+        /// ToUpdateWorkOrderTaskCommand
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static UpdateWorkOrderTask ToUpdateWorkOrderTaskCommand(this UpdateWorkOrderTaskRequest request) =>
+            AutoMapperHelper.Mapper.Map<UpdateWorkOrderTask>(request);
+
+        /// <summary>
+        /// ToUpdateWorkOrderTaskMonitorCommand
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static UpdateWorkOrderTaskMonitor ToUpdateWorkOrderTaskMonitorCommand(this UpdateWorkOrderTaskMonitorRequest request) =>
+            AutoMapperHelper.Mapper.Map<UpdateWorkOrderTaskMonitor>(request);
     }
 }

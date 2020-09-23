@@ -2,8 +2,12 @@ using System.Collections.Generic;
 
 namespace MSR.Domain.Models
 {
+    /// <summary>
+    /// WorkOrderPartModel
+    /// </summary>
     public class WorkOrderPartModel
     {
+        public int Id { get; set; }
         public int WorkOrderId { get; set; }
         public int PartId { get; set; }
         public int? ParentId { get; set; }
