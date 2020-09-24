@@ -11,8 +11,12 @@ slide {
     display: flex;
 }
 
-:host ::ng-deep.carousel-control{
-    width:3%;
+a.carousel-control{
+    width:3% !important;
+}
+
+.carousel-item > .item{
+    width: 100%;
 }
 
 .card{
@@ -27,4 +31,8 @@ slide {
 .card-body{
     background-color: #FFFFFF;
     color: #000000;
+}
+
+.ui-tabview{
+    padding: 0px !important;
 }

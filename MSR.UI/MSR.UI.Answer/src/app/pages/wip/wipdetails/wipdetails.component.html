@@ -39,14 +39,15 @@
           <slide *ngFor="let workOrderTask of workOrderTasks; let index=index" [ngClass]="{ 'bg-warning': workOrderTask.status.name === 'Waiting to Start', 
            'bg-light': workOrderTask.status.name === 'In Progress', 
            'text-dark': workOrderTask.status.name === 'In Progress',
-           'bg-success': workOrderTask.status.name === 'Completed'}" (click)="selectTaskForViewing(workOrderTask)">
-            <div [ngClass]="{ 'm-auto': true}">
+           'bg-success': workOrderTask.status.name === 'Completed',
+           'd-flex': true}" (click)="selectTaskForViewing(workOrderTask)">
+            <div [ngClass]="{ 'm-auto': true, 'w-100': true, 'text-center': true}">
               {{ workOrderTask.procedureStep?.title}}
             </div>
           </slide>
         </carousel>
       </div>
-      <div class="row" *ngIf="workOrderTaskInProgress !== undefined">
+      <div class="row" *ngIf="workOrderTaskInProgress !== undefined" [hidden]="this.workOrderTaskInProgress.id !== workOrderTaskToView.id">
         <workordertasktimer-wrapper [workOrderTasks]="workOrderTasks"
           [workOrderTaskInProgress]="workOrderTaskInProgress"
           (workOrderTaskInProgressUpdateParent)="workOrderTaskInProgress = $event"></workordertasktimer-wrapper>
