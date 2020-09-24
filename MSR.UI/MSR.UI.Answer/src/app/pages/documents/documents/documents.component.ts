@@ -1,7 +1,13 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { EnumMenuItem } from '../../../services/api.client.generated';
+import {
+  EnumMenuItem,
+  DocumentService,
+  DocumentView,
+  FileService,
+  FileModel,
+} from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -9,20 +15,19 @@ import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { DocumentModel, gridDemoData } from '../mock-data';
 
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss'],
-  providers: [],
+  providers: [ DocumentService ],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true
 })
 export class DocumentsComponent implements OnInit {
   privileges = EnumPrivilege;
   menuItems = EnumMenuItem;
-  data: any[];
+  data: DocumentView[];
   getDataFlag: boolean = false;
   showSaveView: boolean = false;
   savedViewsOptions: any;
@@ -33,19 +38,17 @@ export class DocumentsComponent implements OnInit {
   gridStorageId: string;
   gridSettings: ColumnsSaved[];
   documentsPrivileges: AllowedActions;
-  approvalStatus: any[] = [
-    {
-      label: 'Approved',
-      value: 1
-    }
-  ];
   showConfirmDeleteDialog: boolean = false;
-  documentToDelete: DocumentModel;
+  documentToDelete: DocumentView;
+  fileToViewDetail: FileModel;
+  getFileFlag: boolean = false;
 
   constructor(
     public globals: Globals,
     public cg: CommonGrid,
     private elem: ElementRef,
+    private documentService: DocumentService,
+    private fileService: FileService,
   ) { }
 
   ngOnInit(): void {
@@ -66,8 +69,21 @@ export class DocumentsComponent implements OnInit {
   }
 
   getDocuments() {
-    this.data = gridDemoData;
-    this.globals.showLoader(false);
+    this.documentService.documentGet(null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data = response.object;
+        this.getDataFlag = true;
+      }));
+  }
+
+  getFile(fileId: number) {
+    this.getFileFlag = false;
+    this.globals.showLoader(true);
+    this.fileService.fileGet('Documents', null, fileId, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.fileToViewDetail = response.object[0];
+        this.getDataFlag = true;
+      }));
   }
 
   openConfirmDeleteDialog(document) {
@@ -80,7 +96,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   delete() {
-    // this.documentsService.documentDelete(this.documentToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+    // this.documentService.documentDelete(this.documentToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
     //   this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
     //   this.getDocuments();
     // }));
