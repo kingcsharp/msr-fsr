@@ -53,6 +53,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Document> Document { get; set; }
         public DbSet<DocumentApproval> DocumentApproval { get; set; }
         public DbSet<DocumentRoleMap> DocumentRoleMap { get; set; }
+        public DbSet<DocumentEntityMap> DocumentEntityMap { get; set; }
         public DbSet<Part> Part { get; set; }
         public DbSet<Procedure> Procedure { get; set; }
         public DbSet<Product> Product { get; set; }

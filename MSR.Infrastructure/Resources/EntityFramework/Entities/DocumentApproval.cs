@@ -9,9 +9,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int Revision { get; set; }
 
-        [Required]
-        public int RoleId { get; set; }
-
         public int? DocumentId { get; set; }
 
         public string Comments { get; set; }

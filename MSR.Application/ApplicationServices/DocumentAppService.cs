@@ -20,7 +20,8 @@ namespace MSR.Application.ApplicationServices
     public class DocumentAppService :
         ICommandHandler<GetDocument>,
         ICommandHandler<CreateDocument>,
-        ICommandHandler<UpdateDocument>
+        ICommandHandler<UpdateDocument>,
+        ICommandHandler<DeleteDocument>
     {
         private readonly IDocumentService _documentService;
         private readonly IMapper _mapper;
@@ -48,6 +49,12 @@ namespace MSR.Application.ApplicationServices
         {
             var docs = await _documentService.UpdateDocumentAsync(command);
             return new CommandResponse<DocumentView>(docs);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeleteDocument command, CancellationToken cancellationToken = default)
+        {
+            await _documentService.DeleteDocumentAsync(command);
+            return CommandResponse.SuccessCommand;
         }
     }
 }

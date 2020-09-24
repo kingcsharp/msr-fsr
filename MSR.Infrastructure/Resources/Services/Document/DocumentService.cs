@@ -67,10 +67,10 @@ namespace MSR.Infrastructure.Resources.Services.Document
             {
                 dv.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), dv.Id);
 
-                dv.RoleIds = documents.Where(d=> d.Id == dv.Id).FirstOrDefault().Roles.Select(r => r.Id).Cast<int?>().ToList();
+                dv.RoleIds = documents.Where(d => d.Id == dv.Id).FirstOrDefault().Roles.Select(r => r.Id).Cast<int?>().ToList();
             }
 
-            
+
 
             //foreach (var customer in customers.ToList())
             //{
@@ -235,6 +235,8 @@ namespace MSR.Infrastructure.Resources.Services.Document
                 }
 
                 retDocument.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), command.Id);
+
+                //await AddUpdateDocumentHeaderFooterAsync(retDocument, currentDocument);
             }
             else
             {
@@ -254,6 +256,45 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
             return retDocument;
         }
+
+        public async Task DeleteDocumentAsync(DeleteDocument command)
+        {
+            var document = await _unitOfWork.Documents.Query()
+                                .Include(d => d.DocumentEntityMaps)
+                                .Include(d => d.Roles)
+                                .FirstOrDefaultAsync(i => i.Id == command.Id);
+
+            var documentApproval = await _unitOfWork.DocumentApprovals.FirstOrDefaultAsync(false, i => i.DocumentId == command.Id);
+
+            if (document is null && documentApproval is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Document)} not found", DomainError.BadRequest);
+            }
+
+            if (document != null)
+            {
+                foreach (var role in document.Roles)
+                {
+                    _unitOfWork.DocumentRoles.Delete(false, role);
+                }
+
+                foreach (var map in document.DocumentEntityMaps)
+                {
+                    _unitOfWork.DocumentEntityMap.Delete(false, map);
+                }
+                
+                _unitOfWork.Documents.Delete(false, document);
+
+            }
+
+            if (documentApproval != null)
+            {
+                _unitOfWork.DocumentApprovals.Delete(false, documentApproval);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
 
         //public DocLink GetListFileReferences(string id)
         //{
@@ -383,24 +424,27 @@ namespace MSR.Infrastructure.Resources.Services.Document
                                             <td style=""font-size:10px;font-weight:bold;"">Rev. " + dv.Revision + @"</td>
 					                        <td style=""font-size:10px;font-weight:bold;""> pg. {page} of {total-pages}</td>
 				                        </tr><tr class=""data"">";
-                    int count = 1;
+                    //int count = 1;
 
                     // TODO
 
-                    //foreach (var approval in approvals)
-                    //{
-                    //    if (count % 6 == 0)
-                    //    {
-                    //        fragment += "</tr><tr>";
-                    //    }
-                    //    fragment += @"<td style=""font-size:8px;font-weight:bold;"">
-					               //     Approved: " + approval.ApproveDate + @"<br/>
-					               //     " + approval.FullName + ", " + approval.Position + @"
-					               // </td>";
-                    //    count++;
-                    //}
+                    var approval = await _unitOfWork.DocumentApprovals.Query().Where(d => d.Status.Id == (int)ApprovalStatusEnum.Complete).SingleOrDefaultAsync(d => d.DocumentId == dv.Id);
+
+                    if (approval != null)
+                    {
+                        //    if (count % 6 == 0)
+                        //    {
+                        fragment += "</tr><tr>";
+                        //    }
+                        fragment += @"<td style=""font-size:8px;font-weight:bold;"">
+                             Approved: " + approval.LastUpdatedOn + @"<br/>
+                             " + approval.LastUpdated.GetFullName() + ", " + "?Position?" + @"
+                         </td>";
+                        //    count++;
+                    }
 
                     fragment += "</tr></table></div>";
+
                     pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
                     {
                         Height = 30,
