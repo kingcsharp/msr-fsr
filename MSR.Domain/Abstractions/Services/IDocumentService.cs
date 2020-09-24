@@ -12,5 +12,6 @@ namespace MSR.Domain.Abstractions.Services
         Task<DocumentView> CreateDocumentAsync(CreateDocument command);
         Task<DocumentView> UpdateDocumentAsync(UpdateDocument command);
         Task<ICollection<DocumentView>> GetDocuments(int? id);
+        Task DeleteDocumentAsync(DeleteDocument command);
     }
 }
