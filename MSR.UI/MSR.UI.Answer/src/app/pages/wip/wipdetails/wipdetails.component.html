@@ -47,7 +47,8 @@
           </slide>
         </carousel>
       </div>
-      <div class="row" *ngIf="workOrderTaskInProgress !== undefined" [hidden]="this.workOrderTaskInProgress.id !== workOrderTaskToView.id">
+      <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
+        [hidden]="this.workOrderTaskInProgress.id !== workOrderTaskToView.id">
         <workordertasktimer-wrapper [workOrderTasks]="workOrderTasks"
           [workOrderTaskInProgress]="workOrderTaskInProgress"
           (workOrderTaskInProgressUpdateParent)="workOrderTaskInProgress = $event"></workordertasktimer-wrapper>
@@ -55,37 +56,46 @@
       <div class="row">
         <p-tabView class="w-100">
           <p-tabPanel header="Task Description">
-            <table>
-              <tbody>
-                <tr>
-                  <td>Assignee:</td>
-                  <td>{{ workOrderTaskToView?.assignedToUser?.fullName }}</td>
-                </tr>
-                <tr>
-                  <td>Task:</td>
-                  <td>{{ workOrderTaskToView?.procedureStep?.title }}</td>
-                </tr>
-                <tr>
-                  <td>Description:</td>
-                  <td>{{ workOrderTaskToView?.procedureStep?.stepText }}</td>
-                </tr>
-                <tr>
-                  <td>Related Documents:</td>
-                  <td>{{ workOrderTaskToView?.procedureStep?.documents }}</td>
-                </tr>
-                <tr>
-                  <td>Reference Files:</td>
-                  <td>{{ workOrderTaskToView?.procedureStep?.referenceFiles }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="container-fluid description-container">
+              <div class="row">
+                <div class="text-right col-2 p-2" colspan="1">Assignee:</div>
+                <div class="col-10 p-2">{{ workOrderTaskToView?.assignedToUser?.fullName }}</div>
+              </div>
+              <div class="row">
+                <div class="text-right col-2 p-2" colspan="1">Task:</div>
+                <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.title }}</div>
+              </div>
+              <div class="row">
+                <div class="text-right col-2 p-2" colspan="1">Description:</div>
+                <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.stepText }}</div>
+              </div>
+              <div class="row">
+                <div class="text-right col-2 p-2" colspan="1">Related Documents:</div>
+                <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.documents }}</div>
+              </div>
+              <div class="row">
+                <div class="text-right col-2 p-2" colspan="1">Reference Files:</div>
+                <div class="col-10 p-2">
+                  <cmh-file-uploader name="referencefiles" class="col-12"
+                    *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStep?.referenceFiles !== undefined"
+                    [menuItem]="menuItems.Templates" multiple="multiple" [showUploadButton]="false"
+                    [(files)]="workOrderTaskToView.procedureStep.referenceFiles">
+                  </cmh-file-uploader>
+                </div>
+              </div>
+            </div>
           </p-tabPanel>
           <p-tabPanel header="Monitors">
-            <span  *ngIf="workOrderTaskToView !== undefined">
-              <workordertaskmonitos-wrapper [workOrderTaskMonitors]="workOrderTaskToView.workOrderTaskMonitors" (closeCurrentTaskInProgress)="closeCurrentTask()"></workordertaskmonitos-wrapper>
+            <span *ngIf="workOrderTaskToView !== undefined">
+              <workordertaskmonitos-wrapper [workOrderTaskMonitors]="workOrderTaskToView.workOrderTaskMonitors"
+                (closeCurrentTaskInProgress)="closeCurrentTask()"></workordertaskmonitos-wrapper>
             </span>
           </p-tabPanel>
           <p-tabPanel header="Files">
+            <cmh-file-uploader name="referencefiles" class="col-12"
+              *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
+              [menuItem]="menuItems.Templates" multiple="multiple" [(files)]="workOrderTaskToView.referenceFiles">
+            </cmh-file-uploader>
           </p-tabPanel>
         </p-tabView>
       </div>

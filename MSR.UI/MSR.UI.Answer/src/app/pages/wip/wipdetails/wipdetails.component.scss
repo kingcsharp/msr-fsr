@@ -36,3 +36,15 @@ a.carousel-control{
 .ui-tabview{
     padding: 0px !important;
 }
+
+.description-container > .row > div {
+    border-width: 1px 1px 0px 1px;
+    border-color: #eaeaea;
+    border-style: solid;
+}
+
+.description-container > .row:last-child > div{
+    border-width: 1px 1px 1px 1px;
+    border-color: #eaeaea;
+    border-style: solid;
+}

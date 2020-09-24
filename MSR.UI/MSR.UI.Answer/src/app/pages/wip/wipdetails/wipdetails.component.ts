@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, 
-  WorkOrderModel, WorkOrderPartModel, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel } from '../../../services/api.client.generated';
+  WorkOrderModel, WorkOrderPartModel, EnumMenuItem,WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Product } from '../../ecommerce/products.service';
@@ -29,6 +29,7 @@ export class WipdetailsComponent implements OnInit {
   workOrderTasks: Array<WorkOrderTaskModel>;
   workOrderTaskInProgress: WorkOrderTaskModel;
   workOrderTaskToView: WorkOrderTaskModel;
+  menuItems = EnumMenuItem;
   
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService) { }
@@ -40,6 +41,17 @@ export class WipdetailsComponent implements OnInit {
       let workOrderId = params['id'] == null ? 0 : Number(params['id']);
       this.workOrdersService.workOrder(workOrderId,null,null,null,env.apiVersion).subscribe(responseHandler(response => {
         this.workOrderModel = response.object[0];
+
+        this.workOrderModel.workOrderTasks.map(s => {
+          if(s.referenceFiles === undefined){
+            s.referenceFiles = new Array<FileModel>();
+          }
+
+          if(s.procedureStep.referenceFiles === undefined){
+            s.procedureStep.referenceFiles = new Array<FileModel>();
+          }
+        });
+
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.workOrderTasks = this.workOrderModel.workOrderTasks;
         this.parentPart = this.workOrderModel.workOrderParts[0];
@@ -51,7 +63,6 @@ export class WipdetailsComponent implements OnInit {
         this.cleanData();
         this.workOrderTaskInProgress = this.workOrderTasks[0];
         this.workOrderTaskToView = this.workOrderTasks[0];
-        
 
       }));
 
