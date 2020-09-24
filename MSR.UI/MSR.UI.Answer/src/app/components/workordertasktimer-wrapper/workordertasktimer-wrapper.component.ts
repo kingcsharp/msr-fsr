@@ -26,24 +26,23 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   }
 
   startTask(){
-    this.workOrderTaskInProgress.statusId = 2;
-    this.workOrderTaskInProgress.status = new StatusModel({
-      id: 2,
-      name: 'In Progress'
-    } as IStatusModel);
-    
+
     this.resumeAndStartTask();
 
   }
 
   pauseTask(){
     this.workOrderTaskInProgress.taskIsRunning = false;
-    this.workOrderTaskInProgress.taskRunningSince = null;
+    this.workOrderTaskInProgress.taskRunningSince = undefined;
     clearInterval(this.stepTimer);
     //this.saveTaskTimerState();
   }
 
   resumeAndStartTask(){
+
+    if(this.workOrderTaskInProgress.taskRunningSince !== undefined){
+      this.workOrderTaskInProgress.totalTaskTime += new Date().getTime() - this.workOrderTaskInProgress.taskRunningSince.getTime()/1000;
+    }
 
     this.workOrderTaskInProgress.taskIsRunning = true;
     this.workOrderTaskInProgress.taskRunningSince = new Date();

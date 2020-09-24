@@ -64,6 +64,12 @@ export class WipdetailsComponent implements OnInit {
         this.workOrderTaskInProgress = this.workOrderTasks[0];
         this.workOrderTaskToView = this.workOrderTasks[0];
 
+        this.workOrderTaskInProgress.statusId = 2;
+        this.workOrderTaskInProgress.status = new StatusModel({
+          id: 2,
+          name: 'In Progress'
+        } as IStatusModel);
+
       }));
 
     });
