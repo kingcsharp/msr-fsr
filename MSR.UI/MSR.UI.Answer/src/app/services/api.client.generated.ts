@@ -1098,16 +1098,14 @@ export class FileService {
      * @param entityId (optional) 
      * @param fileId (optional) 
      */
-    fileGet(entityName: string | null | undefined, entityId: number | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
+    fileGet(entityName: string | null | undefined, entityId: number | null | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
         let url_ = this.baseUrl + "/v{version}/File?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (entityName !== undefined && entityName !== null)
             url_ += "EntityName=" + encodeURIComponent("" + entityName) + "&";
-        if (entityId === null)
-            throw new Error("The parameter 'entityId' cannot be null.");
-        else if (entityId !== undefined)
+        if (entityId !== undefined && entityId !== null)
             url_ += "EntityId=" + encodeURIComponent("" + entityId) + "&";
         if (fileId !== undefined && fileId !== null)
             url_ += "FileId=" + encodeURIComponent("" + fileId) + "&";
@@ -9627,11 +9625,11 @@ export interface IAuditActionResultOfFileModel extends IAuditActionResult {
 }
 
 export class CreateFileRequest implements ICreateFileRequest {
-    entityName?: string | undefined;
-    entityId?: number;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
+    entityName!: string;
+    entityId!: number;
+    name!: string;
+    base64String!: string;
+    contentType!: string;
 
     constructor(data?: ICreateFileRequest) {
         if (data) {
@@ -9671,11 +9669,11 @@ export class CreateFileRequest implements ICreateFileRequest {
 }
 
 export interface ICreateFileRequest {
-    entityName?: string | undefined;
-    entityId?: number;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
+    entityName: string;
+    entityId: number;
+    name: string;
+    base64String: string;
+    contentType: string;
 }
 
 /** Base class for an API call with a typed result */

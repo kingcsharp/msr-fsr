@@ -33,6 +33,7 @@ import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
 import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-switch/bootstrap-switch.component';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     CheckboxModule,
     TooltipModule.forRoot(),
     NgxDocViewerModule,
-    CKEditorModule
+    CKEditorModule,
+    TableModule,
   ],
   providers: [DatePipe]
 })

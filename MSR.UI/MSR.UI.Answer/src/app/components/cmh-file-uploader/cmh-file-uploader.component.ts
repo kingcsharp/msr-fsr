@@ -1,13 +1,14 @@
 import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  FileService, FileModel, EnumMenuItem
+  FileService, FileModel, EnumMenuItem, CreateFileRequest
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Utils } from 'ngx-bootstrap/utils';
 import { emptyArray } from '../../models/lib/Utils';
+import { CommonGrid } from '../../models/lib/CommonGrid';
 
 @Component({
   selector: 'cmh-file-uploader',
@@ -15,9 +16,13 @@ import { emptyArray } from '../../models/lib/Utils';
   styleUrls: ['./cmh-file-uploader.component.scss']
 })
 export class CmhFileUploaderComponent implements OnInit {
-  uploadedFiles: any = [];
+  uploadedFiles: FileModel[] = [];
   showLi: boolean = false;
-  constructor(private fileService: FileService, private globals: Globals) {
+  showSelectModal: boolean = false;
+  fileTypes: any[] = [];
+  selectAll: boolean = false;
+  selectedFiles: FileModel[] = [];
+  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid,) {
 
   }
 
@@ -26,33 +31,36 @@ export class CmhFileUploaderComponent implements OnInit {
   @Output() filesChange: EventEmitter<Array<FileModel>> = new EventEmitter<Array<FileModel>>();
   @Input() showUploadButton: boolean;
   @Input() showCancelButton: boolean;
+  @Input() showSelectButton: boolean;
   @Input() multiple: string;
   @Input() maxFileSize: number;
   @Input() accept: string;
   @Input() chooseLabel: string;
+  @Input() selectLabel: string;
   ngOnInit(): void {
     if (this.chooseLabel === '' || this.chooseLabel === undefined) {
       this.chooseLabel = 'Select Files';
     }
 
-    if (this.files.length > 0) {
-      this.globals.showLoader(true);
-      this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), this.files[0].entityId, null, env.apiVersion)
-        .pipe(take(1)).subscribe(responseHandler((resp) => {
-          if (resp.object.length > 0) {
-            this.files.forEach((currFile: FileModel) => {
-              resp.object.forEach((getFile: FileModel) => {
-                if (currFile.fileId === getFile.fileId) {
-                  currFile.fileURL = getFile.fileURL;
-                }
-              });
+
+    this.globals.showLoader(true);
+    this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), null, null, env.apiVersion)
+      .pipe(take(1)).subscribe(responseHandler((resp) => {
+        if (resp.object.length > 0) {
+          this.uploadedFiles = resp.object;
+          this.fileTypes = this.uploadedFiles.filter(
+            (thing, i, arr) => arr.findIndex(t => t.contentType === thing.contentType) === i
+          ).map(x => ({ label: x.contentType, value: x.contentType }));
+          this.files.forEach((currFile: FileModel) => {
+            resp.object.forEach((getFile: FileModel) => {
+              if (currFile.fileId === getFile.fileId) {
+                currFile.fileURL = getFile.fileURL;
+              }
             });
-          }
-          this.showLi = true;
-        }));
-    } else {
-      this.showLi = true;
-    }
+          });
+        }
+        this.showLi = true;
+      }));
 
   }
 
@@ -76,13 +84,43 @@ export class CmhFileUploaderComponent implements OnInit {
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = function () {
-          let fileModel = new FileModel();
+          let fileModel = new CreateFileRequest();
           fileModel.name = file.name;
           fileModel.base64String = fileReader.result.toString();
           fileModel.contentType = file.type;
-          ctrl.files.unshift(fileModel);
+          fileModel.entityName = ctrl.globals.getSingularMenuName(ctrl.menuItem);
+          // fileModel.entityId = ctrl.menuItem;
+          // ctrl.globals.showLoader(true);
+          ctrl.fileService.filePost(env.apiVersion,fileModel).pipe(take(1))
+          .subscribe(responseHandler(response => {
+            ctrl.files.unshift(response.object[0]);
+            ctrl.uploadedFiles.unshift(response.object[0]);
+          }));
+
         };
       }
     }
+  }
+
+  openSelectModal() {
+    this.selectedFiles = [];
+    this.showSelectModal = true;
+  }
+
+  closeSelectModal() {
+    this.showSelectModal = false;
+  }
+
+  selectUploadedFiles() {
+    for (let file of this.selectedFiles) {
+      if (this.files.findIndex(x => x.fileId === file.fileId) === -1) {
+        this.files.unshift(file);
+      }
+    }
+    this.closeSelectModal();
+  }
+
+  selectAllFiles($event) {
+    this.selectedFiles = this.selectAll ? this.uploadedFiles : [];
   }
 }
