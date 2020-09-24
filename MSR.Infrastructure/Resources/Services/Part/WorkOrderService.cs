@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.Configuration.Conventions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -14,10 +13,6 @@ using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -152,6 +147,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Collection(x => x.WorkOrderParts).Load();
             created.Context.Entry(workorder)
                 .Collection(x => x.WorkOrderTasks).Load();
+            created.Context.Entry(workorder)
+                .Reference(x => x.Purchase).Load();
+            created.Context.Entry(workorder.Purchase)
+                .Reference(x => x.PurchaseOrder).Load();
+            created.Context.Entry(workorder.Purchase.PurchaseOrder)
+                .Reference(x => x.Customer).Load();
 
             ret = DetachBackPointers(
                 _mapper.Map<Domain.Models.WorkOrderModel>(workorder)
@@ -403,7 +404,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
                 // WorkOrderItemNumber
-                sum.WorkOrderItemNumber = WorkOrderService.GetWorkOrderItemNumber(m);
+                sum.WorkOrderItemNumber = IWorkOrderService.GetWorkOrderItemNumber(m);
 
                 // ProcedureName
                 var firstProc =
@@ -517,7 +518,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 wosum.WorkOrderId = m.Id.GetValueOrDefault();
 
                 // WorkOrderItemNumber
-                wosum.WorkOrderItemNumber = WorkOrderService.GetWorkOrderItemNumber(m);
+                wosum.WorkOrderItemNumber = IWorkOrderService.GetWorkOrderItemNumber(m);
 
                 // PurchaseOrderLineNumber
                 wosum.PurchaseOrderLineNumber = m.Purchase.CustomerLineNumber.ToString();
@@ -632,21 +633,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 status = "Waiting Start";
             }
             return status;
-        }
-
-        public static string GetWorkOrderItemNumber(WorkOrderModel model)
-        {
-            string customerName = model.Purchase?.PurchaseOrder?.Customer?.Name;
-            if (string.IsNullOrEmpty(customerName))
-            {
-                customerName = "";
-            }
-            string customerPNum = model.Purchase?.CustomerPurchaseNumber;
-            if (string.IsNullOrEmpty(customerPNum))
-            {
-                customerPNum = "";
-            }
-            return $"{customerName}-{customerPNum}";
         }
 
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)

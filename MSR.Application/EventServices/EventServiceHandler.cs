@@ -15,6 +15,7 @@ using AutoMapper;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSR.Application.EventServices
 {
@@ -100,6 +101,10 @@ namespace MSR.Application.EventServices
         public async Task HandleAsync(WorkOrderCreateEvent handledEvent, CancellationToken cancellationToken = default)
         {
             try {
+                Uri baseUri = new Uri(_processorConfig.APIURL);
+                UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
+                await _messageHub.Connect(hubUri.ToString());
+
                 var command = _mapper.Map<CreateWorkOrder>(handledEvent.purchaseInfo);
                 command.ScheduledStartDate = DateTime.Now;
 
@@ -110,13 +115,21 @@ namespace MSR.Application.EventServices
                 command.WorkOrderParts = parts;
 
                 WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
+                string wonum = IWorkOrderService.GetWorkOrderItemNumber(model);
+
+                _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
+                {
+                    Message = $"Work Order Created: {wonum}",
+                    Status = EnumToasterStatus.Success
+                });
             }
             catch (Exception e)
             {
+                string msg = "Work Order Creation FAILED. " +
+                             $"ERROR: {e.Message}";
                 _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
                 {
-                    Message = "Work Order Creation FAILED. " +
-                              $"ERROR: {e.Message}",
+                    Message = msg,
                     Status = EnumToasterStatus.Error
                 });
                 // propogate up to log the error

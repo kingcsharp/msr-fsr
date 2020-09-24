@@ -21,5 +21,20 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command);
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command);
         Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command);
+
+        public static string GetWorkOrderItemNumber(WorkOrderModel model)
+        {
+            string customerName = model.Purchase?.PurchaseOrder?.Customer?.Name;
+            if (string.IsNullOrEmpty(customerName))
+            {
+                customerName = "";
+            }
+            string customerPNum = model.Purchase?.CustomerPurchaseNumber;
+            if (string.IsNullOrEmpty(customerPNum))
+            {
+                customerPNum = "";
+            }
+            return $"{customerName}-{customerPNum}";
+        }
     }
 }
