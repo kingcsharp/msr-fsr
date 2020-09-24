@@ -16,6 +16,7 @@ export class AppComponent {
       setTimeout(() => {
         this.signalrService.startConnection();
         this.signalrService.addWorkflowNotificationListener();
+        this.signalrService.addToasterMessageNotificationListener();
       }, 1000);
     }
   }
