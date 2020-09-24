@@ -19,11 +19,12 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ReportComponent } from './report.component';
 import { AdhocComponent } from './adhocreports/adhocreport.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { ReportCubeService } from './reportcube.service';
 
 export const routes = [
   { path: '', redirectTo: 'report/adhocreports', pathMatch: 'full' },
   { path: 'report/adhocreports', component: ReportComponent, pathMatch: 'full' },
-  { path: "report/adhocreports/:id", component: AdhocComponent,pathMatch:'full' }
+  { path: "report/adhocreports/:id", component: AdhocComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -51,7 +52,8 @@ export const routes = [
     MapaelLayersMapModule,
     NewWidgetModule,
     PopoverModule.forRoot()
-  ]
+  ],
+  providers: [ReportCubeService]
 })
 export class ReportModule {
   static routes = routes;

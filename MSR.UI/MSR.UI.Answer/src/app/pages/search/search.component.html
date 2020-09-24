@@ -61,6 +61,7 @@
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}
     </td>
 </ng-template>
+
 <ng-template #rowView let-colsAndSettings='colsAndSettings'>
     <th *ngIf="colsAndSettings.col.dropdownHeader"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">

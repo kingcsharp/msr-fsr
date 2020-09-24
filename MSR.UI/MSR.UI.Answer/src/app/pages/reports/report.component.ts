@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  WorkflowGroupService, WorkflowGroupModel, WorkflowGroupRoleMapModel, RoleService, UserService, WorkflowGroupUserMapModel,
-  Role, AuditActionResultOfWorkflowGroupModel, CreateWorkflowGroupRequest, UpdateWorkflowGroupRequest, EnumMenuItem, ReportService
+  Role, EnumMenuItem, ReportService, ReportModel
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
@@ -14,9 +13,9 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../models/lib/Utils';
-import { CubejsClient } from '@cubejs-client/ngx';
 import { Subject } from "rxjs";
 import { CSVConverterService } from '../../services/csvconverter.service';
+import { ReportCubeService } from './reportcube.service';
 
 declare let jQuery: any;
 
@@ -32,7 +31,8 @@ export class ReportComponent implements OnInit {
   querySubject: any;
   repData: any;
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
-    private elem: ElementRef, private reportService: ReportService, private cubejs: CubejsClient, private cSVConverterService: CSVConverterService) {
+    private elem: ElementRef, private reportService: ReportService, private cSVConverterService: CSVConverterService,
+    private reportCubeService: ReportCubeService) {
 
   }
 
@@ -40,18 +40,14 @@ export class ReportComponent implements OnInit {
     this.reportService.report(env.apiVersion).subscribe(responseHandler(response => {
       this.data = response.object;
     }));
-    // Get data of report.
-    // this.querySubject = new Subject();
-    // this.cubejs.watch(this.querySubject).subscribe(resultSet => {
-    //   debugger;
-    //   console.log(resultSet);
-    // },
-    //   err => console.log('HTTP Error', err)
-    // );
-    // this.querySubject.next(this.query);
 
-    //csv demo.
-    this.repData = this.getData();
+  }
+
+  getCubeReport(reportInfo: ReportModel) {
+    // Get data of report.
+    this.reportCubeService.getReport(reportInfo).then((resp) => {
+      console.log(resp);
+    });
   }
 
   printCsvReport(reportId) {

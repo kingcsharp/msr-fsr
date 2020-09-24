@@ -3,12 +3,15 @@
     Adhoc-Reports
 </h1>
 <widget>
-    <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
-        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
+    <p-table #dt *ngIf="showReport" [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true"
+        [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
         currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
         stateKey="{{gridSaved.storageId}}">
         <ng-template pTemplate="caption">
-            <div class="text-right">
+            <div class="pull-left">
+                <h3><span class="fw-semi-bold">{{reportInfo.name}}</span>- {{reportInfo.subtitle}}</h3>
+            </div>
+            <div class="pull-right">
                 <grid-options [(defaultColumns)]="gridSaved.columnsSaved" [gridStorageId]="gridSaved.storageId"
                     [ptable]="dt" [gridVersion]="gridSaved.version" data-cy="usergrid-options">
                 </grid-options>
@@ -46,24 +49,40 @@
 </widget>
 
 <ng-template #rowViewData let-colsDataAndSettings='colsDataAndSettings'>
-    <td class="text-capitalize" [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
+    <td class="text-capitalize"
+        *ngIf="colsDataAndSettings.col.type === enumColumnType.String || colsDataAndSettings.col.type === enumColumnType.Number"
+        [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}
     </td>
+    <td class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
+        [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
+        {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}
+    </td>
 </ng-template>
+
+
 <ng-template #rowView let-colsAndSettings='colsAndSettings'>
-    <th *ngIf="colsAndSettings.col.type === enumColumnType.String" grid-input-filter [dt]="colsAndSettings.dt"
-        searchField="{{colsAndSettings.col.id}}"
-        [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
-        [gridSettings]="colsAndSettings.gridSaved.columnsSaved">
-    </th>
-    <th *ngIf="colsAndSettings.col.type === enumColumnType.Number" grid-input-filter [dt]="colsAndSettings.dt"
-        searchField="{{colsAndSettings.col.id}}"
-        [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
-        [gridSettings]="colsAndSettings.gridSaved.columnsSaved">
-    </th>
-    <th *ngIf="colsAndSettings.col.type === enumColumnType.Date"
+    <th *ngIf="colsAndSettings.col.dropdownHeader"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">
-        <div class="position-relative" tooltip="colsAndSettings.col.label">
+        <multiselect-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [options]="data"
+            filterProp="{{colsAndSettings.col.id}}" defaultId="{{colsAndSettings.col.id}}"
+            filterId="{{colsAndSettings.col.id}}" defaultText="Select {{colsAndSettings.col.label}}"
+            defaultTextTooltip="" [datatable]="dt">
+        </multiselect-wrapper>
+    </th>
+    <th *ngIf="colsAndSettings.col.type === enumColumnType.String && !colsAndSettings.col.dropdownHeader"
+        grid-input-filter [dt]="colsAndSettings.dt" searchField="{{colsAndSettings.col.id}}"
+        [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
+        [gridSettings]="colsAndSettings.gridSaved.columnsSaved">
+    </th>
+    <th *ngIf="colsAndSettings.col.type === enumColumnType.Number && !colsAndSettings.col.dropdownHeader"
+        grid-input-filter [dt]="colsAndSettings.dt" searchField="{{colsAndSettings.col.id}}"
+        [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
+        [gridSettings]="colsAndSettings.gridSaved.columnsSaved">
+    </th>
+    <th *ngIf="colsAndSettings.col.type === enumColumnType.Date && !colsAndSettings.col.dropdownHeader"
+        [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">
+        <div class="position-relative" tooltip="{{colsAndSettings.col.label}}">
             <pcalendar-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [filterId]="colsAndSettings.col.id"
                 [datatable]="colsAndSettings.dt">
             </pcalendar-wrapper>
