@@ -1,6 +1,4 @@
-﻿using MSR.Domain.Commanding;
-
-namespace MSR.Domain.Commands
+﻿namespace MSR.Domain.Commands
 {
     public class UpdateWorkOrder : CreateWorkOrder
     {

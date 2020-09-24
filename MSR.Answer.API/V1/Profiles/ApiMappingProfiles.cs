@@ -3,8 +3,6 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System;
-using System.Configuration;
-using System.Linq;
 
 namespace MSR.Answer.API.V1.Profiles
 {

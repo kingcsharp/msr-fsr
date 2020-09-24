@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using System;
-using Amazon.Runtime.Internal;
 using MSR.Domain.Hub;
 
 namespace MSR.Application.ApplicationServices

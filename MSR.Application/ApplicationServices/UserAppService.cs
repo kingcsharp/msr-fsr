@@ -37,7 +37,7 @@ namespace MSR.Application.ApplicationServices
             var ret = await _userService.GetUsersAsync(command);
             if (command.Id.HasValue && ret.Count == 1)
             {
-                var file = _fileService.ListFiles(new User().GetType().Name, command.Id.Value).FirstOrDefault();
+                var file = _fileService.ListFiles(new User().GetType().Name, command.Id).FirstOrDefault();
                 if (file != null)
                 {
                     ret.FirstOrDefault().FileModel = file;

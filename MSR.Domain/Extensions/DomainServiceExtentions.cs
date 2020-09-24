@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Amazon.S3;
 using Amazon.Runtime;
 using MSR.Domain.Validators;
-using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Domain.Extensions
 {

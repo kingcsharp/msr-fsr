@@ -9,7 +9,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using Newtonsoft.Json;
 using NSwag.Annotations;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;

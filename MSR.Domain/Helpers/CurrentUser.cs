@@ -1,6 +1,5 @@
 ﻿using MSR.Domain.Commanding.Enums;
 using System;
-using System.Collections.Generic;
 
 namespace MSR.Domain.Helpers
 {

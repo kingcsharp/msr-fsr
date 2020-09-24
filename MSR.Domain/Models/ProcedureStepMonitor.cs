@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Text;
-
-namespace MSR.Domain.Models
+﻿namespace MSR.Domain.Models
 {
     public class ProcedureStepMonitor
     {

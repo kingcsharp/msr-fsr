@@ -1,4 +1,3 @@
-using MSR.Domain.Commands;
 using System.Collections.Generic;
 
 namespace MSR.Answer.API.V1.Models

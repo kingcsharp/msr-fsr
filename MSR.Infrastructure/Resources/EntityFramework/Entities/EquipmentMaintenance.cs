@@ -1,4 +1,3 @@
-using MSR.Domain.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
