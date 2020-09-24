@@ -675,6 +675,10 @@ export class DocumentService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
+    /**
+     * Gets a list of Documents or a single Document matching the Id.
+     * @param id (optional) 
+     */
     documentGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document?";
         if (version === undefined || version === null)
@@ -728,6 +732,9 @@ export class DocumentService {
         return _observableOf<AuditActionResultOfICollectionOfDocumentView>(<any>null);
     }
 
+    /**
+     * Creates a new Document or DocumentApproval.
+     */
     documentPost(version: string, newDocument: CreateDocumentRequest): Observable<AuditActionResultOfDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document";
         if (version === undefined || version === null)
@@ -783,6 +790,9 @@ export class DocumentService {
         return _observableOf<AuditActionResultOfDocumentView>(<any>null);
     }
 
+    /**
+     * Updates a Document or DocumentApproval based on the user privilege. Id is required.
+     */
     documentPatch(version: string, request: UpdateDocumentRequest): Observable<AuditActionResultOfDocumentView> {
         let url_ = this.baseUrl + "/v{version}/Document";
         if (version === undefined || version === null)
@@ -836,6 +846,63 @@ export class DocumentService {
             }));
         }
         return _observableOf<AuditActionResultOfDocumentView>(<any>null);
+    }
+
+    /**
+     * Deletes any Document or DocumentApproval with a matching Id.
+     */
+    documentDelete(id: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Document/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 

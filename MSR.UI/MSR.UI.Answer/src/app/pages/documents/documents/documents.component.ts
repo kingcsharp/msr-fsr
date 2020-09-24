@@ -96,10 +96,12 @@ export class DocumentsComponent implements OnInit {
   }
 
   delete() {
-    // this.documentService.documentDelete(this.documentToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
-    //   this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
-    //   this.getDocuments();
-    // }));
+    this.globals.showLoader(true);
+    this.documentService.documentDelete(this.documentToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+      const index = this.data.findIndex(x => x.id === this.documentToDelete.id);
+      this.data.splice(index, 1);
+      this.showConfirmDeleteDialog = !this.showConfirmDeleteDialog;
+    }));
   }
 
 }
