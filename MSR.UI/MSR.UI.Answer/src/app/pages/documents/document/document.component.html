@@ -1,0 +1,107 @@
+<div class="container" *ngIf="getDocumentFlag">
+  <div class="row">
+      <div class="col-12">
+          <h1 class="page-title">
+            <ng-container *ngIf="document?.id === 0">
+              <i class="fas fa-plus mx-2"></i>
+              <span >Add Document</span>
+            </ng-container>
+            <ng-container *ngIf="document?.id !== 0">
+              <i class="far fa-edit mx-2"></i>
+              <span >Edit Document</span>
+            </ng-container>
+          </h1>
+      </div>
+  </div>
+  <div class="row">
+      <!--
+          Buttons like save, update, cancel go here if your page
+          requires scrolling on any size screen.
+      -->
+  </div>
+  <div class="row">
+      <form class="col-12">
+          <div class="form-group">
+              <label for="title" class="col-form-label text-left">
+                  Document Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                [(ngModel)]="document.name"
+                data-validate="parsley"
+                data-parsley-trigger="change"
+                data-parsley-minlength="3"
+                data-parsley-required="true"
+                class="form-control input-transparent"
+                tooltip="Name of Document"
+                data-cy="document-input-name"
+              >
+          </div>
+          <div class="form-group">
+              <label for="referencefiles" class="col-form-label text-left">
+                Reference Files
+              </label>
+              <cmh-file-uploader
+                name="referencefiles"
+                class="col-12"
+                *ngIf="document.referenceFiles !== undefined"
+                [menuItem]="menuItems.Documents"
+                multiple="multiple"
+                [(files)]="document.referenceFiles"
+                showSelectButton="true"
+                chooseLabel="Browse..."
+                selectLabel="Select"
+              >
+              </cmh-file-uploader>
+          </div>
+
+          <div class="form-group" *ngIf='document !== undefined'>
+            <label for="comment" class="col-form-label text-left">
+              Header Comments (notes,warning, etc.):
+            </label>
+            <ckeditor-wrapper
+              [editorcontent]="document.comments"
+              (editorContentChange)="document.comments = $event"
+            ></ckeditor-wrapper>
+          </div>
+
+          <div class="form-group" *ngIf="availableRoles !== undefined && selectedRoles !== undefined">
+            <label for="roles" class="col-form-label text-left">
+              Additional Roles Allowed Access:
+            </label>
+            <multiselect-wrapper-form
+              [options]="availableRoles"
+              [limit]="10"
+              [(model)]="selectedRoles"
+              defaultLabelProperty="name"
+              defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect"
+            >
+          </multiselect-wrapper-form>
+          </div>
+
+      </form>
+  </div>
+  <div class="row">
+    <button
+      type="button"
+      class="btn btn-primary m-2"
+      (click)="save()"
+      *ngIf="document.id === 0"
+      data-cy="save-button"
+    >Save</button>
+    <button
+      type="button"
+      class="btn btn-primary m-2"
+      (click)="update()"
+      *ngIf="document.id !== 0"
+      data-cy="update-button"
+    >Update</button>
+    <button
+      type="button"
+      class="btn btn-warning m-2"
+      [routerLink]="['../documents']"
+      data-cy="cancel-button"
+    >Cancel</button>
+  </div>
+</div>

@@ -665,6 +665,248 @@ export class CustomerService {
 }
 
 @Injectable()
+export class DocumentService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    /**
+     * Gets a list of Documents or a single Document matching the Id.
+     * @param id (optional) 
+     */
+    documentGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfDocumentView>(<any>null);
+    }
+
+    /**
+     * Creates a new Document or DocumentApproval.
+     */
+    documentPost(version: string, newDocument: CreateDocumentRequest): Observable<AuditActionResultOfDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newDocument);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentPost(response: HttpResponseBase): Observable<AuditActionResultOfDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfDocumentView>(<any>null);
+    }
+
+    /**
+     * Updates a Document or DocumentApproval based on the user privilege. Id is required.
+     */
+    documentPatch(version: string, request: UpdateDocumentRequest): Observable<AuditActionResultOfDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentPatch(response: HttpResponseBase): Observable<AuditActionResultOfDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfDocumentView>(<any>null);
+    }
+
+    /**
+     * Deletes any Document or DocumentApproval with a matching Id.
+     */
+    documentDelete(id: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Document/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+}
+
+@Injectable()
 export class EquipmentMaintenanceService {
     private http: HttpClient;
     private baseUrl: string;
@@ -856,16 +1098,14 @@ export class FileService {
      * @param entityId (optional) 
      * @param fileId (optional) 
      */
-    fileGet(entityName: string | null | undefined, entityId: number | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
+    fileGet(entityName: string | null | undefined, entityId: number | null | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
         let url_ = this.baseUrl + "/v{version}/File?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (entityName !== undefined && entityName !== null)
             url_ += "EntityName=" + encodeURIComponent("" + entityName) + "&";
-        if (entityId === null)
-            throw new Error("The parameter 'entityId' cannot be null.");
-        else if (entityId !== undefined)
+        if (entityId !== undefined && entityId !== null)
             url_ += "EntityId=" + encodeURIComponent("" + entityId) + "&";
         if (fileId !== undefined && fileId !== null)
             url_ += "FileId=" + encodeURIComponent("" + fileId) + "&";
@@ -8701,6 +8941,289 @@ export interface IUpdateCustomerRequest {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfDocumentView extends AuditActionResult implements IAuditActionResultOfICollectionOfDocumentView {
+    object?: DocumentView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(DocumentView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfDocumentView extends IAuditActionResult {
+    object?: DocumentView[] | undefined;
+}
+
+export class DocumentView extends TrackableModel implements IDocumentView {
+    name?: string | undefined;
+    revision?: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
+
+    constructor(data?: IDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+            this.comments = _data["comments"];
+            if (Array.isArray(_data["roleIds"])) {
+                this.roleIds = [] as any;
+                for (let item of _data["roleIds"])
+                    this.roleIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new DocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        data["comments"] = this.comments;
+        if (Array.isArray(this.roleIds)) {
+            data["roleIds"] = [];
+            for (let item of this.roleIds)
+                data["roleIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IDocumentView extends ITrackableModel {
+    name?: string | undefined;
+    revision?: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfDocumentView extends AuditActionResult implements IAuditActionResultOfDocumentView {
+    object?: DocumentView | undefined;
+
+    constructor(data?: IAuditActionResultOfDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? DocumentView.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfDocumentView extends IAuditActionResult {
+    object?: DocumentView | undefined;
+}
+
+export class CreateDocumentRequest implements ICreateDocumentRequest {
+    name!: string;
+    revision!: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+
+    constructor(data?: ICreateDocumentRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+            this.comments = _data["comments"];
+            if (Array.isArray(_data["roleIds"])) {
+                this.roleIds = [] as any;
+                for (let item of _data["roleIds"])
+                    this.roleIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateDocumentRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateDocumentRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        data["comments"] = this.comments;
+        if (Array.isArray(this.roleIds)) {
+            data["roleIds"] = [];
+            for (let item of this.roleIds)
+                data["roleIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface ICreateDocumentRequest {
+    name: string;
+    revision: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+}
+
+export class UpdateDocumentRequest implements IUpdateDocumentRequest {
+    id!: number;
+    name!: string;
+    revision!: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+
+    constructor(data?: IUpdateDocumentRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+            this.comments = _data["comments"];
+            if (Array.isArray(_data["roleIds"])) {
+                this.roleIds = [] as any;
+                for (let item of _data["roleIds"])
+                    this.roleIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): UpdateDocumentRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateDocumentRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        data["comments"] = this.comments;
+        if (Array.isArray(this.roleIds)) {
+            data["roleIds"] = [];
+            for (let item of this.roleIds)
+                data["roleIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IUpdateDocumentRequest {
+    id: number;
+    name: string;
+    revision: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfEquipmentMaintenanceModel {
     object?: EquipmentMaintenanceModel[] | undefined;
 
@@ -9102,11 +9625,11 @@ export interface IAuditActionResultOfFileModel extends IAuditActionResult {
 }
 
 export class CreateFileRequest implements ICreateFileRequest {
-    entityName?: string | undefined;
-    entityId?: number;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
+    entityName!: string;
+    entityId!: number;
+    name!: string;
+    base64String!: string;
+    contentType!: string;
 
     constructor(data?: ICreateFileRequest) {
         if (data) {
@@ -9146,11 +9669,11 @@ export class CreateFileRequest implements ICreateFileRequest {
 }
 
 export interface ICreateFileRequest {
-    entityName?: string | undefined;
-    entityId?: number;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
+    entityName: string;
+    entityId: number;
+    name: string;
+    base64String: string;
+    contentType: string;
 }
 
 /** Base class for an API call with a typed result */

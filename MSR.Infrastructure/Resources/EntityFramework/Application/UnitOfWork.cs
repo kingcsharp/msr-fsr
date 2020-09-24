@@ -58,6 +58,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<DocumentApproval> _documentApprovals;
         private IRepository<ProductApproval> _productApprovals;
         private IRepository<Document> _documents;
+        private IRepository<DocumentRoleMap> _documentRoleMaps;
+        private IRepository<DocumentEntityMap> _documentEntityMap;
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
         private IRepository<PurchaseOrderProduct> _purchaseOrderProducts;
@@ -78,6 +80,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<EquipmentMaintenance> _equipmentMaintenances;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
+        public IRepository<DocumentRoleMap> DocumentRoles { get { return _documentRoleMaps ?? (_documentRoleMaps = new EFRepository<DocumentRoleMap>(Context)); } }
+        public IRepository<DocumentEntityMap> DocumentEntityMap { get { return _documentEntityMap ?? (_documentEntityMap = new EFRepository<DocumentEntityMap>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }

@@ -28,6 +28,7 @@ using MSR.Infrastructure.Resources.Services.Sensor;
 using MSR.Infrastructure.Resources.Services.PurchaseOrder;
 using MSR.Infrastructure.Resources.Services.Timezone;
 using MSR.Infrastructure.Resources.Services.Part;
+using MSR.Infrastructure.Resources.Services.Document;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -74,6 +75,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
             services.AddScoped<IAdminCostSettingsService, AdminCostSettingsService>();
             services.AddScoped<IEquipmentMaintenanceService, EquipmentMaintenanceService>();
+            services.AddScoped<IDocumentService, DocumentService>();
 
             return services;
         }

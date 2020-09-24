@@ -24,6 +24,7 @@ const routes: Routes = [
       { path: 'monitors', loadChildren: () =>  import('../pages/monitors/monitors.module').then(m => m.MonitorsModule) },
       { path: 'pricing', loadChildren: () =>  import('../pages/pricing/pricing.module').then(m => m.PricingModule) },
       { path: 'utilities', loadChildren: () =>  import('../pages/utilities/utilities.module').then(m => m.UtilitiesModule) },
+      { path: 'documents', loadChildren: () =>  import('../pages/documents/documents.module').then(m => m.DocumentsModule) },
     ]
   }
 ];

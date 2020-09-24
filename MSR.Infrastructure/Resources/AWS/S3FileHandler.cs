@@ -41,7 +41,7 @@ namespace MSR.Infrastructure.Resources.AWS
             if (!string.IsNullOrWhiteSpace(file.Base64String))
             {
                 var base64File = Base64Helper.Parse(file.Base64String);
-                await Upload(base64File.FileContents,base64File.ContentType, _s3Information.FileBucketName, uniqueName);
+                await Upload(base64File.FileContents, base64File.ContentType, _s3Information.FileBucketName, uniqueName);
             }
 
             return GetURL($"{uniqueName}");
@@ -49,7 +49,7 @@ namespace MSR.Infrastructure.Resources.AWS
 
         public async Task<string> UploadHelpFile(FileModel file)
         {
-            var fileName = await Upload(file.FileContents,file.ContentType, _s3Information.HelpbucketName, file.Name);
+            var fileName = await Upload(file.FileContents, file.ContentType, _s3Information.HelpbucketName, file.Name);
             return $"{_s3Information.HelpAWSURL}{fileName}";
         }
 
@@ -87,8 +87,14 @@ namespace MSR.Infrastructure.Resources.AWS
                 throw new DomainException($"Attempt to Upload File: {name} to S3 failed.");
             }
 
-            return $"{name}"; 
+            return $"{name}";
         }
 
+        public async Task UploadStream(MemoryStream stream, string fileName, string contentType, string entityName, int entityId)
+        {
+            string uniqueName = $"{entityName}-{entityId}-{fileName}";
+
+            await Upload(stream.ToArray(), contentType, _s3Information.FileBucketName, uniqueName);
+        }
     }
 }

@@ -16,5 +16,14 @@ namespace MSR.Domain.Abstractions.Services
         Task<bool> CreateDocumentAsync<T>(T entity, int entityId, FileModel file) where T : class;
         Task<UploadResponse> UploadHelpFile(UploadFile command);
         Task<UploadResponse> UploadImportFile(UploadFile command);
+
+        /// <summary>
+        /// Map an uploaded file to an entity name + id
+        /// </summary>
+        /// <param name="entityName"></param>
+        /// <param name="entityId"></param>
+        /// <param name="uploadedFileId"></param>
+        /// <returns></returns>
+        Task<FileModel> MapUploadedFileAsync(string entityName, int entityId, int uploadedFileId);
     }
 }
