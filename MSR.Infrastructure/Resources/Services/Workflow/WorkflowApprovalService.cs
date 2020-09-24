@@ -218,7 +218,6 @@ namespace MSR.Infrastructure.Resources.Services
                     var documentApprovalChanges = new PendingApprovalPopoverModel();
                     documentApprovalChanges.AddRow("Name", document?.Name, documentApproval.Name);
                     documentApprovalChanges.AddRow("Revision", document?.Revision, documentApproval.Revision);
-                    documentApprovalChanges.AddRow("Role", document?.RoleId, documentApproval.RoleId);
                     return documentApprovalChanges;
                 case EnumApprovalTables.LocationApproval:
                     var locationApproval = await _unitOfWork.LocationApprovals.Query().Include(x => x.TimeZone).FirstOrDefaultAsync(x => x.Id == command.Id);
