@@ -11,12 +11,12 @@ slide {
     display: flex;
 }
 
-:host ::ng-deep.carousel-indicators{
-    display:none !important;
+a.carousel-control{
+    width:3% !important;
 }
 
-:host ::ng-deep.carousel-control{
-    width:3%;
+.carousel-item > .item{
+    width: 100%;
 }
 
 .card{
@@ -31,4 +31,26 @@ slide {
 .card-body{
     background-color: #FFFFFF;
     color: #000000;
+}
+
+.ui-tabview{
+    padding: 0px !important;
+}
+
+.description-container > .row > div {
+    border-width: 1px 1px 0px 1px;
+    border-color: #eaeaea;
+    border-style: solid;
+}
+
+.description-container > .row:last-child > div{
+    border-width: 1px 1px 1px 1px;
+    border-color: #eaeaea;
+    border-style: solid;
+}
+
+.table > .thead-dark > tr > th{
+    color: #fff;
+    background-color: #353D48;
+    border-color: #32383e;
 }
