@@ -38,7 +38,17 @@ export class ReportCubeService {
             case 'WorkOrderPartsHistorybyPartNumber':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'specno', label: 'SN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'workOrderNumber', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'dateCompleted', label: 'Date Completed', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'ncdisposition', label: 'NC Disposition', visible: true, type: this.enumColumnType.String })
+                ];
+                break;
+            case 'WorkOrderPartsHistorybySerialNumber':
+                return [
+                    new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'workOrderNumber', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'dateCompleted', label: 'Date Completed', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
@@ -47,27 +57,34 @@ export class ReportCubeService {
                 break;
             case 'SerialNumberHistorybySerialNumber':
                 return [
-                    new ColumnsSaved({ id: 'specno', label: 'SN', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'workOrderNumber', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: 'dateCompleted', label: 'Date Completed', visible: true, type: this.enumColumnType.Date }),
-                    new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: 'ncdisposition', label: 'NC Disposition', visible: true, type: this.enumColumnType.String })
+                    new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'workOrderNumber', label: 'WO#', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'wocreationdate', label: 'Created', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'dateCompleted', label: 'Ship Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'msrfsrfacility', label: 'Facility', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'customername', label: 'Customer', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'specno', label: 'Spec #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number })
                 ];
                 break;
-            case 'WorkInProcess':
+            case "WorkInProcessbyWorkOrder":
                 break;
-            case 'MonitorsHistory':
+            case "MonitorsHistorybyWorkOrder":
                 break;
-            case 'WorkOrdersNotInvoiced':
+            case "CombinedFinancialDatabyWorkOrder":
                 break;
-            case 'RevenuebyCustomer':
+            case "WorkOrdersNotInvoicedbyWorkOrder":
                 break;
-            case 'RevenuebyKit':
+            case "RevenuebyCustomerbyTimePeriod":
                 break;
-            case 'CountofKits':
+            case "RevenuebyKitbyPart/Kit":
                 break;
-
+            case "CountofKitsbyPart/Kit":
+                break;
             default:
                 break;
         }
@@ -78,30 +95,39 @@ export class ReportCubeService {
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/ /g, '') + reportInfo.subtitle.replace(/ /g, '')) {
             case 'WorkOrderPartsHistorybyPartNumber':
+            case 'WorkOrderPartsHistorybySerialNumber':
             case 'SerialNumberHistorybySerialNumber':
-                const retData = data.map(elem => {
+                const woPartInfo = data.map(elem => {
                     return {
                         workOrderNumber: elem['CubeWorkorderparts.id'],
                         ponumber: elem['CubeWorkorderparts.ponumber'],
-                        specno: elem['CubeWorkorderparts.specno'],
+                        serialnumber: elem['CubeWorkorderparts.serialnumber'],
                         dateCompleted: elem['CubeWorkorderparts.shipdate'],
                         ncdisposition: elem['CubeWorkorderparts.ncdisposition'],
                         cycleCount: elem['CubeWorkorderparts.cyclecount'],
+                        duedate: elem['CubeWorkorderparts.duedate'],
+                        mttn: elem['CubeWorkorderparts.mttn'],
+                        kitname: elem['CubeWorkorderparts.kitname'],
+                        specno: elem['CubeWorkorderparts.specno'],
+                        customername: elem['CubeWorkorderparts.customername'],
+                        msrfsrfacility: elem['CubeWorkorderparts.msrfsrfacility'],
+                        wocreationdate: elem['CubeWorkorderparts.wocreationdate']
                     }
                 })
-                return retData;
+                return woPartInfo;
+            case "WorkInProcessbyWorkOrder":
                 break;
-            case 'WorkInProcess':
+            case "MonitorsHistorybyWorkOrder":
                 break;
-            case 'MonitorsHistory':
+            case "CombinedFinancialDatabyWorkOrder":
                 break;
-            case 'WorkOrdersNotInvoiced':
+            case "WorkOrdersNotInvoicedbyWorkOrder":
                 break;
-            case 'RevenuebyCustomer':
+            case "RevenuebyCustomerbyTimePeriod":
                 break;
-            case 'RevenuebyKit':
+            case "RevenuebyKitbyPart/Kit":
                 break;
-            case 'CountofKits':
+            case "CountofKitsbyPart/Kit":
                 break;
 
             default:

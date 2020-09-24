@@ -23,13 +23,13 @@
                     data-cy="usertable-header">
                     {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
                 </th>
-                <th>Actions</th>
+                <!-- <th>Actions</th> -->
             </tr>
             <tr>
                 <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowView"
                     [ngTemplateOutletContext]="{colsAndSettings: { col: col,dt:dt,gridSaved:gridSaved} }">
                 </ng-container>
-                <th></th>
+                <!-- <th></th> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-itemData>
@@ -37,12 +37,12 @@
                 <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowViewData"
                     [ngTemplateOutletContext]="{colsDataAndSettings: { col: col,colData:itemData,colsSaved:gridSaved.columnsSaved} }">
                 </ng-container>
-                <td></td>
+                <!-- <td></td> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="8" style="text-align:left">No workflow groups found.</td>
+                <td colspan="12" style="text-align:left">No items found.</td>
             </tr>
         </ng-template>
     </p-table>
