@@ -1,28 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
-import { WorkOrderService, WorkOrderStatus } from '../../services/api.client.generated';
+import { UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderStatus, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'wipstatus',
   templateUrl: './wipstatus.component.html',
   styleUrls: ['./wipstatus.component.scss'],
-  providers: [WorkOrderService]
+  providers: [WorkOrderService, WorkOrderTaskService, UserService]
 })
 export class WipstatusWrapperComponent implements OnInit {
 
-  workOrderStatuses: Array<WorkOrderStatus>;// = new Array<WorkOrderStatus>();
+  @Input() takeOverSteps: boolean = false;
+  workOrderStatuses: Array<WorkOrderStatus>;
   displayWorkOrderStatuses: Array<WorkOrderStatus> = new Array<WorkOrderStatus>();
   locationOptions: Array<SelectItem> = new Array<SelectItem>();
   selectedLocations: Array<string>;
   showTakeOverAsUserConfirmationDialog: boolean = false;
-  workOrderToTakeOver: number;
-  constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals) { }
+  workOrderToTakeOverId: number;
+  constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals, 
+    private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
 
-  
+
   ngOnInit(): void {
 
     this.globals.showLoader(true);
@@ -31,12 +34,12 @@ export class WipstatusWrapperComponent implements OnInit {
       this.workOrderStatuses = response.object;
       this.displayWorkOrderStatuses = response.object;
 
-      this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map( s => ({ label: s, value: s}));
-    
-      if(localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null){
+      this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map(s => ({ label: s, value: s }));
+
+      if (localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null) {
         this.selectedLocations = this.locationOptions.map(s => s.value);
-        localStorage.setItem('wipstatus',this.selectedLocations.toString());
-      }else{
+        localStorage.setItem('wipstatus', this.selectedLocations.toString());
+      } else {
         this.selectedLocations = localStorage.getItem('wipstatus').split(',');
       }
 
@@ -44,21 +47,67 @@ export class WipstatusWrapperComponent implements OnInit {
 
   }
 
-  openTakeOverAsUserConfirmationDialog(workOrderId: number){
+  openTakeOverAsUserConfirmationDialog(workOrderId: number) {
     this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
-    this.workOrderToTakeOver = workOrderId;
+    this.workOrderToTakeOverId = workOrderId;
   }
 
-  closeTakeOverAsUserConfirmationDialog(){
+  closeTakeOverAsUserConfirmationDialog() {
     this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
   }
 
-  takeOverAsUserConfirmationDialog(){
-    this.router.navigate(['app/wip/details',this.workOrderToTakeOver]);
+  takeOverAsUserConfirmationDialog() {
+
+    if (this.takeOverSteps) {
+
+      this.userService.loggedInUser(env.apiVersion).subscribe(responseHandler(response => {
+
+        let loggedInUser = <UserModel>response.object;
+
+        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+
+          let tasks = <Array<WorkOrderTaskModel>>response.object[0].workOrderTasks;
+  
+          let workOrderTaskPatchRequests = new Array<any>();
+  
+          tasks.forEach(task => {
+  
+            if(task.status?.name === 'Waiting to Start'){
+  
+              let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest();
+              updateWorkOrderTaskRequest.status = task.status?.name;
+              updateWorkOrderTaskRequest.taskIsRunning = false;
+              updateWorkOrderTaskRequest.taskRunningSince = task.taskRunningSince;
+              updateWorkOrderTaskRequest.taskStepOrder = task.taskStepOrder;
+              updateWorkOrderTaskRequest.workOrderTaskId = task.id;
+              updateWorkOrderTaskRequest.assignedUserId = loggedInUser.id;
+
+              workOrderTaskPatchRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
+              
+            }
+  
+          });
+
+          // TODO: swap out when endpoint is fixed
+          this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+
+          //forkJoin(workOrderTaskPatchRequests).subscribe(responses => {
+          //  console.log(response);
+          //  this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+          //});
+  
+        }));
+
+      }));
+
+
+
+    }
+
   }
 
-  locationsSelectedUpdated(){
-    localStorage.setItem('wipstatus',this.selectedLocations.toString());
+  locationsSelectedUpdated() {
+    localStorage.setItem('wipstatus', this.selectedLocations.toString());
     this.displayWorkOrderStatuses = this.workOrderStatuses.filter(s => this.selectedLocations.includes(s.locationName));
   }
 
