@@ -53,10 +53,13 @@ export class SignalRService implements OnDestroy {
       switch (data.status) {
         case 0:
           this.toastr.warning(data.message);
+          break;
         case 1:
           this.toastr.success(data.message);
+          break;
         case 2:
           this.toastr.error(data.message);
+          break;
       }
     });
   }
