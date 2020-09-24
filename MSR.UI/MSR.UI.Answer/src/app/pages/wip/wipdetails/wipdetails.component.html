@@ -56,32 +56,61 @@
       <div class="row">
         <p-tabView class="w-100">
           <p-tabPanel header="Task Description">
-            <div class="container-fluid description-container">
-              <div class="row">
-                <div class="text-right col-2 p-2" colspan="1">Assignee:</div>
-                <div class="col-10 p-2">{{ workOrderTaskToView?.assignedToUser?.fullName }}</div>
-              </div>
-              <div class="row">
-                <div class="text-right col-2 p-2" colspan="1">Task:</div>
-                <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.title }}</div>
-              </div>
-              <div class="row">
-                <div class="text-right col-2 p-2" colspan="1">Description:</div>
-                <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.stepText }}</div>
-              </div>
-              <div class="row">
-                <div class="text-right col-2 p-2" colspan="1">Related Documents:</div>
-                <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.documents }}</div>
-              </div>
-              <div class="row">
-                <div class="text-right col-2 p-2" colspan="1">Reference Files:</div>
-                <div class="col-10 p-2">
-                  <cmh-file-uploader name="referencefiles" class="col-12"
-                    *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStep?.referenceFiles !== undefined"
-                    [menuItem]="menuItems.Templates" multiple="multiple" [showUploadButton]="false"
-                    [(files)]="workOrderTaskToView.procedureStep.referenceFiles">
-                  </cmh-file-uploader>
+            <div class="row">
+              <div class="container-fluid description-container m-2">
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">Assignee:</div>
+                  <div class="col-10 p-2">{{ workOrderTaskToView?.assignedToUser?.fullName }}</div>
                 </div>
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">Task:</div>
+                  <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.title }}</div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">Description:</div>
+                  <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.stepText }}</div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">Related Documents:</div>
+                  <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.documents }}</div>
+                </div>
+                <div class="row">
+                  <div class="text-right col-2 p-2" colspan="1">Reference Files:</div>
+                  <div class="col-10 p-2">
+                    <cmh-file-uploader name="referencefiles" class="col-12"
+                      *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStep?.referenceFiles !== undefined"
+                      [menuItem]="menuItems.Templates" multiple="multiple" [showUploadButton]="false"
+                      [(files)]="workOrderTaskToView.procedureStep.referenceFiles">
+                    </cmh-file-uploader>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.taskStepOrder === 1">
+              <div class="container-fluid product-container m-2">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">Part</th>
+                      <th scope="col">Cycle Count</th>
+                      <th scope="col">Serial Number</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    *ngIf="workOrderModel.workOrderParts !== undefined && workOrderModel.workOrderParts.length !== 0">
+                    <tr *ngFor="let workOrderPart of workOrderModel.workOrderParts; let index=index">
+                      <th scope="row">{{workOrderPart.part.name}}</th>
+                      <td>{{workOrderPart.cycleCount}}</td>
+                      <td>
+                        <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber" 
+                          class="form-control input-transparent" tooltip="Serial Number" disabled>
+                          <button id="changebutton{{index}}" class="btn btn-warning" (click)="changeSerialNumber(index, workOrderPart.serialNumber, workOrderPart.id)">Change</button>
+                          <button id="submitbutton{{index}}" class="btn btn-success d-none" (click)="submitSerialNumber(index, workOrderPart.id)">Submit</button>
+                          <button id="cancelbutton{{index}}" class="btn btn-danger d-none" (click)="cancelSerialNumber(index, workOrderPart.id)">Cancel</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </p-tabPanel>
