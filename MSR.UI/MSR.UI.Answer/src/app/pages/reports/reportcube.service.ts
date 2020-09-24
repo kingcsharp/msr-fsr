@@ -58,7 +58,7 @@ export class ReportCubeService {
             case 'SerialNumberHistorybySerialNumber':
                 return [
                     new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'workOrderNumber', label: 'WO#', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'workOrderNumber', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'wocreationdate', label: 'Created', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: 'dateCompleted', label: 'Ship Date', visible: true, type: this.enumColumnType.Date }),
@@ -72,6 +72,11 @@ export class ReportCubeService {
                 ];
                 break;
             case "WorkInProcessbyWorkOrder":
+                return [
+                    new ColumnsSaved({ id: 'workOrderNumber', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'details', label: 'Details', visible: true, type: this.enumColumnType.String })
+                ];
                 break;
             case "MonitorsHistorybyWorkOrder":
                 break;
@@ -116,6 +121,14 @@ export class ReportCubeService {
                 })
                 return woPartInfo;
             case "WorkInProcessbyWorkOrder":
+                const workInProcessbyWorkOrder = data.map(elem => {
+                    return {
+                        workOrderNumber: elem['CubeWorkinprocess.id'],
+                        duedate: elem['CubeWorkinprocess.duedate'],
+                        details: elem['CubeWorkinprocess.details'],
+                    }
+                })
+                return workInProcessbyWorkOrder;
                 break;
             case "MonitorsHistorybyWorkOrder":
                 break;
