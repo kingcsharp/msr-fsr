@@ -48,10 +48,10 @@
         </carousel>
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
-        [hidden]="this.workOrderTaskInProgress.id !== workOrderTaskToView.id">
+        [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
         <workordertasktimer-wrapper [workOrderTasks]="workOrderTasks"
           [workOrderTaskInProgress]="workOrderTaskInProgress"
-          (workOrderTaskInProgressUpdateParent)="workOrderTaskInProgress = $event"></workordertasktimer-wrapper>
+          (workOrderTaskInProgressUpdateParent)="workOrderTaskTimerDoneButtonPushed($event)"></workordertasktimer-wrapper>
       </div>
       <div class="row">
         <p-tabView class="w-100">

@@ -152,4 +152,9 @@ export class WipdetailsComponent implements OnInit {
     cancelbuttonElement.classList.add('d-none');
   }
 
+  workOrderTaskTimerDoneButtonPushed(workOrderTaskModel: WorkOrderTaskModel){
+    this.workOrderTaskInProgress = workOrderTaskModel;
+    this.workOrderTaskToView = workOrderTaskModel;
+  }
+
 }
