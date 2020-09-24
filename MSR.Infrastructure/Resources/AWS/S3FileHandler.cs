@@ -44,7 +44,7 @@ namespace MSR.Infrastructure.Resources.AWS
                 await Upload(base64File.FileContents,base64File.ContentType, _s3Information.FileBucketName, uniqueName);
             }
 
-            return $"{uniqueName}";
+            return GetURL($"{uniqueName}");
         }
 
         public async Task<string> UploadHelpFile(FileModel file)
@@ -58,7 +58,7 @@ namespace MSR.Infrastructure.Resources.AWS
             return Upload(file.FileContents, _s3Information.FileBucketName, _s3Information.FileBucketName, file.Name);
         }
 
-        public string GetURL(string key, int expiresInSeconds)
+        public string GetURL(string key, int expiresInSeconds = 6000)
         {
             return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest()
             {
