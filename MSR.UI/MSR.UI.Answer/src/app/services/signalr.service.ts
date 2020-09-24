@@ -16,8 +16,16 @@ export class SignalRService implements OnDestroy {
   }
 
   public startConnection = () => {
+    const token : string = localStorage.getItem('token');
+
+    if (token == null || token == '') {
+        return;
+    }
+
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(env.url + '/msg')
+      .withUrl(env.url + '/msg', {
+        accessTokenFactory: () => token
+      })
       .build();
     this.hubConnection
       .start()
