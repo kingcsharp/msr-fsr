@@ -7,7 +7,7 @@ namespace MSR.Answer.API.V1.Models
         [Required]
         public string EntityName { get; set; }
         [Required]
-        public int EntityId { get; set; }
+        public int? EntityId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
