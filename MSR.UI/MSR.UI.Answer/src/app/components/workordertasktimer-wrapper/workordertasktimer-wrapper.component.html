@@ -6,10 +6,10 @@
       </div>
     </div>
     <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn start-step hidden m-2"
-      *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0" (click)="startTask()">
+      *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0" (click)="resumeAndStartTask()">
       <i class="glyphicon glyphicon-step-forward"></i> Start</button>
     <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden m-2"
-      *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds !== 0" (click)="resumeTask()">
+      *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds !== 0" (click)="resumeAndStartTask()">
       <i class="glyphicon glyphicon-step-forward"></i> Resume</button>
     <button class="timer-btn btn btn-warning btn-lg print-btn pull-left m-2"
       *ngIf="workOrderTaskInProgress.taskIsRunning === true" (click)="pauseTask()">

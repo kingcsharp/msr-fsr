@@ -31,49 +31,48 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       id: 2,
       name: 'In Progress'
     } as IStatusModel);
-    this.workOrderTaskInProgress.taskIsRunning = true;
-    this.timerStartTime = new Date();
-
-    this.stepTimer = setInterval( () => {
-
-      let runningSeconds = Math.trunc((new Date().getTime() - this.timerStartTime.getTime())/1000);
-      this.stepSeconds = runningSeconds;
-      this.stepMinutes = Math.floor(this.stepSeconds / 60);
-      this.stepHours= Math.floor(this.stepMinutes / 60);
-
-    },1000);
-  }
-
-  resumeTask(){
-
-    this.workOrderTaskInProgress.taskIsRunning = true;
-    this.stepTimer = setInterval( () => {
-
-      let runningSeconds = Math.trunc((new Date().getTime() - this.timerStartTime.getTime())/1000);
-      this.stepSeconds = runningSeconds;
-      this.stepMinutes = Math.floor(this.stepSeconds / 60);
-      this.stepHours= Math.floor(this.stepMinutes / 60);
-
-    },1000);
+    
+    this.resumeAndStartTask();
 
   }
 
   pauseTask(){
     this.workOrderTaskInProgress.taskIsRunning = false;
+    this.workOrderTaskInProgress.taskRunningSince = null;
     clearInterval(this.stepTimer);
+    //this.saveTaskTimerState();
+  }
+
+  resumeAndStartTask(){
+
+    this.workOrderTaskInProgress.taskIsRunning = true;
+    this.workOrderTaskInProgress.taskRunningSince = new Date();
+    this.stepTimer = setInterval( () => {
+
+      this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime++;
+      this.stepMinutes = Math.floor(this.stepSeconds / 60);
+      this.stepHours= Math.floor(this.stepMinutes / 60);
+
+    },1000);
+    //this.saveTaskTimerState();
+
   }
 
   completeTask(){
+
+    this.workOrderTaskInProgress.taskIsRunning = false;
+    this.workOrderTaskInProgress.taskRunningSince = null;
+    clearInterval(this.stepTimer);
+    this.stepSeconds = 0;
+    this.stepMinutes = 0;
+    this.stepHours = 0;
+    //this.saveTaskTimerState();
+    
     this.workOrderTaskInProgress.statusId = 3;
     this.workOrderTaskInProgress.status = new StatusModel({
       id: 3,
       name: 'Completed'
     } as IStatusModel);
-
-    this.stepSeconds = 0;
-    this.stepMinutes = 0;
-    this.stepHours = 0;
-    clearInterval(this.stepTimer);
 
     let indexOfNextTask = this.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
     if((indexOfNextTask + 1) > this.workOrderTasks.length){
@@ -89,13 +88,15 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.workOrderTaskInProgressUpdateParent.emit(this.workOrderTaskInProgress);
   }
 
-  saveTaskHasStarted(){
+  saveTaskTimerState(){
 
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-      assignedUserId: this.workOrderTaskInProgress.assignedToUser.id,
+      assignedUserId: this.workOrderTaskInProgress.assignedToUser?.id,
       status: this.workOrderTaskInProgress.status.name,
-      taskIsRunning: true,
-      taskRunningSince: new Date(),
+      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+      // TODO: Remove comment when property is added
+      //totalTaskTime:this.workOrderTaskInProgress.totalTaskTime,
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       workOrderTaskId: this.workOrderTaskInProgress.id
      } as IUpdateWorkOrderTaskRequest);
@@ -103,20 +104,6 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       console.log(response);
     }));
 
-  }
-
-  saveTaskHasPausedOrFinished(){
-    let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-      assignedUserId: this.workOrderTaskInProgress.assignedToUser.id,
-      status: this.workOrderTaskInProgress.status.name,
-      taskIsRunning: false,
-      taskRunningSince: new Date(),
-      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
-      workOrderTaskId: this.workOrderTaskInProgress.id
-     } as IUpdateWorkOrderTaskRequest);
-    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
-      console.log(response);
-    }));
   }
 
 }
