@@ -112,12 +112,21 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: cubeFinancial + 'invoicedate', label: 'Invoice Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: cubeFinancial + 'invoicedescription', label: 'Invoice Description', visible: true, type: this.enumColumnType.String }),
                     // new ColumnsSaved({ id: cubeFinancial+'', label: 'Qty', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: cubeFinancial + 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
+                    new ColumnsSaved({ id: cubeFinancial + 'amount', label: 'Amount', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: cubeFinancial + 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: cubeFinancial + 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
                 ];
                 break;
             case "WorkOrdersNotInvoicedbyWorkOrder":
+                return [
+                    new ColumnsSaved({ id: cubeFinancial + 'ponumber', label: 'Customer Purchase', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'wonumber', label: 'Work Order Item', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'msrfsrfacility', label: 'Location', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'kitname', label: 'Product Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'shipdate', label: 'WO Complete Date', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'wtax', label: 'Total', visible: true, type: this.enumColumnType.String })
+                ];
+                break;
                 break;
             case "RevenuebyCustomerbyTimePeriod":
                 break;
@@ -150,7 +159,8 @@ export class ReportCubeService {
             case "CombinedFinancialDatabyWorkOrder":
                 break;
             case "WorkOrdersNotInvoicedbyWorkOrder":
-                break;
+                const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
+                return workOrdersNotInvoicedbyWorkOrder;
             case "RevenuebyCustomerbyTimePeriod":
                 break;
             case "RevenuebyKitbyPart/Kit":
