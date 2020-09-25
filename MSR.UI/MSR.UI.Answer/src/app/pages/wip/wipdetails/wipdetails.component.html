@@ -1,14 +1,14 @@
 <div class="container-flex">
   <div class="row">
-    <div class="col-6">
-      Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: {{parentPart?.serialNumber}}),
-      {{parentPart?.part?.name}}
+    <div class="col-10">
+      <h1>Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: {{parentPart?.serialNumber}}),
+      {{parentPart?.part?.name}}</h1>
     </div>
-    <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+    <div class="col-2" [ngClass]="['d-flex', 'justify-content-end']">
       <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
     </div>
   </div>
-  <div class="row">
+  <div class="row custom-panel">
     <div class="container-fluid">
       <div class="row justify-content-center">
         <div class="col-6">Reports go here</div>
@@ -23,12 +23,14 @@
               </ul>
             </p-tabPanel>
             <p-tabPanel header="Purchase">
-              <ul>
-                <li>Customer: {{ customer.name}}</li>
-                <li>Product: {{ product.name}}</li>
-                <li>Procedure: {{procedure.name}}</li>
-                <li>Purchase Item #: {{purchase.customerPurchaseNumber}} </li>
-              </ul>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-2 text-right">Customer:</div><div class="col-10">{{ customer.name}}</div>
+                  <div class="col-2 text-right">Product:</div><div class="col-10">{{ product.name}}</div>
+                  <div class="col-2 text-right">Procedure:</div><div class="col-10">{{ procedure.name}}</div>
+                  <div class="col-2 text-right">Purchase Item #:</div><div class="col-10">{{ purchase.customerPurchaseNumber}}</div>
+                </div>
+              </div>
             </p-tabPanel>
           </p-tabView>
         </div>
@@ -52,10 +54,6 @@
         <workordertasktimer-wrapper [(workOrderTasks)]="workOrderTasks"  (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
           [(workOrderTaskInProgress)]="workOrderTaskInProgress" [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
         </workordertasktimer-wrapper>
-      </div>
-      <div class="row">
-        {{workOrderTaskInProgress?.procedureStep?.title | json}} :
-        {{workOrderTaskToView?.procedureStep?.title | json}}
       </div>
       <div class="row">
         <div class="w-100 text-center m-2" *ngIf="workOrderTaskToView === undefined">

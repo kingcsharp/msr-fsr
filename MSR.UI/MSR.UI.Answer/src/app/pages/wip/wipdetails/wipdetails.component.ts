@@ -189,7 +189,6 @@ export class WipdetailsComponent implements OnInit {
   }
 
   closeCurrentTask(){
-    console.log("Close currently running Task");
     this.workOrderTaskTimer.completeTask();
   }
 }
