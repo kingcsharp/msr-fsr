@@ -35,7 +35,7 @@
           </p-tabView>
         </div>
       </div>
-      <div class="row justify-content-start">
+      <div class="row justify-content-start mb-2">
         <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [interval]="false"
           [startFromIndex]="0" *ngIf="workOrderTasks !== undefined" [showIndicators]="false">
           <slide *ngFor="let workOrderTask of workOrderTasks; let index=index" [ngClass]="{ 'bg-warning': workOrderTask.status.name === 'Waiting to Start', 
