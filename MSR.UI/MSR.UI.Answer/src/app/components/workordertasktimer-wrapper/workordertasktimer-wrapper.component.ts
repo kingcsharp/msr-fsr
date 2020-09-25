@@ -13,9 +13,11 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   @Input() workOrderTaskInProgress: WorkOrderTaskModel;
   @Input() workOrderTasks: Array<WorkOrderTaskModel>;
-  @Output() workOrderTaskInProgressUpdateParent = new EventEmitter();
+  @Input() workOrderTaskToView: WorkOrderTaskModel;
   @Output() workOrderTasksChange = new EventEmitter<any>();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
+  @Output() workOrderTaskToViewChange = new EventEmitter<any>();
+  @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
 
   stepTimer;
   stepSeconds: number = 0;
@@ -83,9 +85,9 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       this.workOrderTaskInProgress = undefined;
     }else{
       this.workOrderTaskInProgress = this.workOrderTasks[indexOfNextTask + 1];
+      this.workOrderTaskToView = this.workOrderTasks[indexOfNextTask + 1];
+      this.updateWorkOrderTaskToViewAndInProgress.emit(this.workOrderTasks[indexOfNextTask + 1]);
     }
-
-    this.workOrderTaskInProgressUpdateParent.emit(this.workOrderTaskInProgress);
     
   }
 

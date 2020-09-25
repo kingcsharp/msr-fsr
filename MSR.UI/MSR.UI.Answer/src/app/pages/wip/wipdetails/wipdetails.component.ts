@@ -88,10 +88,6 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
-  closeCurrentTask() {
-    alert('Close Current Task');
-  }
-
   cleanData() {
 
     this.workOrderTasks.map(s => {
@@ -104,21 +100,10 @@ export class WipdetailsComponent implements OnInit {
       if (s.procedureStep.roles === undefined) {
         s.procedureStep.roles = new Array<Role>();
 
-        if (s.procedureStep.id % 2) {
-
-          s.procedureStep.roles.push(new Role({
-            id: 1,
-            name: 'Administrator'
-          } as IRole));
-
-        } else {
-
-          s.procedureStep.roles.push(new Role({
-            id: 2,
-            name: 'CEO'
-          } as IRole));
-
-        }
+        s.procedureStep.roles.push(new Role({
+          id: 1,
+          name: 'Administrator'
+        } as IRole));
 
       }
 
@@ -196,20 +181,8 @@ export class WipdetailsComponent implements OnInit {
     cancelbuttonElement.classList.add('d-none');
   }
 
-  workOrderTaskTimerDoneButtonPushed(workOrderTaskModel: WorkOrderTaskModel) {
-
-    if (this.canUserAccessWorkOrderTask(workOrderTaskModel)) {
-      this.workOrderTaskInProgress = workOrderTaskModel;
-      this.workOrderTaskToView = workOrderTaskModel;
-    }else{
-      this.workOrderTaskInProgress = undefined;
-      this.workOrderTaskToView = undefined;
-    }
-
+  updateWorkOrderTaskToViewAndInProgress(workOrderTaskModel: WorkOrderTaskModel){
+    this.workOrderTaskInProgress = workOrderTaskModel;
+    this.workOrderTaskToView = workOrderTaskModel;
   }
-
-  updateWorkOrderTaskInProgress(updatedWorkOrderTaskModel: WorkOrderTaskModel) {
-    console.log(updatedWorkOrderTaskModel);
-  }
-
 }

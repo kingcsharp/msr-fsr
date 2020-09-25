@@ -49,10 +49,13 @@
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
         [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
-        <workordertasktimer-wrapper [(workOrderTasks)]="workOrderTasks"
-          [(workOrderTaskInProgress)]="workOrderTaskInProgress"
-          (workOrderTaskInProgressUpdateParent)="workOrderTaskTimerDoneButtonPushed($event)">
+        <workordertasktimer-wrapper [(workOrderTasks)]="workOrderTasks"  (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
+          [(workOrderTaskInProgress)]="workOrderTaskInProgress" [(workOrderTaskToView)]="workOrderTaskToView">
         </workordertasktimer-wrapper>
+      </div>
+      <div class="row">
+        {{workOrderTaskInProgress?.procedureStep?.title | json}} :
+        {{workOrderTaskToView?.procedureStep?.title | json}}
       </div>
       <div class="row">
         <div class="w-100 text-center m-2" *ngIf="workOrderTaskToView === undefined">
