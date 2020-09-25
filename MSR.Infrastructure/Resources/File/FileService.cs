@@ -65,7 +65,7 @@ namespace MSR.Infrastructure.Resources.Services
 
             foreach (var x in files)
             {
-                var fileURL = _fileDownloader.GetURL(x.FileNam, 6000);
+                var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
                     FileId = x.Id,
@@ -89,7 +89,7 @@ namespace MSR.Infrastructure.Resources.Services
                 {
                     FileId = x.FileId,
                     Name = x.FileObject.Name,
-                    FileURL = "", // Not available here because it requires a call to AWS
+                    FileURL = _fileDownloader.GetURL(x.FileObject.FileURL, 6000),
                     EntityId = x.EntityId,
                     ContentType = x.FileObject.ContentType
                 }).ToList();
