@@ -8,6 +8,7 @@ import { responseHandler } from '../../utils/responseHandler';
 import { ReportModel } from '../../services/api.client.generated';
 import { ColumnsSaved } from '../../../app/models/lib/ColumnsSaved';
 import { EnumColumnType } from '../../../app/models/enums/EnumColumnType';
+import * as moment from 'moment';
 
 @Injectable({
     providedIn: 'root'
@@ -112,7 +113,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: cubeFinancial + 'invoicedate', label: 'Invoice Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: cubeFinancial + 'invoicedescription', label: 'Invoice Description', visible: true, type: this.enumColumnType.String }),
                     // new ColumnsSaved({ id: cubeFinancial+'', label: 'Qty', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: cubeFinancial + 'amount', label: 'Amount', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: cubeFinancial + 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: cubeFinancial + 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
                 ];
@@ -127,12 +128,21 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: cubeFinancial + 'wtax', label: 'Total', visible: true, type: this.enumColumnType.String })
                 ];
                 break;
-                break;
             case "RevenuebyCustomerbyTimePeriod":
+                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
+                ];
                 break;
             case "RevenuebyKitbyPart/Kit":
                 break;
             case "CountofKitsbyPart/Kit":
+                return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Money })
+                ];
                 break;
             default:
                 break;
@@ -162,10 +172,61 @@ export class ReportCubeService {
                 const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
                 return workOrdersNotInvoicedbyWorkOrder;
             case "RevenuebyCustomerbyTimePeriod":
+                let dataDic = {};
+                const resultData = [];
+                data.map(elem => {
+                    const elemKey = moment(elem['CubeFinancial.shipdate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    if (dataDic[elemKey] === undefined) {
+                        dataDic[elemKey] = {
+                            yearMonth: elem['CubeFinancial.shipdate'],
+                            customername: elem['CubeFinancial.customername'],
+                            site: elem['CubeFinancial.msrfsrfacility'],
+                            total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
+                        };
+                    } else {
+                        dataDic[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
+                    }
+                });
+                Object.keys(dataDic).forEach(x => resultData.push(dataDic[x]));
+                return resultData;
                 break;
             case "RevenuebyKitbyPart/Kit":
+                let dataDic3 = {};
+                const resultData2 = [];
+                data.map(elem => {
+                    const elemKey = moment(elem['CubeFinancial.shipdate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    if (dataDic3[elemKey] === undefined) {
+                        dataDic3[elemKey] = {
+                            yearMonth: elem['CubeFinancial.shipdate'],
+                            kitname: elem['CubeFinancial.kitname'],
+                            site: elem['CubeFinancial.msrfsrfacility'],
+                            total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
+                        };
+                    } else {
+                        dataDic3[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
+                    }
+                });
+                Object.keys(dataDic3).forEach(x => resultData2.push(dataDic3[x]));
+                return resultData2;
                 break;
             case "CountofKitsbyPart/Kit":
+                let dataDic2 = {};
+                const countOfKits = [];
+                data.map(elem => {
+                    const elemKey = moment(elem['CubeFinancial.shipdate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    if (dataDic2[elemKey] === undefined) {
+                        dataDic2[elemKey] = {
+                            yearMonth: elem['CubeFinancial.shipdate'],
+                            kitname: elem['CubeFinancial.kitname'],
+                            site: elem['CubeFinancial.msrfsrfacility'],
+                            count: 1
+                        };
+                    } else {
+                        dataDic2[elemKey].total += 1;
+                    }
+                });
+                Object.keys(dataDic2).forEach(x => countOfKits.push(dataDic2[x]));
+                return countOfKits;
                 break;
 
             default:

@@ -54,23 +54,20 @@
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}
     </td>
-    <td container="body" tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id | currency]}}" class="text-capitalize"
+    <td container="body" tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency:'USD':true:'1.2-2'}}" class="text-capitalize"
         *ngIf="colsDataAndSettings.col.type === enumColumnType.Money"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
-        {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}}
+        {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency:'USD':true:'1.2-2'}}
     </td>
-    <td container="body" tooltip="{{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone}}" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
+    <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}
     </td>
-
     <td *ngIf="colsDataAndSettings.col.type === enumColumnType.StringArray" 
     [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <span *ngFor="let item of colsDataAndSettings.colData[colsDataAndSettings.col.id]" class="badge mr-xs badge-secondary">{{item.name}}</span>
     </td>
 </ng-template>
-
-
 <ng-template #rowView let-colsAndSettings='colsAndSettings'>
     <th *ngIf="colsAndSettings.col.dropdownHeader && !colsAndSettings.col.multipleValues"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">
