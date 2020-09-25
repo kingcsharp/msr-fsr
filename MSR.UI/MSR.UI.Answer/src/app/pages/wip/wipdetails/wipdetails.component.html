@@ -13,8 +13,8 @@
       <div class="row justify-content-center">
         <div class="col-6">Reports go here</div>
         <div class="col-6">
-          <p-tabView>
-            <p-tabPanel header="Header 1">
+          <p-tabView class="m-2">
+            <p-tabPanel header="Parts">
               <ul>
                 <li *ngFor="let part of workOrderParts">
                   Customer Part #{{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
@@ -22,7 +22,7 @@
                 </li>
               </ul>
             </p-tabPanel>
-            <p-tabPanel header="Header 2">
+            <p-tabPanel header="Purchase">
               <ul>
                 <li>Customer: {{ customer.name}}</li>
                 <li>Product: {{ product.name}}</li>

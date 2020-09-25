@@ -109,10 +109,10 @@
             Result:
           </label>
           <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.holdIfFails !== undefined">
-            <input type="hidden" id="hiddentargetvalueforparsley"
+            <input type="hidden" id="hiddentargetvalueforparsley{{i}}"
               value="{{workOrderTaskMonitor.procedureStepMonitor.targetValue}}">
             <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
-              data-parsley-trigger="change" data-parsley-equalto="#hiddentargetvalueforparsley"
+              data-parsley-trigger="change" data-parsley-equalto="#hiddentargetvalueforparsley{{i}}"
               [attr.data-parsley-required]="workOrderTaskMonitor.holdIfFails" class="form-control input-transparent"
               tooltip="Result" data-parsley-error-message="Value is not equal to target value"
               *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'EQUAL'">
