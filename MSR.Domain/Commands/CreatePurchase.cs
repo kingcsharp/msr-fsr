@@ -16,5 +16,6 @@ namespace MSR.Domain.Commands
         public string MTTN { get; set; }
         public DateTime DueDate { get; set; }
         public decimal PurchasePrice { get; set; }
+        public bool SerializeIndividually { get; set; }
     }
 }

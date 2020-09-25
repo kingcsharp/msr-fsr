@@ -9800,6 +9800,9 @@
                 "type": "integer",
                 "format": "int32"
               },
+              "serializeIndividually": {
+                "type": "boolean"
+              },
               "status": {
                 "nullable": true,
                 "oneOf": [
@@ -9924,6 +9927,10 @@
         "additionalProperties": true,
         "properties": {
           "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
             "type": "integer",
             "format": "int32"
           },
@@ -10467,20 +10474,11 @@
             "type": "number",
             "description": "PurchasePrice",
             "format": "decimal"
+          },
+          "serializeIndividually": {
+            "type": "boolean",
+            "description": "If true, the quantity will be expanded out on the serialize step"
           }
-        },
-        "example" : {
-          "purchaseOrderId": 1,
-          "purchaseOrderProductId": 2,
-          "customerPurchaseNumber": "PURCHASE1598926122",
-          "locationId": 54,
-          "serialNumber": "SN1598926122",
-          "statusId": 1,
-          "qty": 1,
-          "customerLineNumber": 1,
-          "mttn": "1598926122",
-          "dueDate": "2099-12-31",
-          "purchasePrice": 123.45
         }
       },
       "AuditActionResultOfIEnumerableOfPurchaseOrderView": {
@@ -10670,6 +10668,19 @@
             "type": "number",
             "format": "decimal"
           }
+        },
+        "example" : {
+          "purchaseOrderId": 1,
+          "purchaseOrderProductId": 2,
+          "customerPurchaseNumber": "PURCHASE1598926122",
+          "locationId": 54,
+          "serialNumber": "SN1598926122",
+          "statusId": 1,
+          "qty": 1,
+          "customerLineNumber": 1,
+          "mttn": "1598926122",
+          "dueDate": "2099-12-31",
+          "purchasePrice": 123.45
         }
       },
       "UpdatePurchaseOrderRequest": {

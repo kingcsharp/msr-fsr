@@ -19,6 +19,7 @@ namespace MSR.Domain.Models
         public DateTime DueDate { get; set; }
         public decimal PurchasePrice { get; set; }
         public int StatusId { get; set; }
+        public bool SerializeIndividually { get; set; }
         public virtual StatusModel Status { get; set; }
         public virtual ICollection<WorkOrderModel> WorkOrders { get; set; }
 

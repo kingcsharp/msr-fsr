@@ -75,5 +75,10 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [Required]
         public decimal PurchasePrice { get; set; }
+
+        /// <summary>
+        /// If true, the quantity will be expanded out on the serialize step
+        /// </summary>
+        public bool SerializeIndividually { get; set; }
     }
 }
