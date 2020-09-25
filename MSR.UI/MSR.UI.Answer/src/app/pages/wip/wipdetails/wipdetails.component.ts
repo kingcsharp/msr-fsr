@@ -64,12 +64,6 @@ export class WipdetailsComponent implements OnInit {
         this.workOrderTaskInProgress = this.workOrderTasks[0];
         this.workOrderTaskToView = this.workOrderTasks[0];
 
-        this.workOrderTaskInProgress.statusId = 2;
-        this.workOrderTaskInProgress.status = new StatusModel({
-          id: 2,
-          name: 'In Progress'
-        } as IStatusModel);
-
       }));
 
     });
@@ -161,6 +155,10 @@ export class WipdetailsComponent implements OnInit {
   workOrderTaskTimerDoneButtonPushed(workOrderTaskModel: WorkOrderTaskModel){
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
+  }
+
+  updateWorkOrderTaskInProgress(updatedWorkOrderTaskModel: WorkOrderTaskModel){
+    console.log(updatedWorkOrderTaskModel);
   }
 
 }

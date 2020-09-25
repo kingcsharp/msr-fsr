@@ -49,8 +49,7 @@
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
         [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
-        <workordertasktimer-wrapper [workOrderTasks]="workOrderTasks"
-          [workOrderTaskInProgress]="workOrderTaskInProgress"
+        <workordertasktimer-wrapper [(workOrderTasks)]="workOrderTasks" [(workOrderTaskInProgress)]="workOrderTaskInProgress"
           (workOrderTaskInProgressUpdateParent)="workOrderTaskTimerDoneButtonPushed($event)"></workordertasktimer-wrapper>
       </div>
       <div class="row">

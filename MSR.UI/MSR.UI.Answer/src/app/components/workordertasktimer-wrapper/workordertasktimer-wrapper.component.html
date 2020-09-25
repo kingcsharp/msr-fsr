@@ -6,7 +6,7 @@
       </div>
     </div>
     <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn start-step hidden m-2"
-      *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0" (click)="resumeAndStartTask()">
+      *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0" (click)="startTask()">
       <i class="glyphicon glyphicon-step-forward"></i> Start</button>
     <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden m-2"
       *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds !== 0" (click)="resumeAndStartTask()">

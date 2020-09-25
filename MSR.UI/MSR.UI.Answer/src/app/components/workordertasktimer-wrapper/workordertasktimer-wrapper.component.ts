@@ -14,6 +14,9 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Input() workOrderTaskInProgress: WorkOrderTaskModel;
   @Input() workOrderTasks: Array<WorkOrderTaskModel>;
   @Output() workOrderTaskInProgressUpdateParent = new EventEmitter();
+  @Output() workOrderTasksChange = new EventEmitter<any>();
+  @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
+
   stepTimer;
   stepSeconds: number = 0;
   stepMinutes: number = 0;
@@ -27,6 +30,8 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   startTask(){
 
+    this.workOrderTaskInProgress.status.id = 2;
+    this.workOrderTaskInProgress.status.name = 'In Progress';
     this.resumeAndStartTask();
 
   }
@@ -40,7 +45,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   resumeAndStartTask(){
 
-    if(this.workOrderTaskInProgress.taskRunningSince !== undefined){
+    if(this.workOrderTaskInProgress.taskRunningSince !== undefined && this.workOrderTaskInProgress.taskRunningSince !== null){
       this.workOrderTaskInProgress.totalTaskTime += new Date().getTime() - this.workOrderTaskInProgress.taskRunningSince.getTime()/1000;
     }
 
@@ -78,13 +83,10 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       this.workOrderTaskInProgress = undefined;
     }else{
       this.workOrderTaskInProgress = this.workOrderTasks[indexOfNextTask + 1];
-      this.workOrderTaskInProgress.status = new StatusModel({
-        id: 2,
-        name: 'In Progress'
-      } as IStatusModel);
     }
-    
+
     this.workOrderTaskInProgressUpdateParent.emit(this.workOrderTaskInProgress);
+    
   }
 
   saveTaskTimerState(){
