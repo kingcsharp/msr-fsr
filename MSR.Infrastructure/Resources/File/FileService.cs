@@ -65,7 +65,7 @@ namespace MSR.Infrastructure.Resources.Services
 
             foreach (var x in files)
             {
-                var fileURL = _fileDownloader.GetURL(x.FileNam, 6000);
+                var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
                     FileId = x.Id,
