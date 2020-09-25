@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, WorkOrderPartService,
@@ -11,6 +11,7 @@ import { Globals } from '../../../models/lib/globals';
 import { forkJoin } from "rxjs";
 import { tap } from "rxjs/operators";
 import { SelectItem } from 'primeng/api';
+import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 
 @Component({
   selector: 'app-wipdetails',
@@ -22,6 +23,7 @@ import { SelectItem } from 'primeng/api';
 })
 export class WipdetailsComponent implements OnInit {
 
+  @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
@@ -184,5 +186,10 @@ export class WipdetailsComponent implements OnInit {
   updateWorkOrderTaskToViewAndInProgress(workOrderTaskModel: WorkOrderTaskModel){
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
+  }
+
+  closeCurrentTask(){
+    console.log("Close currently running Task");
+    this.workOrderTaskTimer.completeTask();
   }
 }
