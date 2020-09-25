@@ -79,7 +79,15 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 var purchase = _mapper.Map<Purchase>(command);
                 var created = _unitOfWork.Purchases.Add(purchase);
 
-                // This will call SaveChangesAsync
+                // Call SaveChangesAsync to generate the new ID
+                await _unitOfWork.SaveChangesAsync();
+
+                // CustomerPurchaseNumber is the same as the DB id
+                // In answer 2 it was a sequential integer based on the object
+                // table.  In 3, we just use the purchase Id as a string.
+                purchase.CustomerPurchaseNumber = purchase.Id.ToString();
+
+                // log the transaction
                 await _unitOfWork.LogApprovalTransaction(purchase, purchase.Id);
 
                 // load required navigation fields
