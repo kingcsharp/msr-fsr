@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-10">
       <h1>Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: {{parentPart?.serialNumber}}),
-      {{parentPart?.part?.name}}</h1>
+        {{parentPart?.part?.name}}</h1>
     </div>
     <div class="col-2" [ngClass]="['d-flex', 'justify-content-end']">
       <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
@@ -25,35 +25,47 @@
             <p-tabPanel header="Purchase">
               <div class="container-fluid">
                 <div class="row">
-                  <div class="col-2 text-right">Customer:</div><div class="col-10">{{ customer.name}}</div>
-                  <div class="col-2 text-right">Product:</div><div class="col-10">{{ product.name}}</div>
-                  <div class="col-2 text-right">Procedure:</div><div class="col-10">{{ procedure.name}}</div>
-                  <div class="col-2 text-right">Purchase Item #:</div><div class="col-10">{{ purchase.customerPurchaseNumber}}</div>
+                  <div class="col-2 text-right">Customer:</div>
+                  <div class="col-10">{{ customer.name}}</div>
+                  <div class="col-2 text-right">Product:</div>
+                  <div class="col-10">{{ product.name}}</div>
+                  <div class="col-2 text-right">Procedure:</div>
+                  <div class="col-10">{{ procedure.name}}</div>
+                  <div class="col-2 text-right">Purchase Item #:</div>
+                  <div class="col-10">{{ purchase.customerPurchaseNumber}}</div>
                 </div>
               </div>
             </p-tabPanel>
           </p-tabView>
         </div>
       </div>
-      <div class="row justify-content-start mb-2">
-        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [interval]="false"
-          [startFromIndex]="0" *ngIf="workOrderTasks !== undefined" [showIndicators]="false">
-          <slide *ngFor="let workOrderTask of workOrderTasks; let index=index" [ngClass]="{ 'bg-warning': workOrderTask.status.name === 'Waiting to Start', 
-           'bg-light': workOrderTask.status.name === 'In Progress', 
-           'text-dark': workOrderTask.status.name === 'In Progress',
-           'bg-success': workOrderTask.status.name === 'Completed',
-           'd-flex': true}" (click)="selectTaskForViewing(workOrderTask)">
-            <div [ngClass]="{ 'm-auto': true, 'w-100': true, 'text-center': true}">
-              {{ workOrderTask.procedureStep?.title}}
-            </div>
-          </slide>
-        </carousel>
+      <div class="row mb-2" *ngIf="workOrderModel.workOrderTasks !== undefined">
+          <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true"  [showIndicators]="true"
+            [interval]="false" [startFromIndex]="5" (slideRangeChange)="onSlideRangeChange($event)">
+            <slide *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;" (click)="selectTaskForViewing(workOrderTask)"
+            [ngClass]="{ 'bg-warning': workOrderTask.status?.name === 'Waiting to Start', 
+                  'bg-light': workOrderTask.status?.name === 'In Progress', 
+                  'text-dark': workOrderTask.status?.name === 'In Progress',
+                  'bg-success': workOrderTask.status?.name === 'Completed'}">
+              <div class="carousel-caption">
+                <h6>{{ workOrderTask.procedureStep?.title}}</h6>
+              </div>
+            </slide>
+          </carousel>
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
         [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
-        <workordertasktimer-wrapper [(workOrderTasks)]="workOrderTasks"  (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
-          [(workOrderTaskInProgress)]="workOrderTaskInProgress" [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
-        </workordertasktimer-wrapper>
+        <div class="d-flex col-6 justify-content-start pl-0">
+          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress"
+            (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
+            [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
+          </workordertasktimer-wrapper>
+        </div>
+        <div class="d-flex col-6 justify-content-end pr-0">
+          <button class="btn btn-primary m-2" (click)="addEmPm()"><i class="fas fa-plus-square"></i>EM/PM</button>
+          <button class="btn btn-danger m-2" (click)="addNcr()"><i class="fas fa-plus-square"></i>Add NCR</button>
+        </div>
       </div>
       <div class="row">
         <div class="w-100 text-center m-2" *ngIf="workOrderTaskToView === undefined">
@@ -140,3 +152,37 @@
     </div>
   </div>
 </div>
+<p-dialog header="Add NCR Procedure" [(visible)]="showAddNcrDialog" appendTo="body" [baseZIndex]="100001" [modal]='true'
+  [style]="{width: '50vw'}">
+  <div class="container">
+    <div class="row">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Company</th>
+            <th scope="col">Id</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ncrProcedure of ncrProceduresAvailable; let index=index">
+            <td scope="row">{{ ncrProcedure.name }}</td>
+            <td>{{ ncrProcedure.creatorCompany }}</td>
+            <td>{{ ncrProcedure.id }}</td>
+            <td><button class="btn btn-success m-2" (click)="insertNCR(ncrProcedure)"><i
+                  class="fas fa-link"></i>Insert</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="showAddNcrDialog = false" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

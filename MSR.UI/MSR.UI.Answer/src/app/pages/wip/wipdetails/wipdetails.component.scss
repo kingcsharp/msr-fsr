@@ -5,20 +5,9 @@ slide {
     cursor: pointer;
 }
 
-:host ::ng-deep carousel > div > div > slide > div {
-    height: 100% !important;
-    width: 100% !important;
-    display: flex;
-}
-
 a.carousel-control{
     width:3% !important;
 }
-
-.carousel-item > .item{
-    width: 100%;
-}
-
 .card{
     min-width: 500px;
     min-height: 300px;

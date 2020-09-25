@@ -199,7 +199,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     equipmentMonitor.procedureStepMonitor.faultHandling = 'STOP UNTIL FAULT CLEARED';
     equipmentMonitor.procedureStepMonitor.description = "This is a sample Equipment Monitor"
     this.workOrderMonitorsToView.push(equipmentMonitor);
-/*
+
     let passOrdFailMonitor = new WorkOrderTaskMonitorExtended();
     passOrdFailMonitor.id = 2;
     passOrdFailMonitor.procedureMonitorId = 2;
@@ -312,7 +312,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     equipmentSensorMonitor.procedureStepMonitor.faultHandling = 'STOP UNTIL FAULT CLEARED';
     equipmentSensorMonitor.procedureStepMonitor.description = "This is a sample Equpment Sensor Monitor"
     this.workOrderMonitorsToView.push(equipmentSensorMonitor);
-*/
+
 
   }
 

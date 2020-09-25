@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  ProcedureService, WorkOrderTaskService,
   Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, WorkOrderPartService,
-  WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest, Role, IRole
+  WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest, Role, IRole, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -19,7 +20,7 @@ import { WorkordertasktimerWrapperComponent } from '../../../components/workorde
   styleUrls: ['./wipdetails.component.scss'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
-  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService]
+  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -31,14 +32,40 @@ export class WipdetailsComponent implements OnInit {
   product: Product = new Product();
   purchase: PurchaseModel = new PurchaseModel();
   workOrderParts: Array<WorkOrderPartModel> = new Array<WorkOrderPartModel>()
-  workOrderTasks: Array<WorkOrderTaskModel>;
+  //workOrderTasks: Array<WorkOrderTaskModel>;
   workOrderTaskInProgress: WorkOrderTaskModel;
   workOrderTaskToView: WorkOrderTaskModel;
   menuItems = EnumMenuItem;
   originalSerialNumbers: Array<any> = new Array<any>();
+  showAddNcrDialog: boolean = false;
+  ncrProceduresAvailable: Array<Procedure>;
+
+
+  itemsPerSlide = 3;
+  singleSlideOffset = false;
+  noWrap = false;
+ 
+  slidesChangeMessage = '';
+ 
+  slides = [
+    {image: 'assets/images/nature/1.jpg'},
+    {image: 'assets/images/nature/2.jpg'},
+    {image: 'assets/images/nature/3.jpg'},
+    {image: 'assets/images/nature/4.jpg'},
+    {image: 'assets/images/nature/5.jpg'},
+    {image: 'assets/images/nature/6.jpg'},
+    {image: 'assets/images/nature/7.jpg'},
+    {image: 'assets/images/nature/8.jpg'},
+    {image: 'assets/images/nature/1.jpg'},
+    {image: 'assets/images/nature/2.jpg'}
+  ];
+ 
+  onSlideRangeChange(indexes: number[]): void {
+    this.slidesChangeMessage = `Slides have been switched: ${indexes}`;
+  }
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
-    private workOrderPartService: WorkOrderPartService, public globals: Globals) { }
+    private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, private workOrderTaskService: WorkOrderTaskService) { }
 
   ngOnInit(): void {
 
@@ -46,6 +73,7 @@ export class WipdetailsComponent implements OnInit {
 
       let workOrderId = params['id'] == null ? 0 : Number(params['id']);
       this.workOrdersService.workOrder(workOrderId, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+        response.object[0].workOrderTasks.sort((a,b) => (a.taskStepOrder < b.taskStepOrder) ? 1 : -1);
         this.workOrderModel = response.object[0];
 
         this.workOrderModel.workOrderTasks.map(s => {
@@ -59,7 +87,7 @@ export class WipdetailsComponent implements OnInit {
         });
 
         this.workOrderParts = this.workOrderModel.workOrderParts;
-        this.workOrderTasks = this.workOrderModel.workOrderTasks;
+        //this.workOrderTasks = this.workOrderModel.workOrderTasks;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
         this.customer = this.workOrderModel.product.customer;
@@ -67,9 +95,9 @@ export class WipdetailsComponent implements OnInit {
         this.purchase = this.workOrderModel.purchase;
 
         this.cleanData();
-        if (this.canUserAccessWorkOrderTask(this.workOrderTasks[0])) {
-          this.workOrderTaskInProgress = this.workOrderTasks[0];
-          this.workOrderTaskToView = this.workOrderTasks[0];
+        if (this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
+          this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
+          this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
         }
 
       }));
@@ -92,7 +120,7 @@ export class WipdetailsComponent implements OnInit {
 
   cleanData() {
 
-    this.workOrderTasks.map(s => {
+    this.workOrderModel.workOrderTasks.map(s => {
 
       s.status = new StatusModel({
         id: 11,
@@ -111,12 +139,12 @@ export class WipdetailsComponent implements OnInit {
 
     })
 
-    this.workOrderTasks.map(s => {
+    this.workOrderModel.workOrderTasks.map(s => {
       s.taskIsRunning = false;
     });
 
     let stepNumber = 1;
-    this.workOrderTasks.forEach(workOrderTask => {
+    this.workOrderModel.workOrderTasks.forEach(workOrderTask => {
       workOrderTask.taskStepOrder = stepNumber++;
     });
 
@@ -183,12 +211,89 @@ export class WipdetailsComponent implements OnInit {
     cancelbuttonElement.classList.add('d-none');
   }
 
-  updateWorkOrderTaskToViewAndInProgress(workOrderTaskModel: WorkOrderTaskModel){
+  updateWorkOrderTaskToViewAndInProgress(workOrderTaskModel: WorkOrderTaskModel) {
     this.workOrderTaskInProgress = workOrderTaskModel;
     this.workOrderTaskToView = workOrderTaskModel;
   }
 
-  closeCurrentTask(){
+  closeCurrentTask() {
     this.workOrderTaskTimer.completeTask();
+  }
+
+  addEmPm() {
+
+  }
+
+  addNcr() {
+
+    this.globals.showLoader(true);
+    this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler(response => {
+
+      this.ncrProceduresAvailable = response.object.filter(s => s.procedureType.name === 'Non-Conformation Operation');
+      this.showAddNcrDialog = !this.showAddNcrDialog;
+
+    }));
+
+  }
+
+  insertNCR(ncrProcedure: Procedure) {
+
+    this.procedureService.stepGet(ncrProcedure.id, null, env.apiVersion).subscribe(responseHandler((response) => {
+
+      let procedureSteps = <Array<ProcedureStepModel>>response.object;
+      let indexOfWorkOrderTaskInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+      let numberOfStepsToAdd = procedureSteps.length;
+      let arrayOfPatchWorkOrderTaskRequests = new Array<any>()
+
+      for (let index = indexOfWorkOrderTaskInProgress + 1; index < this.workOrderModel.workOrderTasks?.length; index++) {
+
+        this.workOrderModel.workOrderTasks[index].taskStepOrder = index + numberOfStepsToAdd;
+
+        let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+          procedureId: this.workOrderModel.workOrderTasks[index].procedureStep.procedureId,
+          procedureStepId: this.workOrderModel.workOrderTasks[index].procedureStep.id,
+          workOrderId: this.workOrderModel.id,
+          taskStepOrder: this.workOrderModel.workOrderTasks[index].taskStepOrder
+        } as IUpdateWorkOrderTaskRequest);
+
+        arrayOfPatchWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
+      }
+
+      forkJoin(arrayOfPatchWorkOrderTaskRequests).subscribe(responses => {
+
+        let arrayOfPostWorkOrderTaskRequests = new Array<any>();
+  
+        let newTaskStepOrder = this.workOrderModel.workOrderTasks[indexOfWorkOrderTaskInProgress].taskStepOrder + 1;
+        procedureSteps.forEach(procedureStep => {
+  
+          let createWorkOrderTaskRequest = new CreateWorkOrderTaskRequest({
+            procedureId: procedureStep.procedureId,
+            procedureStepId: procedureStep.id,
+            workOrderId: this.workOrderModel.id,
+            taskStepOrder: newTaskStepOrder++
+          } as ICreateWorkOrderTaskRequest);
+  
+          arrayOfPostWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPost(env.apiVersion, createWorkOrderTaskRequest));
+  
+        });
+  
+        forkJoin(arrayOfPostWorkOrderTaskRequests).subscribe(responses => {
+  
+          responses.map(s => {
+  
+            let sample = s as AuditActionResultOfWorkOrderTaskModel;
+            let newWorkOrderTaskModel = sample.object;
+            this.workOrderModel.workOrderTasks.push(newWorkOrderTaskModel);
+  
+          });
+  
+          this.workOrderModel.workOrderTasks.sort((a,b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
+          this.showAddNcrDialog = !this.showAddNcrDialog;
+        });
+
+      });
+
+    }))
+
   }
 }
