@@ -52,6 +52,7 @@ export class AdhocComponent implements OnInit {
     }
 
     getReportData() {
+        this.globals.showLoader(true);
         this.reportService.report(env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo = response.object.filter(x => x.id === parseInt(this.reportId))[0];
@@ -68,8 +69,10 @@ export class AdhocComponent implements OnInit {
     }
 
     getCubeReport(reportInfo: ReportModel) {
+        this.globals.showLoader(true);
         this.reportCubeService.getReport(reportInfo).then((resp) => {
            this.data = resp;
+           this.globals.showLoader(false);
         });
     }
 }

@@ -124,14 +124,30 @@ export class MultiselectWrapperComponent implements OnInit {
           });
         }
       } else {
-        this.currentOptions.push({
-          label: this.getLabel(item),
-          value: this.getValue(item)
-        });
+        const labels = this.getLabel(item);
+        const values = this.getValue(item);
+        if (Array.isArray(labels) && Array.isArray(values)) {
+          for (let index = 0; index < labels.length; index++) {
+            this.insertItemIfNotRepeated(this.currentOptions, labels[index], values[index]);
+          }
+        } else {
+          this.insertItemIfNotRepeated(this.currentOptions, labels, values);
+        }
       }
     });
 
     // this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
+  }
+
+  insertItemIfNotRepeated(currentOptions: any, label: any, val: any) {
+    const elemToAdd = {
+      label: label,
+      value: val
+    };
+    const idx = currentOptions.findIndex(u => u.label === elemToAdd.label && u.value === elemToAdd.value);
+    if (idx === -1) {
+      currentOptions.push(elemToAdd);
+    }
   }
 
   getLabel(item) {
