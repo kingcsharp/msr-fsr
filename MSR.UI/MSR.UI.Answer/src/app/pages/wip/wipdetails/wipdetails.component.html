@@ -49,11 +49,16 @@
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
         [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
-        <workordertasktimer-wrapper [(workOrderTasks)]="workOrderTasks" [(workOrderTaskInProgress)]="workOrderTaskInProgress"
-          (workOrderTaskInProgressUpdateParent)="workOrderTaskTimerDoneButtonPushed($event)"></workordertasktimer-wrapper>
+        <workordertasktimer-wrapper [(workOrderTasks)]="workOrderTasks"
+          [(workOrderTaskInProgress)]="workOrderTaskInProgress"
+          (workOrderTaskInProgressUpdateParent)="workOrderTaskTimerDoneButtonPushed($event)">
+        </workordertasktimer-wrapper>
       </div>
       <div class="row">
-        <p-tabView class="w-100">
+        <div class="w-100 text-center m-2" *ngIf="workOrderTaskToView === undefined">
+          <h3>No Task to Display</h3>
+        </div>
+        <p-tabView class="w-100" *ngIf="workOrderTaskToView !== undefined">
           <p-tabPanel header="Task Description">
             <div class="row">
               <div class="container-fluid description-container m-2">
@@ -90,22 +95,25 @@
                 <table class="table">
                   <thead class="thead-dark">
                     <tr>
-                      <th scope="col">Part</th>
-                      <th scope="col">Cycle Count</th>
-                      <th scope="col">Serial Number</th>
+                      <th>Part</th>
+                      <th>Cycle Count</th>
+                      <th>Serial Number</th>
                     </tr>
                   </thead>
                   <tbody
                     *ngIf="workOrderModel.workOrderParts !== undefined && workOrderModel.workOrderParts.length !== 0">
                     <tr *ngFor="let workOrderPart of workOrderModel.workOrderParts; let index=index">
-                      <th scope="row">{{workOrderPart.part.name}}</th>
+                      <td>{{workOrderPart.part.name}}</td>
                       <td>{{workOrderPart.cycleCount}}</td>
-                      <td>
-                        <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber" 
-                          class="form-control input-transparent" tooltip="Serial Number" disabled>
-                          <button id="changebutton{{index}}" class="btn btn-warning" (click)="changeSerialNumber(index, workOrderPart.serialNumber, workOrderPart.id)">Change</button>
-                          <button id="submitbutton{{index}}" class="btn btn-success d-none" (click)="submitSerialNumber(index, workOrderPart.id)">Submit</button>
-                          <button id="cancelbutton{{index}}" class="btn btn-danger d-none" (click)="cancelSerialNumber(index, workOrderPart.id)">Cancel</button>
+                      <td class="d-flex serialinput-td">
+                        <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber"
+                          class="form-control input-transparent m-2" tooltip="Serial Number" disabled>
+                        <button id="changebutton{{index}}" class="btn btn-warning m-2"
+                          (click)="changeSerialNumber(index, workOrderPart.serialNumber, workOrderPart.id)">Change</button>
+                        <button id="submitbutton{{index}}" class="btn btn-success d-none m-2"
+                          (click)="submitSerialNumber(index, workOrderPart.id)">Submit</button>
+                        <button id="cancelbutton{{index}}" class="btn btn-danger d-none m-2"
+                          (click)="cancelSerialNumber(index, workOrderPart.id)">Cancel</button>
                       </td>
                     </tr>
                   </tbody>

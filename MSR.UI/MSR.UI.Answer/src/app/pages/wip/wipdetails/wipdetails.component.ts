@@ -1,12 +1,15 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, WorkOrderPartService,
-  WorkOrderModel, WorkOrderPartModel, EnumMenuItem,WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest } from '../../../services/api.client.generated';
+import {
+  Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, WorkOrderPartService,
+  WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest, Role, IRole
+} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Product } from '../../ecommerce/products.service';
-import {forkJoin} from "rxjs";
-import {tap} from "rxjs/operators";
+import { Globals } from '../../../models/lib/globals';
+import { forkJoin } from "rxjs";
+import { tap } from "rxjs/operators";
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -32,22 +35,23 @@ export class WipdetailsComponent implements OnInit {
   menuItems = EnumMenuItem;
   originalSerialNumbers: Array<any> = new Array<any>();
 
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService, private workOrderPartService:WorkOrderPartService) { }
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
+    private workOrderPartService: WorkOrderPartService, public globals: Globals) { }
 
   ngOnInit(): void {
 
     this.route.params.subscribe(params => {
 
       let workOrderId = params['id'] == null ? 0 : Number(params['id']);
-      this.workOrdersService.workOrder(workOrderId,null,null,null,env.apiVersion).subscribe(responseHandler(response => {
+      this.workOrdersService.workOrder(workOrderId, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
         this.workOrderModel = response.object[0];
 
         this.workOrderModel.workOrderTasks.map(s => {
-          if(s.referenceFiles === undefined){
+          if (s.referenceFiles === undefined) {
             s.referenceFiles = new Array<FileModel>();
           }
 
-          if(s.procedureStep.referenceFiles === undefined){
+          if (s.procedureStep.referenceFiles === undefined) {
             s.procedureStep.referenceFiles = new Array<FileModel>();
           }
         });
@@ -61,8 +65,10 @@ export class WipdetailsComponent implements OnInit {
         this.purchase = this.workOrderModel.purchase;
 
         this.cleanData();
-        this.workOrderTaskInProgress = this.workOrderTasks[0];
-        this.workOrderTaskToView = this.workOrderTasks[0];
+        if (this.canUserAccessWorkOrderTask(this.workOrderTasks[0])) {
+          this.workOrderTaskInProgress = this.workOrderTasks[0];
+          this.workOrderTaskToView = this.workOrderTasks[0];
+        }
 
       }));
 
@@ -70,22 +76,51 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
-  selectTaskForViewing(workOrderTask: WorkOrderTaskModel){
-    this.workOrderTaskToView = workOrderTask;
+  canUserAccessWorkOrderTask(workOrderTask: WorkOrderTaskModel) {
+    return workOrderTask.procedureStep?.roles?.map(s => s.name).some(s => this.globals.getCurrentUser().roles?.map(s => s.name).includes(s));
   }
 
-  closeCurrentTask(){
+  selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
+
+    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+      this.workOrderTaskToView = workOrderTask;
+    }
+
+  }
+
+  closeCurrentTask() {
     alert('Close Current Task');
   }
 
-  cleanData(){
+  cleanData() {
 
     this.workOrderTasks.map(s => {
 
       s.status = new StatusModel({
         id: 11,
-        name: 'Waiting to Start' 
+        name: 'Waiting to Start'
       });
+
+      if (s.procedureStep.roles === undefined) {
+        s.procedureStep.roles = new Array<Role>();
+
+        if (s.procedureStep.id % 2) {
+
+          s.procedureStep.roles.push(new Role({
+            id: 1,
+            name: 'Administrator'
+          } as IRole));
+
+        } else {
+
+          s.procedureStep.roles.push(new Role({
+            id: 2,
+            name: 'CEO'
+          } as IRole));
+
+        }
+
+      }
 
     })
 
@@ -100,14 +135,14 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
-  changeSerialNumber(index, serialNumber, partId){
+  changeSerialNumber(index, serialNumber, partId) {
 
-    if(this.originalSerialNumbers.find(s => s.id === partId) === undefined){
+    if (this.originalSerialNumbers.find(s => s.id === partId) === undefined) {
       this.originalSerialNumbers.push(({
         id: partId, serialNumber: serialNumber
       }));
     }
-    
+
     let inputElement = <HTMLInputElement>document.getElementById('serialnumber' + index);
     inputElement.disabled = false;
 
@@ -121,21 +156,30 @@ export class WipdetailsComponent implements OnInit {
     cancelbuttonElement.classList.remove('d-none');
   }
 
-  submitSerialNumber(index, partId){
-    
+  submitSerialNumber(index, partId) {
+
     let updateWorkOrderRequest = new UpdateWorkOrderPartRequest({
       workOrderPartId: partId,
       serialNumber: this.workOrderModel.workOrderParts.find(s => s.id === partId).serialNumber
     } as IUpdateWorkOrderPartRequest);
 
-    this.workOrderPartService.workOrderPart(env.apiVersion,updateWorkOrderRequest).subscribe(responseHandler(response => {
+    this.globals.showLoader(true);
+    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(responseHandler(response => {
 
       this.originalSerialNumbers.find(s => s.id === partId).serialNumber = this.workOrderModel.workOrderParts.find(s => s.id === partId).serialNumber;
 
+      let changebuttonElement = <HTMLInputElement>document.getElementById('changebutton' + index);
+      changebuttonElement.classList.remove('d-none');
+
+      let submitbuttonElement = <HTMLInputElement>document.getElementById('submitbutton' + index);
+      submitbuttonElement.classList.add('d-none');
+
+      let cancelbuttonElement = <HTMLInputElement>document.getElementById('cancelbutton' + index);
+      cancelbuttonElement.classList.add('d-none');
     }));
   }
 
-  cancelSerialNumber(index, partId){
+  cancelSerialNumber(index, partId) {
 
     let originalSerialNumber = this.originalSerialNumbers.find(s => s.id === partId)
     let inputElement = <HTMLInputElement>document.getElementById('serialnumber' + index);
@@ -152,12 +196,19 @@ export class WipdetailsComponent implements OnInit {
     cancelbuttonElement.classList.add('d-none');
   }
 
-  workOrderTaskTimerDoneButtonPushed(workOrderTaskModel: WorkOrderTaskModel){
-    this.workOrderTaskInProgress = workOrderTaskModel;
-    this.workOrderTaskToView = workOrderTaskModel;
+  workOrderTaskTimerDoneButtonPushed(workOrderTaskModel: WorkOrderTaskModel) {
+
+    if (this.canUserAccessWorkOrderTask(workOrderTaskModel)) {
+      this.workOrderTaskInProgress = workOrderTaskModel;
+      this.workOrderTaskToView = workOrderTaskModel;
+    }else{
+      this.workOrderTaskInProgress = undefined;
+      this.workOrderTaskToView = undefined;
+    }
+
   }
 
-  updateWorkOrderTaskInProgress(updatedWorkOrderTaskModel: WorkOrderTaskModel){
+  updateWorkOrderTaskInProgress(updatedWorkOrderTaskModel: WorkOrderTaskModel) {
     console.log(updatedWorkOrderTaskModel);
   }
 

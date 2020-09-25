@@ -54,3 +54,11 @@ a.carousel-control{
     background-color: #353D48;
     border-color: #32383e;
 }
+
+.serialinput-td{
+    min-width: 400px;
+}
+
+.serialinput-td > input{
+    max-width: 300px;
+}
