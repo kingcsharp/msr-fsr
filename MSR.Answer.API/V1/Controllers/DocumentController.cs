@@ -22,9 +22,6 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-#if DEBUG
-    [Microsoft.AspNetCore.Authorization.AllowAnonymous]
-#endif
     public class DocumentController : BaseApiController
     {
         private const string privilegeApiName = "Documents";
