@@ -13788,6 +13788,7 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
     dueDate?: Date;
     purchasePrice?: number;
     statusId?: number;
+    serializeIndividually?: boolean;
     status?: StatusModel | undefined;
     workOrders?: WorkOrderModel[] | undefined;
     location?: LocationModel | undefined;
@@ -13813,6 +13814,7 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.purchasePrice = _data["purchasePrice"];
             this.statusId = _data["statusId"];
+            this.serializeIndividually = _data["serializeIndividually"];
             this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
             if (Array.isArray(_data["workOrders"])) {
                 this.workOrders = [] as any;
@@ -13846,6 +13848,7 @@ export class PurchaseModel extends CreatableModel implements IPurchaseModel {
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
         data["statusId"] = this.statusId;
+        data["serializeIndividually"] = this.serializeIndividually;
         data["status"] = this.status ? this.status.toJSON() : <any>undefined;
         if (Array.isArray(this.workOrders)) {
             data["workOrders"] = [];
@@ -13873,6 +13876,7 @@ export interface IPurchaseModel extends ICreatableModel {
     dueDate?: Date;
     purchasePrice?: number;
     statusId?: number;
+    serializeIndividually?: boolean;
     status?: StatusModel | undefined;
     workOrders?: WorkOrderModel[] | undefined;
     location?: LocationModel | undefined;
@@ -13959,6 +13963,7 @@ export interface IPurchaseOrderModel extends ICreatableModel {
 
 export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     id?: number;
+    productId?: number;
     name?: string | undefined;
     totalSalePrice?: number;
 
@@ -13974,6 +13979,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.productId = _data["productId"];
             this.name = _data["name"];
             this.totalSalePrice = _data["totalSalePrice"];
         }
@@ -13989,6 +13995,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["productId"] = this.productId;
         data["name"] = this.name;
         data["totalSalePrice"] = this.totalSalePrice;
         return data; 
@@ -13997,6 +14004,7 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
 
 export interface IPurchaseOrderProductView {
     id?: number;
+    productId?: number;
     name?: string | undefined;
     totalSalePrice?: number;
 }
@@ -14595,6 +14603,8 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     dueDate!: Date;
     /** PurchasePrice */
     purchasePrice!: number;
+    /** If true, the quantity will be expanded out on the serialize step */
+    serializeIndividually?: boolean;
 
     constructor(data?: ICreatePurchaseRequest) {
         if (data) {
@@ -14618,6 +14628,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
             this.mttn = _data["mttn"];
             this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
             this.purchasePrice = _data["purchasePrice"];
+            this.serializeIndividually = _data["serializeIndividually"];
         }
     }
 
@@ -14641,6 +14652,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
         data["mttn"] = this.mttn;
         data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
         data["purchasePrice"] = this.purchasePrice;
+        data["serializeIndividually"] = this.serializeIndividually;
         return data; 
     }
 }
@@ -14669,6 +14681,8 @@ export interface ICreatePurchaseRequest {
     dueDate: Date;
     /** PurchasePrice */
     purchasePrice: number;
+    /** If true, the quantity will be expanded out on the serialize step */
+    serializeIndividually?: boolean;
 }
 
 /** Base class for an API call with a typed result */

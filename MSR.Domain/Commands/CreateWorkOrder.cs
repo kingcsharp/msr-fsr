@@ -14,6 +14,8 @@ namespace MSR.Domain.Commands
         public DateTime ScheduledEndDate { get; set; }
         public bool? HasNCR { get; set; }
         public int? LocationId { get; set; }
+        public int Qty { get; set; }
+        public bool SerializeIndividually { get; set; }
         public virtual ICollection<WorkOrderPartModel> WorkOrderParts { get; set; }
         public virtual ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
 

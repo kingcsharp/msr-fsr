@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.Configuration.Conventions;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -93,6 +92,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.Procedure)
                 .Include(x => x.Purchase)
                 .ThenInclude(y => y.PurchaseOrder)
+                .ThenInclude(y => y.Customer)
                 .Include(x => x.Location)
                 .ToListAsync();
 
@@ -124,18 +124,35 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<Domain.Models.WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-            WorkOrderModel ret;
+            WorkOrderModel ret = null;
 
-            if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
+            if (false && !CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
                 throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
             }
 
+            if (command.ScheduledStartDate == null || command.ScheduledStartDate.Ticks == 0)
+            {
+                command.ScheduledStartDate = DateTime.Now;
+            }
+
             WorkOrder workorder = _mapper.Map<WorkOrder>(command);
 
-            _unitOfWork.WorkOrders.Add(workorder);
+            var created = _unitOfWork.WorkOrders.Add(workorder);
 
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
+
+            // load required navigation fields
+            created.Context.Entry(workorder)
+                .Collection(x => x.WorkOrderParts).Load();
+            created.Context.Entry(workorder)
+                .Collection(x => x.WorkOrderTasks).Load();
+            created.Context.Entry(workorder)
+                .Reference(x => x.Purchase).Load();
+            created.Context.Entry(workorder.Purchase)
+                .Reference(x => x.PurchaseOrder).Load();
+            created.Context.Entry(workorder.Purchase.PurchaseOrder)
+                .Reference(x => x.Customer).Load();
 
             ret = DetachBackPointers(
                 _mapper.Map<Domain.Models.WorkOrderModel>(workorder)
@@ -190,6 +207,64 @@ namespace MSR.Infrastructure.Resources.Services.Part
             await _unitOfWork.LogApprovalTransaction(current, current.Id);
 
             return true;
+        }
+
+        /// <summary>
+        /// Create the EF objects based on the Procedure, ProcedureStep, and
+        /// ProcedureStepMonitor definitions in the database.
+        /// This does not do the insert.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public async Task<ICollection<WorkOrderTaskModel>> GetWorkOrderTasksAsync(CreateWorkOrder command)
+        {
+            var product = await _unitOfWork.Products.Query()
+                .FirstAsync(x => x.Id == command.ProductId);
+            List<ProcedureStep> steps = await _unitOfWork.ProcedureSteps.Query()
+                .Where(x => x.ProcedureId == product.ProcedureId)
+                .Include(x => x.ProcedureStepMonitors)
+                .OrderBy(x => x.PrintOrder)
+                .ToListAsync();
+
+            List<WorkOrderTask> tasks = new List<WorkOrderTask>();
+            int taskStepOrder = 10;
+            foreach (var step in steps)
+            {
+                var wot = _mapper.Map<WorkOrderTask>(step);
+                wot.WorkOrderTaskMonitors = step.ProcedureStepMonitors
+                    .Select(x => _mapper.Map<WorkOrderTaskMonitor>(x))
+                    .ToList();
+                wot.TaskStepOrder = taskStepOrder;
+                tasks.Add(wot);
+                taskStepOrder += 10;
+            }
+
+            return tasks.Select(x =>
+                _mapper.Map<WorkOrderTaskModel>(x))
+                .ToList();
+        }
+
+        public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
+        {
+            var product = await _unitOfWork.Products.Query()
+                .FirstAsync(x => x.Id == command.ProductId);
+            int count = 1;
+            int quantity = command.Qty;
+
+            if (command.SerializeIndividually && command.Qty > 1) {
+                count = command.Qty;
+                quantity = 1;
+            }
+
+            List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
+            for (int i = 0; i < count; i++) {
+                var n = new WorkOrderPartModel() {
+                    PartId = product.PartId
+                };
+                parts.Add(n);
+            }
+
+            return parts;
         }
 
         public async Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command)
@@ -329,7 +404,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
                 // WorkOrderItemNumber
-                sum.WorkOrderItemNumber = WorkOrderService.GetWorkOrderItemNumber(m);
+                sum.WorkOrderItemNumber = IWorkOrderService.GetWorkOrderItemNumber(m);
 
                 // ProcedureName
                 var firstProc =
@@ -443,7 +518,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 wosum.WorkOrderId = m.Id.GetValueOrDefault();
 
                 // WorkOrderItemNumber
-                wosum.WorkOrderItemNumber = WorkOrderService.GetWorkOrderItemNumber(m);
+                wosum.WorkOrderItemNumber = IWorkOrderService.GetWorkOrderItemNumber(m);
 
                 // PurchaseOrderLineNumber
                 wosum.PurchaseOrderLineNumber = m.Purchase.CustomerLineNumber.ToString();
@@ -560,21 +635,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return status;
         }
 
-        public static string GetWorkOrderItemNumber(WorkOrderModel model)
-        {
-            string customerName = model.Purchase?.PurchaseOrder?.Customer?.Name;
-            if (string.IsNullOrEmpty(customerName))
-            {
-                customerName = "";
-            }
-            string customerPNum = model.Purchase?.CustomerPurchaseNumber;
-            if (string.IsNullOrEmpty(customerPNum))
-            {
-                customerPNum = "";
-            }
-            return $"{customerName}-{customerPNum}";
-        }
-
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)
         {
             var model = _mapper.Map<WorkOrderModel>(wom);
@@ -588,12 +648,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 model.Product.WorkOrders = null;
             }
+
             foreach (var wop in model.WorkOrderParts)
             {
                 wop.WorkOrder = null;
                 wop.Parent = null;
                 wop.Children = null;
             }
+
             foreach (var wot in model.WorkOrderTasks)
             {
                 wot.WorkOrder = null;

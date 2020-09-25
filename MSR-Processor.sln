@@ -1,0 +1,107 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Answer.API", "MSR.Answer.API\MSR.Answer.API.csproj", "{92CF4545-EBFE-416B-B25E-364FD35E4CDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain", "MSR.Domain\MSR.Domain.csproj", "{BF34D0FD-A252-4EDB-8E99-744B97B61151}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Application", "MSR.Application\MSR.Application.csproj", "{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Infrastructure", "MSR.Infrastructure\MSR.Infrastructure.csproj", "{999D6BF0-64C4-40E1-8784-B8BADD281DCC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FBB737F4-D6BE-4A4B-BAA7-D07A5ACA6D9F}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
+		ecs-params.yml = ecs-params.yml
+		Jenkinsfile.groovy = Jenkinsfile.groovy
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{56962048-023D-4836-A5A0-BC378A2F584E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ADD0668A-B229-4E9D-A874-D32B8E9B86D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Application.Tests", "MSR.Application.Tests\MSR.Application.Tests.csproj", "{8CAF3128-17DF-4464-910F-BB172DC89DF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Infrastructure.Tests", "MSR.Infrastructure.Tests\MSR.Infrastructure.Tests.csproj", "{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostMan", "PostMan", "{A968AC91-CD80-43EA-8064-32B0B64F243E}"
+	ProjectSection(SolutionItems) = preProject
+		PostMan.Tests\Answer3.0 LocalHost.postman_environment.json = PostMan.Tests\Answer3.0 LocalHost.postman_environment.json
+		PostMan.Tests\Answer3.0.postman_collection.json = PostMan.Tests\Answer3.0.postman_collection.json
+	EndProjectSection
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MSR.Database.Answer3", "MSR.Database.Answer3\MSR.Database.Answer3.sqlproj", "{47B52A08-DCE7-40D1-A9CB-489DF60B306A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{8AFDD297-93F0-48CF-A6AB-EA4733938228}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain.Tests", "MSR.Domain.Tests\MSR.Domain.Tests.csproj", "{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Answer.Processor", "MSR.Answer.Processor\MSR.Answer.Processor.csproj", "{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92CF4545-EBFE-416B-B25E-364FD35E4CDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF34D0FD-A252-4EDB-8E99-744B97B61151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF34D0FD-A252-4EDB-8E99-744B97B61151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF34D0FD-A252-4EDB-8E99-744B97B61151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF34D0FD-A252-4EDB-8E99-744B97B61151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{999D6BF0-64C4-40E1-8784-B8BADD281DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{999D6BF0-64C4-40E1-8784-B8BADD281DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{999D6BF0-64C4-40E1-8784-B8BADD281DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{999D6BF0-64C4-40E1-8784-B8BADD281DCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CAF3128-17DF-4464-910F-BB172DC89DF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CAF3128-17DF-4464-910F-BB172DC89DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CAF3128-17DF-4464-910F-BB172DC89DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CAF3128-17DF-4464-910F-BB172DC89DF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{92CF4545-EBFE-416B-B25E-364FD35E4CDC} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
+		{BF34D0FD-A252-4EDB-8E99-744B97B61151} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
+		{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
+		{999D6BF0-64C4-40E1-8784-B8BADD281DCC} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
+		{8CAF3128-17DF-4464-910F-BB172DC89DF4} = {56962048-023D-4836-A5A0-BC378A2F584E}
+		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40} = {56962048-023D-4836-A5A0-BC378A2F584E}
+		{A968AC91-CD80-43EA-8064-32B0B64F243E} = {56962048-023D-4836-A5A0-BC378A2F584E}
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A} = {8AFDD297-93F0-48CF-A6AB-EA4733938228}
+		{CA5E4178-E8C9-46B3-A53D-BEABD980FC51} = {56962048-023D-4836-A5A0-BC378A2F584E}
+		{DB03C456-DAB8-4CA3-B04B-6E8E754A47FE} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CBCD06A9-C49D-49C9-A0C1-821E3D256A46}
+	EndGlobalSection
+EndGlobal
