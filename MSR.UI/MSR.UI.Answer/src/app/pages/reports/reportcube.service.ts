@@ -37,6 +37,7 @@ export class ReportCubeService {
         const cubeWorkinprocess = 'CubeWorkinprocess.';
         const cubeWorkorderparts = 'CubeWorkorderparts.';
         const cubePartsmonitors = 'CubePartsmonitors.';
+        const cubeFinancial = 'CubeFinancial.'
         switch (reportInfo.name.replace(/ /g, '') + reportInfo.subtitle.replace(/ /g, '')) {
             case 'WorkOrderPartsHistorybyPartNumber':
                 return [
@@ -94,6 +95,27 @@ export class ReportCubeService {
                 ];
                 break;
             case "CombinedFinancialDatabyWorkOrder":
+                return [
+                    new ColumnsSaved({ id: cubeFinancial + 'wonumber', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: cubeFinancial + 'wocreationdate', label: 'Creation Date', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: cubeFinancial + 'shipdate', label: 'Ship Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: cubeFinancial + 'msrfsrfacility', label: 'Facility', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'customername', label: 'Customer', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'customerpartnumber', label: 'Customer Part #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'specificationnumber', label: 'Specification', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'serial', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
+                    // new ColumnsSaved({ id: cubeFinancial+'', label: 'Invoice #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'invoicedate', label: 'Invoice Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: cubeFinancial + 'invoicedescription', label: 'Invoice Description', visible: true, type: this.enumColumnType.String }),
+                    // new ColumnsSaved({ id: cubeFinancial+'', label: 'Qty', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
+                    new ColumnsSaved({ id: cubeFinancial + 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
+                ];
                 break;
             case "WorkOrdersNotInvoicedbyWorkOrder":
                 break;

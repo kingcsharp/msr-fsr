@@ -49,12 +49,17 @@
 </widget>
 
 <ng-template #rowViewData let-colsDataAndSettings='colsDataAndSettings'>
-    <td class="text-capitalize"
+    <td container="body" tooltip="{{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}" class="text-capitalize"
         *ngIf="colsDataAndSettings.col.type === enumColumnType.String || colsDataAndSettings.col.type === enumColumnType.Number"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}
     </td>
-    <td class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
+    <td container="body" tooltip="{{colsDataAndSettings.colData[colsDataAndSettings.col.id | currency]}}" class="text-capitalize"
+        *ngIf="colsDataAndSettings.col.type === enumColumnType.Money"
+        [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
+        {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | currency}}
+    </td>
+    <td container="body" tooltip="{{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone}}" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}
     </td>
