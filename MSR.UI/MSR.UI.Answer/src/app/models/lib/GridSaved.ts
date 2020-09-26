@@ -4,11 +4,13 @@ export interface IGridSaved {
     columnsSaved?: ColumnsSaved[] | undefined;
     storageId?: string | undefined;
     version?: string | undefined;
+    visibleColumns?: number | undefined;
 }
 export class GridSaved implements IGridSaved {
     columnsSaved?: ColumnsSaved[] | undefined;
     version?: string | undefined;
     storageId?: string | undefined;
+    visibleColumns?: number | undefined;
 
     constructor(data?: IGridSaved) {
         if (data) {
@@ -17,6 +19,7 @@ export class GridSaved implements IGridSaved {
                     (<any>this)[property] = (<any>data)[property];
                 }
             }
+            this.visibleColumns = this.columnsSaved.filter(x=>x.visible).length;
         }
     }
 
@@ -31,11 +34,14 @@ export class GridSaved implements IGridSaved {
         if (_data) {
             this.storageId = _data['storageId'];
             this.version = _data['version'];
+
             if (Array.isArray(_data["columnsSaved"])) {
                 this.columnsSaved = [] as any;
-                for (let item of _data["columnsSaved"])
+                for (let item of _data["columnsSaved"]) {
                     this.columnsSaved!.push(ColumnsSaved.fromJS(item));
+                }
             }
+            this.visibleColumns = this.columnsSaved.filter(x=>x.visible).length;
         }
     }
 
@@ -43,6 +49,8 @@ export class GridSaved implements IGridSaved {
         data = typeof data === 'object' ? data : {};
         data['storageId'] = this.storageId;
         data['version'] = this.version;
+        data['visibleColumns'] = this.visibleColumns;
+
         if (Array.isArray(this.columnsSaved)) {
             data["columnsSaved"] = [];
             for (let item of this.columnsSaved)

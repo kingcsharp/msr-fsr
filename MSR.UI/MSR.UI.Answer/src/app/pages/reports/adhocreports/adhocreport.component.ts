@@ -34,7 +34,7 @@ export class AdhocComponent implements OnInit {
     gridSaved: GridSaved;
     reportId: string;
     reportInfo: ReportModel;
-    showReport:boolean;
+    showReport: boolean;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
@@ -56,7 +56,6 @@ export class AdhocComponent implements OnInit {
         this.reportService.report(env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo = response.object.filter(x => x.id === parseInt(this.reportId))[0];
-
                 this.gridSaved = new GridSaved({
                     columnsSaved: this.reportCubeService.getReportColumns(this.reportInfo),
                     storageId: this.reportInfo.name.replace(/ /g, '') + this.reportInfo.subtitle.replace(/ /g, '') + this.elem.nativeElement.tagName.toLowerCase(),
@@ -71,8 +70,8 @@ export class AdhocComponent implements OnInit {
     getCubeReport(reportInfo: ReportModel) {
         this.globals.showLoader(true);
         this.reportCubeService.getReport(reportInfo).then((resp) => {
-           this.data = resp;
-           this.globals.showLoader(false);
+            this.data = resp;
+            this.globals.showLoader(false);
         });
     }
 }

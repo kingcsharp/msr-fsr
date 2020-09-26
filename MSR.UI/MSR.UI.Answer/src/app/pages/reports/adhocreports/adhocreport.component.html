@@ -13,11 +13,11 @@
             </div>
             <div class="pull-right">
                 <grid-options [(defaultColumns)]="gridSaved.columnsSaved" [gridStorageId]="gridSaved.storageId"
-                    [ptable]="dt" [gridVersion]="gridSaved.version" data-cy="usergrid-options">
+                    [ptable]="dt" [gridVersion]="gridSaved.version" data-cy="usergrid-options" [(visibleColumnsCount)]="gridSaved.visibleColumns">
                 </grid-options>
             </div>
         </ng-template>
-        <ng-template pTemplate="header">
+        <ng-template pTemplate="header"> 
             <tr>
                 <th *ngFor="let col of gridSaved.columnsSaved" [hidden]="!col.visible" [pSortableColumn]="col.id"
                     data-cy="usertable-header">
@@ -42,7 +42,8 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="12" style="text-align:left">No items found.</td>
+                <!-- <td colspan="12" style="text-align:left">No items found.</td> -->
+                <td [attr.colspan]="gridSaved.visibleColumns" style="text-align:left">No items found.</td>
             </tr>
         </ng-template>
     </p-table>
@@ -91,6 +92,11 @@
         [gridSettings]="colsAndSettings.gridSaved.columnsSaved">
     </th>
     <th *ngIf="colsAndSettings.col.type === enumColumnType.Number && !colsAndSettings.col.dropdownHeader"
+        grid-input-filter [dt]="colsAndSettings.dt" searchField="{{colsAndSettings.col.id}}"
+        [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
+        [gridSettings]="colsAndSettings.gridSaved.columnsSaved">
+    </th>
+    <th *ngIf="colsAndSettings.col.type === enumColumnType.Money && !colsAndSettings.col.dropdownHeader"
         grid-input-filter [dt]="colsAndSettings.dt" searchField="{{colsAndSettings.col.id}}"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)"
         [gridSettings]="colsAndSettings.gridSaved.columnsSaved">

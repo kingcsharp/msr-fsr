@@ -99,7 +99,7 @@ export class ReportCubeService {
                 return [
                     new ColumnsSaved({ id: cubeFinancial + 'wonumber', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: cubeFinancial + 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: cubeFinancial + 'wocreationdate', label: 'Creation Date', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'wocreationdate', label: 'Creation Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: cubeFinancial + 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: cubeFinancial + 'shipdate', label: 'Ship Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: cubeFinancial + 'msrfsrfacility', label: 'Facility', visible: true, type: this.enumColumnType.String }),
@@ -124,7 +124,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: cubeFinancial + 'wonumber', label: 'Work Order Item', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: cubeFinancial + 'msrfsrfacility', label: 'Location', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: cubeFinancial + 'kitname', label: 'Product Name', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: cubeFinancial + 'shipdate', label: 'WO Complete Date', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: cubeFinancial + 'shipdate', label: 'WO Complete Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: cubeFinancial + 'wtax', label: 'Total', visible: true, type: this.enumColumnType.String })
                 ];
                 break;
@@ -136,12 +136,18 @@ export class ReportCubeService {
                 ];
                 break;
             case "RevenuebyKitbyPart/Kit":
+                return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
+                ];
+
                 break;
             case "CountofKitsbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Money })
+                new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number })
                 ];
                 break;
             default:
@@ -175,12 +181,13 @@ export class ReportCubeService {
                 let dataDic = {};
                 const resultData = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.shipdate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'] + '_' + elem['CubeFinancial.msrfsrfacility'];
                     if (dataDic[elemKey] === undefined) {
                         dataDic[elemKey] = {
-                            yearMonth: elem['CubeFinancial.shipdate'],
-                            customername: elem['CubeFinancial.customername'],
+                            duedate: elem['CubeFinancial.duedate'],
+                            yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
                             site: elem['CubeFinancial.msrfsrfacility'],
+                            customername: elem['CubeFinancial.customername'],
                             total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
                         };
                     } else {
@@ -194,10 +201,11 @@ export class ReportCubeService {
                 let dataDic3 = {};
                 const resultData2 = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.shipdate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
                     if (dataDic3[elemKey] === undefined) {
                         dataDic3[elemKey] = {
-                            yearMonth: elem['CubeFinancial.shipdate'],
+                            duedate: elem['CubeFinancial.duedate'],
+                            yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
                             kitname: elem['CubeFinancial.kitname'],
                             site: elem['CubeFinancial.msrfsrfacility'],
                             total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
@@ -213,16 +221,17 @@ export class ReportCubeService {
                 let dataDic2 = {};
                 const countOfKits = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.shipdate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
                     if (dataDic2[elemKey] === undefined) {
                         dataDic2[elemKey] = {
-                            yearMonth: elem['CubeFinancial.shipdate'],
+                            duedate: elem['CubeFinancial.duedate'],
+                            yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
                             kitname: elem['CubeFinancial.kitname'],
                             site: elem['CubeFinancial.msrfsrfacility'],
                             count: 1
                         };
                     } else {
-                        dataDic2[elemKey].total += 1;
+                        dataDic2[elemKey].count += 1;
                     }
                 });
                 Object.keys(dataDic2).forEach(x => countOfKits.push(dataDic2[x]));
