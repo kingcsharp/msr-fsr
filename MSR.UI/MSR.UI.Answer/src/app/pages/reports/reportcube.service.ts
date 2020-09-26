@@ -9,6 +9,7 @@ import { ReportModel } from '../../services/api.client.generated';
 import { ColumnsSaved } from '../../../app/models/lib/ColumnsSaved';
 import { EnumColumnType } from '../../../app/models/enums/EnumColumnType';
 import * as moment from 'moment';
+import * as Highcharts from 'highcharts';
 
 @Injectable({
     providedIn: 'root'
@@ -157,6 +158,17 @@ export class ReportCubeService {
         return [new ColumnsSaved({ id: 'workOrderNumber', label: 'Id', visible: true, type: this.enumColumnType.Number })];;
     }
 
+
+    public fromToDate(amount: number, unit: moment.DurationInputArg2, format: string) {
+        const fromToValues = [];
+        amount++;
+        while (amount--) {
+            fromToValues.push(moment().subtract(amount, unit).format(format));
+        }
+
+        return fromToValues;
+    }
+
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/ /g, '') + reportInfo.subtitle.replace(/ /g, '')) {
             case "MonitorsHistorybyWorkOrder":
@@ -194,8 +206,72 @@ export class ReportCubeService {
                         dataDic[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
                     }
                 });
-                Object.keys(dataDic).forEach(x => resultData.push(dataDic[x]));
-                return resultData;
+                const months = this.fromToDate(12, 'month', 'YYYY-MM');
+                const dataSeries = []
+                months.forEach(element => {
+                    dataSeries.push([element, 0]);
+                });
+
+
+                Object.keys(dataDic).forEach(x => {
+                    const index = months.indexOf(x.split('_')[0]);
+                    if (index !== -1) {
+                        dataSeries[index][1] += dataDic[x].total;
+                    }
+                    resultData.push(dataDic[x]);
+                });
+
+                let chartOptions: Highcharts.Options = {
+                    title: {
+                        text: 'Revenue by Customer'
+                    },
+                    colors: ['#005378'],
+                    xAxis: {
+                        type: 'category',
+                        labels: {
+                            // rotation: -45,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
+                        },
+                        title: {
+                            text: 'Month (Previous 12 Months Rolling)'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Revenue Per Month'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        pointFormat: 'Revenue: <b>{point.y:.1f}</b>'
+                    },
+                    series: [{
+                        type: 'column',
+                        name: 'Revenue Per Month',
+                        data: dataSeries,
+                        dataLabels: {
+                            enabled: true,
+                            rotation: -90,
+                            color: '#FFFFFF',
+                            align: 'right',
+                            format: '{point.y:.1f}', // one decimal
+                            y: 10, // 10 pixels down from the top
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
+                        }
+                    }]
+                }
+
+
+                return { resultData: resultData, chartOptions: chartOptions };
                 break;
             case "RevenuebyKitbyPart/Kit":
                 let dataDic3 = {};

@@ -34,6 +34,7 @@ import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-swit
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
+
 @NgModule({
   declarations: [
     ProgressAnimateDirective,

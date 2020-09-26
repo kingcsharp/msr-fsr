@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SignalRService } from '../app/services/signalr.service';
 import { Globals } from './models/lib/globals';
+import * as Highcharts from 'highcharts';
 
 @Component({
   selector: 'app-root',

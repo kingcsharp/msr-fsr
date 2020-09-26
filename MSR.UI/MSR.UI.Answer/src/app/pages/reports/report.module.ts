@@ -20,6 +20,7 @@ import { ReportComponent } from './report.component';
 import { AdhocComponent } from './adhocreports/adhocreport.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { ReportCubeService } from './reportcube.service';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 export const routes = [
   { path: '', redirectTo: 'report/adhocreports', pathMatch: 'full' },
@@ -51,7 +52,8 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    PopoverModule.forRoot()
+    PopoverModule.forRoot(),
+    HighchartsChartModule
   ],
   providers: [ReportCubeService]
 })

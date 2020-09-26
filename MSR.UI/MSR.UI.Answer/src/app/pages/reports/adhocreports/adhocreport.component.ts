@@ -17,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EnumColumnType } from '../../../models/enums/EnumColumnType';
 import { GridSaved } from '../../../models/lib/GridSaved';
 import { ReportCubeService } from '../reportcube.service';
+import * as Highcharts from 'highcharts';
 
 declare let jQuery: any;
 
@@ -36,10 +37,13 @@ export class AdhocComponent implements OnInit {
     reportInfo: ReportModel;
     showReport: boolean;
 
+    Highcharts: typeof Highcharts = Highcharts;
+    chartOptions: Highcharts.Options;
+    showCharts: boolean = false;
+
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
         private reportCubeService: ReportCubeService) {
-
     }
 
     ngOnInit(): void {
@@ -47,7 +51,6 @@ export class AdhocComponent implements OnInit {
             this.reportId = routeParams.id
         });
 
-        // this.getWorkflowGroups();
         this.getReportData();
     }
 
@@ -70,7 +73,10 @@ export class AdhocComponent implements OnInit {
     getCubeReport(reportInfo: ReportModel) {
         this.globals.showLoader(true);
         this.reportCubeService.getReport(reportInfo).then((resp) => {
-            this.data = resp;
+            //{ resultData: resultData, chartOptions: chartOptions }
+            this.data = resp.resultData;
+            this.chartOptions = resp.chartOptions;
+            this.showCharts = true;
             this.globals.showLoader(false);
         });
     }

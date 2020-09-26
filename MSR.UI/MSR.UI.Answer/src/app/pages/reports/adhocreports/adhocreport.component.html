@@ -3,6 +3,9 @@
     Adhoc-Reports
 </h1>
 <widget>
+    <highcharts-chart *ngIf="showCharts" [Highcharts]="Highcharts" [options]="chartOptions"
+        style="width: 100%; height: 600px; display: block;"></highcharts-chart>
+
     <p-table #dt *ngIf="showReport" [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true"
         [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
         currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
@@ -23,13 +26,11 @@
                     data-cy="usertable-header">
                     {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
                 </th>
-                <!-- <th>Actions</th> -->
             </tr>
             <tr>
                 <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowView"
                     [ngTemplateOutletContext]="{colsAndSettings: { col: col,dt:dt,gridSaved:gridSaved} }">
                 </ng-container>
-                <!-- <th></th> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-itemData>
@@ -37,12 +38,10 @@
                 <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowViewData"
                     [ngTemplateOutletContext]="{colsDataAndSettings: { col: col,colData:itemData,colsSaved:gridSaved.columnsSaved} }">
                 </ng-container>
-                <!-- <td></td> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <!-- <td colspan="12" style="text-align:left">No items found.</td> -->
                 <td [attr.colspan]="gridSaved.visibleColumns" style="text-align:left">No items found.</td>
             </tr>
         </ng-template>
@@ -55,8 +54,9 @@
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}
     </td>
-    <td container="body" tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency:'USD':true:'1.2-2'}}" class="text-capitalize"
-        *ngIf="colsDataAndSettings.col.type === enumColumnType.Money"
+    <td container="body"
+        tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency:'USD':true:'1.2-2'}}"
+        class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Money"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency:'USD':true:'1.2-2'}}
     </td>
@@ -64,9 +64,10 @@
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}
     </td>
-    <td *ngIf="colsDataAndSettings.col.type === enumColumnType.StringArray" 
-    [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
-        <span *ngFor="let item of colsDataAndSettings.colData[colsDataAndSettings.col.id]" class="badge mr-xs badge-secondary">{{item.name}}</span>
+    <td *ngIf="colsDataAndSettings.col.type === enumColumnType.StringArray"
+        [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
+        <span *ngFor="let item of colsDataAndSettings.colData[colsDataAndSettings.col.id]"
+            class="badge mr-xs badge-secondary">{{item.name}}</span>
     </td>
 </ng-template>
 <ng-template #rowView let-colsAndSettings='colsAndSettings'>
@@ -80,9 +81,8 @@
     </th>
     <th *ngIf="colsAndSettings.col.dropdownHeader && colsAndSettings.col.multipleValues"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">
-        <multiselect-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [options]="data"
-            filterProp="name" defaultId="id"
-            filterId="{{colsAndSettings.col.id}}" defaultText="Select {{colsAndSettings.col.label}}"
+        <multiselect-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [options]="data" filterProp="name"
+            defaultId="id" filterId="{{colsAndSettings.col.id}}" defaultText="Select {{colsAndSettings.col.label}}"
             defaultTextTooltip="" [datatable]="colsAndSettings.dt" [multipleValues]="true">
         </multiselect-wrapper>
     </th>
