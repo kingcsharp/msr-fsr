@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ProcedureService, WorkOrderTaskService,
+  ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, WorkOrderPartService,
-  WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest, Role, IRole, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest
+  WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest, Role, IRole, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, LocationModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -20,7 +20,7 @@ import { WorkordertasktimerWrapperComponent } from '../../../components/workorde
   styleUrls: ['./wipdetails.component.scss'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
-  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService]
+  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService, LocationService, UserService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -32,42 +32,35 @@ export class WipdetailsComponent implements OnInit {
   product: Product = new Product();
   purchase: PurchaseModel = new PurchaseModel();
   workOrderParts: Array<WorkOrderPartModel> = new Array<WorkOrderPartModel>()
-  //workOrderTasks: Array<WorkOrderTaskModel>;
   workOrderTaskInProgress: WorkOrderTaskModel;
   workOrderTaskToView: WorkOrderTaskModel;
   menuItems = EnumMenuItem;
   originalSerialNumbers: Array<any> = new Array<any>();
+
   showAddNcrDialog: boolean = false;
   ncrProceduresAvailable: Array<Procedure>;
-
-
-  itemsPerSlide = 3;
-  singleSlideOffset = false;
-  noWrap = false;
- 
-  slidesChangeMessage = '';
- 
-  slides = [
-    {image: 'assets/images/nature/1.jpg'},
-    {image: 'assets/images/nature/2.jpg'},
-    {image: 'assets/images/nature/3.jpg'},
-    {image: 'assets/images/nature/4.jpg'},
-    {image: 'assets/images/nature/5.jpg'},
-    {image: 'assets/images/nature/6.jpg'},
-    {image: 'assets/images/nature/7.jpg'},
-    {image: 'assets/images/nature/8.jpg'},
-    {image: 'assets/images/nature/1.jpg'},
-    {image: 'assets/images/nature/2.jpg'}
-  ];
- 
-  onSlideRangeChange(indexes: number[]): void {
-    this.slidesChangeMessage = `Slides have been switched: ${indexes}`;
-  }
+  showEmPmDialog:boolean = false;
+  equipmentMaintainanceTask: EquipmentMaintainanceTask = new EquipmentMaintainanceTask();
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
-    private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, private workOrderTaskService: WorkOrderTaskService) { }
+    private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, 
+    private workOrderTaskService: WorkOrderTaskService, private locationService: LocationService, private userService: UserService) { }
 
   ngOnInit(): void {
+
+    this.equipmentMaintainanceTask.statusOptions = [
+      { label: 'Requested', value: 'Requested'},
+      { label: 'Assigned', value: 'Assigned'},
+      { label: 'Completed', value: 'Completed'},
+      { label: 'Scheduled', value: 'Scheduled'}
+    ];
+
+    this.equipmentMaintainanceTask.maintainanceTaskOptions = [
+      { label: 'Add/Replace Media', value: 'Add/Replace Media'},
+      { label: 'Cleaning', value: 'Cleaning'},
+      { label: 'PM', value: 'PM'},
+      { label: 'Repair', value: 'Repair'}
+    ];
 
     this.route.params.subscribe(params => {
 
@@ -87,7 +80,6 @@ export class WipdetailsComponent implements OnInit {
         });
 
         this.workOrderParts = this.workOrderModel.workOrderParts;
-        //this.workOrderTasks = this.workOrderModel.workOrderTasks;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
         this.customer = this.workOrderModel.product.customer;
@@ -220,10 +212,6 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskTimer.completeTask();
   }
 
-  addEmPm() {
-
-  }
-
   addNcr() {
 
     this.globals.showLoader(true);
@@ -296,4 +284,58 @@ export class WipdetailsComponent implements OnInit {
     }))
 
   }
+
+  addEmPm() {
+
+    this.locationService.locationGet(null,null,env.apiVersion).subscribe(responseHandler(response => {
+
+      this.equipmentMaintainanceTask.locationOptions = response.object.map(s => ({ label:s.name , value: s.id}));
+      this.equipmentMaintainanceTask.troubleState = true;
+
+      this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+
+        this.equipmentMaintainanceTask.userOptions = response.object.map(s => ({ label: s.fullName, value: s.id}));
+
+      }));
+
+      this.showEmPmDialog = !this.showEmPmDialog;
+
+    }));
+    
+
+  }
+
+  submitEmPm(){
+
+    this.showEmPmDialog = !this.showEmPmDialog;
+
+  }
+
+  lookUp(){
+
+    this.globals.showLoader(true);
+    this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler(response => {
+
+      this.equipmentMaintainanceTask.selectedLocation = response.object.find(s => s.internalAddress === this.equipmentMaintainanceTask.barcode).id;
+
+    }));
+
+  }
+}
+
+export class EquipmentMaintainanceTask{
+  barcode: string;
+  location: LocationModel;
+  troubleState: boolean;
+  maintainanceTask: string;
+  status: string;
+  maintainanceLastCompleted: Date;
+  maintainanceFrequency: Date;
+  comments: string
+  maintainanceTaskOptions: Array<SelectItem>;
+  statusOptions: Array<SelectItem>;
+  locationOptions: Array<SelectItem>;
+  userOptions: Array<SelectItem>;
+  selectedLocation: number;
+  selectedUserId: number;
 }
