@@ -222,27 +222,50 @@ export class ReportCubeService {
                 });
 
                 let chartOptions: Highcharts.Options = {
-                    title: {
-                        text: 'Revenue by Customer'
+                    chart: {
+                        backgroundColor: '#222d3c',
+                        borderColor: 'none'
                     },
-                    colors: ['#005378'],
+                    title: {
+                        text: 'Revenue by Customer',
+                        style: {
+                            color: '#fff',
+                            fontWeight:'bold',
+                            fontFamily: "Open Sans"
+                        }
+                    },
+                    colors: ['#56616f'],//,'#005378'
                     xAxis: {
                         type: 'category',
                         labels: {
                             // rotation: -45,
                             style: {
+                                color: '#fff',
                                 fontSize: '13px',
-                                fontFamily: 'Verdana, sans-serif'
+                                fontFamily: "Open Sans"
                             }
                         },
                         title: {
-                            text: 'Month (Previous 12 Months Rolling)'
+                            text: 'Month (Previous 12 Months Rolling)',
+                            style: {
+                                color: '#fff',
+                                fontFamily: "Open Sans"
+                            }
                         }
                     },
                     yAxis: {
                         min: 0,
                         title: {
-                            text: 'Revenue Per Month'
+                            text: 'Revenue Per Month',
+                            style: {
+                                color: '#fff',
+                                fontFamily: "Open Sans"
+                            }
+                        },
+                        labels:{
+                            style: {
+                                color: '#fff'
+                            }
                         }
                     },
                     legend: {
@@ -264,7 +287,8 @@ export class ReportCubeService {
                             y: 10, // 10 pixels down from the top
                             style: {
                                 fontSize: '13px',
-                                fontFamily: 'Verdana, sans-serif'
+                                fontFamily: "Open Sans"
+                                // fontFamily: 'Verdana, sans-serif'
                             }
                         }
                     }]
