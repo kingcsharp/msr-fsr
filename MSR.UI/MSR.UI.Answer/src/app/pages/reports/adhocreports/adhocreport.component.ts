@@ -73,10 +73,12 @@ export class AdhocComponent implements OnInit {
     getCubeReport(reportInfo: ReportModel) {
         this.globals.showLoader(true);
         this.reportCubeService.getReport(reportInfo).then((resp) => {
-            this.data = resp.resultData;
             if (resp.chartOptions !== undefined) {
+                this.data = resp.resultData;
                 this.chartOptions = resp.chartOptions;
                 this.showCharts = true;
+            } else {
+                this.data = resp;
             }
             this.globals.showLoader(false);
         });

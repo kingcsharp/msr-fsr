@@ -207,7 +207,7 @@ export class ReportCubeService {
                     }
                 });
 
-                const chartInfo = new ChartInfo ({
+                const chartInfo = new ChartInfo({
                     chartData: dataDic,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Customer',
@@ -217,7 +217,6 @@ export class ReportCubeService {
                 });
 
                 return this.getResultDataAndChart(chartInfo);
-                break;
             case "RevenuebyKitbyPart/Kit":
                 let dataDic3 = {};
                 const resultData2 = [];
@@ -237,7 +236,7 @@ export class ReportCubeService {
                 });
                 Object.keys(dataDic3).forEach(x => resultData2.push(dataDic3[x]));
 
-                const chartInfo2 = new ChartInfo ({
+                const chartInfo2 = new ChartInfo({
                     chartData: dataDic3,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Kit',
@@ -247,7 +246,6 @@ export class ReportCubeService {
                 });
 
                 return this.getResultDataAndChart(chartInfo2);
-                break;
             case "CountofKitsbyPart/Kit":
                 let dataDic2 = {};
                 const countOfKits = [];
@@ -267,7 +265,7 @@ export class ReportCubeService {
                 });
                 Object.keys(dataDic2).forEach(x => countOfKits.push(dataDic2[x]));
 
-                const chartInfo3 = new ChartInfo ({
+                const chartInfo3 = new ChartInfo({
                     chartData: dataDic2,
                     stackBy: 'count',
                     chartTitle: 'Count of Kits',
@@ -285,18 +283,41 @@ export class ReportCubeService {
     }
 
     public getResultDataAndChart(chartInfo: ChartInfo) {
+        // moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'] 
+        // const series = [{
+        //     name: 'John',
+        //     data: [5, 3, 4, 7, 2]
+        // }, {
+        //     name: 'Jane',
+        //     data: [2, 2, 3, 2, 1]
+        // }, {
+        //     name: 'Joe',
+        //     data: [3, 4, 4, 2, 5]
+        // }];
 
         const months = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
         const dataSeries = [];
         const resultData = [];
-        months.forEach(element => {
-            dataSeries.push([element, 0]);
-        });
 
         Object.keys(chartInfo.chartData).forEach(x => {
             const index = months.indexOf(x.split('_')[0]);
+            const name = x.split('_')[1];
             if (index !== -1) {
-                dataSeries[index][1] += chartInfo.chartData[x][chartInfo.stackBy];
+
+                const nameIndex = dataSeries.findIndex(x => x.name === name);
+                if (nameIndex !== -1) {
+                    dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
+                } else {
+                    const dataArr = [];
+                    months.forEach(element => {
+                        dataArr.push(0);
+                    });
+                    dataArr[index] += chartInfo.chartData[x][chartInfo.stackBy];
+                    dataSeries.push({
+                        name: name,
+                        data: dataArr
+                    });
+                }
             }
             resultData.push(chartInfo.chartData[x]);
         });
@@ -304,7 +325,8 @@ export class ReportCubeService {
         let chartOptions: Highcharts.Options = {
             chart: {
                 backgroundColor: '#222d3c',
-                borderColor: 'none'
+                borderColor: 'none',
+                type:'column'
             },
             title: {
                 text: chartInfo.chartTitle,
@@ -314,7 +336,7 @@ export class ReportCubeService {
                     fontFamily: "Open Sans"
                 }
             },
-            colors: ['#56616f'],
+            // colors: ['#56616f'],
             xAxis: {
                 type: 'category',
                 labels: {
@@ -324,6 +346,7 @@ export class ReportCubeService {
                         fontFamily: "Open Sans"
                     }
                 },
+                categories: months,
                 title: {
                     text: chartInfo.xAxisTitle,
                     style: {
@@ -334,42 +357,53 @@ export class ReportCubeService {
             },
             yAxis: {
                 min: 0,
-                title: {
-                    text: chartInfo.yAxisTitle,
+                // title: {
+                //     text: chartInfo.yAxisTitle,
+                //     style: {
+                //         color: '#fff',
+                //         fontFamily: "Open Sans"
+                //     }
+                // },
+                stackLabels: {
+                    enabled: true,
                     style: {
-                        color: '#fff',
-                        fontFamily: "Open Sans"
-                    }
-                },
-                labels: {
-                    style: {
+                        fontWeight: 'bold',
                         color: '#fff'
                     }
                 }
             },
-            legend: {
-                enabled: false
+            legend:{
+                enabled:false
             },
+            // legend: {
+            //     align: 'right',
+            //     x: -5,
+            //     verticalAlign: 'top',
+            //     y: 5,
+            //     floating: true,
+            //     backgroundColor:'white',
+            //     borderColor: '#CCC',
+            //     borderWidth: 1,
+            //     shadow: false,
+            //     maxHeight:100,
+            //     width:200,
+            //     itemHoverStyle:{
+            //         opacity:1
+            //     }
+            // },
             tooltip: {
-                pointFormat: chartInfo.tooltipFormat
+                headerFormat: '<b>Month:</b> {point.x}<br/>',
+                pointFormat: '<b>{series.name}</b>: {point.y:.1f}<br/> <b>Total</b>: {point.stackTotal}'
             },
-            series: [{
-                type: 'column',
-                name: 'Revenue Per Month',
-                data: dataSeries,
-                dataLabels: {
-                    enabled: true,
-                    rotation: -90,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.1f}', // one decimal
-                    y: 10, // 10 pixels down from the top
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: "Open Sans"
-                    }
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    // dataLabels: {
+                    //     enabled: true
+                    // }
                 }
-            }]
+            },
+            series:dataSeries
         }
 
         return { resultData: resultData, chartOptions: chartOptions };
