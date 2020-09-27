@@ -108,46 +108,7 @@
             {{documentmodel.lastUpdated ? documentmodel.lastUpdated.fullName : ''}}
           </td>
           <td [hidden]="!cg.isVisibleCol('referenceFiles',gridSettings)">
-            <ng-container *ngFor="let file of documentmodel.referenceFiles">
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/msword'"
-                class="fad fa-file-word"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
-                class="fad fa-file-word"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'text/plain'"
-                class="fad fa-file-alt"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'text/html'"
-                class="fad fa-file-alt"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'"
-                class="fad fa-file-powerpoint"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'text/csv'"
-                class="fad fa-file-csv"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/pdf'"
-                class="fad fa-file-pdf"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
-                class="fad fa-file-excel"
-              ></i>
-              <img [src]="file.fileURL"
-                tooltip="{{file.name}}"
-                *ngIf="file.fileId !== undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
-                width="50"
-                class="ng-star-inserted"
-              />
-            </ng-container>
+            <grid-file-viewer [menuItem]="menuItems.Documents" [files]="documentmodel.referenceFiles"></grid-file-viewer>
           </td>
           <td>
             <i *ngIf="documentsPrivileges.canEdit"
