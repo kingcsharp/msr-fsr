@@ -54,11 +54,12 @@
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}
     </td>
+    <!-- :'USD':true:'1.2-2' -->
     <td container="body"
-        tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency:'USD':true:'1.2-2'}}"
+        tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}}"
         class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Money"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
-        {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency:'USD':true:'1.2-2'}}
+        {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}} 
     </td>
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">

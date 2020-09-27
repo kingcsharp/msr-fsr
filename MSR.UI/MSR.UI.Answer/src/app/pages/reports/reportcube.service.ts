@@ -10,6 +10,7 @@ import { ColumnsSaved } from '../../../app/models/lib/ColumnsSaved';
 import { EnumColumnType } from '../../../app/models/enums/EnumColumnType';
 import * as moment from 'moment';
 import * as Highcharts from 'highcharts';
+import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 
 @Injectable({
     providedIn: 'root'
@@ -161,7 +162,6 @@ export class ReportCubeService {
 
     public fromToDate(amount: number, unit: moment.DurationInputArg2, format: string) {
         const fromToValues = [];
-        amount++;
         while (amount--) {
             fromToValues.push(moment().subtract(amount, unit).format(format));
         }
@@ -191,7 +191,7 @@ export class ReportCubeService {
                 return workOrdersNotInvoicedbyWorkOrder;
             case "RevenuebyCustomerbyTimePeriod":
                 let dataDic = {};
-                const resultData = [];
+                // const resultData = [];
                 data.map(elem => {
                     const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'] + '_' + elem['CubeFinancial.msrfsrfacility'];
                     if (dataDic[elemKey] === undefined) {
@@ -206,96 +206,17 @@ export class ReportCubeService {
                         dataDic[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
                     }
                 });
-                const months = this.fromToDate(12, 'month', 'YYYY-MM');
-                const dataSeries = []
-                months.forEach(element => {
-                    dataSeries.push([element, 0]);
+
+                const chartInfo = new ChartInfo ({
+                    chartData: dataDic,
+                    stackBy: 'total',
+                    chartTitle: 'Revenue by Customer',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Revenue Per Month',
+                    tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
                 });
 
-
-                Object.keys(dataDic).forEach(x => {
-                    const index = months.indexOf(x.split('_')[0]);
-                    if (index !== -1) {
-                        dataSeries[index][1] += dataDic[x].total;
-                    }
-                    resultData.push(dataDic[x]);
-                });
-
-                let chartOptions: Highcharts.Options = {
-                    chart: {
-                        backgroundColor: '#222d3c',
-                        borderColor: 'none'
-                    },
-                    title: {
-                        text: 'Revenue by Customer',
-                        style: {
-                            color: '#fff',
-                            fontWeight:'bold',
-                            fontFamily: "Open Sans"
-                        }
-                    },
-                    colors: ['#56616f'],//,'#005378'
-                    xAxis: {
-                        type: 'category',
-                        labels: {
-                            // rotation: -45,
-                            style: {
-                                color: '#fff',
-                                fontSize: '13px',
-                                fontFamily: "Open Sans"
-                            }
-                        },
-                        title: {
-                            text: 'Month (Previous 12 Months Rolling)',
-                            style: {
-                                color: '#fff',
-                                fontFamily: "Open Sans"
-                            }
-                        }
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Revenue Per Month',
-                            style: {
-                                color: '#fff',
-                                fontFamily: "Open Sans"
-                            }
-                        },
-                        labels:{
-                            style: {
-                                color: '#fff'
-                            }
-                        }
-                    },
-                    legend: {
-                        enabled: false
-                    },
-                    tooltip: {
-                        pointFormat: 'Revenue: <b>{point.y:.1f}</b>'
-                    },
-                    series: [{
-                        type: 'column',
-                        name: 'Revenue Per Month',
-                        data: dataSeries,
-                        dataLabels: {
-                            enabled: true,
-                            rotation: -90,
-                            color: '#FFFFFF',
-                            align: 'right',
-                            format: '{point.y:.1f}', // one decimal
-                            y: 10, // 10 pixels down from the top
-                            style: {
-                                fontSize: '13px',
-                                fontFamily: "Open Sans"
-                                // fontFamily: 'Verdana, sans-serif'
-                            }
-                        }
-                    }]
-                }
-
-
-                return { resultData: resultData, chartOptions: chartOptions };
+                return this.getResultDataAndChart(chartInfo);
                 break;
             case "RevenuebyKitbyPart/Kit":
                 let dataDic3 = {};
@@ -315,7 +236,17 @@ export class ReportCubeService {
                     }
                 });
                 Object.keys(dataDic3).forEach(x => resultData2.push(dataDic3[x]));
-                return resultData2;
+
+                const chartInfo2 = new ChartInfo ({
+                    chartData: dataDic3,
+                    stackBy: 'total',
+                    chartTitle: 'Revenue by Kit',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Revenue Per Month',
+                    tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
+                });
+
+                return this.getResultDataAndChart(chartInfo2);
                 break;
             case "CountofKitsbyPart/Kit":
                 let dataDic2 = {};
@@ -335,12 +266,112 @@ export class ReportCubeService {
                     }
                 });
                 Object.keys(dataDic2).forEach(x => countOfKits.push(dataDic2[x]));
-                return countOfKits;
-                break;
+
+                const chartInfo3 = new ChartInfo ({
+                    chartData: dataDic2,
+                    stackBy: 'count',
+                    chartTitle: 'Count of Kits',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Revenue Per Month',
+                    tooltipFormat: 'Revenue: <b>{point.y:.1f}</b>'
+                });
+
+                return this.getResultDataAndChart(chartInfo3);
 
             default:
                 break;
         }
         return data;
+    }
+
+    public getResultDataAndChart(chartInfo: ChartInfo) {
+
+        const months = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
+        const dataSeries = [];
+        const resultData = [];
+        months.forEach(element => {
+            dataSeries.push([element, 0]);
+        });
+
+        Object.keys(chartInfo.chartData).forEach(x => {
+            const index = months.indexOf(x.split('_')[0]);
+            if (index !== -1) {
+                dataSeries[index][1] += chartInfo.chartData[x][chartInfo.stackBy];
+            }
+            resultData.push(chartInfo.chartData[x]);
+        });
+
+        let chartOptions: Highcharts.Options = {
+            chart: {
+                backgroundColor: '#222d3c',
+                borderColor: 'none'
+            },
+            title: {
+                text: chartInfo.chartTitle,
+                style: {
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    fontFamily: "Open Sans"
+                }
+            },
+            colors: ['#56616f'],
+            xAxis: {
+                type: 'category',
+                labels: {
+                    style: {
+                        color: '#fff',
+                        fontSize: '13px',
+                        fontFamily: "Open Sans"
+                    }
+                },
+                title: {
+                    text: chartInfo.xAxisTitle,
+                    style: {
+                        color: '#fff',
+                        fontFamily: "Open Sans"
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: chartInfo.yAxisTitle,
+                    style: {
+                        color: '#fff',
+                        fontFamily: "Open Sans"
+                    }
+                },
+                labels: {
+                    style: {
+                        color: '#fff'
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: chartInfo.tooltipFormat
+            },
+            series: [{
+                type: 'column',
+                name: 'Revenue Per Month',
+                data: dataSeries,
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.1f}', // one decimal
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: "Open Sans"
+                    }
+                }
+            }]
+        }
+
+        return { resultData: resultData, chartOptions: chartOptions };
     }
 }
