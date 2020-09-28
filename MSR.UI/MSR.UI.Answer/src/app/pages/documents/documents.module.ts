@@ -20,19 +20,15 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DocumentsComponent } from './documents/documents.component';
-import { DocumentComponent } from './document/document.component';
 
 export const routes = [
   { path: '', redirectTo: 'documents', pathMatch: 'full' },
   { path: 'documents', component: DocumentsComponent, pathMatch: 'full' },
-  { path: 'document-create', component: DocumentComponent, pathMatch: 'full' },
-  { path: 'document-edit', component: DocumentComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
   declarations: [
     DocumentsComponent,
-    DocumentComponent,
   ],
   imports: [
     CommonModule,

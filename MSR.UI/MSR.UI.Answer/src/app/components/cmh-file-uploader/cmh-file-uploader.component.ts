@@ -22,7 +22,7 @@ export class CmhFileUploaderComponent implements OnInit {
   fileTypes: any[] = [];
   selectAll: boolean = false;
   selectedFiles: FileModel[] = [];
-  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid,) {
+  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid, ) {
 
   }
 
