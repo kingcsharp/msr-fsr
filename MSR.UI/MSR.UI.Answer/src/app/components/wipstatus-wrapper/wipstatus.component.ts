@@ -22,7 +22,7 @@ export class WipstatusWrapperComponent implements OnInit {
   selectedLocations: Array<string>;
   showTakeOverAsUserConfirmationDialog: boolean = false;
   workOrderToTakeOverId: number;
-  constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals, 
+  constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals,
     private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
 
 
@@ -31,9 +31,10 @@ export class WipstatusWrapperComponent implements OnInit {
     this.globals.showLoader(true);
     this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
 
+      //TODO: Remove when data is clean
       response.object.map(workOrderStatus => {
 
-        if(workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting Start'){
+        if (workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting Start') {
           workOrderStatus.workOrderSummary.workOrderStatus = 'Waiting to Start';
         }
 
@@ -53,7 +54,7 @@ export class WipstatusWrapperComponent implements OnInit {
         let newlocationSavedList = new Array<string>();
         locationsAlreadySaved.forEach(locationSaved => {
 
-          if(this.locationOptions.find(s => s.value === locationSaved) !== undefined){
+          if (this.locationOptions.find(s => s.value === locationSaved) !== undefined) {
             newlocationSavedList.push(locationSaved);
           }
 
@@ -66,10 +67,6 @@ export class WipstatusWrapperComponent implements OnInit {
 
     }));
 
-  }
-
-  cleanData(){
-    
   }
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number) {
@@ -94,13 +91,13 @@ export class WipstatusWrapperComponent implements OnInit {
         this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
 
           let tasks = <Array<WorkOrderTaskModel>>response.object[0].workOrderTasks;
-  
+
           let workOrderTaskPatchRequests = new Array<any>();
-  
+
           tasks.forEach(task => {
-  
-            if(task.status?.name === 'Waiting to Start'){
-  
+
+            if (task.status?.name === 'Waiting to Start') {
+
               let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest();
               updateWorkOrderTaskRequest.status = task.status?.name;
               updateWorkOrderTaskRequest.taskIsRunning = false;
@@ -110,16 +107,18 @@ export class WipstatusWrapperComponent implements OnInit {
               updateWorkOrderTaskRequest.assignedUserId = loggedInUser.id;
 
               workOrderTaskPatchRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
-              
+
             }
-  
+
           });
 
           this.globals.showLoader(true);
           forkJoin(workOrderTaskPatchRequests).subscribe(responses => {
             this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+          }, () => {
+            this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
           });
-  
+
         }));
 
       }));
