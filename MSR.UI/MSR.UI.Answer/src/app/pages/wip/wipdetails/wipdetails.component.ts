@@ -287,11 +287,13 @@ export class WipdetailsComponent implements OnInit {
 
   addEmPm() {
 
+    this.globals.showLoader(true);
     this.locationService.locationGet(null,null,env.apiVersion).subscribe(responseHandler(response => {
 
       this.equipmentMaintainanceTask.locationOptions = response.object.map(s => ({ label:s.name , value: s.id}));
       this.equipmentMaintainanceTask.troubleState = true;
 
+      this.globals.showLoader(true);
       this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
 
         this.equipmentMaintainanceTask.userOptions = response.object.map(s => ({ label: s.fullName, value: s.id}));

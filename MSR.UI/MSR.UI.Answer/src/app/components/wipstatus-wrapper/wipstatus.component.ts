@@ -40,7 +40,20 @@ export class WipstatusWrapperComponent implements OnInit {
         this.selectedLocations = this.locationOptions.map(s => s.value);
         localStorage.setItem('wipstatus', this.selectedLocations.toString());
       } else {
-        this.selectedLocations = localStorage.getItem('wipstatus').split(',');
+
+        let locationsAlreadySaved = localStorage.getItem('wipstatus').split(',');
+        let newlocationSavedList = new Array<string>();
+        locationsAlreadySaved.forEach(locationSaved => {
+
+          if(this.locationOptions.find(s => s.value === locationSaved) !== undefined){
+            newlocationSavedList.push(locationSaved);
+          }
+
+
+        });
+        localStorage.setItem('wipstatus', newlocationSavedList.toString());
+        this.selectedLocations = this.locationOptions.map(s => s.value).filter(m => newlocationSavedList.includes(m));
+        this.locationsSelectedUpdated();
       }
 
     }));
@@ -60,10 +73,12 @@ export class WipstatusWrapperComponent implements OnInit {
 
     if (this.takeOverSteps) {
 
+      this.globals.showLoader(true);
       this.userService.loggedInUser(env.apiVersion).subscribe(responseHandler(response => {
 
         let loggedInUser = <UserModel>response.object;
 
+        this.globals.showLoader(true);
         this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
 
           let tasks = <Array<WorkOrderTaskModel>>response.object[0].workOrderTasks;
@@ -88,13 +103,10 @@ export class WipstatusWrapperComponent implements OnInit {
   
           });
 
-          // TODO: swap out when endpoint is fixed
-          this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-
-          //forkJoin(workOrderTaskPatchRequests).subscribe(responses => {
-          //  console.log(response);
-          //  this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          //});
+          this.globals.showLoader(true);
+          forkJoin(workOrderTaskPatchRequests).subscribe(responses => {
+            this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+          });
   
         }));
 
