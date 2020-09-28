@@ -10,7 +10,7 @@ namespace MSR.Domain.Commands
         public string Name { get; set; }
         public int? Revision { get; set; }
         public string Comments { get; set; }
-        public List<int?> RoleIds { get; set; }
-        public List<int?> ReferenceFileIds { get; set; }
+        public List<int> RoleIds { get; set; }
+        public List<int> ReferenceFileIds { get; set; }
     }
 }
