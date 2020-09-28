@@ -20,6 +20,7 @@ import { WorkordertasktimerWrapperComponent } from '../../components/workorderta
 import {DropdownModule} from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { WorkordertaskmonitosWrapperComponent } from '../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component'
+import { EmPmButtonWrapperComponent } from '../../components/em-pm-button-wrapper/em-pm-button-wrapper.component'
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -32,7 +33,7 @@ export const routes = [
 
 @NgModule({
   declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent, 
-    WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent],
+    WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

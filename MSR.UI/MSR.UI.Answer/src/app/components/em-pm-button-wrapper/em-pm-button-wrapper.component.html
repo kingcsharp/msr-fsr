@@ -1,0 +1,109 @@
+<button class="btn btn-primary m-2" (click)="addEmPm()"><i class="fas fa-plus-square"></i>EM/PM</button>
+<p-dialog header="Create/Edit Equipment Maintenance" [(visible)]="showEmPmDialog" appendTo="body" [baseZIndex]="100001"
+  [modal]='true' [style]="{width: '75vw'}">
+  <div class="container-fluid">
+    <form role="form">
+      <fieldset>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group d-flex">
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="barcode">Scan/Enter Barcode</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-9">
+                <input type="text" name="barcode" class="form-control input-transparent" [(ngModel)]="equipmentMaintainanceTask.barcode">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" (click)="lookUp()">Lookup</button>
+                </span>
+              </div>
+            </div>
+            <div class="form-group d-flex">
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="roomequipment">Room/Equipment</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-9">
+                <p-dropdown name="roomequipment" [options]="equipmentMaintainanceTask.locationOptions" [(ngModel)]="equipmentMaintainanceTask.selectedLocation"></p-dropdown>
+              </div>
+            </div>
+            <div class="form-group d-flex">
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="troublestate">Trouble State</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-9">
+                <label class="form-check-label" for="checkbox-ios2" class="switch mt-1 mb-0">
+                  <input name="troublestate" class="form-check-input ios" type="checkbox" id="checkbox-ios2" [(ngModel)]="equipmentMaintainanceTask.troubleState"><i></i>
+                </label>
+              </div>
+            </div>
+            <div class="form-group d-flex" *ngIf="equipmentMaintainanceTask.troubleState === false">
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="maintenancetask">Maintenance Task</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-9">
+                <div class="col-6 pl-0"><p-dropdown name="maintenancetask" [options]="equipmentMaintainanceTask.maintainanceTaskOptions" [(ngModel)]="equipmentMaintainanceTask.equipmentMaintainanceTask"></p-dropdown></div>
+                <div class="col-6 pr-0"><p-dropdown name="status" [options]="equipmentMaintainanceTask.statusOptions" [(ngModel)]="equipmentMaintainanceTask.status"></p-dropdown></div>
+              </div>
+            </div>
+            <div class="form-group d-flex" *ngIf="equipmentMaintainanceTask.troubleState === false">
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="assignedto">Assigned To</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-9">
+                <p-dropdown name="assignedto" [options]="equipmentMaintainanceTask.userOptions" [(ngModel)]="equipmentMaintainanceTask.selectedUserId"></p-dropdown>
+              </div>
+            </div>
+            <div class="form-group d-flex" *ngIf="equipmentMaintainanceTask.troubleState === false">
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="maintenancelastcompleted">Maintenance Last Completed</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-3">
+                <p-calendar name="maintenancelastcompleted" [(ngModel)]="equipmentMaintainanceTask.maintainanceLastCompleted" [showIcon]="true"></p-calendar>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="maintenancefrequency">Maintenance Frequency</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-3">
+                <p-calendar name="maintenancefrequency" [(ngModel)]="equipmentMaintainanceTask.maintainanceFrequency" [showIcon]="true"></p-calendar>
+              </div>
+            </div>
+            <div class="form-group d-flex">
+              <div class="col-3 d-flex justify-content-end">
+                <div class="my-auto">
+                  <label class="m-0" for="comments">Comments</label>
+                </div>
+              </div>
+              <div class="input-group input-group-transparent col-9">
+                <textarea rows="4" class="form-control input-transparent" name="comments" [(ngModel)]="equipmentMaintainanceTask.comments"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="submitEmPm()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        Submit
+      </button>
+      <button type="button" (click)="showEmPmDialog = false" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

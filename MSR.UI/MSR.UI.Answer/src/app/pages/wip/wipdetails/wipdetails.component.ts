@@ -39,30 +39,12 @@ export class WipdetailsComponent implements OnInit {
 
   showAddNcrDialog: boolean = false;
   ncrProceduresAvailable: Array<Procedure>;
-  showEmPmDialog:boolean = false;
-  equipmentMaintainanceTask: EquipmentMaintainanceTask = new EquipmentMaintainanceTask();
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
     private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, 
     private workOrderTaskService: WorkOrderTaskService, private locationService: LocationService, private userService: UserService) { }
 
   ngOnInit(): void {
-
-    this.globals.showLoader(false);
-    
-    this.equipmentMaintainanceTask.statusOptions = [
-      { label: 'Requested', value: 'Requested'},
-      { label: 'Assigned', value: 'Assigned'},
-      { label: 'Completed', value: 'Completed'},
-      { label: 'Scheduled', value: 'Scheduled'}
-    ];
-
-    this.equipmentMaintainanceTask.maintainanceTaskOptions = [
-      { label: 'Add/Replace Media', value: 'Add/Replace Media'},
-      { label: 'Cleaning', value: 'Cleaning'},
-      { label: 'PM', value: 'PM'},
-      { label: 'Repair', value: 'Repair'}
-    ];
 
     this.route.params.subscribe(params => {
 
@@ -288,60 +270,4 @@ export class WipdetailsComponent implements OnInit {
     }))
 
   }
-
-  addEmPm() {
-
-    this.globals.showLoader(true);
-    this.locationService.locationGet(null,null,env.apiVersion).subscribe(responseHandler(response => {
-
-      this.equipmentMaintainanceTask.locationOptions = response.object.map(s => ({ label:s.name , value: s.id}));
-      this.equipmentMaintainanceTask.troubleState = true;
-
-      this.globals.showLoader(true);
-      this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
-
-        this.equipmentMaintainanceTask.userOptions = response.object.map(s => ({ label: s.fullName, value: s.id}));
-
-      }));
-
-      this.showEmPmDialog = !this.showEmPmDialog;
-
-    }));
-    
-
-  }
-
-  submitEmPm(){
-
-    this.showEmPmDialog = !this.showEmPmDialog;
-
-  }
-
-  lookUp(){
-
-    this.globals.showLoader(true);
-    this.locationService.locationGet(null, null, env.apiVersion).subscribe(responseHandler(response => {
-
-      this.equipmentMaintainanceTask.selectedLocation = response.object.find(s => s.internalAddress === this.equipmentMaintainanceTask.barcode).id;
-
-    }));
-
-  }
-}
-
-export class EquipmentMaintainanceTask{
-  barcode: string;
-  location: LocationModel;
-  troubleState: boolean;
-  maintainanceTask: string;
-  status: string;
-  maintainanceLastCompleted: Date;
-  maintainanceFrequency: Date;
-  comments: string
-  maintainanceTaskOptions: Array<SelectItem>;
-  statusOptions: Array<SelectItem>;
-  locationOptions: Array<SelectItem>;
-  userOptions: Array<SelectItem>;
-  selectedLocation: number;
-  selectedUserId: number;
 }
