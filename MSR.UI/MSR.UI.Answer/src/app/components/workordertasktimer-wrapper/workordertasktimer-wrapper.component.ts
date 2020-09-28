@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IStatusModel, IUpdateWorkOrderTaskRequest, StatusModel, UpdateWorkOrderTaskRequest, WorkOrderTaskModel, WorkOrderTaskService } from '../../services/api.client.generated';
+import { IStatusModel, IUpdateWorkOrderTaskRequest, StatusModel, UpdateWorkOrderTaskRequest, 
+  WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 
@@ -7,7 +8,7 @@ import { responseHandler } from '../../utils/responseHandler';
   selector: 'workordertasktimer-wrapper',
   templateUrl: './workordertasktimer-wrapper.component.html',
   styleUrls: ['./workordertasktimer-wrapper.component.scss'],
-  providers: [WorkOrderTaskService]
+  providers: [WorkOrderTaskService, UserService]
 })
 export class WorkordertasktimerWrapperComponent implements OnInit {
 
@@ -25,7 +26,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   stepHours: number = 0;
   timerStartTime: Date;
 
-  constructor(private workOrderTaskService: WorkOrderTaskService) { }
+  constructor(private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -42,7 +43,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.workOrderTaskInProgress.taskIsRunning = false;
     this.workOrderTaskInProgress.taskRunningSince = undefined;
     clearInterval(this.stepTimer);
-    //this.saveTaskTimerState();
+    this.saveTaskTimerState();
   }
 
   resumeAndStartTask(){
@@ -60,7 +61,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       this.stepHours= Math.floor(this.stepMinutes / 60);
 
     },1000);
-    //this.saveTaskTimerState();
+    this.saveTaskTimerState();
 
   }
 
@@ -72,7 +73,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.stepSeconds = 0;
     this.stepMinutes = 0;
     this.stepHours = 0;
-    //this.saveTaskTimerState();
+    this.saveTaskTimerState();
     
     this.workOrderTaskInProgress.statusId = 3;
     this.workOrderTaskInProgress.status = new StatusModel({
@@ -93,19 +94,26 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   saveTaskTimerState(){
 
-    let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-      assignedUserId: this.workOrderTaskInProgress.assignedToUser?.id,
-      status: this.workOrderTaskInProgress.status.name,
-      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
-      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
-      // TODO: Remove comment when property is added
-      //totalTaskTime:this.workOrderTaskInProgress.totalTaskTime,
-      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
-      workOrderTaskId: this.workOrderTaskInProgress.id
-     } as IUpdateWorkOrderTaskRequest);
-    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
-      console.log(response);
+    this.userService.loggedInUser(env.apiVersion).subscribe(responseHandler(response => {
+
+      let loggedInUser = <UserModel>response.object;
+      
+      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+        assignedUserId: loggedInUser.id,
+        status: this.workOrderTaskInProgress.status.name,
+        taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
+        taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+        totalTaskTime:this.workOrderTaskInProgress.totalTaskTime,
+        taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
+        workOrderTaskId: this.workOrderTaskInProgress.id
+       } as IUpdateWorkOrderTaskRequest);
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
+        console.log(response);
+      }));
+
     }));
+
+    
 
   }
 

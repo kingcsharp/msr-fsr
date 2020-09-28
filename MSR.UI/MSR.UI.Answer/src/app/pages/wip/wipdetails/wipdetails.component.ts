@@ -121,6 +121,7 @@ export class WipdetailsComponent implements OnInit {
         name: 'Waiting to Start'
       });
 
+      // TODO: Remove when roles are returned and if no roles exist, the array is empty
       if (s.procedureStep.roles === undefined) {
         s.procedureStep.roles = new Array<Role>();
 
@@ -130,6 +131,7 @@ export class WipdetailsComponent implements OnInit {
         } as IRole));
 
       }
+      
 
     })
 

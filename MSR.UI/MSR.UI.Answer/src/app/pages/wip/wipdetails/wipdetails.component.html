@@ -95,11 +95,11 @@
                   <div class="text-right col-2 p-2" colspan="1">Reference Files:</div>
                   <div class="col-10 p-2">
                     <!--TODO: Invesitage File Uploader Bug, possible has to do with showUploadButton parameter-->
-                    <!--<cmh-file-uploader name="referencefiles" class="col-12"
+                    <cmh-file-uploader name="referencefiles" class="col-12"
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStep?.referenceFiles !== undefined"
-                      [menuItem]="menuItems.Templates" multiple="multiple" [showUploadButton]="false"
+                      [menuItem]="menuItems.Templates" multiple="multiple"
                       [(files)]="workOrderTaskToView.procedureStep.referenceFiles">
-                    </cmh-file-uploader>-->
+                    </cmh-file-uploader>
                   </div>
                 </div>
               </div>
