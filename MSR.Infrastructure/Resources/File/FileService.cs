@@ -65,6 +65,11 @@ namespace MSR.Infrastructure.Resources.Services
 
             foreach (var x in files)
             {
+                if (ret.Any(i => i.FileId == x.Id))
+                {
+                    continue;
+                }
+
                 var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
