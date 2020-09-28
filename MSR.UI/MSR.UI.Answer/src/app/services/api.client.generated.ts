@@ -917,6 +917,10 @@ export class EquipmentMaintenanceService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
+    /**
+     * Gets EM/PM items. Filter the item using Id.
+     * @param id (optional) 
+     */
     equipmentMaintenanceGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
         if (version === undefined || version === null)
@@ -970,6 +974,9 @@ export class EquipmentMaintenanceService {
         return _observableOf<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel>(<any>null);
     }
 
+    /**
+     * Creates a new EM/PM entry
+     */
     equipmentMaintenancePost(version: string, request: CreateEquipmentMaintenanceRequest): Observable<AuditActionResultOfEquipmentMaintenanceModel> {
         let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance";
         if (version === undefined || version === null)

@@ -20,7 +20,7 @@
     >
       <ng-template pTemplate="caption">
         <div class="text-right">
-          <button *ngIf="documentsPrivileges.canCreate" [routerLink]="['../document-create']"
+          <button *ngIf="documentsPrivileges.canCreate" (click)="openDocumentDialog()"
             class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
             + Add
           </button>
@@ -108,52 +108,13 @@
             {{documentmodel.lastUpdated ? documentmodel.lastUpdated.fullName : ''}}
           </td>
           <td [hidden]="!cg.isVisibleCol('referenceFiles',gridSettings)">
-            <ng-container *ngFor="let file of documentmodel.referenceFiles">
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/msword'"
-                class="fad fa-file-word"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
-                class="fad fa-file-word"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'text/plain'"
-                class="fad fa-file-alt"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'text/html'"
-                class="fad fa-file-alt"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'"
-                class="fad fa-file-powerpoint"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'text/csv'"
-                class="fad fa-file-csv"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/pdf'"
-                class="fad fa-file-pdf"
-              ></i>
-              <i tooltip="{{file.name}}"
-                *ngIf="file.contentType == 'application/vnd.ms-excel' || file.contentType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
-                class="fad fa-file-excel"
-              ></i>
-              <img [src]="file.fileURL"
-                tooltip="{{file.name}}"
-                *ngIf="file.fileId !== undefined && (file.contentType == 'image/gif' || file.contentType == 'image/png' ||file.contentType == 'image/webp'||file.contentType == 'image/jpeg' || file.contentType == 'image/tiff')"
-                width="50"
-                class="ng-star-inserted"
-              />
-            </ng-container>
+            <grid-file-viewer [menuItem]="menuItems.Documents" [files]="documentmodel.referenceFiles"></grid-file-viewer>
           </td>
           <td>
             <i *ngIf="documentsPrivileges.canEdit"
-              class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
-              [routerLink]="['../document-edit']" [queryParams]="{id: documentmodel.id}">
-            </i>
+            class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
+            (click)="openDocumentDialog(documentmodel)">
+          </i>
             <i *ngIf="documentsPrivileges.canDelete" class="far fa-trash-alt pointer" tooltip="Delete Document"
             data-cy="deleteRow" (click)="openConfirmDeleteDialog(documentmodel)">
           </i>
@@ -188,4 +149,98 @@
       </button>
     </div>
   </p-footer>
+</p-dialog>
+<p-dialog *ngIf="document" header="{{ document.id === undefined ? 'Add Document':'Edit Document'}}" [(visible)]="showDocumentDialog"
+  [style]="{width: '70vw'}" data-cy="user-header" [modal]='true'>
+  <form
+    data-parsley-validate
+    class="form-horizontal form-label-left parsleyjs"
+    method="post"
+    data-parsley-priority-enabled="false"
+    novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <i class="fas fa-file"></i>
+          Document Details
+        </h5>
+      </header>
+      <div class="widget-body">
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group">
+            <label for="title" class="col-form-label text-left">
+              Document Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="document.name"
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-minlength="3"
+              data-parsley-required="true"
+              class="form-control input-transparent"
+              tooltip="Name of Document"
+              data-cy="document-input-name"
+            >
+          </div>
+          <div class="form-group">
+            <label for="referencefiles" class="col-form-label text-left">
+              Reference Files
+            </label>
+            <cmh-file-uploader
+              name="referencefiles"
+              class="col-12"
+              [menuItem]="menuItems.Documents"
+              multiple="multiple"
+              [(files)]="document.referenceFiles"
+              showSelectButton="true"
+              chooseLabel="Browse..."
+              selectLabel="Select"
+            >
+            </cmh-file-uploader>
+          </div>
+
+          <div class="form-group" *ngIf='document !== undefined'>
+            <label for="comment" class="col-form-label text-left">
+              Header Comments (notes,warning, etc.):
+            </label>
+            <ckeditor-wrapper
+              [editorcontent]="document.comments"
+              (editorContentChange)="document.comments = $event"
+            ></ckeditor-wrapper>
+          </div>
+
+          <div class="form-group" *ngIf="availableRoles !== undefined && selectedRoles !== undefined && selectedRoles !== null">
+            <label for="roles" class="col-form-label text-left">
+              Additional Roles Allowed Access:
+            </label>
+            <multiselect-wrapper-form
+              [options]="availableRoles"
+              [limit]="10"
+              [(model)]="selectedRoles"
+              defaultLabelProperty="name"
+              defaultId="id" defaultLabel="Select Roles" data-cy="roles-multiselect"
+            >
+            </multiselect-wrapper-form>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+
+    <p-footer>
+      <div class="pull-right">
+        <button type="button" class="btn btn-outline-inverse width-100 mb-xs" role="button" (click)="documentSubmit()"
+          data-cy="document-submit-button">
+          Submit
+        </button>
+        <button type="button" (click)="closeDocumentDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+          role="button">
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
 </p-dialog>

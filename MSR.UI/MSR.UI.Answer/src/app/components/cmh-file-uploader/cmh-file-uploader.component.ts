@@ -22,7 +22,7 @@ export class CmhFileUploaderComponent implements OnInit {
   fileTypes: any[] = [];
   selectAll: boolean = false;
   selectedFiles: FileModel[] = [];
-  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid,) {
+  constructor(private fileService: FileService, private globals: Globals, public cg: CommonGrid, ) {
 
   }
 
@@ -42,26 +42,35 @@ export class CmhFileUploaderComponent implements OnInit {
       this.chooseLabel = 'Select Files';
     }
 
+    if (this.files.length > 0) {
+      this.globals.showLoader(true);
+      this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), this.files[0].entityId, null, env.apiVersion)
+        .pipe(take(1)).subscribe(responseHandler((resp) => {
+          if (resp.object.length > 0) {
+            this.files.forEach((currFile: FileModel) => {
+              resp.object.forEach((getFile: FileModel) => {
+                if (currFile.fileId === getFile.fileId) {
+                  currFile.fileURL = getFile.fileURL;
+                }
+              });
+            });
+          }
+          this.showLi = true;
+        }));
+    } else {
+      this.showLi = true;
+    }
 
-    this.globals.showLoader(true);
-    this.fileService.fileGet(this.globals.getSingularMenuName(this.menuItem), null, null, env.apiVersion)
-      .pipe(take(1)).subscribe(responseHandler((resp) => {
-        if (resp.object.length > 0) {
+    if (this.showSelectButton) {
+      this.globals.showLoader(true);
+      this.fileService.fileGet(null, null, null, env.apiVersion)
+        .pipe(take(1)).subscribe(responseHandler((resp) => {
           this.uploadedFiles = resp.object;
           this.fileTypes = this.uploadedFiles.filter(
             (thing, i, arr) => arr.findIndex(t => t.contentType === thing.contentType) === i
           ).map(x => ({ label: x.contentType, value: x.contentType }));
-          this.files.forEach((currFile: FileModel) => {
-            resp.object.forEach((getFile: FileModel) => {
-              if (currFile.fileId === getFile.fileId) {
-                currFile.fileURL = getFile.fileURL;
-              }
-            });
-          });
-        }
-        this.showLi = true;
-      }));
-
+        }));
+    }
   }
 
   removeFile(file) {
@@ -84,19 +93,11 @@ export class CmhFileUploaderComponent implements OnInit {
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = function () {
-          let fileModel = new CreateFileRequest();
+          let fileModel = new FileModel();
           fileModel.name = file.name;
           fileModel.base64String = fileReader.result.toString();
           fileModel.contentType = file.type;
-          fileModel.entityName = ctrl.globals.getSingularMenuName(ctrl.menuItem);
-          // fileModel.entityId = ctrl.menuItem;
-          // ctrl.globals.showLoader(true);
-          ctrl.fileService.filePost(env.apiVersion,fileModel).pipe(take(1))
-          .subscribe(responseHandler(response => {
-            ctrl.files.unshift(response.object[0]);
-            ctrl.uploadedFiles.unshift(response.object[0]);
-          }));
-
+          ctrl.files.unshift(fileModel);
         };
       }
     }
