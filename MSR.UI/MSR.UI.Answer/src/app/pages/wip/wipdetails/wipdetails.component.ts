@@ -48,6 +48,8 @@ export class WipdetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.globals.showLoader(false);
+    
     this.equipmentMaintainanceTask.statusOptions = [
       { label: 'Requested', value: 'Requested'},
       { label: 'Assigned', value: 'Assigned'},

@@ -112,12 +112,12 @@ export class WipstatusWrapperComponent implements OnInit {
 
           });
 
-          this.globals.showLoader(true);
-          forkJoin(workOrderTaskPatchRequests).subscribe(responses => {
-            this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          }, () => {
-            this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          });
+          // TODO: Uncomment and use actual request when Endpoint is fixed
+          this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+          //this.globals.showLoader(true);
+          //forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
+          //  this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+          //}));
 
         }));
 
