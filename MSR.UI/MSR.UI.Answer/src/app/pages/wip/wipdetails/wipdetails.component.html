@@ -64,7 +64,7 @@
         </div>
         <div class="d-flex col-6 justify-content-end pr-0">
           <empmbutton-wrapper></empmbutton-wrapper>
-          <button class="btn btn-danger m-2" (click)="addNcr()"><i class="fas fa-plus-square"></i>Add NCR</button>
+          <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
         </div>
       </div>
       <div class="row">
@@ -94,12 +94,12 @@
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Reference Files:</div>
                   <div class="col-10 p-2">
-                    <!--TODO: Invesitage File Uploader Bug, possible has to do with showUploadButton parameter-->
+                    <!--TODO: Invesitage File Uploader Bug, possible has to do with showUploadButton parameter
                     <cmh-file-uploader name="referencefiles" class="col-12"
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStep?.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates" multiple="multiple"
                       [(files)]="workOrderTaskToView.procedureStep.referenceFiles">
-                    </cmh-file-uploader>
+                    </cmh-file-uploader>-->
                   </div>
                 </div>
               </div>
@@ -142,47 +142,13 @@
             </span>
           </p-tabPanel>
           <p-tabPanel header="Files">
-            <cmh-file-uploader name="referencefiles" class="col-12"
+            <!--<cmh-file-uploader name="referencefiles" class="col-12"
               *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
               [menuItem]="menuItems.Templates" multiple="multiple" [(files)]="workOrderTaskToView.referenceFiles">
-            </cmh-file-uploader>
+            </cmh-file-uploader>-->
           </p-tabPanel>
         </p-tabView>
       </div>
     </div>
   </div>
 </div>
-<p-dialog header="Add NCR Procedure" [(visible)]="showAddNcrDialog" appendTo="body" [baseZIndex]="100001" [modal]='true'
-  [style]="{width: '50vw'}">
-  <div class="container">
-    <div class="row">
-      <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Company</th>
-            <th scope="col">Id</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ncrProcedure of ncrProceduresAvailable; let index=index">
-            <td scope="row">{{ ncrProcedure.name }}</td>
-            <td>{{ ncrProcedure.creatorCompany }}</td>
-            <td>{{ ncrProcedure.id }}</td>
-            <td><button class="btn btn-success m-2" (click)="insertNCR(ncrProcedure)"><i
-                  class="fas fa-link"></i>Insert</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <p-footer>
-    <div class="pull-right">
-      <button type="button" (click)="showAddNcrDialog = false" class="btn btn-outline-inverse width-100 mb-xs"
-        role="button">
-        Close
-      </button>
-    </div>
-  </p-footer>
-</p-dialog>

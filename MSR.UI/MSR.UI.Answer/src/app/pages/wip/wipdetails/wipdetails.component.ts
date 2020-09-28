@@ -37,9 +37,6 @@ export class WipdetailsComponent implements OnInit {
   menuItems = EnumMenuItem;
   originalSerialNumbers: Array<any> = new Array<any>();
 
-  showAddNcrDialog: boolean = false;
-  ncrProceduresAvailable: Array<Procedure>;
-
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
     private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, 
     private workOrderTaskService: WorkOrderTaskService, private locationService: LocationService, private userService: UserService) { }
@@ -198,76 +195,4 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskTimer.completeTask();
   }
 
-  addNcr() {
-
-    this.globals.showLoader(true);
-    this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler(response => {
-
-      this.ncrProceduresAvailable = response.object.filter(s => s.procedureType.name === 'Non-Conformation Operation');
-      this.showAddNcrDialog = !this.showAddNcrDialog;
-
-    }));
-
-  }
-
-  insertNCR(ncrProcedure: Procedure) {
-
-    this.procedureService.stepGet(ncrProcedure.id, null, env.apiVersion).subscribe(responseHandler((response) => {
-
-      let procedureSteps = <Array<ProcedureStepModel>>response.object;
-      let indexOfWorkOrderTaskInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
-      let numberOfStepsToAdd = procedureSteps.length;
-      let arrayOfPatchWorkOrderTaskRequests = new Array<any>()
-
-      for (let index = indexOfWorkOrderTaskInProgress + 1; index < this.workOrderModel.workOrderTasks?.length; index++) {
-
-        this.workOrderModel.workOrderTasks[index].taskStepOrder = index + numberOfStepsToAdd;
-
-        let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-          procedureId: this.workOrderModel.workOrderTasks[index].procedureStep.procedureId,
-          procedureStepId: this.workOrderModel.workOrderTasks[index].procedureStep.id,
-          workOrderId: this.workOrderModel.id,
-          taskStepOrder: this.workOrderModel.workOrderTasks[index].taskStepOrder
-        } as IUpdateWorkOrderTaskRequest);
-
-        arrayOfPatchWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
-      }
-
-      forkJoin(arrayOfPatchWorkOrderTaskRequests).subscribe(responses => {
-
-        let arrayOfPostWorkOrderTaskRequests = new Array<any>();
-  
-        let newTaskStepOrder = this.workOrderModel.workOrderTasks[indexOfWorkOrderTaskInProgress].taskStepOrder + 1;
-        procedureSteps.forEach(procedureStep => {
-  
-          let createWorkOrderTaskRequest = new CreateWorkOrderTaskRequest({
-            procedureId: procedureStep.procedureId,
-            procedureStepId: procedureStep.id,
-            workOrderId: this.workOrderModel.id,
-            taskStepOrder: newTaskStepOrder++
-          } as ICreateWorkOrderTaskRequest);
-  
-          arrayOfPostWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPost(env.apiVersion, createWorkOrderTaskRequest));
-  
-        });
-  
-        forkJoin(arrayOfPostWorkOrderTaskRequests).subscribe(responses => {
-  
-          responses.map(s => {
-  
-            let sample = s as AuditActionResultOfWorkOrderTaskModel;
-            let newWorkOrderTaskModel = sample.object;
-            this.workOrderModel.workOrderTasks.push(newWorkOrderTaskModel);
-  
-          });
-  
-          this.workOrderModel.workOrderTasks.sort((a,b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
-          this.showAddNcrDialog = !this.showAddNcrDialog;
-        });
-
-      });
-
-    }))
-
-  }
 }
