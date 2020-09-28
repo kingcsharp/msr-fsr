@@ -31,6 +31,14 @@ export class WipstatusWrapperComponent implements OnInit {
     this.globals.showLoader(true);
     this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
 
+      response.object.map(workOrderStatus => {
+
+        if(workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting Start'){
+          workOrderStatus.workOrderSummary.workOrderStatus = 'Waiting to Start';
+        }
+
+      });
+
       this.workOrderStatuses = response.object;
       this.displayWorkOrderStatuses = response.object;
 
@@ -58,6 +66,10 @@ export class WipstatusWrapperComponent implements OnInit {
 
     }));
 
+  }
+
+  cleanData(){
+    
   }
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number) {
