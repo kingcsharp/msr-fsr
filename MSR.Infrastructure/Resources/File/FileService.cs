@@ -89,7 +89,7 @@ namespace MSR.Infrastructure.Resources.Services
                 {
                     FileId = x.FileId,
                     Name = x.FileObject.Name,
-                    FileURL = "", // Not available here because it requires a call to AWS
+                    FileURL = _fileDownloader.GetURL(x.FileObject.FileURL, 6000),
                     EntityId = x.EntityId,
                     ContentType = x.FileObject.ContentType
                 }).ToList();
