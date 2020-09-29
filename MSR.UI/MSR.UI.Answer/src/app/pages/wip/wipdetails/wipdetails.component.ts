@@ -13,6 +13,7 @@ import { forkJoin } from "rxjs";
 import { tap } from "rxjs/operators";
 import { SelectItem } from 'primeng/api';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
+import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 
 @Component({
   selector: 'app-wipdetails',
@@ -25,6 +26,7 @@ import { WorkordertasktimerWrapperComponent } from '../../../components/workorde
 export class WipdetailsComponent implements OnInit {
 
   @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
+  @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
@@ -36,6 +38,7 @@ export class WipdetailsComponent implements OnInit {
   workOrderTaskToView: WorkOrderTaskModel;
   menuItems = EnumMenuItem;
   originalSerialNumbers: Array<any> = new Array<any>();
+  hideCompletedWorkOrders: boolean = false;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
     private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, 
@@ -195,4 +198,8 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskTimer.completeTask();
   }
 
+  toggleHideCompletedWorkOrders(){
+    this.hideCompletedWorkOrders = !this.hideCompletedWorkOrders;
+    this.selectWorkOrderDropDown.updateWorkOrders();
+  }
 }
