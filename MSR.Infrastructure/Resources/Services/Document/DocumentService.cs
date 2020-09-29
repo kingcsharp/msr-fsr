@@ -65,7 +65,7 @@ namespace MSR.Infrastructure.Resources.Services.Document
             {
                 dv.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), dv.Id);
 
-                dv.RoleIds = documents.Where(d => d.Id == dv.Id).FirstOrDefault().Roles.Select(r => r.Id).Cast<int>().ToList();
+                dv.RoleIds = documents.Where(d => d.Id == dv.Id).FirstOrDefault().Roles.Select(r => r.RoleId).Cast<int>().ToList();
             }
 
             return retDocumentViews;
@@ -165,7 +165,7 @@ namespace MSR.Infrastructure.Resources.Services.Document
                 var roleIdsToAdd = command.RoleIds.Where(i => !currentRoles.Contains(i)).ToList();
                 var roleIdsToRemove = currentRoles.Where(i => !command.RoleIds.Contains(i)).ToList();
 
-                var rolesToRemove = _unitOfWork.DocumentRoles.Query().Where(i => i.Id == command.Id && roleIdsToRemove.Contains(i.RoleId)).ToList();
+                var rolesToRemove = _unitOfWork.DocumentRoles.Query().Where(i => i.DocumentId == command.Id && roleIdsToRemove.Contains(i.RoleId)).ToList();
 
                 foreach (var addRoleId in roleIdsToAdd)
                 {
@@ -185,9 +185,11 @@ namespace MSR.Infrastructure.Resources.Services.Document
                     _unitOfWork.DocumentRoles.Delete(false, removeRole);
                 }
 
+                await _unitOfWork.SaveChangesAsync();
+
                 retDocument.RoleIds = currentRoles.Except(roleIdsToRemove).ToList();
                 retDocument.RoleIds.AddRange(roleIdsToAdd);
-
+                
                 // Update Document files mapping
                 var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), command.Id);
 
