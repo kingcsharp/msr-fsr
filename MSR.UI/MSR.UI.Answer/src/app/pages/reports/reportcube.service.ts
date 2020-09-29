@@ -414,6 +414,7 @@ export class ReportCubeService {
             },
             series: dataSeries
         }
+        
 
         return { resultData: resultData, chartOptions: chartOptions, chartInfo: chartInfo };
     }
