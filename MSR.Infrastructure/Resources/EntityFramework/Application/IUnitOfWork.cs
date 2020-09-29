@@ -57,6 +57,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<MonitorType> MonitorTypes { get; }
         IRepository<MonitorListItem> MonitorListItems { get; }
         IRepository<Document> Documents { get; }
+        IRepository<DocumentRoleMap> DocumentRoles { get; }
+        IRepository<DocumentEntityMap> DocumentEntityMap { get; }
         IRepository<Product> Products { get; }
         IRepository<Purchase> Purchases { get; }
         IRepository<PurchaseOrder> PurchaseOrders { get; }
@@ -81,6 +83,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ReportDashboard> ReportDashboards { get; }
         IRepository<ReportDashboardMap> ReportDashboardMaps { get; }
 
+        IRepository<EquipmentMaintenance> EquipmentMaintenances { get; }
+        
         void SaveChanges();
         Task SaveChangesAsync();
         DbSet<T> Query<T>() where T : class;

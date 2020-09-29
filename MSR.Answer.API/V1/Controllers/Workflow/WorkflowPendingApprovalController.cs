@@ -40,7 +40,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse<ICollection<PendingApprovalModel>>();
         }
-        //, HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanRead)
+
         [HttpGet("Details"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalPopoverModel>))]
         public async Task<IActionResult> GetApprovalDetails([FromQuery, Required] GetPendingApprovalDetailRequest request)
         {

@@ -16,6 +16,7 @@ namespace MSR.Answer.API.V1.Profiles
         /// </summary>
         public ApiMappingProfiles()
         {
+            CreateMap<GetUsersRequest, GetUsers>();
             CreateMap<GetLocationRequest, GetLocations>();
             CreateMap<CreateLocationRequest, CreateLocation>();
             CreateMap<UpdateLocationRequest, UpdateLocation>()
@@ -98,6 +99,13 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
             CreateMap<GetSearchRequest, GetSearch>();
             CreateMap<GetDashboardRequest, GetDashboard>();
+            CreateMap<UpdateAdminCostSettingRequest, UpdateAdminCostSetting>();
+            CreateMap<GetEquipmentMaintenanceRequest, GetEquipmentMaintenance>();
+            CreateMap<CreateEquipmentMaintenanceRequest, CreateEquipmentMaintenance>();
+            CreateMap<UpdateEquipmentMaintenanceRequest, UpdateEquipmentMaintenance>();
+            CreateMap<GetDocumentRequest, GetDocument>();
+            CreateMap<CreateDocumentRequest, CreateDocument>();
+            CreateMap<UpdateDocumentRequest, UpdateDocument>();
         }
     }
 }

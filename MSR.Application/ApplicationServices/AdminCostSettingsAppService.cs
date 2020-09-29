@@ -9,18 +9,25 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class AdminCostSettingsAppService :
-        ICommandHandler<GetAdminCostSettingsCommand>
+        ICommandHandler<GetAdminCostSettings>,
+        ICommandHandler<UpdateAdminCostSetting>
     {
-        private readonly IAdminCostSettingsService _service;
+        private readonly IAdminCostSettingsService _adminCostSettingsService;
 
-        public AdminCostSettingsAppService(IAdminCostSettingsService service)
+        public AdminCostSettingsAppService(IAdminCostSettingsService adminCostSettingsService)
         {
-            _service = service;
+            _adminCostSettingsService = adminCostSettingsService;
         }
 
-        public async Task<ICommandResponse> HandleAsync(GetAdminCostSettingsCommand command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(GetAdminCostSettings command, CancellationToken cancellationToken = default)
         {
-            return new CommandResponse<AdminCostSettingsModel>(await _service.GetAdminCostSettings());
+            return new CommandResponse<AdminCostSettingsModel>(await _adminCostSettingsService.GetAdminCostSettings());
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateAdminCostSetting command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _adminCostSettingsService.UpdateAdminCostSettingAsync(command);
+            return new CommandResponse<AdminCostSettingsModel>(ret);
         }
     }
 }

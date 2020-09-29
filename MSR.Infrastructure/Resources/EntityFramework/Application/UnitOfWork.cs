@@ -58,6 +58,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<DocumentApproval> _documentApprovals;
         private IRepository<ProductApproval> _productApprovals;
         private IRepository<Document> _documents;
+        private IRepository<DocumentRoleMap> _documentRoleMaps;
+        private IRepository<DocumentEntityMap> _documentEntityMap;
         private IRepository<Product> _products;
         private IRepository<PurchaseOrder> _purchaseOrders;
         private IRepository<PurchaseOrderProduct> _purchaseOrderProducts;
@@ -80,8 +82,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ReportCategoryMap> _reportCategoryMap;
         private IRepository<ReportDashboard> _reportDashboard;
         private IRepository<ReportDashboardMap> _reportDashboardMap;
+        private IRepository<EquipmentMaintenance> _equipmentMaintenances;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
+        public IRepository<DocumentRoleMap> DocumentRoles { get { return _documentRoleMaps ?? (_documentRoleMaps = new EFRepository<DocumentRoleMap>(Context)); } }
+        public IRepository<DocumentEntityMap> DocumentEntityMap { get { return _documentEntityMap ?? (_documentEntityMap = new EFRepository<DocumentEntityMap>(Context)); } }
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }
@@ -144,6 +149,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
         public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
         public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }
+        public IRepository<EquipmentMaintenance> EquipmentMaintenances { get { return _equipmentMaintenances ??= new EFRepository<EquipmentMaintenance>(Context); } }
 
         public IRepository<Report> Reports { get { return _report ??= new EFRepository<Report>(Context); } }
         public IRepository<ReportCategory> ReportCategories { get { return _reportCategory ??= new EFRepository<ReportCategory>(Context); } }

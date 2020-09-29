@@ -29,5 +29,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<DocumentEntityMap> DocumentEntityMaps { get; set; }
 
         public virtual ICollection<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get; set; }
+
+        public virtual ICollection<DocumentRoleMap> Roles { get; set; }
     }
 }
