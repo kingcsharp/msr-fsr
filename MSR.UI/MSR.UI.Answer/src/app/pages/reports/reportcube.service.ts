@@ -57,7 +57,6 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'ncdisposition', label: 'NC Disposition', visible: true, type: this.enumColumnType.String })
                 ];
-                break;
             case 'SerialNumberHistorybySerialNumber':
                 return [
                     new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
@@ -73,14 +72,12 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number })
                 ];
-                break;
             case "WorkInProcessbyWorkOrder":
                 return [
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: 'details', label: 'Details', visible: true, type: this.enumColumnType.String })
                 ];
-                break;
             case "MonitorsHistorybyWorkOrder":
                 return [
                     new ColumnsSaved({ id: 'value', label: 'Monitor Value', visible: true, type: this.enumColumnType.String }),
@@ -92,7 +89,6 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'workordername', label: 'WO Name', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String }),
                 ];
-                break;
             case "CombinedFinancialDatabyWorkOrder":
                 return [
                     new ColumnsSaved({ id: 'wonumber', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
@@ -115,7 +111,6 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
                 ];
-                break;
             case "WorkOrdersNotInvoicedbyWorkOrder":
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'Customer Purchase', visible: true, type: this.enumColumnType.String }),
@@ -125,29 +120,24 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'shipdate', label: 'WO Complete Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: 'wtax', label: 'Total', visible: true, type: this.enumColumnType.String })
                 ];
-                break;
             case "RevenuebyCustomerbyTimePeriod":
                 return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true }),
                 new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
                 ];
-                break;
             case "RevenuebyKitbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
                 ];
-
-                break;
             case "CountofKitsbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number })
                 ];
-                break;
             default:
                 break;
         }
@@ -178,13 +168,14 @@ export class ReportCubeService {
                     });
                     return elem;
                 })
-                return workInProcessbyWorkOrder;
+                return workInProcessbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));;
                 break;
             case "CombinedFinancialDatabyWorkOrder":
                 break;
             case "WorkOrdersNotInvoicedbyWorkOrder":
                 const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
-                return workOrdersNotInvoicedbyWorkOrder;
+
+                return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
             case "RevenuebyCustomerbyTimePeriod":
                 let dataDic = {};
                 // const resultData = [];
@@ -286,7 +277,9 @@ export class ReportCubeService {
     removeObjectsPropertyPrefix(elem: any) {
         let objToReturn = {};
         Object.keys(elem).forEach((key) => {
-            objToReturn[key.split('.')[1]] = elem[key];
+            const keysplitted = key.split('.');
+            const keyVal = keysplitted.length > 1 ? 1 : 0;
+            objToReturn[keysplitted[keyVal]] = elem[key];
         });
         return objToReturn;
     }
