@@ -42,6 +42,7 @@ export class AdhocComponent implements OnInit {
     chartOptions: Highcharts.Options;
     showCharts: boolean = false;
     chartInfo: ChartInfo;
+    hasChart: boolean = false;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
@@ -73,13 +74,17 @@ export class AdhocComponent implements OnInit {
     }
 
     handleFilter(ev, filteredData) {
+        if (!this.hasChart) {
+            return;
+        }
+
+        this.globals.showLoader(true);
         let objFiltered = {};
         if (Object.keys(filteredData.filters).length > 0) {
             filteredData.filteredValue.forEach(element => {
                 objFiltered[element.elemKey] = element;
             });
         } else {
-            debugger;
             filteredData.value.forEach(element => {
                 objFiltered[element.elemKey] = element;
             });
@@ -92,13 +97,15 @@ export class AdhocComponent implements OnInit {
             this.chartOptions = resp.chartOptions;
             this.chartInfo = resp.chartInfo;
             this.showCharts = true;
-        }, 1000);
+            this.globals.showLoader(false);
+        }, 300);
     }
 
     getCubeReport(reportInfo: ReportModel) {
         this.globals.showLoader(true);
         this.reportCubeService.getReport(reportInfo).then((resp) => {
             if (resp.chartOptions !== undefined) {
+                this.hasChart = true;
                 this.data = resp.resultData;
                 this.chartOptions = resp.chartOptions;
                 this.chartInfo = resp.chartInfo;

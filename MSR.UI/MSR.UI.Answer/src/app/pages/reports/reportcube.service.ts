@@ -131,7 +131,7 @@ export class ReportCubeService {
                 ];
                 break;
             case "RevenuebyCustomerbyTimePeriod":
-                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy' }),
+                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy', isRanged: true }),
                 new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
@@ -139,7 +139,7 @@ export class ReportCubeService {
                 break;
             case "RevenuebyKitbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy' }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy', isRanged: true }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
                 ];
@@ -147,7 +147,7 @@ export class ReportCubeService {
                 break;
             case "CountofKitsbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy' }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy', isRanged: true }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number })
                 ];

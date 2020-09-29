@@ -8,6 +8,7 @@ export interface IColumnsSaved {
     dropdownHeader?: boolean | undefined;
     multipleValues?: boolean | undefined;
     formatting?: string | undefined;
+    isRanged?: boolean | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
@@ -18,6 +19,7 @@ export class ColumnsSaved implements IColumnsSaved {
     multipleValues?: boolean | undefined;
     //used only for date values at the time but can be extended if wanted
     formatting?: string | undefined;
+    isRanged?: boolean | undefined;
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -45,6 +47,7 @@ export class ColumnsSaved implements IColumnsSaved {
             this.dropdownHeader = _data['dropdownHeader'];
             this.multipleValues = _data['multipleValues'];
             this.formatting = _data['formatting'];
+            this.isRanged = _data['isRanged'];
         }
     }
 
@@ -57,6 +60,7 @@ export class ColumnsSaved implements IColumnsSaved {
         data['dropdownHeader'] = this.dropdownHeader;
         data['multipleValues'] = this.multipleValues;
         data['formatting'] = this.formatting;
+        data['isRanged'] = this.isRanged;
 
         return data;
     }
