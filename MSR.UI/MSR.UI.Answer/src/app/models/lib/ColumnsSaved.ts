@@ -7,8 +7,9 @@ export interface IColumnsSaved {
     type?: EnumColumnType | undefined;
     dropdownHeader?: boolean | undefined;
     multipleValues?: boolean | undefined;
-    formatting?: string | undefined;
     isRanged?: boolean | undefined;
+    formattingMoment?: string | undefined;
+    formattingAngular?: string | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
@@ -18,7 +19,9 @@ export class ColumnsSaved implements IColumnsSaved {
     dropdownHeader?: boolean | undefined;
     multipleValues?: boolean | undefined;
     //used only for date values at the time but can be extended if wanted
-    formatting: string = 'MM-YYYY';
+    formattingMoment: string = 'MM-YYYY';
+    formattingAngular: string = 'MM-yyyy';
+    
     isRanged?: boolean | undefined;
 
     constructor(data?: IColumnsSaved) {
@@ -46,7 +49,8 @@ export class ColumnsSaved implements IColumnsSaved {
             this.type = _data['type'];
             this.dropdownHeader = _data['dropdownHeader'];
             this.multipleValues = _data['multipleValues'];
-            this.formatting = _data['formatting'];
+            this.formattingMoment = _data['formattingMoment'];
+            this.formattingAngular = _data['formattingAngular'];
             this.isRanged = _data['isRanged'];
         }
     }
@@ -59,7 +63,8 @@ export class ColumnsSaved implements IColumnsSaved {
         data['type'] = this.type;
         data['dropdownHeader'] = this.dropdownHeader;
         data['multipleValues'] = this.multipleValues;
-        data['formatting'] = this.formatting;
+        data['formattingMoment'] = this.formattingMoment;
+        data['formattingAngular'] = this.formattingAngular;
         data['isRanged'] = this.isRanged;
 
         return data;

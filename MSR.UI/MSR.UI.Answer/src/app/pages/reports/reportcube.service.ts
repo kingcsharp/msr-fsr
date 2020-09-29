@@ -37,7 +37,7 @@ export class ReportCubeService {
     */
 
     public getReportColumns(reportInfo: ReportModel) {
-        switch (reportInfo.name.replace(/\s/g,'') + reportInfo.subtitle.replace(/\s/g,'')) {
+        switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'WorkOrderPartsHistorybyPartNumber':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
@@ -127,7 +127,7 @@ export class ReportCubeService {
                 ];
                 break;
             case "RevenuebyCustomerbyTimePeriod":
-                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy', isRanged: true }),
+                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true }),
                 new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
@@ -135,7 +135,7 @@ export class ReportCubeService {
                 break;
             case "RevenuebyKitbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy', isRanged: true }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
                 ];
@@ -143,7 +143,7 @@ export class ReportCubeService {
                 break;
             case "CountofKitsbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy', isRanged: true }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, isRanged: true }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number })
                 ];
@@ -166,7 +166,7 @@ export class ReportCubeService {
     }
 
     public filterReportData(data: any, reportInfo: ReportModel) {
-        switch (reportInfo.name.replace(/\s/g,'') + reportInfo.subtitle.replace(/\s/g,'')) {
+        switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case "MonitorsHistorybyWorkOrder":
                 const workInProcessbyWorkOrder = data.map(elem => {
                     //we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
@@ -189,7 +189,7 @@ export class ReportCubeService {
                 let dataDic = {};
                 // const resultData = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.customername'].replace(/\s/g,'') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g,'');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.customername'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
                     if (dataDic[elemKey] === undefined) {
                         dataDic[elemKey] = {
                             elemKey: elemKey,
@@ -217,7 +217,7 @@ export class ReportCubeService {
                 let dataDic3 = {};
                 const resultData2 = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g,'') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g,'');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
                     if (dataDic3[elemKey] === undefined) {
                         dataDic3[elemKey] = {
                             elemKey: elemKey,
@@ -246,7 +246,7 @@ export class ReportCubeService {
             case "CountofKitsbyPart/Kit":
                 let dataDic2 = {};
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g,'') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g,'');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
                     if (dataDic2[elemKey] === undefined) {
                         dataDic2[elemKey] = {
                             elemKey: elemKey,
@@ -275,18 +275,20 @@ export class ReportCubeService {
             default:
                 if (data.length > 0) {
                     //CUBE js sends data with CubePartsmonitors. which is not supported by primeNg so we need to create a new obj.
-                    const resultDataArr = data.map((elem) => {
-                        let objToReturn = {};
-                        Object.keys(elem).forEach((key) => {
-                            objToReturn[key.split('.')[1]] = elem[key];
-                        });
-                        return objToReturn;
-                    });
+                    const resultDataArr = data.map((elem) => this.removeObjectsPropertyPrefix(elem));
                     return resultDataArr;
                 }
                 break;
         }
         return data;
+    }
+
+    removeObjectsPropertyPrefix(elem: any) {
+        let objToReturn = {};
+        Object.keys(elem).forEach((key) => {
+            objToReturn[key.split('.')[1]] = elem[key];
+        });
+        return objToReturn;
     }
 
     public generateChart(chartInfo3) {

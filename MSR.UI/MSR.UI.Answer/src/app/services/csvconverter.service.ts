@@ -57,12 +57,11 @@ export class CSVConverterService {
             return "";
         }
         if (column.type === EnumColumnType.Date) {
-            return moment(value).format(column.formatting);
+            return moment(value).format(column.formattingMoment);
         }
         if (column.type === EnumColumnType.Boolean) {
             return value === true ? 'Yes' : 'No';
         }
-
 
         return value;
     }

@@ -5,9 +5,9 @@
 <widget>
     <div *ngIf="hasChart" style="height: 600px;">
         <highcharts-chart *ngIf="showCharts" [Highcharts]="Highcharts" [options]="chartOptions"
-        style="width: 100%; height: 100%; display: block;"></highcharts-chart>
+            style="width: 100%; height: 100%; display: block;"></highcharts-chart>
     </div>
-    
+
 
     <p-table #dt *ngIf="showReport" [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true"
         [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
@@ -68,9 +68,10 @@
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <div *ngIf="colsDataAndSettings.col.formatting=== undefined">
             {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}</div>
-            <div *ngIf="colsDataAndSettings.col.formatting!== undefined">
-                {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | date: colsDataAndSettings.col.formatting }}</div>
-    </td> 
+        <div *ngIf="colsDataAndSettings.col.formatting!== undefined">
+            {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | date: colsDataAndSettings.col.formattingAngular }}
+        </div>
+    </td>
     <td *ngIf="colsDataAndSettings.col.type === enumColumnType.StringArray"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <span *ngFor="let item of colsDataAndSettings.colData[colsDataAndSettings.col.id]"
@@ -116,7 +117,8 @@
     <th *ngIf="colsAndSettings.col.type === enumColumnType.Date && !colsAndSettings.col.dropdownHeader"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">
         <div class="position-relative" tooltip="{{colsAndSettings.col.label}}">
-            <pcalendar-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [isRanged]="colsAndSettings.col.isRanged" [filterId]="colsAndSettings.col.id"
+            <pcalendar-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId"
+                [isRanged]="colsAndSettings.col.isRanged" [filterId]="colsAndSettings.col.id"
                 [datatable]="colsAndSettings.dt">
             </pcalendar-wrapper>
         </div>
