@@ -57,3 +57,30 @@ ol{
     list-style-type: decimal;
     padding-inline-start: 40px;
 }
+
+@media print {
+
+    .report.ui-dialog{
+        max-width: none;
+        width: 100% !important;
+        height:100% !important;
+    }
+
+    .report.ui-dialog .ui-dialog-titlebar {
+        display: none !important;
+    }
+
+    .report.ui-dialog .ui-dialog-content{
+        background-color: transparent;
+        border:none;
+        height: 100% !important;
+    }
+
+    .report.ui-dialog .ui-dialog-footer{
+        display: none !important;
+    }
+
+    .report.ui-dialog .report-viewport{
+        height:100% !important;
+    }
+}

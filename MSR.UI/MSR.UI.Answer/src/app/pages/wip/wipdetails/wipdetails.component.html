@@ -34,8 +34,8 @@
           <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
           <div class="row justify-content-end">
             <button type="button" class="btn btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> 
-            <button type="button" class="btn btn-primary mr-2"><i class="fas fa-print mx-1"></i>Print Traveler</button>
-            <button type="button" class="btn btn-primary mr-0"><i class="fas fa-print mx-1"></i>Print Other</button>
+            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="false"></printtraveler-report>
+            <button type="button" class="btn btn-primary mr-0"*ngIf="false"><i class="fas fa-print mx-1"></i>Print Other</button>
           </div>
         </div>
         <div class="col-6">
@@ -189,7 +189,6 @@
           <li>If you wish close and invoice for this Work Order, click the Yes - And Invoice button below.</li>
           <li>If you do not want to invoice for this Work Order click the Yes - But Do Not Invoice button below.</li>
         </ol>
-        
         Other wise click the <b>Cancel</b> button to continue with this Work Order.
       </div>
     </div>

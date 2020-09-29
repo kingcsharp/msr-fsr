@@ -24,6 +24,8 @@ import { EmPmButtonWrapperComponent } from '../../components/em-pm-button-wrappe
 import { AddNcrButtonWrapperComponent} from '../../components/add-ncr-button-wrapper/add-ncr-button-wrapper.component';
 import { WipListButtonWrapperComponent } from '../../components/wip-list-button-wrapper/wip-list-button-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component'
+import { PrinttravelerReportComponent } from '../../components/printtraveler-report/printtraveler-report.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -37,7 +39,7 @@ export const routes = [
 @NgModule({
   declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent, 
     WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
-    WipListButtonWrapperComponent,SelectWorkOrderDropDownWrapperComponent],
+    WipListButtonWrapperComponent,SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -52,7 +54,8 @@ export const routes = [
     TabViewModule,
     CarouselModule,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    QRCodeModule
   ]
 })
 export class WipModule { static routes = routes; }

@@ -241,4 +241,5 @@ export class WipdetailsComponent implements OnInit {
     }
 
   }
+
 }
