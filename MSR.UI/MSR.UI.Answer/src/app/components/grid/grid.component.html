@@ -58,9 +58,9 @@
     </td>
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
-        <div *ngIf="colsDataAndSettings.col.formatting=== undefined">
+        <div *ngIf="colsDataAndSettings.col.formattingAngular === undefined">
             {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}</div>
-        <div *ngIf="colsDataAndSettings.col.formatting!== undefined">
+        <div *ngIf="colsDataAndSettings.col.formattingAngular !== undefined">
             {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | date: colsDataAndSettings.col.formattingAngular }}
         </div>
     </td>
@@ -81,9 +81,10 @@
     </th>
     <th *ngIf="colsAndSettings.col.dropdownHeader && colsAndSettings.col.multipleValues"
         [hidden]="!cg.isVisibleCol(colsAndSettings.col.id,colsAndSettings.gridSaved.columnsSaved)">
-        <multiselect-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [options]="gridData" filterProp="name"
-            defaultId="id" filterId="{{colsAndSettings.col.id}}" defaultText="Select {{colsAndSettings.col.label}}"
-            defaultTextTooltip="" [datatable]="colsAndSettings.dt" [multipleValues]="true">
+        <multiselect-wrapper [gridStorageId]="colsAndSettings.gridSaved.storageId" [options]="gridData"
+            filterProp="name" defaultId="id" filterId="{{colsAndSettings.col.id}}"
+            defaultText="Select {{colsAndSettings.col.label}}" defaultTextTooltip="" [datatable]="colsAndSettings.dt"
+            [multipleValues]="true">
         </multiselect-wrapper>
     </th>
     <th *ngIf="colsAndSettings.col.type === enumColumnType.String && !colsAndSettings.col.dropdownHeader"

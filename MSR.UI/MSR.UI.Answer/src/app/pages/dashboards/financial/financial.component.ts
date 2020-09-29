@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
@@ -6,20 +5,13 @@ import {
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
-import { ViewSaved } from '../../../models/lib/ViewSaved';
-import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, forkJoin, of } from 'rxjs';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
 import { ActivatedRoute } from '@angular/router';
-import { EnumColumnType } from '../../../models/enums/EnumColumnType';
 import { GridSaved } from '../../../models/lib/GridSaved';
-// import { ReportCubeService } from '../../../../app/components/c';
-import { ChartInfo } from '../../../../app/models/lib/ChartInfo';
-
+import { ReportCubeService } from '../../../pages/reports/reportcube.service';
+import { EnumReport } from '../../../../app/models/enums/ReportType';
 declare let jQuery: any;
 
 @Component({
@@ -29,9 +21,55 @@ declare let jQuery: any;
     encapsulation: ViewEncapsulation.None
 })
 export class FinancialComponent implements OnInit {
+    gridSaved: GridSaved;
+    reportId: string;
+    reportInfo: ReportModel;
+    showReport: boolean;
+    hasChart: boolean = false;
+
+    gridSaved2: GridSaved;
+    reportId2: string;
+    reportInfo2: ReportModel;
+    showReport2: boolean;
+    hasChart2: boolean = false;
+
+    constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
+        private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
+        private reportCubeService: ReportCubeService) {
+
+
+    }
 
     ngOnInit(): void {
-        // throw new Error('Method not implemented.');
+        this.getReportData();
+    }
+
+    getReportData() {
+        this.globals.showLoader(true);
+
+        this.reportService.report(env.apiVersion).pipe(take(1))
+            .subscribe(responseHandler(response => {
+                this.reportInfo = response.object.filter(x => x.id === EnumReport.CombinedFinancialDatabyWorkOrder)[0];
+                this.gridSaved = new GridSaved({
+                    columnsSaved: this.reportCubeService.getReportColumns(this.reportInfo),
+                    storageId: this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') + this.elem.nativeElement.tagName.toLowerCase(),
+                    version: '1.0.0'
+                });
+
+                this.showReport = true;
+            }));
+
+        this.reportService.report(env.apiVersion).pipe(take(1))
+            .subscribe(responseHandler(response => {
+                this.reportInfo2 = response.object.filter(x => x.id === EnumReport.WorkOrdersNotInvoicedbyWorkOrder)[0];
+                this.gridSaved2 = new GridSaved({
+                    columnsSaved: this.reportCubeService.getReportColumns(this.reportInfo2),
+                    storageId: this.reportInfo2.name.replace(/\s/g, '') + this.reportInfo2.subtitle.replace(/\s/g, '') + this.elem.nativeElement.tagName.toLowerCase(),
+                    version: '1.0.0'
+                });
+
+                this.showReport2 = true;
+            }));
     }
 
 

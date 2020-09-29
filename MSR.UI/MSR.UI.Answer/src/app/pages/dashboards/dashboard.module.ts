@@ -23,8 +23,8 @@ import { FinancialComponent } from './financial/financial.component';
 
 export const routes = [
   { path: '', redirectTo: 'report/operationsdashboard', pathMatch: 'full' },
-  { path: 'report/operationsdashboard', component: FinancialComponent, pathMatch: 'full' },
-  { path: 'report/financialdashboard', component: OperationsComponent, pathMatch: 'full' }
+  { path: 'report/operationsdashboard', component: OperationsComponent, pathMatch: 'full' },
+  { path: 'report/financialdashboard', component: FinancialComponent, pathMatch: 'full' }
 ];
 
 @NgModule({

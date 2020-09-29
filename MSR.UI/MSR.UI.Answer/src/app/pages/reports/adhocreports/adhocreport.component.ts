@@ -5,15 +5,12 @@ import {
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
-import { EnumPrivilege } from '../../../models/enums/privileges';
 import { responseHandler } from '../../../utils/responseHandler';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
-import { EnumColumnType } from '../../../models/enums/EnumColumnType';
 import { GridSaved } from '../../../models/lib/GridSaved';
 import { ReportCubeService } from '../reportcube.service';
-import { ChartInfo } from '../../../../app/models/lib/ChartInfo';
 
 declare let jQuery: any;
 
@@ -24,16 +21,10 @@ declare let jQuery: any;
     encapsulation: ViewEncapsulation.None
 })
 export class AdhocComponent implements OnInit {
-    privileges = EnumPrivilege;
-    enumColumnType = EnumColumnType;
-    data: any;
     gridSaved: GridSaved;
     reportId: string;
     reportInfo: ReportModel;
     showReport: boolean;
-
-    showCharts: boolean = false;
-    chartInfo: ChartInfo;
     hasChart: boolean = false;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
