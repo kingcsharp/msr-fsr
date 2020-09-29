@@ -18,15 +18,18 @@ import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 
 import { PopoverModule } from 'ngx-bootstrap/popover';
-//dashboards/report/operationsdashboard
+import { OperationsComponent } from './operational/operations.component';
+import { FinancialComponent } from './financial/financial.component';
+
 export const routes = [
-  { path: '', redirectTo: 'report/adhocreports', pathMatch: 'full' },
-//   { path: 'report/operationsdashboard', component: ReportComponent, pathMatch: 'full' }
+  { path: '', redirectTo: 'report/operationsdashboard', pathMatch: 'full' },
+  { path: 'report/operationsdashboard', component: FinancialComponent, pathMatch: 'full' },
+  { path: 'report/financialdashboard', component: OperationsComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
   declarations: [
-    
+    FinancialComponent, OperationsComponent
   ],
   imports: [
     CommonModule,

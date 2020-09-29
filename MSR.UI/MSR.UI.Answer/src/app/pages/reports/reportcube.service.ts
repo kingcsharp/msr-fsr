@@ -170,8 +170,6 @@ export class ReportCubeService {
                 })
                 return workInProcessbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));;
                 break;
-            case "CombinedFinancialDatabyWorkOrder":
-                break;
             case "WorkOrdersNotInvoicedbyWorkOrder":
                 const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
 

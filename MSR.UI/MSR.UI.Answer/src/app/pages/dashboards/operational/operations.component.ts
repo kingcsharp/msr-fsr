@@ -19,17 +19,17 @@ import { EnumColumnType } from '../../../models/enums/EnumColumnType';
 import { GridSaved } from '../../../models/lib/GridSaved';
 // import { ReportCubeService } from '../../../../app/components/c';
 import * as Highcharts from 'highcharts';
-import { ChartInfo } from '../../../../app/models/lib/ChartInfo';
+import { ChartInfo } from '../../../models/lib/ChartInfo';
 
 declare let jQuery: any;
 
 @Component({
-    selector: 'app-financial',
-    templateUrl: './financial.component.html',
-    styleUrls: ['./financial.component.scss'],
+    selector: 'app-operations',
+    templateUrl: './operations.component.html',
+    styleUrls: ['./operations.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class FinancialComponent implements OnInit {
+export class OperationsComponent implements OnInit {
 
     ngOnInit(): void {
         // throw new Error('Method not implemented.');
