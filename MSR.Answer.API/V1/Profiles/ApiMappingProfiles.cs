@@ -115,7 +115,11 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.LocationName, opts => opts.MapFrom(src => src.Location.Name));
             CreateMap<UpdateWorkOrderPartRequest, UpdateWorkOrderPart>();
             CreateMap<CreateWorkOrderTaskRequest, CreateWorkOrderTask>();
-            CreateMap<UpdateWorkOrderTaskRequest, UpdateWorkOrderTask>();
+            CreateMap<UpdateWorkOrderTaskRequest, UpdateWorkOrderTask>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderTaskId))
+                .ForMember(dest => dest.AssignedTo, opts => opts.MapFrom(src => src.AssignedUserId))
+                .ForMember(dest => dest.TaskRunningSince, opts => opts.MapFrom(src =>
+                    (src.TaskRunningSince.Ticks > 0) ? src.TaskRunningSince : (DateTime?)null));
             CreateMap<UpdateWorkOrderTaskMonitorRequest, UpdateWorkOrderTaskMonitor>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderTaskMonitorId));
         }

@@ -35,7 +35,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<User, UserApproval>();
             #endregion
 
-            #region Customer 
+            #region Customer
             CreateMap<Customer, Domain.Models.Customer>()
                     .ForMember(dest => dest.Location, opts => opts.AllowNull())
                     .ForMember(dest => dest.PrimaryContactUser, opts => opts.AllowNull())
@@ -100,7 +100,7 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
-           
+
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
@@ -390,6 +390,25 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderPartId));
 
             CreateMap<CreateWorkOrderTask, WorkOrderTask>();
+            CreateMap<UpdateWorkOrderTask, WorkOrderTask>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => ignoreNullOrZero(srcMember)));
+        }
+
+        private static bool ignoreNullOrZero(object srcMember)
+        {
+            if (srcMember == null) {
+                return false;
+            }
+
+            if ((srcMember is int) && (int)srcMember == 0) {
+                return false;
+            }
+
+            if ((srcMember is DateTime) && ((DateTime)srcMember).Ticks == 0) {
+                return false;
+            }
+
+            return true;
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)
