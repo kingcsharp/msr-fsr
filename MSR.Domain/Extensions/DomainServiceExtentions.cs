@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Amazon.S3;
 using Amazon.Runtime;
 using MSR.Domain.Validators;
-using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Domain.Extensions
 {
@@ -18,7 +17,7 @@ namespace MSR.Domain.Extensions
         public static IServiceCollection AddDomainServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<ICommandDispatcher, CommandDispatcher>();
-            services.AddScoped<ISendSQSMessages, BusSender>();
+            services.AddSingleton<ISendSQSMessages, BusSender>();
 
             var s3Config = config.GetSection(nameof(S3Information)).Get<S3Information>();
             var sQSInformation = config.GetSection(nameof(SQSInformation)).Get<SQSInformation>();

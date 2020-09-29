@@ -222,6 +222,11 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 users = users.Where(i => i.Email == command.Email);
             }
 
+            if (command.HasRoleIDs != null && command.HasRoleIDs.Any())
+            {
+                users = users.Where(i => i.Roles.Any(r => command.HasRoleIDs.Contains(r.RoleId)));
+            }
+
             var userList = new List<Domain.Models.UserModel>();
 
             var usersTo = await users.Include(x => x.TimeZone).Include(x => x.Location).Include(x => x.Supervisor)

@@ -44,6 +44,11 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 locationQuery = locationQuery.Where(i => i.ParentId == command.ParentId);
             }
 
+            if (!string.IsNullOrEmpty(command.InternalAddress))
+            {
+                locationQuery = locationQuery.Where(i => i.InternalAddress == command.InternalAddress);
+            }
+
             var locations = await locationQuery.Include(i => i.Parent).Include(i => i.TimeZone)
                                                .ToListAsync();
 

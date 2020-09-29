@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(DocumentEntityMap))]
-    public partial class DocumentEntityMap: TrackableEntity
+    public partial class DocumentEntityMap: CreatableEntity
     {
         public int DocumentId { get; set; }
 

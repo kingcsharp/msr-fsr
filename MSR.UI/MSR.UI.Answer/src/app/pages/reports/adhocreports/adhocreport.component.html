@@ -1,0 +1,9 @@
+<h1 class="page-title" data-cy="page-title">
+    <i class="fas fa-clock-o"></i>
+    Adhoc-Reports
+</h1>
+<widget>
+    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport"
+        [reportInfo]="reportInfo">
+    </app-grid>
+</widget>

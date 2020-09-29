@@ -1,5 +1,4 @@
-﻿using MSR.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace MSR.Answer.API.V1.Models

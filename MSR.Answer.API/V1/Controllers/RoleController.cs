@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -11,7 +10,6 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
-using MSR.Domain.Views;
 
 namespace MSR.Answer.API.V1.Controllers
 {

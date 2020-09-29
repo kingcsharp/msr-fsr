@@ -33,6 +33,9 @@ import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
 import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-switch/bootstrap-switch.component';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { TableModule } from 'primeng/table';
+import { GridComponent } from '../../../app/components/grid/grid.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   declarations: [
@@ -50,15 +53,16 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     GridOptionsComponent,
     TimeZonePipe,
     BootstrapSwitchComponent,
-    CkeditorWrapperComponent
+    CkeditorWrapperComponent,
+    GridComponent
   ],
   exports: [
+    GridComponent,
     ProgressAnimateDirective,
     AnimateNumberDirective,
     MultiselectWrapperComponent,
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
-    FileUploadModule,
     GridFileViewerComponent,
     ApproveEntityComponent,
     CsvImportComponent,
@@ -78,6 +82,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     CkeditorWrapperComponent
   ],
   imports: [
+    TableModule,
     CommonModule,
     CalendarModule,
     FormsModule,
@@ -87,7 +92,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     CheckboxModule,
     TooltipModule.forRoot(),
     NgxDocViewerModule,
-    CKEditorModule
+    CKEditorModule,
+    HighchartsChartModule
   ],
   providers: [DatePipe]
 })
