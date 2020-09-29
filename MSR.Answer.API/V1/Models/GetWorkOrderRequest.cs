@@ -33,5 +33,10 @@ namespace MSR.Answer.API.V1.Models
         /// Get work orders by invoice Date
         /// </summary>
         public string invoiceDate { get; set; }
+
+        /// <summary>
+        /// Get work orders with ANY tasks assigned to this user ID
+        /// </summary>
+        public int? assignedToId { get; set; }
     }
 }

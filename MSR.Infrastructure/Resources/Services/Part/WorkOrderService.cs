@@ -71,6 +71,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
+            if (command.assignedToId.HasValue) {
+                query = query.Where(x =>
+                    x.WorkOrderTasks.Any(y =>
+                        y.AssignedTo == command.assignedToId));
+            }
+
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .ThenInclude(y => y.Part)
