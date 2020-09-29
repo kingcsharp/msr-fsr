@@ -301,7 +301,7 @@ export class ReportCubeService {
                 const nameIndex = dataSeries.findIndex(x => x.name === name);
                 if (nameIndex !== -1) {
                     dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
-                    if(isNaN(dataSeries[nameIndex].data[index])){
+                    if (isNaN(dataSeries[nameIndex].data[index])) {
                         debugger;
                     }
                 } else {
@@ -311,7 +311,7 @@ export class ReportCubeService {
                     });
                     dataArr[index] += chartInfo.chartData[x][chartInfo.stackBy];
                     dataArr.forEach(element => {
-                        if(isNaN(element)){
+                        if (isNaN(element)) {
                             debugger;
                         }
                     });
@@ -359,13 +359,20 @@ export class ReportCubeService {
             },
             yAxis: {
                 min: 0,
-                // title: {
-                //     text: chartInfo.yAxisTitle,
-                //     style: {
-                //         color: '#fff',
-                //         fontFamily: "Open Sans"
-                //     }
-                // },
+                title: {
+                    text: chartInfo.yAxisTitle,
+                    style: {
+                        color: '#fff',
+                        fontFamily: "Open Sans"
+                    }
+                },
+                labels: {
+                    style: {
+                        color: '#fff',
+                        fontSize: '13px',
+                        fontFamily: "Open Sans"
+                    }
+                },
                 stackLabels: {
                     enabled: true,
                     style: {
