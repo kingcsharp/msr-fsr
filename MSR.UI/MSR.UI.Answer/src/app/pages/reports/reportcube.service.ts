@@ -324,6 +324,13 @@ export class ReportCubeService {
             resultData.push(chartInfo.chartData[x]);
         });
 
+        Highcharts.setOptions({
+            lang: {
+                decimalPoint: '.',
+                thousandsSep: ','
+            },
+          });
+
         let chartOptions: Highcharts.Options = {
             chart: {
                 backgroundColor: '#222d3c',
@@ -341,6 +348,7 @@ export class ReportCubeService {
             // colors: ['#56616f'],
             xAxis: {
                 type: 'category',
+                
                 labels: {
                     style: {
                         color: '#fff',
@@ -402,7 +410,7 @@ export class ReportCubeService {
             // },
             tooltip: {
                 headerFormat: '<b>Month:</b> {point.x}<br/>',
-                pointFormat: '<b>{series.name}</b>: {point.y:.1f}<br/> <b>Total</b>: {point.stackTotal}'
+                pointFormat: '<b>{series.name}</b>: {point.y:,.2f}<br/> <b>Total</b>: {point.stackTotal:,.2f}'
             },
             plotOptions: {
                 column: {
