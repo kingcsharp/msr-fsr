@@ -630,7 +630,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             else
             {
-                status = "Waiting Start";
+                status = "Waiting to Start";
             }
             return status;
         }
