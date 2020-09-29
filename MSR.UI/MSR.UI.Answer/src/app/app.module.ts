@@ -27,7 +27,7 @@ import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
   FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService, ReportService,
-  SearchService, ProcedureService
+  SearchService, ProcedureService, DocumentService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -86,7 +86,7 @@ const APP_PROVIDERS = [
     },
     LocationService,
     RoleService,
-    PurchaseOrderService, CustomerService, ProductService, ReportService, SearchService, ProcedureService
+    PurchaseOrderService, CustomerService, ProductService, ReportService, SearchService, ProcedureService, DocumentService
   ]
 })
 // { //we have this bse url set in the app.config that's why we define as ''

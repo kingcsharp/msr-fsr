@@ -7,7 +7,7 @@ import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
 import { Globals } from '../../models/lib/globals';
 import {
-  SearchService, ProcedureService, WorkOrderService, PartService
+  SearchService, ProcedureService, WorkOrderService, PartService, DocumentService
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
@@ -30,7 +30,7 @@ export class SearchComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute, private elem: ElementRef, public cg: CommonGrid,
     private workOrderService: WorkOrderService, private globals: Globals, private searchService: SearchService,
-    private procedureService: ProcedureService, private partService: PartService, private router: Router) {
+    private procedureService: ProcedureService, private partService: PartService, private router: Router, private documentService: DocumentService) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.getSearchData(params['search'])
     });
@@ -79,6 +79,12 @@ export class SearchComponent implements OnInit {
         break;
       case 'Part':
         this.partService.partGet(rowData.itemId, env.apiVersion).pipe(take(1))
+          .subscribe(responseHandler(response => {
+            this.setGridData(response, rowData);
+          }));
+        break;
+      case 'Document':
+        this.documentService.documentGet(rowData.itemId, env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.setGridData(response, rowData);
           }));
