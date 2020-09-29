@@ -33,7 +33,8 @@ export class CSVConverterService {
             let line = '';
             for (let index in headerList) {
                 let head = headerList[index];
-                const item = "\"" + array[i][head] + "\"";
+                const value = array[i][head];
+                const item = "\"" + this.getDefaultValue(value) + "\"";
                 if (line.length > 0) {
                     line += ',';
                 }
@@ -43,5 +44,12 @@ export class CSVConverterService {
             str += line + '\r\n';
         }
         return str;
+    }
+
+    getDefaultValue(value){
+        if(value === null){
+            return "";
+        }
+        return value;
     }
 }

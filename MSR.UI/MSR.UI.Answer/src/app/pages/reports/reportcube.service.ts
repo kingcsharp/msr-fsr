@@ -37,14 +37,14 @@ export class ReportCubeService {
     */
 
     public getReportColumns(reportInfo: ReportModel) {
-        switch (reportInfo.name.replace(/ /g, '') + reportInfo.subtitle.replace(/ /g, '')) {
+        switch (reportInfo.name.replace(/\s/g,'') + reportInfo.subtitle.replace(/\s/g,'')) {
             case 'WorkOrderPartsHistorybyPartNumber':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'shipdate', label: 'Date Completed', visible: true, type: this.enumColumnType.Date }),
-                    new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'ncdisposition', label: 'NC Disposition', visible: true, type: this.enumColumnType.String })
                 ];
                 break;
@@ -54,7 +54,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'shipdate', label: 'Date Completed', visible: true, type: this.enumColumnType.Date }),
-                    new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'ncdisposition', label: 'NC Disposition', visible: true, type: this.enumColumnType.String })
                 ];
                 break;
@@ -71,7 +71,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number })
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number })
                 ];
                 break;
             case "WorkInProcessbyWorkOrder":
@@ -166,7 +166,7 @@ export class ReportCubeService {
     }
 
     public filterReportData(data: any, reportInfo: ReportModel) {
-        switch (reportInfo.name.replace(/ /g, '') + reportInfo.subtitle.replace(/ /g, '')) {
+        switch (reportInfo.name.replace(/\s/g,'') + reportInfo.subtitle.replace(/\s/g,'')) {
             case "MonitorsHistorybyWorkOrder":
                 const workInProcessbyWorkOrder = data.map(elem => {
                     //we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
@@ -189,7 +189,7 @@ export class ReportCubeService {
                 let dataDic = {};
                 // const resultData = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.customername'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.customername'].replace(/\s/g,'') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g,'');
                     if (dataDic[elemKey] === undefined) {
                         dataDic[elemKey] = {
                             elemKey: elemKey,
@@ -217,7 +217,7 @@ export class ReportCubeService {
                 let dataDic3 = {};
                 const resultData2 = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g,'') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g,'');
                     if (dataDic3[elemKey] === undefined) {
                         dataDic3[elemKey] = {
                             elemKey: elemKey,
@@ -246,7 +246,7 @@ export class ReportCubeService {
             case "CountofKitsbyPart/Kit":
                 let dataDic2 = {};
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g,'') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g,'');
                     if (dataDic2[elemKey] === undefined) {
                         dataDic2[elemKey] = {
                             elemKey: elemKey,

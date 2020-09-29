@@ -64,7 +64,7 @@ export class AdhocComponent implements OnInit {
                 this.reportInfo = response.object.filter(x => x.id === parseInt(this.reportId))[0];
                 this.gridSaved = new GridSaved({
                     columnsSaved: this.reportCubeService.getReportColumns(this.reportInfo),
-                    storageId: this.reportInfo.name.replace(/ /g, '') + this.reportInfo.subtitle.replace(/ /g, '') + this.elem.nativeElement.tagName.toLowerCase(),
+                    storageId: this.reportInfo.name.replace(/\s/g,'') + this.reportInfo.subtitle.replace(/\s/g,'') + this.elem.nativeElement.tagName.toLowerCase(),
                     version: '1.0.0'
                 });
 
