@@ -311,7 +311,7 @@ export class AdminCostSettingsService {
     /**
      * Get all admin cost settings
      */
-    adminCostSettings(version: string): Observable<AuditActionResultOfAdminCostSettingsModel> {
+    adminCostSettingsGet(version: string): Observable<AuditActionResultOfAdminCostSettingsModel> {
         let url_ = this.baseUrl + "/v{version}/AdminCostSettings";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -327,11 +327,11 @@ export class AdminCostSettingsService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAdminCostSettings(response_);
+            return this.processAdminCostSettingsGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAdminCostSettings(<any>response_);
+                    return this.processAdminCostSettingsGet(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfAdminCostSettingsModel>><any>_observableThrow(e);
                 }
@@ -340,7 +340,65 @@ export class AdminCostSettingsService {
         }));
     }
 
-    protected processAdminCostSettings(response: HttpResponseBase): Observable<AuditActionResultOfAdminCostSettingsModel> {
+    protected processAdminCostSettingsGet(response: HttpResponseBase): Observable<AuditActionResultOfAdminCostSettingsModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfAdminCostSettingsModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfAdminCostSettingsModel>(<any>null);
+    }
+
+    /**
+     * Update admin cost setting
+     */
+    adminCostSettingsPatch(version: string, request: UpdateAdminCostSettingRequest): Observable<AuditActionResultOfAdminCostSettingsModel> {
+        let url_ = this.baseUrl + "/v{version}/AdminCostSettings";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAdminCostSettingsPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAdminCostSettingsPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfAdminCostSettingsModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfAdminCostSettingsModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAdminCostSettingsPatch(response: HttpResponseBase): Observable<AuditActionResultOfAdminCostSettingsModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -603,6 +661,430 @@ export class CustomerService {
             }));
         }
         return _observableOf<AuditActionResult>(<any>null);
+    }
+}
+
+@Injectable()
+export class DocumentService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    /**
+     * Gets a list of Documents or a single Document matching the Id.
+     * @param id (optional) 
+     */
+    documentGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfDocumentView>(<any>null);
+    }
+
+    /**
+     * Creates a new Document or DocumentApproval.
+     */
+    documentPost(version: string, newDocument: CreateDocumentRequest): Observable<AuditActionResultOfDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(newDocument);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentPost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentPost(response: HttpResponseBase): Observable<AuditActionResultOfDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfDocumentView>(<any>null);
+    }
+
+    /**
+     * Updates a Document or DocumentApproval based on the user privilege. Id is required.
+     */
+    documentPatch(version: string, request: UpdateDocumentRequest): Observable<AuditActionResultOfDocumentView> {
+        let url_ = this.baseUrl + "/v{version}/Document";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfDocumentView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentPatch(response: HttpResponseBase): Observable<AuditActionResultOfDocumentView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfDocumentView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfDocumentView>(<any>null);
+    }
+
+    /**
+     * Deletes any Document or DocumentApproval with a matching Id.
+     */
+    documentDelete(id: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/Document/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDocumentDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDocumentDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDocumentDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
+}
+
+@Injectable()
+export class EquipmentMaintenanceService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+    }
+
+    /**
+     * Gets EM/PM items. Filter the item using Id.
+     * @param id (optional) 
+     */
+    equipmentMaintenanceGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
+        let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEquipmentMaintenanceGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEquipmentMaintenanceGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processEquipmentMaintenanceGet(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel>(<any>null);
+    }
+
+    /**
+     * Creates a new EM/PM entry
+     */
+    equipmentMaintenancePost(version: string, request: CreateEquipmentMaintenanceRequest): Observable<AuditActionResultOfEquipmentMaintenanceModel> {
+        let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEquipmentMaintenancePost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEquipmentMaintenancePost(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfEquipmentMaintenanceModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfEquipmentMaintenanceModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processEquipmentMaintenancePost(response: HttpResponseBase): Observable<AuditActionResultOfEquipmentMaintenanceModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfEquipmentMaintenanceModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfEquipmentMaintenanceModel>(<any>null);
+    }
+
+    equipmentMaintenancePatch(version: string, request: UpdateEquipmentMaintenanceRequest): Observable<AuditActionResultOfEquipmentMaintenanceModel> {
+        let url_ = this.baseUrl + "/v{version}/EquipmentMaintenance";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEquipmentMaintenancePatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEquipmentMaintenancePatch(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfEquipmentMaintenanceModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfEquipmentMaintenanceModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processEquipmentMaintenancePatch(response: HttpResponseBase): Observable<AuditActionResultOfEquipmentMaintenanceModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfEquipmentMaintenanceModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfEquipmentMaintenanceModel>(<any>null);
     }
 }
 
@@ -1541,7 +2023,7 @@ export class LocationService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    locationGet(parentId: number | null | undefined, id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
+    locationGet(parentId: number | null | undefined, id: number | null | undefined, internalAddress: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfLocationModel> {
         let url_ = this.baseUrl + "/v{version}/Location?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -1550,6 +2032,8 @@ export class LocationService {
             url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (internalAddress !== undefined && internalAddress !== null)
+            url_ += "InternalAddress=" + encodeURIComponent("" + internalAddress) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5279,8 +5763,9 @@ export class UserService {
      * @param supervisor (optional) 
      * @param primaryPhone (optional) 
      * @param email (optional) 
+     * @param hasRoleIDs (optional) 
      */
-    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
+    userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, hasRoleIDs: number[] | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUserModel> {
         let url_ = this.baseUrl + "/v{version}/User?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -5301,6 +5786,8 @@ export class UserService {
             url_ += "PrimaryPhone=" + encodeURIComponent("" + primaryPhone) + "&";
         if (email !== undefined && email !== null)
             url_ += "Email=" + encodeURIComponent("" + email) + "&";
+        if (hasRoleIDs !== undefined && hasRoleIDs !== null)
+            hasRoleIDs && hasRoleIDs.forEach(item => { url_ += "HasRoleIDs=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -7494,6 +7981,54 @@ export interface IAdminCostSettingsModel {
     hourMinutes?: number;
 }
 
+export class UpdateAdminCostSettingRequest implements IUpdateAdminCostSettingRequest {
+    rmAnnualRate?: number | undefined;
+    laborRateMinute?: number | undefined;
+    yearsHours?: number | undefined;
+    hourMinutes?: number | undefined;
+
+    constructor(data?: IUpdateAdminCostSettingRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.rmAnnualRate = _data["rmAnnualRate"];
+            this.laborRateMinute = _data["laborRateMinute"];
+            this.yearsHours = _data["yearsHours"];
+            this.hourMinutes = _data["hourMinutes"];
+        }
+    }
+
+    static fromJS(data: any): UpdateAdminCostSettingRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAdminCostSettingRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["rmAnnualRate"] = this.rmAnnualRate;
+        data["laborRateMinute"] = this.laborRateMinute;
+        data["yearsHours"] = this.yearsHours;
+        data["hourMinutes"] = this.hourMinutes;
+        return data; 
+    }
+}
+
+export interface IUpdateAdminCostSettingRequest {
+    rmAnnualRate?: number | undefined;
+    laborRateMinute?: number | undefined;
+    yearsHours?: number | undefined;
+    hourMinutes?: number | undefined;
+}
+
 /** Base class for an API call with a typed result */
 export class AuditActionResultOfIEnumerableOfCustomer extends AuditActionResult implements IAuditActionResultOfIEnumerableOfCustomer {
     object?: Customer[] | undefined;
@@ -8594,6 +9129,624 @@ export interface IUpdateCustomerRequest {
     isActive?: boolean | undefined;
     /**   */
     customerNumber?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfDocumentView extends AuditActionResult implements IAuditActionResultOfICollectionOfDocumentView {
+    object?: DocumentView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(DocumentView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfDocumentView extends IAuditActionResult {
+    object?: DocumentView[] | undefined;
+}
+
+export class DocumentView extends TrackableModel implements IDocumentView {
+    name?: string | undefined;
+    revision?: number;
+    comments?: string | undefined;
+    roleIds?: number[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
+    referenceFlieIds?: number[] | undefined;
+
+    constructor(data?: IDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+            this.comments = _data["comments"];
+            if (Array.isArray(_data["roleIds"])) {
+                this.roleIds = [] as any;
+                for (let item of _data["roleIds"])
+                    this.roleIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFlieIds"])) {
+                this.referenceFlieIds = [] as any;
+                for (let item of _data["referenceFlieIds"])
+                    this.referenceFlieIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): DocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new DocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        data["comments"] = this.comments;
+        if (Array.isArray(this.roleIds)) {
+            data["roleIds"] = [];
+            for (let item of this.roleIds)
+                data["roleIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
+        if (Array.isArray(this.referenceFlieIds)) {
+            data["referenceFlieIds"] = [];
+            for (let item of this.referenceFlieIds)
+                data["referenceFlieIds"].push(item);
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IDocumentView extends ITrackableModel {
+    name?: string | undefined;
+    revision?: number;
+    comments?: string | undefined;
+    roleIds?: number[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
+    referenceFlieIds?: number[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfDocumentView extends AuditActionResult implements IAuditActionResultOfDocumentView {
+    object?: DocumentView | undefined;
+
+    constructor(data?: IAuditActionResultOfDocumentView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? DocumentView.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfDocumentView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfDocumentView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfDocumentView extends IAuditActionResult {
+    object?: DocumentView | undefined;
+}
+
+export class CreateDocumentRequest implements ICreateDocumentRequest {
+    name!: string;
+    revision!: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+
+    constructor(data?: ICreateDocumentRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+            this.comments = _data["comments"];
+            if (Array.isArray(_data["roleIds"])) {
+                this.roleIds = [] as any;
+                for (let item of _data["roleIds"])
+                    this.roleIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateDocumentRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateDocumentRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        data["comments"] = this.comments;
+        if (Array.isArray(this.roleIds)) {
+            data["roleIds"] = [];
+            for (let item of this.roleIds)
+                data["roleIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface ICreateDocumentRequest {
+    name: string;
+    revision: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+}
+
+export class UpdateDocumentRequest implements IUpdateDocumentRequest {
+    id!: number;
+    name!: string;
+    revision!: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+
+    constructor(data?: IUpdateDocumentRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.revision = _data["revision"];
+            this.comments = _data["comments"];
+            if (Array.isArray(_data["roleIds"])) {
+                this.roleIds = [] as any;
+                for (let item of _data["roleIds"])
+                    this.roleIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): UpdateDocumentRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateDocumentRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["revision"] = this.revision;
+        data["comments"] = this.comments;
+        if (Array.isArray(this.roleIds)) {
+            data["roleIds"] = [];
+            for (let item of this.roleIds)
+                data["roleIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IUpdateDocumentRequest {
+    id: number;
+    name: string;
+    revision: number;
+    comments?: string | undefined;
+    roleIds?: (number | undefined)[] | undefined;
+    referenceFileIds?: (number | undefined)[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel extends AuditActionResult implements IAuditActionResultOfIEnumerableOfEquipmentMaintenanceModel {
+    object?: EquipmentMaintenanceModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfEquipmentMaintenanceModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(EquipmentMaintenanceModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfIEnumerableOfEquipmentMaintenanceModel extends IAuditActionResult {
+    object?: EquipmentMaintenanceModel[] | undefined;
+}
+
+export class EquipmentMaintenanceModel extends TrackableModel implements IEquipmentMaintenanceModel {
+    locationId?: number;
+    assignedToId?: number | undefined;
+    troubleState?: boolean | undefined;
+    maintenanceTask?: string | undefined;
+    statusId?: number;
+    pemLastCompletedDate?: Date | undefined;
+    frequencyField?: number | undefined;
+    comments?: string | undefined;
+    location?: LocationModel | undefined;
+    assignedTo?: UserModel | undefined;
+    status?: StatusModel | undefined;
+
+    constructor(data?: IEquipmentMaintenanceModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.locationId = _data["locationId"];
+            this.assignedToId = _data["assignedToId"];
+            this.troubleState = _data["troubleState"];
+            this.maintenanceTask = _data["maintenanceTask"];
+            this.statusId = _data["statusId"];
+            this.pemLastCompletedDate = _data["pemLastCompletedDate"] ? new Date(_data["pemLastCompletedDate"].toString()) : <any>undefined;
+            this.frequencyField = _data["frequencyField"];
+            this.comments = _data["comments"];
+            this.location = _data["location"] ? LocationModel.fromJS(_data["location"]) : <any>undefined;
+            this.assignedTo = _data["assignedTo"] ? UserModel.fromJS(_data["assignedTo"]) : <any>undefined;
+            this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EquipmentMaintenanceModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new EquipmentMaintenanceModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["locationId"] = this.locationId;
+        data["assignedToId"] = this.assignedToId;
+        data["troubleState"] = this.troubleState;
+        data["maintenanceTask"] = this.maintenanceTask;
+        data["statusId"] = this.statusId;
+        data["pemLastCompletedDate"] = this.pemLastCompletedDate ? this.pemLastCompletedDate.toISOString() : <any>undefined;
+        data["frequencyField"] = this.frequencyField;
+        data["comments"] = this.comments;
+        data["location"] = this.location ? this.location.toJSON() : <any>undefined;
+        data["assignedTo"] = this.assignedTo ? this.assignedTo.toJSON() : <any>undefined;
+        data["status"] = this.status ? this.status.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IEquipmentMaintenanceModel extends ITrackableModel {
+    locationId?: number;
+    assignedToId?: number | undefined;
+    troubleState?: boolean | undefined;
+    maintenanceTask?: string | undefined;
+    statusId?: number;
+    pemLastCompletedDate?: Date | undefined;
+    frequencyField?: number | undefined;
+    comments?: string | undefined;
+    location?: LocationModel | undefined;
+    assignedTo?: UserModel | undefined;
+    status?: StatusModel | undefined;
+}
+
+export class StatusModel implements IStatusModel {
+    id?: number;
+    name?: string | undefined;
+
+    constructor(data?: IStatusModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): StatusModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatusModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface IStatusModel {
+    id?: number;
+    name?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfEquipmentMaintenanceModel extends AuditActionResult implements IAuditActionResultOfEquipmentMaintenanceModel {
+    object?: EquipmentMaintenanceModel | undefined;
+
+    constructor(data?: IAuditActionResultOfEquipmentMaintenanceModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? EquipmentMaintenanceModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfEquipmentMaintenanceModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfEquipmentMaintenanceModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfEquipmentMaintenanceModel extends IAuditActionResult {
+    object?: EquipmentMaintenanceModel | undefined;
+}
+
+export class CreateEquipmentMaintenanceRequest implements ICreateEquipmentMaintenanceRequest {
+    locationId!: number;
+    assignedToId?: number | undefined;
+    troubleState!: boolean;
+    maintenanceTask?: string | undefined;
+    statusId!: number;
+    pemLastCompletedDate?: Date | undefined;
+    frequencyField?: number | undefined;
+    comments?: string | undefined;
+
+    constructor(data?: ICreateEquipmentMaintenanceRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.locationId = _data["locationId"];
+            this.assignedToId = _data["assignedToId"];
+            this.troubleState = _data["troubleState"];
+            this.maintenanceTask = _data["maintenanceTask"];
+            this.statusId = _data["statusId"];
+            this.pemLastCompletedDate = _data["pemLastCompletedDate"] ? new Date(_data["pemLastCompletedDate"].toString()) : <any>undefined;
+            this.frequencyField = _data["frequencyField"];
+            this.comments = _data["comments"];
+        }
+    }
+
+    static fromJS(data: any): CreateEquipmentMaintenanceRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEquipmentMaintenanceRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["locationId"] = this.locationId;
+        data["assignedToId"] = this.assignedToId;
+        data["troubleState"] = this.troubleState;
+        data["maintenanceTask"] = this.maintenanceTask;
+        data["statusId"] = this.statusId;
+        data["pemLastCompletedDate"] = this.pemLastCompletedDate ? this.pemLastCompletedDate.toISOString() : <any>undefined;
+        data["frequencyField"] = this.frequencyField;
+        data["comments"] = this.comments;
+        return data; 
+    }
+}
+
+export interface ICreateEquipmentMaintenanceRequest {
+    locationId: number;
+    assignedToId?: number | undefined;
+    troubleState: boolean;
+    maintenanceTask?: string | undefined;
+    statusId: number;
+    pemLastCompletedDate?: Date | undefined;
+    frequencyField?: number | undefined;
+    comments?: string | undefined;
+}
+
+export class UpdateEquipmentMaintenanceRequest implements IUpdateEquipmentMaintenanceRequest {
+    id!: number;
+    locationId!: number;
+    assignedToId?: number | undefined;
+    troubleState!: boolean;
+    maintenanceTask?: string | undefined;
+    statusId!: number;
+    pemLastCompletedDate?: Date | undefined;
+    frequencyField?: number | undefined;
+    comments?: string | undefined;
+
+    constructor(data?: IUpdateEquipmentMaintenanceRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.locationId = _data["locationId"];
+            this.assignedToId = _data["assignedToId"];
+            this.troubleState = _data["troubleState"];
+            this.maintenanceTask = _data["maintenanceTask"];
+            this.statusId = _data["statusId"];
+            this.pemLastCompletedDate = _data["pemLastCompletedDate"] ? new Date(_data["pemLastCompletedDate"].toString()) : <any>undefined;
+            this.frequencyField = _data["frequencyField"];
+            this.comments = _data["comments"];
+        }
+    }
+
+    static fromJS(data: any): UpdateEquipmentMaintenanceRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateEquipmentMaintenanceRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["locationId"] = this.locationId;
+        data["assignedToId"] = this.assignedToId;
+        data["troubleState"] = this.troubleState;
+        data["maintenanceTask"] = this.maintenanceTask;
+        data["statusId"] = this.statusId;
+        data["pemLastCompletedDate"] = this.pemLastCompletedDate ? this.pemLastCompletedDate.toISOString() : <any>undefined;
+        data["frequencyField"] = this.frequencyField;
+        data["comments"] = this.comments;
+        return data; 
+    }
+}
+
+export interface IUpdateEquipmentMaintenanceRequest {
+    id: number;
+    locationId: number;
+    assignedToId?: number | undefined;
+    troubleState: boolean;
+    maintenanceTask?: string | undefined;
+    statusId: number;
+    pemLastCompletedDate?: Date | undefined;
+    frequencyField?: number | undefined;
+    comments?: string | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -13413,46 +14566,6 @@ export interface IQuoteModel {
     customerRequirementJson?: string | undefined;
     products?: ProductModel[] | undefined;
     quoteItems?: QuoteItemModel[] | undefined;
-}
-
-export class StatusModel implements IStatusModel {
-    id?: number;
-    name?: string | undefined;
-
-    constructor(data?: IStatusModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): StatusModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new StatusModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface IStatusModel {
-    id?: number;
-    name?: string | undefined;
 }
 
 export class QuoteItemModel implements IQuoteItemModel {
