@@ -22,7 +22,8 @@ import { FormsModule } from '@angular/forms';
 import { WorkordertaskmonitosWrapperComponent } from '../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component'
 import { EmPmButtonWrapperComponent } from '../../components/em-pm-button-wrapper/em-pm-button-wrapper.component'
 import { AddNcrButtonWrapperComponent} from '../../components/add-ncr-button-wrapper/add-ncr-button-wrapper.component';
-import { WipListButtonWrapperComponent } from '../../components/wip-list-button-wrapper/wip-list-button-wrapper.component'
+import { WipListButtonWrapperComponent } from '../../components/wip-list-button-wrapper/wip-list-button-wrapper.component';
+import { SelectWorkOrderDropDownWrapperComponent } from '../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component'
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -36,7 +37,7 @@ export const routes = [
 @NgModule({
   declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent, 
     WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
-    WipListButtonWrapperComponent],
+    WipListButtonWrapperComponent,SelectWorkOrderDropDownWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

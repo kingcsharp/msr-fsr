@@ -1,0 +1,16 @@
+<p-dropdown [options]="workOrdersAvailable" [(ngModel)]="selectedWorkOrder" optionLabel="CustomerPurchaseNumber" (onChange)="workOrderSelected($event)"
+[filter]="false" [showClear]="false" placeholder="Select a WorkOrder" [autoWidth]="false" [style]="{'width':'100% !important'}">
+    <ng-template let-workorder pTemplate="item">
+        <div class="row">
+            <div class="col-12 font-weight-bold">{{workorder.value.CustomerPurchaseNumber}}</div>
+            <div class="col-2 text-right">Procedure: </div><div class="col-10">{{workorder.value.ProcedureName}}</div>
+            <div class="col-2 text-right">Serial Number:</div><div class="col-8">{{workorder.value.SerialNumber}}</div>
+            <div class="col-2">
+                <span class="badge badge-warning" *ngIf="workorder.value.Status === 'Requested'">{{workorder.value.Status}}</span>
+                <span class="badge badge-primary" *ngIf="workorder.value.Status === 'Accepted'">{{workorder.value.Status}}</span>
+                <span class="badge badge-success" *ngIf="workorder.value.Status === 'Finished'">{{workorder.value.Status}}</span>
+                
+            </div>
+        </div>
+    </ng-template>
+</p-dropdown>

@@ -31,7 +31,10 @@ export class WipstatusWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.globals.showLoader(true);
+    if(!this.isDisplayedInWipList){
+      this.globals.showLoader(true);
+    }
+    
     this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
 
       //TODO: Remove when data is clean
