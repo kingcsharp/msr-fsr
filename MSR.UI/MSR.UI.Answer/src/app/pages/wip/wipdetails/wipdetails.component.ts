@@ -50,20 +50,10 @@ export class WipdetailsComponent implements OnInit {
     this.route.params.subscribe(params => {
 
       let workOrderId = params['id'] == null ? 0 : Number(params['id']);
-      this.workOrdersService.workOrder(workOrderId, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
-        response.object[0].workOrderTasks.sort((a,b) => (a.taskStepOrder < b.taskStepOrder) ? 1 : -1);
-        this.workOrderModel = response.object[0];
+      this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
 
-        this.workOrderModel.workOrderTasks.map(s => {
-          if (s.referenceFiles === undefined) {
-            s.referenceFiles = new Array<FileModel>();
-          }
 
-          if (s.procedureStep.referenceFiles === undefined) {
-            s.procedureStep.referenceFiles = new Array<FileModel>();
-          }
-        });
-
+        this.workOrderModel = this.cleanData(response.object[0]);
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
@@ -71,14 +61,49 @@ export class WipdetailsComponent implements OnInit {
         this.product = this.workOrderModel.product;
         this.purchase = this.workOrderModel.purchase;
 
-        if (this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
-          this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
-          this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
+        // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
+        if (!this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
+
+          
+          for(let index = 0; index < this.workOrderModel.workOrderTasks.length; index++){
+            if(this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start'){
+              this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[index];
+              this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
+              break;
+            }
+          }
         }
 
       }));
 
     });
+
+  }
+
+  cleanData(workOrderModel: WorkOrderModel): WorkOrderModel {
+
+    workOrderModel.workOrderTasks.sort((a, b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
+    workOrderModel.workOrderTasks.map(s => {
+
+      if (s.taskIsRunning === null || s.taskIsRunning === undefined) {
+        s.taskIsRunning = false;
+      }
+
+      if (s.totalTaskTime === null || s.totalTaskTime === undefined) {
+        s.totalTaskTime = 0;
+      }
+
+      if (s.referenceFiles === undefined) {
+        s.referenceFiles = new Array<FileModel>();
+      }
+
+      if (s.procedureStep.referenceFiles === undefined) {
+        s.procedureStep.referenceFiles = new Array<FileModel>();
+      }
+
+    });
+
+    return workOrderModel;
 
   }
 
@@ -88,7 +113,8 @@ export class WipdetailsComponent implements OnInit {
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
 
-    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+    // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
+    if (!this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.workOrderTaskToView = workOrderTask;
     }
 
@@ -164,18 +190,18 @@ export class WipdetailsComponent implements OnInit {
     this.workOrderTaskTimer.completeTask();
   }
 
-  toggleHideCompletedWorkOrders(){
+  toggleHideCompletedWorkOrders() {
     this.hideCompletedWorkOrders = !this.hideCompletedWorkOrders;
     this.selectWorkOrderDropDown.updateWorkOrders();
   }
 
-  toggleCancelRemainingStepsDialog(){
+  toggleCancelRemainingStepsDialog() {
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
   }
 
-  cancelRemainingSteps(invoice: boolean){
+  cancelRemainingSteps(invoice: boolean) {
 
-    if(invoice){
+    if (invoice) {
 
       // TODO: Call Invoice
 
@@ -183,7 +209,7 @@ export class WipdetailsComponent implements OnInit {
 
     let indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
 
-    for(let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++){
+    for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
 
       let workOrderTaskToClose = this.workOrderModel.workOrderTasks[index];
 
@@ -197,8 +223,8 @@ export class WipdetailsComponent implements OnInit {
       } as IUpdateWorkOrderTaskRequest);
 
       this.globals.showLoader(true);
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
-        
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
+
         this.router.navigate(['/app/wip/wipstatus']);
 
       }));

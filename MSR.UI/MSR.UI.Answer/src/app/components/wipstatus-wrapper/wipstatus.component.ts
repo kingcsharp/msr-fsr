@@ -98,7 +98,7 @@ export class WipstatusWrapperComponent implements OnInit {
         let loggedInUser = <UserModel>response.object;
 
         this.globals.showLoader(true);
-        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null,null ,env.apiVersion).subscribe(responseHandler(response => {
 
           let tasks = <Array<WorkOrderTaskModel>>response.object[0].workOrderTasks;
 
@@ -106,10 +106,10 @@ export class WipstatusWrapperComponent implements OnInit {
 
           tasks.forEach(task => {
 
-            if (task.status?.name === 'Waiting to Start') {
+            if (task.status?.name === 'Waiting to Start' || task.status?.name === 'Approved') {
 
               let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest();
-              updateWorkOrderTaskRequest.status = task.status?.name;
+              updateWorkOrderTaskRequest.status = 'Waiting to Start';
               updateWorkOrderTaskRequest.taskIsRunning = false;
               updateWorkOrderTaskRequest.taskRunningSince = task.taskRunningSince;
               updateWorkOrderTaskRequest.taskStepOrder = task.taskStepOrder;
