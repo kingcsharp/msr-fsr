@@ -16,11 +16,12 @@
             </div>
             <div class="pull-right">
                 <grid-options [(defaultColumns)]="gridSaved.columnsSaved" [gridStorageId]="gridSaved.storageId"
-                    [ptable]="dt" [gridVersion]="gridSaved.version" data-cy="usergrid-options" [(visibleColumnsCount)]="gridSaved.visibleColumns">
+                    [ptable]="dt" [gridVersion]="gridSaved.version" data-cy="usergrid-options"
+                    [(visibleColumnsCount)]="gridSaved.visibleColumns">
                 </grid-options>
             </div>
         </ng-template>
-        <ng-template pTemplate="header"> 
+        <ng-template pTemplate="header">
             <tr>
                 <th *ngFor="let col of gridSaved.columnsSaved" [hidden]="!col.visible" [pSortableColumn]="col.id"
                     data-cy="usertable-header">
@@ -55,16 +56,18 @@
         {{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}
     </td>
     <!-- :'USD':true:'1.2-2' -->
-    <td container="body"
-        tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}}"
+    <td container="body" tooltip="{{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}}"
         class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Money"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
-        {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}} 
+        {{colsDataAndSettings?.colData[colsDataAndSettings.col.id] | currency}}
     </td>
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.Date"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
-        {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}
-    </td>
+        <div *ngIf="colsDataAndSettings.col.formatting=== undefined">
+            {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | userTimezone }}</div>
+            <div *ngIf="colsDataAndSettings.col.formatting!== undefined">
+                {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | date: colsDataAndSettings.col.formatting }}</div>
+    </td> 
     <td *ngIf="colsDataAndSettings.col.type === enumColumnType.StringArray"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <span *ngFor="let item of colsDataAndSettings.colData[colsDataAndSettings.col.id]"

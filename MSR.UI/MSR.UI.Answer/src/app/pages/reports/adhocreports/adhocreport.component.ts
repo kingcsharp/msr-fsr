@@ -73,7 +73,6 @@ export class AdhocComponent implements OnInit {
     }
 
     handleFilter(ev, filteredData) {
-        
         let objFiltered = {};
         if (Object.keys(filteredData.filters).length > 0) {
             filteredData.filteredValue.forEach(element => {

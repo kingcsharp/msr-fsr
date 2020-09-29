@@ -7,6 +7,7 @@ export interface IColumnsSaved {
     type?: EnumColumnType | undefined;
     dropdownHeader?: boolean | undefined;
     multipleValues?: boolean | undefined;
+    formatting?: string | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
@@ -15,6 +16,8 @@ export class ColumnsSaved implements IColumnsSaved {
     type?: EnumColumnType | undefined;
     dropdownHeader?: boolean | undefined;
     multipleValues?: boolean | undefined;
+    //used only for date values at the time but can be extended if wanted
+    formatting?: string | undefined;
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -41,7 +44,7 @@ export class ColumnsSaved implements IColumnsSaved {
             this.type = _data['type'];
             this.dropdownHeader = _data['dropdownHeader'];
             this.multipleValues = _data['multipleValues'];
-            
+            this.formatting = _data['formatting'];
         }
     }
 
@@ -53,6 +56,7 @@ export class ColumnsSaved implements IColumnsSaved {
         data['type'] = this.type;
         data['dropdownHeader'] = this.dropdownHeader;
         data['multipleValues'] = this.multipleValues;
+        data['formatting'] = this.formatting;
 
         return data;
     }

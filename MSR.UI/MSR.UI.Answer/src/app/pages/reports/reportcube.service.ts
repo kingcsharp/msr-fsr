@@ -131,7 +131,7 @@ export class ReportCubeService {
                 ];
                 break;
             case "RevenuebyCustomerbyTimePeriod":
-                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.String }),
+                return [new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy' }),
                 new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
@@ -139,7 +139,7 @@ export class ReportCubeService {
                 break;
             case "RevenuebyKitbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy' }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'total', label: 'Total', visible: true, type: this.enumColumnType.Money })
                 ];
@@ -147,7 +147,7 @@ export class ReportCubeService {
                 break;
             case "CountofKitsbyPart/Kit":
                 return [new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
-                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.String }),
+                new ColumnsSaved({ id: 'yearMonth', label: 'Year-Month', visible: true, type: this.enumColumnType.Date, formatting: 'MM-yyyy' }),
                 new ColumnsSaved({ id: 'site', label: 'Site', visible: true, type: this.enumColumnType.String }),
                 new ColumnsSaved({ id: 'count', label: 'Count', visible: true, type: this.enumColumnType.Number })
                 ];
@@ -193,12 +193,11 @@ export class ReportCubeService {
                 let dataDic = {};
                 // const resultData = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.customername'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
                     if (dataDic[elemKey] === undefined) {
                         dataDic[elemKey] = {
                             elemKey: elemKey,
-                            duedate: elem['CubeFinancial.duedate'],
-                            yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
+                            yearMonth: moment(elem['CubeFinancial.duedate']),
                             site: elem['CubeFinancial.msrfsrfacility'],
                             customername: elem['CubeFinancial.customername'],
                             total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
@@ -222,12 +221,12 @@ export class ReportCubeService {
                 let dataDic3 = {};
                 const resultData2 = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
                     if (dataDic3[elemKey] === undefined) {
                         dataDic3[elemKey] = {
                             elemKey: elemKey,
                             duedate: elem['CubeFinancial.duedate'],
-                            yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
+                            yearMonth: moment(elem['CubeFinancial.duedate']),
                             kitname: elem['CubeFinancial.kitname'],
                             site: elem['CubeFinancial.msrfsrfacility'],
                             total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
@@ -251,12 +250,12 @@ export class ReportCubeService {
             case "CountofKitsbyPart/Kit":
                 let dataDic2 = {};
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
                     if (dataDic2[elemKey] === undefined) {
                         dataDic2[elemKey] = {
                             elemKey: elemKey,
                             duedate: elem['CubeFinancial.duedate'],
-                            yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
+                            yearMonth: moment(elem['CubeFinancial.duedate']),
                             kitname: elem['CubeFinancial.kitname'],
                             site: elem['CubeFinancial.msrfsrfacility'],
                             count: 1
@@ -329,7 +328,7 @@ export class ReportCubeService {
                 decimalPoint: '.',
                 thousandsSep: ','
             },
-          });
+        });
 
         let chartOptions: Highcharts.Options = {
             chart: {
@@ -348,7 +347,7 @@ export class ReportCubeService {
             // colors: ['#56616f'],
             xAxis: {
                 type: 'category',
-                
+
                 labels: {
                     style: {
                         color: '#fff',

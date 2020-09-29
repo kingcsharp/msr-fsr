@@ -13,7 +13,7 @@ export interface IChartInfo {
 export class ChartInfo implements IChartInfo {
     amount: number = 12;
     unit: moment.DurationInputArg2 = 'month';
-    format: string = 'YYYY-MM';
+    format: string = 'MM-YYYY';
     chartData?: any | undefined;
     stackBy?: string | undefined;
     chartTitle?: string | undefined;
