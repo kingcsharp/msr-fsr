@@ -274,6 +274,7 @@ export class ReportCubeService {
 
             default:
                 if (data.length > 0) {
+                    //CUBE js sends data with CubePartsmonitors. which is not supported by primeNg so we need to create a new obj.
                     const resultDataArr = data.map((elem) => {
                         let objToReturn = {};
                         Object.keys(elem).forEach((key) => {
