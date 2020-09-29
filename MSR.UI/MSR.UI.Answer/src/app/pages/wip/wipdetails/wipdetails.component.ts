@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, WorkOrderPartService,
@@ -39,9 +39,10 @@ export class WipdetailsComponent implements OnInit {
   menuItems = EnumMenuItem;
   originalSerialNumbers: Array<any> = new Array<any>();
   hideCompletedWorkOrders: boolean = false;
+  showCancelRemainingStepsDialog: boolean = false;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
-    private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, 
+    private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, private router: Router,
     private workOrderTaskService: WorkOrderTaskService, private locationService: LocationService, private userService: UserService) { }
 
   ngOnInit(): void {
@@ -201,5 +202,43 @@ export class WipdetailsComponent implements OnInit {
   toggleHideCompletedWorkOrders(){
     this.hideCompletedWorkOrders = !this.hideCompletedWorkOrders;
     this.selectWorkOrderDropDown.updateWorkOrders();
+  }
+
+  toggleCancelRemainingStepsDialog(){
+    this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
+  }
+
+  cancelRemainingSteps(invoice: boolean){
+
+    if(invoice){
+
+      // TODO: Call Invoice
+
+    }
+
+    let indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+
+    for(let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++){
+
+      let workOrderTaskToClose = this.workOrderModel.workOrderTasks[index];
+
+      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+        assignedUserId: this.globals.getCurrentUser().id,
+        status: 'Cancelled',
+        taskIsRunning: false,
+        taskRunningSince: workOrderTaskToClose.taskRunningSince,
+        taskStepOrder: workOrderTaskToClose.taskStepOrder,
+        workOrderTaskId: workOrderTaskToClose.id
+      } as IUpdateWorkOrderTaskRequest);
+
+      this.globals.showLoader(true);
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
+        
+        this.router.navigate(['/app/wip/wipstatus']);
+
+      }));
+
+    }
+
   }
 }

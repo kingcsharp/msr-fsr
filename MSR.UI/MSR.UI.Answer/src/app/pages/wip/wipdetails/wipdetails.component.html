@@ -32,7 +32,9 @@
             </div>
           </div>
           <div class="row"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
-          <div class="row">Cancel Remaining steps, Print Traveler, and Print Other goes here</div>
+          <div class="row">
+            <button type="button" class="btn btn-danger" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> Print Traveler, and Print Other goes here
+          </div>
         </div>
         <div class="col-6">
           <p-tabView class="m-2">
@@ -174,3 +176,36 @@
     </div>
   </div>
 </div>
+<p-dialog header="Cancel Remaining Steps Confirmation" [(visible)]="showCancelRemainingStepsDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 p-0 mb-2">Are you sure you want to cancel the remaining steps?</div>
+      <div class="alert alert-primary col-12" role="alert">
+        <i class="fas fa-info-circle"></i> When Cancelling remaing steps you have <b>two options</b>:
+        <ol>
+          <li>If you wish close and invoice for this Work Order, click the Yes - And Invoice button below.</li>
+          <li>If you do not want to invoice for this Work Order click the Yes - But Do Not Invoice button below.</li>
+        </ol>
+        
+        Other wise click the <b>Cancel</b> button to continue with this Work Order.
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="cancelRemainingSteps(true)" class="btn btn-success mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        <i class="fas fa-dollar-sign mx-1"></i>Yes - And Invoice
+      </button>
+      <button type="submit" (click)="cancelRemainingSteps(false)" class="btn btn-warning mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        <i class="fas fa-times mx-1"></i>Yes - But Do Not Invoice
+      </button>
+      <button type="button" (click)="toggleCancelRemainingStepsDialog()" class="btn btn-danger mb-xs"
+        role="button">
+        <i class="fas fa-times-circle mx-1"></i>Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
