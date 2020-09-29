@@ -5,16 +5,16 @@
         <h2>{{ stepHours }} : {{ stepMinutes - (60*stepHours)  }} : {{ stepSeconds - (60*stepMinutes) }}</h2>
       </div>
     </div>
-    <button class="timer-btn btn btn-secondary btn-lg print-btn pull-left start-timer-btn start-step hidden m-2"
+    <button class="timer-btn btn btn-secondary btn-lg print-btn pull-left start-timer-btn start-step hidden mb-2 mx-1"
       *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds === 0" (click)="startTask()">
       <i class="glyphicon glyphicon-step-forward"></i> Start</button>
-    <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden m-2"
+    <button class="timer-btn btn btn-warning btn-lg print-btn pull-left hidden mb-2 mx-1"
       *ngIf="workOrderTaskInProgress.taskIsRunning === false && stepSeconds !== 0" (click)="resumeAndStartTask()">
       <i class="glyphicon glyphicon-step-forward"></i> Resume</button>
-    <button class="timer-btn btn btn-warning btn-lg print-btn pull-left m-2"
+    <button class="timer-btn btn btn-warning btn-lg print-btn pull-left mb-2 mx-1"
       *ngIf="workOrderTaskInProgress.taskIsRunning === true" (click)="pauseTask()">
       <i class="glyphicon glyphicon-pause"></i> Pause</button>
-    <button class="timer-btn btn btn-primary btn-lg print-btn pull-left m-2" *ngIf="stepSeconds !== 0"
+    <button class="timer-btn btn btn-primary btn-lg print-btn pull-left mb-2 mx-1" *ngIf="stepSeconds !== 0"
       (click)="completeTask()">
       <i class="glyphicon glyphicon-stop"></i> Done
     </button>

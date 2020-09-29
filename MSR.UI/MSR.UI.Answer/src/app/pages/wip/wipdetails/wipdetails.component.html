@@ -10,11 +10,11 @@
   </div>
   <div class="row custom-panel">
     <div class="container-fluid">
-      <div class="row justify-content-center">
+      <div class="row justify-content-center mb-2">
         <div class="col-6">
           <div class="row">
             <div class="col-11">
-              <div class="form-group d-flex mr-4">
+              <div class="form-group d-flex mr-4 mb-1">
                 <div class="col-11 d-flex justify-content-end pr-0">
                   <div class="my-auto">
                     <label class="m-0" for="troublestate">Hide Completed</label>
@@ -31,13 +31,15 @@
               <wiplistbutton-wrapper class="d-flex justify-content-end"></wiplistbutton-wrapper>
             </div>
           </div>
-          <div class="row"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
-          <div class="row">
-            <button type="button" class="btn btn-danger" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> Print Traveler, and Print Other goes here
+          <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
+          <div class="row justify-content-end">
+            <button type="button" class="btn btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> 
+            <button type="button" class="btn btn-primary mr-2"><i class="fas fa-print mx-1"></i>Print Traveler</button>
+            <button type="button" class="btn btn-primary mr-0"><i class="fas fa-print mx-1"></i>Print Other</button>
           </div>
         </div>
         <div class="col-6">
-          <p-tabView class="m-2">
+          <p-tabView class="mt-0">
             <p-tabPanel header="Parts">
               <ul>
                 <li *ngFor="let part of workOrderParts">
