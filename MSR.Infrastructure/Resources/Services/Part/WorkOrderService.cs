@@ -107,6 +107,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 var wom = _mapper.Map<WorkOrderModel>(wo);
                 foreach (var wot in wom.WorkOrderTasks) {
+
+                    // enforce sane data by limiting the status IDs returned by the API
+                    wot.StatusId = TranslateWOTaskStatusToViewModel(wot);
+
                     var wotmList = new List<WorkOrderTaskMonitorModel>();
                     int i = 1; // Monitor Number starts at 1
                     foreach (var wotm in wot.WorkOrderTaskMonitors.OrderBy(x => x.Id)) {
@@ -418,7 +422,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     sum.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
                 }
 
-                // Status ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
+                // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
                 sum.Status = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
 
                 // Disposition
@@ -533,7 +537,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     wosum.WorkOrderPartSerialNumber = "";
                 }
 
-                // WorkOrderStatus ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
+                // WorkOrderStatus ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
                 wosum.WorkOrderStatus = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
 
                 // WorkOrderAssignedTo
@@ -601,7 +605,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public static string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks)
         {
-            // Status ['Waiting Start', 'In Progress', 'Cancelled', 'Completed']
+            // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
             // This field is calculated based on the summation of the statuses
             // of the steps.
             // 1   Approved
@@ -614,6 +618,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 8   Closed
             // 9   Requested
             // 10  Assigned
+            // 11  Waiting to Start
             int[] completed = { 3, 6, 8 };
             string status;
             if (tasks.Where(x => x.StatusId == 2).Any())
@@ -631,6 +636,30 @@ namespace MSR.Infrastructure.Resources.Services.Part
             else
             {
                 status = "Waiting to Start";
+            }
+            return status;
+        }
+
+        public static int TranslateWOTaskStatusToViewModel(WorkOrderTaskModel task)
+        {
+            // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
+            int[] completed = { 3, 6, 8 };
+            int status;
+            if (task.StatusId == 2)
+            {
+                status = 2;
+            }
+            else if (task.StatusId == 4)
+            {
+                status = 4;
+            }
+            else if (completed.Contains(task.StatusId))
+            {
+                status = 3;
+            }
+            else
+            {
+                status = 11;
             }
             return status;
         }
