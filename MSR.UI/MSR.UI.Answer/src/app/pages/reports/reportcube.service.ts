@@ -193,9 +193,10 @@ export class ReportCubeService {
                 let dataDic = {};
                 // const resultData = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
                     if (dataDic[elemKey] === undefined) {
                         dataDic[elemKey] = {
+                            elemKey: elemKey,
                             duedate: elem['CubeFinancial.duedate'],
                             yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
                             site: elem['CubeFinancial.msrfsrfacility'],
@@ -221,9 +222,10 @@ export class ReportCubeService {
                 let dataDic3 = {};
                 const resultData2 = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
                     if (dataDic3[elemKey] === undefined) {
                         dataDic3[elemKey] = {
+                            elemKey: elemKey,
                             duedate: elem['CubeFinancial.duedate'],
                             yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
                             kitname: elem['CubeFinancial.kitname'],
@@ -248,11 +250,11 @@ export class ReportCubeService {
                 return this.getResultDataAndChart(chartInfo2);
             case "CountofKitsbyPart/Kit":
                 let dataDic2 = {};
-                const countOfKits = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'] + '_' + elem['CubeFinancial.msrfsrfacility'];
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.kitname'].replace(/ /g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/ /g, '');
                     if (dataDic2[elemKey] === undefined) {
                         dataDic2[elemKey] = {
+                            elemKey: elemKey,
                             duedate: elem['CubeFinancial.duedate'],
                             yearMonth: moment(elem['CubeFinancial.duedate']).format('YYYY-MM'),
                             kitname: elem['CubeFinancial.kitname'],
@@ -263,7 +265,6 @@ export class ReportCubeService {
                         dataDic2[elemKey].count += 1;
                     }
                 });
-                Object.keys(dataDic2).forEach(x => countOfKits.push(dataDic2[x]));
 
                 const chartInfo3 = new ChartInfo({
                     chartData: dataDic2,
@@ -282,18 +283,11 @@ export class ReportCubeService {
         return data;
     }
 
+    public generateChart(chartInfo3) {
+        return this.getResultDataAndChart(chartInfo3);
+    }
+
     public getResultDataAndChart(chartInfo: ChartInfo) {
-        // moment(elem['CubeFinancial.duedate']).format('YYYY-MM') + '_' + elem['CubeFinancial.customername'] 
-        // const series = [{
-        //     name: 'John',
-        //     data: [5, 3, 4, 7, 2]
-        // }, {
-        //     name: 'Jane',
-        //     data: [2, 2, 3, 2, 1]
-        // }, {
-        //     name: 'Joe',
-        //     data: [3, 4, 4, 2, 5]
-        // }];
 
         const months = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
         const dataSeries = [];
@@ -307,12 +301,20 @@ export class ReportCubeService {
                 const nameIndex = dataSeries.findIndex(x => x.name === name);
                 if (nameIndex !== -1) {
                     dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
+                    if(isNaN(dataSeries[nameIndex].data[index])){
+                        debugger;
+                    }
                 } else {
                     const dataArr = [];
                     months.forEach(element => {
                         dataArr.push(0);
                     });
                     dataArr[index] += chartInfo.chartData[x][chartInfo.stackBy];
+                    dataArr.forEach(element => {
+                        if(isNaN(element)){
+                            debugger;
+                        }
+                    });
                     dataSeries.push({
                         name: name,
                         data: dataArr
@@ -326,7 +328,7 @@ export class ReportCubeService {
             chart: {
                 backgroundColor: '#222d3c',
                 borderColor: 'none',
-                type:'column'
+                type: 'column'
             },
             title: {
                 text: chartInfo.chartTitle,
@@ -372,8 +374,8 @@ export class ReportCubeService {
                     }
                 }
             },
-            legend:{
-                enabled:false
+            legend: {
+                enabled: false
             },
             // legend: {
             //     align: 'right',
@@ -403,9 +405,9 @@ export class ReportCubeService {
                     // }
                 }
             },
-            series:dataSeries
+            series: dataSeries
         }
 
-        return { resultData: resultData, chartOptions: chartOptions };
+        return { resultData: resultData, chartOptions: chartOptions, chartInfo: chartInfo };
     }
 }

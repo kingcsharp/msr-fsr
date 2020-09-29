@@ -9,7 +9,7 @@
     <p-table #dt *ngIf="showReport" [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true"
         [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="true"
         currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
-        stateKey="{{gridSaved.storageId}}">
+        stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
         <ng-template pTemplate="caption">
             <div class="pull-left">
                 <h3><span class="fw-semi-bold">{{reportInfo.name}}</span> - {{reportInfo.subtitle}}</h3>
