@@ -108,7 +108,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
         workOrderTaskId: this.workOrderTaskInProgress.id
        } as IUpdateWorkOrderTaskRequest);
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
-        console.log(response);
+ 
       }));
 
     }));

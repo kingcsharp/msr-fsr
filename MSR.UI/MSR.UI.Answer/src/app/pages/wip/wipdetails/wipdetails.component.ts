@@ -71,7 +71,6 @@ export class WipdetailsComponent implements OnInit {
         this.product = this.workOrderModel.product;
         this.purchase = this.workOrderModel.purchase;
 
-        this.cleanData();
         if (this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
           this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
           this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
@@ -92,40 +91,6 @@ export class WipdetailsComponent implements OnInit {
     if (this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.workOrderTaskToView = workOrderTask;
     }
-
-  }
-
-  cleanData() {
-
-    this.workOrderModel.workOrderTasks.map(s => {
-
-      s.status = new StatusModel({
-        id: 11,
-        name: 'Waiting to Start'
-      });
-
-      // TODO: Remove when roles are returned and if no roles exist, the array is empty
-      if (s.procedureStep.roles === undefined) {
-        s.procedureStep.roles = new Array<Role>();
-
-        s.procedureStep.roles.push(new Role({
-          id: 1,
-          name: 'Administrator'
-        } as IRole));
-
-      }
-      
-
-    })
-
-    this.workOrderModel.workOrderTasks.map(s => {
-      s.taskIsRunning = false;
-    });
-
-    let stepNumber = 1;
-    this.workOrderModel.workOrderTasks.forEach(workOrderTask => {
-      workOrderTask.taskStepOrder = stepNumber++;
-    });
 
   }
 

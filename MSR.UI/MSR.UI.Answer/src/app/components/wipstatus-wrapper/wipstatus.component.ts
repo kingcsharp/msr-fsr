@@ -37,15 +37,6 @@ export class WipstatusWrapperComponent implements OnInit {
     
     this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
 
-      //TODO: Remove when data is clean
-      response.object.map(workOrderStatus => {
-
-        if (workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting Start') {
-          workOrderStatus.workOrderSummary.workOrderStatus = 'Waiting to Start';
-        }
-
-      });
-
       this.workOrderStatuses = response.object;
       this.displayWorkOrderStatuses = response.object;
 
@@ -131,12 +122,11 @@ export class WipstatusWrapperComponent implements OnInit {
 
           });
 
-          // TODO: Uncomment and use actual request when Endpoint is fixed
-          this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          //this.globals.showLoader(true);
-          //forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
-          //  this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          //}));
+
+          this.globals.showLoader(true);
+          forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
+            this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+          }));
 
         }));
 
