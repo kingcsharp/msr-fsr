@@ -49,8 +49,7 @@ export class ReportComponent implements OnInit {
     this.globals.showLoader(true);
     this.reportCubeService.getReport(reportInfo).then((resp) => {
       this.globals.showLoader(false);
-      this.cSVConverterService.downloadFile(resp,
-        reportColumns.map(x=>x.id), reportColumns.map(x=>x.label), reportInfo.name);
+      this.cSVConverterService.downloadFile(resp,reportColumns, reportInfo.name);
     });
     
   }

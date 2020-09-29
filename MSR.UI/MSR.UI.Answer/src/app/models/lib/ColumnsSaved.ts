@@ -18,7 +18,7 @@ export class ColumnsSaved implements IColumnsSaved {
     dropdownHeader?: boolean | undefined;
     multipleValues?: boolean | undefined;
     //used only for date values at the time but can be extended if wanted
-    formatting?: string | undefined;
+    formatting: string = 'MM-YYYY';
     isRanged?: boolean | undefined;
 
     constructor(data?: IColumnsSaved) {
