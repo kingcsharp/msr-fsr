@@ -1,10 +1,11 @@
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr data-cy="wipstatus-header">
-            <th>Product</th>
-            <th>Part Number</th>
-            <th>Procedure</th>
-            <th>
+            <th *ngIf="isDisplayedInWipList">Procedure & Product</th>
+            <th *ngIf="!isDisplayedInWipList">Product</th>
+            <th *ngIf="!isDisplayedInWipList">Part Number</th>
+            <th *ngIf="!isDisplayedInWipList">Procedure</th>
+            <th  *ngIf="!isDisplayedInWipList">
                 Location<br />
                 <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1" 
                 (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect"></p-multiSelect>
@@ -14,10 +15,20 @@
     </thead>
     <tbody>
         <tr *ngFor="let workOrderStatus of displayWorkOrderStatuses" data-cy="wipstatus-row">
-            <td> {{ workOrderStatus.productName }} </td>
-            <td> {{ workOrderStatus.partNumber }} </td>
-            <td> {{ workOrderStatus.procedureName }} </td>
-            <td data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
+            <td *ngIf="isDisplayedInWipList">
+              <div class="container">
+                <div class="row">
+                  <div class="col-2 text-right">Procedure: </div><div class="col-10">{{ workOrderStatus.procedureName }} </div>
+                </div>
+                <div class="row">
+                  <div class="col-2 text-right">Product: </div><div class="col-10">{{ workOrderStatus.productName }}</div>
+                </div>
+              </div>
+            </td>
+            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.productName }} </td>
+            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.partNumber }} </td>
+            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.procedureName }} </td>
+            <td *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
             <td>
                 <i [ngClass]="{'fa': true, 'fa-2x': true, 
                 'fa-exclamation-circle': workOrderStatus.workOrderSummary.workOrderHasNcr === true,

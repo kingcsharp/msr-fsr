@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderStatus, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel } from '../../services/api.client.generated';
@@ -16,6 +16,9 @@ import { forkJoin } from 'rxjs';
 export class WipstatusWrapperComponent implements OnInit {
 
   @Input() takeOverSteps: boolean = false;
+  @Input() isDisplayedInWipList: boolean = false;
+  @Input() displayWipListDialog: boolean;
+  @Output() displayWipListDialogChange = new EventEmitter();
   workOrderStatuses: Array<WorkOrderStatus>;
   displayWorkOrderStatuses: Array<WorkOrderStatus> = new Array<WorkOrderStatus>();
   locationOptions: Array<SelectItem> = new Array<SelectItem>();
@@ -45,33 +48,46 @@ export class WipstatusWrapperComponent implements OnInit {
 
       this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map(s => ({ label: s, value: s }));
 
-      if (localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null) {
+      if(this.isDisplayedInWipList){
         this.selectedLocations = this.locationOptions.map(s => s.value);
-        localStorage.setItem('wipstatus', this.selectedLocations.toString());
-      } else {
+      } else{
 
-        let locationsAlreadySaved = localStorage.getItem('wipstatus').split(',');
-        let newlocationSavedList = new Array<string>();
-        locationsAlreadySaved.forEach(locationSaved => {
+        if (localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null) {
+          this.selectedLocations = this.locationOptions.map(s => s.value);
+          localStorage.setItem('wipstatus', this.selectedLocations.toString());
+        } else {
+  
+          let locationsAlreadySaved = localStorage.getItem('wipstatus').split(',');
+          let newlocationSavedList = new Array<string>();
+          locationsAlreadySaved.forEach(locationSaved => {
+  
+            if (this.locationOptions.find(s => s.value === locationSaved) !== undefined) {
+              newlocationSavedList.push(locationSaved);
+            }
+  
+  
+          });
+          localStorage.setItem('wipstatus', newlocationSavedList.toString());
+          this.selectedLocations = this.locationOptions.map(s => s.value).filter(m => newlocationSavedList.includes(m));
+          this.locationsSelectedUpdated();
+        }
 
-          if (this.locationOptions.find(s => s.value === locationSaved) !== undefined) {
-            newlocationSavedList.push(locationSaved);
-          }
-
-
-        });
-        localStorage.setItem('wipstatus', newlocationSavedList.toString());
-        this.selectedLocations = this.locationOptions.map(s => s.value).filter(m => newlocationSavedList.includes(m));
-        this.locationsSelectedUpdated();
       }
+      
 
     }));
 
   }
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number) {
-    this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
-    this.workOrderToTakeOverId = workOrderId;
+
+    if(this.isDisplayedInWipList){
+      this.router.navigate(['app/wip/details', workOrderId]);
+      this.displayWipListDialogChange.emit(false);
+    }else {
+      this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
+      this.workOrderToTakeOverId = workOrderId;
+    }
   }
 
   closeTakeOverAsUserConfirmationDialog() {
