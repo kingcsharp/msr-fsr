@@ -28,13 +28,6 @@ export class ReportCubeService {
             return this.filterReportData(response, reportInfo);
         });
     }
-    /*
-    Available Reports
-    Financial
-    PartsMonitors
-    WorkInProcess
-    WorkOrderParts
-    */
 
     public getReportColumns(reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {

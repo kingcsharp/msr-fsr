@@ -20,6 +20,7 @@ import { NotificationService } from './layout/navbar/notification.service';
 import { CommonGrid } from './models/lib/CommonGrid';
 import { CSVConverterService } from '../app/services/csvconverter.service';
 import { environment } from '../environments/environment';
+// import { GridComponent } from '../app/components/grid/grid.component';
 
 import * as $ from 'jquery';
 import {
@@ -47,6 +48,7 @@ const APP_PROVIDERS = [
     AppComponent,
     ErrorComponent
   ],
+  exports: [],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

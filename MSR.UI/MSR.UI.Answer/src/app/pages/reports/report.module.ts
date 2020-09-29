@@ -12,15 +12,12 @@ import { FormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ReportComponent } from './report.component';
 import { AdhocComponent } from './adhocreports/adhocreport.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { ReportCubeService } from './reportcube.service';
-import { HighchartsChartModule } from 'highcharts-angular';
 
 export const routes = [
   { path: '', redirectTo: 'report/adhocreports', pathMatch: 'full' },
@@ -45,15 +42,12 @@ export const routes = [
     InputSwitchModule,
     TextMaskModule,
     DialogModule,
-    TableModule,
-    CalendarModule,
     UtilsModule,
     LiveTileModule,
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    PopoverModule.forRoot(),
-    HighchartsChartModule
+    PopoverModule.forRoot()
   ],
   providers: [ReportCubeService]
 })

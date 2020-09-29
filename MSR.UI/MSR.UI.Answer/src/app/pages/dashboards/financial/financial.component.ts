@@ -18,7 +18,6 @@ import { ActivatedRoute } from '@angular/router';
 import { EnumColumnType } from '../../../models/enums/EnumColumnType';
 import { GridSaved } from '../../../models/lib/GridSaved';
 // import { ReportCubeService } from '../../../../app/components/c';
-import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../../app/models/lib/ChartInfo';
 
 declare let jQuery: any;
