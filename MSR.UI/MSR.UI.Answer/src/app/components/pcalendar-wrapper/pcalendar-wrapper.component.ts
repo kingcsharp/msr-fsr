@@ -9,14 +9,17 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
   templateUrl: './pcalendar-wrapper.component.html'
 })
 export class PcalendarWrapperComponent implements OnInit {
-  selectedDate: Date;
+  selectedDate: any;
   subscriptions: Subscription[] = [];
+  selectionMode: string;
   en: any;
   @Input() gridStorageId: string;
   @Input() filterId: string;
   @Input() datatable: any;
   @Input() reset: any;
-  constructor(public cg: CommonGrid) { }
+  @Input() isRanged: boolean;
+  constructor(public cg: CommonGrid) {
+  }
 
   ngOnInit(): void {
     this.en = {
@@ -32,8 +35,19 @@ export class PcalendarWrapperComponent implements OnInit {
     };
     const ctrl = this;
     FilterUtils['dateRangeFilter'] = (value, filter): boolean => {
-      // IF WE USE RANGE AS FILTER THEN it would just be setting range in the pcalendar-wrapper selectionMode='range' and here filter would be an array.
-      return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);
+      // debugger;
+      if (Array.isArray(filter)) {
+        if (filter[1] === null) {
+          return moment(filter[0]).startOf('day').isBefore(value);
+        } else {
+          return moment(filter[0]).startOf('day').isBefore(value) && moment(filter[1]).endOf('day').isAfter(value);
+        }
+      } else {
+        return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);
+      }
+
+      // // IF WE USE RANGE AS FILTER THEN it would just be setting range in the pcalendar-wrapper selectionMode='range' and here filter would be an array.
+      // return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);
     };
 
     this.setSelectedDate(this.datatable.filters[this.filterId]);
@@ -48,7 +62,17 @@ export class PcalendarWrapperComponent implements OnInit {
       if (elem.filters[ctrl.filterId] === undefined) {
         this.selectedDate = undefined;
       }
-      this.selectedDate = moment(elem.filters[ctrl.filterId].value).toDate();
+      else {
+        const restoredVal = elem.filters[ctrl.filterId].value;
+
+        if (Array.isArray(restoredVal)) {
+          this.selectedDate = [moment(restoredVal[0]).toDate(), moment(restoredVal[1]).toDate()];
+        } else {
+          this.selectedDate = moment(restoredVal).toDate();
+        }
+
+        this.selectedDate = moment(elem.filters[ctrl.filterId].value).toDate();
+      }
     });
 
     this.subscriptions.push(sub1);
@@ -64,7 +88,12 @@ export class PcalendarWrapperComponent implements OnInit {
     if (filters === undefined || filters.value.length === 0) {
       return;
     }
-    this.selectedDate = moment(filters.value).toDate();
+
+    if (Array.isArray(filters.value)) {
+      this.selectedDate = [moment(filters.value[0]).toDate(), moment(filters.value[1]).toDate()];
+    } else {
+      this.selectedDate = moment(filters.value).toDate();
+    }
   }
 
   ngOnDestroy() {

@@ -18,14 +18,16 @@ import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
 import { NotificationService } from './layout/navbar/notification.service';
 import { CommonGrid } from './models/lib/CommonGrid';
+import { CSVConverterService } from '../app/services/csvconverter.service';
 import { environment } from '../environments/environment';
-
+// import { GridComponent } from '../app/components/grid/grid.component';
 
 import * as $ from 'jquery';
 import {
   UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
   WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
-  FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService
+  FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService, ReportService,
+  SearchService, ProcedureService, DocumentService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -36,6 +38,7 @@ const APP_PROVIDERS = [
   ResetpasswordService,
   Globals,
   CommonGrid,
+  CSVConverterService,
   NotificationService
 ];
 
@@ -45,6 +48,7 @@ const APP_PROVIDERS = [
     AppComponent,
     ErrorComponent
   ],
+  exports: [],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -82,7 +86,7 @@ const APP_PROVIDERS = [
     },
     LocationService,
     RoleService,
-    PurchaseOrderService, CustomerService, ProductService
+    PurchaseOrderService, CustomerService, ProductService, ReportService, SearchService, ProcedureService, DocumentService
   ]
 })
 // { //we have this bse url set in the app.config that's why we define as ''

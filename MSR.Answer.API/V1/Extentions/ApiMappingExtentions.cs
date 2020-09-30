@@ -184,8 +184,7 @@ namespace MSR.Answer.API.V1.Extentions
             return new DeactivateApprovalModel()
             {
                 Id = request.Id,
-                Table = request.Table,
-                Comment=request.Comment
+                Table = request.Table
             };
         }
 
@@ -944,5 +943,8 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateDocument>(request);
         }
+
+        public static GetSearch ToGetSearchCommand(this GetSearchRequest request) => AutoMapperHelper.Mapper.Map<GetSearch>(request);
+        public static GetDashboard ToGetDashboardCommand(this GetDashboardRequest request) => AutoMapperHelper.Mapper.Map<GetDashboard>(request);
     }
 }

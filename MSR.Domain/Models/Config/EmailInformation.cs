@@ -11,5 +11,6 @@
         public string From { get; set; }
         public string SupportEmail { get; set; }
         public string SendEmailsTo { get; set; }
+        public string ConfigSet { get; set; }
     }
 }

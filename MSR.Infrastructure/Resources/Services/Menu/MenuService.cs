@@ -124,7 +124,12 @@ namespace MSR.Infrastructure.Resources.Services.Menu
             var roleMenu = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuRolePermission)
                                                       .FirstOrDefaultAsync(i => i.RoleId == command.RoleId && i.MenuItemId == command.MenuId);
 
-            if (roleMenu == null) { throw new DomainException("MenuRole does not exist", DomainError.BadRequest); }
+            if (roleMenu == null)
+            {
+                var id = await CreateMenuRoleMapAsync(new CreateMenuRoleMap() { MenuId = command.MenuId, RoleId = command.RoleId });
+                roleMenu = await _unitOfWork.MenuRoles.Query().Include(i => i.MenuRolePermission)
+                                                      .FirstOrDefaultAsync(i => i.Id == id);
+            }
 
             if(roleMenu.MenuRolePermission is null)
             {
