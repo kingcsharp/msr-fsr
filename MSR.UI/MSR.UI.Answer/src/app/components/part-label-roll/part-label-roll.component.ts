@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { WorkOrderModel, WorkOrderPartModel } from '../../services/api.client.generated';
 
 @Component({
   selector: 'part-label-roll',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PartLabelRollComponent implements OnInit {
 
+  @Input() WorkOrder: WorkOrderModel;
+  workOrderParentPart: WorkOrderPartModel;
+  
   constructor() { }
 
   ngOnInit(): void {
+    this.workOrderParentPart = this.WorkOrder.workOrderParts[0];
   }
 
 }
