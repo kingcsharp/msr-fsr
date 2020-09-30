@@ -9178,7 +9178,7 @@ export class DocumentView extends TrackableModel implements IDocumentView {
     comments?: string | undefined;
     roleIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    referenceFlieIds?: number[] | undefined;
+    referenceFileIds?: number[] | undefined;
 
     constructor(data?: IDocumentView) {
         super(data);
@@ -9200,10 +9200,10 @@ export class DocumentView extends TrackableModel implements IDocumentView {
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
             }
-            if (Array.isArray(_data["referenceFlieIds"])) {
-                this.referenceFlieIds = [] as any;
-                for (let item of _data["referenceFlieIds"])
-                    this.referenceFlieIds!.push(item);
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
         }
     }
@@ -9230,10 +9230,10 @@ export class DocumentView extends TrackableModel implements IDocumentView {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        if (Array.isArray(this.referenceFlieIds)) {
-            data["referenceFlieIds"] = [];
-            for (let item of this.referenceFlieIds)
-                data["referenceFlieIds"].push(item);
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
         }
         super.toJSON(data);
         return data; 
@@ -9246,7 +9246,7 @@ export interface IDocumentView extends ITrackableModel {
     comments?: string | undefined;
     roleIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    referenceFlieIds?: number[] | undefined;
+    referenceFileIds?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -9290,6 +9290,7 @@ export class CreateDocumentRequest implements ICreateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: ICreateDocumentRequest) {
         if (data) {
@@ -9314,6 +9315,11 @@ export class CreateDocumentRequest implements ICreateDocumentRequest {
                 this.referenceFileIds = [] as any;
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -9340,6 +9346,11 @@ export class CreateDocumentRequest implements ICreateDocumentRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -9350,6 +9361,7 @@ export interface ICreateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 }
 
 export class UpdateDocumentRequest implements IUpdateDocumentRequest {
@@ -9359,6 +9371,7 @@ export class UpdateDocumentRequest implements IUpdateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateDocumentRequest) {
         if (data) {
@@ -9384,6 +9397,11 @@ export class UpdateDocumentRequest implements IUpdateDocumentRequest {
                 this.referenceFileIds = [] as any;
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -9411,6 +9429,11 @@ export class UpdateDocumentRequest implements IUpdateDocumentRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -9422,6 +9445,7 @@ export interface IUpdateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
