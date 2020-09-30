@@ -102,5 +102,11 @@ namespace MSR.Domain.Models
         /// </summary>
         [DataMember(Name="workOrderTasks")]
         public ICollection<WorkOrderTaskModel> WorkOrderTasks { get; set; }
+
+        /// <summary>
+        /// Status of string, calculated based on state of WO tasks
+        /// </summary>
+        [DataMember(Name="status")]
+        public string Status { get; set; }
     }
 }

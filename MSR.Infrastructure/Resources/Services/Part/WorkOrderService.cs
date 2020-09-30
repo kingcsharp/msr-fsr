@@ -112,6 +112,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             foreach (var wo in workorders)
             {
                 var wom = _mapper.Map<WorkOrderModel>(wo);
+
+                // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
+                wom.Status = WorkOrderService.TranslateWOStatusToViewModel(wom.WorkOrderTasks);
+
                 foreach (var wot in wom.WorkOrderTasks) {
 
                     // enforce sane data by limiting the status IDs returned by the API
@@ -442,9 +446,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     sum.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
                 }
 
-                // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-                sum.Status = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
-
                 // Disposition
                 // This is a string join of the text values of
                 // all procedure steps with a type of "NC Disposition"
@@ -558,7 +559,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
                 // WorkOrderStatus ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-                wosum.WorkOrderStatus = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
+                wosum.WorkOrderStatus = m.Status;
 
                 // WorkOrderAssignedTo
                 var curstep = m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
