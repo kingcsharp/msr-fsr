@@ -407,6 +407,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<CreateWorkOrderTask, WorkOrderTask>();
             CreateMap<UpdateWorkOrderTask, WorkOrderTask>()
+                .ForMember(dest => dest.Status, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => ignoreNullOrZero(srcMember)));
 
             CreateMap<EquipmentMaintenance, EquipmentMaintenanceModel>().ReverseMap();

@@ -333,8 +333,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"{nameof(WorkOrderTask)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
+            if (!String.IsNullOrEmpty(command.Status))
+            {
+                var statusObj = await _unitOfWork
+                    .Status
+                    .Query()
+                    .FirstOrDefaultAsync(x =>
+                        x.Name.ToUpper().Equals(command.Status.ToUpper()));
+                if (statusObj == null)
+                {
+                    throw new DomainException($"{nameof(Status)} not found with Name: {command.Status}", DomainError.NotFound);
+                }
+                current.StatusId = statusObj.Id;
+            }
+
             WorkOrderTaskModel ret;
-            var workordertask = _mapper.Map(command, current);
+            WorkOrderTask workordertask = _mapper.Map(command, current);
             _unitOfWork.WorkOrderTasks.Update(workordertask);
 
             // This will call SaveChangesAsync
