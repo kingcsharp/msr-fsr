@@ -238,6 +238,48 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "AdminCostSettings"
+        ],
+        "summary": "Update admin cost setting",
+        "operationId": "AdminCostSettings_UpdateAdminCostSettings",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminCostSettingRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfAdminCostSettingsModel"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v{version}/Customer": {
@@ -463,6 +505,299 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Document": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Gets a list of Documents or a single Document matching the Id.",
+        "operationId": "Document_GetDocuments",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfDocumentView"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Creates a new Document or DocumentApproval.",
+        "operationId": "Document_CreateDocument",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "newDocument",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfDocumentView"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Updates a Document or DocumentApproval based on the user privilege. Id is required.",
+        "operationId": "Document_UpdateDocument",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDocumentRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfDocumentView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Document/{id}": {
+      "delete": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Deletes any Document or DocumentApproval with a matching Id.",
+        "operationId": "Document_DeleteDocument",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/EquipmentMaintenance": {
+      "get": {
+        "tags": [
+          "EquipmentMaintenance"
+        ],
+        "summary": "Gets EM/PM items. Filter the item using Id.",
+        "operationId": "EquipmentMaintenance_GetEquipmentMaintenance",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "EquipmentMaintenance"
+        ],
+        "summary": "Creates a new EM/PM entry",
+        "operationId": "EquipmentMaintenance_CreateEquipmentMaintenance",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEquipmentMaintenanceRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfEquipmentMaintenanceModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "EquipmentMaintenance"
+        ],
+        "operationId": "EquipmentMaintenance_UpdateEquipmentMaintenance",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEquipmentMaintenanceRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfEquipmentMaintenanceModel"
                 }
               }
             }
@@ -882,7 +1217,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 3
           }
@@ -1371,14 +1707,22 @@
             "x-position": 2
           },
           {
+            "name": "InternalAddress",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "1"
+              "type": "string"
             },
-            "x-position": 3
+            "x-position": 4
           }
         ],
         "responses": {
@@ -3680,6 +4024,80 @@
         }
       }
     },
+    "/v{version}/Report": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "operationId": "Report_Get",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfReportModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Report/Dashboard/{id}": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "operationId": "Report_GetDashboard",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfReportDashboardModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Role": {
       "get": {
         "tags": [
@@ -3692,8 +4110,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "1"
+              "type": "string"
             },
             "x-position": 1
           }
@@ -3828,6 +4245,46 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuditActionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Search": {
+      "get": {
+        "tags": [
+          "Search"
+        ],
+        "operationId": "Search_Search",
+        "parameters": [
+          {
+            "name": "SearchTerm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfSearchView"
                 }
               }
             }
@@ -4001,6 +4458,21 @@
             "x-position": 8
           },
           {
+            "name": "HasRoleIDs",
+            "in": "query",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "x-position": 9
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
@@ -4008,7 +4480,7 @@
               "type": "string",
               "example": "1"
             },
-            "x-position": 9
+            "x-position": 10
           }
         ],
         "responses": {
@@ -4653,13 +5125,24 @@
             "x-position": 4
           },
           {
+            "name": "assignedToId",
+            "in": "query",
+            "description": "Get work orders with ANY tasks assigned to this user ID",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "x-position": 5
+            "x-position": 6
           }
         ],
         "responses": {
@@ -5671,6 +6154,32 @@
           }
         }
       },
+      "UpdateAdminCostSettingRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "rmAnnualRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "laborRateMinute": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "yearsHours": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hourMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "AuditActionResultOfIEnumerableOfCustomer": {
         "allOf": [
           {
@@ -6489,6 +6998,406 @@
           "customerNumber": {
             "type": "string",
             "description": " ",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfICollectionOfDocumentView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/DocumentView"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "DocumentView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "revision": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "comments": {
+                "type": "string",
+                "nullable": true
+              },
+              "roleIds": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "referenceFiles": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/FileModel"
+                }
+              },
+              "referenceFlieIds": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AuditActionResultOfDocumentView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/DocumentView"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CreateDocumentRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "revision"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "roleIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "referenceFileIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "UpdateDocumentRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id",
+          "name",
+          "revision"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "roleIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          "referenceFileIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            }
+          }
+        }
+      },
+      "AuditActionResultOfIEnumerableOfEquipmentMaintenanceModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/EquipmentMaintenanceModel"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "EquipmentMaintenanceModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TrackableModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "locationId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "assignedToId": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "troubleState": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "maintenanceTask": {
+                "type": "string",
+                "nullable": true
+              },
+              "statusId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "pemLastCompletedDate": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "frequencyField": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "comments": {
+                "type": "string",
+                "nullable": true
+              },
+              "location": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/LocationModel"
+                  }
+                ]
+              },
+              "assignedTo": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/UserModel"
+                  }
+                ]
+              },
+              "status": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/StatusModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "StatusModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfEquipmentMaintenanceModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/EquipmentMaintenanceModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CreateEquipmentMaintenanceRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "locationId",
+          "troubleState",
+          "statusId"
+        ],
+        "properties": {
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "assignedToId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "troubleState": {
+            "type": "boolean"
+          },
+          "maintenanceTask": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pemLastCompletedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "frequencyField": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateEquipmentMaintenanceRequest": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id",
+          "locationId",
+          "troubleState",
+          "statusId"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "assignedToId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "troubleState": {
+            "type": "boolean"
+          },
+          "maintenanceTask": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pemLastCompletedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "frequencyField": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "comments": {
+            "type": "string",
             "nullable": true
           }
         }
@@ -9591,24 +10500,6 @@
           }
         }
       },
-      "StatusModel": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "example": {
-            "id": 25,
-            "name": "PROCTYPE1598416546"
-        }
-      },
       "QuoteItemModel": {
         "type": "object",
         "additionalProperties": true,
@@ -9652,6 +10543,10 @@
             "format": "decimal",
             "nullable": true
           }
+        },
+        "example": {
+            "id": 25,
+            "name": "PROCTYPE1598416546"
         }
       },
       "WorkOrderModel": {
@@ -10975,6 +11870,133 @@
           }
         ]
       },
+      "AuditActionResultOfICollectionOfReportModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ReportModel"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ReportModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "subtitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "apiEndPointURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "categories": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ReportCategoryModel"
+            }
+          }
+        }
+      },
+      "ReportCategoryModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AuditActionResultOfReportDashboardModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ReportDashboardModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "ReportDashboardModel": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "subTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "apiEndPointURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "reports": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ReportModel"
+            }
+          }
+        }
+      },
       "AuditActionResultOfICollectionOfRole": {
         "allOf": [
           {
@@ -11068,6 +12090,57 @@
             }
           }
         ]
+      },
+      "AuditActionResultOfICollectionOfSearchView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/SearchView"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "SearchView": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "itemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "itemName": {
+            "type": "string",
+            "nullable": true
+          },
+          "itemType": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastUpdatedOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdatedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       },
       "AuditActionResultOfICollectionOfTimeZoneModel": {
         "allOf": [
