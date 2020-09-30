@@ -1,7 +1,9 @@
-<p-fileUpload class="col-md-10" name="fileUpload" url="./upload.php" customUpload="true" (onSelect)="myUploader($event)"
+<p-fileUpload class="col-md-10" name="fileUpload" url="./upload.php"  (onSelect)="myUploader($event)"
     (onRemove)="removeuploadFile($event)" [showUploadButton]="showUploadButton" [showCancelButton]="showCancelButton" [multiple]="multiple"
     [accept]="accept" [chooseLabel]="chooseLabel" [maxFileSize]="maxFileSize">
-
+    <ng-template pTemplate="toolbar" *ngIf="showSelectButton">
+      <p-button [label]="selectLabel" icon="pi pi-bars" (click)="openSelectModal()"></p-button>
+    </ng-template>
     <ng-template pTemplate="content">
         <ul *ngIf="showLi && files !==undefined && files.length>0">
             <li class="row fileLi" *ngFor="let file of files">
@@ -38,3 +40,121 @@
         </ul>
     </ng-template>
 </p-fileUpload>
+
+<p-dialog
+  header="Files"
+  [(visible)]="showSelectModal"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '70vw'}"
+  data-cy="user-header"
+>
+  <div class="container">
+    <div class="widget mrg-btm-sm" widget>
+      <div class="widget-body">
+        <p-table
+          #dt
+          [value]="uploadedFiles"
+          dataKey="id"
+          styleClass="ui-table-customers"
+          [rowHover]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          [paginator]="true"
+          currentPageReportTemplate="Showing {first}-{last} of {{uploadedFiles.length}}" [filterDelay]="0"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th data-cy="usertable-header">
+                <p-checkbox [(ngModel)]="selectAll" binary="true" (onChange)="selectAllFiles($event)"></p-checkbox>
+              </th>
+              <th [pSortableColumn]="'fileId'" data-cy="usertable-header">
+                # <p-sortIcon [field]="'fileId'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'name'" data-cy="usertable-header">
+                Name <p-sortIcon [field]="'name'"></p-sortIcon>
+              </th>
+              <th [pSortableColumn]="'contentType'"
+                data-cy="usertable-header">
+                File Type <p-sortIcon [field]="'contentType'"></p-sortIcon>
+              </th>
+              <th [class.hide]="true"></th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>
+                <div class="position-relative">
+                  <input
+                    pInputText type="text"
+                    tooltip="Search by File Id"
+                    (input)="dt.filter($event.target.value, 'fileId', 'contains')"
+                    data-cy="searchbyid-grid"
+                    class="ui-column-filter"
+                    [value]="dt.filters['fileId']?.value"
+                  >
+                  <i *ngIf="dt.filters['fileId']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'fileId')"></i>
+                </div>
+              </th>
+              <th>
+                <div class="position-relative">
+                  <input pInputText type="text" tooltip="Search by Name" data-cy="searchbyname-grid"
+                    (input)="dt.filter($event.target.value, 'name', 'contains')" class="ui-column-filter"
+                    [value]="dt.filters['name']?.value">
+                  <i *ngIf="dt.filters['name']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'name')"></i>
+                </div>
+              </th>
+              <th>
+                <multiselect-wrapper [options]="fileTypes" filterId="contentType"
+                  defaultText="Select File Type" defaultTextTooltip="" [datatable]="dt">
+                </multiselect-wrapper>
+              </th>
+              <th [class.hide]="true"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-filemodel>
+            <tr class="ui-selectable-row" data-cy="row">
+              <td>
+                <p-checkbox [value]="filemodel"  [(ngModel)]="selectedFiles" [inputId]="filemodel"></p-checkbox>
+              </td>
+              <td>
+                {{filemodel.fileId}}
+              </td>
+              <td>
+                {{filemodel.name}}
+              </td>
+              <td>
+                {{filemodel.contentType}}
+              </td>
+              <td [class.hide]="true"></td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" style="text-align:left">No Data found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="row mx-4 px-4 pb-2 justify-content-end">
+      <button
+        type="button"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        (click)="selectUploadedFiles()"
+        role="button" data-cy="btn-select"
+      >
+        Select
+      </button>
+      <button
+        type="button"
+        (click)="closeSelectModal()"
+        class="btn btn-outline-inverse width-100 mb-xs"
+        role="button"
+      >
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

@@ -48,29 +48,36 @@ namespace MSR.Infrastructure.Resources.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<FileModel> ListFiles(string entityName, int entityId, int? fileId = null)
+        public ICollection<FileModel> ListFiles(string entityName, int? entityId = null, int? fileId = null)
         {
-            var tableName = mapEntityToTable(entityName);
-            List<File> files;
-            if (fileId.HasValue) {
-                files = _unitOfWork.FileEntityMap.Query().Where(x =>
-                    x.EntityTableName == tableName &&
-                    x.EntityId == entityId &&
-                    x.FileId == fileId
-                    ).Select(x =>
-                        x.FileObject
-                    ).ToList();
-            } else {
-                files = _unitOfWork.FileEntityMap.Query().Where(x =>
-                    x.EntityTableName == tableName &&
-                    x.EntityId == entityId
-                    ).Select(x =>
-                        x.FileObject
-                    ).ToList();
+            var tableName = mapEntityToTable(entityName ?? "");
+            var fileMaps = _unitOfWork.FileEntityMap.Query();
+            
+            if (fileId.HasValue)
+            {
+                fileMaps = fileMaps.Where(x => x.FileId == fileId);
             }
 
-            List<FileModel> ret = new List<FileModel>();
-            foreach (var x in files) {
+            if (!string.IsNullOrWhiteSpace(entityName))
+            {
+                fileMaps = fileMaps.Where(x => x.EntityTableName == entityName);
+            }
+
+            if (entityId.HasValue)
+            {
+                fileMaps = fileMaps.Where(x => x.EntityId == entityId);
+            }
+
+            var ret = new List<FileModel>();
+            var files = fileMaps.Select(x => x.FileObject).ToList();
+
+            foreach (var x in files)
+            {
+                if (ret.Any(i => i.FileId == x.Id))
+                {
+                    continue;
+                }
+
                 var fileURL = _fileDownloader.GetURL(x.FileURL, 6000);
                 ret.Add(new FileModel()
                 {
@@ -95,7 +102,7 @@ namespace MSR.Infrastructure.Resources.Services
                 {
                     FileId = x.FileId,
                     Name = x.FileObject.Name,
-                    FileURL = "", // Not available here because it requires a call to AWS
+                    FileURL = _fileDownloader.GetURL(x.FileObject.FileURL, 6000),
                     EntityId = x.EntityId,
                     ContentType = x.FileObject.ContentType
                 }).ToList();
@@ -129,7 +136,8 @@ namespace MSR.Infrastructure.Resources.Services
             _unitOfWork.FileEntityMap.Add(fileEntityMap);
             await _unitOfWork.SaveChangesAsync();
 
-            return new FileModel() {
+            return new FileModel()
+            {
                 FileId = efFile.Id,
                 EntityId = entityId,
                 Name = file.Name,
@@ -182,17 +190,21 @@ namespace MSR.Infrastructure.Resources.Services
             string tableName = mapEntityToTable(entityName);
             int deleteCount = 0;
 
-            if (fileId.HasValue) {
+            if (fileId.HasValue)
+            {
                 var file = _unitOfWork.FileEntityMap.Query().FirstOrDefault(x =>
                         x.EntityTableName == tableName &&
                         x.EntityId == entityId &&
                         x.FileId == fileId.Value
                     );
-                if (file != null){
+                if (file != null)
+                {
                     _unitOfWork.FileEntityMap.Delete(false, file);
                     deleteCount++;
                 }
-            } else {
+            }
+            else
+            {
                 foreach (var e in _unitOfWork.FileEntityMap.Query().Where(x =>
                         x.EntityTableName == tableName &&
                         x.EntityId == entityId
@@ -210,13 +222,15 @@ namespace MSR.Infrastructure.Resources.Services
         public async Task<ICollection<FileModel>> AttachFilesAsync(string entityName, int entityId, ICollection<FileModel> files)
         {
             List<FileModel> ret = new List<FileModel>();
-            if (files == null) {
+            if (files == null)
+            {
                 return ret;
             }
 
             await DetachFilesAsync(entityName, entityId);
 
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 ret.Add(await CreateFileAsync(entityName, entityId, file));
             }
 

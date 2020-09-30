@@ -1105,16 +1105,14 @@ export class FileService {
      * @param entityId (optional) 
      * @param fileId (optional) 
      */
-    fileGet(entityName: string | null | undefined, entityId: number | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
+    fileGet(entityName: string | null | undefined, entityId: number | null | undefined, fileId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfFileModel> {
         let url_ = this.baseUrl + "/v{version}/File?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (entityName !== undefined && entityName !== null)
             url_ += "EntityName=" + encodeURIComponent("" + entityName) + "&";
-        if (entityId === null)
-            throw new Error("The parameter 'entityId' cannot be null.");
-        else if (entityId !== undefined)
+        if (entityId !== undefined && entityId !== null)
             url_ += "EntityId=" + encodeURIComponent("" + entityId) + "&";
         if (fileId !== undefined && fileId !== null)
             url_ += "FileId=" + encodeURIComponent("" + fileId) + "&";
@@ -9180,7 +9178,7 @@ export class DocumentView extends TrackableModel implements IDocumentView {
     comments?: string | undefined;
     roleIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    referenceFlieIds?: number[] | undefined;
+    referenceFileIds?: number[] | undefined;
 
     constructor(data?: IDocumentView) {
         super(data);
@@ -9202,10 +9200,10 @@ export class DocumentView extends TrackableModel implements IDocumentView {
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileModel.fromJS(item));
             }
-            if (Array.isArray(_data["referenceFlieIds"])) {
-                this.referenceFlieIds = [] as any;
-                for (let item of _data["referenceFlieIds"])
-                    this.referenceFlieIds!.push(item);
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
         }
     }
@@ -9232,10 +9230,10 @@ export class DocumentView extends TrackableModel implements IDocumentView {
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
         }
-        if (Array.isArray(this.referenceFlieIds)) {
-            data["referenceFlieIds"] = [];
-            for (let item of this.referenceFlieIds)
-                data["referenceFlieIds"].push(item);
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
         }
         super.toJSON(data);
         return data; 
@@ -9248,7 +9246,7 @@ export interface IDocumentView extends ITrackableModel {
     comments?: string | undefined;
     roleIds?: number[] | undefined;
     referenceFiles?: FileModel[] | undefined;
-    referenceFlieIds?: number[] | undefined;
+    referenceFileIds?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -9292,6 +9290,7 @@ export class CreateDocumentRequest implements ICreateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: ICreateDocumentRequest) {
         if (data) {
@@ -9316,6 +9315,11 @@ export class CreateDocumentRequest implements ICreateDocumentRequest {
                 this.referenceFileIds = [] as any;
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -9342,6 +9346,11 @@ export class CreateDocumentRequest implements ICreateDocumentRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -9352,6 +9361,7 @@ export interface ICreateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 }
 
 export class UpdateDocumentRequest implements IUpdateDocumentRequest {
@@ -9361,6 +9371,7 @@ export class UpdateDocumentRequest implements IUpdateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateDocumentRequest) {
         if (data) {
@@ -9386,6 +9397,11 @@ export class UpdateDocumentRequest implements IUpdateDocumentRequest {
                 this.referenceFileIds = [] as any;
                 for (let item of _data["referenceFileIds"])
                     this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -9413,6 +9429,11 @@ export class UpdateDocumentRequest implements IUpdateDocumentRequest {
             for (let item of this.referenceFileIds)
                 data["referenceFileIds"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -9424,6 +9445,7 @@ export interface IUpdateDocumentRequest {
     comments?: string | undefined;
     roleIds?: (number | undefined)[] | undefined;
     referenceFileIds?: (number | undefined)[] | undefined;
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -9828,11 +9850,11 @@ export interface IAuditActionResultOfFileModel extends IAuditActionResult {
 }
 
 export class CreateFileRequest implements ICreateFileRequest {
-    entityName?: string | undefined;
-    entityId?: number;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
+    entityName!: string;
+    entityId!: number;
+    name!: string;
+    base64String!: string;
+    contentType!: string;
 
     constructor(data?: ICreateFileRequest) {
         if (data) {
@@ -9872,11 +9894,11 @@ export class CreateFileRequest implements ICreateFileRequest {
 }
 
 export interface ICreateFileRequest {
-    entityName?: string | undefined;
-    entityId?: number;
-    name?: string | undefined;
-    base64String?: string | undefined;
-    contentType?: string | undefined;
+    entityName: string;
+    entityId: number;
+    name: string;
+    base64String: string;
+    contentType: string;
 }
 
 /** Base class for an API call with a typed result */
