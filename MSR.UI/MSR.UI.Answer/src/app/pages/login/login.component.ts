@@ -18,13 +18,13 @@ export class Login {
   username: string = '';
   forgotUsername: boolean = false;
   showLogin: boolean = true;
-  forgotPassword: boolean = false; 
+  forgotPassword: boolean = false;
 
   constructor(public loginService: LoginService, private route: ActivatedRoute, private accountService: AccountService) {
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
     }
-    
+
     this.route.queryParams.subscribe((params) => {
       if (params.token) {
         this.loginService.receiveToken(params.token);

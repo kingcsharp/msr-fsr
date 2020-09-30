@@ -175,7 +175,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   getLocations() {
-    this.locationService.locationGet(null, null,null, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.locations = response.object.filter(x => x.parentId === null);
       }));

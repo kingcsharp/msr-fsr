@@ -1,17 +1,15 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
-  Customer, IStatusModel, PartModel, Procedure, ProcedureStepMonitor, ProductModel, PurchaseModel, StatusModel, WorkOrderPartService,
-  WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel, ProcedureStepMonitorService, WorkOrderTaskMonitorModel, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest, Role, IRole, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, LocationModel
-} from '../../../services/api.client.generated';
+  Customer, Procedure, PurchaseModel, WorkOrderPartService,
+  WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
+   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
+   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Product } from '../../ecommerce/products.service';
 import { Globals } from '../../../models/lib/globals';
-import { forkJoin } from "rxjs";
-import { tap } from "rxjs/operators";
-import { SelectItem } from 'primeng/api';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 
@@ -33,7 +31,7 @@ export class WipdetailsComponent implements OnInit {
   customer: Customer = new Customer();
   product: Product = new Product();
   purchase: PurchaseModel = new PurchaseModel();
-  workOrderParts: Array<WorkOrderPartModel> = new Array<WorkOrderPartModel>()
+  workOrderParts: Array<WorkOrderPartModel> = new Array<WorkOrderPartModel>();
   workOrderTaskInProgress: WorkOrderTaskModel;
   workOrderTaskToView: WorkOrderTaskModel;
   menuItems = EnumMenuItem;
@@ -41,10 +39,9 @@ export class WipdetailsComponent implements OnInit {
   hideCompletedWorkOrders: boolean = false;
   showCancelRemainingStepsDialog: boolean = false;
   activeSlideIndex = 0;
-  
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
-    private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, private router: Router,
-    private workOrderTaskService: WorkOrderTaskService, private locationService: LocationService, private userService: UserService) { }
+
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, public globals: Globals, private router: Router,
+    private workOrderTaskService: WorkOrderTaskService) { }
 
   ngOnInit(): void {
 
@@ -65,9 +62,9 @@ export class WipdetailsComponent implements OnInit {
         // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
         if (!this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
 
-          
-          for(let index = 0; index < this.workOrderModel.workOrderTasks.length; index++){
-            if(this.workOrderModel.workOrderTasks[index].status.name === 'In Progress'  || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start'){
+
+          for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
+            if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress'  || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
               this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[index];
               this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
               break;
@@ -109,7 +106,7 @@ export class WipdetailsComponent implements OnInit {
   }
 
   canUserAccessWorkOrderTask(workOrderTask: WorkOrderTaskModel) {
-    return workOrderTask.procedureStep?.roles?.map(s => s.name).some(s => this.globals.getCurrentUser().roles?.map(s => s.name).includes(s));
+    return workOrderTask.procedureStep?.roles?.map(s => s.name).some(s => this.globals.getCurrentUser().roles?.map(m => m.name).includes(s));
   }
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
@@ -150,7 +147,7 @@ export class WipdetailsComponent implements OnInit {
     } as IUpdateWorkOrderPartRequest);
 
     this.globals.showLoader(true);
-    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(responseHandler(response => {
+    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(responseHandler(() => {
 
       this.originalSerialNumbers.find(s => s.id === partId).serialNumber = this.workOrderModel.workOrderParts.find(s => s.id === partId).serialNumber;
 
@@ -167,7 +164,7 @@ export class WipdetailsComponent implements OnInit {
 
   cancelSerialNumber(index, partId) {
 
-    let originalSerialNumber = this.originalSerialNumbers.find(s => s.id === partId)
+    let originalSerialNumber = this.originalSerialNumbers.find(s => s.id === partId);
     let inputElement = <HTMLInputElement>document.getElementById('serialnumber' + index);
     inputElement.disabled = true;
     inputElement.value = originalSerialNumber.serialNumber;
@@ -224,7 +221,7 @@ export class WipdetailsComponent implements OnInit {
       } as IUpdateWorkOrderTaskRequest);
 
       this.globals.showLoader(true);
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(response => {
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
 
         this.router.navigate(['/app/wip/wipstatus']);
 

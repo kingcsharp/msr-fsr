@@ -9,7 +9,7 @@ import { WorkOrderModel } from '../../services/api.client.generated';
 export class DeliveryTicketReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
-  
+
   constructor() { }
 
   ngOnInit(): void {

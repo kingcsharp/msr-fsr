@@ -4,5 +4,5 @@ export enum EnumColumnType {
     String = 2,
     Money = 3,
     Boolean = 4,
-    StringArray=5
+    StringArray= 5
 }

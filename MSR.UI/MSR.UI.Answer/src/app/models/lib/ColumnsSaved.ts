@@ -21,7 +21,7 @@ export class ColumnsSaved implements IColumnsSaved {
     //used only for date values at the time but can be extended if wanted
     formattingMoment: string = 'MM-YYYY';
     formattingAngular: string = 'MM-yyyy';
-    
+
     isRanged?: boolean | undefined;
 
     constructor(data?: IColumnsSaved) {

@@ -10,7 +10,7 @@ import { WorkOrderModel } from '../../services/api.client.generated';
 export class PrinttravelerReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
-  
+
   showPrintTravelerDialog: boolean = false;
 
   constructor() { }
@@ -19,11 +19,11 @@ export class PrinttravelerReportComponent implements OnInit {
     console.log(this.WorkOrder);
   }
 
-  togglePrintTravelerDialog(){
+  togglePrintTravelerDialog() {
     this.showPrintTravelerDialog = !this.showPrintTravelerDialog;
   }
 
-  printTravelerReport(){
+  printTravelerReport() {
     window.print();
   }
 
