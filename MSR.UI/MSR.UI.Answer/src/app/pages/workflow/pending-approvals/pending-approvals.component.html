@@ -49,15 +49,6 @@
 
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('comments',gridSettings)">
-          <div class="position-relative">
-            <input id="comments" pInputText type="text" tooltip="Search by Comments"
-              (input)="dt.filter($event.target.value, 'comments', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['comments']?.value">
-            <i *ngIf="dt.filters['comments']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'comments')"></i>
-          </div>
-        </th>
         <th [hidden]="!cg.isVisibleCol('workflowName',gridSettings)">
           <div class="position-relative">
             <input id="workflowName" pInputText type="text" tooltip="Search by Workflow"
@@ -124,9 +115,6 @@
             popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
             Details
           </button>
-        </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings)">
-          {{approval.comments}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowName',gridSettings)">
           {{approval.workflowName}}
@@ -221,15 +209,6 @@
 
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
-          <div class="position-relative">
-            <input id="comments2" pInputText type="text" tooltip="Search by Comments"
-              (input)="dt2.filter($event.target.value, 'comments', 'contains')" class="ui-column-filter"
-              [value]="dt2.filters['comments']?.value">
-            <i *ngIf="dt2.filters['comments']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt2,'comments')"></i>
-          </div>
-        </th>
         <th [hidden]="!cg.isVisibleCol('workflowName',gridSettings2)">
           <div class="position-relative">
             <input id="workflowName2" pInputText type="text" tooltip="Search by Workflow"
@@ -296,9 +275,6 @@
             popoverTitle="Requested Changes" container="body" triggers="mouseenter:mouseleave">
             Details
           </button>
-        </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
-          {{approval.comments}}
         </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowName',gridSettings2)">
           {{approval.workflowName}}
