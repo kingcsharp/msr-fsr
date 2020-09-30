@@ -317,11 +317,11 @@
         </td>
         <td>
           <i data-cy="cancel-approval"
-            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
           <i data-cy="approve-approval"
-            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove) && approval.status !=='Approved'"
+            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
             class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
             (click)="showDialog(approveAction,approval)"></i>
         </td>

@@ -73,15 +73,6 @@ namespace MSR.Answer.API.Extentions
                             return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanApprove);
                         };
 
-                        CurrentUser.CanDeleteActivity = (EnumApprovalTables) =>
-                        {
-                            var activityToBeApproved = (int)EnumApprovalTables;
-
-                            approvalPrivilegesDic.TryGetValue(activityToBeApproved, out int[] privileges);
-
-                            return privileges == null ? false : privileges.Contains((int)EnumPrivilege.CanDelete);
-                        };
-
                         CurrentUser.CanReadActivity = (EnumApprovalTables) =>
                         {
                             var activityToBeApproved = (int)EnumApprovalTables;
