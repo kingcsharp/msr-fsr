@@ -40,7 +40,8 @@ export class WipdetailsComponent implements OnInit {
   originalSerialNumbers: Array<any> = new Array<any>();
   hideCompletedWorkOrders: boolean = false;
   showCancelRemainingStepsDialog: boolean = false;
-
+  activeSlideIndex = 0;
+  
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private procedureStepMonitorService: ProcedureStepMonitorService,
     private workOrderPartService: WorkOrderPartService, public globals: Globals, private procedureService: ProcedureService, private router: Router,
     private workOrderTaskService: WorkOrderTaskService, private locationService: LocationService, private userService: UserService) { }

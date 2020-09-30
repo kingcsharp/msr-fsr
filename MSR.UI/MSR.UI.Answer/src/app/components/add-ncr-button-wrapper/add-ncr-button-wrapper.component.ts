@@ -2,7 +2,7 @@ import {  Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Procedure, WorkOrderPartService,
-  WorkOrderModel, WorkOrderService, ProcedureStepMonitorService, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, WorkOrderTaskModel} from '../../services/api.client.generated';
+  WorkOrderModel, WorkOrderService, ProcedureStepMonitorService, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, WorkOrderTaskModel, StatusModel, IStatusModel} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
@@ -96,14 +96,24 @@ export class AddNcrButtonWrapperComponent implements OnInit {
   }
 
   getProcedureSteps(responses: Array<AuditActionResultOfWorkOrderTaskModel>){
-
+    window.location.reload();
     responses.map(s => {
   
       let sample = s as AuditActionResultOfWorkOrderTaskModel;
       let newWorkOrderTaskModel = sample.object;
+
+      if(newWorkOrderTaskModel.status === undefined && newWorkOrderTaskModel.statusId === 1){
+        newWorkOrderTaskModel.status = new StatusModel({
+          id:1,
+          name: 'Approved'
+        } as IStatusModel);
+      }
+      newWorkOrderTaskModel.assignedTo = this.globals.getCurrentUser();
+      newWorkOrderTaskModel.assignedTo = this.globals.getCurrentUser()?.id;
       this.workOrderModel.workOrderTasks.push(newWorkOrderTaskModel);
     });
 
+    this.workOrderModel.workOrderTasks = this.workOrderModel.workOrderTasks;
     this.workOrderModel.workOrderTasks.sort((a,b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
     this.showAddNcrDialog = !this.showAddNcrDialog;
 

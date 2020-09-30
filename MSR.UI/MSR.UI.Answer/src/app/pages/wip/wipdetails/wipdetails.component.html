@@ -66,8 +66,8 @@
         </div>
       </div>
       <div class="row mb-2" *ngIf="workOrderModel.workOrderTasks !== undefined">
-        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="true"
-          [interval]="false" [startFromIndex]="5">
+        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
+          [interval]="false" [startFromIndex]="0" [(activeSlide)]="activeSlideIndex">
           <slide *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
             (click)="selectTaskForViewing(workOrderTask)" 
               [ngClass]="{ 'bg-warning': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved', 
