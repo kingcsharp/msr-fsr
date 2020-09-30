@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { WorkOrderModel, WorkOrderPartModel } from '../../services/api.client.generated';
 
 @Component({
   selector: 'wip-history-report',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WipHistoryReportComponent implements OnInit {
 
+  @Input() WorkOrder: WorkOrderModel;
+  workOrderPart: WorkOrderPartModel;
+  
   constructor() { }
 
   ngOnInit(): void {
+
+    this.workOrderPart = this.WorkOrder.workOrderParts[0];
+
   }
 
 }

@@ -1,5 +1,5 @@
 <p-dropdown [options]="workOrdersAvailable" [(ngModel)]="selectedWorkOrder" optionLabel="CustomerPurchaseNumber" (onChange)="workOrderSelected($event)"
-[filter]="false" [showClear]="false" placeholder="Select a WorkOrder" [autoWidth]="false" [style]="{'width':'100% !important'}">
+[filter]="false" [showClear]="false" placeholder="Select a WorkOrder" [style]="{'width':'100% !important'}">
     <ng-template let-workorder pTemplate="item">
         <div class="row">
             <div class="col-12 font-weight-bold">{{workorder.value?.CustomerPurchaseNumber}}</div>
