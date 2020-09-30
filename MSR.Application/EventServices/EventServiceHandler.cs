@@ -2,7 +2,6 @@
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Events;
 using MSR.Domain.Exceptions;
-using Microsoft.Extensions.Configuration;
 using MSR.Domain.SQSEventing.Abstractions;
 using System;
 using System.Linq;

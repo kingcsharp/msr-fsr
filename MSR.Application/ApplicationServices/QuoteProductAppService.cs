@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MSR.Domain.Abstractions.QuickBooks;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;

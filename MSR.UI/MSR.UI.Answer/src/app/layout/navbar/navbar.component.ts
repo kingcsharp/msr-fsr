@@ -2,7 +2,8 @@ import { Component, Output, EventEmitter, ElementRef, Renderer2, OnInit } from '
 import { LoginService } from '../../pages/login/login.service';
 import { Globals } from '../../models/lib/globals';
 import { NotificationService } from './notification.service';
-
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: '[navbar]',
@@ -19,17 +20,21 @@ export class Navbar implements OnInit {
   settings: any = {
     isOpen: false
   };
+  searchValue:string;
 
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
     private loginService: LoginService,
     public globals: Globals,
-    public notificationservice: NotificationService
+    public notificationservice: NotificationService,
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
 
   ngOnInit(): void {
+    this.searchValue = '';
     this.notificationservice.getNotifications();
   }
 
@@ -54,6 +59,14 @@ export class Navbar implements OnInit {
       this.changeStyleElement('.notifications ', 'top', '46px');
     }
     this.searchFormState = !this.searchFormState;
+  }
+
+  search() {
+    if(this.searchValue.length<3){
+      this.toastr.error("Search value is too short. It should have 3 characters or more.");
+    }else{
+      this.router.navigate(['app/search'], { queryParams: { search: this.searchValue }, queryParamsHandling: 'merge' });
+    }
   }
 
   private changeStyleElement(selector, styleName, styleValue): void {

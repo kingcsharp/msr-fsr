@@ -5,7 +5,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table(nameof(ProductApproval))]
     public partial class ProductApproval: ApprovalEntity
     {
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
 
         public int Revision { get; set; }
 

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Views;
 
 namespace MSR.Infrastructure.Resources.Services
 {
@@ -22,12 +23,14 @@ namespace MSR.Infrastructure.Resources.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IPartService _partService;
+        private readonly IFileService _fileService;
 
-        public WorkflowApprovalService(IUnitOfWork unitOfWork, IMapper mapper, IPartService partService)
+        public WorkflowApprovalService(IUnitOfWork unitOfWork, IMapper mapper, IPartService partService, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _partService = partService;
+            _fileService = fileService;
 
         }
 
@@ -42,16 +45,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = await ApproveCustomer(command, status);
                     break;
                 case EnumApprovalTables.DocumentApproval:
-                    var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var document = await _unitOfWork.Documents.Query().FirstOrDefaultAsync(x => x.Id == documentApproval.DocumentId);
-                    documentApproval.Status = status;
-                    _mapper.Map(documentApproval, document);
-                    document.Revision++;
-                    _unitOfWork.Documents.Update(document);
-                    _unitOfWork.DocumentApprovals.Update(documentApproval);
-                    _unitOfWork.SaveChanges();
-                    await _unitOfWork.LogApprovalTransaction(documentApproval, documentApproval.Id, status.Name, command.Comments);
-                    result = documentApproval;
+                    result = await ApproveDocument(command,status);
                     break;
                 case EnumApprovalTables.LocationApproval:
                     result = await ApproveLocation(command, status);
@@ -218,7 +212,6 @@ namespace MSR.Infrastructure.Resources.Services
                     var documentApprovalChanges = new PendingApprovalPopoverModel();
                     documentApprovalChanges.AddRow("Name", document?.Name, documentApproval.Name);
                     documentApprovalChanges.AddRow("Revision", document?.Revision, documentApproval.Revision);
-                    documentApprovalChanges.AddRow("Role", document?.RoleId, documentApproval.RoleId);
                     return documentApprovalChanges;
                 case EnumApprovalTables.LocationApproval:
                     var locationApproval = await _unitOfWork.LocationApprovals.Query().Include(x => x.TimeZone).FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -342,7 +335,7 @@ namespace MSR.Infrastructure.Resources.Services
             }
         }
 
-        private void GetProcedureStepApprovals(PendingApprovalPopoverModel pendingApprovalModel, ICollection<EntityFramework.Entities.ProcedureStep> procSteps, ICollection<ProcedureStepApproval> procStepApprovals)
+        private void GetProcedureStepApprovals(PendingApprovalPopoverModel pendingApprovalModel, ICollection<ProcedureStep> procSteps, ICollection<ProcedureStepApproval> procStepApprovals)
         {
             var from = "";
             foreach (var procedure in procSteps)
@@ -457,7 +450,7 @@ namespace MSR.Infrastructure.Resources.Services
             return pendingApprovalModelResult;
         }
 
-        private async Task<ApprovalEntity> ApproveCustomer(PostApprovalModel command, EntityFramework.Entities.Status status)
+        private async Task<ApprovalEntity> ApproveCustomer(PostApprovalModel command, Status status)
         {
             var customerApproval = await _unitOfWork.CustomerApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
@@ -466,6 +459,8 @@ namespace MSR.Infrastructure.Resources.Services
                 var customer = _mapper.Map<EntityFramework.Entities.Customer>(customerApproval);
                 customer.IsActive = true;
                 await _unitOfWork.Customers.AddAsync(customer);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(customer, customer.Id, status.Name, command.Comments);
             }
             else
             {
@@ -482,18 +477,17 @@ namespace MSR.Infrastructure.Resources.Services
                     }
                 }
                 _unitOfWork.Customers.Update(customer);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(customer, customer.Id, status.Name, command.Comments);
             }
 
             _unitOfWork.CustomerApprovals.Delete(false, customerApproval);
-
-
-            _unitOfWork.SaveChanges();
-            await _unitOfWork.LogApprovalTransaction(customerApproval, customerApproval.Id, status.Name, command.Comments);
+            await _unitOfWork.SaveChangesAsync();
 
             return customerApproval;
         }
 
-        private async Task<ApprovalEntity> ApproveLocation(PostApprovalModel command, EntityFramework.Entities.Status status)
+        private async Task<ApprovalEntity> ApproveLocation(PostApprovalModel command, Status status)
         {
             var locationApproval = await _unitOfWork.LocationApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
 
@@ -502,6 +496,8 @@ namespace MSR.Infrastructure.Resources.Services
                 var location = _mapper.Map<EntityFramework.Entities.Location>(locationApproval);
                 location.IsActive = true;
                 await _unitOfWork.Locations.AddAsync(location);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(location, location.Id, status.Name, command.Comments);
             }
             else
             {
@@ -516,12 +512,12 @@ namespace MSR.Infrastructure.Resources.Services
                         _unitOfWork.Locations.Update(childLocation);
                     }
                 }
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(location, location.Id, status.Name, command.Comments);
             }
 
             _unitOfWork.LocationApprovals.Delete(false, locationApproval);
-            _unitOfWork.SaveChanges();
-
-            await _unitOfWork.LogApprovalTransaction(locationApproval, locationApproval.Id, status.Name, command.Comments);
+            await _unitOfWork.SaveChangesAsync();
 
             return locationApproval;
         }
@@ -550,6 +546,8 @@ namespace MSR.Infrastructure.Resources.Services
                     await _unitOfWork.PurchaseOrderProducts.AddAsync(map);
                     _unitOfWork.PurchaseOrderProductApprovals.Delete(false, purchaseOrderProduct);
                 }
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, status.Name, command.Comments);
             }
             else
             {
@@ -559,12 +557,132 @@ namespace MSR.Infrastructure.Resources.Services
                 _mapper.Map(purchaseOrderApproval, purchaseOrder);
                 purchaseOrder.Revision = purchaseOrder.Revision == null ? 1 : purchaseOrder.Revision + 1;
                 _unitOfWork.PurchaseOrders.Update(purchaseOrder);
-                _unitOfWork.SaveChanges();
+
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, status.Name, command.Comments);
             }
 
             _unitOfWork.PurchaseOrderApprovals.Delete(false, purchaseOrderApproval);
-            await _unitOfWork.LogApprovalTransaction(purchaseOrderApproval, purchaseOrderApproval.Id, status.Name, command.Comments);
+            await _unitOfWork.SaveChangesAsync();
             return purchaseOrderApproval;
+        }
+
+        private async Task<ApprovalEntity> ApproveDocument(PostApprovalModel command, Status status)
+        {
+            var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            var supportingData = JsonConvert.DeserializeObject<Dictionary<string,List<int>>>(documentApproval.ApprovalJSON);
+
+            if (documentApproval.DocumentId is null)
+            {
+                var document = _mapper.Map<EntityFramework.Entities.Document>(documentApproval); 
+                document.Revision = 1;
+                await _unitOfWork.Documents.AddAsync(document);
+                await _unitOfWork.SaveChangesAsync();
+
+                if (supportingData != null)
+                {
+                    foreach (var role in supportingData["RoleIds"] ?? new List<int>())
+                    {
+                        var map = new DocumentRoleMap()
+                        {
+                            Document = document,
+                            DocumentId = document.Id,
+                            RoleId = role
+                        };
+
+                        await _unitOfWork.DocumentRoles.AddAsync(map);
+                    }
+
+                    foreach (var referenceFile in supportingData["ReferenceFileIds"] ?? new List<int>())
+                    {
+                        var map = new FileEntityMap()
+                        {
+                            EntityId = document.Id,
+                            EntityTableName = "document",
+                            FileId = referenceFile
+                        };
+
+                        await _unitOfWork.FileEntityMap.AddAsync(map);
+                    }
+                }
+                await _unitOfWork.LogApprovalTransaction(document, document.Id, status.Name, command.Comments);
+                await SetPDFData(_mapper.Map<DocumentView>(document));
+            }
+            else
+            {
+                var document = await _unitOfWork.Documents.Query().FirstOrDefaultAsync(x => x.Id == documentApproval.DocumentId);
+
+                _mapper.Map(documentApproval, document);
+                document.Revision++;
+                _unitOfWork.DocumentApprovals.Update(documentApproval);
+                await _unitOfWork.SaveChangesAsync();
+
+                var curRoleIds = await _unitOfWork.DocumentRoles.Query().Where(i => i.DocumentId == document.Id).Select(i => i.RoleId).ToListAsync();
+                var curFileIds = await _unitOfWork.FileEntityMap.Query().Where(i => i.EntityId == document.Id && i.EntityTableName == "document").Select(i => i.FileId).ToListAsync();
+
+                if (supportingData != null)
+                {
+                    //Exists in DB but not in list: Remove
+                    var rolesToRemove = curRoleIds.Except(supportingData["RoleIds"] ?? new List<int>());
+                    var filesToRemove = curFileIds.Except(supportingData["ReferenceFileIds"] ?? new List<int>());
+                    //Does not Exist in DB: Add
+                    var rolesToAdd = supportingData["RoleIds"] ?? new List<int>().Except(curRoleIds);
+                    var filesToAdd = supportingData["ReferenceFileIds"] ?? new List<int>().Except(curFileIds);
+
+                    var removeRoles = await _unitOfWork.DocumentRoles.Query().Where(i => i.DocumentId == document.Id && rolesToRemove.Contains(i.RoleId)).ToListAsync();
+                    foreach (var role in removeRoles)
+                    {
+                        _unitOfWork.DocumentRoles.Delete(false, role);
+                    }
+
+                    var removeFiles = await _unitOfWork.FileEntityMap.Query().Where(i => i.EntityId == document.Id && i.EntityTableName == "document" && filesToRemove.Contains(i.FileId)).ToListAsync();
+                    foreach (var file in removeFiles)
+                    {
+                        _unitOfWork.FileEntityMap.Delete(false, file);
+                    }
+                    foreach (var referenceFile in filesToAdd)
+                    {
+                        var map = new FileEntityMap()
+                        {
+                            EntityId = document.Id,
+                            EntityTableName = "document",
+                            FileId = referenceFile
+                        };
+
+                        await _unitOfWork.FileEntityMap.AddAsync(map);
+                    }
+                    foreach (var role in rolesToAdd)
+                    {
+                        var map = new DocumentRoleMap()
+                        {
+                            Document = document,
+                            DocumentId = document.Id,
+                            RoleId = role
+                        };
+
+                        await _unitOfWork.DocumentRoles.AddAsync(map);
+                    }
+                }
+                await _unitOfWork.LogApprovalTransaction(document, document.Id, status.Name, command.Comments);
+                await SetPDFData(_mapper.Map<DocumentView>(document));
+            }
+
+            _unitOfWork.DocumentApprovals.Delete(false, documentApproval);
+            await _unitOfWork.SaveChangesAsync();
+            return documentApproval;
+        }
+
+        private async Task SetPDFData(DocumentView document)
+        {
+            var files = _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject)
+                                                         .Where(i => i.EntityTableName == "Documents" && i.EntityId == document.Id
+                                                                && i.FileObject != null && i.FileObject.ContentType == "application/pdf").Select(i => i.FileObject);
+            
+
+            foreach(var file in files)
+            {
+                await _fileService.EditPdfFile(_mapper.Map<FileModel>(file), document);
+            }
         }
     }
 }

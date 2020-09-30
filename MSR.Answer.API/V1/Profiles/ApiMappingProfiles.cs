@@ -3,8 +3,6 @@ using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System;
-using System.Configuration;
-using System.Linq;
 
 namespace MSR.Answer.API.V1.Profiles
 {
@@ -18,6 +16,7 @@ namespace MSR.Answer.API.V1.Profiles
         /// </summary>
         public ApiMappingProfiles()
         {
+            CreateMap<GetUsersRequest, GetUsers>();
             CreateMap<GetLocationRequest, GetLocations>();
             CreateMap<CreateLocationRequest, CreateLocation>();
             CreateMap<UpdateLocationRequest, UpdateLocation>()
@@ -122,6 +121,16 @@ namespace MSR.Answer.API.V1.Profiles
                     (src.TaskRunningSince.Ticks > 0) ? src.TaskRunningSince : (DateTime?)null));
             CreateMap<UpdateWorkOrderTaskMonitorRequest, UpdateWorkOrderTaskMonitor>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.WorkOrderTaskMonitorId));
+
+            CreateMap<GetSearchRequest, GetSearch>();
+            CreateMap<GetDashboardRequest, GetDashboard>();
+            CreateMap<UpdateAdminCostSettingRequest, UpdateAdminCostSetting>();
+            CreateMap<GetEquipmentMaintenanceRequest, GetEquipmentMaintenance>();
+            CreateMap<CreateEquipmentMaintenanceRequest, CreateEquipmentMaintenance>();
+            CreateMap<UpdateEquipmentMaintenanceRequest, UpdateEquipmentMaintenance>();
+            CreateMap<GetDocumentRequest, GetDocument>();
+            CreateMap<CreateDocumentRequest, CreateDocument>();
+            CreateMap<UpdateDocumentRequest, UpdateDocument>();
         }
     }
 }

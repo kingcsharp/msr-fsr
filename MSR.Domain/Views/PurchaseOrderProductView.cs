@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MSR.Domain.Views
+﻿namespace MSR.Domain.Views
 {
     public class PurchaseOrderProductView
     {

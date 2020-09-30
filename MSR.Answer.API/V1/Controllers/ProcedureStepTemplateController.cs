@@ -9,7 +9,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using NSwag.Annotations;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers

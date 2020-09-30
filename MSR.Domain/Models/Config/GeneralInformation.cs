@@ -6,5 +6,6 @@
         public string APIURL { get; set; }
         public string Environment { get; set; }
         public string RollbarConfig { get; set; }
+        public string IronPDFLicense { get; set; }
     }
 }

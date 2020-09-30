@@ -2036,13 +2036,13 @@ cmh-file-uploader {
   padding: 0 !important;
 }
 
-
-grid-options>div .ui-widget.ui-widget-content{
-  right: 0px!important;
-  left: inherit!important;
+grid-options > div .ui-widget.ui-widget-content {
+  right: 0px !important;
+  left: inherit !important;
 }
 
-.input-group.row, td {
+.input-group.row,
+td {
   p-inputnumber {
     flex: 1;
     .ui-inputnumber {
@@ -2074,7 +2074,21 @@ p-dropdown {
   }
 }
 
-::-webkit-scrollbar {    width: 6px;}
-::-webkit-scrollbar-track {    background: transparent;     border-radius: 3px;}
-::-webkit-scrollbar-thumb {    background:#36455a;     border-radius: 3px;}
-::-webkit-scrollbar-thumb:hover {    background: #222d3c; }
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: #36455a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #222d3c;
+}
+
+.ui-calendar {
+  width: 100%;
+}

@@ -44,30 +44,24 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 locationQuery = locationQuery.Where(i => i.ParentId == command.ParentId);
             }
 
+            if (!string.IsNullOrEmpty(command.InternalAddress))
+            {
+                locationQuery = locationQuery.Where(i => i.InternalAddress == command.InternalAddress);
+            }
+
             var locations = await locationQuery.Include(i => i.Parent).Include(i => i.TimeZone)
                                                .ToListAsync();
 
             var locationIds = locations.Select(i => i.Id);
-            //var timeZoneIds = locations.Select(i => i.TimeZoneId);
             var locationApprovals = await _unitOfWork.LocationApprovals.Query()
                                                                        .Include(i => i.Status)
                                                                        .Where(i => i.LocationId.HasValue && locationIds.Contains(i.LocationId.Value)).ToListAsync();
 
-            //var timeZones = await _unitOfWork.Timezones.Query().Where(i => timeZoneIds.Contains(i.Id)).ToListAsync();
             var ret = new List<LocationModel>();
             foreach(var location in locations)
             {
                 var domlocation = _mapper.Map<LocationModel>(location);
                 var siteId = location.ParentId;
-                //if (location.TimeZoneId.HasValue)
-                //{
-                //    var timeZone = timeZones.FirstOrDefault(i => i.Id == location.TimeZoneId);
-                //    if (timeZone != null)
-                //    {
-                //        domlocation.TimeZone = _mapper.Map<TimeZoneModel>(timeZone);
-                //    }
-                //}
-
                 if(location.Parent != null && location.Parent.ParentId.HasValue)
                 {
                     siteId = location.Parent.ParentId;

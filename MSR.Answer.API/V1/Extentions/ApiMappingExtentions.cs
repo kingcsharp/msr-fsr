@@ -2,7 +2,6 @@ using MSR.Answer.API.V1.Models;
 using MSR.Answer.API.V1.Models.Workflow;
 using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -86,17 +85,7 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static GetUsers ToGetUsersCommand(this GetUsersRequest request)
         {
-            return new GetUsers()
-            {
-                Id = request.Id,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                UserName = request.UserName,
-                Title = request.Title,
-                Supervisor = request.Supervisor,
-                PrimaryPhone = request.PrimaryPhone,
-                Email = request.Email
-            };
+            return AutoMapperHelper.Mapper.Map<GetUsers>(request);
         }
 
         /// <summary>
@@ -195,8 +184,7 @@ namespace MSR.Answer.API.V1.Extentions
             return new DeactivateApprovalModel()
             {
                 Id = request.Id,
-                Table = request.Table,
-                Comment=request.Comment
+                Table = request.Table
             };
         }
 
@@ -957,5 +945,39 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static UpdateWorkOrderTaskMonitor ToUpdateWorkOrderTaskMonitorCommand(this UpdateWorkOrderTaskMonitorRequest request) =>
             AutoMapperHelper.Mapper.Map<UpdateWorkOrderTaskMonitor>(request);
+
+        public static UpdateAdminCostSetting ToUpdateAdminCostSettingsCommand(this UpdateAdminCostSettingRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateAdminCostSetting>(request);
+        }
+
+        public static GetEquipmentMaintenance ToGetEquipmentMaintenanceCommand(this GetEquipmentMaintenanceRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetEquipmentMaintenance>(request);
+        }
+
+        public static CreateEquipmentMaintenance ToCreateEquipmentMaintenanceCommand(this CreateEquipmentMaintenanceRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateEquipmentMaintenance>(request);
+        }
+        public static UpdateEquipmentMaintenance ToUpdateEquipmentMaintenanceCommand(this UpdateEquipmentMaintenanceRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateEquipmentMaintenance>(request);
+        }
+        public static GetDocument ToGetDocumentCommand(this GetDocumentRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<GetDocument>(request);
+        }
+        public static CreateDocument ToCreateDocumentCommand(this CreateDocumentRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<CreateDocument>(request);
+        }
+        public static UpdateDocument ToUpdateDocumentCommand(this UpdateDocumentRequest request)
+        {
+            return AutoMapperHelper.Mapper.Map<UpdateDocument>(request);
+        }
+
+        public static GetSearch ToGetSearchCommand(this GetSearchRequest request) => AutoMapperHelper.Mapper.Map<GetSearch>(request);
+        public static GetDashboard ToGetDashboardCommand(this GetDashboardRequest request) => AutoMapperHelper.Mapper.Map<GetDashboard>(request);
     }
 }

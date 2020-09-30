@@ -2,7 +2,6 @@
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +10,6 @@ using MSR.Answer.API.Attributes;
 using MSR.Domain.Commanding.Enums;
 using MSR.Answer.API.Filters;
 using MSR.Domain.Models;
-using MSR.Domain.Views;
 using System.Net;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Application.Hubs;
@@ -55,7 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = product.ToCreateProductCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             await SendApprovalNotificationHubMessage(EnumApprovalTables.ProductApproval, _messageHub);
-            return ret.ToOkObjectResponse<ProductModel>("Product was successfully added.");
+            return ret.ToOkObjectResponse<ProductModel>(await DetermineResponseMessage(ret, "Create"));
         }
 
         /// <summary>
@@ -84,7 +82,21 @@ namespace MSR.Answer.API.V1.Controllers
             var updateProduct = request.ToUpdateProductCommand();
             var ret = await _dispatcher.DispatchAsync(updateProduct);
             await SendApprovalNotificationHubMessage(EnumApprovalTables.ProductApproval, _messageHub);
-            return ret.ToOkObjectResponse<ProductModel>("Product has been successfully updated.");
+            return ret.ToOkObjectResponse<ProductModel>(await DetermineResponseMessage(ret, "Update"));
+        }
+
+        private async Task<string> DetermineResponseMessage(ICommandResponse commandResponse, string action)
+        {
+            var product = commandResponse.ToEntity<ProductModel>();
+            var response = $"Product {action} Successful";
+
+            if (!string.IsNullOrWhiteSpace(product.ApprovalStatus))
+            {
+                await SendApprovalNotificationHubMessage(EnumApprovalTables.LocationApproval, _messageHub);
+                response = $"Product {action} Pending Approval";
+            }
+
+            return response;
         }
     }
 }
