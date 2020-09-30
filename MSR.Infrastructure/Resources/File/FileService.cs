@@ -119,7 +119,7 @@ namespace MSR.Infrastructure.Resources.Services
             var efFile = new File()
             {
                 ContentType = file.ContentType,
-                FileURL = url,
+                FileURL = $"{entityName}-{entityId}-{file.Name}",
                 Name = file.Name
             };
 
@@ -178,7 +178,7 @@ namespace MSR.Infrastructure.Resources.Services
                                         Name = x.Name,
                                         Base64String = "",
                                         ContentType = x.ContentType,
-                                        FileURL = x.FileURL
+                                        FileURL = _fileDownloader.GetURL(x.FileURL,6000)
                                     })
                                     .SingleOrDefaultAsync();
 
