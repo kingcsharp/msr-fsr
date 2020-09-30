@@ -1,1 +1,47 @@
-<p>ncr-report works!</p>
+<div class="row">
+    <div class="col-12">Part Non Conformance Report - Work Order #417203</div>
+    <div class="col-12">
+        <div class="row">
+            <div class="col-2">MSR-FSR</div>
+            <div class="col-10">Customer Part # 500213434, (S/N:N/A), Heated V2 Valve</div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row">
+            <div class="col-3">Date Report Prepared:</div><div class="col-9">9/30/2020 7:48:20 PM</div>
+            <div class="col-3">Work Order #:</div><div class="col-9">417203</div>
+            <div class="col-3">Customer:</div><div class="col-9">INTEL F28</div>
+            <div class="col-3">Technician:</div><div class="col-9">Robert Lara</div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row">
+            <div class="col-4">Part #</div>
+            <div class="col-4">Part Name</div>
+            <div class="col-4">Serial Number</div>
+            <div class="col-4">500213434</div>
+            <div class="col-4">Heated V2 Valve</div>
+            <div class="col-4">N/A</div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row">
+            <div class="col-3">Associated Documents:</div><div class="col-9"></div>
+            <div class="col-3">Associated Digital Pictures:</div><div class="col-9"></div>
+            <div class="col-3">Comments:</div><div class="col-9"></div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row" *ngFor="let taskSummary of taskSummaries">
+            <div class="col-12">{{taskSummary.taskName}}</div>
+            <div class="col-6">Monitor {{taskSummary.taskId}}</div><div class="col-3">Result</div><div class="col-3">Comment</div>
+            <div class="col-12">
+                <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
+                    <div class="col-6">{{monitorSummary.monitorTitle}}</div>
+                    <div class="col-3">{{monitorSummary.result}}</div>
+                    <div class="col-3">{{monitorSummary.comment}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
