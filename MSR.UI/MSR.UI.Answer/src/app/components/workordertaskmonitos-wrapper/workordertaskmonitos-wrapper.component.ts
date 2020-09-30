@@ -15,10 +15,9 @@ declare let jQuery: any;
 })
 export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
-  @Input() workOrderTaskMonitors: Array<WorkOrderTaskMonitorModel>;
+  @Input() workOrderMonitorsToView: Array<any>;
   @Input() locationId: number;
   @Output() closeCurrentTaskInProgress = new EventEmitter();
-  workOrderMonitorsToView: Array<any>;
   workOrderMonitorYesOrNoOptions: Array<SelectItem>;
   monitorListItemOptions: Array<SelectItem>;
   sensorsAvailable: Array<SelectItem>;
