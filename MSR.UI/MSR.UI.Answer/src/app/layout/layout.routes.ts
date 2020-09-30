@@ -18,11 +18,14 @@ const routes: Routes = [
       { path: 'extra', loadChildren: () => import('../pages/extra/extra.module').then(m => m.ExtraModule) },
       { path: 'tables', loadChildren: () => import('../pages/tables/tables.module').then(m => m.TablesModule) },
       { path: 'package', loadChildren: () => import('../pages/package/package.module').then(m => m.PackageModule) },
-      { path: 'help', loadChildren: () =>  import('../pages/help/help.module').then(m => m.HelpModule) },
-      { path: 'locations', loadChildren: () =>  import('../pages/locations/locations.module').then(m => m.LocationsModule) },
-      { path: 'procedures', loadChildren: () =>  import('../pages/procedures/procedures.module').then(m => m.ProceduresModule) },
-      { path: 'monitors', loadChildren: () =>  import('../pages/monitors/monitors.module').then(m => m.MonitorsModule) },
-      { path: 'pricing', loadChildren: () =>  import('../pages/pricing/pricing.module').then(m => m.PricingModule) }
+      { path: 'help', loadChildren: () => import('../pages/help/help.module').then(m => m.HelpModule) },
+      { path: 'locations', loadChildren: () => import('../pages/locations/locations.module').then(m => m.LocationsModule) },
+      { path: 'procedures', loadChildren: () => import('../pages/procedures/procedures.module').then(m => m.ProceduresModule) },
+      { path: 'monitors', loadChildren: () => import('../pages/monitors/monitors.module').then(m => m.MonitorsModule) },
+      { path: 'pricing', loadChildren: () => import('../pages/pricing/pricing.module').then(m => m.PricingModule) },
+      { path: 'reporting', loadChildren: () => import('../pages/reports/report.module').then(m => m.ReportModule) },
+      { path: 'dashboards', loadChildren: () => import('../pages/dashboards/dashboard.module').then(m => m.DashboardModule) },
+      { path: 'search', loadChildren: () => import('../pages/search/search.module').then(m => m.SearchModule) }
     ]
   }
 ];

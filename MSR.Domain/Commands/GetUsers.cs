@@ -14,5 +14,6 @@ namespace MSR.Domain.Commands
         public int? Supervisor { get; set; }
         public string PrimaryPhone { get; set; }
         public string Email { get; set; }
+        public List<int>? HasRoleIDs { get; set; }
     }
 }

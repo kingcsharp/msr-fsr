@@ -91,7 +91,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getAdminCostSettings() {
-    this.adminCostSettingsService.adminCostSettings(env.apiVersion)
+    this.adminCostSettingsService.adminCostSettingsGet(env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.adminCostSettings = response.object;
@@ -388,7 +388,7 @@ export class ProductDefinitionComponent implements OnInit {
     const url = this.router.serializeUrl(
       this.router.createUrlTree([urlTree])
     );
-    window.open('#/'+url, '_blank');
+    window.open('#/' + url, '_blank');
   }
 
   onSubmit() {

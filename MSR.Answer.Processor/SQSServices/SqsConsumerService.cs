@@ -17,7 +17,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using MSR.Domain.Helpers;
 using MSR.Domain.Commanding.Enums;
-using System.Security.Claims;
 
 namespace MSR.Answer.Processor.SQSServices
 {

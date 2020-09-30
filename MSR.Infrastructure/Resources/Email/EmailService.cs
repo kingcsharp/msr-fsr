@@ -60,7 +60,7 @@ namespace MSR.Infrastructure.Resources.Email
                     message.IsBodyHtml = isHtml;
                     message.Priority = MailPriority.High;
                     message.BodyEncoding = Encoding.GetEncoding("utf-8");
-
+                    message.Headers.Add("X-SES-CONFIGURATION-SET", _emailInformation.ConfigSet);
                     foreach (var attachment in attachments ?? new List<Attachment>())
                     {
                         message.Attachments.Add(attachment);

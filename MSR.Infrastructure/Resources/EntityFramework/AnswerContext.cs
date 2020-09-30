@@ -51,6 +51,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<ProcedureStepTemplate> ProcedureStepTemplate { get; set; }
         public DbSet<ProcedureType> ProcedureType { get; set; }
         public DbSet<Document> Document { get; set; }
+        public DbSet<DocumentApproval> DocumentApproval { get; set; }
+        public DbSet<DocumentRoleMap> DocumentRoleMap { get; set; }
+        public DbSet<DocumentEntityMap> DocumentEntityMap { get; set; }
         public DbSet<Part> Part { get; set; }
         public DbSet<Procedure> Procedure { get; set; }
         public DbSet<Product> Product { get; set; }
@@ -63,6 +66,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Quote> Quote { get; set; }
         public DbSet<TimeZone> Timezone { get; set; }
         public DbSet<AdminCostSetting> AdminCostSetting { get; set; }
+        public DbSet<Report> Report { get; set; }
+        public DbSet<ReportCategory> ReportCategory { get; set; }
+        public DbSet<ReportCategoryMap> ReportCategoryMap { get; set; }
+        public DbSet<ReportDashboard> ReportDashboard { get; set; }
+        public DbSet<ReportDashboardMap> ReportDashboardMap { get; set; }
+
+        public DbSet<EquipmentMaintenance> EquipmentMaintenance { get; set; }
 
         public AnswerContext() : base()
         {

@@ -42,7 +42,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         public async Task<ProductModel> CreateProductAsync(CreateProduct command)
         {
             var product = _mapper.Map<Product>(command);
-            ProductModel retProduct;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
@@ -51,20 +50,17 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 await _unitOfWork.Products.AddAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
-                // Returning ProductModel from the inserted quote
-                retProduct = _mapper.Map<ProductModel>(product);
+                return _mapper.Map<ProductModel>(product);
             }
-            else
-            {
-                var approval = _mapper.Map<ProductApproval>(command);
-                _unitOfWork.ProductApprovals.Add(approval);
-                await _unitOfWork.SaveChangesAsync();
-                retProduct = new ProductModel() {
-                    ApprovalStatus = approval.Status.Name
-                };
-            }
+           
+            var approval = _mapper.Map<ProductApproval>(command);
+            approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
+            approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
+            approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+            _unitOfWork.ProductApprovals.Add(approval);
+            await _unitOfWork.SaveChangesAsync();
 
-            return retProduct;
+            return _mapper.Map<ProductModel>(approval);
         }
 
         public async Task<ICollection<ProductModel>> GetProductAsync(int? id)
@@ -113,25 +109,21 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.QuoteId = command.QuoteId ?? product.QuoteId;
             product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
-            ProductModel retProduct;
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
                 // Save product changes
                 await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
-                retProduct = _mapper.Map<ProductModel>(product);
+                return _mapper.Map<ProductModel>(product);
             }
-            else
-            {
-                var approval = _mapper.Map<ProductApproval>(command);
-                _unitOfWork.ProductApprovals.Add(approval);
-                await _unitOfWork.SaveChangesAsync();
-                retProduct = new ProductModel() {
-                    ApprovalStatus = approval.Status.Name
-                };
-            }
-
-            return retProduct;
+            
+            var approval = _mapper.Map<ProductApproval>(product);
+            approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
+            approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
+            approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+            _unitOfWork.ProductApprovals.Add(approval);
+            await _unitOfWork.SaveChangesAsync();
+            return _mapper.Map<ProductModel>(approval);
         }
 
     }

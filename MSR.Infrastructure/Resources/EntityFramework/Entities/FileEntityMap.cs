@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     [Table(nameof(FileEntityMap))]
-    public partial class FileEntityMap: CreatableEntity
+    public partial class FileEntityMap : CreatableEntity
     {
         public int FileId { get; set; }
 

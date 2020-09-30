@@ -18,6 +18,7 @@ using User = MSR.Infrastructure.Resources.EntityFramework.Entities.User;
 using System.Collections.Generic;
 using Castle.Core.Internal;
 using MSR.Domain.Validators;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -100,7 +101,7 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             CreateMap<TimeZone, TimeZoneModel>().ReverseMap();
-           
+
             CreateMap<GetLocations, Location>();
             CreateMap<User, UserApproval>();
 
@@ -218,11 +219,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',', src.Roles)))
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',',src.Roles)))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',', src.Roles)))
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
@@ -281,9 +282,31 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Status, StatusModel>().ReverseMap();
 
             #region Product
-            CreateMap<Product, Domain.Models.ProductModel>().ReverseMap();
-            CreateMap<CreateProduct, Product>();
-            CreateMap<Domain.Models.ProductModel, Product>();
+            CreateMap<Product, ProductModel>().ReverseMap();
+            CreateMap<CreateProduct, Product>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<ProductModel, Product>();
+            CreateMap<CreateProduct, ProductApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<UpdateProduct, ProductApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<Product, ProductApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProductId, opts => opts.MapFrom(i => i.Id));
+            CreateMap<ProductModel, QuotesProductsView>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.SubmittedById, opt => opt.MapFrom(src => src.CreatedBy.GetValueOrDefault()))
+                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
+            CreateMap<QuoteModel, QuotesProductsView>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name));
+            CreateMap<ProductApproval, ProductModel>()
+                .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => src.Status.Name));
             #endregion
 
             #region Quote
@@ -296,20 +319,6 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<UploadFile, FileModel>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.FileName));
-
-            CreateMap<Domain.Models.ProductModel, Domain.Views.QuotesProductsView>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name))
-                .ForMember(dest => dest.SubmittedById, opt => opt.MapFrom(src => src.CreatedBy.GetValueOrDefault()))
-                .ForMember(dest => dest.SubmittedBy, opt => opt.MapFrom(src => src.Created))
-                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.Procedure.Name))
-                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.PartKitNo, opt => opt.MapFrom(src => src.Part.Name));
-
-            CreateMap<Domain.Models.QuoteModel, QuotesProductsView>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.ProcedureName, opt => opt.MapFrom(src => src.ProcessName))
-                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Customer.Name));
 
             #region PurchaseOrder
             CreateMap<PurchaseOrderProduct, PurchaseOrderView>()
@@ -362,25 +371,49 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PartCSVRecord, PartModel>();
             CreateMap<PartCSVRecord, UpdatePart>();
             CreateMap<PartCSVRecord, CreatePart>();
+
+            #region Reporting
+            CreateMap<Report, ReportModel>();
+            CreateMap<ReportCategory, ReportCategoryModel>();
+            CreateMap<ReportDashboard, ReportDashboardModel>()
+                .ForMember(dest => dest.Reports, opts => opts.Ignore());
+            #endregion
             CreateMap<PurchaseOrderProduct, PurchaseOrderProductView>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.TotalSalePrice, opts => opts.MapFrom(src => src.Product.TotalSalePrice));
+            CreateMap<EquipmentMaintenance, EquipmentMaintenanceModel>().ReverseMap();
+            CreateMap<CreateEquipmentMaintenance, EquipmentMaintenance>();
+            CreateMap<Document, DocumentView>();
+            CreateMap<CreateDocument, Document>();
+            CreateMap<CreateDocument, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<DocumentApproval, DocumentView>();
+            CreateMap<DocumentApproval, DocumentView>();
+            CreateMap<UpdateDocument, Document>();
+            CreateMap<UpdateDocument, DocumentApproval>();
+            CreateMap<DocumentRoleMap, RoleView>();
         }
 
         private static List<int> splitRoles(ProcedureStepTemplate arg)
         {
             List<int> ret;
 
-            try {
-                if (arg.Roles.IsNullOrEmpty()) {
+            try
+            {
+                if (arg.Roles.IsNullOrEmpty())
+                {
                     ret = new List<int>();
-                } else {
+                }
+                else
+                {
                     ret = arg.Roles.Split(',')
                         .Select(x => Convert.ToInt32(x))
                         .ToList();
                 }
-            } catch(FormatException) {
+            }
+            catch (FormatException)
+            {
                 // ignore bad data
                 ret = new List<int>();
             }

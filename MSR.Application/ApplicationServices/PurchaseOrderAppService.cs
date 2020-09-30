@@ -2,7 +2,6 @@
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
-using MSR.Domain.Models;
 using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading;
