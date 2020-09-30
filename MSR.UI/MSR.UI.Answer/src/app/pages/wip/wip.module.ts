@@ -29,6 +29,11 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { PrintotherReportComponent } from '../../components/printother-report/printother-report.component';
 import { DeliveryTicketReportComponent } from '../../components/delivery-ticket-report/delivery-ticket-report.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { WipHistoryReportComponent}  from '../../components/wip-history-report/wip-history-report.component';
+import { NcrReportComponent } from '../../components/ncr-report/ncr-report.component';
+import { PartLabelRollComponent } from '../../components/part-label-roll/part-label-roll.component';
+import { TechnicalDataLabelComponent } from '../../components/technical-data-label/technical-data-label.component';
+import { WorkReportComponent } from '../../components/work-report/work-report.component';
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -43,7 +48,8 @@ export const routes = [
   declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent,
     WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
-    DeliveryTicketReportComponent],
+    DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent,
+    WorkReportComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
