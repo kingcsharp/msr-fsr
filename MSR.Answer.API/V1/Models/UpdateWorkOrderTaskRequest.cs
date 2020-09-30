@@ -61,5 +61,11 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="status")]
         public string Status { get; set; }
+
+        /// <summary>
+        /// Get or set TotalTaskTime
+        /// </summary>
+        [DataMember(Name="totalTaskTime")]
+        public decimal? TotalTaskTime { get; set; }
     }
 }
