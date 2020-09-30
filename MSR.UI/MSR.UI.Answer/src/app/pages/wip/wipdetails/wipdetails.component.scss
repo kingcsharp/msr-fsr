@@ -58,6 +58,10 @@ ol{
     padding-inline-start: 40px;
 }
 
+.report.ui-dialog .ui-dialog-content{
+    min-height: 300px;
+}
+
 @media print {
 
     @page {

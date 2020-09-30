@@ -11,7 +11,7 @@ export class PrinttravelerReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
   
-  showPrintTravelerDialog: boolean = true;
+  showPrintTravelerDialog: boolean = false;
 
   constructor() { }
 

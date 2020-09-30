@@ -1,0 +1,29 @@
+<button type="button" class="btn btn-primary mr-0" (click)="togglePrintOtherDialog()"><i class="fas fa-print mx-1"></i>Print Other</button>
+<p-dialog [(visible)]="showPrintOtherDialog" appendTo="body" styleClass="report"
+    [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <p-header>
+        Print Other
+    </p-header>
+    <div class="row">
+        <div class="col-2 d-flex justify-content-end">
+            <div class="my-auto">Report Type:</div>
+        </div>
+        <div class="col-10">
+            <p-dropdown [options]="reportsAvailable" [(ngModel)]="selectedReport"></p-dropdown>
+        </div>
+    </div>
+    <div class="report-viewport m-4 d-print-flex">
+        <delivery-ticket-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'DeliveryTicket'"></delivery-ticket-report>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="print()" class="btn btn-primary mb-xs" role="button" data-cy="confirmdelete-button">
+                <i class="fas fa-print mx-1"></i>Display
+            </button>
+            <button type="submit" (click)="togglePrintOtherDialog()" class="btn btn-warning mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-times-circle mx-1"></i>Close
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>

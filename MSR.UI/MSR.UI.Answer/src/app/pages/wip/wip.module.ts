@@ -26,6 +26,9 @@ import { WipListButtonWrapperComponent } from '../../components/wip-list-button-
 import { SelectWorkOrderDropDownWrapperComponent } from '../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component'
 import { PrinttravelerReportComponent } from '../../components/printtraveler-report/printtraveler-report.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { PrintotherReportComponent } from '../../components/printother-report/printother-report.component';
+import { DeliveryTicketReportComponent } from '../../components/delivery-ticket-report/delivery-ticket-report.component'
+import { NgxBarcodeModule } from 'ngx-barcode';
 
 export const routes = [
   { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
@@ -39,7 +42,8 @@ export const routes = [
 @NgModule({
   declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent, 
     WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
-    WipListButtonWrapperComponent,SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent],
+    WipListButtonWrapperComponent,SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent,PrintotherReportComponent,
+    DeliveryTicketReportComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -55,7 +59,8 @@ export const routes = [
     CarouselModule,
     DropdownModule,
     FormsModule,
-    QRCodeModule
+    QRCodeModule,
+    NgxBarcodeModule
   ]
 })
 export class WipModule { static routes = routes; }

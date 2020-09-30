@@ -35,7 +35,7 @@
           <div class="row justify-content-end">
             <button type="button" class="btn btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> 
             <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printtraveler-report>
-            <button type="button" class="btn btn-primary mr-0"*ngIf="false"><i class="fas fa-print mx-1"></i>Print Other</button>
+            <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
           </div>
         </div>
         <div class="col-6">
