@@ -96,10 +96,10 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serial', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
-                    // new ColumnsSaved({ id: cubeFinancial+'', label: 'Invoice #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'invoicenumber', label: 'Invoice #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'invoicedate', label: 'Invoice Date', visible: true, type: this.enumColumnType.Date }),
                     new ColumnsSaved({ id: 'invoicedescription', label: 'Invoice Description', visible: true, type: this.enumColumnType.String }),
-                    // new ColumnsSaved({ id: cubeFinancial+'', label: 'Qty', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'fillqty', label: 'Qty', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
@@ -153,12 +153,18 @@ export class ReportCubeService {
             case "MonitorsHistorybyWorkOrder":
                 const workInProcessbyWorkOrder = data.map(elem => {
                     //we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
-                    elem['partname'] = elem['CubePartsmonitors.partname'].map((x) => {
-                        return {
-                            name: x,
-                            id: x
-                        }
-                    });
+                    const partName = elem['CubePartsmonitors.partname'];
+                    if(partName === null){
+                        elem['partname'] = [];
+                    }else{
+                        elem['partname'] = elem['CubePartsmonitors.partname'].map((x) => {
+                            return {
+                                name: x,
+                                id: x
+                            }
+                        });
+                    }
+                    
                     return elem;
                 })
                 return workInProcessbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));;
