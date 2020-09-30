@@ -73,7 +73,7 @@
               [ngClass]="{ 'bg-warning': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved', 
                   'bg-light': workOrderTask.status?.name === 'In Progress', 
                   'text-dark': workOrderTask.status?.name === 'In Progress',
-                  'bg-success': workOrderTask.status?.name === 'Completed'}">
+                  'bg-success': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
             <div class="carousel-caption">
               <h6>{{ workOrderTask.procedureStep?.title}}</h6>
             </div>

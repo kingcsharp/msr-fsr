@@ -66,7 +66,7 @@ export class WipdetailsComponent implements OnInit {
 
           
           for(let index = 0; index < this.workOrderModel.workOrderTasks.length; index++){
-            if(this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start'){
+            if(this.workOrderModel.workOrderTasks[index].status.name === 'In Progress'  || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start'){
               this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[index];
               this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
               break;

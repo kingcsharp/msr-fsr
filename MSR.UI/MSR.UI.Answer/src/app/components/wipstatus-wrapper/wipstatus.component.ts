@@ -122,11 +122,16 @@ export class WipstatusWrapperComponent implements OnInit {
 
           });
 
-
-          this.globals.showLoader(true);
-          forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
+          if(workOrderTaskPatchRequests.length === 0){
             this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          }));
+          }else{
+            this.globals.showLoader(true);
+            forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
+              this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
+            }));
+          }
+
+
 
         }));
 

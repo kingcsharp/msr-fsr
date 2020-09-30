@@ -30,7 +30,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if(this.workOrderTaskInProgress.taskIsRunning = true){
+    if(this.workOrderTaskInProgress.taskIsRunning === true){
       this.startTask();
     }
 
@@ -82,7 +82,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.workOrderTaskInProgress.statusId = 3;
     this.workOrderTaskInProgress.status = new StatusModel({
       id: 3,
-      name: 'Completed'
+      name: 'Complete'
     } as IStatusModel);
 
     this.saveTaskTimerState(true);
@@ -97,7 +97,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       
       let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
         assignedUserId: loggedInUser.id,
-        status: closeStep ? 'Completed' : this.workOrderTaskInProgress.status.name,
+        status: closeStep ? 'Complete' : this.workOrderTaskInProgress.status.name,
         taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
         taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
         totalTaskTime:this.workOrderTaskInProgress.totalTaskTime,
