@@ -72,7 +72,7 @@ export class SearchComponent implements OnInit {
           }));
         break;
       case 'WorkOrder':
-        this.workOrderService.workOrderGet(rowData.itemId, null, null, null, env.apiVersion).pipe(take(1))
+        this.workOrderService.workOrder(rowData.itemId,null, null, null, null, env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.setGridData(response, rowData);
           }));
