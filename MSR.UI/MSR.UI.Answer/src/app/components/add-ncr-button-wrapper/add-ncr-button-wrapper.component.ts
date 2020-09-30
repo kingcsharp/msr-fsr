@@ -2,7 +2,7 @@ import {  Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Procedure, WorkOrderPartService,
-  WorkOrderModel, WorkOrderService, ProcedureStepMonitorService, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest} from '../../services/api.client.generated';
+  WorkOrderModel, WorkOrderService, ProcedureStepMonitorService, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, WorkOrderTaskModel} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
@@ -53,12 +53,13 @@ export class AddNcrButtonWrapperComponent implements OnInit {
       for (let index = indexOfWorkOrderTaskInProgress + 1; index < this.workOrderModel.workOrderTasks?.length; index++) {
 
         this.workOrderModel.workOrderTasks[index].taskStepOrder = index + numberOfStepsToAdd;
-
         let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-          procedureId: this.workOrderModel.workOrderTasks[index].procedureStep.procedureId,
-          procedureStepId: this.workOrderModel.workOrderTasks[index].procedureStep.id,
-          workOrderId: this.workOrderModel.id,
-          taskStepOrder: this.workOrderModel.workOrderTasks[index].taskStepOrder
+          assignedUserId: this.workOrderModel.workOrderTasks[index].assignedTo,
+          status:this.workOrderModel.workOrderTasks[index].status.name,
+          taskIsRunning:this.workOrderModel.workOrderTasks[index].taskIsRunning,
+          taskRunningSince:this.workOrderModel.workOrderTasks[index].taskRunningSince,
+          taskStepOrder: this.workOrderModel.workOrderTasks[index].taskStepOrder,
+          workOrderTaskId: this.workOrderModel.workOrderTasks[index].id
         } as IUpdateWorkOrderTaskRequest);
 
         arrayOfPatchWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
@@ -83,22 +84,28 @@ export class AddNcrButtonWrapperComponent implements OnInit {
         });
   
         forkJoin(arrayOfPostWorkOrderTaskRequests).subscribe(responses => {
-  
-          responses.map(s => {
-  
-            let sample = s as AuditActionResultOfWorkOrderTaskModel;
-            let newWorkOrderTaskModel = sample.object;
-            this.workOrderModel.workOrderTasks.push(newWorkOrderTaskModel);
-  
-          });
-  
-          this.workOrderModel.workOrderTasks.sort((a,b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
-          this.showAddNcrDialog = !this.showAddNcrDialog;
+          
+          this.getProcedureSteps(responses as Array<AuditActionResultOfWorkOrderTaskModel>);
+          
         });
 
       });
 
     }))
+
+  }
+
+  getProcedureSteps(responses: Array<AuditActionResultOfWorkOrderTaskModel>){
+
+    responses.map(s => {
+  
+      let sample = s as AuditActionResultOfWorkOrderTaskModel;
+      let newWorkOrderTaskModel = sample.object;
+      this.workOrderModel.workOrderTasks.push(newWorkOrderTaskModel);
+    });
+
+    this.workOrderModel.workOrderTasks.sort((a,b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
+    this.showAddNcrDialog = !this.showAddNcrDialog;
 
   }
 
