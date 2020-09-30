@@ -153,3 +153,8 @@ Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angu
 ## Bootstrap
 [Documentation](https://ng-bootstrap.github.io/#/components/tooltip/examples)
 [Documentation](https://getbootstrap.com/docs/4.0/utilities/colors/)
+
+## HighCharts
+[Documentation](https://github.com/highcharts/highcharts-angular)
+[ChartOptions to set up all the chart options](https://api.highcharts.com/highcharts)
+[ChartDemoExamples](https://codepen.io/pen)

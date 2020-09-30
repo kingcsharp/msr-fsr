@@ -2,7 +2,6 @@ import { take } from 'rxjs/operators';
 import { WorkflowService, PendingApprovalNotification, PendingNotificationItem } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { responseHandler } from '../../utils/responseHandler';
 
 @Injectable()
@@ -10,7 +9,7 @@ export class NotificationService {
   notificationCount: number = 0;
   notificationData: PendingApprovalNotification = new PendingNotificationItem();
 
-  constructor(private toastr: ToastrService, private workflowService: WorkflowService) {
+  constructor(private workflowService: WorkflowService) {
     this.notificationData.items = new Array<PendingNotificationItem>();
   }
 

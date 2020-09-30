@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IronPdf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Application.Extentions;
@@ -19,6 +20,7 @@ namespace MSR.Answer.API.Extentions
             var generalConfig = config.GetSection(nameof(GeneralInformation)).Get<GeneralInformation>();
             services.AddSingleton(generalConfig);
             services.AddSingleton(emailConfig);
+            License.LicenseKey = generalConfig.IronPDFLicense;
 
             var mapperConfiguration = new MapperConfiguration(i =>
             {

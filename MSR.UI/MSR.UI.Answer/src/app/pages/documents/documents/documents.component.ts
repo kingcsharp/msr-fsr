@@ -125,7 +125,6 @@ export class DocumentsComponent implements OnInit {
       this.document = new DocumentView();
       this.document.comments = '';
       this.document.referenceFiles = [];
-      this.selectedRoles = new Array<Role>();
     }
     this.showDocumentDialog = true;
   }
@@ -155,9 +154,8 @@ export class DocumentsComponent implements OnInit {
         updateDocumentRequest.name = this.document.name;
         updateDocumentRequest.comments = this.document.comments;
         updateDocumentRequest.revision = this.document.revision;
-        updateDocumentRequest.referenceFileIds = this.document.referenceFiles.map(file => file.fileId);
-        // updateDocumentRequest.referenceFileIds = uploadedFileIds;
-        // updateDocumentRequest.referenceFiles = newFiles;
+        updateDocumentRequest.referenceFileIds = uploadedFileIds;
+        updateDocumentRequest.referenceFiles = newFiles;
         updateDocumentRequest.roleIds = this.selectedRoles.map(s => s.id);
 
         this.globals.showLoader(true);
@@ -172,9 +170,8 @@ export class DocumentsComponent implements OnInit {
         createDocumentRequest.name = this.document.name;
         createDocumentRequest.comments = this.document.comments;
         createDocumentRequest.revision = 0;
-        createDocumentRequest.referenceFileIds = this.document.referenceFiles.map(file => file.fileId);
-        // createDocumentRequest.referenceFileIds = uploadedFileIds;
-        // createDocumentRequest.referenceFiles = newFiles;
+        createDocumentRequest.referenceFileIds = uploadedFileIds;
+        createDocumentRequest.referenceFiles = newFiles;
         createDocumentRequest.roleIds = this.selectedRoles.map(s => s.id);
 
         this.globals.showLoader(true);

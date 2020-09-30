@@ -29,6 +29,8 @@ export class GridOptionsComponent implements OnInit {
 
   @Input() defaultColumns: Array<ColumnsSaved>;
   @Output() defaultColumnsChange: EventEmitter<Array<ColumnsSaved>> = new EventEmitter<Array<ColumnsSaved>>();
+  @Input() visibleColumnsCount: number;
+  @Output() visibleColumnsCountChange: EventEmitter<number> = new EventEmitter<number>();
   @Input() gridStorageId: string;
   @Input() gridVersion: string;
   @Input() ptable: any;
@@ -44,6 +46,7 @@ export class GridOptionsComponent implements OnInit {
     this.selectedColumns = this.defaultColumns.filter(x => x.visible).map((elem) => {
       return { id: elem.id, name: elem.label, visible: elem.visible };
     });
+    this.visibleColumnsCount = this.selectedColumns.length;
 
     this.viewToSave = this.getNewView();
 
@@ -76,6 +79,8 @@ export class GridOptionsComponent implements OnInit {
     this.defaultColumns.forEach((elem) => {
       elem.visible = value.findIndex(x => x.id === elem.id) > -1;
     });
+    this.visibleColumnsCount = this.selectedColumns.length;
+    this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     this.defaultColumnsChange.emit(this.defaultColumns);
   }
 
@@ -86,6 +91,8 @@ export class GridOptionsComponent implements OnInit {
     this.defaultColumns.forEach((elem) => {
       elem.visible = view.columns.find(x => x.id === elem.id).visible;
     });
+    this.visibleColumnsCount = this.selectedColumns.length;
+    this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     this.defaultColumnsChange.emit(this.defaultColumns);
   }
 
@@ -168,6 +175,8 @@ export class GridOptionsComponent implements OnInit {
       this.ptable._filter();
       this.ptable.filterTimeout = null;
     }, this.ptable.filterDelay);
+    this.visibleColumnsCount = this.selectedColumns.length;
+    this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
   }
 
   public deleteView(view: ViewSaved) {

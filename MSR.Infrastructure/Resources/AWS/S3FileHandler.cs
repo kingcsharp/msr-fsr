@@ -44,7 +44,16 @@ namespace MSR.Infrastructure.Resources.AWS
                 await Upload(base64File.FileContents, base64File.ContentType, _s3Information.FileBucketName, uniqueName);
             }
 
-            return GetURL($"{uniqueName}");
+            return GetURL(uniqueName, 6000);
+        }
+
+        public async Task<string> UploadFile(MemoryStream stream, FileModel file, string entityName, int entityId)
+        {
+            string uniqueName = $"{entityName}-{entityId}-{file.Name}";
+
+            await Upload(stream.ToArray(), file.ContentType, _s3Information.FileBucketName, uniqueName);
+
+            return GetURL(uniqueName, 6000);
         }
 
         public async Task<string> UploadHelpFile(FileModel file)
@@ -95,13 +104,6 @@ namespace MSR.Infrastructure.Resources.AWS
             }
 
             return $"{name}";
-        }
-
-        public async Task UploadStream(MemoryStream stream, string fileName, string contentType, string entityName, int entityId)
-        {
-            string uniqueName = $"{entityName}-{entityId}-{fileName}";
-
-            await Upload(stream.ToArray(), contentType, _s3Information.FileBucketName, uniqueName);
         }
     }
 }

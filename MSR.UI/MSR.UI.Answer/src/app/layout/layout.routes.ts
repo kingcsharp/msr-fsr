@@ -25,6 +25,9 @@ const routes: Routes = [
       { path: 'pricing', loadChildren: () =>  import('../pages/pricing/pricing.module').then(m => m.PricingModule) },
       { path: 'utilities', loadChildren: () =>  import('../pages/utilities/utilities.module').then(m => m.UtilitiesModule) },
       { path: 'documents', loadChildren: () =>  import('../pages/documents/documents.module').then(m => m.DocumentsModule) },
+      { path: 'reporting', loadChildren: () => import('../pages/reports/report.module').then(m => m.ReportModule) },
+      { path: 'dashboards', loadChildren: () => import('../pages/dashboards/dashboard.module').then(m => m.DashboardModule) },
+      { path: 'search', loadChildren: () => import('../pages/search/search.module').then(m => m.SearchModule) }
     ]
   }
 ];
