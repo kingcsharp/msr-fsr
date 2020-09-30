@@ -77,6 +77,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         y.AssignedTo == command.assignedToId));
             }
 
+            query = query
+                .OrderByDescending(x => x.Id)
+                .Take(50);
+
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .ThenInclude(y => y.Part)
@@ -371,6 +375,39 @@ namespace MSR.Infrastructure.Resources.Services.Part
             await _unitOfWork.LogApprovalTransaction(workordertask, workordertask.Id);
 
             ret = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workordertask);
+
+            // Update the work order datetimes, if needed
+            _unitOfWork.WorkOrderTasks.LoadReference(workordertask, x => x.Status);
+            _unitOfWork.WorkOrderTasks.LoadReference(workordertask, x => x.WorkOrder);
+            WorkOrder wo = workordertask.WorkOrder;
+            _unitOfWork.WorkOrders.LoadCollection(wo, "WorkOrderTasks");
+            // "DONE" states are:
+            // 4   Cancelled
+            // 8   Closed
+            // 3   Complete
+            // 6   Rejected
+            int[] completed = { 3, 4, 6, 8 };
+            if (workordertask.Status.Name.ToUpper().Equals("IN PROGRESS"))
+            {
+                if (!workordertask.WorkOrder.ActualStartDate.HasValue)
+                {
+                    wo.ActualStartDate = DateTime.Now;
+                    _unitOfWork.WorkOrders.Update(wo);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+            }
+            else if (wo.WorkOrderTasks.All(x => completed.Contains(x.StatusId)))
+            {
+                if (!workordertask.WorkOrder.ActualEndDate.HasValue)
+                {
+                    wo.ActualEndDate = DateTime.Now;
+                    _unitOfWork.WorkOrders.Update(wo);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+            }
+
+
+
 
             return ret;
         }

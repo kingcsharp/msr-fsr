@@ -205,7 +205,10 @@ export class WipdetailsComponent implements OnInit {
 
     }
 
-    let indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+    let indexOfCurrentWorkOrderInProgress = 0;
+    if (this.workOrderTaskInProgress != null) {
+        indexOfCurrentWorkOrderInProgress = this.workOrderModel .workOrderTasks .findIndex(s => s.id === this.workOrderTaskInProgress.id);
+    }
 
     for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
 
