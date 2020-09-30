@@ -14984,6 +14984,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
+    status?: string | undefined;
 
     constructor(data?: IWorkOrderModel) {
         if (data) {
@@ -15018,6 +15019,7 @@ export class WorkOrderModel implements IWorkOrderModel {
                 for (let item of _data["workOrderTasks"])
                     this.workOrderTasks!.push(WorkOrderTaskModel.fromJS(item));
             }
+            this.status = _data["status"];
         }
     }
 
@@ -15052,6 +15054,7 @@ export class WorkOrderModel implements IWorkOrderModel {
             for (let item of this.workOrderTasks)
                 data["workOrderTasks"].push(item.toJSON());
         }
+        data["status"] = this.status;
         return data; 
     }
 }
@@ -15071,6 +15074,7 @@ export interface IWorkOrderModel {
     purchase?: PurchaseModel | undefined;
     workOrderParts?: WorkOrderPartModel[] | undefined;
     workOrderTasks?: WorkOrderTaskModel[] | undefined;
+    status?: string | undefined;
 }
 
 export class PurchaseModel extends CreatableModel implements IPurchaseModel {
@@ -18521,6 +18525,8 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     taskRunningSince?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
+    /** Get or set TotalTaskTime */
+    totalTaskTime?: number | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -18539,6 +18545,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             this.taskIsRunning = _data["taskIsRunning"];
             this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
             this.status = _data["status"];
+            this.totalTaskTime = _data["totalTaskTime"];
         }
     }
 
@@ -18557,6 +18564,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
         data["taskIsRunning"] = this.taskIsRunning;
         data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
         data["status"] = this.status;
+        data["totalTaskTime"] = this.totalTaskTime;
         return data; 
     }
 }
@@ -18575,6 +18583,8 @@ export interface IUpdateWorkOrderTaskRequest {
     taskRunningSince?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
+    /** Get or set TotalTaskTime */
+    totalTaskTime?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */

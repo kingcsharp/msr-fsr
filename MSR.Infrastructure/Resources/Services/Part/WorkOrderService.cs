@@ -80,9 +80,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .ThenInclude(y => y.Part)
+
+                // Work Order Tasks etc.
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.ProcedureStep)
                 .ThenInclude(y => y.Procedure)
+                .Include(x => x.WorkOrderTasks)
+                .ThenInclude(y => y.ProcedureStep)
+                .ThenInclude(y => y.ProcedureStepRoles)
+                .ThenInclude(y => y.Role)
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(x => x.WorkOrderTaskMonitors)
                 .ThenInclude(x => x.ProcedureStepMonitor)
@@ -90,12 +96,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.Status)
+
+                // Product etc.
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Part)
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Customer)
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Procedure)
+
                 .Include(x => x.Purchase)
                 .ThenInclude(y => y.PurchaseOrder)
                 .ThenInclude(y => y.Customer)
@@ -112,6 +121,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             foreach (var wo in workorders)
             {
                 var wom = _mapper.Map<WorkOrderModel>(wo);
+
+                // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
+                wom.Status = WorkOrderService.TranslateWOStatusToViewModel(wom.WorkOrderTasks);
+
                 foreach (var wot in wom.WorkOrderTasks) {
 
                     // enforce sane data by limiting the status IDs returned by the API
@@ -311,10 +324,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
 
-            _unitOfWork.WorkOrderTasks.Add(newTask);
+            var created = _unitOfWork.WorkOrderTasks.Add(newTask);
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(newTask, newTask.Id);
+
+            created.Context.Entry(newTask)
+                .Reference(x => x.ProcedureStep).Load();
 
             return _mapper.Map<WorkOrderTaskModel>(newTask);
         }
@@ -442,9 +458,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     sum.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
                 }
 
-                // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-                sum.Status = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
-
                 // Disposition
                 // This is a string join of the text values of
                 // all procedure steps with a type of "NC Disposition"
@@ -558,7 +571,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
                 // WorkOrderStatus ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-                wosum.WorkOrderStatus = WorkOrderService.TranslateWOStatusToViewModel(m.WorkOrderTasks);
+                wosum.WorkOrderStatus = m.Status;
 
                 // WorkOrderAssignedTo
                 var curstep = m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));

@@ -10635,6 +10635,10 @@
             "items": {
               "$ref": "#/components/schemas/WorkOrderTaskModel"
             }
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -12990,6 +12994,12 @@
           "status": {
             "type": "string",
             "description": "Gets or Sets Status",
+            "nullable": true
+          },
+          "totalTaskTime": {
+            "type": "number",
+            "description": "Get or set TotalTaskTime",
+            "format": "decimal",
             "nullable": true
           }
         }
