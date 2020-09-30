@@ -391,10 +391,6 @@ namespace MSR.Infrastructure.Resources.Services
 
         private async Task<List<PendingApprovalModel>> GetPendingApprovalByTable(EnumApprovalTables table)
         {
-            var approvalComments = await _unitOfWork.ApprovalTransactionLogs.Query()
-                .Where(x => x.ApprovalEntity == EnumUtils.GetDescription(table) && x.Comments != null)
-                .Select(x => new { x.ApprovalEntityId, x.Comments }).ToListAsync();
-
             IQueryable<ApprovalEntity> approvalEntity = null;
             switch (table)
             {
@@ -424,13 +420,6 @@ namespace MSR.Infrastructure.Resources.Services
                         .Include(x => x.Workflow).Include(x => x.WorkflowGroup)
                         .ToListAsync();
                     var result = userApprovals.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
-                    foreach (var approvalComment in approvalComments)
-                    {
-                        foreach (var approvalModel in result.Where(approvalModel => approvalModel.Id == approvalComment.ApprovalEntityId))
-                        {
-                            approvalModel.Comments = approvalComment.Comments;
-                        }
-                    }
                     return result;
                 default:
                     break;
@@ -438,14 +427,6 @@ namespace MSR.Infrastructure.Resources.Services
 
             var approvalEntityList = await approvalEntity.Include(x => x.Workflow).Include(x => x.WorkflowGroup).ToListAsync();
             var pendingApprovalModelResult = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
-
-            foreach (var approvalComment in approvalComments)
-            {
-                foreach (var approvalModel in pendingApprovalModelResult.Where(approvalModel => approvalModel.Id == approvalComment.ApprovalEntityId))
-                {
-                    approvalModel.Comments = approvalComment.Comments;
-                }
-            }
 
             return pendingApprovalModelResult;
         }
