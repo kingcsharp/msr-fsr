@@ -34,7 +34,7 @@
           <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
           <div class="row justify-content-end">
             <button type="button" class="btn btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> 
-            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="false"></printtraveler-report>
+            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printtraveler-report>
             <button type="button" class="btn btn-primary mr-0"*ngIf="false"><i class="fas fa-print mx-1"></i>Print Other</button>
           </div>
         </div>

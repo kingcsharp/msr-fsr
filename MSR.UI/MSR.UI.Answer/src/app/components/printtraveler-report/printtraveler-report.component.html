@@ -6,33 +6,54 @@
     <p-header>
         Print Traveler Report
     </p-header>
-    <div class="report-viewport" style="background-color: blueviolet;">
-        <div class="row justify-content-center">
+    <div class="report-viewport m-4 d-print-flex">
+        <div class="row justify-content-center m-4">
             <qrcode [qrdata]="'https://google.com'" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
         </div>
-        <div class="row">
-            <div class="row">
+        <div class="row mb-4">
+            <div class="col-12 justify-content-start ml-4">
                 <h3>Purchase Item Information</h3>
             </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="col-6">Customer:</div><div class="col-6"></div>
-                    <div class="col-6">Product:</div><div class="col-6"></div>
-                    <div class="col-6">Procedure:</div><div class="col-6"></div>
-                    <div class="col-6">WO Item #:</div><div class="col-6"></div>
-                    <div class="col-6">Customer P/O Line:</div><div class="col-6"></div>
-                    <div class="col-6"></div><div class="col-6"></div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4 text-right">Customer:</div><div class="col-8">{{WorkOrder.product?.customer?.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">Product:</div><div class="col-8">{{WorkOrder.product?.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">Procedure:</div><div class="col-8">{{WorkOrder.product?.procedure?.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">WO Item #:</div><div class="col-8">{{WorkOrder.id}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">Customer P/O Line:</div><div class="col-8">{{WorkOrder.purchase?.customerLineNumber}}</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="image-placeholder d-flex justify-content-center"> 
+                            <div class="my-auto"><h2>NO IMAGE AVAILABLE</h2></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6"></div>
             </div>
         </div>
         <div class="row">
-            <div class="row">
+            <div class="col-12 ml-4">
                 <h3>Parts and Procedure Information</h3>
             </div>
-            <div class="row">Customer Part #</div>
-            <div class="row">
-                <div class="card-columns">
+            <div class="col-12 ml-4 mb-4">
+                <div class="row">
+                    <div class="col-12">
+                        Customer Part Number {{WorkOrder.workOrderParts[0]?.part?.partNumber}}, (Serial #: {{WorkOrder.workOrderParts[0]?.serialNumber}}),{{WorkOrder.workOrderParts[0]?.part?.name}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card-column mx-4">
                     <div class="card" *ngFor="let workOrderTask of WorkOrder.workOrderTasks">
                         <div class="card-header">
                           {{ workOrderTask.procedureStep?.title}}
