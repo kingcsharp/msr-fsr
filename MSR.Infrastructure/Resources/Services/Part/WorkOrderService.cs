@@ -324,10 +324,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
 
-            _unitOfWork.WorkOrderTasks.Add(newTask);
+            var created = _unitOfWork.WorkOrderTasks.Add(newTask);
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(newTask, newTask.Id);
+
+            created.Context.Entry(newTask)
+                .Reference(x => x.ProcedureStep).Load();
 
             return _mapper.Map<WorkOrderTaskModel>(newTask);
         }
