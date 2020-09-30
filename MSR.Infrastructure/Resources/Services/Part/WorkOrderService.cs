@@ -80,9 +80,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .ThenInclude(y => y.Part)
+
+                // Work Order Tasks etc.
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.ProcedureStep)
                 .ThenInclude(y => y.Procedure)
+                .Include(x => x.WorkOrderTasks)
+                .ThenInclude(y => y.ProcedureStep)
+                .ThenInclude(y => y.ProcedureStepRoles)
+                .ThenInclude(y => y.Role)
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(x => x.WorkOrderTaskMonitors)
                 .ThenInclude(x => x.ProcedureStepMonitor)
@@ -90,12 +96,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.Status)
+
+                // Product etc.
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Part)
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Customer)
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Procedure)
+
                 .Include(x => x.Purchase)
                 .ThenInclude(y => y.PurchaseOrder)
                 .ThenInclude(y => y.Customer)
