@@ -64,11 +64,10 @@ ol{
 
 @media print {
 
-    @page {
-        margin-top: 48px;
-        margin-bottom: 48px;
+    .printotherreport-dropdown{
+        display:none;
     }
-
+    
     .report.ui-dialog{
         max-width: none;
         width: 100% !important;

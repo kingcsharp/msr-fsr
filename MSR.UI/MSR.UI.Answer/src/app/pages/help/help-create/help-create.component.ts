@@ -13,7 +13,7 @@ import {PartsModule} from '../../parts/parts.module';
 import { WorkflowModule} from '../../workflow/workflow.module';
 import { ProceduresModule} from '../../procedures/procedures.module';
 import { MonitorsModule} from '../../monitors/monitors.module';
-import { WipModule } from '../../wip/wip.module'
+import { WipModule } from '../../wip/wip.module';
 
 @Component({
   selector: 'app-help-create',

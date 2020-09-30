@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-12 mb-4" *ngFor="let label of labels">
+        <div class="row">
+            <div class="col-12 font-weight-bold">{{label.TaskDescription}}</div>
+            <div class="col-12">{{label.MonitorName}}</div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-4">Part #:</div>
+                    <div class="col-4">{{label.PartNumber}}</div>
+                    <div class="col-4">Part Name:</div>
+                    <div class="col-4">Purchase Item #:</div>
+                    <div class="col-4">{{label.CustomerPurchaseNumber}}</div>
+                    <div class="col-4">{{label.PartName}}</div>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-4">Requestee:</div><div class="col-8">{{label.Requestee}}</div>
+                            <div class="col-4">Date:</div><div class="col-8">{{label.Date}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

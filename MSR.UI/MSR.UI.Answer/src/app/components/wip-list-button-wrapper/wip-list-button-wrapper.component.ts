@@ -14,7 +14,7 @@ export class WipListButtonWrapperComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  showWipList(){
+  showWipList() {
     this.showWipListDialog = !this.showWipListDialog;
   }
 

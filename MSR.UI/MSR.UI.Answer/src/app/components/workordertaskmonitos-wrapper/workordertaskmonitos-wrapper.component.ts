@@ -11,7 +11,7 @@ declare let jQuery: any;
   selector: 'workordertaskmonitos-wrapper',
   templateUrl: './workordertaskmonitos-wrapper.component.html',
   styleUrls: ['./workordertaskmonitos-wrapper.component.scss'],
-  providers: [SensorService,WorkOrderTaskMonitorService]
+  providers: [SensorService, WorkOrderTaskMonitorService]
 })
 export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
@@ -51,23 +51,23 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       { label: 'Cust NC - shipped to wrong location', value: 22 },
       { label: 'Cust NC - incorrect paperwork', value: 23 },
       { label: 'Cust NC - cannot disassemble', value: 24 }
-    ]
+    ];
 
     this.workOrderMonitorYesOrNoOptions = [
       { label: 'Yes', value: '1' },
       { label: 'No', value: '0' }
-    ]
+    ];
 
     this.workOrderMonitorPassOrFailOptions = [
       { label: 'Pass', value: '1' },
       { label: 'Fail', value: '0' }
-    ]
+    ];
 
     this.workOrderMonitorsToView.map(monitor => {
 
       monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED' ? true : false;
 
-    })
+    });
 
     this.sensorService.sensor(null, 415, env.apiVersion).subscribe(responseHandler(response => {
 
@@ -81,35 +81,35 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
         }
 
-      })
+      });
     }));
 
 
 
   }
 
-  areDropDownsValid():boolean {
+  areDropDownsValid(): boolean {
 
     let dropDownsAreValid = true;
 
     this.workOrderMonitorsToView.filter(s => (s.procedureStepMonitor.monitorType === 'Pass or Fail'
       || s.procedureStepMonitor.monitorType === 'Yes or No'
       || s.procedureStepMonitor.monitorType === 'Select') && s.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED').forEach(m => {
-        
-        if(m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
-        || m.procedureStepMonitor.monitorType === 'Yes or No')){
+
+        if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
+        || m.procedureStepMonitor.monitorType === 'Yes or No')) {
           dropDownsAreValid = false;
-        }else if(m.procedureStepMonitor.monitorType === 'Select' && m.numVal === undefined){
+        } else if (m.procedureStepMonitor.monitorType === 'Select' && m.numVal === undefined) {
           dropDownsAreValid = false;
         }
-        
+
 
       });
 
       return dropDownsAreValid;
   }
 
-  updateMonitors(closeTask: boolean = false){
+  updateMonitors(closeTask: boolean = false) {
 
     let updateMonitorsRequests = new Array<any>();
 
@@ -124,17 +124,17 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
           workOrderTaskMonitorId: monitor.id
         } as IUpdateWorkOrderTaskMonitorRequest);
 
-        updateMonitorsRequests.push(this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion,updateWorkOrderTaskMonitorRequest));
+        updateMonitorsRequests.push(this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest));
 
       });
-  
+
       forkJoin(updateMonitorsRequests).subscribe(responses => {
         console.log(closeTask);
-        if(closeTask){
+        if (closeTask) {
           this.closeCurrentTaskInProgress.emit();
         }
       });
-      
+
 
   }
 
@@ -144,7 +144,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
 
     if (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid()) {
-      
+
       this.updateMonitors(false);
 
     } else {
@@ -156,7 +156,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
 
     if (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid()) {
-      
+
       this.updateMonitors(true);
 
     } else {
@@ -167,7 +167,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   getSensorValue(indexOfMonitor: number, elementName: string, sensorId: number) {
 
     this.sensorService.sensor(sensorId, null, env.apiVersion).subscribe(responseHandler(response => {
-      this.workOrderMonitorsToView[indexOfMonitor].sensorValue = response.object[0]?.itemCurrentValue == undefined ? '1 p/ft³' : '1 p/ft³';
+      this.workOrderMonitorsToView[indexOfMonitor].sensorValue = response.object[0]?.itemCurrentValue === undefined ? '1 p/ft³' : '1 p/ft³';
     }));
   }
 

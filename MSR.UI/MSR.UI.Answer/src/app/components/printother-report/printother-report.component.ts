@@ -25,15 +25,15 @@ export class PrintotherReportComponent implements OnInit {
       { label: 'NCR Report', value: 'NCRReport'},
       { label: 'Technical Data Label', value: 'TechnicalDataLabel'},
       { label: 'Part Label Roll 4in', value: 'PartLabelRoll4in'}
-    ]
+    ];
 
   }
 
-  togglePrintOtherDialog(){
+  togglePrintOtherDialog() {
     this.showPrintOtherDialog = !this.showPrintOtherDialog;
   }
 
-  print(){
+  print() {
     window.print();
   }
 

@@ -31,10 +31,10 @@ export class WipstatusWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if(!this.isDisplayedInWipList){
+    if (!this.isDisplayedInWipList) {
       this.globals.showLoader(true);
     }
-    
+
     this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
 
       this.workOrderStatuses = response.object;
@@ -42,24 +42,24 @@ export class WipstatusWrapperComponent implements OnInit {
 
       this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map(s => ({ label: s, value: s }));
 
-      if(this.isDisplayedInWipList){
+      if (this.isDisplayedInWipList) {
         this.selectedLocations = this.locationOptions.map(s => s.value);
-      } else{
+      } else {
 
         if (localStorage.getItem('wipstatus') === undefined || localStorage.getItem('wipstatus') === null) {
           this.selectedLocations = this.locationOptions.map(s => s.value);
           localStorage.setItem('wipstatus', this.selectedLocations.toString());
         } else {
-  
+
           let locationsAlreadySaved = localStorage.getItem('wipstatus').split(',');
           let newlocationSavedList = new Array<string>();
           locationsAlreadySaved.forEach(locationSaved => {
-  
+
             if (this.locationOptions.find(s => s.value === locationSaved) !== undefined) {
               newlocationSavedList.push(locationSaved);
             }
-  
-  
+
+
           });
           localStorage.setItem('wipstatus', newlocationSavedList.toString());
           this.selectedLocations = this.locationOptions.map(s => s.value).filter(m => newlocationSavedList.includes(m));
@@ -67,7 +67,7 @@ export class WipstatusWrapperComponent implements OnInit {
         }
 
       }
-      
+
 
     }));
 
@@ -75,10 +75,10 @@ export class WipstatusWrapperComponent implements OnInit {
 
   openTakeOverAsUserConfirmationDialog(workOrderId: number) {
 
-    if(this.isDisplayedInWipList){
+    if (this.isDisplayedInWipList) {
       this.router.navigate(['app/wip/details', workOrderId]);
       this.displayWipListDialogChange.emit(false);
-    }else {
+    } else {
       this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
       this.workOrderToTakeOverId = workOrderId;
     }
@@ -98,9 +98,9 @@ export class WipstatusWrapperComponent implements OnInit {
         let loggedInUser = <UserModel>response.object;
 
         this.globals.showLoader(true);
-        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null,null ,env.apiVersion).subscribe(responseHandler(response => {
+        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null , env.apiVersion).subscribe(responseHandler(workOrderGetResponse => {
 
-          let tasks = <Array<WorkOrderTaskModel>>response.object[0].workOrderTasks;
+          let tasks = <Array<WorkOrderTaskModel>>workOrderGetResponse.object[0].workOrderTasks;
 
           let workOrderTaskPatchRequests = new Array<any>();
 
@@ -122,9 +122,9 @@ export class WipstatusWrapperComponent implements OnInit {
 
           });
 
-          if(workOrderTaskPatchRequests.length === 0){
+          if (workOrderTaskPatchRequests.length === 0) {
             this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          }else{
+          } else {
             this.globals.showLoader(true);
             forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
               this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);

@@ -55,4 +55,4 @@ export const routes = [
 })
 export class DashboardModule {
   static routes = routes;
-} 
+}

@@ -24,7 +24,7 @@ export class HelpbuttonWrapperComponent implements OnInit {
 
     this.helpMenuUrl = this.router.url.replace('/app', '');
 
-    if(this.helpMenuUrl.includes('/wip/details')){
+    if (this.helpMenuUrl.includes('/wip/details')) {
       this.helpMenuUrl = '/wip/details/:id';
     }
 

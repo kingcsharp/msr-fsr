@@ -4,6 +4,7 @@ import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Router } from '@angular/router';
 import { Globals } from '../../models/lib/globals';
+import { WorkOrderItem } from '../../models/work-order-item';
 
 @Component({
   selector: 'selectworkorderdropdown-wrapper',
@@ -22,25 +23,27 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
-     this.workOrderService.workOrder(null, null, null, null, this.globals.getCurrentUser().id,env.apiVersion).subscribe(responseHandler(response => {
+     this.workOrderService.workOrder(null, null, null, null,
+      this.globals.getCurrentUser().id, env.apiVersion).subscribe(responseHandler(response => {
 
       let workOrders = <Array<WorkOrderModel>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();
       workOrders.forEach(workOrder => {
-        
+
         let workOrderItem = new WorkOrderItem();
         workOrderItem.WorkOrderId = workOrder.id;
-        workOrderItem.CustomerPurchaseNumber = workOrder.purchase?.customerPurchaseNumber === undefined ? '' : workOrder.purchase?.customerPurchaseNumber ;
+        workOrderItem.CustomerPurchaseNumber = workOrder.purchase?.customerPurchaseNumber === undefined ? '' :
+        workOrder.purchase?.customerPurchaseNumber ;
         workOrderItem.ProcedureName = workOrder.product?.procedure?.name;
         workOrderItem.SerialNumber = workOrder.purchase?.serialNumber;
-                
-        if(workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Waiting to Start' || s === 'Requested')){
+
+        if (workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Waiting to Start' || s === 'Requested')) {
           workOrderItem.Status = 'Requested';
-        }else if(workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Finished' || s === 'Complete')){
+        } else if (workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Finished' || s === 'Complete')) {
           workOrderItem.Status = 'Finished';
-        }else if(workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Accepted' || s === 'Waiting to Start')){
+        } else if (workOrder.workOrderTasks.map(s => s.status.name).find(s => s === 'Accepted' || s === 'Waiting to Start')) {
           workOrderItem.Status = 'Accepted';
-        }else{
+        } else {
           workOrderItem.Status = 'Closed';
         }
 
@@ -54,29 +57,21 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
   }
 
-  workOrderSelected($event){
+  workOrderSelected($event) {
     this.selectedWorkOrder = '';
     this.router.navigate(['app/wip/details', $event.value.WorkOrderId]);
   }
 
-  updateWorkOrders(){
+  updateWorkOrders() {
 
     this.hideCompleted = !this.hideCompleted;
 
-    if(this.hideCompleted){
+    if (this.hideCompleted) {
       this.workOrdersAvailable = this.orignalworkOrdersOptions.filter(s => s.Status !== 'Finished');
-    }else{
+    } else {
       this.workOrdersAvailable = this.orignalworkOrdersOptions;
     }
 
   }
 
-}
-
-export class WorkOrderItem{
-  WorkOrderId: number;
-  ProcedureName: string;
-  SerialNumber: string;
-  Status: string;
-  CustomerPurchaseNumber: string;
 }

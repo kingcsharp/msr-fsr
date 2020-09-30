@@ -4,7 +4,7 @@
     <p-header>
         Print Other
     </p-header>
-    <div class="row">
+    <div class="row printotherreport-dropdown">
         <div class="col-2 d-flex justify-content-end">
             <div class="my-auto">Report Type:</div>
         </div>
@@ -14,6 +14,11 @@
     </div>
     <div class="report-viewport m-4 d-print-flex">
         <delivery-ticket-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'DeliveryTicket'"></delivery-ticket-report>
+        <wip-history-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'WIPHistoryReport'"></wip-history-report>
+        <ncr-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'NCRReport'"></ncr-report>
+        <technical-data-label [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'TechnicalDataLabel'"></technical-data-label>
+        <part-label-roll [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'PartLabelRoll4in'"></part-label-roll>
+        <work-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'WorkReport'"></work-report>
     </div>
     <p-footer>
         <div class="pull-right">

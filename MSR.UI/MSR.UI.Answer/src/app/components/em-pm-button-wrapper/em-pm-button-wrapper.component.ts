@@ -7,22 +7,25 @@ import {
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
-import { SelectItem } from 'primeng/api';
+import { EquipmentMaintainanceTaskModel } from '../../models/equipmen-maintainance-task-model';
 
 @Component({
   selector: 'empmbutton-wrapper',
   templateUrl: './em-pm-button-wrapper.component.html',
   styleUrls: ['./em-pm-button-wrapper.component.scss'],
-  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService, LocationService, UserService]
+  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService,
+    WorkOrderTaskService, LocationService, UserService]
 })
 export class EmPmButtonWrapperComponent implements OnInit {
 
-  showEmPmDialog:boolean = false;
-  equipmentMaintainanceTask: EquipmentMaintainanceTaskModel = new EquipmentMaintainanceTaskModel();
+  showEmPmDialog: boolean = false;
+  equipmentMaintainanceTask: EquipmentMaintainanceTaskModel;
 
   constructor(public globals: Globals, private locationService: LocationService, private userService: UserService) { }
 
   ngOnInit(): void {
+
+    this.equipmentMaintainanceTask = new EquipmentMaintainanceTaskModel();
 
     this.equipmentMaintainanceTask.statusOptions = [
       { label: 'Requested', value: 'Requested'},
@@ -37,19 +40,19 @@ export class EmPmButtonWrapperComponent implements OnInit {
       { label: 'PM', value: 'PM'},
       { label: 'Repair', value: 'Repair'}
     ];
-    
+
   }
 
   addEmPm() {
 
     this.globals.showLoader(true);
-    this.locationService.locationGet(null,null,null,env.apiVersion).subscribe(responseHandler(response => {
+    this.locationService.locationGet(null, null, null, env.apiVersion).subscribe(responseHandler(locationGetResponse => {
 
-      this.equipmentMaintainanceTask.locationOptions = response.object.map(s => ({ label:s.name , value: s.id}));
+      this.equipmentMaintainanceTask.locationOptions = locationGetResponse.object.map(s => ({ label: s.name , value: s.id}));
       this.equipmentMaintainanceTask.troubleState = true;
 
       this.globals.showLoader(true);
-      this.userService.userGet(null,null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+      this.userService.userGet(null, null, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
 
         this.equipmentMaintainanceTask.userOptions = response.object.map(s => ({ label: s.fullName, value: s.id}));
 
@@ -58,17 +61,17 @@ export class EmPmButtonWrapperComponent implements OnInit {
       this.showEmPmDialog = !this.showEmPmDialog;
 
     }));
-    
+
 
   }
 
-  submitEmPm(){
+  submitEmPm() {
 
     this.showEmPmDialog = !this.showEmPmDialog;
 
   }
 
-  lookUp(){
+  lookUp() {
 
     this.globals.showLoader(true);
     this.locationService.locationGet(null, null, null, env.apiVersion).subscribe(responseHandler(response => {
@@ -79,21 +82,4 @@ export class EmPmButtonWrapperComponent implements OnInit {
 
   }
 
-}
-
-export class EquipmentMaintainanceTaskModel{
-  barcode: string;
-  location: LocationModel;
-  troubleState: boolean;
-  maintainanceTask: string;
-  status: string;
-  maintainanceLastCompleted: Date;
-  maintainanceFrequency: Date;
-  comments: string
-  maintainanceTaskOptions: Array<SelectItem>;
-  statusOptions: Array<SelectItem>;
-  locationOptions: Array<SelectItem>;
-  userOptions: Array<SelectItem>;
-  selectedLocation: number;
-  selectedUserId: number;
 }

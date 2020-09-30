@@ -42,7 +42,7 @@ export class LocationCreateComponent implements OnInit {
   getAvailableParentLocations() {
 
     this.globals.showLoader(true);
-    this.locationService.locationGet(null, null,null, env.apiVersion).subscribe(responseHandler((response) => {
+    this.locationService.locationGet(null, null, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       if (this.locationToEdit !== undefined) {
         this.parentLocationOptions = response.object.filter(s => s.id !== this.locationToEdit.id).map(m => ({ label: m.name, value: m.id }))
@@ -71,7 +71,7 @@ export class LocationCreateComponent implements OnInit {
       if (this.locationToEditId !== 0) {
 
         this.globals.showLoader(true);
-        this.locationService.locationGet(null, this.locationToEditId,null, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
+        this.locationService.locationGet(null, this.locationToEditId, null, env.apiVersion).subscribe(responseHandler((locationGetResponse) => {
 
           this.locationToEdit = locationGetResponse.object[0];
 
