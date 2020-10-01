@@ -77,10 +77,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         y.AssignedTo == command.assignedToId));
             }
 
-            query = query
-                .OrderByDescending(x => x.Id)
-                .Take(50);
-
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .ThenInclude(y => y.Part)
