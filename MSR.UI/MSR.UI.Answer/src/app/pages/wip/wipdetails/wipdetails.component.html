@@ -1,6 +1,6 @@
 <div class="container-flex">
   <div class="row">
-    <div class="col-10">
+    <div class="col-10 wip-detail-header">
       <h1>Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: {{parentPart?.serialNumber}}),
         {{parentPart?.part?.name}}</h1>
     </div>
@@ -10,10 +10,10 @@
   </div>
   <div class="row custom-panel">
     <div class="container-fluid">
-      <div class="row justify-content-center mb-2">
+      <div class="row justify-content-center wip-detail-top mb-2">
         <div class="col-6">
-          <div class="row">
-            <div class="col-11">
+          <div class="row ">
+            <div class="col-9">
               <div class="form-group d-flex mr-4 mb-1">
                 <div class="col-11 d-flex justify-content-end pr-0">
                   <div class="my-auto">
@@ -27,29 +27,31 @@
                 </div>
               </div>
             </div>
-            <div class="col-1 mr-0 pr-0 justify-content-end align-middle">
+            <div class="col-3 mr-0 pr-0 justify-content-end align-middle">
               <wiplistbutton-wrapper class="d-flex justify-content-end"></wiplistbutton-wrapper>
             </div>
           </div>
           <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
           <div class="row justify-content-end">
-            <button type="button" class="btn btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> 
+            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
             <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printtraveler-report>
             <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
           </div>
         </div>
         <div class="col-6">
           <p-tabView class="mt-0">
-            <p-tabPanel header="Parts">
+            <p-tabPanel header="Parts" class="ui-tabview-top-panel">
+              <div class="ui-tabview-top-right">
               <ul>
                 <li *ngFor="let part of workOrderParts">
                   Customer Part #{{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
                   (Qty: {{part.part.Quantity}})
                 </li>
               </ul>
+              </div>
             </p-tabPanel>
-            <p-tabPanel header="Purchase">
-              <div class="container-fluid">
+            <p-tabPanel header="Purchase" class="ui-tabview-top-panel">
+              <div class="container-fluid ui-tabview-top-right">
                 <div class="row">
                   <div class="col-2 text-right">Customer:</div>
                   <div class="col-10">{{ customer.name}}</div>
@@ -66,17 +68,15 @@
         </div>
       </div>
       <div class="row mb-2" *ngIf="workOrderModel.workOrderTasks !== undefined">
-        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
+        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="true"
           [interval]="false" [startFromIndex]="0" [(activeSlide)]="activeSlideIndex">
           <slide *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
-            (click)="selectTaskForViewing(workOrderTask)" 
-              [ngClass]="{ 'bg-warning': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved', 
-                  'bg-light': workOrderTask.status?.name === 'In Progress', 
+            (click)="selectTaskForViewing(workOrderTask)"
+              [ngClass]="{ 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
+                  'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
-                  'bg-success': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
-            <div class="carousel-caption">
-              <h6>{{ workOrderTask.procedureStep?.title}}</h6>
-            </div>
+                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
+              <div class="carousel-step-title">{{ workOrderTask.procedureStep?.title}}</div>
           </slide>
         </carousel>
       </div>

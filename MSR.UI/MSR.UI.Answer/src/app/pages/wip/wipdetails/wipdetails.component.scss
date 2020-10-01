@@ -67,11 +67,11 @@ ol{
     .workreport-control{
         display: none;
     }
-    
+
     .printotherreport-dropdown{
         display:none;
     }
-    
+
     .report.ui-dialog{
         max-width: none;
         width: 100% !important;
@@ -97,3 +97,50 @@ ol{
         height:100% !important;
     }
 }
+.carousel-caption {
+  color:#000
+}
+.carousel .item {
+  height: 60px !important;
+  width: 150px !important;
+  display:table !important
+}
+.carousel-step-title {
+  font-size: 14px;
+  font-weight:500;
+  margin: 0 auto;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.step-complete {
+  color:#000;
+  background-color: #cfc!important;
+}
+.step-waiting {
+  color:#000;
+  background-color: #ffc!important;
+}
+
+/* updates for tablets */
+
+@media (max-width: 1024px) {
+  .wip-detail-header h1 {
+    font-size:1.5rem
+  }
+  .wip-detail-top {
+    min-height: 150px;
+  }
+  .ui-tabview-top-right {
+    min-height:85px;
+    height:85px;
+    overflow-y:auto;
+  }
+  .ui-tabview-top-panel {
+    font-family:'Roboto Condensed';
+    font-size: .8rem;
+    font-weight:700;
+  }
+
+}
+
