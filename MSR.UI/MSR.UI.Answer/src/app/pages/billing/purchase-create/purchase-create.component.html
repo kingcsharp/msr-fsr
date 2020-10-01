@@ -6,7 +6,9 @@
   <widget>
     <form
       *ngIf="getPurchaseOrderFlag && purchaseOrderData"
-      class="py-4"
+      class="py-4 form-horizontal form-label-left parsleyjs"
+      data-parsley-priority-enabled="false"
+      novalidate="novalidate"
     >
       <div class="row mx-0">
         <div class="col-md-8 col-12">
@@ -258,13 +260,17 @@
                 >
               </td>
               <td>
-                <p-inputNumber
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
                   [(ngModel)]="purchaseItems[i].customerLineNumber"
-                  mode="decimal"
                   name="purchaseItem[{{i}}].CUST_LINE_ITEM"
-                  [useGrouping]="false"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-type="number"
+                  data-parsley-required="true"
                 >
-                </p-inputNumber>
               </td>
               <td>
                 <input
@@ -355,6 +361,9 @@
                   class="form-control input-transparent disable"
                   name="purchaseSerializeItem[{{i}}].SERIAL_KIT_NUMBER"
                   type="text"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
                 >
               </td>
               <td>
@@ -374,7 +383,7 @@
                   [options]="locationsData"
                   appendTo="body"
                   [baseZIndex]="100001"
-                  required
+                  data-parsley-required="true"
                 >
                 </p-dropdown>
               </td>
