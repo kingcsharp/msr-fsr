@@ -29,8 +29,12 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         public async Task<ICollection<LocationModel>> GetLocationsAsync(GetLocations command)
         {
+            var locationListAll = await _unitOfWork.Locations.Query().ToListAsync();
+
             var locationQuery = _unitOfWork.Locations.Query();
-            if(command.Id.HasValue && command.Id.Value != 0)
+            bool includeChildren;
+
+            if (command.Id.HasValue && command.Id.Value != 0)
             {
                 locationQuery = locationQuery.Where(i => i.Id == command.Id);
             }
@@ -38,7 +42,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
             {
                 locationQuery = locationQuery.Where(i => i.IsActive);
             }
-            
+
             if (command.ParentId.HasValue && command.ParentId.Value != 0)
             {
                 locationQuery = locationQuery.Where(i => i.ParentId == command.ParentId);
@@ -47,6 +51,11 @@ namespace MSR.Infrastructure.Resources.Services.Location
             if (!string.IsNullOrEmpty(command.InternalAddress))
             {
                 locationQuery = locationQuery.Where(i => i.InternalAddress == command.InternalAddress);
+                includeChildren = true;
+            }
+            else
+            {
+                includeChildren = false;
             }
 
             var locations = await locationQuery.Include(i => i.Parent).Include(i => i.TimeZone)
@@ -57,12 +66,20 @@ namespace MSR.Infrastructure.Resources.Services.Location
                                                                        .Include(i => i.Status)
                                                                        .Where(i => i.LocationId.HasValue && locationIds.Contains(i.LocationId.Value)).ToListAsync();
 
+            if (includeChildren)
+            {
+                foreach (var location in locations.ToArray())
+                {
+                    await AddChildrenLocationsAsync(location, locationListAll, locations);
+                }
+            }
+
             var ret = new List<LocationModel>();
-            foreach(var location in locations)
+            foreach (var location in locations)
             {
                 var domlocation = _mapper.Map<LocationModel>(location);
                 var siteId = location.ParentId;
-                if(location.Parent != null && location.Parent.ParentId.HasValue)
+                if (location.Parent != null && location.Parent.ParentId.HasValue)
                 {
                     siteId = location.Parent.ParentId;
                 }
@@ -72,12 +89,12 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 {
                     domlocation.Status = locationApproval.Status.Name;
                 }
-                if(domlocation.Parent != null)
+                if (domlocation.Parent != null)
                 {
                     domlocation.Parent.Created = null;
                     domlocation.Parent.LastUpdated = null;
                 }
-                if(domlocation.Parent?.Parent != null)
+                if (domlocation.Parent?.Parent != null)
                 {
                     domlocation.Parent.Parent = null;
                 }
@@ -85,6 +102,19 @@ namespace MSR.Infrastructure.Resources.Services.Location
             }
 
             return ret;
+        }
+
+        private async Task AddChildrenLocationsAsync(EntityFramework.Entities.Location location, List<EntityFramework.Entities.Location> locationListAll, List<EntityFramework.Entities.Location> locations)
+        {
+            foreach (var child in locationListAll.Where(l => l.ParentId == location.Id))
+            {
+                if (!locations.Where(l => l.Id == child.Id).Any())
+                {
+                    locations.Add(child);
+                }
+
+                await AddChildrenLocationsAsync(child, locationListAll, locations);
+            }
         }
 
         public async Task<LocationModel> CreateLocationAsync(CreateLocation command, bool import = false)
@@ -119,13 +149,13 @@ namespace MSR.Infrastructure.Resources.Services.Location
             }
 
             return retLocation;
-        } 
+        }
 
         public async Task<LocationModel> UpdateLocationAsync(UpdateLocation command, bool import = false)
         {
             var curLocation = await _unitOfWork.Locations.FirstOrDefaultAsync(false, i => i.Id == command.Id);
 
-            if(curLocation is null)
+            if (curLocation is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.Id}", DomainError.NotFound);
             }
@@ -135,8 +165,8 @@ namespace MSR.Infrastructure.Resources.Services.Location
             //Import is used here because if they are importing the data, it doesn't go through approvals.
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.LocationApproval) || import)
             {
-                var location = _mapper.Map(command,curLocation);
-                
+                var location = _mapper.Map(command, curLocation);
+
                 _unitOfWork.Locations.Update(location);
                 await _unitOfWork.LogApprovalTransaction(location, location.Id);
 
@@ -154,7 +184,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
                 await _unitOfWork.LocationApprovals.AddAsync(locationApproval);
                 await _unitOfWork.SaveChangesAsync();
-                
+
                 retLocation = _mapper.Map<LocationModel>(locationApproval);
                 retLocation.TimeZone = locationApproval.TimeZoneId.HasValue ? _mapper.Map<TimeZoneModel>((await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == locationApproval.TimeZoneId.Value))) : null;
             }
@@ -180,7 +210,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
                 curLocation.IsActive = false;
                 _unitOfWork.Locations.Update(curLocation);
 
-                foreach(var location in await _unitOfWork.Locations.Query().Where(i => i.ParentId == curLocation.Id).ToListAsync())
+                foreach (var location in await _unitOfWork.Locations.Query().Where(i => i.ParentId == curLocation.Id).ToListAsync())
                 {
                     location.IsActive = false;
                     _unitOfWork.Locations.Update(location);
@@ -223,11 +253,11 @@ namespace MSR.Infrastructure.Resources.Services.Location
             {
                 try
                 {
-                    
+
                     var ret = await CreateLocationAsync(_mapper.Map<CreateLocation>(record), true);
                     locations.Add(ret);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     //If we get an error on a single import dump it and keep going. 
                 }
@@ -241,7 +271,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
         {
             var location = await _unitOfWork.Locations.Query().Include(i => i.Sensors).Include(i => i.Parent).FirstOrDefaultAsync(i => i.Id == command.LocationId);
 
-            if(location is null)
+            if (location is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.Location)} not found with ID: {command.LocationId}", DomainError.NotFound);
             }
@@ -250,7 +280,7 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
             var sensorList = location.Sensors.Any() ? location.Sensors.Select(i => _mapper.Map<SensorModel>(i)) : new List<SensorModel>();
 
-            foreach(var sensor in sensorList)
+            foreach (var sensor in sensorList)
             {
                 if (location.Parent != null && location.Parent.ParentId.HasValue)
                 {
@@ -264,10 +294,10 @@ namespace MSR.Infrastructure.Resources.Services.Location
 
         public async Task AddSensorToLocation(CreateLocationSensorMap command)
         {
-            var location = await _unitOfWork.Locations.FirstOrDefaultAsync(false,i => i.Id == command.LocationId);
+            var location = await _unitOfWork.Locations.FirstOrDefaultAsync(false, i => i.Id == command.LocationId);
             var sensor = await _unitOfWork.Sensors.FirstOrDefaultAsync(false, i => i.Id == command.SensorItemId);
-            
-            if(location is null || sensor is null)
+
+            if (location is null || sensor is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.Sensor)} or {nameof(EntityFramework.Entities.Location)} not found", DomainError.BadRequest);
             }
