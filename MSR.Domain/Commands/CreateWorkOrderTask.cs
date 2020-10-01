@@ -8,8 +8,8 @@ namespace MSR.Domain.Commands
     {
         public int WorkOrderId { get; set; }
         public int ProcedureStepId { get; set; }
-        public int ProcedureStepTypeId { get; set; }
-        public int StatusId { get; set; }
+        public int? ProcedureStepTypeId { get; set; }
+        public int? StatusId { get; set; }
         public int TaskStepOrder { get; set; }
         public int? AssignedTo { get; set; }
         public decimal? TotalTaskTime { get; set; }
