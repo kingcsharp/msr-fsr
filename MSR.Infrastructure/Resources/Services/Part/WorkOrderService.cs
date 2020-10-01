@@ -151,7 +151,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             if (command.ScheduledStartDate == null || command.ScheduledStartDate.Ticks == 0)
@@ -188,7 +190,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
-                throw new DomainException($"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
@@ -221,7 +225,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             _unitOfWork.WorkOrders.Delete(false, current.Id);
@@ -294,7 +300,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderPart)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderPart)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = _unitOfWork.WorkOrderParts.Query().Where(x => x.Id == command.WorkOrderPartId);
@@ -319,7 +327,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
@@ -339,7 +349,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == command.Id);
@@ -412,7 +424,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
