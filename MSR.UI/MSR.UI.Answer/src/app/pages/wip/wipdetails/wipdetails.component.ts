@@ -5,10 +5,9 @@ import {
   Customer, Procedure, PurchaseModel, WorkOrderPartService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
    ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest} from '../../../services/api.client.generated';
+   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { Product } from '../../ecommerce/products.service';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
@@ -29,7 +28,7 @@ export class WipdetailsComponent implements OnInit {
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
   customer: Customer = new Customer();
-  product: Product = new Product();
+  product: ProductModel = new ProductModel();
   purchase: PurchaseModel = new PurchaseModel();
   workOrderParts: Array<WorkOrderPartModel> = new Array<WorkOrderPartModel>();
   workOrderTaskInProgress: WorkOrderTaskModel;
