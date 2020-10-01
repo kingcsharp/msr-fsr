@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProcedureStepMonitor, WorkOrderModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
-
+import { ProcedureStepMonitor, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { Globals } from '../../models/lib/globals';
 @Component({
   selector: 'ncr-report',
   templateUrl: './ncr-report.component.html',
@@ -9,10 +9,16 @@ import { ProcedureStepMonitor, WorkOrderModel, WorkOrderTaskMonitorModel } from 
 export class NcrReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
+  workOrderPart: WorkOrderPartModel;
   taskSummaries: Array<any> = new Array<any>();
-  constructor() { }
+  technicianFullName: string;
+  date: Date;
+  constructor(private globals: Globals) { }
 
   ngOnInit(): void {
+
+    this.technicianFullName = this.globals.getCurrentUser().fullName;
+    this.date =  new Date();
 
     this.WorkOrder.workOrderTasks.map(s => {
 
@@ -25,6 +31,7 @@ export class NcrReportComponent implements OnInit {
 
     this.generateMonitorSummaries();
 
+    this.workOrderPart = this.WorkOrder.workOrderParts[0];
   }
 
   generateMonitorSummaries(){

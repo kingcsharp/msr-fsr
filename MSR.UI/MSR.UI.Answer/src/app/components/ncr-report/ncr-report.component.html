@@ -1,45 +1,48 @@
 <div class="row">
     <div class="col-12">Part Non Conformance Report - Work Order #417203</div>
-    <div class="col-12">
+    <div class="col-12 border mb-2">
         <div class="row">
             <div class="col-2">MSR-FSR</div>
-            <div class="col-10">Customer Part # 500213434, (S/N:N/A), Heated V2 Valve</div>
+            <div class="col-10">Customer Part # {{workOrderPart?.part?.partNumber}}, (Serial #: {{workOrderPart?.serialNumber}}),
+                {{workOrderPart?.part?.name}}</div>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 border mb-2">
         <div class="row">
-            <div class="col-3">Date Report Prepared:</div><div class="col-9">9/30/2020 7:48:20 PM</div>
-            <div class="col-3">Work Order #:</div><div class="col-9">417203</div>
-            <div class="col-3">Customer:</div><div class="col-9">INTEL F28</div>
-            <div class="col-3">Technician:</div><div class="col-9">Robert Lara</div>
+            <div class="col-3 text-right">Date Report Prepared:</div><div class="col-9">{{date}}</div>
+            <div class="col-3 text-right">Work Order #:</div><div class="col-9">{{WorkOrder.id}}</div>
+            <div class="col-3 text-right">Customer:</div><div class="col-9">{{WorkOrder.purchase?.purchaseOrder?.customer?.name}}</div>
+            <div class="col-3 text-right">Technician:</div><div class="col-9">{{technicianFullName}}</div>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 border mb-2">
         <div class="row">
-            <div class="col-4">Part #</div>
-            <div class="col-4">Part Name</div>
-            <div class="col-4">Serial Number</div>
+            <div class="col-4 font-weight-bold">Part #</div>
+            <div class="col-4 font-weight-bold">Part Name</div>
+            <div class="col-4 font-weight-bold">Serial Number</div>
             <div class="col-4">500213434</div>
             <div class="col-4">Heated V2 Valve</div>
             <div class="col-4">N/A</div>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 border mb-2">
         <div class="row">
-            <div class="col-3">Associated Documents:</div><div class="col-9"></div>
-            <div class="col-3">Associated Digital Pictures:</div><div class="col-9"></div>
-            <div class="col-3">Comments:</div><div class="col-9"></div>
+            <div class="col-3 font-weight-bold text-right">Associated Documents:</div><div class="col-9"></div>
+            <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div><div class="col-9"></div>
+            <div class="col-3 font-weight-bold text-right">Comments:</div><div class="col-9"></div>
         </div>
     </div>
     <div class="col-12">
         <div class="row" *ngFor="let taskSummary of taskSummaries">
-            <div class="col-12">{{taskSummary.taskName}}</div>
-            <div class="col-6">Monitor {{taskSummary.taskId}}</div><div class="col-3">Result</div><div class="col-3">Comment</div>
+            <div class="col-12 border text-light bg-dark p-2">{{taskSummary.taskName}}</div>
+            <div class="col-6 border bg-secondary text-dark p-2">Monitor {{taskSummary.taskId}}</div>
+            <div class="col-3 border bg-secondary text-dark p-2">Result</div>
+            <div class="col-3 border bg-secondary text-dark p-2">Comment</div>
             <div class="col-12">
                 <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
-                    <div class="col-6">{{monitorSummary.monitorTitle}}</div>
-                    <div class="col-3">{{monitorSummary.result}}</div>
-                    <div class="col-3">{{monitorSummary.comment}}</div>
+                    <div class="col-6 border p-2">{{monitorSummary.monitorTitle}}</div>
+                    <div class="col-3 border p-2">{{monitorSummary.result}}</div>
+                    <div class="col-3 border p-2">{{monitorSummary.comment}}</div>
                 </div>
             </div>
         </div>
