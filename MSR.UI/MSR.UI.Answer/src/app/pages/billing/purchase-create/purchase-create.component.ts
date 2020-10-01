@@ -199,7 +199,7 @@ export class PurchaseCreateComponent implements OnInit {
         const requestData = new CreatePurchaseRequest(
           {
             purchaseOrderId: this.purchaseOrderData.id,
-            statusId: 0,
+            statusId: 1, // Approved
             purchaseOrderProductId: item.id,
             serialNumber: item.serialKitNo,
             locationId: item.locationId,

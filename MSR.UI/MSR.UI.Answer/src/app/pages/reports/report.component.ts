@@ -13,7 +13,7 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../models/lib/Utils';
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 import { CSVConverterService } from '../../services/csvconverter.service';
 import { ReportCubeService } from './reportcube.service';
 
@@ -44,14 +44,14 @@ export class ReportComponent implements OnInit {
   }
 
   printCsvReport(reportId) {
-    let reportInfo = this.data.filter(x=>x.id === reportId)[0];
+    let reportInfo = this.data.filter(x => x.id === reportId)[0];
     const reportColumns = this.reportCubeService.getReportColumns(reportInfo);
     this.globals.showLoader(true);
     this.reportCubeService.getReport(reportInfo).then((resp) => {
       this.globals.showLoader(false);
-      this.cSVConverterService.downloadFile(resp,reportColumns, reportInfo.name);
+      this.cSVConverterService.downloadFile(resp, reportColumns, reportInfo.name);
     });
-    
+
   }
 
 }

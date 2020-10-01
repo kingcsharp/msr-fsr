@@ -3,14 +3,16 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using System;
 using MSR.Domain.Hub;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Application.ApplicationServices
 {
     public class MessageHubAppService : IMessageHubClient
     {
         private HubConnection connection = null;
+        private ILogger _logger;
 
-        public async Task Connect(string url)
+        public async Task Connect(string url, ILogger logger = null)
         {
             if (connection != null) {
                 return;
@@ -25,14 +27,21 @@ namespace MSR.Application.ApplicationServices
             };
 
             await connection.StartAsync();
+
+            _logger = logger;
+            connection.On<Toaster>("ToasterMessage", (msg) => {
+                if (_logger != null)
+                {
+                    _logger.LogInformation($"Received SignalR Heartbeat {msg.Message}");
+                }
+            });
+
         }
 
         public void SendNotification(string userId, Toaster message)
         {
             connection.InvokeAsync("SendMessage", userId, message);
-
-            // TODO: it would be useful to hook in additional message logging
-            // here to capture all import messages
+            _logger.LogInformation($"SendMessage userId={userId} message={message.Message}");
         }
     }
 }

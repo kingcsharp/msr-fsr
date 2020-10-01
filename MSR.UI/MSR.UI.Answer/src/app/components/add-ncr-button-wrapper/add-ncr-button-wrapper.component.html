@@ -1,0 +1,35 @@
+<button class="btn btn-danger m-2" (click)="addNcr()"><i class="fas fa-plus-square mr-2"></i>Add NCR</button>
+<p-dialog header="Add NCR Procedure" [(visible)]="showAddNcrDialog" appendTo="body" [baseZIndex]="100001" [modal]='true'
+  [style]="{width: '50vw'}">
+  <div class="container">
+    <div class="row">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Company</th>
+            <th scope="col">Id</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ncrProcedure of ncrProceduresAvailable; let index=index">
+            <td scope="row">{{ ncrProcedure.name }}</td>
+            <td>{{ ncrProcedure.creatorCompany }}</td>
+            <td>{{ ncrProcedure.id }}</td>
+            <td><button class="btn btn-success m-2" (click)="insertNCR(ncrProcedure)"><i
+                  class="fas fa-link"></i>Insert</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="showAddNcrDialog = false" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

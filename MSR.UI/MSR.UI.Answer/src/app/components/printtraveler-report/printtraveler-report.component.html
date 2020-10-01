@@ -1,0 +1,81 @@
+<button type="button" class="btn btn-primary mr-2" (click)="togglePrintTravelerDialog()"><i
+        class="fas fa-print mx-1"></i>Print Traveler</button>
+
+<p-dialog [(visible)]="showPrintTravelerDialog" appendTo="body" styleClass="report"
+    [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <p-header>
+        Print Traveler Report
+    </p-header>
+    <div class="report-viewport m-4 d-print-flex">
+        <div class="row justify-content-center m-4">
+            <qrcode [qrdata]="'https://google.com'" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12 justify-content-start ml-4">
+                <h3>Purchase Item Information</h3>
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4 text-right">Customer:</div><div class="col-8">{{WorkOrder.product?.customer?.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">Product:</div><div class="col-8">{{WorkOrder.product?.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">Procedure:</div><div class="col-8">{{WorkOrder.product?.procedure?.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">WO Item #:</div><div class="col-8">{{WorkOrder.id}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-right">Customer P/O Line:</div><div class="col-8">{{WorkOrder.purchase?.customerLineNumber}}</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="image-placeholder d-flex justify-content-center"> 
+                            <div class="my-auto"><h2>NO IMAGE AVAILABLE</h2></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 ml-4">
+                <h3>Parts and Procedure Information</h3>
+            </div>
+            <div class="col-12 ml-4 mb-4">
+                <div class="row">
+                    <div class="col-12" *ngIf="workOrder !== undefined && workOrder.workOrderParts !== undefined && workOrder.workOrderParts?.length !== 0">
+                        Customer Part Number {{WorkOrder.workOrderParts[0]?.part?.partNumber}}, (Serial #: {{WorkOrder.workOrderParts[0]?.serialNumber}}),{{WorkOrder.workOrderParts[0]?.part?.name}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card-column mx-4">
+                    <div class="card" *ngFor="let workOrderTask of WorkOrder.workOrderTasks">
+                        <div class="card-header">
+                          {{ workOrderTask.procedureStep?.title}}
+                        </div>
+                        <div class="card-body">
+                          <p class="card-text">{{ workOrderTask.procedureStep?.stepText}}</p>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="printTravelerReport()" class="btn btn-primary mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-print mx-1"></i>Print Report
+            </button>
+            <button type="submit" (click)="togglePrintTravelerDialog()" class="btn btn-warning mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-times-circle mx-1"></i>Close
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>

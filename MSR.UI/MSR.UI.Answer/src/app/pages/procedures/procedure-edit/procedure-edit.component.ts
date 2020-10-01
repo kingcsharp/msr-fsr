@@ -292,7 +292,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepMonitorRequest.monitorType = this.monitorToEdit.monitorType;
     updateProcedureStepMonitorRequest.inputType = this.monitorToEdit.inputType;
     updateProcedureStepMonitorRequest.shouldBe = this.monitorToEdit.shouldBe;
-    updateProcedureStepMonitorRequest.targetValue = this.monitorToEdit.targetValue.toString();
+    updateProcedureStepMonitorRequest.targetValue = this.monitorToEdit.targetValue?.toString();
     updateProcedureStepMonitorRequest.faultHandling = this.monitorToEdit.faultHandling;
     updateProcedureStepMonitorRequest.description = this.monitorToEdit.description;
     updateProcedureStepMonitorRequest.sendEmailNotification = this.monitorToEdit.sendEmailNotification;
@@ -324,7 +324,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepMonitorRequest.monitorType = this.monitorToAdd.monitorType;
     createProcedureStepMonitorRequest.inputType = this.monitorToAdd.inputType;
     createProcedureStepMonitorRequest.shouldBe = this.monitorToAdd.shouldBe;
-    createProcedureStepMonitorRequest.targetValue = this.monitorToAdd.targetValue.toString();
+    createProcedureStepMonitorRequest.targetValue = this.monitorToAdd.targetValue?.toString();
     createProcedureStepMonitorRequest.faultHandling = this.monitorToAdd.faultHandling;
     createProcedureStepMonitorRequest.description = this.monitorToAdd.description;
     createProcedureStepMonitorRequest.sendEmailNotification = this.monitorToAdd.sendEmailNotification;

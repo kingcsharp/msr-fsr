@@ -24,6 +24,11 @@ export class HelpbuttonWrapperComponent implements OnInit {
 
     this.helpMenuUrl = this.router.url.replace('/app', '');
 
+    if (this.helpMenuUrl.includes('/wip/details')) {
+      this.helpMenuUrl = '/wip/details/:id';
+    }
+
+    this.globals.showLoader(true);
     this.helpService.helpGet(null, this.helpMenuUrl, env.apiVersion).subscribe(responseHandler(response => {
 
       if ( response.object.length !== 0 ) {

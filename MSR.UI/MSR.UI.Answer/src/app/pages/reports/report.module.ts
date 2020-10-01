@@ -22,7 +22,7 @@ import { ReportCubeService } from './reportcube.service';
 export const routes = [
   { path: '', redirectTo: 'report/adhocreports', pathMatch: 'full' },
   { path: 'report/adhocreports', component: ReportComponent, pathMatch: 'full' },
-  { path: "report/adhocreports/:id", component: AdhocComponent, pathMatch: 'full' }
+  { path: 'report/adhocreports/:id', component: AdhocComponent, pathMatch: 'full' }
 ];
 
 @NgModule({

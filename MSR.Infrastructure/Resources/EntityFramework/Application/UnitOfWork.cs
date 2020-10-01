@@ -77,6 +77,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Sensor> _sensor;
         private IRepository<Quote> _quotes;
         private IRepository<TimeZone> _timezone;
+        private IRepository<WorkOrderTaskMonitor> _workOrderTasksMonitors;
         private IRepository<Report> _report;
         private IRepository<ReportCategory> _reportCategory;
         private IRepository<ReportCategoryMap> _reportCategoryMap;
@@ -149,8 +150,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
         public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
         public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }
+        public IRepository<WorkOrderTaskMonitor> WorkOrderTaskMonitors { get { return _workOrderTasksMonitors ??= new EFRepository<WorkOrderTaskMonitor>(Context); } }
         public IRepository<EquipmentMaintenance> EquipmentMaintenances { get { return _equipmentMaintenances ??= new EFRepository<EquipmentMaintenance>(Context); } }
-
         public IRepository<Report> Reports { get { return _report ??= new EFRepository<Report>(Context); } }
         public IRepository<ReportCategory> ReportCategories { get { return _reportCategory ??= new EFRepository<ReportCategory>(Context); } }
         public IRepository<ReportCategoryMap> ReportCategoryMaps { get { return _reportCategoryMap ??= new EFRepository<ReportCategoryMap>(Context); } }

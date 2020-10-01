@@ -143,4 +143,12 @@ p-footer button[type="submit"] {
 
 .taskcompleted > pcalendar-wrapper > p-calendar > span{
   width:100%;
-} 
+}
+
+selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown {
+  width:100% !important;
+}
+
+selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-container{
+  width:100% !important;
+}

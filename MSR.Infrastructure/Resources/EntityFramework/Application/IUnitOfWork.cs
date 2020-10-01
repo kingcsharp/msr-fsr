@@ -35,7 +35,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get; }
         IRepository<DocumentApproval> DocumentApprovals { get; }
         IRepository<ProductApproval> ProductApprovals { get; }
-
         IRepository<ProcedureStepMonitorApproval> ProcedureStepMonitorApprovals { get; }
         IRepository<PurchaseOrderApproval> PurchaseOrderApprovals { get; }
         IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get; }
@@ -76,13 +75,12 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Sensor> Sensors { get; }
         IRepository<Quote> Quotes { get; }
         IRepository<TimeZone> Timezones { get; }
-
+        IRepository<WorkOrderTaskMonitor> WorkOrderTaskMonitors { get; }
         IRepository<Report> Reports { get; }
         IRepository<ReportCategory> ReportCategories { get; }
         IRepository<ReportCategoryMap> ReportCategoryMaps { get; }
         IRepository<ReportDashboard> ReportDashboards { get; }
         IRepository<ReportDashboardMap> ReportDashboardMaps { get; }
-
         IRepository<EquipmentMaintenance> EquipmentMaintenances { get; }
         
         void SaveChanges();

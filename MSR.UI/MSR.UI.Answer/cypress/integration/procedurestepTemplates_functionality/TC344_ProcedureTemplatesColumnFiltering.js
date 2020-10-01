@@ -129,7 +129,7 @@ describe('Procedure Step Templates Functionality', () => {
         cy.writeAndValidate('revision','1');
         cy.multiselectClick('status-multiselect','Approved');
         cy.get('body').click('top')
-        cy.get('[data-cy=row]').find('td:first').contains('1');
+        cy.get('[data-cy=row]').find('tr').contains('1');
 
         cy.checkWebConsoleTracking();
 

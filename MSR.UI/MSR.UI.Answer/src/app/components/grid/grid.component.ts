@@ -46,7 +46,7 @@ export class GridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCubeReport(this.data, this.reportInfo)
+    this.getCubeReport(this.data, this.reportInfo);
   }
 
   handleFilter(ev, filteredData) {
@@ -80,8 +80,7 @@ export class GridComponent implements OnInit {
   getCubeReport(data: any, reportInfo?: ReportModel) {
     if (reportInfo === undefined) {
       this.gridData = data;
-    }
-    else {
+    } else {
       this.globals.showLoader(true);
       this.reportCubeService.getReport(reportInfo).then((resp) => {
         if (resp.chartOptions !== undefined) {

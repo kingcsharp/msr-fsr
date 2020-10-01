@@ -13,8 +13,14 @@ namespace MSR.Domain.Views
 
         public string Name { get; set; }
 
+        /// <summary>
+        /// CustomerReferencePO aka ReferencePO
+        /// </summary>
         public string CustomerReferencePO { get; set; }
 
+        /// <summary>
+        /// CustomerReferenceNo aka CustomerReference aka MTTN
+        /// </summary>
         public string CustomerReferenceNo { get; set; }
 
         public int InvoicedBalance { get; set; }

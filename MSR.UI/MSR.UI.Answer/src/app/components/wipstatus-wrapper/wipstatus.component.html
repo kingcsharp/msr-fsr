@@ -1,0 +1,73 @@
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr data-cy="wipstatus-header">
+            <th *ngIf="isDisplayedInWipList">Procedure & Product</th>
+            <th *ngIf="!isDisplayedInWipList">Product</th>
+            <th *ngIf="!isDisplayedInWipList">Part Number</th>
+            <th *ngIf="!isDisplayedInWipList">Procedure</th>
+            <th  *ngIf="!isDisplayedInWipList">
+                Location<br />
+                <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1" 
+                (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect"></p-multiSelect>
+            </th>
+            <th>Open WorkOrders</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let workOrderStatus of displayWorkOrderStatuses" data-cy="wipstatus-row">
+            <td *ngIf="isDisplayedInWipList">
+              <div class="container">
+                <div class="row">
+                  <div class="col-2 text-right">Procedure: </div><div class="col-10">{{ workOrderStatus.procedureName }} </div>
+                </div>
+                <div class="row">
+                  <div class="col-2 text-right">Product: </div><div class="col-10">{{ workOrderStatus.productName }}</div>
+                </div>
+              </div>
+            </td>
+            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.productName }} </td>
+            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.partNumber }} </td>
+            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.procedureName }} </td>
+            <td *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
+            <td>
+                <i [ngClass]="{'fa': true, 'fa-2x': true, 
+                'fa-exclamation-circle': workOrderStatus.workOrderSummary.workOrderHasNcr === true,
+                'fa-cog': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                'fa-spin': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                'fa-hourglass': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start'
+                } " placement="bottom" data-cy="workordersummary-icon"
+                [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
+                <ng-template #workOrderSummaryToolTipTemplate>
+                    WorkOrder Item Number: {{workOrderStatus.workOrderSummary.workOrderItemNumber}}<br />
+                    Purchase Order / Line Number: {{workOrderStatus.workOrderSummary.purchaseOrderLineNumber}}<br />
+                    Serial Number: {{workOrderStatus.workOrderSummary.workOrderPartSerialNumber}}<br />
+                    Status: {{workOrderStatus.workOrderSummary.workOrderStatus }}<br />
+                    Assigned To: {{workOrderStatus.workOrderSummary.workOrderAssignedTo }}
+                </ng-template>
+            </td>
+        </tr>
+        <tr *ngIf="displayWorkOrderStatuses.length === 0">
+            <td colspan="5">No Open WorksOrders to Display</td>
+        </tr>
+    </tbody>
+</table>
+<p-dialog header="Attention" [(visible)]="showTakeOverAsUserConfirmationDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      Are you sure you want to take over this WorkOrder?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="takeOverAsUserConfirmationDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Yes
+      </button>
+      <button type="button" (click)="closeTakeOverAsUserConfirmationDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
