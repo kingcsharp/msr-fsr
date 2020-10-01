@@ -10,7 +10,7 @@ export class WipHistoryReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
   workOrderPart: WorkOrderPartModel;
-  
+
   constructor() { }
 
   ngOnInit(): void {

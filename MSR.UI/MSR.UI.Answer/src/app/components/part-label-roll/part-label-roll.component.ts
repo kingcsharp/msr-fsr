@@ -10,7 +10,7 @@ export class PartLabelRollComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
   workOrderParentPart: WorkOrderPartModel;
-  
+
   constructor() { }
 
   ngOnInit(): void {

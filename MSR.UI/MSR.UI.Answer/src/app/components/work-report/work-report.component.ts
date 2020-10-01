@@ -13,8 +13,8 @@ export class WorkReportComponent implements OnInit {
   reportTypeOptions: Array<SelectItem>;
   yesOrNoOptions: Array<SelectItem>;
   selectedReportType: string;
-  selectedShowProcedureStepOption:boolean = true;
-  selectedShowPurchaseItemOption:boolean = true;
+  selectedShowProcedureStepOption: boolean = true;
+  selectedShowPurchaseItemOption: boolean = true;
 
   constructor() { }
 
@@ -32,8 +32,8 @@ export class WorkReportComponent implements OnInit {
 
     this.WorkOrder.workOrderTasks.map(s => {
 
-      if(s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined){
-        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>()
+      if (s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined) {
+        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
       }
     });
 

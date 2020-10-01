@@ -22,8 +22,8 @@ export class NcrReportComponent implements OnInit {
 
     this.WorkOrder.workOrderTasks.map(s => {
 
-      if(s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined){
-        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>()
+      if (s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined) {
+        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
       }
     });
 
@@ -32,7 +32,7 @@ export class NcrReportComponent implements OnInit {
     this.workOrderPart = this.WorkOrder.workOrderParts[0];
   }
 
-  generateMonitorSummaries(){
+  generateMonitorSummaries() {
 
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
 
@@ -49,8 +49,8 @@ export class NcrReportComponent implements OnInit {
           monitorTitle: workOrderTaskMonitor.procedureStepMonitor?.description,
           result: workOrderTaskMonitor.textVal,
           comment: workOrderTaskMonitor.comment
-          
-        })
+
+        });
 
       });
 

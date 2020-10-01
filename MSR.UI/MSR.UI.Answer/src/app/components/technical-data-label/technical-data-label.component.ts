@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProcedureStepMonitor, WorkOrderModel, WorkOrderTaskModel, WorkOrderTaskMonitorModel, WorkOrderTaskService } from '../../services/api.client.generated';
+import { DataLabel } from './../../models/data-label-model';
+import { WorkOrderModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 
 @Component({
   selector: 'technical-data-label',
@@ -18,8 +19,8 @@ export class TechnicalDataLabelComponent implements OnInit {
 
     this.WorkOrder.workOrderTasks.map(s => {
 
-      if(s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined){
-        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>()
+      if (s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined) {
+        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
       }
 
     });
@@ -28,11 +29,11 @@ export class TechnicalDataLabelComponent implements OnInit {
 
   }
 
-  generateLabels(){
+  generateLabels() {
 
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
 
-      for(let index = 0; index < workOrderTask.workOrderTaskMonitors.length; index++){
+      for (let index = 0; index < workOrderTask.workOrderTaskMonitors.length; index++) {
 
         let dataLabel = new DataLabel();
         dataLabel.CustomerPurchaseNumber  = this.WorkOrder.purchase.customerPurchaseNumber;
@@ -50,14 +51,4 @@ export class TechnicalDataLabelComponent implements OnInit {
 
   }
 
-}
-
-export class DataLabel{
-  TaskDescription: string;
-  MonitorName: string;
-  PartNumber: string;
-  CustomerPurchaseNumber: string;
-  PartName: string;
-  Requestee: string;
-  Date: Date;
 }
