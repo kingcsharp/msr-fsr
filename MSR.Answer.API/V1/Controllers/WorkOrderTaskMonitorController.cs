@@ -53,7 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             UpdateWorkOrderTaskMonitor command = body.ToUpdateWorkOrderTaskMonitorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderTaskMonitorModel>();
+            return ret.ToOkObjectResponse<WorkOrderTaskMonitorModel>("Work Order Task Monitor Updated");
         }
     }
 }

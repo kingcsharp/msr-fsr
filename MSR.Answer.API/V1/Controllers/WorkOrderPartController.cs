@@ -51,7 +51,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             UpdateWorkOrderPart command = body.ToUpdateWorkOrderPartCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderPartModel>();
+            return ret.ToOkObjectResponse<WorkOrderPartModel>("Work Order Part Updated");
         }
     }
 }

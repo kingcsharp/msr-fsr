@@ -53,7 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
             command.ProcedureStepTypeId = 1;
 
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderTaskModel>();
+            return ret.ToOkObjectResponse<WorkOrderTaskModel>("Work Order Task Created");
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             UpdateWorkOrderTask command = body.ToUpdateWorkOrderTaskCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<WorkOrderTaskModel>();
+            return ret.ToOkObjectResponse<WorkOrderTaskModel>("Work Order Task Updated");
         }
     }
 }
