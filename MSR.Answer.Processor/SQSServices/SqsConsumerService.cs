@@ -17,6 +17,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using MSR.Domain.Helpers;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.Processor.SQSServices
 {
@@ -28,16 +29,20 @@ namespace MSR.Answer.Processor.SQSServices
         private readonly ICommandDispatcher _dispatcher;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventHandlers _eventHandlers;
+        private GeneralInformation _processorConfig;
         private string _queueURL;
 
         private CancellationTokenSource _tokenSource;
+        private IMessageHubClient _messageHub;
 
         public SqsConsumerService(
             IAmazonSQS sqsClient,
             SQSInformation sQSInformation,
+            GeneralInformation processorConfig,
             ICommandDispatcher dispatcher,
             IServiceProvider serviceProvider,
             IEventHandlers eventHandlers,
+            IMessageHubClient messageHub,
             ILogger<SqsConsumerService> logger)
         {
             _eventHandlers = eventHandlers;
@@ -46,6 +51,8 @@ namespace MSR.Answer.Processor.SQSServices
             _sQSInformation = sQSInformation;
             _dispatcher = dispatcher;
             _serviceProvider = serviceProvider;
+            _messageHub = messageHub;
+            _processorConfig = processorConfig;
 
         }
 
@@ -87,8 +94,15 @@ namespace MSR.Answer.Processor.SQSServices
         {
             try
             {
+                Uri baseUri = new Uri(_processorConfig.APIURL);
+                UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
+                await _messageHub.Connect(hubUri.ToString(), _logger);
+
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {
+                    _messageHub.SendNotification("ping", new MSR.Domain.Hub.Toaster() {
+                        Message = "ping"
+                    });
                     try
                     {
                         var response = await _sqsClient.ReceiveMessageAsync(new ReceiveMessageRequest
