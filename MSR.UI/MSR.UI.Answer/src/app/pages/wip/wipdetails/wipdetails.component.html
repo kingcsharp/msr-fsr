@@ -28,10 +28,10 @@
               </div>
             </div>
             <div class="col-1 mr-0 pr-0 justify-content-end align-middle">
-              <wiplistbutton-wrapper  *ngIf="false" class="d-flex justify-content-end"></wiplistbutton-wrapper>
+              <wiplistbutton-wrapper class="d-flex justify-content-end"></wiplistbutton-wrapper>
             </div>
           </div>
-          <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" *ngIf="false" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
+          <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
           <div class="row justify-content-end">
             <button type="button" class="btn btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> 
             <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printtraveler-report>

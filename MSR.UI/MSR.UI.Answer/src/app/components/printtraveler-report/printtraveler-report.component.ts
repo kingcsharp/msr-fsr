@@ -16,7 +16,7 @@ export class PrinttravelerReportComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.WorkOrder);
+
   }
 
   togglePrintTravelerDialog() {

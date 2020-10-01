@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProcedureStepMonitor, WorkOrderModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
-
+import { ProcedureStepMonitor, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { Globals } from '../../models/lib/globals';
 @Component({
   selector: 'ncr-report',
   templateUrl: './ncr-report.component.html',
@@ -9,25 +9,30 @@ import { ProcedureStepMonitor, WorkOrderModel, WorkOrderTaskMonitorModel } from 
 export class NcrReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
+  workOrderPart: WorkOrderPartModel;
   taskSummaries: Array<any> = new Array<any>();
-  constructor() { }
+  technicianFullName: string;
+  date: Date;
+  constructor(private globals: Globals) { }
 
   ngOnInit(): void {
 
+    this.technicianFullName = this.globals.getCurrentUser().fullName;
+    this.date =  new Date();
+
     this.WorkOrder.workOrderTasks.map(s => {
 
-      if(s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined){
-        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>()
+      if (s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined) {
+        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
       }
     });
 
-    this.getMockMonitors(); 
-
     this.generateMonitorSummaries();
 
+    this.workOrderPart = this.WorkOrder.workOrderParts[0];
   }
 
-  generateMonitorSummaries(){
+  generateMonitorSummaries() {
 
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
 
@@ -44,49 +49,12 @@ export class NcrReportComponent implements OnInit {
           monitorTitle: workOrderTaskMonitor.procedureStepMonitor?.description,
           result: workOrderTaskMonitor.textVal,
           comment: workOrderTaskMonitor.comment
-          
-        })
+
+        });
 
       });
 
       this.taskSummaries.push(taskSummary);
-    });
-
-  }
-
-  getMockMonitors(){
-    let index = 0;
-    this.WorkOrder.workOrderTasks.map(s => {
-
-      let sampleMonitorA = new WorkOrderTaskMonitorModel();	
-      sampleMonitorA.id = 1;	
-      sampleMonitorA.procedureMonitorId = 1;	
-      sampleMonitorA.procedureStepMonitor = new ProcedureStepMonitor();	
-      sampleMonitorA.procedureStepMonitor.id = 1;	
-      sampleMonitorA.procedureStepMonitor.inputType = 'Manual';	
-      sampleMonitorA.procedureStepMonitor.monitorType = 'Equipment';	
-      sampleMonitorA.procedureStepMonitor.targetValue = '10';	
-      sampleMonitorA.procedureStepMonitor.faultHandling = 'STOP UNTIL FAULT CLEARED';	
-      sampleMonitorA.procedureStepMonitor.description = "This is a sample Monitor A" + index++;
-      
-
-      let sampleMonitorB = new WorkOrderTaskMonitorModel();	
-      sampleMonitorB.id = 2;	
-      sampleMonitorB.procedureMonitorId = 2;	
-      sampleMonitorB.procedureStepMonitor = new ProcedureStepMonitor();	
-      sampleMonitorB.procedureStepMonitor.id = 2;	
-      sampleMonitorB.procedureStepMonitor.inputType = 'Manual';	
-      sampleMonitorB.procedureStepMonitor.monitorType = 'Equipment';	
-      sampleMonitorB.procedureStepMonitor.targetValue = '10';	
-      sampleMonitorB.procedureStepMonitor.faultHandling = 'STOP UNTIL FAULT CLEARED';	
-      sampleMonitorB.procedureStepMonitor.description = "This is a sample Monitor B" + index++;
-      
-      if(index<8){
-        s.workOrderTaskMonitors.push(sampleMonitorA);
-        s.workOrderTaskMonitors.push(sampleMonitorB);
-      }
-
-
     });
 
   }

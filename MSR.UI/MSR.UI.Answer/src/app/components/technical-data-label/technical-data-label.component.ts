@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProcedureStepMonitor, WorkOrderModel, WorkOrderTaskModel, WorkOrderTaskMonitorModel, WorkOrderTaskService } from '../../services/api.client.generated';
+import { DataLabel } from './../../models/data-label-model';
+import { WorkOrderModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 
 @Component({
   selector: 'technical-data-label',
@@ -18,30 +19,21 @@ export class TechnicalDataLabelComponent implements OnInit {
 
     this.WorkOrder.workOrderTasks.map(s => {
 
-      if(s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined){
-        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>()
+      if (s.workOrderTaskMonitors === null || s.workOrderTaskMonitors === undefined) {
+        s.workOrderTaskMonitors = new Array<WorkOrderTaskMonitorModel>();
       }
 
     });
 
-
-    if(this.WorkOrder.workOrderTasks.map(s => s.workOrderTaskMonitors).map(s => s.length).reduce((sum, b) => sum + b, 0) > 0){
-
-      this.generateLabels();     
-
-    }else{
-
-      this.getMockMonitors();
-      this.generateLabels();
-    }
+    this.generateLabels();
 
   }
 
-  generateLabels(){
+  generateLabels() {
 
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
 
-      for(let index = 0; index < workOrderTask.workOrderTaskMonitors.length; index++){
+      for (let index = 0; index < workOrderTask.workOrderTaskMonitors.length; index++) {
 
         let dataLabel = new DataLabel();
         dataLabel.CustomerPurchaseNumber  = this.WorkOrder.purchase.customerPurchaseNumber;
@@ -59,51 +51,4 @@ export class TechnicalDataLabelComponent implements OnInit {
 
   }
 
-  getMockMonitors(){
-    let index = 0;
-    this.WorkOrder.workOrderTasks.map(s => {
-
-      let sampleMonitorA = new WorkOrderTaskMonitorModel();	
-      sampleMonitorA.id = 1;	
-      sampleMonitorA.procedureMonitorId = 1;	
-      sampleMonitorA.procedureStepMonitor = new ProcedureStepMonitor();	
-      sampleMonitorA.procedureStepMonitor.id = 1;	
-      sampleMonitorA.procedureStepMonitor.inputType = 'Manual';	
-      sampleMonitorA.procedureStepMonitor.monitorType = 'Equipment';	
-      sampleMonitorA.procedureStepMonitor.targetValue = '10';	
-      sampleMonitorA.procedureStepMonitor.faultHandling = 'STOP UNTIL FAULT CLEARED';	
-      sampleMonitorA.procedureStepMonitor.description = "This is a sample Monitor A" + index++;
-      
-
-      let sampleMonitorB = new WorkOrderTaskMonitorModel();	
-      sampleMonitorB.id = 2;	
-      sampleMonitorB.procedureMonitorId = 2;	
-      sampleMonitorB.procedureStepMonitor = new ProcedureStepMonitor();	
-      sampleMonitorB.procedureStepMonitor.id = 2;	
-      sampleMonitorB.procedureStepMonitor.inputType = 'Manual';	
-      sampleMonitorB.procedureStepMonitor.monitorType = 'Equipment';	
-      sampleMonitorB.procedureStepMonitor.targetValue = '10';	
-      sampleMonitorB.procedureStepMonitor.faultHandling = 'STOP UNTIL FAULT CLEARED';	
-      sampleMonitorB.procedureStepMonitor.description = "This is a sample Monitor B" + index++;
-      
-      if(index<8){
-        s.workOrderTaskMonitors.push(sampleMonitorA);
-        s.workOrderTaskMonitors.push(sampleMonitorB);
-      }
-
-
-    });
-
-  }
-
-}
-
-export class DataLabel{
-  TaskDescription: string;
-  MonitorName: string;
-  PartNumber: string;
-  CustomerPurchaseNumber: string;
-  PartName: string;
-  Requestee: string;
-  Date: Date;
 }
