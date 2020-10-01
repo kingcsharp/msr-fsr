@@ -18,7 +18,7 @@ export class ColumnsSaved implements IColumnsSaved {
     type?: EnumColumnType | undefined;
     dropdownHeader?: boolean | undefined;
     multipleValues?: boolean | undefined;
-    //used only for date values at the time but can be extended if wanted
+    // used only for date values at the time but can be extended if wanted
     formattingMoment: string = 'MM-YYYY';
     formattingAngular: string = 'MM-yyyy';
 

@@ -152,7 +152,7 @@ export class ReportCubeService {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'MonitorsHistorybyWorkOrder':
                 const workInProcessbyWorkOrder = data.map(elem => {
-                    //we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
+                    // we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
                     const partName = elem['CubePartsmonitors.partname'];
                     if (partName === null) {
                         elem['partname'] = [];
@@ -161,7 +161,7 @@ export class ReportCubeService {
                             return {
                                 name: x,
                                 id: x
-                            }
+                            };
                         });
                     }
 
@@ -262,7 +262,7 @@ export class ReportCubeService {
 
             default:
                 if (data.length > 0) {
-                    //CUBE js sends data with CubePartsmonitors. which is not supported by primeNg so we need to create a new obj.
+                    // CUBE js sends data with CubePartsmonitors. which is not supported by primeNg so we need to create a new obj.
                     const resultDataArr = data.map((elem) => this.removeObjectsPropertyPrefix(elem));
                     return resultDataArr;
                 }
@@ -296,23 +296,15 @@ export class ReportCubeService {
             const name = x.split('_')[1];
             if (index !== -1) {
 
-                const nameIndex = dataSeries.findIndex(x => x.name === name);
+                const nameIndex = dataSeries.findIndex(z => z.name === name);
                 if (nameIndex !== -1) {
                     dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
-                    if (isNaN(dataSeries[nameIndex].data[index])) {
-                        debugger;
-                    }
                 } else {
                     const dataArr = [];
                     months.forEach(element => {
                         dataArr.push(0);
                     });
                     dataArr[index] += chartInfo.chartData[x][chartInfo.stackBy];
-                    dataArr.forEach(element => {
-                        if (isNaN(element)) {
-                            debugger;
-                        }
-                    });
                     dataSeries.push({
                         name: name,
                         data: dataArr
@@ -419,7 +411,7 @@ export class ReportCubeService {
                 }
             },
             series: dataSeries
-        }
+        };
 
 
         return { resultData: resultData, chartOptions: chartOptions, chartInfo: chartInfo };

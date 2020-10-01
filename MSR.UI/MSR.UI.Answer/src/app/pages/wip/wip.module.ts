@@ -14,14 +14,14 @@ import { WidgetModule } from '../../layout/widget/widget.module';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { WipdetailsComponent } from './wipdetails/wipdetails.component';
-import {TabViewModule} from 'primeng/tabview';
+import { TabViewModule } from 'primeng/tabview';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { WorkordertasktimerWrapperComponent } from '../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
-import {DropdownModule} from 'primeng/dropdown';
+import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { WorkordertaskmonitosWrapperComponent } from '../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component';
 import { EmPmButtonWrapperComponent } from '../../components/em-pm-button-wrapper/em-pm-button-wrapper.component';
-import { AddNcrButtonWrapperComponent} from '../../components/add-ncr-button-wrapper/add-ncr-button-wrapper.component';
+import { AddNcrButtonWrapperComponent } from '../../components/add-ncr-button-wrapper/add-ncr-button-wrapper.component';
 import { WipListButtonWrapperComponent } from '../../components/wip-list-button-wrapper/wip-list-button-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { PrinttravelerReportComponent } from '../../components/printtraveler-report/printtraveler-report.component';
@@ -29,7 +29,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { PrintotherReportComponent } from '../../components/printother-report/printother-report.component';
 import { DeliveryTicketReportComponent } from '../../components/delivery-ticket-report/delivery-ticket-report.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
-import { WipHistoryReportComponent}  from '../../components/wip-history-report/wip-history-report.component';
+import { WipHistoryReportComponent } from '../../components/wip-history-report/wip-history-report.component';
 import { NcrReportComponent } from '../../components/ncr-report/ncr-report.component';
 import { PartLabelRollComponent } from '../../components/part-label-roll/part-label-roll.component';
 import { TechnicalDataLabelComponent } from '../../components/technical-data-label/technical-data-label.component';
@@ -40,7 +40,7 @@ export const routes = [
   { path: 'wip', component: WipComponent, pathMatch: 'full' },
   { path: 'wiphistory', component: WiphistoryComponent, pathMatch: 'full' },
   { path: 'wipstatus', component: WipstatusComponent, pathMatch: 'full' },
-  { path: 'details/:id', component: WipdetailsComponent, pathMatch: 'full'}
+  { path: 'details/:id', component: WipdetailsComponent, pathMatch: 'full' }
 ];
 
 
