@@ -21,7 +21,7 @@ export class Navbar implements OnInit {
     isOpen: false
   };
   searchValue: string;
-  hideImg: false;
+  hideImg: boolean = false;
 
   constructor(
     private renderer: Renderer2,
@@ -40,7 +40,6 @@ export class Navbar implements OnInit {
   }
 
   updateUrl(ev) {
-    console.log(ev);
     this.hideImg = true;
   }
 
