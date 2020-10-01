@@ -68,7 +68,7 @@ export class Navbar implements OnInit {
 
   search() {
     if (this.searchValue.length < 3) {
-      this.toastr.error("Search value is too short. It should have 3 characters or more.");
+      this.toastr.error('Search value is too short. It should have 3 characters or more.');
     } else {
       this.router.navigate(['app/search'], { queryParams: { search: this.searchValue }, queryParamsHandling: 'merge' });
     }

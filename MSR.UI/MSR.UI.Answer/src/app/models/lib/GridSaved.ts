@@ -38,7 +38,9 @@ export class GridSaved implements IGridSaved {
             if (Array.isArray(_data['columnsSaved'])) {
                 this.columnsSaved = [] as any;
                 for (let item of _data['columnsSaved']) {
+                    /* tslint:disable */
                     this.columnsSaved!.push(ColumnsSaved.fromJS(item));
+                    /* tslint:enable */
                 }
             }
             this.visibleColumns = this.columnsSaved.filter(x => x.visible).length;
