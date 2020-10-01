@@ -25,8 +25,8 @@ export class SignalRService implements OnDestroy {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(env.url + '/msg', {
         accessTokenFactory: () => token,
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets
+        // skipNegotiation: true,
+        // transport: signalR.HttpTransportType.WebSockets
       })
       .build();
     this.hubConnection
