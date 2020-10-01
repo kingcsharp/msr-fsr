@@ -259,7 +259,7 @@
             <label for="maximumCycles" class="col-md-2 col-form-label text-md-right">
               Maximum Cycles
             </label>
-            <div class="col-md-4 ">
+            <div class="col-md-4">
               <input type="number" id="maximumCycles" name="maximumCycles" [(ngModel)]="currPart.maximumCycles"
                 class="form-control input-transparent" data-parsley-min="0" data-validate="parsley"
                 data-parsley-trigger="change" placeholder="Maximum Cycles" data-cy="maximumCycles-input">
@@ -269,9 +269,11 @@
             <label for="demo[]" class="col-md-2 col-form-label text-md-right">
               Files
             </label>
-            <cmh-file-uploader class="col-md-10" [menuItem]="menuItems.Parts"
-              multiple="multiple" [(files)]="currPart.files">
-            </cmh-file-uploader>
+            <div class="col-md-10">
+              <cmh-file-uploader [menuItem]="menuItems.Parts" multiple="multiple" [(files)]="currPart.files">
+              </cmh-file-uploader>
+            </div>
+
           </div>
         </fieldset>
       </div>
