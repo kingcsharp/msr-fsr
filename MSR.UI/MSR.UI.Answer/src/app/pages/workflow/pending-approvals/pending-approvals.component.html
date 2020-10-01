@@ -140,7 +140,7 @@
               </div>
             </div>
           </ng-template>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
           <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"

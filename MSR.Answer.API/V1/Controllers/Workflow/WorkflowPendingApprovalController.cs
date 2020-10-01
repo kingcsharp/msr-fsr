@@ -72,7 +72,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             await SendApprovalNotificationHubMessage(request.Table, _messageHub, -1);
 
-            var result = ret.ToOkObjectResponse<PendingApprovalModel>("Pending Approval was cancelled successfully.");
+            var result = ret.ToOkObjectResponse("Pending Approval was cancelled successfully.");
             return result;
         }
 
