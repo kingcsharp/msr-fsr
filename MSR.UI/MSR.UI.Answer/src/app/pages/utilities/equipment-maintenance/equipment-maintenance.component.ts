@@ -167,6 +167,9 @@ export class EquipmentMaintenanceComponent implements OnInit {
         response.object.map((x) => {
           this.locations.push({ label: x.name, value: x.id });
         });
+        if (this.locations.length === 1) {
+          this.currentEM.locationId = this.locations[0].value;
+        }
         this.getLocationsFlag = true;
       }));
     }
