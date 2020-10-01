@@ -30,7 +30,7 @@
                     <div class="col-6 text-right">Blanket PO #:</div><div class="col-6"></div>
                     <div class="col-6 text-right">Barcode:</div>
                     <div class="col-6">
-                        <ngx-barcode [bc-format]="CODE128" [bc-background]="none" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
+                        <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
                          [bc-display-value]="false" [bc-height]="40" ></ngx-barcode>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
             <div class="col-1 border"></div>
             <div class="col-3 border">
                 PO /Line #: {{ WorkOrder.purchase?.purchaseOrder?.referencePO }}/{{ WorkOrder.purchase?.customerLineNumber }}<br />
-                <ngx-barcode [bc-format]="CODE128" [bc-background]="none" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO + '/' + WorkOrder.purchase?.customerLineNumber"
+                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO + '/' + WorkOrder.purchase?.customerLineNumber"
                          [bc-display-value]="false" [bc-height]="40" ></ngx-barcode>
             </div>
         </div>

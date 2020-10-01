@@ -27,7 +27,8 @@ const routes: Routes = [
       { path: 'documents', loadChildren: () =>  import('../pages/documents/documents.module').then(m => m.DocumentsModule) },
       { path: 'reporting', loadChildren: () => import('../pages/reports/report.module').then(m => m.ReportModule) },
       { path: 'dashboards', loadChildren: () => import('../pages/dashboards/dashboard.module').then(m => m.DashboardModule) },
-      { path: 'search', loadChildren: () => import('../pages/search/search.module').then(m => m.SearchModule) }
+      { path: 'search', loadChildren: () => import('../pages/search/search.module').then(m => m.SearchModule) },
+      { path: 'wip', loadChildren: () =>  import('../pages/wip/wip.module').then(m => m.WipModule) },
     ]
   }
 ];

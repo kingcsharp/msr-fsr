@@ -47,7 +47,7 @@
             </div>
             <div class="col-12 ml-4 mb-4">
                 <div class="row">
-                    <div class="col-12" *ngIf="workOrder !== undefined && workOrder.workOrderParts !== undefined && workOrder.workOrderParts?.length !== 0">
+                    <div class="col-12" *ngIf="WorkOrder !== undefined && WorkOrder.workOrderParts !== undefined && WorkOrder.workOrderParts?.length !== 0">
                         Customer Part Number {{WorkOrder.workOrderParts[0]?.part?.partNumber}}, (Serial #: {{WorkOrder.workOrderParts[0]?.serialNumber}}),{{WorkOrder.workOrderParts[0]?.part?.name}}
                     </div>
                 </div>

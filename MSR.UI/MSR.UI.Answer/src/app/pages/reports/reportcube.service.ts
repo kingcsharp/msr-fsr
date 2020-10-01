@@ -161,7 +161,7 @@ export class ReportCubeService {
                             return {
                                 name: x,
                                 id: x
-                            }
+                            };
                         });
                     }
 
@@ -419,7 +419,7 @@ export class ReportCubeService {
                 }
             },
             series: dataSeries
-        }
+        };
 
 
         return { resultData: resultData, chartOptions: chartOptions, chartInfo: chartInfo };
