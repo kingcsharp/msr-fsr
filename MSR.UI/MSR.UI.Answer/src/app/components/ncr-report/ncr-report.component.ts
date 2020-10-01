@@ -25,8 +25,6 @@ export class NcrReportComponent implements OnInit {
 
     this.generateMonitorSummaries();
 
-    console.log(this.taskSummaries);
-    
   }
 
   generateMonitorSummaries(){

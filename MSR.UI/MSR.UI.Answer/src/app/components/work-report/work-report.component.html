@@ -1,1 +1,80 @@
-<p>work-report works!</p>
+<div class="row">
+    <div class="col-12 workreport-control">
+        <div class="row mb-4">
+            <div class="col-6 border p-2">Report Type:</div>
+            <div class="col-6 border p-2"><p-dropdown [options]="reportTypeOptions" [(ngModel)]="selectedReportType" placeholder="Select Report Type"></p-dropdown></div>
+            <div class="col-6 border p-2">Purchase Item:</div>
+            <div class="col-6 border p-2">{{ WorkOrder.purchase?.id}}</div>
+            <div class="col-6 border p-2" *ngIf="selectedReportType === 'TechnicalSummary'">Show Procedure Steps?:</div>
+            <div class="col-6 border p-2" *ngIf="selectedReportType === 'TechnicalSummary'"><p-dropdown [options]="yesOrNoOptions" [(ngModel)]="selectedShowProcedureStepOption"></p-dropdown></div>
+            <div class="col-6 border p-2" *ngIf="selectedReportType === 'PurchaseSummary'">Show Shipping Procedure Purchase Items?:</div>
+            <div class="col-6 border p-2" *ngIf="selectedReportType === 'PurchaseSummary'"><p-dropdown [options]="yesOrNoOptions" [(ngModel)]="selectedShowPurchaseItemOption"></p-dropdown></div>
+        </div>
+    </div>
+    <div class="col-12" *ngIf="selectedReportType === 'PurchaseSummary'">
+        <div class="row mb-4" *ngIf="selectedShowPurchaseItemOption === true">
+            <div class="col-2 border font-weight-bold">PO #</div>
+            <div class="col-2 border font-weight-bold">Purchase Item #</div>
+            <div class="col-2 border font-weight-bold">Single PO# (Customer Purchase #)</div>
+            <div class="col-2 border font-weight-bold">Blanket PO #</div>
+            <div class="col-1 border font-weight-bold">Line Item</div>
+            <div class="col-1 border font-weight-bold">Part ID</div>
+            <div class="col-1 border font-weight-bold">Serial #</div>
+            <div class="col-1 border font-weight-bold">Qty #</div>
+            <div class="col-2 border">{{WorkOrder.purchase?.purchaseOrder?.id}}</div>
+            <div class="col-2 border">{{WorkOrder.purchase?.id}}</div>
+            <div class="col-2 border">{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</div>
+            <div class="col-2 border"></div>
+            <div class="col-1 border"></div>
+            <div class="col-1 border">{{WorkOrder.workOrderParts[0].id}}</div>
+            <div class="col-1 border">{{WorkOrder.workOrderParts[0].serialNumber}}</div>
+            <div class="col-1 border">{{WorkOrder.purchase?.qty}}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-6 border">Supplier: </div><div class="col-6 border">MSR-FSR</div>
+            <div class="col-6 border">Customer: </div><div class="col-6 border">{{ WorkOrder.purchase?.purchaseOrder?.customer?.name}}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-6 border font-weight-bold">Product Name (#):</div><div class="col-6 border">{{  WorkOrder.product?.part?.name}}</div>
+            <div class="col-6 border font-weight-bold">Procedure Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.procedure?.name}}</div>
+            <div class="col-6 border font-weight-bold">Current Owner's Part Name (#):</div><div class="col-6 border">{{ WorkOrder.product?.name}}</div>
+            <div class="col-6 border font-weight-bold">Fill Date:</div><div class="col-6 border">{{ WorkOrder.acutalEndDate}}</div>
+        </div>
+    </div>
+    <div class="col-12" *ngIf="selectedReportType === 'TechnicalSummary'">
+        <div class="row mb-4">
+            <div class="col-3 border">MSR-FSR</div>
+            <div class="col-9 border">
+                <div class="row">
+                    <div class="col-12 border">{{ WorkOrder.product?.procedure?.name}}</div>
+                    <div class="col-12 border">Customer Part # {{WorkOrder.product?.part?.partNumber}}, (S/N:{{WorkOrder.workOrderParts[0].serialNumber}}), {{  WorkOrder.product?.part?.name}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12" *ngIf="selectedReportType === 'TechnicalSummary'">
+        <div class="row mb-4">
+            <div class="col-12" *ngFor="let workOrderTask of WorkOrder.workOrderTasks">
+                <div class="row">
+                    <div class="col-1 border p-2">
+                        {{workOrderTask.id}}
+                    </div>
+                    <div class="col-11 border p-2">
+                        <div class="col-12 mb-2">{{workOrderTask.procedureStep?.stepText}}</div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-8 border font-weight-bold">Desciption</div><div class="col-4 border font-weight-bold">Result</div>
+                                <div class="col-12">
+                                    <div class="row" *ngFor="let workOrderTaskMonitor of workOrderTask.workOrderTaskMonitors">
+                                        <div class="col-8 border">{{workOrderTaskMonitor.procedureStepMonitor?.description }}</div>
+                                        <div class="col-4 border">{{workOrderTaskMonitor.textVal}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -64,6 +64,10 @@ ol{
 
 @media print {
 
+    .workreport-control{
+        display: none;
+    }
+    
     .printotherreport-dropdown{
         display:none;
     }
