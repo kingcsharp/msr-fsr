@@ -67,12 +67,19 @@ namespace MSR.Infrastructure.Resources.AWS
             return Upload(file.FileContents, _s3Information.FileBucketName, _s3Information.FileBucketName, file.Name);
         }
 
-        public string GetURL(string key, int expiresInSeconds)
+        public string GetURL(string key, int expiresInSeconds = 6000)
         {
+            var s3Key = key;
+            if (key.Contains(_s3Information.AWSURL))
+            {
+                //Get the Last part
+                s3Key = key.Replace(_s3Information.AWSURL, "");
+            }
+
             return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest()
             {
                 BucketName = _s3Information.FileBucketName,
-                Key = key,
+                Key = s3Key,
                 Expires = DateTime.Now.AddSeconds(expiresInSeconds)
             });
         }

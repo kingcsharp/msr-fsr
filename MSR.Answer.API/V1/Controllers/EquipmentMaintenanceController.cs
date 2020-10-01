@@ -1,5 +1,3 @@
-﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -8,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using MSR.Answer.API.Attributes;
 using MSR.Domain.Models;
-using MSR.Domain.Views;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;

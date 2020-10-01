@@ -93,7 +93,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
     TooltipModule.forRoot(),
     NgxDocViewerModule,
     CKEditorModule,
-    HighchartsChartModule
+    TableModule,
+    HighchartsChartModule,
   ],
   providers: [DatePipe]
 })

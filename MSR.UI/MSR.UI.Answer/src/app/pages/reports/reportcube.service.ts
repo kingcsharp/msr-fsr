@@ -36,7 +36,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: 'shipdate', label: 'Date Completed', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'shipdate', label: 'Date Completed', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
                     new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'ncdisposition', label: 'NC Disposition', visible: true, type: this.enumColumnType.String })
                 ];
@@ -46,7 +46,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: 'shipdate', label: 'Date Completed', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'shipdate', label: 'Date Completed', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
                     new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number }),
                     new ColumnsSaved({ id: 'ncdisposition', label: 'NC Disposition', visible: true, type: this.enumColumnType.String })
                 ];
@@ -54,9 +54,9 @@ export class ReportCubeService {
                 return [
                     new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: 'wocreationdate', label: 'Created', visible: true, type: this.enumColumnType.Date }),
-                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
-                    new ColumnsSaved({ id: 'shipdate', label: 'Ship Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'wocreationdate', label: 'Created', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+                    new ColumnsSaved({ id: 'shipdate', label: 'Ship Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
                     new ColumnsSaved({ id: 'msrfsrfacility', label: 'Facility', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'customername', label: 'Customer', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'specno', label: 'Spec #', visible: true, type: this.enumColumnType.String }),
@@ -68,7 +68,7 @@ export class ReportCubeService {
             case 'WorkInProcessbyWorkOrder':
                 return [
                     new ColumnsSaved({ id: 'id', label: 'WO#', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
                     new ColumnsSaved({ id: 'details', label: 'Details', visible: true, type: this.enumColumnType.String })
                 ];
             case 'MonitorsHistorybyWorkOrder':
@@ -86,9 +86,9 @@ export class ReportCubeService {
                 return [
                     new ColumnsSaved({ id: 'wonumber', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.Number }),
-                    new ColumnsSaved({ id: 'wocreationdate', label: 'Creation Date', visible: true, type: this.enumColumnType.Date }),
-                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date }),
-                    new ColumnsSaved({ id: 'shipdate', label: 'Ship Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'wocreationdate', label: 'Creation Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+                    new ColumnsSaved({ id: 'duedate', label: 'Due Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+                    new ColumnsSaved({ id: 'shipdate', label: 'Ship Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
                     new ColumnsSaved({ id: 'msrfsrfacility', label: 'Facility', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'customername', label: 'Customer', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'customerpartnumber', label: 'Customer Part #', visible: true, type: this.enumColumnType.String }),
@@ -96,10 +96,10 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serial', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
-                    // new ColumnsSaved({ id: cubeFinancial+'', label: 'Invoice #', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'invoicedate', label: 'Invoice Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'invoicenumber', label: 'Invoice #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'invoicedate', label: 'Invoice Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
                     new ColumnsSaved({ id: 'invoicedescription', label: 'Invoice Description', visible: true, type: this.enumColumnType.String }),
-                    // new ColumnsSaved({ id: cubeFinancial+'', label: 'Qty', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'fillqty', label: 'Qty', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
@@ -110,7 +110,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'wonumber', label: 'Work Order Item', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'msrfsrfacility', label: 'Location', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'kitname', label: 'Product Name', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'shipdate', label: 'WO Complete Date', visible: true, type: this.enumColumnType.Date }),
+                    new ColumnsSaved({ id: 'shipdate', label: 'WO Complete Date', visible: true, type: this.enumColumnType.Date, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
                     new ColumnsSaved({ id: 'wtax', label: 'Total', visible: true, type: this.enumColumnType.String })
                 ];
             case 'RevenuebyCustomerbyTimePeriod':
@@ -152,13 +152,19 @@ export class ReportCubeService {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'MonitorsHistorybyWorkOrder':
                 const workInProcessbyWorkOrder = data.map(elem => {
-                    // we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
-                    elem['partname'] = elem['CubePartsmonitors.partname'].map((x) => {
-                        return {
-                            name: x,
-                            id: x
-                        };
-                    });
+                    //we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
+                    const partName = elem['CubePartsmonitors.partname'];
+                    if (partName === null) {
+                        elem['partname'] = [];
+                    } else {
+                        elem['partname'] = elem['CubePartsmonitors.partname'].map((x) => {
+                            return {
+                                name: x,
+                                id: x
+                            }
+                        });
+                    }
+
                     return elem;
                 });
                 return workInProcessbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
@@ -413,7 +419,7 @@ export class ReportCubeService {
                 }
             },
             series: dataSeries
-        };
+        }
 
 
         return { resultData: resultData, chartOptions: chartOptions, chartInfo: chartInfo };

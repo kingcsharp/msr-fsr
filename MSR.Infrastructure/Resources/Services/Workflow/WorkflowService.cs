@@ -149,6 +149,24 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 }
             }
 
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.ProductApproval))
+            {
+                var prodsCount = await _unitOfWork.ProductApprovals.CountAsync();
+                if (prodsCount > 0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Table = (int)EnumApprovalTables.ProductApproval, Count = prodsCount });
+                }
+            }
+
+            if (CurrentUser.CanReadActivity(EnumApprovalTables.DocumentApproval))
+            {
+                var docsCount = await _unitOfWork.DocumentApprovals.CountAsync();
+                if (docsCount > 0)
+                {
+                    pendingNotificationItems.Add(new PendingNotificationItem() { Table = (int)EnumApprovalTables.DocumentApproval, Count = docsCount });
+                }
+            }
+
             var result = new PendingApprovalNotification()
             {
                 Items = pendingNotificationItems
