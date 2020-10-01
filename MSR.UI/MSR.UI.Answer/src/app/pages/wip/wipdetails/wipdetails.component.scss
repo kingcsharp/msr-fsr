@@ -1,3 +1,16 @@
+.ui-tabview .ui-tabview-panels {
+  background-color: #ffffff;
+  padding: .5em;
+  border: 1px solid #c8c8c8;
+  color: #333333;
+}
+.content {
+  padding-left:0
+}
+.custom-panel {
+  min-height: 79vh;
+}
+
 slide {
     width: 200px !important;
     height: 80px !important;
@@ -121,6 +134,18 @@ ol{
   color:#000;
   background-color: #ffc!important;
 }
+.wip-details-bottom {
+  min-height:33vh;
+  max-height:33vh;
+  height:33vh;
+  overflow-y:auto
+}
+.carousel-inner {
+  position: relative;
+    width: 96.75%;
+    overflow: hidden;
+}
+
 
 /* updates for tablets */
 
