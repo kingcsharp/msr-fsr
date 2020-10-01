@@ -109,7 +109,14 @@ namespace MSR.Application.Hubs
         public override async Task OnConnectedAsync()
         {
             var name = Context.User.Identity.Name;
-            if (name != null) {
+            if (name == null)
+            {
+                // heartbeat
+                await Groups.AddToGroupAsync(Context.ConnectionId, "answer");
+                Connections.Add("ping", Context.ConnectionId);
+            }
+            else
+            {
                 await Groups.AddToGroupAsync(Context.ConnectionId, "answer");
                 Connections.Add(name, Context.ConnectionId);
             }
