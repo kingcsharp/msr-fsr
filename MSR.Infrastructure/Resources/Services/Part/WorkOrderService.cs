@@ -10,6 +10,7 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -22,11 +23,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IStatusHelper _statusHelper;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IStatusHelper statusHelper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _statusHelper = statusHelper;
         }
 
         public async Task<ICollection<Domain.Models.WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
@@ -123,7 +126,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var wom = _mapper.Map<WorkOrderModel>(wo);
 
                 // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-                wom.Status = WorkOrderService.TranslateWOStatusToViewModel(wom.WorkOrderTasks);
+                wom.Status = TranslateWOStatusToViewModel(wom.WorkOrderTasks);
 
                 foreach (var wot in wom.WorkOrderTasks) {
 
@@ -151,7 +154,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             if (command.ScheduledStartDate == null || command.ScheduledStartDate.Ticks == 0)
@@ -188,7 +193,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
-                throw new DomainException($"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(Domain.Models.WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = await _unitOfWork.WorkOrders.FirstOrDefaultAsync(false, i => i.Id == command.Id);
@@ -221,7 +228,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanApprove))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderModel)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             _unitOfWork.WorkOrders.Delete(false, current.Id);
@@ -294,7 +303,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderPart)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderPart)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = _unitOfWork.WorkOrderParts.Query().Where(x => x.Id == command.WorkOrderPartId);
@@ -319,7 +330,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
@@ -339,7 +352,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = await _unitOfWork.WorkOrderTasks.FirstOrDefaultAsync(false, i => i.Id == command.Id);
@@ -382,7 +397,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 8   Closed
             // 3   Complete
             // 6   Rejected
-            int[] completed = { 3, 4, 6, 8 };
+            int[] completed = _statusHelper.GetCompletedIds();
             if (workordertask.Status.Name.ToUpper().Equals("IN PROGRESS"))
             {
                 if (!workordertask.WorkOrder.ActualStartDate.HasValue)
@@ -412,7 +427,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))
             {
-                throw new DomainException($"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}");
+                throw new DomainException(
+                    $"Permission denied for {nameof(WorkOrderTask)} uid {CurrentUser.GetId()}",
+                    DomainError.BadRequest);
             }
 
             var current = await _unitOfWork.WorkOrderTaskMonitors.FirstOrDefaultAsync(false, i => i.Id == command.Id);
@@ -669,7 +686,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return rows.Select(x => _mapper.Map<StatusModel>(x)).ToList();
         }
 
-        public static string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks)
+        private string TranslateWOStatusToViewModel(ICollection<WorkOrderTaskModel> tasks)
         {
             // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
             // This field is calculated based on the summation of the statuses
@@ -685,47 +702,53 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 9   Requested
             // 10  Assigned
             // 11  Waiting to Start
-            int[] completed = { 3, 6, 8 };
+            int[] completed = _statusHelper.GetCompletedIds();
             string status;
-            if (tasks.Where(x => x.StatusId == 2).Any())
+            if (tasks.Where(x => x.StatusId ==
+                    _statusHelper.GetInProgress().Id)
+                .Any())
             {
-                status = "In Progress";
+                status = _statusHelper.GetInProgress().Name;
             }
-            else if (tasks.Where(x => x.StatusId == 4).Any())
+            else if (tasks.Where(x => x.StatusId ==
+                    _statusHelper.GetCancelled().Id)
+                .Any())
             {
-                status = "Cancelled";
+                status = _statusHelper.GetCancelled().Name;
             }
             else if (tasks.All(x => completed.Contains(x.StatusId)))
             {
-                status = "Completed";
+                status = _statusHelper.GetCompleted().Name;
             }
             else
             {
-                status = "Waiting to Start";
+                status = _statusHelper.GetWaitingToStart().Name;
             }
             return status;
         }
 
-        public static int TranslateWOTaskStatusToViewModel(WorkOrderTaskModel task)
+        public int TranslateWOTaskStatusToViewModel(WorkOrderTaskModel task)
         {
             // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-            int[] completed = { 3, 6, 8 };
+            int[] completed = _statusHelper.GetCompletedIds();
             int status;
-            if (task.StatusId == 2)
+            if (task.StatusId ==
+                    _statusHelper.GetInProgress().Id)
             {
-                status = 2;
+                status = _statusHelper.GetInProgress().Id;
             }
-            else if (task.StatusId == 4)
+            else if (task.StatusId ==
+                    _statusHelper.GetCancelled().Id)
             {
-                status = 4;
+                status = _statusHelper.GetCancelled().Id;
             }
             else if (completed.Contains(task.StatusId))
             {
-                status = 3;
+                status = _statusHelper.GetCompleted().Id;
             }
             else
             {
-                status = 11;
+                status = _statusHelper.GetWaitingToStart().Id;
             }
             return status;
         }

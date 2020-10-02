@@ -25,7 +25,7 @@ namespace MSR.Domain.Models
         /// </summary>
         [DataMember(Name="workOrderId")]
         [Required]
-        public int WorkOrderId { get; set; }
+        public int? WorkOrderId { get; set; }
 
         /// <summary>
         /// This is a combination of: {CustomerName}-{CustomerPurchaseNumber}

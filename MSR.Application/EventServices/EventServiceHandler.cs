@@ -101,7 +101,7 @@ namespace MSR.Application.EventServices
 
         public async Task HandleAsync(WorkOrderCreateEvent handledEvent, CancellationToken cancellationToken = default)
         {
-            try 
+            try
             {
                 Uri baseUri = new Uri(_processorConfig.APIURL);
                 UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
