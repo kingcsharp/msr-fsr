@@ -23,13 +23,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IStatusHelper _statusHelper;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IStatusHelper statusHelper)
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _statusHelper = statusHelper;
         }
 
         public async Task<ICollection<Domain.Models.WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
@@ -74,7 +72,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            if (command.assignedToId.HasValue) {
+            if (command.assignedToId.HasValue)
+            {
                 query = query.Where(x =>
                     x.WorkOrderTasks.Any(y =>
                         y.AssignedTo == command.assignedToId));
@@ -128,14 +127,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
                 wom.Status = TranslateWOStatusToViewModel(wom.WorkOrderTasks);
 
-                foreach (var wot in wom.WorkOrderTasks) {
+                foreach (var wot in wom.WorkOrderTasks)
+                {
 
                     // enforce sane data by limiting the status IDs returned by the API
                     wot.StatusId = TranslateWOTaskStatusToViewModel(wot);
 
                     var wotmList = new List<WorkOrderTaskMonitorModel>();
                     int i = 1; // Monitor Number starts at 1
-                    foreach (var wotm in wot.WorkOrderTaskMonitors.OrderBy(x => x.Id)) {
+                    foreach (var wotm in wot.WorkOrderTaskMonitors.OrderBy(x => x.Id))
+                    {
                         wotm.MonitorNumber = i;
                         wotm.WorkOrderTask = null; // avoid loops
                         wotmList.Add(wotm);
@@ -283,14 +284,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
             int count = 1;
             int quantity = command.Qty;
 
-            if (command.SerializeIndividually && command.Qty > 1) {
+            if (command.SerializeIndividually && command.Qty > 1)
+            {
                 count = command.Qty;
                 quantity = 1;
             }
 
             List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
-            for (int i = 0; i < count; i++) {
-                var n = new WorkOrderPartModel() {
+            for (int i = 0; i < count; i++)
+            {
+                var n = new WorkOrderPartModel()
+                {
                     PartId = product.PartId
                 };
                 parts.Add(n);
@@ -397,7 +401,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 8   Closed
             // 3   Complete
             // 6   Rejected
-            int[] completed = _statusHelper.GetCompletedIds();
+            int[] completed = { 3, 4, 6, 8 };
             if (workordertask.Status.Name.ToUpper().Equals("IN PROGRESS"))
             {
                 if (!workordertask.WorkOrder.ActualStartDate.HasValue)
@@ -463,7 +467,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
         {
-            var gwo = new GetWorkOrder() {
+            var gwo = new GetWorkOrder()
+            {
                 completedOnly = isHistory
             };
 
@@ -702,27 +707,23 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 9   Requested
             // 10  Assigned
             // 11  Waiting to Start
-            int[] completed = _statusHelper.GetCompletedIds();
+            int[] completed = { 3, 6, 8 };
             string status;
-            if (tasks.Where(x => x.StatusId ==
-                    _statusHelper.GetInProgress().Id)
-                .Any())
+            if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.InProgress))
             {
-                status = _statusHelper.GetInProgress().Name;
+                status = EnumUtils.GetDescription(EnumStatusSteps.InProgress);
             }
-            else if (tasks.Where(x => x.StatusId ==
-                    _statusHelper.GetCancelled().Id)
-                .Any())
+            else if (tasks.Any(x => x.StatusId == (int)EnumStatusSteps.Cancelled))
             {
-                status = _statusHelper.GetCancelled().Name;
+                status = EnumUtils.GetDescription(EnumStatusSteps.Cancelled);
             }
             else if (tasks.All(x => completed.Contains(x.StatusId)))
             {
-                status = _statusHelper.GetCompleted().Name;
+                status = EnumUtils.GetDescription(EnumStatusSteps.Complete);
             }
             else
             {
-                status = _statusHelper.GetWaitingToStart().Name;
+                status = EnumUtils.GetDescription(EnumStatusSteps.WaitingtoStart);
             }
             return status;
         }
@@ -730,25 +731,23 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public int TranslateWOTaskStatusToViewModel(WorkOrderTaskModel task)
         {
             // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
-            int[] completed = _statusHelper.GetCompletedIds();
+            int[] completed = { 3, 6, 8 };
             int status;
-            if (task.StatusId ==
-                    _statusHelper.GetInProgress().Id)
+            if (task.StatusId == (int)EnumStatusSteps.InProgress)
             {
-                status = _statusHelper.GetInProgress().Id;
+                status = (int)EnumStatusSteps.InProgress;
             }
-            else if (task.StatusId ==
-                    _statusHelper.GetCancelled().Id)
+            else if (task.StatusId == (int)EnumStatusSteps.Cancelled)
             {
-                status = _statusHelper.GetCancelled().Id;
+                status = (int)EnumStatusSteps.Cancelled;
             }
             else if (completed.Contains(task.StatusId))
             {
-                status = _statusHelper.GetCompleted().Id;
+                status = (int)EnumStatusSteps.Complete;
             }
             else
             {
-                status = _statusHelper.GetWaitingToStart().Id;
+                status = (int)EnumStatusSteps.WaitingtoStart;
             }
             return status;
         }
