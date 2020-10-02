@@ -167,6 +167,7 @@ export class WipdetailsComponent implements OnInit {
     let inputElement = <HTMLInputElement>document.getElementById('serialnumber' + index);
     inputElement.disabled = true;
     inputElement.value = originalSerialNumber.serialNumber;
+    this.workOrderModel.workOrderParts.find(s => s.id === partId).serialNumber = originalSerialNumber.serialNumber;
 
     let changebuttonElement = <HTMLInputElement>document.getElementById('changebutton' + index);
     changebuttonElement.classList.remove('d-none');
