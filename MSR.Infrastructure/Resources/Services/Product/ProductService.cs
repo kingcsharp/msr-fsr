@@ -84,9 +84,9 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var product = await productQuery
                         .Select(x => _mapper.Map<ProductModel>(x))
                         .ToListAsync();
-            }
+            
 
-            return await GetProductsAsync();
+            return product;
         }
 
 
