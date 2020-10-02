@@ -110,7 +110,7 @@
                     {{invoiceModel.lastUpdatedByName }}
                 </td>
                 <td>
-                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Par" data-cy="editRow"
+                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Invoice" data-cy="editRow"
                         (click)="showDialog(invoiceModel)"></i>
                     <i *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices(invoiceModel.id)"
                         tooltip="Download Invoice" class="far fa-download pointer"></i>
@@ -158,7 +158,7 @@
                             <input type="number" id="taxPercentage" name="taxPercentage"
                                 [(ngModel)]="currentInvoice.taxPercentage" data-validate="parsley"
                                 data-parsley-trigger="change" data-parsley-required="true"
-                                data-parsley-range="[0, 100]"	
+                                data-parsley-range="[0, 100]"
                                 class="form-control input-transparent" placeholder="Tax Percentage"
                                 data-cy="taxPercentage-input">
                         </div>
