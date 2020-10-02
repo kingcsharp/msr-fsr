@@ -30,10 +30,11 @@ export class CertificationsComponent implements OnInit {
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
-      new ColumnsSaved({ id: 'employeeName', label: 'Employee Name', visible: true }),
+      new ColumnsSaved({ id: 'id', label: 'Id', visible: false }),
+      new ColumnsSaved({ id: 'employeeName', label: 'Employee Name', visible: true}),
       new ColumnsSaved({ id: 'certificationName', label: 'Certification', visible: true}),
-      new ColumnsSaved({ id: 'certificationFromDate', label: 'Begin Date', visible: true }),
-      new ColumnsSaved({ id: 'certificationToDate', label: 'End Date', visible: true }),
+      new ColumnsSaved({ id: 'certificationFromDate', label: 'From Date', visible: true }),
+      new ColumnsSaved({ id: 'certificationToDate', label: 'To Date', visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true })
     ];
 

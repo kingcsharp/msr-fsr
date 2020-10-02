@@ -63,23 +63,33 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return _mapper.Map<ProductModel>(approval);
         }
 
-        public async Task<ICollection<ProductModel>> GetProductAsync(int? id)
+        public async Task<ICollection<ProductModel>> GetProductAsync(GetProduct command)
         {
-            if (!id.HasValue)
+            if (command.Id.HasValue)
             {
-                return await GetProductsAsync();
-            }
-
-            var product = await _unitOfWork.Products
+                return await _unitOfWork.Products
                         .Query()
                         .Include(x => x.Customer)
                         .Include(x => x.Part)
-                        .Include(x=>x.Procedure)
-                        .Where(x => x.Id == id)
+                        .Include(x => x.Procedure)
+                        .Where(x => x.Id == command.Id.Value)
                         .Select(x => _mapper.Map<ProductModel>(x))
                         .ToListAsync();
+            }
 
-            return product;
+            if (command.CustomerId.HasValue)
+            {
+                return await _unitOfWork.Products
+                        .Query()
+                        .Include(x => x.Customer)
+                        .Include(x => x.Part)
+                        .Include(x => x.Procedure)
+                        .Where(x => x.CustomerId == command.CustomerId.Value)
+                        .Select(x => _mapper.Map<ProductModel>(x))
+                        .ToListAsync();
+            }
+
+            return await GetProductsAsync();
         }
 
 

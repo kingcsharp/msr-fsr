@@ -14,6 +14,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
 {
@@ -87,12 +88,13 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             {
                 //They can approve so just put it in the tables
                 var purchaseOrder = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(command);
+                purchaseOrder.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Name == "Open");
                 purchaseOrder.Revision = 1;
 
                 await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrder);
                 await _unitOfWork.SaveChangesAsync();
 
-                var products = _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id));
+                var products = await _unitOfWork.Products.Query().Where(i => command.Products.Contains(i.Id)).ToListAsync();
 
                 foreach (var product in products)
                 {
@@ -107,7 +109,10 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 }
 
                 await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
-                return _mapper.Map<PurchaseOrderView>(purchaseOrder);
+                var retPO = _mapper.Map<PurchaseOrderView>(purchaseOrder);
+                retPO.Products = products.Select(i => _mapper.Map<PurchaseOrderProductView>(i)).ToList();
+                retPO.CustomerName = (await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == command.CustomerId)).Name;
+                return retPO;
             }
             else
             {
@@ -152,7 +157,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 purchaseOrder.Revision = purchaseOrder.Revision == null ? 1 : purchaseOrder.Revision + 1;
                 _unitOfWork.PurchaseOrders.Update(purchaseOrder);
 
-                var productIds = _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id).Select(i => i.ProductId);
+                var productIds = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id).Select(i => i.ProductId).ToListAsync();
 
                 //Exists in DB but not in list: Remove
                 var productsToRemove = productIds.Except(command.Products);

@@ -29,7 +29,7 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetProduct command, CancellationToken cancellationToken = default)
         {
-            var ret = await _productService.GetProductAsync(command.Id);
+            var ret = await _productService.GetProductAsync(command);
             return new CommandResponse<IEnumerable<ProductModel>>(ret);
         }
 

@@ -14,7 +14,7 @@ using AutoMapper;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Logging;
 
 namespace MSR.Application.EventServices
 {
@@ -29,6 +29,7 @@ namespace MSR.Application.EventServices
         private GeneralInformation _processorConfig;
         private IWorkOrderService _workOrderService;
         private IMapper _mapper;
+        private ILogger _logger;
 
         public EventServiceHandler(
             ICustomerService customerService,
@@ -37,7 +38,8 @@ namespace MSR.Application.EventServices
             GeneralInformation processorConfig,
             IWorkOrderService workOrderService,
             IMapper mapper,
-            IMessageHubClient messageHub)
+            IMessageHubClient messageHub,
+            ILogger<EventServiceHandler> logger)
         {
             _customerService = customerService;
             _locationService = locationService;
@@ -46,6 +48,7 @@ namespace MSR.Application.EventServices
             _messageHub = messageHub;
             _workOrderService = workOrderService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task HandleAsync(ImportEvent handledEvent, CancellationToken cancellationToken = default)
@@ -75,7 +78,6 @@ namespace MSR.Application.EventServices
                         throw new DomainException("Import function not found for " +
                             Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem));
                 }
-
                 // Note that the current user is set during the message envelope decoding process.
                 // This means that the security hole of impersonating a user simply by setting the ID
                 // in the SQS message is mitigated.
@@ -99,7 +101,8 @@ namespace MSR.Application.EventServices
 
         public async Task HandleAsync(WorkOrderCreateEvent handledEvent, CancellationToken cancellationToken = default)
         {
-            try {
+            try 
+            {
                 Uri baseUri = new Uri(_processorConfig.APIURL);
                 UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
                 await _messageHub.Connect(hubUri.ToString());
@@ -116,6 +119,8 @@ namespace MSR.Application.EventServices
                 WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
                 string wonum = IWorkOrderService.GetWorkOrderItemNumber(model);
 
+                _logger.LogInformation($"Finished importing WorkOrder: {wonum}");
+
                 _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
                 {
                     Message = $"Work Order Created: {wonum}",
@@ -124,6 +129,7 @@ namespace MSR.Application.EventServices
             }
             catch (Exception e)
             {
+                _logger.LogError(e, e.Message);
                 string msg = "Work Order Creation FAILED. " +
                              $"ERROR: {e.Message}";
                 _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
@@ -132,7 +138,6 @@ namespace MSR.Application.EventServices
                     Status = EnumToasterStatus.Error
                 });
                 // propogate up to log the error
-                throw;
             }
         }
     }
