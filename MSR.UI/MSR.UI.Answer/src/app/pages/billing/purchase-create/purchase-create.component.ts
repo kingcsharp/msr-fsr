@@ -225,7 +225,7 @@ export class PurchaseCreateComponent implements OnInit {
           .subscribe(responseHandler((resp) => {
             length--;
             if (length === 0) {
-              this.router.navigate(['app/billing/purchaseorder']);
+              this.router.navigate(['app/pricing/purchaseorder']);
             }
           }));
         });

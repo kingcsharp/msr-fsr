@@ -277,6 +277,8 @@
                   [(ngModel)]="purchaseItems[i].mttn"
                   class="form-control input-transparent disable"
                   name="purchaseItem[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER" type="text"
+                  data-parsley-trigger="change" data-parsley-maxlength="10" data-parsley-maxlength-message="MTTN must be 10 characters or less."
+                  data-parsley-required="false"
                 >
               </td>
               <td>
