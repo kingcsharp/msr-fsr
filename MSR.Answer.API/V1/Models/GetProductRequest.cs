@@ -9,5 +9,6 @@
         /// Get product by Id
         /// </summary>
         public int? Id { get; set; }
+        public int? CustomerId { get; set; }
     }
 }
