@@ -92,6 +92,7 @@ export class WipstatusWrapperComponent implements OnInit {
 
     if (this.takeOverSteps) {
 
+      this.closeTakeOverAsUserConfirmationDialog();
       this.globals.showLoader(true);
       this.userService.loggedInUser(env.apiVersion).subscribe(responseHandler(response => {
 
