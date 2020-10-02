@@ -5,7 +5,7 @@ import {
   Customer, Procedure, PurchaseModel, WorkOrderPartService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
    ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel} from '../../../services/api.client.generated';
+   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
@@ -18,7 +18,8 @@ import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/sel
   styleUrls: ['./wipdetails.component.scss'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
-  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService, LocationService, UserService]
+  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService, 
+    LocationService, UserService, UserService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -39,8 +40,8 @@ export class WipdetailsComponent implements OnInit {
   showCancelRemainingStepsDialog: boolean = false;
   activeSlideIndex = 0;
 
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, public globals: Globals, private router: Router,
-    private workOrderTaskService: WorkOrderTaskService) { }
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, 
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
 
   ngOnInit(): void {
 
@@ -79,7 +80,6 @@ export class WipdetailsComponent implements OnInit {
 
   cleanData(workOrderModel: WorkOrderModel): WorkOrderModel {
 
-    workOrderModel.workOrderTasks.sort((a, b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
     workOrderModel.workOrderTasks.map(s => {
 
       if (s.taskIsRunning === null || s.taskIsRunning === undefined) {
@@ -234,4 +234,21 @@ export class WipdetailsComponent implements OnInit {
 
   }
 
+  takeOverThisStep() {
+    console.log(this.workOrderTaskInProgress);
+    let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+      assignedUserId: this.globals.getCurrentUser().id,
+      status: this.workOrderTaskInProgress.status.name,
+      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
+      workOrderTaskId: this.workOrderTaskInProgress.id
+    } as IUpdateWorkOrderTaskRequest);
+
+    this.globals.showLoader(true);
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+      this.workOrderTaskInProgress.assignedTo = this.globals.getCurrentUser().id;
+      this.workOrderTaskInProgress.assignedToUser = this.globals.getCurrentUser();
+    }));
+  }
 }

@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IStatusModel, IUpdateWorkOrderTaskRequest, StatusModel, UpdateWorkOrderTaskRequest,
-  WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel } from '../../services/api.client.generated';
+import {
+  IStatusModel, IUpdateWorkOrderTaskRequest, StatusModel, UpdateWorkOrderTaskRequest,
+  WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel
+} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 
@@ -30,6 +32,8 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime, true);
+
     if (this.workOrderTaskInProgress.taskIsRunning === true) {
       this.startTask();
     }
@@ -53,20 +57,22 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   resumeAndStartTask() {
 
-    if (this.workOrderTaskInProgress.taskRunningSince !== undefined && this.workOrderTaskInProgress.taskRunningSince !== null) {
-      this.workOrderTaskInProgress.totalTaskTime += Math.abs(Math.floor((new Date().getTime() - this.workOrderTaskInProgress.taskRunningSince.getTime()) / 1000));
-    }
-
     this.workOrderTaskInProgress.taskIsRunning = true;
     this.workOrderTaskInProgress.taskRunningSince = new Date();
-    this.stepTimer = setInterval( () => {
+    this.stepTimer = setInterval(() => {
 
-      this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime++;
-      this.stepMinutes = Math.floor(this.stepSeconds / 60);
-      this.stepHours = Math.floor(this.stepMinutes / 60);
+      this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime, true);
 
     }, 1000);
     this.saveTaskTimerState(false);
+
+  }
+
+  setTimerDisplay(seconds: number, incrementTotalTaskTime: boolean) {
+
+    this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime++;
+    this.stepMinutes = Math.floor(this.stepSeconds / 60);
+    this.stepHours = Math.floor(this.stepMinutes / 60);
 
   }
 
@@ -103,7 +109,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
         totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
         taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
         workOrderTaskId: this.workOrderTaskInProgress.id
-       } as IUpdateWorkOrderTaskRequest);
+      } as IUpdateWorkOrderTaskRequest);
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(workOrderTaskPatchResponse => {
 
         if (closeStep) {
