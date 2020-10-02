@@ -69,8 +69,8 @@ export class RoleComponent implements OnInit {
   }
 
   getRoles() {
+    this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).subscribe(responseHandler(response => {
-      this.globals.showLoader(true);
       this.data = response.object;
     }));
   }
