@@ -76,15 +76,15 @@
                   'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
                   'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
-              <div class="carousel-step-title">{{ workOrderTask.procedureStep?.title}}</div>
+              <div class="carousel-step-title">{{ workOrderTask.procedureStep?.title}} {{workOrderTask.status.name}}</div>
           </slide>
         </carousel>
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
         [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
         <div class="d-flex col-6 justify-content-start pl-0">
-          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
-            [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="workOrderTaskInProgress.assignedTo === this.globals.getCurrentUser().id"
+          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks" [currentUser]="globals.getCurrentUser()"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id"
             (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
             [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
           </workordertasktimer-wrapper>
