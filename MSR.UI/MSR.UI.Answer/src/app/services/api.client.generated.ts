@@ -9088,6 +9088,9 @@ export enum EnumMenuItem {
     WIPMenu = 30,
     WipStatus = 31,
     Roles = 32,
+    WorkOrders = 33,
+    WorkOrderParts = 34,
+    WorkOrderTasks = 35,
 }
 
 export class FileModel implements IFileModel {
