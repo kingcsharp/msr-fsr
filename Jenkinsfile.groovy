@@ -152,6 +152,18 @@ pipeline {
             }
         }
 
+        stage("Deploy Rollbar") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=\"${env.BRANCH_NAME}\" \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
+                }
+            }
+        }
 
         stage("Promote API to UAT") {
             agent { label 'master'}
