@@ -1,3 +1,16 @@
+.ui-tabview .ui-tabview-panels {
+  background-color: #ffffff;
+  padding: .5em;
+  border: 1px solid #c8c8c8;
+  color: #333333;
+}
+.content {
+  padding-left:0
+}
+.custom-panel {
+  min-height: 79vh;
+}
+
 slide {
     width: 200px !important;
     height: 80px !important;
@@ -67,11 +80,11 @@ ol{
     .workreport-control{
         display: none;
     }
-    
+
     .printotherreport-dropdown{
         display:none;
     }
-    
+
     .report.ui-dialog{
         max-width: none;
         width: 100% !important;
@@ -97,3 +110,62 @@ ol{
         height:100% !important;
     }
 }
+.carousel-caption {
+  color:#000
+}
+.carousel .item {
+  height: 60px !important;
+  width: 150px !important;
+  display:table !important
+}
+.carousel-step-title {
+  font-size: 14px;
+  font-weight:500;
+  margin: 0 auto;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.step-complete {
+  color:#000;
+  background-color: #cfc!important;
+}
+.step-waiting {
+  color:#000;
+  background-color: #ffc!important;
+}
+.wip-details-bottom {
+  min-height:33vh;
+  max-height:33vh;
+  height:33vh;
+  overflow-y:auto
+}
+.carousel-inner {
+  position: relative;
+    width: 96.75%;
+    overflow: hidden;
+}
+
+
+/* updates for tablets */
+
+@media (max-width: 1024px) {
+  .wip-detail-header h1 {
+    font-size:1.5rem
+  }
+  .wip-detail-top {
+    min-height: 150px;
+  }
+  .ui-tabview-top-right {
+    min-height:85px;
+    height:85px;
+    overflow-y:auto;
+  }
+  .ui-tabview-top-panel {
+    font-family:'Roboto Condensed';
+    font-size: .8rem;
+    font-weight:700;
+  }
+
+}
+

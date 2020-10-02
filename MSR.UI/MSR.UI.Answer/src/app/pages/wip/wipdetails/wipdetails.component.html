@@ -1,6 +1,6 @@
 <div class="container-flex">
   <div class="row">
-    <div class="col-10">
+    <div class="col-10 wip-detail-header">
       <h1>Customer Part # {{parentPart?.part?.partNumber}}, (Serial #: {{parentPart?.serialNumber}}),
         {{parentPart?.part?.name}}</h1>
     </div>
@@ -10,10 +10,10 @@
   </div>
   <div class="row custom-panel">
     <div class="container-fluid">
-      <div class="row justify-content-center mb-2">
+      <div class="row justify-content-center wip-detail-top mb-2">
         <div class="col-6">
-          <div class="row">
-            <div class="col-11">
+          <div class="row ">
+            <div class="col-9">
               <div class="form-group d-flex mr-4 mb-1">
                 <div class="col-11 d-flex justify-content-end pr-0">
                   <div class="my-auto">
@@ -27,56 +27,56 @@
                 </div>
               </div>
             </div>
-            <div class="col-1 mr-0 pr-0 justify-content-end align-middle">
+            <div class="col-3 mr-0 pr-0 justify-content-end align-middle">
               <wiplistbutton-wrapper class="d-flex justify-content-end"></wiplistbutton-wrapper>
             </div>
           </div>
           <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
           <div class="row justify-content-end">
-            <button type="button" class="btn btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button> 
+            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
             <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printtraveler-report>
             <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-6" style="margin-right:-25px;padding-right:12px;">
           <p-tabView class="mt-0">
-            <p-tabPanel header="Parts">
+            <p-tabPanel header="Parts" class="ui-tabview-top-panel">
+              <div class="ui-tabview-top-right">
               <ul>
                 <li *ngFor="let part of workOrderParts">
-                  Customer Part #{{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
+                  Part # {{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
                   (Qty: {{part.part.Quantity}})
                 </li>
               </ul>
+              </div>
             </p-tabPanel>
-            <p-tabPanel header="Purchase">
-              <div class="container-fluid">
+            <p-tabPanel header="Purchase" class="ui-tabview-top-panel">
+              <div class="container-fluid ui-tabview-top-right">
                 <div class="row">
-                  <div class="col-2 text-right">Customer:</div>
-                  <div class="col-10">{{ customer.name}}</div>
-                  <div class="col-2 text-right">Product:</div>
-                  <div class="col-10">{{ product.name}}</div>
-                  <div class="col-2 text-right">Procedure:</div>
-                  <div class="col-10">{{ procedure.name}}</div>
-                  <div class="col-2 text-right">Purchase Item #:</div>
-                  <div class="col-10">{{ purchase.customerPurchaseNumber}}</div>
+                  <div class="col-4 text-right">Customer:</div>
+                  <div class="col-8 text-left">{{ customer.name}}</div>
+                  <div class="col-4 text-right">Product:</div>
+                  <div class="col-8">{{ product.name}}</div>
+                  <div class="col-4 text-right">Procedure:</div>
+                  <div class="col-8">{{ procedure.name}}</div>
+                  <div class="col-4 text-right">Purchase Item #:</div>
+                  <div class="col-8">{{ purchase.customerPurchaseNumber}}</div>
                 </div>
               </div>
             </p-tabPanel>
           </p-tabView>
         </div>
       </div>
-      <div class="row mb-2" *ngIf="workOrderModel.workOrderTasks !== undefined">
-        <carousel [itemsPerSlide]="8" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
-          [interval]="false" [startFromIndex]="0" [(activeSlide)]="activeSlideIndex">
+      <div class="row mb-3" *ngIf="workOrderModel.workOrderTasks !== undefined">
+        <carousel id="step-carousel" [itemsPerSlide]="5" [singleSlideOffset]="true" [noWrap]="true" [showIndicators]="false"
+          [interval]="false" [startFromIndex]="0" [(activeSlide)]="activeSlideIndex" data-ride="carousel">
           <slide *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
-            (click)="selectTaskForViewing(workOrderTask)" 
-              [ngClass]="{ 'bg-warning': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved', 
-                  'bg-light': workOrderTask.status?.name === 'In Progress', 
+            (click)="selectTaskForViewing(workOrderTask)"
+              [ngClass]="{ 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
+                  'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
-                  'bg-success': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
-            <div class="carousel-caption">
-              <h6>{{ workOrderTask.procedureStep?.title}}</h6>
-            </div>
+                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
+              <div class="carousel-step-title">{{ workOrderTask.procedureStep?.title}}</div>
           </slide>
         </carousel>
       </div>
@@ -90,6 +90,8 @@
           </workordertasktimer-wrapper>
         </div>
         <div class="d-flex col-6 justify-content-end pr-0">
+          <!--if user is not assigned -->
+          <button class="btn btn-lg btn-warning mt-0 mr-2 mb-2" ><i class="fas fa-step-forward"></i> Take Over This Task</button>
           <empmbutton-wrapper></empmbutton-wrapper>
           <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
         </div>
@@ -101,7 +103,7 @@
         <p-tabView class="w-100" *ngIf="workOrderTaskToView !== undefined">
           <p-tabPanel header="Task Description">
             <div class="row">
-              <div class="container-fluid description-container m-2">
+              <div class="container-fluid description-container m-2 wip-details-bottom">
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Assignee:</div>
                   <div class="col-10 p-2">{{ workOrderTaskToView?.assignedToUser?.fullName }}</div>
@@ -121,16 +123,12 @@
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Reference Files:</div>
                   <div class="col-10 p-2">
-                    <!--<cmh-file-uploader name="referencefiles" class="col-12"
-                      *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.procedureStep?.referenceFiles !== undefined"
-                      [menuItem]="menuItems.WIPMenu" multiple="multiple"
-                      [(files)]="workOrderTaskToView.procedureStep.referenceFiles">
-                    </cmh-file-uploader>-->
+                      <!-- should show link to exiting file like 2.0-->
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.taskStepOrder === 1">
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.taskStepOrder === workOrderModel.workOrderTasks['0'].taskStepOrder">
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">
@@ -168,10 +166,18 @@
             </span>
           </p-tabPanel>
           <p-tabPanel header="Files">
-            <!--<cmh-file-uploader name="referencefiles" class="col-12"
-              *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
-              [menuItem]="menuItems.Templates" multiple="multiple" [(files)]="workOrderTaskToView.referenceFiles">
-            </cmh-file-uploader>-->
+            <div class="row">
+              <div class="container-fluid file-container m-2 wip-details-bottom">
+                <div class="row">
+                  <div class="col">
+                    <cmh-file-uploader name="referencefiles" class="col-12"
+                      *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
+                      [menuItem]="menuItems.Templates" multiple="multiple" [(files)]="workOrderTaskToView.referenceFiles">
+                    </cmh-file-uploader>
+                  </div>
+                </div>
+              </div>
+            </div>
           </p-tabPanel>
         </p-tabView>
       </div>

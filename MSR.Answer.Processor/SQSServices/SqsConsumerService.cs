@@ -64,6 +64,7 @@ namespace MSR.Answer.Processor.SQSServices
                 {
                     _tokenSource = new CancellationTokenSource();
                     _queueURL = _sQSInformation.QueueURL;
+                    _logger.LogInformation("Starting to Consume");
                     // This must be await-ed and processed in order, because
                     // there is only one DbContext to use.
                     await ProcessAsync();
@@ -113,6 +114,7 @@ namespace MSR.Answer.Processor.SQSServices
                             MessageAttributeNames = new List<string> { "All" }
                         });
 
+                        _logger.LogInformation($"Number of messages Recevied: {response.Messages.Count}");
                         if (response.HttpStatusCode != HttpStatusCode.OK)
                         {
                             throw new AmazonSQSException($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}. Response: {response.HttpStatusCode}");
@@ -138,6 +140,10 @@ namespace MSR.Answer.Processor.SQSServices
             catch (OperationCanceledException)
             {
                 //operation has been canceled but it shouldn't be propagated
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
             }
         }
 

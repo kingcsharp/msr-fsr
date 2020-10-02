@@ -47,11 +47,6 @@ namespace MSR.Answer.API.V1.Controllers
         public async Task<IActionResult> WorkOrderTaskCreateWorkOrderTask([FromBody] CreateWorkOrderTaskRequest body)
         {
             CreateWorkOrderTask command = body.ToCreateWorkOrderTaskCommand();
-
-            // some additional defaults
-            command.StatusId = 1;
-            command.ProcedureStepTypeId = 1;
-
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<WorkOrderTaskModel>("Work Order Task Created");
         }
