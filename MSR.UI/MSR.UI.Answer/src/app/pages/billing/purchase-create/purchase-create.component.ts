@@ -131,36 +131,41 @@ export class PurchaseCreateComponent implements OnInit {
       if (this.step === 0) {
         this.purchaseItems = [];
         let valid = true;
+        let sum: number = this.purchaseProducts.map(a => a.qty).reduce(function(a, b) {
+          return a + b;
+        });
 
         this.purchaseProducts.map(product => {
-          if (product.qty < 1) { valid = false; }
-          if (product.groupWO) {
-            this.purchaseItems.push({
-              id: product.id,
-              productName: product.name,
-              customerLineNumber: null,
-              mttn: null,
-              dueDate: null,
-              qty: product.qty,
-              unitPrice: product.price,
-              extPrice: product.qty * product.price,
-              groupWO: product.groupWO,
-              serializeIndividually: product.serializeIndividually
-            });
-          } else {
-            for (let i = 0; i < product.qty; i++) {
+          if (sum < 1) { valid = false; }
+          if (sum > 0 && product.qty > 0) {
+            if (product.groupWO) {
               this.purchaseItems.push({
                 id: product.id,
                 productName: product.name,
                 customerLineNumber: null,
                 mttn: null,
                 dueDate: null,
-                qty: 1,
+                qty: product.qty,
                 unitPrice: product.price,
-                extPrice: product.price,
+                extPrice: product.qty * product.price,
                 groupWO: product.groupWO,
                 serializeIndividually: product.serializeIndividually
               });
+            } else {
+              for (let i = 0; i < product.qty; i++) {
+                this.purchaseItems.push({
+                  id: product.id,
+                  productName: product.name,
+                  customerLineNumber: null,
+                  mttn: null,
+                  dueDate: null,
+                  qty: 1,
+                  unitPrice: product.price,
+                  extPrice: product.price,
+                  groupWO: product.groupWO,
+                  serializeIndividually: product.serializeIndividually
+                });
+              }
             }
           }
         });
