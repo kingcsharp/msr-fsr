@@ -87,6 +87,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             {
                 //They can approve so just put it in the tables
                 var purchaseOrder = _mapper.Map<EntityFramework.Entities.PurchaseOrder>(command);
+                purchaseOrder.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Name == "Waiting to Start");
                 purchaseOrder.Revision = 1;
 
                 await _unitOfWork.PurchaseOrders.AddAsync(purchaseOrder);
