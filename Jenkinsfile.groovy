@@ -152,7 +152,7 @@ pipeline {
             }
         }
 
-        stage("Deploy Rollbar") {
+        stage("Deploy Rollbar QA") {
             agent { label 'master' }
             steps {
                 script {
@@ -197,6 +197,19 @@ pipeline {
 
                     deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
                     office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+                }
+            }
+        }
+
+        stage("Deploy Rollbar UAT") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=UAT \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
                 }
             }
         }
