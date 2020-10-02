@@ -346,7 +346,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<PurchaseOrder, PurchaseOrderModel>().ReverseMap();
             CreateMap<PurchaseOrder, PurchaseOrderView>()
                 .ForMember(dest => dest.CustomerReferencePO, opts => opts.MapFrom(src => src.ReferencePO))
-                .ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.CustomerReference));
+                .ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.CustomerReference))
+                .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.Status == null ? "Open" : src.Status.Name));
             CreateMap<PurchaseOrderApproval, PurchaseOrderView>()
                 .ForMember(dest => dest.CustomerReferencePO, opts => opts.MapFrom(src => src.ReferencePO))
                 .ForMember(dest => dest.CustomerReferenceNo, opts => opts.MapFrom(src => src.CustomerReference))

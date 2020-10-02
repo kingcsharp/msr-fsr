@@ -14,34 +14,52 @@ namespace MSR.Application.ApplicationServices
 
         public async Task Connect(string url, ILogger logger = null)
         {
-            if (connection != null) {
-                return;
-            }
-            connection = new HubConnectionBuilder()
-                .WithUrl(url)
-                .Build();
-
-            connection.Closed += async (error) => {
-                await Task.Delay(new Random().Next(0, 5) * 1000);
-                await connection.StartAsync();
-            };
-
-            await connection.StartAsync();
-
-            _logger = logger;
-            connection.On<Toaster>("ToasterMessage", (msg) => {
-                if (_logger != null)
+            try
+            {
+                if (connection != null)
                 {
-                    _logger.LogInformation($"Received SignalR Heartbeat {msg.Message}");
+                    return;
                 }
-            });
+                connection = new HubConnectionBuilder()
+                    .WithUrl(url)
+                    .Build();
+
+                connection.Closed += async (error) =>
+                {
+                    await Task.Delay(new Random().Next(0, 5) * 1000);
+                    await connection.StartAsync();
+                };
+
+                await connection.StartAsync();
+
+                _logger = logger;
+                connection.On<Toaster>("ToasterMessage", (msg) =>
+                {
+                    if (_logger != null)
+                    {
+                        _logger.LogInformation($"Received SignalR Heartbeat {msg.Message}");
+                    }
+                });
+            }
+            catch(Exception ex)
+            {
+                //If this fails swallow the error
+                _logger.LogError(ex, ex.Message);
+            }
 
         }
 
         public void SendNotification(string userId, Toaster message)
         {
-            connection.InvokeAsync("SendMessage", userId, message);
-            _logger.LogInformation($"SendMessage userId={userId} message={message.Message}");
+            try
+            {
+                connection.InvokeAsync("SendMessage", userId, message);
+                _logger.LogInformation($"SendMessage userId={userId} message={message.Message}");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
         }
     }
 }

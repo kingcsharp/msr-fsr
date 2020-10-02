@@ -10,7 +10,6 @@ namespace MSR.Domain.Commanding
 {
     public class EventDispatcher<T> : EventDispatcher where T : class, IEvent
     {
-
         public EventDispatcher(IServiceProvider serviceProvider, ILogger<EventDispatcher> logger) : base(serviceProvider, logger)
         { }
 
