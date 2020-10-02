@@ -9,7 +9,7 @@ namespace MSR.Domain.Abstractions.Services
     {
         Task<ProductModel> CreateProductAsync(CreateProduct command);
         Task<ICollection<ProductModel>> GetProductsAsync();
-        Task<ICollection<ProductModel>> GetProductAsync(int? id);
+        Task<ICollection<ProductModel>> GetProductAsync(GetProduct command);
         Task<ProductModel> UpdateProductAsync(UpdateProduct command);
     }
 }

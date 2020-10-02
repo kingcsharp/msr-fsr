@@ -4494,14 +4494,17 @@ export class ProductService {
     /**
      * GetProduct
      * @param id (optional) Get product by Id
+     * @param customerId (optional) 
      */
-    productGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfProductModel> {
+    productGet(id: number | null | undefined, customerId: number | null | undefined, version: string): Observable<AuditActionResultOfIEnumerableOfProductModel> {
         let url_ = this.baseUrl + "/v{version}/Product?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (customerId !== undefined && customerId !== null)
+            url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

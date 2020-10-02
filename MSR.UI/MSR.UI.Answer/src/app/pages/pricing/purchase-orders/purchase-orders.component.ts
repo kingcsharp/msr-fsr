@@ -13,6 +13,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { Utils } from 'ngx-bootstrap/utils';
 
 declare let jQuery: any;
 
@@ -40,6 +41,7 @@ export class PurchaseOrdersComponent implements OnInit {
   getCustomersFlag: boolean = false;
   productsData: any[] = [];
   getProductsFlag: boolean = false;
+  showProductsSelect:boolean = true;
   purchaseOrderStatus: any[] = [
     {
       label: 'All',
@@ -89,7 +91,6 @@ export class PurchaseOrdersComponent implements OnInit {
     this.getPurchaseOrders();
     this.getCustomers();
     this.currentPO = new PurchaseOrderModel();
-    this.getProducts();
   }
 
   getPurchaseOrders() {
@@ -183,14 +184,20 @@ export class PurchaseOrdersComponent implements OnInit {
       .subscribe(responseHandler(response => {
         ctrl.customersData = response.object;
         ctrl.getCustomersFlag = true;
+
       }));
   }
 
   getProducts() {
     const ctrl = this;
-    this.productService.productGet(null, env.apiVersion).pipe(take(1))
+    this.globals.showLoader(true);
+    this.productService.productGet(null, this.currentPO.customer.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        ctrl.productsData = response.object;
+        ctrl.showProductsSelect = false;
+        replaceArrayItems(ctrl.productsData, response.object);
+        setTimeout(() => {
+          ctrl.showProductsSelect = true;
+        }, 10);
       }));
   }
 

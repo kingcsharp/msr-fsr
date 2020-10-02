@@ -52,7 +52,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
                 return _mapper.Map<ProductModel>(product);
             }
-           
+
             var approval = _mapper.Map<ProductApproval>(command);
             approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
             approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
@@ -63,19 +63,25 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return _mapper.Map<ProductModel>(approval);
         }
 
-        public async Task<ICollection<ProductModel>> GetProductAsync(int? id)
+        public async Task<ICollection<ProductModel>> GetProductAsync(GetProduct command)
         {
-            if (!id.HasValue)
-            {
-                return await GetProductsAsync();
-            }
-
-            var product = await _unitOfWork.Products
+            IQueryable<Product> productQuery = _unitOfWork.Products
                         .Query()
                         .Include(x => x.Customer)
                         .Include(x => x.Part)
-                        .Include(x=>x.Procedure)
-                        .Where(x => x.Id == id)
+                        .Include(x => x.Procedure);
+
+            if (command.Id.HasValue)
+            {
+                productQuery = productQuery.Where(x => x.Id == command.Id.Value);
+            }
+
+            if (command.CustomerId.HasValue)
+            {
+                productQuery = productQuery.Where(x => x.CustomerId == command.CustomerId.Value);
+            }
+
+            var product = await productQuery
                         .Select(x => _mapper.Map<ProductModel>(x))
                         .ToListAsync();
 
@@ -116,7 +122,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
                 return _mapper.Map<ProductModel>(product);
             }
-            
+
             var approval = _mapper.Map<ProductApproval>(product);
             approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
             approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);

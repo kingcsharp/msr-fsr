@@ -164,7 +164,7 @@ export class ProductDefinitionComponent implements OnInit {
 
   getProductData() {
     this.getProductDataFlag = false;
-    this.productService.productGet(this.id, env.apiVersion)
+    this.productService.productGet(this.id, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.productData = response.object[0];

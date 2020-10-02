@@ -178,8 +178,9 @@
           {{purcahseordermodel.status}}
         </td>
         <td>
-          <i *ngIf="purchasePrivileges.canCreate && purcahseordermodel.status !== 'Closed'" class="fa fa-dollar pointer" tooltip="Purchase" data-cy="purchaseRow"
-          [routerLink]="['../../billing/purchaseorder/purchase-create/',purcahseordermodel.id]">
+          <i *ngIf="purchasePrivileges.canCreate && purcahseordermodel.status !== 'Closed'" class="fa fa-dollar pointer"
+            tooltip="Purchase" data-cy="purchaseRow"
+            [routerLink]="['../../billing/purchaseorder/purchase-create/',purcahseordermodel.id]">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-edit pointer" tooltip="Edit" data-cy="editRow"
@@ -188,8 +189,9 @@
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
             class="fa fa-close pointer" tooltip="Close" data-cy="closeRow" (click)="onClickClose(purcahseordermodel)">
           </i>
-          <i *ngIf="purchaseOrderPrivileges.canDelete && purcahseordermodel.isDeletable" class="far fa-trash-alt pointer" tooltip="Delete"
-            data-cy="deleteRow" (click)="onClickDelete(purcahseordermodel)">
+          <i *ngIf="purchaseOrderPrivileges.canDelete && purcahseordermodel.isDeletable"
+            class="far fa-trash-alt pointer" tooltip="Delete" data-cy="deleteRow"
+            (click)="onClickDelete(purcahseordermodel)">
           </i>
         </td>
       </tr>
@@ -207,8 +209,7 @@
 </p-confirmDialog>
 
 <p-dialog header="{{ currentPO.id === undefined ?'Create Purchase Order':'Edit Purchase Order'}}" *ngIf="display"
-  [(visible)]="display" [appendTo]="'body'" [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}"
-  data-cy="purchase-order-header">
+  [(visible)]="display" [appendTo]="'body'" [modal]='true' [style]="{width: '50vw'}" data-cy="purchase-order-header">
   <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
     data-parsley-priority-enabled="false" (ngSubmit)="onPurchaseSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
@@ -223,11 +224,13 @@
             <label for="firstName" class="col-md-4 col-form-label text-md-right">
               Customer:
             </label>
-            <p-dropdown class="col-md-8" placeholder="Select Client" optionLabel="name" name="CutomerId"
-              [(ngModel)]="currentPO.customer" [options]="customersData" appendTo="body" [baseZIndex]="100002" required>
-            </p-dropdown>
+            <div class="col-md-8">
+              <p-dropdown placeholder="Select Client" optionLabel="name" name="CutomerId"
+                [(ngModel)]="currentPO.customer" [options]="customersData" (onChange)="getProducts()" appendTo="body"
+                [baseZIndex]="100002" required>
+              </p-dropdown>
+            </div>
           </div>
-
           <div class="form-group row">
             <label for="POName" class="col-md-4  col-form-label text-md-right">
               PO Name :
@@ -309,19 +312,17 @@
               Tax %:
             </label>
             <div class="col-md-8 col-12 input-group input-group-transparent">
-              <input placeholder="Enter Tax %" type="number" data-parsley-range="[0, 100]"
-                data-parsley-trigger="change" data-parsley-validation-threshold="1"
-                class="form-control input-transparent" name="Tax">
+              <input placeholder="Enter Tax %" type="number" data-parsley-range="[0, 100]" data-parsley-trigger="change"
+                data-parsley-validation-threshold="1" class="form-control input-transparent" name="Tax">
               <span class="input-group-addon bg-secondary">%</span>
             </div>
           </div>
-
           <div class="form-group row">
             <label for="ProductId" class="col-md-2 text-right">
               Products:
             </label>
             <div class="col-md-10 col-12">
-              <multiselect-wrapper-form [(model)]="currentPO.selectedProducts" defaultLabel="Select Products"
+              <multiselect-wrapper-form *ngIf="showProductsSelect" [(model)]="currentPO.selectedProducts" defaultLabel="Select Products"
                 name="ProductId" defaultId="id" defaultLabelProperty="name" [options]="productsData" [limit]="30">
               </multiselect-wrapper-form>
             </div>
