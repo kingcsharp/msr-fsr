@@ -34,3 +34,4 @@ msbuild.wrn
 *.dbmdl
 Answer3.0.iml
 docker-compose.override.yml.OLD
+.angulardoc.json
