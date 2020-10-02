@@ -7,6 +7,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     {
         public int ProcedureMonitorId { get; set; }
 
+        [ForeignKey("ProcedureMonitorId")]
+        public virtual ProcedureStepMonitor ProcedureStepMonitor { get; set; }
+
         public int? NumVal { get; set; }
 
         public string TextVal { get; set; }

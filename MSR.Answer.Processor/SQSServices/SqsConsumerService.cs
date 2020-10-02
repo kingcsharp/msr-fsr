@@ -17,6 +17,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using MSR.Domain.Helpers;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Answer.Processor.SQSServices
 {
@@ -28,16 +29,20 @@ namespace MSR.Answer.Processor.SQSServices
         private readonly ICommandDispatcher _dispatcher;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventHandlers _eventHandlers;
+        private GeneralInformation _processorConfig;
         private string _queueURL;
 
         private CancellationTokenSource _tokenSource;
+        private IMessageHubClient _messageHub;
 
         public SqsConsumerService(
             IAmazonSQS sqsClient,
             SQSInformation sQSInformation,
+            GeneralInformation processorConfig,
             ICommandDispatcher dispatcher,
             IServiceProvider serviceProvider,
             IEventHandlers eventHandlers,
+            IMessageHubClient messageHub,
             ILogger<SqsConsumerService> logger)
         {
             _eventHandlers = eventHandlers;
@@ -46,6 +51,8 @@ namespace MSR.Answer.Processor.SQSServices
             _sQSInformation = sQSInformation;
             _dispatcher = dispatcher;
             _serviceProvider = serviceProvider;
+            _messageHub = messageHub;
+            _processorConfig = processorConfig;
 
         }
 
@@ -57,6 +64,7 @@ namespace MSR.Answer.Processor.SQSServices
                 {
                     _tokenSource = new CancellationTokenSource();
                     _queueURL = _sQSInformation.QueueURL;
+                    _logger.LogInformation("Starting to Consume");
                     // This must be await-ed and processed in order, because
                     // there is only one DbContext to use.
                     await ProcessAsync();
@@ -87,8 +95,15 @@ namespace MSR.Answer.Processor.SQSServices
         {
             try
             {
+                Uri baseUri = new Uri(_processorConfig.APIURL);
+                UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
+                await _messageHub.Connect(hubUri.ToString(), _logger);
+
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {
+                    _messageHub.SendNotification("ping", new MSR.Domain.Hub.Toaster() {
+                        Message = "ping"
+                    });
                     try
                     {
                         var response = await _sqsClient.ReceiveMessageAsync(new ReceiveMessageRequest
@@ -99,6 +114,7 @@ namespace MSR.Answer.Processor.SQSServices
                             MessageAttributeNames = new List<string> { "All" }
                         });
 
+                        _logger.LogInformation($"Number of messages Recevied: {response.Messages.Count}");
                         if (response.HttpStatusCode != HttpStatusCode.OK)
                         {
                             throw new AmazonSQSException($"Failed to GetMessagesAsync for queue {_sQSInformation.QueueName}. Response: {response.HttpStatusCode}");
@@ -124,6 +140,10 @@ namespace MSR.Answer.Processor.SQSServices
             catch (OperationCanceledException)
             {
                 //operation has been canceled but it shouldn't be propagated
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
             }
         }
 

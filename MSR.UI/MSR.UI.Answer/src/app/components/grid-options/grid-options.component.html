@@ -1,6 +1,6 @@
 <div class="dropdown" style="display: inline-block!important;">
     <button type="button" class="btn btn-primary width-100 mb-xs ng-star-inserted dropdown-toggle"
-        (click)="this.columnDropdown = false;" data-toggle="dropdown">
+        (click)="this.columnDropdown = false;" data-toggle="dropdown" data-cy="myviews-button">
         My Views
     </button>
     <div id="myViews" class="dropdown-menu dropdown-menu-right" (click)="stopEvent($event)">
@@ -31,7 +31,7 @@
                 (click)="showSaveViewDiv()">
                 Save Current View
             </button> &nbsp;
-            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
+            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" data-cy="clearview-button"
                 (click)="resetgr()">
                 Clear View
             </button>

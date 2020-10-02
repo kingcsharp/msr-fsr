@@ -24,7 +24,6 @@ namespace MSR.Domain.Views
 
         public ICollection<FileModel> ReferenceFiles { get; set; }
 
-        [JsonIgnore]
-        public ICollection<int> ReferenceFlieIds { get; set; }
+        public ICollection<int> ReferenceFileIds { get; set; }
     }
 }

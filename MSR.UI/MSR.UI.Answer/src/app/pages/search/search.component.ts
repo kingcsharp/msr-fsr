@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit {
     private workOrderService: WorkOrderService, private globals: Globals, private searchService: SearchService,
     private procedureService: ProcedureService, private partService: PartService, private router: Router, private documentService: DocumentService) {
     this.activatedRoute.queryParams.subscribe(params => {
-      this.getSearchData(params['search'])
+      this.getSearchData(params['search']);
     });
   }
 
@@ -72,7 +72,7 @@ export class SearchComponent implements OnInit {
           }));
         break;
       case 'WorkOrder':
-        this.workOrderService.workOrderGet(rowData.itemId, null, null, null, env.apiVersion).pipe(take(1))
+        this.workOrderService.workOrder(rowData.itemId, null, null, null, null, env.apiVersion).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.setGridData(response, rowData);
           }));

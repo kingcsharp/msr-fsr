@@ -2057,12 +2057,22 @@ td {
   }
 }
 
+
+
+
 p-dropdown {
   width: 100%;
   .ui-dropdown-label {
     color: #f8f8f8;
     background-color: rgba(0, 0, 0, 0.24);
   }
+  .ui-dropdown-label-container {
+    width: 100%;
+  }
+}
+
+p-paginator > div > p-dropdown {
+  width: auto;
 }
 
 .product-form {
@@ -2091,4 +2101,14 @@ p-dropdown {
 
 .ui-calendar {
   width: 100%;
+}
+
+p-dialog {
+  .ui-table .ui-table-tbody > tr {
+    background-color: #454d58;
+  }
+
+  .ui-table .ui-table-thead .ng-star-inserted:last-child th input {
+    background-color: #454d58;
+  }
 }

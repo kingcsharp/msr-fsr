@@ -45,7 +45,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = await ApproveCustomer(command, status);
                     break;
                 case EnumApprovalTables.DocumentApproval:
-                    result = await ApproveDocument(command,status);
+                    result = await ApproveDocument(command, status);
                     break;
                 case EnumApprovalTables.LocationApproval:
                     result = await ApproveLocation(command, status);
@@ -92,16 +92,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = procedureApproval;
                     break;
                 case EnumApprovalTables.ProductApproval:
-                    var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    productApproval.Status = status;
-                    _mapper.Map(productApproval, product);
-                    _unitOfWork.ProductApprovals.Update(productApproval);
-                    product.Revision++;
-                    _unitOfWork.Products.Update(product);
-                    _unitOfWork.SaveChanges();
-                    await _unitOfWork.LogApprovalTransaction(productApproval, productApproval.Id, status.Name, command.Comments);
-                    result = productApproval;
+                    result = await ApproveProduct(command, status);
                     break;
                 case EnumApprovalTables.PurchaseOrderApproval:
                     result = await ApprovePurchaseOrder(command, status);
@@ -391,10 +382,6 @@ namespace MSR.Infrastructure.Resources.Services
 
         private async Task<List<PendingApprovalModel>> GetPendingApprovalByTable(EnumApprovalTables table)
         {
-            var approvalComments = await _unitOfWork.ApprovalTransactionLogs.Query()
-                .Where(x => x.ApprovalEntity == EnumUtils.GetDescription(table) && x.Comments != null)
-                .Select(x => new { x.ApprovalEntityId, x.Comments }).ToListAsync();
-
             IQueryable<ApprovalEntity> approvalEntity = null;
             switch (table)
             {
@@ -424,13 +411,6 @@ namespace MSR.Infrastructure.Resources.Services
                         .Include(x => x.Workflow).Include(x => x.WorkflowGroup)
                         .ToListAsync();
                     var result = userApprovals.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
-                    foreach (var approvalComment in approvalComments)
-                    {
-                        foreach (var approvalModel in result.Where(approvalModel => approvalModel.Id == approvalComment.ApprovalEntityId))
-                        {
-                            approvalModel.Comments = approvalComment.Comments;
-                        }
-                    }
                     return result;
                 default:
                     break;
@@ -438,14 +418,6 @@ namespace MSR.Infrastructure.Resources.Services
 
             var approvalEntityList = await approvalEntity.Include(x => x.Workflow).Include(x => x.WorkflowGroup).ToListAsync();
             var pendingApprovalModelResult = approvalEntityList.Select(approvalEnt => _mapper.Map<PendingApprovalModel>(approvalEnt)).ToList();
-
-            foreach (var approvalComment in approvalComments)
-            {
-                foreach (var approvalModel in pendingApprovalModelResult.Where(approvalModel => approvalModel.Id == approvalComment.ApprovalEntityId))
-                {
-                    approvalModel.Comments = approvalComment.Comments;
-                }
-            }
 
             return pendingApprovalModelResult;
         }
@@ -522,6 +494,33 @@ namespace MSR.Infrastructure.Resources.Services
             return locationApproval;
         }
 
+        private async Task<ApprovalEntity> ApproveProduct(PostApprovalModel command, Status status)
+        {
+            var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+
+            if (productApproval.ProductId == null)
+            {
+                var product = _mapper.Map<EntityFramework.Entities.Product>(productApproval);
+                product.Revision = 1;
+                await _unitOfWork.Products.AddAsync(product);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.LogApprovalTransaction(product, product.Id, status.Name, command.Comments);
+            }
+            else
+            {
+                var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                _mapper.Map(productApproval, product);
+                _unitOfWork.ProductApprovals.Update(productApproval);
+                product.Revision++;
+                _unitOfWork.Products.Update(product);
+                _unitOfWork.SaveChanges();
+                await _unitOfWork.LogApprovalTransaction(productApproval, productApproval.Id, status.Name, command.Comments);
+            }
+
+            _unitOfWork.ProductApprovals.Delete(false, productApproval);
+            return productApproval;
+        }
+
         private async Task<ApprovalEntity> ApprovePurchaseOrder(PostApprovalModel command, Status status)
         {
             var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -570,11 +569,11 @@ namespace MSR.Infrastructure.Resources.Services
         private async Task<ApprovalEntity> ApproveDocument(PostApprovalModel command, Status status)
         {
             var documentApproval = await _unitOfWork.DocumentApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-            var supportingData = JsonConvert.DeserializeObject<Dictionary<string,List<int>>>(documentApproval.ApprovalJSON);
+            var supportingData = JsonConvert.DeserializeObject<Dictionary<string, List<int>>>(documentApproval.ApprovalJSON);
 
             if (documentApproval.DocumentId is null)
             {
-                var document = _mapper.Map<EntityFramework.Entities.Document>(documentApproval); 
+                var document = _mapper.Map<EntityFramework.Entities.Document>(documentApproval);
                 document.Revision = 1;
                 await _unitOfWork.Documents.AddAsync(document);
                 await _unitOfWork.SaveChangesAsync();
@@ -677,9 +676,9 @@ namespace MSR.Infrastructure.Resources.Services
             var files = _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject)
                                                          .Where(i => i.EntityTableName == "Documents" && i.EntityId == document.Id
                                                                 && i.FileObject != null && i.FileObject.ContentType == "application/pdf").Select(i => i.FileObject);
-            
 
-            foreach(var file in files)
+
+            foreach (var file in files)
             {
                 await _fileService.EditPdfFile(_mapper.Map<FileModel>(file), document);
             }

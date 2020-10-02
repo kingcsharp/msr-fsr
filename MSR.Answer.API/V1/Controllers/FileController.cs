@@ -40,9 +40,6 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<FileModel>>))]
         public async Task<IActionResult> GetFiles([FromQuery] GetFileRequest req)
         {
-            if (!CurrentUser.HasPrivilege(EnumUtils.ParseMenuType(req.EntityName), EnumPrivilege.CanRead)) {
-                throw new DomainException("Permission Denied", DomainError.BadRequest);
-            }
             var ret = await _dispatcher.DispatchAsync(new GetFiles() {
                 entityName = req.EntityName,
                 entityId = req.EntityId,
@@ -60,9 +57,6 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<FileModel>))]
         public async Task<IActionResult> AddFile(CreateFileRequest newfile)
         {
-            if (!CurrentUser.HasPrivilege(EnumUtils.ParseMenuType(newfile.EntityName), EnumPrivilege.CanCreate)) {
-                throw new DomainException("Permission Denied", DomainError.BadRequest);
-            }
             var command = newfile.ToCreateFileCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<FileModel>("File was successfully added.");

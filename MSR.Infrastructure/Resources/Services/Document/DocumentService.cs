@@ -133,7 +133,15 @@ namespace MSR.Infrastructure.Resources.Services.Document
                 fileReferences.Add(fileModel);
             }
 
+            foreach (var file in command.ReferenceFiles)
+            {
+                var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Document), retDocument.Id, file);
+
+                fileReferences.Add(fileModel);
+            }
+
             retDocument.ReferenceFiles = fileReferences;
+            retDocument.ReferenceFileIds = fileReferences.Select(f => f.FileId).Cast<int>().ToList();
 
             return retDocument;
         }
@@ -147,12 +155,12 @@ namespace MSR.Infrastructure.Resources.Services.Document
                 throw new DomainException($"{nameof(EntityFramework.Entities.Document)} not found with ID: {command.Id}");
             }
 
-            currentDocument.Revision += 1;
-
             DocumentView retDocument;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.DocumentApproval))
             {
+                currentDocument.Revision += 1;
+
                 _mapper.Map(command, currentDocument);
 
                 _unitOfWork.Documents.Update(currentDocument);
@@ -189,7 +197,7 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
                 retDocument.RoleIds = currentRoles.Except(roleIdsToRemove).ToList();
                 retDocument.RoleIds.AddRange(roleIdsToAdd);
-                
+
                 // Update Document files mapping
                 var currentFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), command.Id);
 
@@ -197,9 +205,13 @@ namespace MSR.Infrastructure.Resources.Services.Document
                 var fileIdsToAdd = command.ReferenceFileIds.Where(i => !currentFileIds.Contains(i)).ToList();
                 var fileIdsToRemove = currentFileIds.Where(i => !command.ReferenceFileIds.Contains(i.Value)).ToList();
 
+                var fileReferences = new List<FileModel>();
+
                 foreach (var addFileId in fileIdsToAdd)
                 {
-                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Document), command.Id, addFileId);
+                    var fileModel = await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Document), command.Id, addFileId);
+
+                    fileReferences.Add(fileModel);
                 }
 
                 foreach (var removeFileId in fileIdsToRemove)
@@ -207,7 +219,17 @@ namespace MSR.Infrastructure.Resources.Services.Document
                     await _fileService.DetachFilesAsync(nameof(EntityFramework.Entities.Document), command.Id, removeFileId);
                 }
 
-                retDocument.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.Document), command.Id);
+                fileReferences.AddRange(_fileService.ListFiles(nameof(EntityFramework.Entities.Document), command.Id));
+
+                foreach (var file in command.ReferenceFiles)
+                {
+                    var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Document), retDocument.Id, file);
+
+                    fileReferences.Add(fileModel);
+                }
+
+                retDocument.ReferenceFiles = fileReferences;
+                retDocument.ReferenceFileIds = fileReferences.Select(f => f.FileId).Cast<int>().ToList();
             }
             else
             {
@@ -253,7 +275,7 @@ namespace MSR.Infrastructure.Resources.Services.Document
                 {
                     _unitOfWork.DocumentEntityMap.Delete(false, map);
                 }
-                
+
                 _unitOfWork.Documents.Delete(false, document);
 
             }

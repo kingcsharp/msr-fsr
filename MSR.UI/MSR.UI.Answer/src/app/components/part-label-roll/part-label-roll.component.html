@@ -1,0 +1,61 @@
+<div class="container label">
+    <div class="row m-2">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12"><img src="assets/img/msr-label-logo.png" alt="Logo"></div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">Date: {{WorkOrder.actualEndDate}}</div>
+                        <div class="col-12">Site: MSR-FSR {{WorkOrder.location?.name}}</div>
+                        <div class="col-12">WO: {{WorkOrder.product?.customer?.name}}-{{ WorkOrder.purchase?.customerPurchaseNumber }}</div>
+                    </div>
+                </div>
+                <div class="col-12 border">
+                    PO #: {{WorkOrder.purchase?.purchaseOrder?.referencePO}}<br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                        [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO" [bc-display-value]="false"
+                        [bc-height]="40"></ngx-barcode>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <img class="part-image" *ngIf="WorkOrder.product?.productImage !== undefined" src="{{WorkOrder.product?.productImage}}" alt="Product Image">
+            <div class="col-12  justify-content-center d-flex" *ngIf="WorkOrder.product?.productImage === undefined">
+                No Image Available
+            </div>
+        </div>
+    </div>
+    <div class="row border m-2">
+        <div class="col-12">Part Dec: {{WorkOrder.product?.name}}</div>
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    Customer Part #: {{WorkOrder.product?.part?.partNumber}}<br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                        [bc-value]="WorkOrder.product?.part?.partNumber" [bc-display-value]="false" [bc-height]="40">
+                    </ngx-barcode>
+                </div>
+                <div class="col-6">
+                    OEM Part #: {{WorkOrder.product?.part?.oemPartNumber}}<br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                        [bc-value]="WorkOrder.product?.part?.oemPartNumber" [bc-display-value]="false" [bc-height]="40">
+                    </ngx-barcode>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-2">
+        <div class="col-8 border">
+            Serial Number #: {{workOrderParentPart.serialNumber}}<br />
+            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderParentPart?.serialNumber"
+                [bc-display-value]="false" [bc-height]="40"></ngx-barcode><br />
+            This part processed <strong>{{workOrderParentPart.part?.maximumCycles}}</strong> time(s)
+    
+        </div>
+        <div class="col-4 text-center">
+            ONLY OPEN IN
+            CLASS 100 CLEANROOM
+            OR BETTER
+        </div>
+    </div>
+</div>

@@ -19,7 +19,7 @@ export class GridSaved implements IGridSaved {
                     (<any>this)[property] = (<any>data)[property];
                 }
             }
-            this.visibleColumns = this.columnsSaved.filter(x=>x.visible).length;
+            this.visibleColumns = this.columnsSaved.filter(x => x.visible).length;
         }
     }
 
@@ -35,13 +35,15 @@ export class GridSaved implements IGridSaved {
             this.storageId = _data['storageId'];
             this.version = _data['version'];
 
-            if (Array.isArray(_data["columnsSaved"])) {
+            if (Array.isArray(_data['columnsSaved'])) {
                 this.columnsSaved = [] as any;
-                for (let item of _data["columnsSaved"]) {
+                for (let item of _data['columnsSaved']) {
+                    /* tslint:disable */
                     this.columnsSaved!.push(ColumnsSaved.fromJS(item));
+                    /* tslint:enable */
                 }
             }
-            this.visibleColumns = this.columnsSaved.filter(x=>x.visible).length;
+            this.visibleColumns = this.columnsSaved.filter(x => x.visible).length;
         }
     }
 
@@ -52,9 +54,10 @@ export class GridSaved implements IGridSaved {
         data['visibleColumns'] = this.visibleColumns;
 
         if (Array.isArray(this.columnsSaved)) {
-            data["columnsSaved"] = [];
-            for (let item of this.columnsSaved)
-                data["columnsSaved"].push(item.toJSON());
+            data['columnsSaved'] = [];
+            for (let item of this.columnsSaved) {
+                data['columnsSaved'].push(item.toJSON());
+            }
         }
         return data;
     }

@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import * as signalR from "@aspnet/signalr";
+import * as signalR from '@aspnet/signalr';
 import { NotificationService } from '../layout/navbar/notification.service';
 import { environment as env } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -16,13 +16,23 @@ export class SignalRService implements OnDestroy {
   }
 
   public startConnection = () => {
+    const token: string = localStorage.getItem('token');
+
+    if (token === null || token === '' || token === undefined) {
+      return;
+    }
+
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(env.url + '/msg')
+      .withUrl(env.url + '/msg', {
+        accessTokenFactory: () => token,
+        // skipNegotiation: true,
+        // transport: signalR.HttpTransportType.WebSockets
+      })
       .build();
     this.hubConnection
       .start()
       .then(() => console.log('Signalr Connection started'))
-      .catch(err => console.log('Error while starting connection: ' + err))
+      .catch(err => console.log('Error while starting connection: ' + err));
   }
 
   public discconecctHub = () => {
@@ -32,7 +42,7 @@ export class SignalRService implements OnDestroy {
 
   public addWorkflowNotificationListener = () => {
     this.hubConnection.on('WorkflowNotification', (evId, data) => {
-      var index = this.workflowNotificationIds.findIndex(x => x === evId);
+      let index = this.workflowNotificationIds.findIndex(x => x === evId);
       if (index === -1) {
         this.workflowNotificationIds.push(evId);
         this.notificationService.addNotification(data);
@@ -45,10 +55,13 @@ export class SignalRService implements OnDestroy {
       switch (data.status) {
         case 0:
           this.toastr.warning(data.message);
+          break;
         case 1:
           this.toastr.success(data.message);
+          break;
         case 2:
           this.toastr.error(data.message);
+          break;
       }
     });
   }

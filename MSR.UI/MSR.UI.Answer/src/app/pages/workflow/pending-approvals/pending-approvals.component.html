@@ -49,15 +49,6 @@
 
           </div>
         </th>
-        <th [hidden]="!cg.isVisibleCol('comments',gridSettings)">
-          <div class="position-relative">
-            <input id="comments" pInputText type="text" tooltip="Search by Comments"
-              (input)="dt.filter($event.target.value, 'comments', 'contains')" class="ui-column-filter"
-              [value]="dt.filters['comments']?.value">
-            <i *ngIf="dt.filters['comments']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'comments')"></i>
-          </div>
-        </th>
         <th [hidden]="!cg.isVisibleCol('workflowName',gridSettings)">
           <div class="position-relative">
             <input id="workflowName" pInputText type="text" tooltip="Search by Workflow"
@@ -125,9 +116,6 @@
             Details
           </button>
         </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings)">
-          {{approval.comments}}
-        </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowName',gridSettings)">
           {{approval.workflowName}}
         </td>
@@ -152,7 +140,7 @@
               </div>
             </div>
           </ng-template>
-          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+          <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
           <i *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
@@ -219,15 +207,6 @@
         <th [hidden]="!cg.isVisibleCol('RequestedChanges',gridSettings2)">
           <div class="position-relative">
 
-          </div>
-        </th>
-        <th [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
-          <div class="position-relative">
-            <input id="comments2" pInputText type="text" tooltip="Search by Comments"
-              (input)="dt2.filter($event.target.value, 'comments', 'contains')" class="ui-column-filter"
-              [value]="dt2.filters['comments']?.value">
-            <i *ngIf="dt2.filters['comments']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt2,'comments')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('workflowName',gridSettings2)">
@@ -297,9 +276,6 @@
             Details
           </button>
         </td>
-        <td class="text-capitalize" [hidden]="!cg.isVisibleCol('comments',gridSettings2)">
-          {{approval.comments}}
-        </td>
         <td class="text-capitalize" [hidden]="!cg.isVisibleCol('workflowName',gridSettings2)">
           {{approval.workflowName}}
         </td>
@@ -317,11 +293,11 @@
         </td>
         <td>
           <i data-cy="cancel-approval"
-            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanDelete)"
+            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
             class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost"
             appendTo="body" (click)="showDialog(cancelAction,approval)"></i>
           <i data-cy="approve-approval"
-            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove) && approval.status !=='Approved'"
+            *ngIf="globals.hasActivityPrivilegeByTableName(approval.activityType, privileges.CanApprove)"
             class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
             (click)="showDialog(approveAction,approval)"></i>
         </td>

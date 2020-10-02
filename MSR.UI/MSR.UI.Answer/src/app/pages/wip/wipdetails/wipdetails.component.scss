@@ -1,0 +1,170 @@
+.ui-tabview .ui-tabview-panels {
+  background-color: #ffffff;
+  padding: .5em;
+  border: 1px solid #c8c8c8;
+  color: #333333;
+}
+.content {
+  padding-left:0
+}
+.custom-panel {
+  min-height: 79vh;
+}
+
+slide {
+    width: 200px !important;
+    height: 80px !important;
+    border: solid 1px #FFFFFF;
+    cursor: pointer;
+}
+
+a.carousel-control{
+    width:3% !important;
+}
+.card{
+    min-width: 500px;
+    min-height: 300px;
+}
+
+.card-header{
+    background-color: #116fbf;
+}
+
+.card-body{
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+.ui-tabview{
+    padding: 0px !important;
+}
+
+.description-container > .row > div {
+    border-width: 1px 1px 0px 1px;
+    border-color: #eaeaea;
+    border-style: solid;
+}
+
+.description-container > .row:last-child > div{
+    border-width: 1px 1px 1px 1px;
+    border-color: #eaeaea;
+    border-style: solid;
+}
+
+.table > .thead-dark > tr > th{
+    color: #fff;
+    background-color: #353D48;
+    border-color: #32383e;
+}
+
+.serialinput-td{
+    min-width: 400px;
+}
+
+.serialinput-td > input{
+    max-width: 300px;
+}
+
+ol{
+    display: block;
+    list-style-type: decimal;
+    padding-inline-start: 40px;
+}
+
+.report.ui-dialog .ui-dialog-content{
+    min-height: 300px;
+}
+
+@media print {
+
+    .workreport-control{
+        display: none;
+    }
+
+    .printotherreport-dropdown{
+        display:none;
+    }
+
+    .report.ui-dialog{
+        max-width: none;
+        width: 100% !important;
+        height:100% !important;
+    }
+
+    .report.ui-dialog .ui-dialog-titlebar {
+        display: none !important;
+    }
+
+    .report.ui-dialog .ui-dialog-content{
+        background-color: transparent;
+        border:none;
+        height: 100% !important;
+        overflow: visible;
+    }
+
+    .report.ui-dialog .ui-dialog-footer{
+        display: none !important;
+    }
+
+    .report.ui-dialog .report-viewport{
+        height:100% !important;
+    }
+}
+.carousel-caption {
+  color:#000
+}
+.carousel .item {
+  height: 60px !important;
+  width: 150px !important;
+  display:table !important
+}
+.carousel-step-title {
+  font-size: 14px;
+  font-weight:500;
+  margin: 0 auto;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.step-complete {
+  color:#000;
+  background-color: #cfc!important;
+}
+.step-waiting {
+  color:#000;
+  background-color: #ffc!important;
+}
+.wip-details-bottom {
+  min-height:33vh;
+  max-height:33vh;
+  height:33vh;
+  overflow-y:auto
+}
+.carousel-inner {
+  position: relative;
+    width: 96.75%;
+    overflow: hidden;
+}
+
+/* updates for tablets */
+
+@media (max-width: 1024px) {
+  .wip-detail-header h1 {
+    font-size:1.5rem
+  }
+  .wip-detail-top {
+    min-height: 150px;
+  }
+  .ui-tabview-top-right {
+    min-height:85px;
+    height:85px;
+    overflow-y:auto;
+  }
+  .ui-tabview-top-panel {
+    font-family:'Roboto Condensed';
+    font-size: .8rem;
+    font-weight:700;
+  }
+
+}
+

@@ -6,6 +6,9 @@ namespace MSR.Domain.Models
     public class PurchaseOrderModel : CreatableModel
     {
         public int Id { get; set; }
+
+        public Customer Customer { get; set; }
+
         public int CustomerId { get; set; }
 
         public string Name { get; set; }

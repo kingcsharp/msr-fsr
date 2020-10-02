@@ -6,13 +6,14 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ConfirmationService } from 'primeng/api';
 import { AllowedActions } from '../../../models/lib/AllowedActions';
-import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderModel } from '../../../services/api.client.generated';
+import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, UpdatePurchaseOrderRequest, CreatePurchaseOrderRequest, PurchaseOrderView, Customer, ProductModel } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { Utils } from 'ngx-bootstrap/utils';
 
 declare let jQuery: any;
 
@@ -35,16 +36,13 @@ export class PurchaseOrdersComponent implements OnInit {
   purchasePrivileges: AllowedActions;
   purchaseOrderPrivileges: AllowedActions;
   display: boolean = false;
-  currentPO: PurchaseOrderModel;
+  currentPO: PurcahseOrderEditModel;
   customersData: any[] = [];
   getCustomersFlag: boolean = false;
   productsData: any[] = [];
   getProductsFlag: boolean = false;
+  showProductsSelect:boolean = true;
   purchaseOrderStatus: any[] = [
-    {
-      label: 'All',
-      value: 'All'
-    },
     {
       label: 'Open',
       value: 'Open'
@@ -88,8 +86,6 @@ export class PurchaseOrdersComponent implements OnInit {
     this.data = [];
     this.getPurchaseOrders();
     this.getCustomers();
-    this.currentPO = new PurchaseOrderModel();
-    this.getProducts();
   }
 
   getPurchaseOrders() {
@@ -101,8 +97,8 @@ export class PurchaseOrdersComponent implements OnInit {
       }));
   }
 
-  showPurchaseOrderModal(purchaseOrder: PurchaseOrderModel) {
-    this.currentPO = this.getPuchaseOrder(purchaseOrder === undefined ? new PurchaseOrderModel() : purchaseOrder);
+  showPurchaseOrderModal(purchaseOrder: PurchaseOrderView) {
+    this.currentPO = this.getPuchaseOrder(purchaseOrder === undefined ? new PurchaseOrderView() : purchaseOrder);
     this.display = true;
   }
 
@@ -110,7 +106,7 @@ export class PurchaseOrdersComponent implements OnInit {
     currentPO.customer = this.customersData.find(x => x.id === purchaseOrder.customerId);
   }
 
-  onClickDelete(purchaseOrder: PurchaseOrderModel) {
+  onClickDelete(purchaseOrder: PurchaseOrderView) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to Delete this record?',
       accept: () => {
@@ -119,7 +115,7 @@ export class PurchaseOrdersComponent implements OnInit {
     });
   }
 
-  deletePurchaseOrder(purchaseOrder: PurchaseOrderModel) {
+  deletePurchaseOrder(purchaseOrder: PurchaseOrderView) {
     this.globals.showLoader(true);
     this.purchaseOrderService.purchaseOrderDelete(purchaseOrder.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
@@ -128,7 +124,7 @@ export class PurchaseOrdersComponent implements OnInit {
       }));
   }
 
-  onClickClose(purchaseOrder: PurchaseOrderModel) {
+  onClickClose(purchaseOrder: PurchaseOrderView) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to Close this record?',
       accept: () => {
@@ -137,7 +133,7 @@ export class PurchaseOrdersComponent implements OnInit {
     });
   }
 
-  closePurchaseOrder(purchaseOrder: any) {
+  closePurchaseOrder(purchaseOrder: PurchaseOrderView) {
     this.globals.showLoader(true);
     let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
     Object.assign(purchaseOrderRequest, purchaseOrder);
@@ -163,7 +159,10 @@ export class PurchaseOrdersComponent implements OnInit {
       return purchaseOrder;
     }
     let ret = copyObj(purchaseOrder);
-    ret.selectedProducts = ret.products;
+    ret.selectedProducts = [];
+    ret.products.forEach(product => {
+      ret.selectedProducts.push(this.productsData.find(x => x.id === product.productId));
+    });
     this.setCurrentCustomer(ret, purchaseOrder);
     return ret;
   }
@@ -183,14 +182,20 @@ export class PurchaseOrdersComponent implements OnInit {
       .subscribe(responseHandler(response => {
         ctrl.customersData = response.object;
         ctrl.getCustomersFlag = true;
+
       }));
   }
 
   getProducts() {
     const ctrl = this;
-    this.productService.productGet(null, env.apiVersion).pipe(take(1))
+    this.globals.showLoader(true);
+    this.productService.productGet(null, this.currentPO.customer.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        ctrl.productsData = response.object;
+        ctrl.showProductsSelect = false;
+        replaceArrayItems(ctrl.productsData, response.object);
+        setTimeout(() => {
+          ctrl.showProductsSelect = true;
+        }, 10);
       }));
   }
 
@@ -228,5 +233,10 @@ export class PurchaseOrdersComponent implements OnInit {
       }
     }
   }
+}
+
+class PurcahseOrderEditModel extends PurchaseOrderView {
+  customer?: Customer | undefined;
+  selectedProducts!: ProductModel[];
 }
 

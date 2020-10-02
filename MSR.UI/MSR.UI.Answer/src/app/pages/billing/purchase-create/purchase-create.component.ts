@@ -14,7 +14,9 @@ import {
   PurchaseService,
   CreatePurchaseRequest
 } from '../../../services/api.client.generated';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+
+declare let jQuery: any;
 
 @Component({
   selector: 'app-purchase-create',
@@ -59,6 +61,7 @@ export class PurchaseCreateComponent implements OnInit {
     private customerService: CustomerService,
     private purchaseService: PurchaseService,
     private locationService: LocationService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -107,7 +110,7 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   getLocationsData() {
-    this.locationService.locationGet(null, null,null, env.apiVersion).pipe(take(1))
+    this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
           this.locationsData.push({ label: x.name, value: x.id });
@@ -123,102 +126,105 @@ export class PurchaseCreateComponent implements OnInit {
   }
 
   goToNextStep() {
-    if (this.step === 0) {
-      this.purchaseItems = [];
-      let valid = true;
+    jQuery('.parsleyjs').parsley().validate();
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      if (this.step === 0) {
+        this.purchaseItems = [];
+        let valid = true;
 
-      this.purchaseProducts.map(product => {
-        if (product.qty < 1) { valid = false; }
-        if (product.groupWO) {
-          this.purchaseItems.push({
-            id: product.id,
-            productName: product.name,
-            customerLineNumber: null,
-            mttn: null,
-            dueDate: null,
-            qty: product.qty,
-            unitPrice: product.price,
-            extPrice: product.qty * product.price,
-            groupWO: product.groupWO,
-            serializeIndividually: product.serializeIndividually
-          });
-        } else {
-          for (let i = 0; i < product.qty; i++) {
+        this.purchaseProducts.map(product => {
+          if (product.qty < 1) { valid = false; }
+          if (product.groupWO) {
             this.purchaseItems.push({
               id: product.id,
               productName: product.name,
               customerLineNumber: null,
               mttn: null,
               dueDate: null,
-              qty: 1,
+              qty: product.qty,
               unitPrice: product.price,
-              extPrice: product.price,
+              extPrice: product.qty * product.price,
               groupWO: product.groupWO,
               serializeIndividually: product.serializeIndividually
             });
+          } else {
+            for (let i = 0; i < product.qty; i++) {
+              this.purchaseItems.push({
+                id: product.id,
+                productName: product.name,
+                customerLineNumber: null,
+                mttn: null,
+                dueDate: null,
+                qty: 1,
+                unitPrice: product.price,
+                extPrice: product.price,
+                groupWO: product.groupWO,
+                serializeIndividually: product.serializeIndividually
+              });
+            }
           }
-        }
-      });
-      if (valid) { this.step = 1; }
-    } else if (this.step === 1) {
-      this.purchaseSerializeItems = [];
-      this.purchaseItems.map(item => {
-        if (item.serializeIndividually) {
-          this.purchaseSerializeItems.push({
-            id: item.id,
-            dueDate: item.dueDate,
-            customerLineNumber: item.customerLineNumber,
-            mttn: item.mttn,
-            serialKitNo: null,
-            qty: item.qty,
-            locationId: null,
-            part: null,
-            procedure: null
-          });
-        } else {
-          for (let i = 0; i < item.qty; i++) {
+        });
+        if (valid) { this.step = 1; }
+      } else if (this.step === 1) {
+        this.purchaseSerializeItems = [];
+        this.purchaseItems.map(item => {
+          if (item.serializeIndividually) {
             this.purchaseSerializeItems.push({
               id: item.id,
               dueDate: item.dueDate,
               customerLineNumber: item.customerLineNumber,
               mttn: item.mttn,
               serialKitNo: null,
-              qty: 1,
-              locationId: null,
+              qty: item.qty,
+              locationId: this.locationsData[0].value,
               part: null,
               procedure: null
             });
+          } else {
+            for (let i = 0; i < item.qty; i++) {
+              this.purchaseSerializeItems.push({
+                id: item.id,
+                dueDate: item.dueDate,
+                customerLineNumber: item.customerLineNumber,
+                mttn: item.mttn,
+                serialKitNo: null,
+                qty: 1,
+                locationId:  this.locationsData[0].value,
+                part: null,
+                procedure: null
+              });
+            }
           }
-        }
-      });
-      this.step = 2;
-    } else {
-      length = this.purchaseSerializeItems.length;
-      this.globals.showLoader(true);
-      this.purchaseSerializeItems.forEach(item => {
-        const requestData = new CreatePurchaseRequest(
-          {
-            purchaseOrderId: this.purchaseOrderData.id,
-            statusId: 0,
-            purchaseOrderProductId: item.id,
-            serialNumber: item.serialKitNo,
-            locationId: item.locationId,
-            qty: item.qty,
-            customerLineNumber: item.customerLineNumber,
-            mttn: item.mttn,
-            dueDate: item.dueDate,
-            purchasePrice: item.price,
-          }
-        );
-        this.purchaseService.purchasePost(env.apiVersion, requestData)
-        .pipe(take(1))
-        .subscribe(responseHandler((resp) => {
-          length--;
-          if (length === 0) {
-            this.globals.showLoader(false);
-          }
-        }));
-      });
+        });
+        this.step = 2;
+      } else {
+        length = this.purchaseSerializeItems.length;
+        this.globals.showLoader(true);
+        this.purchaseSerializeItems.forEach(item => {
+          const requestData = new CreatePurchaseRequest(
+            {
+              purchaseOrderId: this.purchaseOrderData.id,
+              statusId: 1, // Approved
+              purchaseOrderProductId: item.id,
+              serialNumber: item.serialKitNo,
+              locationId: item.locationId,
+              qty: item.qty,
+              customerLineNumber: item.customerLineNumber ? parseInt(item.customerLineNumber, 10) : null,
+              mttn: item.mttn,
+              dueDate: item.dueDate,
+              purchasePrice: item.price,
+            }
+          );
+          this.purchaseService.purchasePost(env.apiVersion, requestData)
+          .pipe(take(1))
+          .subscribe(responseHandler((resp) => {
+            length--;
+            if (length === 0) {
+              this.router.navigate(['app/billing/purchaseorder']);
+            }
+          }));
+        });
+      }
     }
   }
 

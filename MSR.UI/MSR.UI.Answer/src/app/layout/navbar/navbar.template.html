@@ -5,8 +5,8 @@
         <div class="input-group-addon">
           <i class="fa fa-search text-white" (click)="search()"></i>
         </div>
-        <input placeholder="Search" type="text" tooltip="Min length 3 characters" [(ngModel)]="searchValue" class="input-transparent form-control"
-          [ngModelOptions]="{standalone: true}" (keyup.enter)="search()">
+        <input placeholder="Search" type="text" tooltip="Min length 3 characters" [(ngModel)]="searchValue"
+          class="input-transparent form-control" [ngModelOptions]="{standalone: true}" (keyup.enter)="search()">
       </div>
     </div>
   </form>
@@ -59,13 +59,15 @@
     <li class="nav-item dropdown d-sm-down-none">
       <a href="javascript:;" id="account" data-cy="account-a" tooltip="Account" class="nav-link dropdown-toggle"
         data-toggle="dropdown">
-        <img *ngIf="globals.user.fileModel === undefined" width="34" src="assets/img/2.png" alt="">
-        <img *ngIf="globals.user.fileModel !== undefined" width="34" [src]="globals.user.fileModel.fileURL" alt="">
+        <img *ngIf="globals.user?.fileModel === undefined || hideImg" width="34" src="assets/img/2.png" alt="">
+        <img *ngIf="globals.user?.fileModel !== undefined || !hideImg" width="34" [src]="globals.user?.fileModel?.fileURL"
+          (error)="updateUrl($event)" alt="">
       </a>
       <ul id="account-menu" class="dropdown-menu dropdown-menu-right account" role="menu">
         <li role="presentation" class="account-picture">
-          <img *ngIf="globals.user.fileModel === undefined" width="34" src="assets/img/2.png" alt="">
-          <img *ngIf="globals.user.fileModel !== undefined" width="34" [src]="globals.user.fileModel.fileURL" alt="">
+          <img *ngIf="globals.user?.fileModel === undefined || hideImg" width="34" src="assets/img/2.png" alt="">
+          <img *ngIf="globals.user?.fileModel !== undefined || !hideImg" width="34"
+            [src]="globals.user?.fileModel?.fileURL" (error)="updateUrl($event)" alt="">
           {{globals.user.firstName + ' ' + globals.user.lastName}}
         </li>
         <li role="presentation">
