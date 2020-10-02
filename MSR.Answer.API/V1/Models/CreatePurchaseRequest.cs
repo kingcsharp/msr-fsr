@@ -41,7 +41,6 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// SerialNumber
         /// </summary>
-        [Required]
         [StringLength(20)]
         public string SerialNumber { get; set; }
 
