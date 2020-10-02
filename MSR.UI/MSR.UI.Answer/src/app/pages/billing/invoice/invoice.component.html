@@ -156,9 +156,7 @@
                         </label>
                         <div class="col-md-4 ">
                             <input type="number" id="taxPercentage" name="taxPercentage"
-                                [(ngModel)]="currentInvoice.taxPercentage" data-validate="parsley"
-                                data-parsley-trigger="change" data-parsley-required="true"
-                                data-parsley-range="[0, 100]"
+                                [(ngModel)]="currentInvoice.taxPercentage" 
                                 class="form-control input-transparent" placeholder="Tax Percentage"
                                 data-cy="taxPercentage-input">
                         </div>
