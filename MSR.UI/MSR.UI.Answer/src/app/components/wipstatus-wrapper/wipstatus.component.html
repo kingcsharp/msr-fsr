@@ -45,6 +45,7 @@
                     'fa-hourglass': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start',
                     'fa-exclamation-circle': isLate && workOrderStatus.workOrderSummary.workOrderStatus !== 'In Progress'
                   } " placement="bottom" data-cy="workordersummary-icon"
+                  (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"
                   [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
                   <ng-template #workOrderSummaryToolTipTemplate>
                     <strong>WorkOrder Item Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderItemNumber }}<br />
@@ -63,7 +64,7 @@
     </tbody>
 </table>
 <p-dialog header="Attention" [(visible)]="showTakeOverAsUserConfirmationDialog" appendTo="body"
-  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '33vw'}" data-cy="user-header">
   <div class="container">
     <div class="row">
       Are you sure you want to take over this WorkOrder?
@@ -71,11 +72,11 @@
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="takeOverAsUserConfirmationDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+      <button type="submit" (click)="takeOverAsUserConfirmationDialog()" class="btn btn-warning width-100 mb-xs" role="button"
         data-cy="confirmdelete-button">
         Yes
       </button>
-      <button type="button" (click)="closeTakeOverAsUserConfirmationDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+      <button type="button" (click)="closeTakeOverAsUserConfirmationDialog()" class="btn btn-danger width-100 mb-xs"
         role="button">
         Cancel
       </button>

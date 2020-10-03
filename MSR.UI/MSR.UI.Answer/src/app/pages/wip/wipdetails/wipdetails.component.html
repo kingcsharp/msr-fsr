@@ -68,9 +68,10 @@
         </div>
       </div>
       <div class="row mb-3" *ngIf="workOrderModel.workOrderTasks !== undefined">
-        <carousel id="step-carousel" [itemsPerSlide]="5" [singleSlideOffset]="true" [noWrap]="true" [showIndicators]="false"
+        <carousel id="step-carousel" class=" col-12 align-items-center" style="margin-left:25px"
+        [itemsPerSlide]="6" [singleSlideOffset]="true" [noWrap]="true" [showIndicators]="false"
           [interval]="false" [startFromIndex]="0" [(activeSlide)]="activeSlideIndex" data-ride="carousel">
-          <slide *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
+          <slide id={{index}} *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
             (click)="selectTaskForViewing(workOrderTask)"
               [ngClass]="{ 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
                   'bg-light': workOrderTask.status?.name === 'In Progress',
@@ -91,7 +92,7 @@
         </div>
         <div class="d-flex col-6 justify-content-end pr-0">
           <!--if user is not assigned -->
-          <button class="btn btn-lg btn-warning mt-0 mr-2 mb-2" ><i class="fas fa-step-forward"></i> Take Over This Task</button>
+          <take-over-task-button-wrapper></take-over-task-button-wrapper>
           <empmbutton-wrapper></empmbutton-wrapper>
           <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
         </div>
