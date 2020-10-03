@@ -40,10 +40,10 @@
                 >
                   <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
                     'fa-clock': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
-                    'fa-cog': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
-                    'fa-spin': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                    'fa-cog': workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                    'fa-spin': workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
                     'fa-hourglass': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start',
-                    'fa-exclamation-circle': isLate
+                    'fa-exclamation-circle': isLate && workOrderStatus.workOrderSummary.workOrderStatus !== 'In Progress'
                   } " placement="bottom" data-cy="workordersummary-icon"
                   [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
                   <ng-template #workOrderSummaryToolTipTemplate>
