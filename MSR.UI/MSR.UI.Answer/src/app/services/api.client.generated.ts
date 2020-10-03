@@ -15922,7 +15922,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     /** LocationId */
     locationId!: number;
     /** SerialNumber */
-    serialNumber!: string;
+    serialNumber?: string | undefined;
     /** Quantity */
     qty!: number;
     /** CustomerLineNumber */
@@ -16000,7 +16000,7 @@ export interface ICreatePurchaseRequest {
     /** LocationId */
     locationId: number;
     /** SerialNumber */
-    serialNumber: string;
+    serialNumber?: string | undefined;
     /** Quantity */
     qty: number;
     /** CustomerLineNumber */

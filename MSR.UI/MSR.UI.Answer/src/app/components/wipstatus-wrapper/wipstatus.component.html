@@ -1,16 +1,15 @@
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr data-cy="wipstatus-header">
-            <th *ngIf="isDisplayedInWipList">Procedure & Product</th>
-            <th *ngIf="!isDisplayedInWipList">Product</th>
-            <th *ngIf="!isDisplayedInWipList">Part Number</th>
-            <th *ngIf="!isDisplayedInWipList">Procedure</th>
-            <th  *ngIf="!isDisplayedInWipList">
-                Location<br />
-                <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1" 
+            <th class="wipListHeader" *ngIf="isDisplayedInWipList">Procedure & Product</th>
+            <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Product</th>
+            <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">PN/IPN</th>
+            <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Procedure</th>
+            <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">
+                <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1"
                 (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect"></p-multiSelect>
             </th>
-            <th>Open WorkOrders</th>
+            <th class="wipListHeader">Open WorkOrders</th>
         </tr>
     </thead>
     <tbody>
@@ -25,25 +24,37 @@
                 </div>
               </div>
             </td>
-            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.productName }} </td>
-            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.partNumber }} </td>
-            <td *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.procedureName }} </td>
-            <td *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.productName }} </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.partNumber }} </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.procedureName }} </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
             <td>
-                <i [ngClass]="{'fa': true, 'fa-2x': true, 
-                'fa-exclamation-circle': workOrderStatus.workOrderSummary.workOrderHasNcr === true,
-                'fa-cog': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
-                'fa-spin': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
-                'fa-hourglass': workOrderStatus.workOrderSummary.workOrderHasNcr !== true && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start'
-                } " placement="bottom" data-cy="workordersummary-icon"
-                [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
-                <ng-template #workOrderSummaryToolTipTemplate>
-                    WorkOrder Item Number: {{workOrderStatus.workOrderSummary.workOrderItemNumber}}<br />
-                    Purchase Order / Line Number: {{workOrderStatus.workOrderSummary.purchaseOrderLineNumber}}<br />
-                    Serial Number: {{workOrderStatus.workOrderSummary.workOrderPartSerialNumber}}<br />
-                    Status: {{workOrderStatus.workOrderSummary.workOrderStatus }}<br />
-                    Assigned To: {{workOrderStatus.workOrderSummary.workOrderAssignedTo }}
-                </ng-template>
+              <button [ngClass]="{'btn':true, 'btn-lg': true,
+                  'bg-warning': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
+                  'bg-info': !isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
+                  'bg-danger': isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate)
+                }"
+                placement="bottom" data-cy="workordersummary-icon"
+                (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"
+                placement="bottom" data-cy="workordersummary-icon"
+                >
+                  <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
+                    'fa-clock': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
+                    'fa-cog': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                    'fa-spin': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                    'fa-hourglass': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start',
+                    'fa-exclamation-circle': isLate
+                  } " placement="bottom" data-cy="workordersummary-icon"
+                  [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
+                  <ng-template #workOrderSummaryToolTipTemplate>
+                    <strong>WorkOrder Item Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderItemNumber }}<br />
+                    <strong>Purchase Order / Line Number:</strong> {{ workOrderStatus.workOrderSummary.purchaseOrderLineNumber }}<br />
+                    <strong>Serial Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderPartSerialNumber }}<br />
+                    <strong>Status:</strong> {{ workOrderStatus.workOrderSummary.workOrderStatus }}<br />
+                    <strong>Assigned To:</strong> {{ workOrderStatus.workOrderSummary.workOrderAssignedTo }}<br />
+                    <strong>Due Date:</strong> {{ workOrderStatus.workOrderSummary.workOrderScheduledEndDate | date: "MM/dd/yy hh-mm-ss z"}}
+                  </ng-template>
+              </button>
             </td>
         </tr>
         <tr *ngIf="displayWorkOrderStatuses.length === 0">
