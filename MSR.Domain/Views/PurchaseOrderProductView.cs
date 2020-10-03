@@ -17,6 +17,12 @@
         /// </summary>
         public string Name { get; set; }
 
+        public string PartName { get; set; }
+
+        public string PartNumber { get; set; }
+
+        public string ProcedureName { get; set; }
+
         /// <summary>
         /// Total Sale Price
         /// </summary>

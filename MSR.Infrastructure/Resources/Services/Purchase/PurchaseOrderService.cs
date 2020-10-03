@@ -41,6 +41,10 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 .Include(i => i.Status)
                 .Include(i => i.PurchaseOrderProducts)
                 .ThenInclude(x => x.Product)
+                .ThenInclude(pt => pt.Part)
+                .Include(i => i.PurchaseOrderProducts)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(pt => pt.Procedure)
                 .ToListAsync();
 
             var purchaseOrderList = new List<PurchaseOrderView>();
