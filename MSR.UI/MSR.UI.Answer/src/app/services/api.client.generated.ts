@@ -15295,6 +15295,9 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
     id?: number;
     productId?: number;
     name?: string | undefined;
+    partName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureName?: string | undefined;
     totalSalePrice?: number;
 
     constructor(data?: IPurchaseOrderProductView) {
@@ -15311,6 +15314,9 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
             this.id = _data["id"];
             this.productId = _data["productId"];
             this.name = _data["name"];
+            this.partName = _data["partName"];
+            this.partNumber = _data["partNumber"];
+            this.procedureName = _data["procedureName"];
             this.totalSalePrice = _data["totalSalePrice"];
         }
     }
@@ -15327,6 +15333,9 @@ export class PurchaseOrderProductView implements IPurchaseOrderProductView {
         data["id"] = this.id;
         data["productId"] = this.productId;
         data["name"] = this.name;
+        data["partName"] = this.partName;
+        data["partNumber"] = this.partNumber;
+        data["procedureName"] = this.procedureName;
         data["totalSalePrice"] = this.totalSalePrice;
         return data; 
     }
@@ -15336,6 +15345,9 @@ export interface IPurchaseOrderProductView {
     id?: number;
     productId?: number;
     name?: string | undefined;
+    partName?: string | undefined;
+    partNumber?: string | undefined;
+    procedureName?: string | undefined;
     totalSalePrice?: number;
 }
 
@@ -15922,7 +15934,7 @@ export class CreatePurchaseRequest implements ICreatePurchaseRequest {
     /** LocationId */
     locationId!: number;
     /** SerialNumber */
-    serialNumber!: string;
+    serialNumber?: string | undefined;
     /** Quantity */
     qty!: number;
     /** CustomerLineNumber */
@@ -16000,7 +16012,7 @@ export interface ICreatePurchaseRequest {
     /** LocationId */
     locationId: number;
     /** SerialNumber */
-    serialNumber: string;
+    serialNumber?: string | undefined;
     /** Quantity */
     qty: number;
     /** CustomerLineNumber */
