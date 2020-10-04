@@ -49,6 +49,9 @@
               </div>
               <div class="input-group input-group-transparent col-9">
                 <div class="col-6 pl-0"><p-dropdown name="maintenancetask" [options]="maintainanceTaskOptions" [(ngModel)]="equipmentMaintenanceModel.maintenanceTask"></p-dropdown></div>
+                <div class="my-auto">
+                  <label class="m-0" for="status">Status</label>
+                </div>
                 <div class="col-6 pr-0"><p-dropdown name="status" [options]="statusOptions" [(ngModel)]="equipmentMaintenanceModel.statusId"></p-dropdown></div>
               </div>
             </div>
@@ -109,7 +112,7 @@
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="button" (click)="submitEmPm()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+      <button type="button" (click)="submitEmPm()" class="btn btn-outline-inverse width-100 mb-xs" role="button" *ngIf="equipmentMaintenanceModel.locationId !== undefined">
         Submit
       </button>
       <button type="button" (click)="showEmPmDialog = false" class="btn btn-outline-inverse width-100 mb-xs"
