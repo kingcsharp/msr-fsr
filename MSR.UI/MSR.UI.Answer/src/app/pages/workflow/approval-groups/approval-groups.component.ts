@@ -187,6 +187,7 @@ export class ApprovalGroupsComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflowGroup.id);
         this.data.splice(index, 1);
+        this.data = this.data.slice(0);
       }, () => {
         // DO not update user
       }));
@@ -228,10 +229,12 @@ export class ApprovalGroupsComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currWorkflowGroup.id === undefined) {
             ctrl.data.push(resp.object);
+            this.data = this.data.slice(0);
           } else {
             const index = ctrl.data.findIndex(x => x.id === ctrl.currWorkflowGroup.id);
             ctrl.data.splice(index, 1);
             ctrl.data.splice(index, 0, resp.object);
+            this.data = this.data.slice(0);
           }
           this.updateRolesUsersSavedForItem(resp.object);
           this.addToGridRolesDropdown(resp.object.groupRoles);

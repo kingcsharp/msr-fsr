@@ -121,6 +121,7 @@ export class PurchaseOrdersComponent implements OnInit {
       .subscribe(responseHandler(response => {
         const index = this.data.findIndex(x => x.id === purchaseOrder.id);
         this.data.splice(index, 1);
+        this.data = this.data.slice(0);
       }));
   }
 
@@ -145,6 +146,7 @@ export class PurchaseOrdersComponent implements OnInit {
         const index = this.data.findIndex(x => x.id === purchaseOrder.id);
         this.data.splice(index, 1);
         this.data.splice(index, 0, response.object);
+        this.data = this.data.slice(0);
       }));
   }
 
@@ -218,6 +220,7 @@ export class PurchaseOrdersComponent implements OnInit {
         this.purchaseOrderService.purchaseOrderPost(env.apiVersion, purchaseOrderRequest).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.data.push(response.object);
+            this.data = this.data.slice(0);
             ctrl.clseDialog();
           }));
       } else {
@@ -228,6 +231,7 @@ export class PurchaseOrdersComponent implements OnInit {
             const index = this.data.findIndex(x => x.id === this.currentPO.id);
             this.data.splice(index, 1);
             this.data.splice(index, 0, response.object);
+            this.data = this.data.slice(0);
             ctrl.clseDialog();
           }));
       }

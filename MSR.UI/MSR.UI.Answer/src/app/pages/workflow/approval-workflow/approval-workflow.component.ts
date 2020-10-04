@@ -204,6 +204,7 @@ export class ApprovalWorkflowComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === workflow.id);
         this.data.splice(index, 1);
+        this.data = this.data.slice(0);
       }, () => {
         // DO not update user
       }));
@@ -246,10 +247,12 @@ export class ApprovalWorkflowComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currWorkflow.id === undefined) {
             ctrl.data.push(resp.object);
+            this.data = this.data.slice(0);
           } else {
             const index = ctrl.data.findIndex(x => x.id === ctrl.currWorkflow.id);
             ctrl.data.splice(index, 1);
             ctrl.data.splice(index, 0, resp.object);
+            this.data = this.data.slice(0);
           }
           ctrl.clseDialog();
         }

@@ -107,10 +107,12 @@ export class RoleComponent implements OnInit {
           resp.object.parentRoles = this.currentRole.parentRoles;
           if (ctrl.currentRole.id === undefined) {
             ctrl.data.push(resp.object);
+            this.data = this.data.slice(0);
           } else {
             const index = ctrl.data.findIndex(x => x.id === ctrl.currentRole.id);
             ctrl.data.splice(index, 1);
             ctrl.data.splice(index, 0, resp.object);
+            ctrl.data = ctrl.data.slice(0);
           }
           ctrl.clseDialog();
         }
@@ -136,6 +138,7 @@ export class RoleComponent implements OnInit {
       if (!resp.hasErrors) {
         const index = this.data.findIndex(x => x.id === role.id);
         this.data.splice(index, 1);
+        this.data = this.data.slice(0);
         this.clseDialog();
       }
     }, () => {
