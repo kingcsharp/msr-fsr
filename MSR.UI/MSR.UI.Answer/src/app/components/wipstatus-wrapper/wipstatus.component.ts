@@ -6,6 +6,7 @@ import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
 import { forkJoin } from 'rxjs';
+import { AxisDateTimeLabelFormatsOptions } from 'highcharts';
 
 @Component({
   selector: 'wipstatus',
@@ -25,6 +26,8 @@ export class WipstatusWrapperComponent implements OnInit {
   selectedLocations: Array<string>;
   showTakeOverAsUserConfirmationDialog: boolean = false;
   workOrderToTakeOverId: number;
+  currentDate: Date = new Date;
+  warningDate: Date = new Date(new Date().setDate(new Date().getDate() - 1 ));
   constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals,
     private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
 
@@ -147,6 +150,17 @@ export class WipstatusWrapperComponent implements OnInit {
   locationsSelectedUpdated() {
     localStorage.setItem('wipstatus', this.selectedLocations.toString());
     this.displayWorkOrderStatuses = this.workOrderStatuses.filter(s => this.selectedLocations.includes(s.locationName));
+  }
+
+  isLate(currDate): boolean {
+    let thisDate = currDate;
+    return this.workOrderStatuses.filter((workOrderStatus: any) =>
+    thisDate < this.currentDate).length > 0;
+  }
+  isWarning(currDate): boolean {
+    let thisDate = currDate;
+    return this.workOrderStatuses.filter((workOrderStatus: any) =>
+    thisDate <= this.warningDate && !(thisDate < this.currentDate)).length > 0;
   }
 
 }

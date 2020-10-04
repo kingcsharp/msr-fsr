@@ -84,10 +84,13 @@ export class PurchaseCreateComponent implements OnInit {
           this.purchaseProducts.push({
             id: product.id,
             name: product.name,
+            partName: product.partName,
+            partNumber: product.partNumber,
+            procedureName: product.procedureName,
             price: product.totalSalePrice,
             qty: 0,
             groupWO: false,
-            serializeIndividually: false
+            serializeIndividually: false,
           });
         });
         this.getPurchaseOrderFlag = true;
@@ -149,7 +152,10 @@ export class PurchaseCreateComponent implements OnInit {
                 unitPrice: product.price,
                 extPrice: product.qty * product.price,
                 groupWO: product.groupWO,
-                serializeIndividually: product.serializeIndividually
+                serializeIndividually: product.serializeIndividually,
+                partName: product.partName,
+                partNumber: product.partNumber,
+                procedureName: product.procedureName,
               });
             } else {
               for (let i = 0; i < product.qty; i++) {
@@ -163,7 +169,10 @@ export class PurchaseCreateComponent implements OnInit {
                   unitPrice: product.price,
                   extPrice: product.price,
                   groupWO: product.groupWO,
-                  serializeIndividually: product.serializeIndividually
+                  serializeIndividually: product.serializeIndividually,
+                  partName: product.partName,
+                  partNumber: product.partNumber,
+                  procedureName: product.procedureName,
                 });
               }
             }
@@ -182,8 +191,9 @@ export class PurchaseCreateComponent implements OnInit {
               serialKitNo: null,
               qty: item.qty,
               locationId: this.locationsData[0].value,
-              part: null,
-              procedure: null
+              partName: item.partName,
+              partNumber: item.partNumber,
+              procedure: item.procedureName,
             });
           } else {
             for (let i = 0; i < item.qty; i++) {
@@ -195,8 +205,9 @@ export class PurchaseCreateComponent implements OnInit {
                 serialKitNo: null,
                 qty: 1,
                 locationId:  this.locationsData[0].value,
-                part: null,
-                procedure: null
+                partName: item.partName,
+                partNumber: item.parNumber,
+                procedureName: item.procedureName,
               });
             }
           }
