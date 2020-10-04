@@ -84,10 +84,13 @@ export class PurchaseCreateComponent implements OnInit {
           this.purchaseProducts.push({
             id: product.id,
             name: product.name,
+            partName: product.partName,
+            partNumber: product.partNumber,
+            procedureName: product.procedureName,
             price: product.totalSalePrice,
             qty: 0,
             groupWO: false,
-            serializeIndividually: false
+            serializeIndividually: false,
           });
         });
         this.getPurchaseOrderFlag = true;
@@ -149,7 +152,10 @@ export class PurchaseCreateComponent implements OnInit {
                 unitPrice: product.price,
                 extPrice: product.qty * product.price,
                 groupWO: product.groupWO,
-                serializeIndividually: product.serializeIndividually
+                serializeIndividually: product.serializeIndividually,
+                partName: product.partName,
+                partNumber: product.partNumber,
+                procedureName: product.procedureName,
               });
             } else {
               for (let i = 0; i < product.qty; i++) {
@@ -163,7 +169,10 @@ export class PurchaseCreateComponent implements OnInit {
                   unitPrice: product.price,
                   extPrice: product.price,
                   groupWO: product.groupWO,
-                  serializeIndividually: product.serializeIndividually
+                  serializeIndividually: product.serializeIndividually,
+                  partName: product.partName,
+                  partNumber: product.partNumber,
+                  procedureName: product.procedureName,
                 });
               }
             }
@@ -175,28 +184,17 @@ export class PurchaseCreateComponent implements OnInit {
         this.purchaseItems.map(item => {
           if (item.serializeIndividually) {
             this.purchaseSerializeItems.push({
-              id: item.id,
-              dueDate: item.dueDate,
-              customerLineNumber: item.customerLineNumber,
-              mttn: item.mttn,
               serialKitNo: null,
-              qty: item.qty,
               locationId: this.locationsData[0].value,
-              part: null,
-              procedure: null
+              ...item,
             });
           } else {
             for (let i = 0; i < item.qty; i++) {
               this.purchaseSerializeItems.push({
-                id: item.id,
-                dueDate: item.dueDate,
-                customerLineNumber: item.customerLineNumber,
-                mttn: item.mttn,
                 serialKitNo: null,
-                qty: 1,
                 locationId:  this.locationsData[0].value,
-                part: null,
-                procedure: null
+                ...item,
+                qty: 1,
               });
             }
           }
@@ -217,7 +215,7 @@ export class PurchaseCreateComponent implements OnInit {
               customerLineNumber: item.customerLineNumber ? parseInt(item.customerLineNumber, 10) : null,
               mttn: item.mttn,
               dueDate: item.dueDate,
-              purchasePrice: item.price,
+              purchasePrice: item.unitPrice,
             }
           );
           this.purchaseService.purchasePost(env.apiVersion, requestData)
