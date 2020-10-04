@@ -84,6 +84,7 @@
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
         [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
         <div class="d-flex col-6 justify-content-start pl-0">
+          <!--if user assigned is current user-->
           <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
             [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
@@ -91,8 +92,9 @@
           </workordertasktimer-wrapper>
         </div>
         <div class="d-flex col-6 justify-content-end pr-0">
-          <!--if user is not assigned -->
+          <!--if user assigned is NOT the current user -->
           <take-over-task-button-wrapper></take-over-task-button-wrapper>
+          <!--next 2 are all users -->
           <empmbutton-wrapper></empmbutton-wrapper>
           <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
         </div>
