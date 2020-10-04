@@ -216,6 +216,7 @@ export class PartsComponent implements OnInit {
       .pipe(take(1)).subscribe(responseHandler((resp) => {
         const index = this.data.findIndex(x => x.id === part.id);
         this.data.splice(index, 1);
+        this.data = this.data.slice(0);
       }, () => {
         // DO not update user
       }));
@@ -244,10 +245,12 @@ export class PartsComponent implements OnInit {
           if (!resp.hasErrors) {
             if (ctrl.currPart.id === undefined) {
               ctrl.data.push(resp.object);
+              this.data = this.data.slice(0);
             } else {
               const index = this.data.findIndex(x => x.id === this.currPart.id);
               this.data.splice(index, 1);
               this.data.splice(index, 0, resp.object);
+              this.data = this.data.slice(0);
             }
             ctrl.clseDialog();
           }

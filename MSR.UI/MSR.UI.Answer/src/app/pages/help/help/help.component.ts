@@ -89,7 +89,7 @@ export class HelpComponent implements OnInit {
 
       const index: number = this.data.map(function (e) { return e.id; }).indexOf(this.helpPageToDelete.id);
       this.data.splice(index, 1);
-
+      this.data = this.data.slice(0);
     }));
   }
 }

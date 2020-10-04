@@ -169,6 +169,7 @@ export class PendingApprovalsComponent implements OnInit {
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           const index = this.data.findIndex(x => x.id === this.currAction.id);
           this.data.splice(index, 1);
+          this.data = this.data.slice(0);
           ctrl.clseDialog();
         }));
     } else {
@@ -176,6 +177,7 @@ export class PendingApprovalsComponent implements OnInit {
         .pipe(take(1)).subscribe(responseHandler((resp) => {
           const index = this.data.findIndex(x => x.id === this.currAction.id);
           this.data.splice(index, 1);
+          this.data = this.data.slice(0);
           ctrl.clseDialog();
         }));
     }

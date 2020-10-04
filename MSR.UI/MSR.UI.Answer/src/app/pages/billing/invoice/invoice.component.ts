@@ -251,6 +251,7 @@ export class InvoiceComponent implements OnInit {
           this.invoiceService.createIndividualInvoices(env.apiVersion, new CreateInvoiceRequest(basicReqData)).pipe(take(1)).subscribe(responseHandler((resp) => {
             if (!resp.hasErrors) {
               ctrl.data.push(...resp.object);
+              this.data = this.data.slice(0);
               ctrl.clseDialog();
             }
           }, () => {
@@ -261,10 +262,12 @@ export class InvoiceComponent implements OnInit {
         if (!resp.hasErrors) {
           if (ctrl.currentInvoice.id === undefined) {
             ctrl.data.push(resp.object);
+            this.data = this.data.slice(0);
           } else {
             const index = ctrl.data.findIndex(x => x.id === ctrl.currentInvoice.id);
             ctrl.data.splice(index, 1);
             ctrl.data.splice(index, 0, resp.object);
+            this.data = this.data.slice(0);
           }
           ctrl.clseDialog();
         }
