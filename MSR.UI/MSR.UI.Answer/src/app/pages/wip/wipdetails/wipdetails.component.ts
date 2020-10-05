@@ -99,12 +99,6 @@ export class WipdetailsComponent implements OnInit {
         s.procedureStep.referenceFiles = new Array<FileModel>();
       }
 
-      if (s.status.name !== 'Complete') {
-        s.assignedTo = 131;
-        s.assignedToUser.id = 131;
-        s.assignedToUser.fullName = 'John Doe';
-      }
-
     });
 
     return workOrderModel;
