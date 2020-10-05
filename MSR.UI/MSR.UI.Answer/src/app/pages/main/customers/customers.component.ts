@@ -19,6 +19,7 @@ export class CustomersComponent implements OnInit {
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
+  gridVersion: string;
   gridStorageId: string;
   canAddCustomer: boolean = false;
   canEditCustomer: boolean = false;
@@ -30,10 +31,10 @@ export class CustomersComponent implements OnInit {
   menuItems = EnumMenuItem;
   statusOptions: any[];
 
-  constructor(private customerService: CustomerService, private userService: UserService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private customerService: CustomerService, private userService: UserService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
-
+    this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
@@ -131,5 +132,9 @@ export class CustomersComponent implements OnInit {
 
     }));
 
+  }
+
+  uploadCustomersData($event) {
+    // TODO: customer csv file upload
   }
 }

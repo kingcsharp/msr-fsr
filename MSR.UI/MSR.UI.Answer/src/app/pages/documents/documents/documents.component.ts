@@ -106,6 +106,7 @@ export class DocumentsComponent implements OnInit {
     this.documentService.documentDelete(this.documentToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
       const index = this.data.findIndex(x => x.id === this.documentToDelete.id);
       this.data.splice(index, 1);
+      this.data = this.data.slice(0);
       this.showConfirmDeleteDialog = false;
     }));
   }
@@ -163,6 +164,7 @@ export class DocumentsComponent implements OnInit {
           const index = this.data.findIndex(x => x.id === this.document.id);
           this.data.splice(index, 1);
           this.data.splice(index, 0, response.object);
+          this.data = this.data.slice(0);
           this.closeDocumentDialog();
         }));
       } else {
@@ -177,6 +179,7 @@ export class DocumentsComponent implements OnInit {
         this.globals.showLoader(true);
         this.documentService.documentPost(env.apiVersion, createDocumentRequest).subscribe(responseHandler((response) => {
           this.data.unshift(response.object);
+          this.data = this.data.slice(0);
           this.closeDocumentDialog();
         }));
       }

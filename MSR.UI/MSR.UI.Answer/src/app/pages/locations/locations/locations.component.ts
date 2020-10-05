@@ -19,6 +19,7 @@ export class LocationsComponent implements OnInit {
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
+  gridVersion: string;
   gridStorageId: string;
   locationToDelete: LocationModel;
   showConfirmDeleteDialog: boolean = false;
@@ -29,10 +30,10 @@ export class LocationsComponent implements OnInit {
   menuItems = EnumMenuItem;
   statusOptions: any[];
 
-  constructor(private locationService: LocationService, private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
+  constructor(private locationService: LocationService, public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals) { }
 
   ngOnInit(): void {
-
+    this.gridVersion = '1.0.0';
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
@@ -122,6 +123,10 @@ export class LocationsComponent implements OnInit {
 
     }));
 
+  }
+
+  uploadLocationsData($event) {
+    // TODO: locations csv file upload
   }
 
 }

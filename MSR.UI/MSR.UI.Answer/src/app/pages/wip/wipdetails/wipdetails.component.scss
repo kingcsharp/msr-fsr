@@ -74,38 +74,35 @@ ol{
 .report.ui-dialog .ui-dialog-content{
     min-height: 300px;
 }
+#ui-tabpanel-2, #ui-tabpanel-3 {
+  min-height:30vh;
+  overflow-y:auto
+}
 
 @media print {
-
     .workreport-control{
         display: none;
     }
-
     .printotherreport-dropdown{
         display:none;
     }
-
     .report.ui-dialog{
         max-width: none;
         width: 100% !important;
         height:100% !important;
     }
-
     .report.ui-dialog .ui-dialog-titlebar {
         display: none !important;
     }
-
     .report.ui-dialog .ui-dialog-content{
         background-color: transparent;
         border:none;
         height: 100% !important;
         overflow: visible;
     }
-
     .report.ui-dialog .ui-dialog-footer{
         display: none !important;
     }
-
     .report.ui-dialog .report-viewport{
         height:100% !important;
     }
@@ -116,7 +113,8 @@ ol{
 .carousel .item {
   height: 60px !important;
   width: 150px !important;
-  display:table !important
+  display:table !important;
+  margin-right: 2px;
 }
 .carousel-step-title {
   font-size: 14px;
@@ -135,17 +133,41 @@ ol{
   background-color: #ffc!important;
 }
 .wip-details-bottom {
-  min-height:33vh;
-  max-height:33vh;
-  height:33vh;
+  min-height:30vh;
+  max-height:30vh;
+  height:30vh;
   overflow-y:auto
 }
 .carousel-inner {
   position: relative;
-    width: 96.75%;
-    overflow: hidden;
+  width: 95.75%;
+  overflow: hidden;
+  margin-left: 15px;
 }
 
+.wip-detail-top {
+  min-height: 150px;
+}
+.ui-tabview-top-right {
+  min-height:85px;
+  height:85px;
+  overflow-y:auto;
+}
+.ui-tabview-top-panel {
+  font-family:'Roboto Condensed';
+  font-size: 1rem;
+  font-weight:700;
+}
+
+.carousel-control.left, .carousel-control.right {
+  background: rgba(0,0,0,.25);
+}
+.carousel-control.left {
+  left: -40px;
+}
+.carousel-control.right{
+  right: 9px;
+}
 /* updates for tablets */
 
 @media (max-width: 1024px) {
@@ -165,6 +187,20 @@ ol{
     font-size: .8rem;
     font-weight:700;
   }
-
+  .carousel-control.left {
+    left: -40px;
+  }
+  .carousel-control.right{
+    right: 9px;
+  }
+  .carousel-inner {
+    position: relative;
+    width: 97.5%;
+    overflow: hidden;
+    margin-left: -12px;
+  }
+  .content .content-footer {
+    margin-bottom: 10px
+  }
 }
 

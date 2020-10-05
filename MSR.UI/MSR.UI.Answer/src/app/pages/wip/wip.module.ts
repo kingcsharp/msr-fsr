@@ -22,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { WorkordertaskmonitosWrapperComponent } from '../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component';
 import { EmPmButtonWrapperComponent } from '../../components/em-pm-button-wrapper/em-pm-button-wrapper.component';
 import { AddNcrButtonWrapperComponent } from '../../components/add-ncr-button-wrapper/add-ncr-button-wrapper.component';
+import { TakeOverTaskButtonWrapperComponent } from '../../components/take-over-task-button-wrapper/take-over-task-button-wrapper.component';
 import { WipListButtonWrapperComponent } from '../../components/wip-list-button-wrapper/wip-list-button-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { PrinttravelerReportComponent } from '../../components/printtraveler-report/printtraveler-report.component';
@@ -49,7 +50,7 @@ export const routes = [
     WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
     DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent,
-    WorkReportComponent],
+    WorkReportComponent, TakeOverTaskButtonWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

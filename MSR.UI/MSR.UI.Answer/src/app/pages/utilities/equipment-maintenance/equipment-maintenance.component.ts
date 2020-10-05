@@ -225,6 +225,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
         this.equipmentMaintenanceService.equipmentMaintenancePost(env.apiVersion, new CreateEquipmentMaintenanceRequest(requestData)).pipe(take(1))
           .subscribe(responseHandler(response => {
             this.data.push(response.object);
+            this.data = this.data.slice(0);
             this.closeEMModal();
           }));
       } else {
@@ -244,6 +245,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
             const index = this.data.findIndex(x => x.id === this.currentEM.id);
             this.data.splice(index, 1);
             this.data.splice(index, 0, response.object);
+            this.data = this.data.slice(0);
             this.closeEMModal();
           }));
       }

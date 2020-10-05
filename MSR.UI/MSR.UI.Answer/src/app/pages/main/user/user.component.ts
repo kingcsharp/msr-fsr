@@ -103,7 +103,6 @@ export class UserComponent implements OnInit {
     this.getLocations();
     this.getRoles();
     this.getCustomers();
-
   }
 
   getCustomers() {
@@ -235,6 +234,7 @@ export class UserComponent implements OnInit {
           }
 
           ctrl.data.push(new UserModel(resp.object));
+          ctrl.data = ctrl.data.slice(0);
           this.updateUsersData(ctrl.data);
           ctrl.clseDialog();
         }
