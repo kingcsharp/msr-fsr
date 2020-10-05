@@ -35,9 +35,7 @@
                   'bg-danger': isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate)
                 }"
                 placement="bottom" data-cy="workordersummary-icon"
-                (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"
-                placement="bottom" data-cy="workordersummary-icon"
-                >
+                (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)">
                   <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
                     'fa-clock': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
                     'fa-cog': workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
@@ -45,8 +43,7 @@
                     'fa-hourglass': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start',
                     'fa-exclamation-circle': isLate && workOrderStatus.workOrderSummary.workOrderStatus !== 'In Progress'
                   } " placement="bottom" data-cy="workordersummary-icon"
-                  (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"
-                  [tooltip]="workOrderSummaryToolTipTemplate" (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)"></i>
+                  [tooltip]="workOrderSummaryToolTipTemplate"></i>
                   <ng-template #workOrderSummaryToolTipTemplate>
                     <strong>WorkOrder Item Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderItemNumber }}<br />
                     <strong>Purchase Order / Line Number:</strong> {{ workOrderStatus.workOrderSummary.purchaseOrderLineNumber }}<br />

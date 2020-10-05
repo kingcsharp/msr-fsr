@@ -1,4 +1,4 @@
-<button class="btn btn-lg btn-warning mt-0 mr-2 mb-2" (click)="openTakeOverAsUserConfirmationDialog(wor)"><i class="fas fa-step-forward"></i> Take Over This Task</button>
+<button class="btn btn-lg btn-warning mt-0 mr-2 mb-2" (click)="openTakeOverAsUserConfirmationDialog(workOrderToTakeOverId)"><i class="fas fa-step-forward"></i> Take Over This Task</button>
 
 <p-dialog header="Attention" [(visible)]="showTakeOverAsUserConfirmationDialog" appendTo="body"
   [baseZIndex]="100001" [modal]='true' [style]="{width: '33vw'}" data-cy="user-header">
