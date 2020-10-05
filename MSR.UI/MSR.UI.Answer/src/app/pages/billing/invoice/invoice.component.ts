@@ -33,6 +33,7 @@ export class InvoiceComponent implements OnInit {
   gridWoStorageId: string;
   gridSettings: ColumnsSaved[];
   gridWoSettings: ColumnsSaved[];
+  gridVersion: string;
   roles: any[];
   allRoles: any[] = [];
   canCreate: boolean = false;
@@ -64,6 +65,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.gridVersion = '1.0.0';
     this.calendarEn = this.globals.getCalendarDefault();
     this.gridStorageId = 'invoiceGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),

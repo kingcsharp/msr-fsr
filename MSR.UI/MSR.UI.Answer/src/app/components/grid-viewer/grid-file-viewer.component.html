@@ -22,8 +22,7 @@
 </span>
 
 <p-dialog *ngIf="display" header="Viewer" [(visible)]="display" [style]="{width: '50vw'}" [modal]='true' data-cy="user-header">
-  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
-    data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
+  <form class="form-horizontal form-label-left">
     <section class="widget mrg-btm-sm" widget>
       <header>
         <h5>

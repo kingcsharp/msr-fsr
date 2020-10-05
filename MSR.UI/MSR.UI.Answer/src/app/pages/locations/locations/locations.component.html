@@ -23,7 +23,7 @@
               + Add
             </button>
             <csv-import [showButton]="canAddLocation" [menuItem]="menuItems.Locations" title="Import Locations"
-              (onUpload)="uploadParts($event)" fileName="LocationsSample.csv" *ngIf="menuItems !== undefined">
+              (onUpload)="uploadLocationsData($event)" fileName="LocationsSample.csv" *ngIf="menuItems !== undefined">
             </csv-import>
             <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
               [gridVersion]="gridVersion" data-cy="locations-options" [hidden]="false">
