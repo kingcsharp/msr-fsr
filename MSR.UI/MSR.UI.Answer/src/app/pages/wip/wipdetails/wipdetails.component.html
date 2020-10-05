@@ -77,7 +77,7 @@
                   'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
                   'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
-              <div class="carousel-step-title">{{ workOrderTask.procedureStep?.title}} {{workOrderTask.status.name}}</div>
+              <div class="carousel-step-title">{{ workOrderTask.procedureStep?.title}}</div>
           </slide>
         </carousel>
       </div>

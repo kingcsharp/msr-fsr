@@ -27,7 +27,7 @@ export class WipstatusWrapperComponent implements OnInit {
   showTakeOverAsUserConfirmationDialog: boolean = false;
   workOrderToTakeOverId: number;
   currentDate: Date = new Date;
-  warningDate: Date = new Date(new Date().setDate(new Date().getDate() - 1 ));
+  warningDate: Date = new Date(new Date().setDate(new Date().getDate() - 1));
   constructor(private router: Router, private workOrderService: WorkOrderService, public globals: Globals,
     private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
 
@@ -82,6 +82,13 @@ export class WipstatusWrapperComponent implements OnInit {
       this.router.navigate(['app/wip/details', workOrderId]);
       this.displayWipListDialogChange.emit(false);
     } else {
+
+      let workOrderAssignedToFullName = this.workOrderStatuses.find(s => s.workOrderSummary.workOrderId === workOrderId).workOrderSummary.workOrderAssignedTo;
+      let currentUsersFullName = this.globals.getCurrentUser().fullName;
+      if (workOrderAssignedToFullName === currentUsersFullName) {
+        this.router.navigate(['app/wip/details', workOrderId]);
+      }
+
       this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
       this.workOrderToTakeOverId = workOrderId;
     }
@@ -102,7 +109,7 @@ export class WipstatusWrapperComponent implements OnInit {
         let loggedInUser = <UserModel>response.object;
 
         this.globals.showLoader(true);
-        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null , env.apiVersion).subscribe(responseHandler(workOrderGetResponse => {
+        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null, env.apiVersion).subscribe(responseHandler(workOrderGetResponse => {
 
           let tasks = <Array<WorkOrderTaskModel>>workOrderGetResponse.object[0].workOrderTasks;
 
@@ -110,7 +117,7 @@ export class WipstatusWrapperComponent implements OnInit {
 
           tasks.forEach(task => {
 
-            if (task.status?.name === 'Waiting to Start' || task.status?.name === 'Approved') {
+            if (task.status?.name === 'Waiting to Start' || task.status?.name === 'Approved' || task.assignedTo !== this.globals.getCurrentUser().id) {
 
               let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest();
               updateWorkOrderTaskRequest.status = 'Waiting to Start';
@@ -155,12 +162,12 @@ export class WipstatusWrapperComponent implements OnInit {
   isLate(currDate): boolean {
     let thisDate = currDate;
     return this.workOrderStatuses.filter((workOrderStatus: any) =>
-    thisDate < this.currentDate).length > 0;
+      thisDate < this.currentDate).length > 0;
   }
   isWarning(currDate): boolean {
     let thisDate = currDate;
     return this.workOrderStatuses.filter((workOrderStatus: any) =>
-    thisDate <= this.warningDate && !(thisDate < this.currentDate)).length > 0;
+      thisDate <= this.warningDate && !(thisDate < this.currentDate)).length > 0;
   }
 
 }
