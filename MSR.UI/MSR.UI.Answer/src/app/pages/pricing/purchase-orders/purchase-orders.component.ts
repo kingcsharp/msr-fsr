@@ -41,7 +41,7 @@ export class PurchaseOrdersComponent implements OnInit {
   getCustomersFlag: boolean = false;
   productsData: any[] = [];
   getProductsFlag: boolean = false;
-  showProductsSelect:boolean = true;
+  showProductsSelect: boolean = true;
   purchaseOrderStatus: any[] = [
     {
       label: 'Open',

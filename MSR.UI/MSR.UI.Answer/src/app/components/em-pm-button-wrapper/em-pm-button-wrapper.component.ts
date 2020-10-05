@@ -104,7 +104,7 @@ export class EmPmButtonWrapperComponent implements OnInit {
 
     this.showEmPmDialog = !this.showEmPmDialog;
 
-    let createEqupmentMaintainaceRequest = new CreateEquipmentMaintenanceRequest({ 
+    let createEqupmentMaintainaceRequest = new CreateEquipmentMaintenanceRequest({
       locationId: this.equipmentMaintenanceModel.locationId,
       statusId: this.equipmentMaintenanceModel.statusId === undefined ? 9 : this.equipmentMaintenanceModel.statusId,
       troubleState: this.equipmentMaintenanceModel.troubleState,

@@ -18,7 +18,7 @@ import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/sel
   styleUrls: ['./wipdetails.component.scss'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
-  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService, 
+  providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService,
     LocationService, UserService, UserService]
 })
 export class WipdetailsComponent implements OnInit {
@@ -40,7 +40,7 @@ export class WipdetailsComponent implements OnInit {
   showCancelRemainingStepsDialog: boolean = false;
   activeSlideIndex = 0;
 
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, 
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
     public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
 
   ngOnInit(): void {
