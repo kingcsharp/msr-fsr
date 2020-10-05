@@ -1,7 +1,7 @@
 import { WorkOrderItem } from './../../models/work-order-item';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-  UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderModel, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel
+  UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderModel, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel, IUpdateWorkOrderTaskRequest
 } from '../../services/api.client.generated';
 import { Router } from '@angular/router';
 import { environment as env } from '../../../environments/environment';
@@ -19,7 +19,9 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
   @Input() takeOverSteps: boolean = false;
   @Input() isDisplayedInWipList: boolean = false;
   @Input() displayWipListDialog: boolean;
+  @Input() workOrderTaskInProgress: WorkOrderTaskModel;
   @Output() displayWipListDialogChange = new EventEmitter();
+  @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   showTakeOverAsUserConfirmationDialog: boolean = false;
   workOrderToTakeOverId: number;
 
@@ -47,47 +49,21 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
 
   takeOverAsUserConfirmationDialog() {
 
-    if (this.takeOverSteps) {
+    let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+      assignedUserId: this.globals.getCurrentUser().id,
+      status: this.workOrderTaskInProgress.status.name,
+      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
+      workOrderTaskId: this.workOrderTaskInProgress.id
+    } as IUpdateWorkOrderTaskRequest);
 
-      this.globals.showLoader(true);
-      this.userService.loggedInUser(env.apiVersion).subscribe(responseHandler(response => {
-
-        let loggedInUser = <UserModel>response.object;
-
-        this.globals.showLoader(true);
-        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null , env.apiVersion).subscribe(responseHandler(workOrderGetResponse => {
-
-          let tasks = <Array<WorkOrderTaskModel>>workOrderGetResponse.object[0].workOrderTasks;
-
-          let workOrderTaskPatchRequests = new Array<any>();
-
-          tasks.forEach(task => {
-
-            if (task.status?.name === 'Waiting to Start' || task.status?.name === 'Approved') {
-
-              let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest();
-              updateWorkOrderTaskRequest.status = 'Waiting to Start';
-              updateWorkOrderTaskRequest.taskIsRunning = false;
-              updateWorkOrderTaskRequest.taskRunningSince = task.taskRunningSince;
-              updateWorkOrderTaskRequest.taskStepOrder = task.taskStepOrder;
-              updateWorkOrderTaskRequest.workOrderTaskId = task.id;
-              updateWorkOrderTaskRequest.assignedUserId = loggedInUser.id;
-
-              workOrderTaskPatchRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
-            }
-          });
-
-          if (workOrderTaskPatchRequests.length === 0) {
-            this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-          } else {
-            this.globals.showLoader(true);
-            forkJoin(workOrderTaskPatchRequests).subscribe(responseHandler(responses => {
-              this.router.navigate(['app/wip/details', this.workOrderToTakeOverId]);
-            }));
-          }
-        }));
-      }));
-    }
+    this.globals.showLoader(true);
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+      this.workOrderTaskInProgress.assignedTo = this.globals.getCurrentUser().id;
+      this.workOrderTaskInProgress.assignedToUser = this.globals.getCurrentUser();
+      this.closeTakeOverAsUserConfirmationDialog();
+    }));
   }
 
 }

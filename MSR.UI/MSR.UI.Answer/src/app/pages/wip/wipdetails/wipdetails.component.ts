@@ -4,8 +4,9 @@ import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Customer, Procedure, PurchaseModel, WorkOrderPartService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
-   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-   UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel} from '../../../services/api.client.generated';
+  ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel
+} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
@@ -64,7 +65,7 @@ export class WipdetailsComponent implements OnInit {
 
 
           for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
-            if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress'  || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
+            if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress' || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
               this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[index];
               this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
               break;
@@ -96,6 +97,12 @@ export class WipdetailsComponent implements OnInit {
 
       if (s.procedureStep.referenceFiles === undefined) {
         s.procedureStep.referenceFiles = new Array<FileModel>();
+      }
+
+      if (s.status.name !== 'Complete') {
+        s.assignedTo = 131;
+        s.assignedToUser.id = 131;
+        s.assignedToUser.fullName = 'John Doe';
       }
 
     });
@@ -207,7 +214,7 @@ export class WipdetailsComponent implements OnInit {
 
     let indexOfCurrentWorkOrderInProgress = 0;
     if (this.workOrderTaskInProgress != null) {
-        indexOfCurrentWorkOrderInProgress = this.workOrderModel .workOrderTasks .findIndex(s => s.id === this.workOrderTaskInProgress.id);
+      indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
     }
 
     for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
@@ -235,7 +242,7 @@ export class WipdetailsComponent implements OnInit {
   }
 
   takeOverThisStep() {
-    console.log(this.workOrderTaskInProgress);
+
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
       assignedUserId: this.globals.getCurrentUser().id,
       status: this.workOrderTaskInProgress.status.name,
