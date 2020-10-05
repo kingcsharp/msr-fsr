@@ -92,7 +92,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             var encryptedText = EncryptionHelper.Encrypt(command.UserName).Replace('/', '*');
             var encodedText = System.Net.WebUtility.UrlEncode(encryptedText);
 
-            var lnkHref = $"<a href='https://qa.answer.msr-fsr.com/#/resetpassword/{encodedText}'>Reset Password</a>";
+            var lnkHref = $"<a href='{websiteUrl}/#/resetpassword/{encodedText}'>Reset Password</a>";
 
             var body = $@"<div>
                <p>Hello ANSWER user,<br/></p>
