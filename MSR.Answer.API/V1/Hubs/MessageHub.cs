@@ -37,6 +37,7 @@ namespace MSR.Application.Hubs
                 }
 
                 lock (connections) {
+                    connections.Clear();
                     connections.Add(connectionId);
                 }
             }
