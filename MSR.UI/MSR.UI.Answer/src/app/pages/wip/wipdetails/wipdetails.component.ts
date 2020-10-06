@@ -2,16 +2,19 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDete
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
-  Customer, Procedure, PurchaseModel, WorkOrderPartService,
+  Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel, CreateInvoiceItemRequest, ICreateInvoiceRequest, CreateInvoiceRequest, ICreateInvoiceItemRequest
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
+
+const moment = require('moment');
+const today = moment();
 declare let jQuery: any;
 
 @Component({
@@ -21,7 +24,7 @@ declare let jQuery: any;
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
   providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService,
-    LocationService, UserService, UserService]
+    LocationService, UserService, UserService, InvoiceService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -47,8 +50,10 @@ export class WipdetailsComponent implements OnInit {
 
   slideConfig;
 
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private userService: UserService, private elementReference: ElementRef) { }
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
+    @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService,
+    private userService: UserService, private elementReference: ElementRef, private invoiceService: InvoiceService) { }
 
 
   ngOnInit(): void {
@@ -78,6 +83,12 @@ export class WipdetailsComponent implements OnInit {
               this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
               break;
             }
+          }
+
+          if (this.workOrderTaskInProgress === undefined) {
+            this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
+            this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
+            this.slideConfig = { 'slidesToShow': 6, 'slidesToScroll': 6, 'initialSlide': 0, 'infinite': false, 'prevArrow': '.carousel-control-prev', 'nextArrow': '.carousel-control-next' };
           }
         }
 
@@ -211,13 +222,51 @@ export class WipdetailsComponent implements OnInit {
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
   }
 
-  cancelRemainingSteps(invoice: boolean) {
+  cancelRemainingStepsAndInvoice(invoice: boolean) {
 
     if (invoice) {
 
-      // TODO: Call Invoice
+      this.completeRemainingSteps();
+
+    } else {
+
+      this.cancelRemainingSteps();
 
     }
+
+  }
+  completeRemainingSteps() {
+
+    let indexOfCurrentWorkOrderInProgress = 0;
+    if (this.workOrderTaskInProgress != null) {
+      indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+    }
+
+    for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
+
+      let workOrderTaskToClose = this.workOrderModel.workOrderTasks[index];
+
+      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+        assignedUserId: this.globals.getCurrentUser().id,
+        status: 'Complete',
+        taskIsRunning: false,
+        taskRunningSince: null,
+        taskStepOrder: workOrderTaskToClose.taskStepOrder,
+        workOrderTaskId: workOrderTaskToClose.id,
+        totalTaskTime: 0
+      } as IUpdateWorkOrderTaskRequest);
+
+      this.globals.showLoader(true);
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+
+        this.router.navigate(['/app/wip/wipstatus']);
+
+      }));
+
+    }
+  }
+
+  cancelRemainingSteps() {
 
     let indexOfCurrentWorkOrderInProgress = 0;
     if (this.workOrderTaskInProgress != null) {
@@ -234,7 +283,8 @@ export class WipdetailsComponent implements OnInit {
         taskIsRunning: false,
         taskRunningSince: workOrderTaskToClose.taskRunningSince,
         taskStepOrder: workOrderTaskToClose.taskStepOrder,
-        workOrderTaskId: workOrderTaskToClose.id
+        workOrderTaskId: workOrderTaskToClose.id,
+        totalTaskTime: 0
       } as IUpdateWorkOrderTaskRequest);
 
       this.globals.showLoader(true);
@@ -245,7 +295,6 @@ export class WipdetailsComponent implements OnInit {
       }));
 
     }
-
   }
 
   takeOverThisStep() {
