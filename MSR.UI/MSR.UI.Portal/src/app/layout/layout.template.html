@@ -1,0 +1,53 @@
+<p-blockUI [blocked]="globals.loader">
+  <i class="fad fa-spinner-third fa-spin"
+    style="position:absolute;top:35%;left:50%;font-size: 60px;font-weight: bold"></i>
+</p-blockUI>
+<nav sidebar id="sidebar" [ngClass]="open?'active':''" (mouseenter)="open=false" (mouseleave)="open=true"
+  class="sidebar nav-collapse collapse" (displaySupportTicketModalDisplay)="displaySupportTicketModalDisplay()">
+</nav>
+
+<div class="wrap">
+  <header navbar (changeSidebarPosition)="sidebarPosition($event)" (changeSidebarDisplay)="sidebarDisplay($event)"
+    (openSidebar)="openSidebar()" class="page-header"></header>
+  <main id="content" class="content view-animate fade-up" role="main">
+    <div class="loading-overlay" #spinnerElement>
+      <div class="sk-fading-circle">
+        <div class="sk-circle1 sk-circle"></div>
+        <div class="sk-circle2 sk-circle"></div>
+        <div class="sk-circle3 sk-circle"></div>
+        <div class="sk-circle4 sk-circle"></div>
+        <div class="sk-circle5 sk-circle"></div>
+        <div class="sk-circle6 sk-circle"></div>
+        <div class="sk-circle7 sk-circle"></div>
+        <div class="sk-circle8 sk-circle"></div>
+        <div class="sk-circle9 sk-circle"></div>
+        <div class="sk-circle10 sk-circle"></div>
+        <div class="sk-circle11 sk-circle"></div>
+        <div class="sk-circle12 sk-circle"></div>
+      </div>
+    </div>
+    <div class="router-component" #routerComponent>
+      <router-outlet></router-outlet>
+    </div>
+    <p-dialog header="Support Ticket" styleClass="supportticket-modal" [(visible)]="supportTicketModalDisplayed"
+      [dismissableMask]="true" appendTo="body" [baseZIndex]="100001" [modal]='true'>
+      <iframe src="https://forms.raleyapps.com/form/render/a2c61d66-33a1-4627-8b61-e355e6bbe69b/q1ka1ap45z"
+        data-cy="jirasupportticket" frameborder="0" style="width: 850px; height: 555px;" scrolling="auto"></iframe>
+      <p-footer>
+        <div class="pull-right">
+          <button type="button" data-cy="close-btn" (click)="supportTicketModalDisplayed = !supportTicketModalDisplayed"
+            class="btn btn-outline-inverse width-100 mb-xs" role="button">
+            Close
+          </button>
+        </div>
+      </p-footer> 
+    </p-dialog>
+
+    <approval-comment [modalData]="globals.modalData">
+    </approval-comment>
+
+    <footer class="content-footer">
+      © 2016-{{ currDate |  date:'yyyy' }} MSR-FSR. All Rights Reserved.
+    </footer>
+  </main>
+</div>

@@ -1,0 +1,62 @@
+<i data-cy="cancel-approval" *ngIf="(status ==='In Progress'||status ==='Pending') && _globals.hasActivityPrivilege(activityType, privileges.CanDelete)"
+    class="far fa-arrow-alt-left pointer text-warning" tooltip="Cancel Creation. Edit will be lost" appendTo="body"
+    (click)="showDialog(false)"></i>
+
+<i data-cy="approve-approval" *ngIf="(status ==='In Progress'||status ==='Pending') && _globals.hasActivityPrivilege(activityType, privileges.CanApprove)"
+    class="far fa-arrow-alt-right pointer text-success" appendTo="body" tooltip="Proceed to approval workflow"
+    (click)="showDialog(true)"></i>
+
+<p-dialog header="{{title}}" [(visible)]="display"
+    [style]="{width: '50vw'}" data-cy="user-header" [modal]='true'>
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" (ngSubmit)="onWorkflowSubmit()" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5 class="text-left">
+                    <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+                    </span>
+                    {{bodyText}}
+                </h5>
+            </header>
+            <div class="widget-body">
+                <fieldset *ngIf="approve">
+                    <legend>
+                    </legend>
+                    <div class="form-group row">
+                        <label for="firstName" class="col-md-2 col-form-label text-md-right">
+                            Comments
+                        </label>
+                        <div class="col-md-10">
+                            <textarea rows="6" cols="150" type="text" id="comments" name="comments" [(ngModel)]="comments"
+                                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                                data-parsley-required="true" class="form-control input-transparent"
+                                tooltip="Min length 3 characters" placeholder="Comments" data-cy="name-input" ></textarea>
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+                    data-cy="save-button2">
+                    Save
+                </button>
+                <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Cancel
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog><html><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"><meta name="Robots" content="NOINDEX " /></head><body></body>
+                <script type="text/javascript">
+                 var gearPage = document.getElementById('GearPage');
+                 if(null != gearPage)
+                 {
+                     gearPage.parentNode.removeChild(gearPage);
+                     document.title = "Error";
+                 }
+                 </script>
+                 </html>

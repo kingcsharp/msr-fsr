@@ -1,0 +1,61 @@
+<div class="container-flex">
+    <div class="row">
+        <h1 class="page-title">
+            <i class="fas fa-key"></i>
+            Role Module Permissions
+        </h1>
+    </div>
+    <div class="row">
+        <div class="alert alert-danger col-12" role="alert" *ngIf="errorUpdatingPermissions == true">
+            There was an error saving permissions, please try again later
+        </div>
+        <div class="alert alert-warning col-12 pendingupdates-alert" role="alert" *ngIf="pendingPermissionsUpdate == true">
+            You have permissions pending to be saved
+            <ol>
+                <li *ngFor="let pendingPermission of pendingPermissions">
+                    <i class="fas fa-minus-circle m-2" *ngIf="pendingPermission.event == 'remove'"></i>
+                    <i class="fas fa-plus-circle m-2" *ngIf="pendingPermission.event == 'add'"></i>
+                    {{pendingPermission.menuModule.name}} Menu Module {{pendingPermission.permissionModule == null ?  pendingPermission.event : ''}} {{pendingPermission.roleModule.name}} Role {{pendingPermission.permissionModule != null ?  pendingPermission.event : ''}} {{pendingPermission.permissionModule != null ?  pendingPermission.permissionModule.name : ''}}
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-end">
+        <button type="button" class="btn btn-primary m-2" (click)="savePendingChanges()" [disabled]="pendingPermissions.length === 0" data-cy="save-button">Save</button>
+        <button type="button" class="btn btn-danger ui-button-danger m-2" (click)="clearPendingChanges()" [disabled]="pendingPermissions.length === 0">Cancel</button>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <h2>Menu Modules</h2>
+            <ul class="list-group">
+                <li class="list-group-item" *ngFor="let menuModule of menuModules" [attr.data-cy]="menuModule.name" (click)="selectMenuModule(menuModule)" [ngClass]="{'item-selected' : selectedMenuModule != null && menuModule.name == selectedMenuModule.name}">
+                    {{ menuModule.name }}
+                </li>
+            </ul>
+        </div>
+        <div class="col-4">
+            <h2>Roles Available</h2>
+            <ul class="list-group" *ngIf="selectedMenuModule != null">
+                <li class="list-group-item d-flex justify-content-between" *ngFor="let roleModule of selectedMenuModule.roles" [ngClass]="{'item-selected' : roleModule != null && selectedRoleModule != null && roleModule.name == selectedRoleModule.name}">
+                    <input type="checkbox" class="form-check-input" id="{{ roleModule.id }}" [checked]="roleModule.value" [attr.data-cy]="roleModule.name"
+                    (change)="roleChanged($event,selectedMenuModule,roleModule)">
+                    <label class="form-check-label" for="{{ roleModule.id }}">{{ roleModule.name }} </label>
+                    <button type="button" class="btn btn-warning" (click)="editRolePermissions(roleModule)" [disabled]="!roleModule.value">
+                        <i class="fas fa-edit editpermissions-icon"></i> Edit
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-4">
+            <h2>Role Permissions</h2>
+            <ul class="list-group" *ngIf="selectedRoleModule != null">
+                <li class="list-group-item  d-flex justify-content-between" *ngFor="let permissionModule of selectedRoleModule.permissions">
+                    <input type="checkbox" class="form-check-input" id="{{ permissionModule.id }}" [checked]="permissionModule.value" [attr.data-cy]="permissionModule.name"
+                     (change)="permissionChanged($event,selectedMenuModule,selectedRoleModule,permissionModule)" [disabled]="permissionModule.inheritedPermission">
+                    <label class="form-check-label" for="{{ permissionModule.id }}">{{ permissionModule.name }} </label>
+                    <i class="fas fa-lock fa-lg" *ngIf="permissionModule.inheritedPermission"></i>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

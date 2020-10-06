@@ -1,0 +1,45 @@
+<div class="container-flex custom-panel">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-title">
+                <i class="fal fa-eye mx-2"></i>
+                <span>Procedure: {{ procedure.name}}</span>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div>Procedure Id: {{ procedure.id}} </div>
+            <div>Revision Number: {{ procedure.revision}} </div>
+        </div>
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Number</th>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Text</th>
+                        <th>Labor Time (mins)</th>
+                        <th>Equipment Time (mins)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let procedureStep of procedureSteps;">
+                        <td> {{ procedureStep.id }} </td>
+                        <td> {{ procedureStep.id }} </td>
+                        <td> {{ procedureStep.title }} </td>
+                        <td> {{ procedureStep.stepText }} </td>
+                        <td> {{ procedureStep.laborTime }} </td>
+                        <td> {{ procedureStep.equipmentTime }} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <button type="button" class="btn btn-warning m-2" [routerLink]="['../procedures']" data-cy="cancel-button">Cancel</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,122 @@
+<div class="container-flex">
+  <div class="row">
+    <div class="col-6">
+      <h1 class="page-title">
+        <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+        {{globals.activeMenu.name}}
+      </h1>
+    </div>
+    <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+      <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+    </div>
+  </div>
+  <div class="row">
+    <widget>
+      <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+        [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true" [filterDelay]="0"
+        stateStorage="local" stateKey="{{gridStorageId}}">
+        <ng-template pTemplate="caption">
+          <div class="text-right">
+            <button *ngIf="canAddHelpPage" [routerLink]="['../help-create']"
+              class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+              + Add
+            </button>
+            <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+              [gridVersion]="gridVersion" data-cy="usergrid-options" [hidden]="true">
+            </grid-options>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+              data-cy="usertable-header">
+              {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label != 'Actions'"></p-sortIcon>
+            </th>
+          </tr>
+          <tr>
+            <th [hidden]="!commonGrid.isVisibleCol('id',gridSettings)">
+              <div class="position-relative">
+                <input id="id" pInputText type="text" tooltip="Search by Id"
+                  (input)="dt.filter($event.target.value, 'id', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['id']?.value">
+                <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'id')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('title',gridSettings)">
+              <div class="position-relative">
+                <input id="title" pInputText type="text" tooltip="Search by Friendly Url"
+                  (input)="dt.filter($event.target.value, 'title', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['title']?.value">
+                <i *ngIf="dt.filters['title']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'title')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('friendlyURL',gridSettings)">
+              <div class="position-relative">
+                <input id="friendlyURL" pInputText type="text" tooltip="Search by Friendly Url"
+                  (input)="dt.filter($event.target.value, 'friendlyURL', 'contains')" class="ui-column-filter"
+                  [value]="dt.filters['friendlyURL']?.value">
+                <i *ngIf="dt.filters['friendlyURL']?.value" class="fclear pi pi-times pointer"
+                  (click)="commonGrid.filter(dt,'friendlyURL')"></i>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('roles',gridSettings)">
+              <div class="position-relative">
+                <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="allRoles" [filterId]="'roles'"
+                  [defaultText]="'Select Group Roles'" [filterProp]="'name'" [multipleValues]="true"
+                  [defaultTextTooltip]="''" [datatable]="dt">
+                </multiselect-wrapper>
+              </div>
+            </th>
+            <th [hidden]="!commonGrid.isVisibleCol('actions',gridSettings)"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-helpPage>
+          <tr class="ui-selectable-row">
+            <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)" data-cy="helppage-id">
+              {{helpPage.id}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('title', gridSettings)">
+              {{helpPage.title}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('friendlyURL', gridSettings)">
+              {{helpPage.friendlyURL}}
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('roles', gridSettings)">
+              <span *ngFor="let role of helpPage.roles" class="badge mr-xs badge-secondary">{{role.name}}</span>
+            </td>
+            <td [hidden]="!commonGrid.isVisibleCol('actions', gridSettings)">
+              <i *ngIf="canEditHelpPage" class="far fa-edit pointer" tooltip="Edit Help Page" data-cy="edit-button"
+                [routerLink]="['../help-create']" [queryParams]="{id: helpPage.id}"></i>
+              <i *ngIf="canDeleteHelpPage" class="fa fa-trash pointer" tooltip="Delete Help Page" data-cy="delete-button"
+                (click)="openConfirmDeleteDialog(helpPage)"></i>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" style="text-align:left">No Help Pages to Display</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </widget>
+  </div>
+</div>
+<p-dialog header="Confirm Delete Help Page" [(visible)]="showConfirmDeleteDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  Are you sure you want to Delete this Help Page? This action cannot be undone.
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="deleteHelpPage()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

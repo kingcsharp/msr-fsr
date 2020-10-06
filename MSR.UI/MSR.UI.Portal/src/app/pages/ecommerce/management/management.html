@@ -1,0 +1,25 @@
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">YOU ARE HERE</li>
+  <li class="active breadcrumb-item">E-commerce</li>
+</ol>
+<div class="page-top-line">
+  <h1 class="page-title">Product - <span class="fw-semi-bold">Management</span></h1>
+  <alert
+    type="success"
+    class="promo-alert"
+    [ngClass]="{'show-alert': showAlert}"
+    [dismissible]="true"
+  >
+    This page is only available in <a class="text-white font-weight-bold" rel="noreferrer noopener"
+                                      href="https://flatlogic.com/admin-dashboards/light-blue-angular-node-js"
+                                      target="_blank">Light Blue Angular with Node.js</a> integration!
+  </alert>
+</div>
+<widget
+  [title]="'List of Products'"
+  [close]="true"
+  [fetchingData]="productsService.isReceiving"
+>
+  <button (click)="createNewProduct()" class="btn btn-success mb-3">Create Product</button>
+
+</widget>

@@ -1,0 +1,485 @@
+<div class="container-fluid">
+  <h1 class="page-title mb-5">
+    New Purchase - Purchase Order Details
+  </h1>
+
+  <widget>
+    <form
+      *ngIf="getPurchaseOrderFlag && purchaseOrderData"
+      class="py-4 form-horizontal form-label-left parsleyjs"
+      data-parsley-priority-enabled="false"
+      novalidate="novalidate"
+    >
+      <div class="row mx-0">
+        <div class="col-md-8 col-12">
+          <div class="form-group row">
+            <label
+              for="CustomerName"
+              class="col-md-4 text-right"
+            >
+              Customer Name :
+            </label>
+            <div class="col-md-8">
+              <input
+                *ngIf="getCustomerFlag"
+                [value]="getCustomerLabel(customerData)"
+                placeholder="Customer Name"
+                type="text"
+                class="form-control input-transparent"
+                name="CustomerName"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="POName"
+              class="col-md-4 text-right"
+            >
+              PO Name :
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.name"
+                placeholder="PO Name"
+                type="text"
+                class="form-control input-transparent"
+                name="POName"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="RefCustPO"
+              class="col-md-4 text-right"
+            >
+              Reference Cust PO #:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.customerReferencePO"
+                type="text"
+                class="form-control input-transparent"
+                name="RefCustPO"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="RefCustPO"
+              class="col-md-4 text-right"
+            >
+              Cust Ref# / MTTN:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.customerReferenceNo"
+                type="text"
+                class="form-control input-transparent"
+                name="CustRefNum"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="OpenDate" class="col-md-4 text-right">
+              Open Date:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.openDate | date :'short'"
+                type="text"
+                class="form-control input-transparent"
+                name="OpenDate"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="ClosedDate" class="col-md-4 text-right">
+              Close Date:
+            </label>
+            <div class="col-md-8">
+              <input
+                [value]="purchaseOrderData.closeDate | date :'short'"
+                type="text"
+                class="form-control input-transparent"
+                name="ClosedDate"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label
+              for="TotalPurchaseLimit"
+              class="col-md-4 text-right"
+            >
+              Maximum Amount to Charge:
+            </label>
+            <div class="col-md-8 input-group input-group-transparent">
+              <span class="input-group-addon bg-secondary">$</span>
+              <input
+                [value]="purchaseOrderData.totalPurchaseLimit"
+                type="text"
+                class="form-control input-transparent"
+                name="TotalPurchaseLimit"
+                readonly
+              >
+            </div>
+          </div>
+
+          <div *ngIf="step === 1" class="form-group row">
+            <label
+              for="TotalPurchaseLimit"
+              class="col-md-4 text-right"
+            >
+            Set all due dates to:
+            </label>
+            <div class="col-md-8 input-group input-group-transparent">
+              <p-calendar
+                [(ngModel)]="globalDueDate"
+                name="globalDueDate"
+                showIcon="true"
+                styleClass="input-group input-group-transparent"
+                inputStyleClass="form-control input-transparent"
+              >
+              </p-calendar>
+              <div class="input-group-btn">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-cy="btn-apply"
+                  (click)="applyGlobalDueDate()"
+                >Apply</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <ng-container *ngIf="step === 0">
+        <h2 class="page-title my-4 px-3">
+          Available Purchase Items
+        </h2>
+
+        <div class="row mx-0">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <th style="width:50%;">Product</th>
+                <th style="width:10%;">Purchase Qty</th>
+                <th><div id="show-hide">Work Order Creation</div></th>
+              </tr>
+              <tr *ngFor="let product of purchaseProducts; index as i">
+                <td>
+                  <input
+                    class="form-control input-transparent"
+                    name="ProductPo[{{i}}].Name"
+                    readonly
+                    type="text"
+                    [value]="product.name"
+                  >
+                </td>
+                <td>
+                  <p-inputNumber
+                    [(ngModel)]="purchaseProducts[i].qty"
+                    mode="decimal"
+                    name="ProductPo[{{i}}].Qty"
+                    [useGrouping]="false"
+                  >
+                  </p-inputNumber>
+                </td>
+                <td>
+                  <div
+                    class="d-flex align-items-center justify-content-start"
+                    [class.hide]="product.qty < 2"
+                  >
+                    <p-selectButton
+                      [options]="selectButtonOptions"
+                      [(ngModel)]="purchaseProducts[i].groupWO"
+                      name="ProductPo[{{i}}].groupWO"
+                    >
+                    </p-selectButton>
+                    <label class="px-3">Group Quantity on One WO</label>
+                  </div>
+
+                  <div
+                    class="d-flex align-items-center justify-content-start"
+                    [class.hide]="!product.groupWO"
+                  >
+                    <p-selectButton
+                      [options]="selectButtonOptions"
+                      [(ngModel)]="purchaseProducts[i].serializeIndividually"
+                      name="ProductPo[{{i}}].serializeIndividually"
+                      class="ml-1"
+                    >
+                    </p-selectButton>
+                    <label class="px-3">Serialize Parts Individually</label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="step === 1">
+        <h2 class="page-title my-4 px-3">
+          Purchase Items
+        </h2>
+
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th>Product Name</th>
+              <th>Cust Line</th>
+              <th>Material Transfer #</th>
+              <th>Due Date</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Ext Price</th>
+            </tr>
+
+            <tr *ngFor="let purchaseItem of purchaseItems; index as i">
+              <td>
+                <input
+                  [value]="purchaseItem.productName"
+                  class="form-control input-transparent"
+                  name="purchaseItems[{{i}}].PROD_SHOW_NAME"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  [(ngModel)]="purchaseItems[i].customerLineNumber"
+                  name="purchaseItem[{{i}}].CUST_LINE_ITEM"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-type="number"
+                  data-parsley-required="true"
+                >
+              </td>
+              <td>
+                <input
+                  [(ngModel)]="purchaseItems[i].mttn"
+                  class="form-control input-transparent disable"
+                  name="purchaseItem[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER" type="text"
+                  data-parsley-trigger="change" data-parsley-maxlength="10" data-parsley-maxlength-message="MTTN must be 10 characters or less."
+                  data-parsley-required="false"
+                >
+              </td>
+              <td>
+                <div class="form-group row mx-0">
+                  <p-calendar
+                    [(ngModel)]="purchaseItems[i].dueDate"
+                    name="purchaseItem[{{i}}].DUE_DATE"
+                    showIcon="true"
+                    styleClass="input-group input-group-transparent"
+                    inputStyleClass="form-control input-transparent"
+                  >
+                  </p-calendar>
+                </div>
+              </td>
+              <td>
+                <input
+                  [value]="purchaseItem.qty"
+                  class="form-control input-transparent disable"
+                  name="purchaseItem[{{i}}].QTY"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <div class="input-group input-group-transparent">
+                  <span class="input-group-addon bg-secondary">$</span>
+                  <input
+                    [value]="purchaseItem.unitPrice"
+                    class="form-control input-transparent"
+                    name="purchaseItem[{{i}}].UNIT_PRICE"
+                    readonly
+                    type="text"
+                  >
+                </div>
+              </td>
+              <td>
+                <div class="input-group input-group-transparent">
+                  <span class="input-group-addon bg-secondary">$</span>
+                  <input
+                    [value]="purchaseItem.extPrice"
+                    class="form-control input-transparent"
+                    name="purchaseItem[{{i}}].EXT_PRICE"
+                    readonly
+                    type="text"
+                  >
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+
+      <ng-container *ngIf="step === 2">
+        <h2 class="page-title my-4 px-3">
+          Purchase Serialize Parts
+        </h2>
+
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th>Cust Line #</th>
+              <th>Serial / Kit Number</th>
+              <th>Quantity</th>
+              <th>Site</th>
+              <th>Part</th>
+              <th>Procedure</th>
+            </tr>
+
+            <tr *ngFor="let purchaseSerializeItem of purchaseSerializeItems; index as i">
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.customerLineNumber"
+                  class="form-control input-transparent disable"
+                  name="purchaseSerializeItem[{{i}}].CUST_LINE_ITEM"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [(ngModel)]="purchaseSerializeItems[i].serialKitNo"
+                  class="form-control input-transparent disable"
+                  name="purchaseSerializeItem[{{i}}].SERIAL_KIT_NUMBER"
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.qty"
+                  class="form-control input-transparent"
+                  name="purchaseSerializeItem[{{i}}].QTY"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <p-dropdown
+                  placeholder="Select Site"
+                  name="purchaseSerializeItem[{{i}}].SITE"
+                  [(ngModel)]="purchaseSerializeItems[i].locationId"
+                  [options]="locationsData"
+                  appendTo="body"
+                  [baseZIndex]="100001"
+                  data-parsley-required="true"
+                >
+                </p-dropdown>
+              </td>
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.partName"
+                  class="form-control input-transparent"
+                  name="purchaseSerializeItem[{{i}}].PART_NAME"
+                  readonly
+                  type="text"
+                >
+              </td>
+              <td>
+                <input
+                  [value]="purchaseSerializeItem.procedureName"
+                  class="form-control input-transparent"
+                  name="purchaseSerializeItem[{{i}}].PROCEDURE_NAME"
+                  readonly
+                  type="text"
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+
+      <div class="row mx-0 my-3">
+        <button
+          class="btn btn-success action-button"
+          title=""
+          tooltip="Create Purchase and Continue"
+          (click)="goToNextStep()"
+        >
+          <i class="fa fa-arrow-circle-right"></i>
+          Next
+        </button>
+        <button
+          class="btn btn-warning action-button ml-2"
+          tooltip="Cancel Purchase and Return to PO List"
+          [routerLink]="['../../../../pricing/purchaseorder']"
+        >
+          <i class="fa fa-arrow-circle-left"></i>
+          Cancel Purchase
+        </button>
+      </div>
+    </form>
+  </widget>
+</div>
+
+<p-dialog
+  header="Serial Numbers checked that has been used for a different Part Number previously!"
+  [(visible)]="serialNumberModal"
+  [appendTo]="'body'"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '50vw'}"
+  data-cy="purchase-order-header"
+>
+  <section
+  class="widget mrg-btm-sm"
+  widget
+  >
+    <header class="mb-4">
+      <h5>Details</h5>
+    </header>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <th>Serial Number</th>
+          <th>Customer Part Number</th>
+          <th>Part Description</th>
+        </tr>
+        <tr>
+          <td>Serial Number1</td>
+          <td>Customer Part Number1</td>
+          <td>Part Description1</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row mx-0 mt-4 mb-3 justify-content-end">
+      <button
+        type="submit"
+        class="btn btn-success width-100 mr-2"
+        role="button"
+        data-cy="save-button"
+      >
+        Continue
+      </button>
+      <button
+        type="button"
+        class="btn btn-warning width-100"
+        role="button"
+        (click)="closeSerialNumberModal()"
+      >
+        Cancel
+      </button>
+    </div>
+  </section>
+</p-dialog>

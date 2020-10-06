@@ -1,0 +1,82 @@
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr data-cy="wipstatus-header">
+            <th class="wipListHeader" *ngIf="isDisplayedInWipList">Procedure & Product</th>
+            <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Product</th>
+            <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">PN/IPN</th>
+            <th class="wipListHeader" width="20%" *ngIf="!isDisplayedInWipList">Procedure</th>
+            <th class="wipListHeader" width="10%" *ngIf="!isDisplayedInWipList">
+                <p-multiSelect [options]="locationOptions" [(ngModel)]="selectedLocations" placeholder="All" maxSelectedLabels="1"
+                (onChange)="locationsSelectedUpdated($event)" data-cy="location-multiselect"></p-multiSelect>
+            </th>
+            <th class="wipListHeader">Open WorkOrders</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let workOrderStatus of displayWorkOrderStatuses" data-cy="wipstatus-row">
+            <td *ngIf="isDisplayedInWipList">
+              <div class="container">
+                <div class="row">
+                  <div class="col-2 text-right">Procedure: </div><div class="col-10">{{ workOrderStatus.procedureName }} </div>
+                </div>
+                <div class="row">
+                  <div class="col-2 text-right">Product: </div><div class="col-10">{{ workOrderStatus.productName }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.productName }} </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.partNumber }} </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.procedureName }} </td>
+            <td class="wipListItem" *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
+            <td>
+              <button [ngClass]="{'btn':true, 'btn-lg': true,
+                  'bg-warning': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
+                  'bg-info': !isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
+                  'bg-danger': isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate)
+                }"
+                placement="bottom" data-cy="workordersummary-icon"
+                (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)">
+                  <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
+                    'fa-clock': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
+                    'fa-cog': workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                    'fa-spin': workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
+                    'fa-hourglass': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start',
+                    'fa-exclamation-circle': isLate && workOrderStatus.workOrderSummary.workOrderStatus !== 'In Progress'
+                  } " placement="bottom" data-cy="workordersummary-icon"
+                  [tooltip]="workOrderSummaryToolTipTemplate"></i>
+                  <ng-template #workOrderSummaryToolTipTemplate>
+                    <strong>WorkOrder Item Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderItemNumber }}<br />
+                    <strong>Purchase Order / Line Number:</strong> {{ workOrderStatus.workOrderSummary.purchaseOrderLineNumber }}<br />
+                    <strong>Serial Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderPartSerialNumber }}<br />
+                    <strong>Status:</strong> {{ workOrderStatus.workOrderSummary.workOrderStatus }}<br />
+                    <strong>Assigned To:</strong> {{ workOrderStatus.workOrderSummary.workOrderAssignedTo }}<br />
+                    <strong>Due Date:</strong> {{ workOrderStatus.workOrderSummary.workOrderScheduledEndDate | date: "MM/dd/yy hh-mm-ss z"}}
+                  </ng-template>
+              </button>
+            </td>
+        </tr>
+        <tr *ngIf="displayWorkOrderStatuses.length === 0">
+            <td colspan="5">No Open WorksOrders to Display</td>
+        </tr>
+    </tbody>
+</table>
+<p-dialog header="Attention" [(visible)]="showTakeOverAsUserConfirmationDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '33vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      Are you sure you want to take over this WorkOrder?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="takeOverAsUserConfirmationDialog()" class="btn btn-warning width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Yes
+      </button>
+      <button type="button" (click)="closeTakeOverAsUserConfirmationDialog()" class="btn btn-danger width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
