@@ -87,7 +87,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
 
             var from = _emailInformation.From;
-            var websiteUrl = _generalInformation.WebsiteURL;
+           // var websiteUrl = _generalInformation.WebsiteURL;
+            var websiteUrl = "https://qa.answer.msr-fsr.com";
 
             var encryptedText = EncryptionHelper.Encrypt(command.UserName).Replace('/', '*');
             var encodedText = System.Net.WebUtility.UrlEncode(encryptedText);
