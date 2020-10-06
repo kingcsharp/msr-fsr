@@ -119,7 +119,7 @@ namespace MSR.Application.EventServices
                 WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
                 string wonum = IWorkOrderService.GetWorkOrderItemNumber(model);
 
-                _logger.LogInformation($"Finished importing WorkOrder: {wonum}");
+                _logger.LogInformation($"Finished creating WorkOrder: {wonum}");
 
                 _messageHub.SendNotification(CurrentUser.GetId().ToString(), new Toaster()
                 {

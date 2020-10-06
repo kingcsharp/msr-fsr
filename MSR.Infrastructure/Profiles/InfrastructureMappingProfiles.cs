@@ -193,6 +193,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Created, opts => opts.Ignore())
                 .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())
                 .ForMember(dest => dest.CreatedOn, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdated, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedOn, opts => opts.Ignore())
                 .ForMember(dest => dest.StatusId, opts => opts.MapFrom(src => 1))
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<ProcedureStepType, ProcedureStepTypeModel>().ReverseMap();
@@ -248,6 +251,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Domain.Models.ProcedureStepMonitor, MonitorModel>();
             CreateMap<ProcedureStepMonitor, WorkOrderTaskMonitor>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.Created, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.CreatedOn, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdated, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedBy, opts => opts.Ignore())
+                .ForMember(dest => dest.LastUpdatedOn, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureMonitorId, opts => opts.MapFrom(src => src.Id));
             CreateMap<ProcedureStepMonitor, Domain.Models.ProcedureStepMonitor>()
                 .ForMember(dest => dest.InputType, opt => opt.MapFrom(src => src.InputType.Name))
