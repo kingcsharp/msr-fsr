@@ -17,6 +17,7 @@ namespace MSR.Application.ApplicationServices
 
         public async Task Connect(string url, ILogger logger = null)
         {
+            _logger = logger;
             try
             {
                 if (connection != null)
@@ -35,7 +36,6 @@ namespace MSR.Application.ApplicationServices
 
                 await connection.StartAsync();
 
-                _logger = logger;
                 connection.On<Toaster>("ToasterMessage", (msg) =>
                 {
                     if (_logger != null)
