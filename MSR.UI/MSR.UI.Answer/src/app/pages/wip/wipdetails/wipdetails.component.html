@@ -132,7 +132,9 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.taskStepOrder === workOrderModel.workOrderTasks['0'].taskStepOrder">
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart.serialNumber !== 'N/A' && (
+             (workOrderTaskToView.procedureStep?.title.trim().toLocaleUpperCase() === 'SERIALIZE') ||
+             (workOrderTaskToView.id === workOrderModel.workOrderTasks['0'].id && !hasSerializationStep) )">
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">

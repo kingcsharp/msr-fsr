@@ -42,6 +42,7 @@ export class WipdetailsComponent implements OnInit {
   showCancelRemainingStepsDialog: boolean = false;
   activeSlideIndex = 0;
   showCarousel = true;
+  hasSerializationStep: boolean;
 
 
   slideConfig;
@@ -59,6 +60,7 @@ export class WipdetailsComponent implements OnInit {
 
 
         this.workOrderModel = this.cleanData(response.object[0]);
+        this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
