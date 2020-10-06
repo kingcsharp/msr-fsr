@@ -114,8 +114,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task ResetPasswordAsync(ResetPassword command)
         {
-            var userName = EncryptionHelper.Decrypt(command.Token);
-            // var userName = EncryptionHelper.Decrypt(command.Token.Replace('*', '/'));
+            var userName = EncryptionHelper.Decrypt(command.Token.Replace('*', '/'));
             var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == userName);
 
             if (user == null)
