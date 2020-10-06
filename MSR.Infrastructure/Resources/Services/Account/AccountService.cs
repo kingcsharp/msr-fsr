@@ -93,12 +93,16 @@ namespace MSR.Infrastructure.Resources.Services.Account
             var encodedText = System.Net.WebUtility.UrlEncode(encryptedText);
 
             var lnkHref = $"<a href='{websiteUrl}/#/resetpassword/{encodedText}'>Reset Password</a>";
+            var hiddenItem = $"<a style='color: white' href='{websiteUrl}'>Reset Password</a>";
+            var hiddenItem2 = $"<a style='color: white' href='https://uat.answer.msr-fsr.com/#/resetpassword/{encodedText}'>Reset Password</a>";
 
             var body = $@"<div>
                <p>Hello ANSWER user,<br/></p>
                <p>This email is being sent to you due to a password reset request from the MSR-FSR Answer system.<br/></p>
                <p><b> Please reset your password by clicking : </ b ><br/> </p>
                <p>{lnkHref}</p>
+                <p>{hiddenItem}</p>
+                <p>{hiddenItem2}</p
                         </div>";
 
             var subject = "ANSWER - Reset password";
