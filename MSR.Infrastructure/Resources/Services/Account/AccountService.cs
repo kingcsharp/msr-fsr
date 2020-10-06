@@ -87,8 +87,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
 
             var from = _emailInformation.From;
-           // var websiteUrl = _generalInformation.WebsiteURL;
-            var websiteUrl = "https://qa.answer.msr-fsr.com";
+            var websiteUrl = _generalInformation.WebsiteURL;
 
             var encryptedText = EncryptionHelper.Encrypt(command.UserName).Replace('/', '*');
             var encodedText = System.Net.WebUtility.UrlEncode(encryptedText);
@@ -115,7 +114,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task ResetPasswordAsync(ResetPassword command)
         {
-            var userName = EncryptionHelper.Decrypt(command.Token.Replace('*', '/'));
+            var userName = EncryptionHelper.Decrypt(command.Token);
+            // var userName = EncryptionHelper.Decrypt(command.Token.Replace('*', '/'));
             var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == userName);
 
             if (user == null)
