@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDetectorRef, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
@@ -12,6 +12,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
+declare let jQuery: any;
 
 @Component({
   selector: 'app-wipdetails',
@@ -40,9 +41,14 @@ export class WipdetailsComponent implements OnInit {
   hideCompletedWorkOrders: boolean = false;
   showCancelRemainingStepsDialog: boolean = false;
   activeSlideIndex = 0;
+  showCarousel = true;
 
-  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
+
+  slideConfig;
+
+  constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService, @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private userService: UserService, private elementReference: ElementRef) { }
+
 
   ngOnInit(): void {
 
@@ -80,6 +86,10 @@ export class WipdetailsComponent implements OnInit {
   }
 
   cleanData(workOrderModel: WorkOrderModel): WorkOrderModel {
+
+    workOrderModel.workOrderTasks.sort(function (a, b) {
+      return a.taskStepOrder - b.taskStepOrder;
+    });
 
     workOrderModel.workOrderTasks.map(s => {
 
@@ -195,6 +205,7 @@ export class WipdetailsComponent implements OnInit {
   }
 
   toggleCancelRemainingStepsDialog() {
+    this.showCarousel = true;
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
   }
 
@@ -252,4 +263,33 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskInProgress.assignedToUser = this.globals.getCurrentUser();
     }));
   }
+
+  addNcrTasks(newWorkOrderTasks: Array<WorkOrderTaskModel>) {
+
+    this.showCarousel = false;
+
+    let indexOfCurrentActiveTask = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id) + 1;
+
+    let workOrderTasksToAddBack = new Array<WorkOrderTaskModel>();
+
+    while (this.workOrderModel.workOrderTasks.length > (indexOfCurrentActiveTask)) {
+
+      workOrderTasksToAddBack.push(this.workOrderModel.workOrderTasks.pop());
+
+    }
+
+    newWorkOrderTasks.reverse().map((updatedWorkOrderTask, index) => {
+
+      workOrderTasksToAddBack.push(updatedWorkOrderTask);
+
+    });
+
+    workOrderTasksToAddBack.reverse().map((workOrderTask, index) => {
+      this.workOrderModel.workOrderTasks.push(workOrderTask);
+    });
+
+    this.changeDetectorRef.detectChanges();
+    this.showCarousel = true;
+  }
+
 }

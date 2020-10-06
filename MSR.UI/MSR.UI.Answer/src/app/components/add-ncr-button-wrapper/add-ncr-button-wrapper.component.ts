@@ -1,10 +1,10 @@
-import {  Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Procedure, WorkOrderPartService,
   WorkOrderModel, WorkOrderService, ProcedureStepMonitorService, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest,
-  AuditActionResultOfWorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, StatusModel,
-  IStatusModel} from '../../services/api.client.generated';
+  WorkOrderTaskModel, WorkOrderTaskMonitorModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel
+} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
@@ -20,9 +20,10 @@ import { forkJoin } from 'rxjs';
 export class AddNcrButtonWrapperComponent implements OnInit {
 
   @Input() workOrderModel: WorkOrderModel;
-  @Input() workOrderTaskInProgress: WorkOrderModel;
+  @Input() workOrderTaskInProgress: WorkOrderTaskModel;
   @Output() workOrderModelChange = new EventEmitter<any>();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
+  @Output() addNcrTasks = new EventEmitter<any>();
   showAddNcrDialog: boolean = false;
   ncrProceduresAvailable: Array<Procedure>;
 
@@ -37,7 +38,7 @@ export class AddNcrButtonWrapperComponent implements OnInit {
     this.globals.showLoader(true);
     this.procedureService.procedureGet(null, env.apiVersion).subscribe(responseHandler(response => {
 
-      this.ncrProceduresAvailable = response.object.filter(s => s.procedureType.name === 'Non-Conformation Operation');
+      this.ncrProceduresAvailable = response.object.filter(s => s.procedureType.name === 'Conformance Action (NCR)');
       this.showAddNcrDialog = !this.showAddNcrDialog;
 
     }));
@@ -46,79 +47,67 @@ export class AddNcrButtonWrapperComponent implements OnInit {
 
   insertNCR(ncrProcedure: Procedure) {
 
+    this.showAddNcrDialog = !this.showAddNcrDialog;
     this.procedureService.stepGet(ncrProcedure.id, null, env.apiVersion).subscribe(responseHandler((response) => {
 
       let procedureSteps = <Array<ProcedureStepModel>>response.object;
-      let indexOfWorkOrderTaskInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
-      let numberOfStepsToAdd = procedureSteps.length;
-      let arrayOfPatchWorkOrderTaskRequests = new Array<any>();
+      let seedStepOrderNumber = this.workOrderTaskInProgress.taskStepOrder;
+      let arrayOfPostWorkOrderTaskRequests = new Array<any>();
 
-      for (let index = indexOfWorkOrderTaskInProgress + 1; index < this.workOrderModel.workOrderTasks?.length; index++) {
+      procedureSteps.map((procedureStep, index) => {
 
-        this.workOrderModel.workOrderTasks[index].taskStepOrder = index + numberOfStepsToAdd;
-        let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-          assignedUserId: this.workOrderModel.workOrderTasks[index].assignedTo,
-          status: this.workOrderModel.workOrderTasks[index].status.name,
-          taskIsRunning: this.workOrderModel.workOrderTasks[index].taskIsRunning,
-          taskRunningSince: this.workOrderModel.workOrderTasks[index].taskRunningSince,
-          taskStepOrder: this.workOrderModel.workOrderTasks[index].taskStepOrder,
-          workOrderTaskId: this.workOrderModel.workOrderTasks[index].id
-        } as IUpdateWorkOrderTaskRequest);
+        let createWorkOrderTaskRequest = new CreateWorkOrderTaskRequest({
+          procedureId: procedureStep.procedureId,
+          procedureStepId: procedureStep.id,
+          workOrderId: this.workOrderModel.id,
+          taskStepOrder: seedStepOrderNumber + (index + 1)
+        } as ICreateWorkOrderTaskRequest);
 
-        arrayOfPatchWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
-      }
 
-      forkJoin(arrayOfPatchWorkOrderTaskRequests).subscribe(() => {
+        arrayOfPostWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPost(env.apiVersion, createWorkOrderTaskRequest));
 
-        let arrayOfPostWorkOrderTaskRequests = new Array<any>();
-
-        let newTaskStepOrder = this.workOrderModel.workOrderTasks[indexOfWorkOrderTaskInProgress].taskStepOrder + 1;
-        procedureSteps.forEach(procedureStep => {
-
-          let createWorkOrderTaskRequest = new CreateWorkOrderTaskRequest({
-            procedureId: procedureStep.procedureId,
-            procedureStepId: procedureStep.id,
-            workOrderId: this.workOrderModel.id,
-            taskStepOrder: newTaskStepOrder++
-          } as ICreateWorkOrderTaskRequest);
-
-          arrayOfPostWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPost(env.apiVersion, createWorkOrderTaskRequest));
-
-        });
-
-        forkJoin(arrayOfPostWorkOrderTaskRequests).subscribe(responses => {
-
-          this.getProcedureSteps(responses as Array<AuditActionResultOfWorkOrderTaskModel>);
-
-        });
 
       });
+
+      forkJoin(arrayOfPostWorkOrderTaskRequests).subscribe((postWorkOrderTaskResponses) => {
+        this.setDefaultsOfWorkOrderTasks(postWorkOrderTaskResponses.map(s => (<AuditActionResultOfWorkOrderTaskModel>s).object), procedureSteps);
+      });
+
 
     }));
 
   }
 
-  getProcedureSteps(responses: Array<AuditActionResultOfWorkOrderTaskModel>) {
-    window.location.reload();
-    responses.map(s => {
+  setDefaultsOfWorkOrderTasks(workOrderTasks: Array<WorkOrderTaskModel>, procedureSteps: Array<ProcedureStepModel>) {
 
-      let sample = s as AuditActionResultOfWorkOrderTaskModel;
-      let newWorkOrderTaskModel = sample.object;
+    let arrayOfPatchWorkOrderTaskRequests = new Array<any>();
+    workOrderTasks.map((workOrderTask) => {
 
-      if (newWorkOrderTaskModel.status === undefined && newWorkOrderTaskModel.statusId === 1) {
-        newWorkOrderTaskModel.status = new StatusModel({
-          id: 1,
-          name: 'Approved'
-        } as IStatusModel);
-      }
-      newWorkOrderTaskModel.assignedTo = this.globals.getCurrentUser();
-      newWorkOrderTaskModel.assignedTo = this.globals.getCurrentUser()?.id;
-      this.workOrderModel.workOrderTasks.push(newWorkOrderTaskModel);
+      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+        assignedUserId: this.globals.getCurrentUser().id,
+        status: 'Waiting to Start',
+        taskIsRunning: false,
+        taskRunningSince: null,
+        taskStepOrder: workOrderTask.taskStepOrder,
+        totalTaskTime: 0,
+        workOrderTaskId: workOrderTask.id
+      } as IUpdateWorkOrderTaskRequest);
+
+      arrayOfPatchWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
     });
 
-    this.workOrderModel.workOrderTasks = this.workOrderModel.workOrderTasks;
-    this.workOrderModel.workOrderTasks.sort((a, b) => (a.taskStepOrder > b.taskStepOrder) ? 1 : -1);
-    this.showAddNcrDialog = !this.showAddNcrDialog;
+    forkJoin(arrayOfPatchWorkOrderTaskRequests).subscribe((patchWorkOrderTaskResponses) => {
+
+      let updatedWorkOrderTasks = patchWorkOrderTaskResponses.map(s => (<AuditActionResultOfWorkOrderTaskModel>s).object);
+      updatedWorkOrderTasks.map(workOrderTask => {
+
+        workOrderTask.procedureStep = procedureSteps.find(s => s.id === workOrderTask.procedureStepId);
+
+      });
+
+      this.addNcrTasks.emit(updatedWorkOrderTasks);
+    });
+
 
   }
 

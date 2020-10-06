@@ -96,7 +96,8 @@
           <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"  *ngIf="workOrderTaskInProgress.assignedTo !== this.globals.getCurrentUser().id"></take-over-task-button-wrapper>
           <!--next 2 are all users -->
           <empmbutton-wrapper></empmbutton-wrapper>
-          <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
+          <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" (addNcrTasks)="addNcrTasks($event)"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
         </div>
       </div>
       <div class="row">
