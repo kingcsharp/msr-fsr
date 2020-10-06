@@ -42,7 +42,7 @@ namespace MSR.Application.ApplicationServices
                     {
                         if (pingCounterRcv % 20 == 0)
                         {
-                            _logger.LogInformation($"Received SignalR Heartbeat {msg.Message} " +
+                            _logger.LogDebug($"Received SignalR Heartbeat {msg.Message} " +
                                 $"(repeated {pingCounterRcv} times)");
                             pingCounterRcv = 0;
                         }
@@ -78,7 +78,7 @@ namespace MSR.Application.ApplicationServices
                     pingCounterSend += 1;
                 }
                 if (logit) {
-                    _logger.LogInformation(
+                    _logger.LogDebug(
                         $"SendMessage userId={userId} message={message.Message} " +
                         $"(repeated {pc} times");
                 }
