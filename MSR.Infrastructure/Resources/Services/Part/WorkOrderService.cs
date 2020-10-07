@@ -82,6 +82,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .ThenInclude(y => y.Part)
+                .Include(x => x.WorkOrderParts)
+                .ThenInclude(y => y.Children)
 
                 // Work Order Tasks etc.
                 .Include(x => x.WorkOrderTasks)
@@ -168,6 +170,24 @@ namespace MSR.Infrastructure.Resources.Services.Part
             WorkOrder workorder = _mapper.Map<WorkOrder>(command);
 
             var created = _unitOfWork.WorkOrders.Add(workorder);
+
+            // link work order IDs for all parts
+            Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
+            foreach(var p in workorder.WorkOrderParts)
+            {
+                parts.Push(p);
+            }
+            while(parts.Count > 0) {
+                var p = parts.Pop();
+                p.WorkOrder = workorder;
+                if (p.Children != null && p.Children.Count > 0)
+                {
+                    foreach(var sp in p.Children)
+                    {
+                        parts.Push(sp);
+                    }
+                }
+            }
 
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
@@ -279,7 +299,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
         {
-            var product = await _unitOfWork.Products.Query()
+            var product = await _unitOfWork.Products
+                .Query()
+                .Include(x => x.Part)
+                .ThenInclude(y => y.Subparts)
                 .FirstAsync(x => x.Id == command.ProductId);
             int count = 1;
             int quantity = command.Qty;
@@ -293,9 +316,30 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
             for (int i = 0; i < count; i++)
             {
+                List<WorkOrderPartModel> subs = new List<WorkOrderPartModel>();
+                if (product.Part.Subparts != null && product.Part.Subparts.Count > 0)
+                {
+                    foreach (PartSubPartMap p in product.Part.Subparts)
+                    {
+                        int spquantity = p.Qty;
+                        if (spquantity == 0)
+                        {
+                            spquantity = 1;
+                        }
+
+                        for (int j = 0; j < spquantity; j++)
+                        {
+                            subs.Add(new WorkOrderPartModel() {
+                                PartId = p.PartId,
+                                ParentId = p.ParentPartId
+                            });
+                        }
+                    }
+                }
                 var n = new WorkOrderPartModel()
                 {
-                    PartId = product.PartId
+                    PartId = product.PartId,
+                    Children = subs
                 };
                 parts.Add(n);
             }
@@ -629,16 +673,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 wosum.WorkOrderStatus = m.Status;
 
                 // WorkOrderAssignedTo
-                var curstep = m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
-                if (curstep.Count() > 0)
+                var curstepq = m.WorkOrderTasks.Where(x => !(
+                    x.Status.Name.ToUpper().Equals("COMPLETE") ||
+                    x.Status.Name.ToUpper().Equals("CANCELLED"))
+                );
+                if (curstepq.Count() > 0)
                 {
-                    if (curstep.First().AssignedToUser == null)
+                    WorkOrderTaskModel curstep = curstepq.OrderBy(x => x.TaskStepOrder).First();
+                    if (curstep.AssignedToUser == null)
                     {
                         wosum.WorkOrderAssignedTo = "";
+                        wosum.AssignedTo = null;
                     }
                     else
                     {
-                        wosum.WorkOrderAssignedTo = curstep.First().AssignedToUser.FullName;
+                        wosum.WorkOrderAssignedTo = curstep.AssignedToUser.FullName;
+                        wosum.AssignedTo = curstep.AssignedToUser.Id;
                     }
                 }
                 else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
