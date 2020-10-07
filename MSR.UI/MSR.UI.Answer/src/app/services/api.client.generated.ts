@@ -18277,7 +18277,6 @@ export class WorkOrderSummary implements IWorkOrderSummary {
     workOrderPartSerialNumber?: string | undefined;
     workOrderStatus!: string;
     workOrderAssignedTo?: string | undefined;
-    assignedTo?: number | undefined;
     workOrderHasNcr!: boolean;
     workOrderScheduledEndDate?: Date | undefined;
 
@@ -18298,7 +18297,6 @@ export class WorkOrderSummary implements IWorkOrderSummary {
             this.workOrderPartSerialNumber = _data["workOrderPartSerialNumber"];
             this.workOrderStatus = _data["workOrderStatus"];
             this.workOrderAssignedTo = _data["workOrderAssignedTo"];
-            this.assignedTo = _data["assignedTo"];
             this.workOrderHasNcr = _data["workOrderHasNcr"];
             this.workOrderScheduledEndDate = _data["workOrderScheduledEndDate"] ? new Date(_data["workOrderScheduledEndDate"].toString()) : <any>undefined;
         }
@@ -18319,7 +18317,6 @@ export class WorkOrderSummary implements IWorkOrderSummary {
         data["workOrderPartSerialNumber"] = this.workOrderPartSerialNumber;
         data["workOrderStatus"] = this.workOrderStatus;
         data["workOrderAssignedTo"] = this.workOrderAssignedTo;
-        data["assignedTo"] = this.assignedTo;
         data["workOrderHasNcr"] = this.workOrderHasNcr;
         data["workOrderScheduledEndDate"] = this.workOrderScheduledEndDate ? this.workOrderScheduledEndDate.toISOString() : <any>undefined;
         return data; 
@@ -18333,7 +18330,6 @@ export interface IWorkOrderSummary {
     workOrderPartSerialNumber?: string | undefined;
     workOrderStatus: string;
     workOrderAssignedTo?: string | undefined;
-    assignedTo?: number | undefined;
     workOrderHasNcr: boolean;
     workOrderScheduledEndDate?: Date | undefined;
 }

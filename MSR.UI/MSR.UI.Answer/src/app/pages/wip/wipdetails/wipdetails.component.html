@@ -70,7 +70,7 @@
         </div>
       </div>
       <div class="row mb-3" *ngIf="workOrderModel.workOrderTasks !== undefined">
-        <carousel id="step-carousel" class=" col-12 align-items-center" style="margin-left:25px"
+        <carousel id="step-carousel" #stepCarousel class="col-12 align-items-center" style="margin-left:25px"
         [itemsPerSlide]="9" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
           [interval]="false" [startFromIndex]="0" [(activeSlide)]="activeSlideIndex" data-ride="carousel">
           <slide id={{index}} *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"

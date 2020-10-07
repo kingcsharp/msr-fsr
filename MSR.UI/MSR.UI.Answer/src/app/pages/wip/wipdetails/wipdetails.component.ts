@@ -12,6 +12,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
+import { CarouselComponent } from 'ngx-bootstrap/carousel';
 
 const moment = require('moment');
 const today = moment();
@@ -30,6 +31,7 @@ export class WipdetailsComponent implements OnInit {
 
   @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
   @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
+  @ViewChild('stepCarousel') carousel: CarouselComponent;
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
@@ -224,7 +226,6 @@ export class WipdetailsComponent implements OnInit {
   }
 
   toggleCancelRemainingStepsDialog() {
-    this.showCarousel = true;
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
   }
 
@@ -351,7 +352,8 @@ export class WipdetailsComponent implements OnInit {
 
 
   slideToTaskInProgress() {
-
+    let index = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+    this.carousel.selectSlide(index);
   }
 
 }
