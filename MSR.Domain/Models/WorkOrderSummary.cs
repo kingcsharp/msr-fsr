@@ -61,6 +61,12 @@ namespace MSR.Domain.Models
         public string WorkOrderAssignedTo { get; set; }
 
         /// <summary>
+        /// User ID of the WorkOrderAssignedTo user
+        /// </summary>
+        [DataMember(Name="assignedTo ")]
+        public int? AssignedTo { get; set; }
+
+        /// <summary>
         /// Gets or Sets WorkOrderHasNcr
         /// </summary>
         [DataMember(Name="workOrderHasNcr")]

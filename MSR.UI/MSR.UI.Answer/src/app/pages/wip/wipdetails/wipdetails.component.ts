@@ -1,17 +1,22 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDetectorRef, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
-  Customer, Procedure, PurchaseModel, WorkOrderPartService,
+  Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel, CreateInvoiceItemRequest, ICreateInvoiceRequest, CreateInvoiceRequest, ICreateInvoiceItemRequest
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
+import { CarouselComponent } from 'ngx-bootstrap/carousel';
+
+const moment = require('moment');
+const today = moment();
+declare let jQuery: any;
 
 @Component({
   selector: 'app-wipdetails',
@@ -20,12 +25,13 @@ import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/sel
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
   providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService,
-    LocationService, UserService, UserService]
+    LocationService, UserService, UserService, InvoiceService]
 })
 export class WipdetailsComponent implements OnInit {
 
   @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
   @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
+  @ViewChild('stepCarousel') carousel: CarouselComponent;
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
@@ -40,9 +46,18 @@ export class WipdetailsComponent implements OnInit {
   hideCompletedWorkOrders: boolean = false;
   showCancelRemainingStepsDialog: boolean = false;
   activeSlideIndex = 0;
+  showCarousel = true;
+  hasSerializationStep: boolean;
+  workOrderIsComplete: boolean;
+
+
+  slideConfig;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService, private userService: UserService) { }
+    @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService,
+    private userService: UserService, private elementReference: ElementRef, private invoiceService: InvoiceService) { }
+
 
   ngOnInit(): void {
 
@@ -53,6 +68,8 @@ export class WipdetailsComponent implements OnInit {
 
 
         this.workOrderModel = this.cleanData(response.object[0]);
+        this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
+        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress') === undefined;
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
@@ -71,6 +88,12 @@ export class WipdetailsComponent implements OnInit {
               break;
             }
           }
+
+          if (this.workOrderTaskInProgress === undefined) {
+            this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
+            this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
+            this.slideConfig = { 'slidesToShow': 6, 'slidesToScroll': 6, 'initialSlide': 0, 'infinite': false, 'prevArrow': '.carousel-control-prev', 'nextArrow': '.carousel-control-next' };
+          }
         }
 
       }));
@@ -80,6 +103,10 @@ export class WipdetailsComponent implements OnInit {
   }
 
   cleanData(workOrderModel: WorkOrderModel): WorkOrderModel {
+
+    workOrderModel.workOrderTasks.sort(function (a, b) {
+      return a.taskStepOrder - b.taskStepOrder;
+    });
 
     workOrderModel.workOrderTasks.map(s => {
 
@@ -114,6 +141,10 @@ export class WipdetailsComponent implements OnInit {
     // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
     if (!this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.workOrderTaskToView = workOrderTask;
+    }
+
+    if (this.workOrderIsComplete) {
+      this.workOrderTaskInProgress = workOrderTask;
     }
 
   }
@@ -198,13 +229,51 @@ export class WipdetailsComponent implements OnInit {
     this.showCancelRemainingStepsDialog = !this.showCancelRemainingStepsDialog;
   }
 
-  cancelRemainingSteps(invoice: boolean) {
+  cancelRemainingStepsAndInvoice(invoice: boolean) {
 
     if (invoice) {
 
-      // TODO: Call Invoice
+      this.completeRemainingSteps();
+
+    } else {
+
+      this.cancelRemainingSteps();
 
     }
+
+  }
+  completeRemainingSteps() {
+
+    let indexOfCurrentWorkOrderInProgress = 0;
+    if (this.workOrderTaskInProgress != null) {
+      indexOfCurrentWorkOrderInProgress = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+    }
+
+    for (let index = indexOfCurrentWorkOrderInProgress; index < this.workOrderModel.workOrderTasks.length; index++) {
+
+      let workOrderTaskToClose = this.workOrderModel.workOrderTasks[index];
+
+      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+        assignedUserId: this.globals.getCurrentUser().id,
+        status: 'Complete',
+        taskIsRunning: false,
+        taskRunningSince: null,
+        taskStepOrder: workOrderTaskToClose.taskStepOrder,
+        workOrderTaskId: workOrderTaskToClose.id,
+        totalTaskTime: 0
+      } as IUpdateWorkOrderTaskRequest);
+
+      this.globals.showLoader(true);
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+
+        this.router.navigate(['/app/wip/wipstatus']);
+
+      }));
+
+    }
+  }
+
+  cancelRemainingSteps() {
 
     let indexOfCurrentWorkOrderInProgress = 0;
     if (this.workOrderTaskInProgress != null) {
@@ -221,7 +290,8 @@ export class WipdetailsComponent implements OnInit {
         taskIsRunning: false,
         taskRunningSince: workOrderTaskToClose.taskRunningSince,
         taskStepOrder: workOrderTaskToClose.taskStepOrder,
-        workOrderTaskId: workOrderTaskToClose.id
+        workOrderTaskId: workOrderTaskToClose.id,
+        totalTaskTime: 0
       } as IUpdateWorkOrderTaskRequest);
 
       this.globals.showLoader(true);
@@ -232,7 +302,6 @@ export class WipdetailsComponent implements OnInit {
       }));
 
     }
-
   }
 
   takeOverThisStep() {
@@ -252,4 +321,39 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskInProgress.assignedToUser = this.globals.getCurrentUser();
     }));
   }
+
+  addNcrTasks(newWorkOrderTasks: Array<WorkOrderTaskModel>) {
+
+    this.showCarousel = false;
+
+    let indexOfCurrentActiveTask = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id) + 1;
+
+    let workOrderTasksToAddBack = new Array<WorkOrderTaskModel>();
+
+    while (this.workOrderModel.workOrderTasks.length > (indexOfCurrentActiveTask)) {
+
+      workOrderTasksToAddBack.push(this.workOrderModel.workOrderTasks.pop());
+
+    }
+
+    newWorkOrderTasks.reverse().map((updatedWorkOrderTask, index) => {
+
+      workOrderTasksToAddBack.push(updatedWorkOrderTask);
+
+    });
+
+    workOrderTasksToAddBack.reverse().map((workOrderTask, index) => {
+      this.workOrderModel.workOrderTasks.push(workOrderTask);
+    });
+
+    this.changeDetectorRef.detectChanges();
+    this.showCarousel = true;
+  }
+
+
+  slideToTaskInProgress() {
+    let index = this.workOrderModel.workOrderTasks.findIndex(s => s.id === this.workOrderTaskInProgress.id);
+    this.carousel.selectSlide(index);
+  }
+
 }

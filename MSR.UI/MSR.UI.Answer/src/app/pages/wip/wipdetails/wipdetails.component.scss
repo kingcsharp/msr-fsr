@@ -79,6 +79,12 @@ ol{
   overflow-y:auto
 }
 
+
+.carousel-inner {
+
+  margin-left: 15px;
+}
+
 @media print {
     .workreport-control{
         display: none;
@@ -110,11 +116,15 @@ ol{
 .carousel-caption {
   color:#000
 }
-.carousel .item {
+/* .carousel .item {
   height: 60px !important;
   width: 150px !important;
   display:table !important;
   margin-right: 2px;
+} */
+
+.carousel .item {
+  height: 100%;
 }
 .carousel-step-title {
   font-size: 14px;
@@ -142,7 +152,7 @@ ol{
   position: relative;
   width: 95.75%;
   overflow: hidden;
-  margin-left: 15px;
+  /* margin-left: 15px; */
 }
 
 .wip-detail-top {

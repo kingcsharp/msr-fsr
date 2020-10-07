@@ -97,7 +97,7 @@ namespace MSR.Answer.Processor.SQSServices
             {
                 Uri baseUri = new Uri(_processorConfig.APIURL);
                 UriBuilder hubUri = new UriBuilder(baseUri.Scheme, baseUri.Host, baseUri.Port, "msg");
-                await _messageHub.Connect(hubUri.ToString(), _logger);
+                await _messageHub.Connect(hubUri.ToString());
 
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {

@@ -19,10 +19,12 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Input() workOrderTasks: Array<WorkOrderTaskModel>;
   @Input() workOrderTaskToView: WorkOrderTaskModel;
   @Input() currentUser: UserModel;
+  @Input() workOrderIsComplete: boolean = false;
   @Output() workOrderTasksChange = new EventEmitter<any>();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
+  @Output() slideToTaskInProgress = new EventEmitter<any>();
 
   stepTimer;
   stepSeconds: number = 0;
@@ -34,10 +36,17 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime, true);
+    this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime);
 
     if (this.workOrderTaskInProgress.taskIsRunning === true) {
       this.startTask();
+    }
+
+  }
+
+  ngOnChanges() {
+    if (this.workOrderIsComplete) {
+      this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime);
     }
 
   }
@@ -63,14 +72,14 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
     this.workOrderTaskInProgress.taskRunningSince = new Date();
     this.stepTimer = setInterval(() => {
 
-      this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime, true);
+      this.setTimerDisplay(this.workOrderTaskInProgress.totalTaskTime);
 
     }, 1000);
     this.saveTaskTimerState(false);
 
   }
 
-  setTimerDisplay(seconds: number, incrementTotalTaskTime: boolean) {
+  setTimerDisplay(seconds: number) {
 
     this.stepSeconds = this.workOrderTaskInProgress.totalTaskTime++;
     this.stepMinutes = Math.floor(this.stepSeconds / 60);
@@ -109,7 +118,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       nextWorkOrderTask.status.name = 'In Progress';
 
       let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-        assignedUserId: this.currentUser.id,
+        assignedUserId: this.globals.getCurrentUser().id,
         status: nextWorkOrderTask.status.name,
         taskIsRunning: nextWorkOrderTask.taskIsRunning,
         taskRunningSince: nextWorkOrderTask.taskRunningSince,
@@ -117,7 +126,9 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
         taskStepOrder: nextWorkOrderTask.taskStepOrder,
         workOrderTaskId: nextWorkOrderTask.id
       } as IUpdateWorkOrderTaskRequest);
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => { }));
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+        this.slideToTask();
+      }));
     }
 
 
@@ -126,7 +137,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   saveTaskTimerState(closeStep: boolean) {
 
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-      assignedUserId: this.currentUser.id,
+      assignedUserId: this.globals.getCurrentUser().id,
       status: closeStep ? 'Complete' : this.workOrderTaskInProgress.status.name,
       taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
       taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
@@ -149,9 +160,11 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
     }));
 
+  }
 
+  slideToTask() {
 
-
+    this.slideToTaskInProgress.emit();
 
   }
 

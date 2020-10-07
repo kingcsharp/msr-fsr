@@ -33,8 +33,10 @@
           </div>
           <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
           <div class="row justify-content-end">
-            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
-            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printtraveler-report>
+            <button type="button" class="btn btn-sm btn-danger mr-2" *ngIf="!workOrderIsComplete" (click)="toggleCancelRemainingStepsDialog()">
+              <i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
+            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined">
+            </printtraveler-report>
             <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
           </div>
         </div>
@@ -68,8 +70,8 @@
         </div>
       </div>
       <div class="row mb-3" *ngIf="workOrderModel.workOrderTasks !== undefined">
-        <carousel id="step-carousel" class=" col-12 align-items-center" style="margin-left:25px"
-        [itemsPerSlide]="6" [singleSlideOffset]="true" [noWrap]="true" [showIndicators]="false"
+        <carousel id="step-carousel" #stepCarousel class="col-12 align-items-center" style="margin-left:25px"
+        [itemsPerSlide]="9" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
           [interval]="false" [startFromIndex]="0" [(activeSlide)]="activeSlideIndex" data-ride="carousel">
           <slide id={{index}} *ngFor="let workOrderTask of workOrderModel.workOrderTasks; let index=index;"
             (click)="selectTaskForViewing(workOrderTask)"
@@ -77,16 +79,18 @@
                   'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
                   'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
-              <div class="carousel-step-title">{{ workOrderTask.procedureStep?.title}}</div>
+              <div class="h-100 d-flex">
+                <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title}}</div>
+              </div>
           </slide>
         </carousel>
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
-        [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
+        [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id && !workOrderIsComplete">
         <div class="d-flex col-6 justify-content-start pl-0">
-          <!--if user assigned is current user-->
-          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
-            [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="workOrderTaskInProgress.assignedTo === this.globals.getCurrentUser().id"
+          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks" [workOrderIsComplete]="workOrderIsComplete"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress" (slideToTaskInProgress)="slideToTaskInProgress()"
+            *ngIf="workOrderTaskInProgress.assignedTo === this.globals.getCurrentUser().id"
             (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
             [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
           </workordertasktimer-wrapper>
@@ -95,8 +99,9 @@
           <!--if user assigned is NOT the current user -->
           <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"  *ngIf="workOrderTaskInProgress.assignedTo !== this.globals.getCurrentUser().id"></take-over-task-button-wrapper>
           <!--next 2 are all users -->
-          <empmbutton-wrapper></empmbutton-wrapper>
-          <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
+          <empmbutton-wrapper *ngIf="!workOrderIsComplete"></empmbutton-wrapper>
+          <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" (addNcrTasks)="addNcrTasks($event)"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="!workOrderIsComplete"></addncrbutton-wrapper>
         </div>
       </div>
       <div class="row">
@@ -131,7 +136,9 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView.taskStepOrder === workOrderModel.workOrderTasks['0'].taskStepOrder">
+            <div class="row" *ngIf="workOrderTaskToView !== undefined && parentPart.serialNumber !== 'N/A' && (
+             (workOrderTaskToView.procedureStep?.title.trim().toLocaleUpperCase() === 'SERIALIZE') ||
+             (workOrderTaskToView.id === workOrderModel.workOrderTasks['0'].id && !hasSerializationStep) )">
               <div class="container-fluid product-container m-2">
                 <table class="table">
                   <thead class="thead-dark">
@@ -164,7 +171,7 @@
           </p-tabPanel>
           <p-tabPanel header="Monitors">
             <span *ngIf="workOrderTaskToView.workOrderTaskMonitors !== undefined">
-              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
+              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors" [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
                 (closeCurrentTaskInProgress)="closeCurrentTask()"></workordertaskmonitos-wrapper>
             </span>
           </p-tabPanel>
@@ -204,11 +211,11 @@
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="cancelRemainingSteps(true)" class="btn btn-success mb-xs" role="button"
+      <button type="submit" (click)="cancelRemainingStepsAndInvoice(true)" class="btn btn-success mb-xs" role="button"
         data-cy="confirmdelete-button">
         <i class="fas fa-dollar-sign mx-1"></i>Yes - And Invoice
       </button>
-      <button type="submit" (click)="cancelRemainingSteps(false)" class="btn btn-warning mb-xs" role="button"
+      <button type="submit" (click)="cancelRemainingStepsAndInvoice(false)" class="btn btn-warning mb-xs" role="button"
         data-cy="confirmdelete-button">
         <i class="fas fa-times mx-1"></i>Yes - But Do Not Invoice
       </button>
