@@ -141,7 +141,7 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskToView = workOrderTask;
     }
 
-    if(this.workOrderIsComplete){
+    if (this.workOrderIsComplete) {
       this.workOrderTaskInProgress = workOrderTask;
     }
 
