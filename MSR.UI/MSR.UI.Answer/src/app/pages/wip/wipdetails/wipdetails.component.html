@@ -171,7 +171,7 @@
           </p-tabPanel>
           <p-tabPanel header="Monitors">
             <span *ngIf="workOrderTaskToView.workOrderTaskMonitors !== undefined">
-              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
+              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors" [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
                 (closeCurrentTaskInProgress)="closeCurrentTask()"></workordertaskmonitos-wrapper>
             </span>
           </p-tabPanel>
