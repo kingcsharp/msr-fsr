@@ -24,6 +24,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
+  @Output() slideToTaskInProgress = new EventEmitter<any>();
 
   stepTimer;
   stepSeconds: number = 0;
@@ -117,7 +118,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       nextWorkOrderTask.status.name = 'In Progress';
 
       let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-        assignedUserId: this.currentUser.id,
+        assignedUserId: this.globals.getCurrentUser().id,
         status: nextWorkOrderTask.status.name,
         taskIsRunning: nextWorkOrderTask.taskIsRunning,
         taskRunningSince: nextWorkOrderTask.taskRunningSince,
@@ -136,7 +137,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   saveTaskTimerState(closeStep: boolean) {
 
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
-      assignedUserId: this.currentUser.id,
+      assignedUserId: this.globals.getCurrentUser().id,
       status: closeStep ? 'Complete' : this.workOrderTaskInProgress.status.name,
       taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
       taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
@@ -159,9 +160,11 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
     }));
 
+  }
 
+  slideToTask() {
 
-
+    this.slideToTaskInProgress.emit();
 
   }
 

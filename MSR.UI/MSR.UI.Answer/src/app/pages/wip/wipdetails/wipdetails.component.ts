@@ -349,4 +349,9 @@ export class WipdetailsComponent implements OnInit {
     this.showCarousel = true;
   }
 
+
+  slideToTaskInProgress() {
+
+  }
+
 }
