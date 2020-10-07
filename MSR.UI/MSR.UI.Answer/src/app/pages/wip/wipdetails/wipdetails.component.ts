@@ -49,7 +49,7 @@ export class WipdetailsComponent implements OnInit {
   showCarousel = true;
   hasSerializationStep: boolean;
   workOrderIsComplete: boolean;
-
+  startSlideIndex: number = 0;
 
   slideConfig;
 
@@ -85,6 +85,7 @@ export class WipdetailsComponent implements OnInit {
             if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress' || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
               this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[index];
               this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
+              this.startSlideIndex = index;
               break;
             }
           }
@@ -92,7 +93,6 @@ export class WipdetailsComponent implements OnInit {
           if (this.workOrderTaskInProgress === undefined) {
             this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
             this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
-            this.slideConfig = { 'slidesToShow': 6, 'slidesToScroll': 6, 'initialSlide': 0, 'infinite': false, 'prevArrow': '.carousel-control-prev', 'nextArrow': '.carousel-control-next' };
           }
         }
 
