@@ -629,16 +629,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 wosum.WorkOrderStatus = m.Status;
 
                 // WorkOrderAssignedTo
-                var curstep = m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
-                if (curstep.Count() > 0)
+                var curstepq = m.WorkOrderTasks.Where(x => !(
+                    x.Status.Name.ToUpper().Equals("COMPLETE") ||
+                    x.Status.Name.ToUpper().Equals("CANCELLED"))
+                );
+                if (curstepq.Count() > 0)
                 {
-                    if (curstep.First().AssignedToUser == null)
+                    WorkOrderTaskModel curstep = curstepq.OrderBy(x => x.TaskStepOrder).First();
+                    if (curstep.AssignedToUser == null)
                     {
                         wosum.WorkOrderAssignedTo = "";
                     }
                     else
                     {
-                        wosum.WorkOrderAssignedTo = curstep.First().AssignedToUser.FullName;
+                        wosum.WorkOrderAssignedTo = curstep.AssignedToUser.FullName;
                     }
                 }
                 else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
