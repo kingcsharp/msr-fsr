@@ -35,7 +35,7 @@
                 'bg-info': !isWarning(workOrderSummary.workOrderScheduledEndDate) && !isLate(workOrderSummary.workOrderScheduledEndDate),
                 'bg-danger': isLate(workOrderSummary.workOrderScheduledEndDate)}"
               placement="bottom" data-cy="workordersummary-icon"
-              (click)="openTakeOverAsUserConfirmationDialog(workOrderSummary.workOrderId)">
+              (click)="openTakeOverAsUserConfirmationDialog(workOrderSummary.workOrderId, workOrderSummary.workOrderAssignedTo)">
                 <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
                   'fa-clock': isWarning(workOrderSummary.workOrderScheduledEndDate),
                   'fa-cog': workOrderSummary.workOrderStatus === 'In Progress',

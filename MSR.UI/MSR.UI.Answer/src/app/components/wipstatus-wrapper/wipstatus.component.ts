@@ -106,14 +106,14 @@ export class WipstatusWrapperComponent implements OnInit {
 
   }
 
-  openTakeOverAsUserConfirmationDialog(workOrderId: number) {
+  openTakeOverAsUserConfirmationDialog(workOrderId: number, assignedToFullName: string) {
 
     if (this.isDisplayedInWipList) {
       this.router.navigate(['app/wip/details', workOrderId]);
       this.displayWipListDialogChange.emit(false);
     } else {
 
-      let workOrderAssignedToFullName = this.workOrderStatuses.find(s => s.workOrderSummary.workOrderId === workOrderId).workOrderSummary.workOrderAssignedTo;
+      let workOrderAssignedToFullName = assignedToFullName;
       let currentUsersFullName = this.globals.getCurrentUser().fullName;
       if (workOrderAssignedToFullName === currentUsersFullName) {
         this.router.navigate(['app/wip/details', workOrderId]);
