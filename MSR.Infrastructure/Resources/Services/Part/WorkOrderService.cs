@@ -639,10 +639,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     if (curstep.AssignedToUser == null)
                     {
                         wosum.WorkOrderAssignedTo = "";
+                        wosum.AssignedTo = null;
                     }
                     else
                     {
                         wosum.WorkOrderAssignedTo = curstep.AssignedToUser.FullName;
+                        wosum.AssignedTo = curstep.AssignedToUser.Id;
                     }
                 }
                 else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
