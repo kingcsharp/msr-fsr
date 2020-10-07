@@ -68,7 +68,6 @@ export class WipstatusWrapperComponent implements OnInit {
 
       });
 
-      console.log(workOrderStatuses);
 
       this.workOrderStatuses = workOrderStatuses;
       this.displayWorkOrderStatuses = workOrderStatuses;
