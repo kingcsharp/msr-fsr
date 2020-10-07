@@ -12,7 +12,12 @@ namespace MSR.Application.ApplicationServices
         private HubConnection connection = null;
         private ILogger _logger;
 
-        public async Task Connect(string url, ILogger logger = null)
+        public MessageHubAppService(ILogger<MessageHubAppService> logger)
+        {
+            _logger = logger;
+        }
+
+        public async Task Connect(string url)
         {
             try
             {
@@ -32,7 +37,6 @@ namespace MSR.Application.ApplicationServices
 
                 await connection.StartAsync();
 
-                _logger = logger;
                 connection.On<Toaster>("ToasterMessage", (msg) =>
                 {
                     if (_logger != null)
