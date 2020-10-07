@@ -12,6 +12,9 @@ namespace MSR.Application.ApplicationServices
         private HubConnection connection = null;
         private ILogger _logger;
 
+        public static int pingCounterSend = 0;
+        public static int pingCounterRcv = 0;
+
         public MessageHubAppService(ILogger<MessageHubAppService> logger)
         {
             _logger = logger;
@@ -19,7 +22,6 @@ namespace MSR.Application.ApplicationServices
 
         public async Task Connect(string url)
         {
-            _logger = logger;
             try
             {
                 if (connection != null)
