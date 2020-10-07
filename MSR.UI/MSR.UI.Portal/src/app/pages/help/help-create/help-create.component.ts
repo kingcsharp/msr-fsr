@@ -10,7 +10,6 @@ import {LoadedRouterConfig} from '@angular/router/bundles/router.umd.js';
 import {LocationsModule} from '../../locations/locations.module';
 import {MainModule} from '../../main/main.module';
 import {PartsModule} from '../../parts/parts.module';
-import { WorkflowModule} from '../../workflow/workflow.module';
 import { ProceduresModule} from '../../procedures/procedures.module';
 import { MonitorsModule} from '../../monitors/monitors.module';
 import { WipModule } from '../../wip/wip.module';
@@ -111,8 +110,6 @@ export class HelpCreateComponent implements OnInit {
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(mainPaths);
     let partsPaths = PartsModule.routes.filter(s => s.path !== '').map(m => '/parts/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(partsPaths);
-    let workflowPaths = PartsModule.routes.filter(s => s.path !== '').map(m => '/workflow/' + m.path.toLowerCase());
-    this.friendlyUrlOptions = this.friendlyUrlOptions.concat(workflowPaths);
     let proceduresPaths = ProceduresModule.routes.filter(s => s.path !== '').map(m => '/procedures/' + m.path.toLowerCase());
     this.friendlyUrlOptions = this.friendlyUrlOptions.concat(proceduresPaths);
     let monitorsPaths = MonitorsModule.routes.filter(s => s.path !== '').map(m => '/monitors/' + m.path.toLowerCase());

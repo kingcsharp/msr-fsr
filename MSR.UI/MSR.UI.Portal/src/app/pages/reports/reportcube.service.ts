@@ -1,10 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { NotificationService } from '../../layout/navbar/notification.service';
-import { environment as env } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { take } from 'rxjs/operators';
-import { responseHandler } from '../../utils/responseHandler';
 import { ReportModel } from '../../services/api.client.generated';
 import { ColumnsSaved } from '../../../app/models/lib/ColumnsSaved';
 import { EnumColumnType } from '../../../app/models/enums/EnumColumnType';
@@ -103,7 +99,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
-                ];
+                ]; 
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'Customer Purchase', visible: true, type: this.enumColumnType.String }),

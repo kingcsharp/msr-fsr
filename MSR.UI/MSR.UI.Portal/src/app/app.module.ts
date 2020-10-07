@@ -16,7 +16,6 @@ import { AppGuard } from './app.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
-import { NotificationService } from './layout/navbar/notification.service';
 import { CommonGrid } from './models/lib/CommonGrid';
 import { CSVConverterService } from '../app/services/csvconverter.service';
 import { environment } from '../environments/environment';
@@ -24,8 +23,8 @@ import { environment } from '../environments/environment';
 
 import * as $ from 'jquery';
 import {
-  UserService, AccountService, API_BASE_URL, WorkflowService, WorkflowGroupService, CustomerService,
-  WorkflowStageService, LocationService, RoleService, WorkflowPendingApprovalService, PartService,
+  UserService, AccountService, API_BASE_URL, CustomerService,
+  LocationService, RoleService, PartService,
   FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService, ReportService,
   SearchService, ProcedureService, DocumentService
 } from './services/api.client.generated';
@@ -38,8 +37,7 @@ const APP_PROVIDERS = [
   ResetpasswordService,
   Globals,
   CommonGrid,
-  CSVConverterService,
-  NotificationService
+  CSVConverterService
 ];
 
 @NgModule({
@@ -69,10 +67,6 @@ const APP_PROVIDERS = [
     },
     Globals,
     AccountService,
-    WorkflowService,
-    WorkflowGroupService,
-    WorkflowStageService,
-    WorkflowPendingApprovalService,
     PartService,
     FileService,
     UserService,

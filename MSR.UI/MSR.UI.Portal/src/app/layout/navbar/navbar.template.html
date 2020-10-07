@@ -1,61 +1,6 @@
 <nav class="navbar-collapse">
-  <form id="search-form" class="navbar-form" role="search">
-    <div class="form-group mb-0">
-      <div class="input-group-transparent input-group">
-        <div class="input-group-addon">
-          <i class="fa fa-search text-white" (click)="search()"></i>
-        </div>
-        <input placeholder="Search" type="text" tooltip="Min length 3 characters" [(ngModel)]="searchValue"
-          class="input-transparent form-control" [ngModelOptions]="{standalone: true}" (keyup.enter)="search()">
-      </div>
-    </div>
-  </form>
+  
   <ul class="nav navbar-nav">
-    <!-- <li class="nav-item visible-phone-landscape">
-      <a (click)="searchFormOpen()" class="nav-link" href="#" id="search-toggle">
-        <i class="fa fa-search"></i>
-      </a>
-    </li> -->
-    <li class="nav-item dropdown">
-      <a href tooltip="{{notificationservice.notificationCount+' new notifications'}}" class="nav-link dropdown-toggle"
-        data-toggle="dropdown">
-        <i class="fad fa-bell" [ngClass]="notificationservice.notificationCount>0?'btn-outline-danger':''"></i>
-        <span class="count" data-cy="page-notificationcount">{{notificationservice.notificationCount}}</span>
-      </a>
-      <ul id="support-menu" class="dropdown-menu dropdown-menu-right support" role="menu">
-        <li role="presentation">
-          <a href="javascript:;" class="dropdown-item support-ticket ">
-            <div class="picture">
-              <span class="badge"
-                [ngClass]="{'badge-success': notificationservice.notificationCount==0, 'badge-danger': notificationservice.notificationCount>0}">{{notificationservice.notificationCount}}</span>
-            </div>
-            <div class="details">
-              Notifications
-            </div>
-          </a>
-        </li>
-        <li *ngFor="let item of notificationservice.notificationData.items" role="presentation">
-          <a href="/#/app/workflow/pendingapproval/{{item.table}}" class="dropdown-item support-ticket ">
-            <div class="picture">
-              <span class="badge badge-success">{{item.count}}</span>
-            </div>
-            <div class="details">
-              {{item.name}}
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="/#/app/workflow/pendingapproval/9" class="dropdown-item support-ticket ">
-            <div class="picture">
-            </div>
-            <div class="text-center">
-              <b>View All</b>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <li class="divider"></li>
     <li class="nav-item dropdown d-sm-down-none">
       <a href="javascript:;" id="account" data-cy="account-a" tooltip="Account" class="nav-link dropdown-toggle"
         data-toggle="dropdown">

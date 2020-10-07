@@ -7,7 +7,6 @@ const routes: Routes = [
     path: '', component: Layout, children: [
       { path: '', redirectTo: 'wip', pathMatch: 'full' },
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
-      { path: 'workflow', loadChildren: () => import('../pages/workflow/workflow.module').then(m => m.WorkflowModule) },
       { path: 'parts', loadChildren: () => import('../pages/parts/parts.module').then(m => m.PartsModule) },
       { path: 'billing', loadChildren: () => import('../pages/billing/billing.module').then(m => m.BillingModule) },
       { path: 'inbox', loadChildren: () => import('../pages/inbox/inbox.module').then(m => m.InboxModule) },

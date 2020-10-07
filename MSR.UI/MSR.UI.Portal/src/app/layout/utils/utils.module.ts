@@ -21,7 +21,6 @@ import { MultiselectWrapperFormComponent } from '../../../app/components/multise
 import { PcalendarWrapperComponent } from '../../../app/components/pcalendar-wrapper/pcalendar-wrapper.component';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 import { GridFileViewerComponent } from '../../components/grid-viewer/grid-file-viewer.component';
-import { ApproveEntityComponent } from '../../../app/components/aproove-entity/approve-entity.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -45,7 +44,6 @@ import { HighchartsChartModule } from 'highcharts-angular';
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
     GridFileViewerComponent,
-    ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
@@ -64,7 +62,6 @@ import { HighchartsChartModule } from 'highcharts-angular';
     MultiselectWrapperFormComponent,
     PcalendarWrapperComponent,
     GridFileViewerComponent,
-    ApproveEntityComponent,
     CsvImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
