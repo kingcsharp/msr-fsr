@@ -827,7 +827,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "nullable": true
             },
             "x-position": 2
           },
@@ -3549,6 +3550,16 @@
             "x-position": 1
           },
           {
+            "name": "CustomerId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
@@ -3556,7 +3567,7 @@
               "type": "string",
               "example": "1"
             },
-            "x-position": 2
+            "x-position": 3
           }
         ],
         "responses": {
@@ -3584,7 +3595,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -3723,7 +3735,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "1"
             },
             "x-position": 2
           }
@@ -6631,7 +6644,10 @@
           "WIPHistory",
           "WIPMenu",
           "WipStatus",
-          "Roles"
+          "Roles",
+          "WorkOrders",
+          "WorkOrderParts",
+          "WorkOrderTasks"
         ],
         "enum": [
           0,
@@ -6666,7 +6682,10 @@
           29,
           30,
           31,
-          32
+          32,
+          33,
+          34,
+          35
         ]
       },
       "TrackableModel": {
@@ -7059,7 +7078,7 @@
                   "$ref": "#/components/schemas/FileModel"
                 }
               },
-              "referenceFlieIds": {
+              "referenceFileIds": {
                 "type": "array",
                 "nullable": true,
                 "items": {
@@ -7130,6 +7149,13 @@
               "format": "int32",
               "nullable": true
             }
+          },
+          "referenceFiles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FileModel"
+            }
           }
         }
       },
@@ -7174,6 +7200,13 @@
               "type": "integer",
               "format": "int32",
               "nullable": true
+            }
+          },
+          "referenceFiles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FileModel"
             }
           }
         }
@@ -7448,10 +7481,17 @@
       "CreateFileRequest": {
         "type": "object",
         "additionalProperties": true,
+        "required": [
+          "entityName",
+          "entityId",
+          "name",
+          "base64String",
+          "contentType"
+        ],
         "properties": {
           "entityName": {
             "type": "string",
-            "nullable": true
+            "minLength": 1
           },
           "entityId": {
             "type": "integer",
@@ -7459,15 +7499,15 @@
           },
           "name": {
             "type": "string",
-            "nullable": true
+            "minLength": 1
           },
           "base64String": {
             "type": "string",
-            "nullable": true
+            "minLength": 1
           },
           "contentType": {
             "type": "string",
-            "nullable": true
+            "minLength": 1
           }
         }
       },
@@ -10837,6 +10877,18 @@
             "type": "string",
             "nullable": true
           },
+          "partName": {
+            "type": "string",
+            "nullable": true
+          },
+          "partNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "procedureName": {
+            "type": "string",
+            "nullable": true
+          },
           "totalSalePrice": {
             "type": "number",
             "format": "decimal"
@@ -11344,7 +11396,8 @@
             "type": "string",
             "description": "SerialNumber",
             "maxLength": 20,
-            "minLength": 0
+            "minLength": 0,
+            "nullable": true
           },
           "qty": {
             "type": "integer",
@@ -12832,6 +12885,11 @@
           },
           "workOrderAssignedTo": {
             "type": "string",
+            "nullable": true
+          },
+          "assignedTo": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "workOrderHasNcr": {
