@@ -169,6 +169,24 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             var created = _unitOfWork.WorkOrders.Add(workorder);
 
+            // link work order IDs for all parts
+            Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
+            foreach(var p in workorder.WorkOrderParts)
+            {
+                parts.Push(p);
+            }
+            while(parts.Count > 0) {
+                var p = parts.Pop();
+                p.WorkOrder = workorder;
+                if (p.Children != null && p.Children.Count > 0)
+                {
+                    foreach(var sp in p.Children)
+                    {
+                        parts.Push(sp);
+                    }
+                }
+            }
+
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
             // load required navigation fields
@@ -279,7 +297,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
         {
-            var product = await _unitOfWork.Products.Query()
+            var product = await _unitOfWork.Products
+                .Query()
+                .Include(x => x.Part)
+                .ThenInclude(y => y.Subparts)
                 .FirstAsync(x => x.Id == command.ProductId);
             int count = 1;
             int quantity = command.Qty;
@@ -293,9 +314,21 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
             for (int i = 0; i < count; i++)
             {
+                List<WorkOrderPartModel> subs = new List<WorkOrderPartModel>();
+                if (product.Part.Subparts != null && product.Part.Subparts.Count > 0)
+                {
+                    foreach (PartSubPartMap p in product.Part.Subparts)
+                    {
+                        subs.Add(new WorkOrderPartModel() {
+                            PartId = p.PartId,
+                            ParentId = p.ParentPartId
+                        });
+                    }
+                }
                 var n = new WorkOrderPartModel()
                 {
-                    PartId = product.PartId
+                    PartId = product.PartId,
+                    Children = subs
                 };
                 parts.Add(n);
             }
