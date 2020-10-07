@@ -44,7 +44,8 @@ export class WipstatusWrapperComponent implements OnInit {
 
       response.object.map(workOrderSummary => {
 
-        if (workOrderStatuses.find(s => s.productName === workOrderSummary.productName && s.locationName === workOrderSummary.locationName) === undefined) {
+        let workOrderStatusToUse = workOrderStatuses.find(s => s.productName === workOrderSummary.productName && s.locationName === workOrderSummary.locationName);
+        if (workOrderStatusToUse === undefined) {
 
           let newWorkOrderStatus = {
             productName: workOrderSummary.productName,
@@ -60,8 +61,7 @@ export class WipstatusWrapperComponent implements OnInit {
 
         } else {
 
-          let workOrderStatus = workOrderStatuses.find(s => s.productName === workOrderSummary.productName && s.locationName === workOrderSummary.locationName);
-          workOrderStatus.workOrderSummaries.push(workOrderSummary.workOrderSummary);
+          workOrderStatusToUse.workOrderSummaries.push(workOrderSummary.workOrderSummary);
 
         }
 
@@ -112,9 +112,8 @@ export class WipstatusWrapperComponent implements OnInit {
       this.displayWipListDialogChange.emit(false);
     } else {
 
-      let workOrderAssignedToFullName = assignedToFullName;
       let currentUsersFullName = this.globals.getCurrentUser().fullName;
-      if (workOrderAssignedToFullName === currentUsersFullName) {
+      if (assignedToFullName === currentUsersFullName) {
         this.router.navigate(['app/wip/details', workOrderId]);
       }
 
