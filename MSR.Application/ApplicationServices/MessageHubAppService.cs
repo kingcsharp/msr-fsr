@@ -12,8 +12,12 @@ namespace MSR.Application.ApplicationServices
         private HubConnection connection = null;
         private ILogger _logger;
 
+        public static int pingCounterSend = 0;
+        public static int pingCounterRcv = 0;
+
         public async Task Connect(string url, ILogger logger = null)
         {
+            _logger = logger;
             try
             {
                 if (connection != null)
@@ -32,12 +36,17 @@ namespace MSR.Application.ApplicationServices
 
                 await connection.StartAsync();
 
-                _logger = logger;
                 connection.On<Toaster>("ToasterMessage", (msg) =>
                 {
                     if (_logger != null)
                     {
-                        _logger.LogInformation($"Received SignalR Heartbeat {msg.Message}");
+                        if (pingCounterRcv % 20 == 0)
+                        {
+                            _logger.LogDebug($"Received SignalR Heartbeat {msg.Message} " +
+                                $"(repeated {pingCounterRcv} times)");
+                            pingCounterRcv = 0;
+                        }
+                        pingCounterRcv += 1;
                     }
                 });
             }
@@ -54,7 +63,25 @@ namespace MSR.Application.ApplicationServices
             try
             {
                 connection.InvokeAsync("SendMessage", userId, message);
-                _logger.LogInformation($"SendMessage userId={userId} message={message.Message}");
+
+                // Log the message.  If it's a ping, show it only once
+                // ever 20 times (approx. every 400 seconds).
+                bool logit = true;
+                int pc = 0;
+                if (userId.Equals("ping")) {
+                    if (pingCounterSend % 20 == 0) {
+                        pc = pingCounterSend;
+                        pingCounterSend = 0;
+                    } else {
+                        logit = false;
+                    }
+                    pingCounterSend += 1;
+                }
+                if (logit) {
+                    _logger.LogDebug(
+                        $"SendMessage userId={userId} message={message.Message} " +
+                        $"(repeated {pc} times");
+                }
             }
             catch(Exception ex)
             {
