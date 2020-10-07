@@ -321,10 +321,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 {
                     foreach (PartSubPartMap p in product.Part.Subparts)
                     {
-                        subs.Add(new WorkOrderPartModel() {
-                            PartId = p.PartId,
-                            ParentId = p.ParentPartId
-                        });
+                        int spquantity = p.Qty;
+                        if (spquantity == 0)
+                        {
+                            spquantity = 1;
+                        }
+
+                        for (int j = 0; j < spquantity; j++)
+                        {
+                            subs.Add(new WorkOrderPartModel() {
+                                PartId = p.PartId,
+                                ParentId = p.ParentPartId
+                            });
+                        }
                     }
                 }
                 var n = new WorkOrderPartModel()
