@@ -50,7 +50,7 @@
                     <strong>Serial Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderPartSerialNumber }}<br />
                     <strong>Status:</strong> {{ workOrderStatus.workOrderSummary.workOrderStatus }}<br />
                     <strong>Assigned To:</strong> {{ workOrderStatus.workOrderSummary.workOrderAssignedTo }}<br />
-                    <strong>Due Date:</strong> {{ workOrderStatus.workOrderSummary.workOrderScheduledEndDate | date: "MM/dd/yy hh-mm-ss z"}}
+                    <strong>Due Date:</strong> {{ workOrderStatus.workOrderSummary.workOrderScheduledEndDate | userTimezone}}
                   </ng-template>
               </button>
             </td>
