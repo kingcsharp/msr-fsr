@@ -29,30 +29,31 @@
             <td class="wipListItem" *ngIf="!isDisplayedInWipList"> {{ workOrderStatus.procedureName }} </td>
             <td class="wipListItem" *ngIf="!isDisplayedInWipList" data-cy="wipstatus-location"> {{ workOrderStatus.locationName }} </td>
             <td>
-              <button [ngClass]="{'btn':true, 'btn-lg': true,
-                  'bg-warning': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
-                  'bg-info': !isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
-                  'bg-danger': isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate)
-                }"
-                placement="bottom" data-cy="workordersummary-icon"
-                (click)="openTakeOverAsUserConfirmationDialog(workOrderStatus.workOrderSummary.workOrderId)">
-                  <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
-                    'fa-clock': isWarning(workOrderStatus.workOrderSummary.workOrderScheduledEndDate),
-                    'fa-cog': workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
-                    'fa-spin': workOrderStatus.workOrderSummary.workOrderStatus === 'In Progress',
-                    'fa-hourglass': !isLate(workOrderStatus.workOrderSummary.workOrderScheduledEndDate) && workOrderStatus.workOrderSummary.workOrderStatus === 'Waiting to Start',
-                    'fa-exclamation-circle': isLate && workOrderStatus.workOrderSummary.workOrderStatus !== 'In Progress'
-                  } " placement="bottom" data-cy="workordersummary-icon"
-                  [tooltip]="workOrderSummaryToolTipTemplate"></i>
-                  <ng-template #workOrderSummaryToolTipTemplate>
-                    <strong>WorkOrder Item Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderItemNumber }}<br />
-                    <strong>Purchase Order / Line Number:</strong> {{ workOrderStatus.workOrderSummary.purchaseOrderLineNumber }}<br />
-                    <strong>Serial Number:</strong> {{ workOrderStatus.workOrderSummary.workOrderPartSerialNumber }}<br />
-                    <strong>Status:</strong> {{ workOrderStatus.workOrderSummary.workOrderStatus }}<br />
-                    <strong>Assigned To:</strong> {{ workOrderStatus.workOrderSummary.workOrderAssignedTo }}<br />
-                    <strong>Due Date:</strong> {{ workOrderStatus.workOrderSummary.workOrderScheduledEndDate | userTimezone}}
-                  </ng-template>
-              </button>
+              <span class="m-1" *ngFor="let workOrderSummary of workOrderStatus.workOrderSummaries">
+                <button [ngClass]="{'btn':true, 'btn-lg': true,
+                'bg-warning': isWarning(workOrderSummary.workOrderScheduledEndDate),
+                'bg-info': !isWarning(workOrderSummary.workOrderScheduledEndDate) && !isLate(workOrderSummary.workOrderScheduledEndDate),
+                'bg-danger': isLate(workOrderSummary.workOrderScheduledEndDate)}"
+              placement="bottom" data-cy="workordersummary-icon"
+              (click)="openTakeOverAsUserConfirmationDialog(workOrderSummary.workOrderId)">
+                <i [ngClass]="{'fa': true, 'fa-2x': true,'text-white': true,
+                  'fa-clock': isWarning(workOrderSummary.workOrderScheduledEndDate),
+                  'fa-cog': workOrderSummary.workOrderStatus === 'In Progress',
+                  'fa-spin': workOrderSummary.workOrderStatus === 'In Progress',
+                  'fa-hourglass': !isLate(workOrderSummary.workOrderScheduledEndDate) && workOrderSummary.workOrderStatus === 'Waiting to Start',
+                  'fa-exclamation-circle': isLate && workOrderSummary.workOrderStatus !== 'In Progress'
+                } " placement="bottom" data-cy="workordersummary-icon"
+                [tooltip]="workOrderSummaryToolTipTemplate"></i>
+                <ng-template #workOrderSummaryToolTipTemplate>
+                  <strong>WorkOrder Item Number:</strong> {{ workOrderSummary.workOrderItemNumber }}<br />
+                  <strong>Purchase Order / Line Number:</strong> {{ workOrderSummary.purchaseOrderLineNumber }}<br />
+                  <strong>Serial Number:</strong> {{ workOrderSummary.workOrderPartSerialNumber }}<br />
+                  <strong>Status:</strong> {{ workOrderSummary.workOrderStatus }}<br />
+                  <strong>Assigned To:</strong> {{ workOrderSummary.workOrderAssignedTo }}<br />
+                  <strong>Due Date:</strong> {{ workOrderSummary.workOrderScheduledEndDate | userTimezone}}
+                </ng-template>
+            </button>
+              </span>
             </td>
         </tr>
         <tr *ngIf="displayWorkOrderStatuses.length === 0">

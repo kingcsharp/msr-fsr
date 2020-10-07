@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Router } from '@angular/router';
-import { UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderStatus, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel } from '../../services/api.client.generated';
+import { UpdateWorkOrderTaskRequest, WorkOrderService, WorkOrderStatus, WorkOrderTaskModel, WorkOrderTaskService, UserService, UserModel, WorkOrderSummary } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
@@ -20,8 +20,8 @@ export class WipstatusWrapperComponent implements OnInit {
   @Input() isDisplayedInWipList: boolean = false;
   @Input() displayWipListDialog: boolean;
   @Output() displayWipListDialogChange = new EventEmitter();
-  workOrderStatuses: Array<WorkOrderStatus>;
-  displayWorkOrderStatuses: Array<WorkOrderStatus> = new Array<WorkOrderStatus>();
+  workOrderStatuses: Array<any>;
+  displayWorkOrderStatuses: Array<any> = new Array<any>();
   locationOptions: Array<SelectItem> = new Array<SelectItem>();
   selectedLocations: Array<string>;
   showTakeOverAsUserConfirmationDialog: boolean = false;
@@ -40,8 +40,38 @@ export class WipstatusWrapperComponent implements OnInit {
 
     this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
 
-      this.workOrderStatuses = response.object;
-      this.displayWorkOrderStatuses = response.object;
+      let workOrderStatuses = new Array<any>();
+
+      response.object.map(workOrderSummary => {
+
+        if (workOrderStatuses.find(s => s.productName === workOrderSummary.productName && s.locationName === workOrderSummary.locationName) === undefined) {
+
+          let newWorkOrderStatus = {
+            productName: workOrderSummary.productName,
+            partNumber: workOrderSummary.partNumber,
+            procedureName: workOrderSummary.procedureName,
+            locationName: workOrderSummary.locationName,
+            workOrderSummaries: new Array<WorkOrderSummary>()
+          };
+
+          newWorkOrderStatus.workOrderSummaries.push(workOrderSummary.workOrderSummary);
+
+          workOrderStatuses.push(newWorkOrderStatus);
+
+        } else {
+
+          let workOrderStatus = workOrderStatuses.find(s => s.productName === workOrderSummary.productName && s.locationName === workOrderSummary.locationName);
+          workOrderStatus.workOrderSummaries.push(workOrderSummary.workOrderSummary);
+
+        }
+
+
+      });
+
+      console.log(workOrderStatuses);
+
+      this.workOrderStatuses = workOrderStatuses;
+      this.displayWorkOrderStatuses = workOrderStatuses;
 
       this.locationOptions = this.workOrderStatuses?.map(s => s.locationName).filter((v, i, a) => a.indexOf(v) === i).map(s => ({ label: s, value: s }));
 
