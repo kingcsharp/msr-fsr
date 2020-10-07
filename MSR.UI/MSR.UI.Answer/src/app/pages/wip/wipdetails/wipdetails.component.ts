@@ -46,6 +46,7 @@ export class WipdetailsComponent implements OnInit {
   activeSlideIndex = 0;
   showCarousel = true;
   hasSerializationStep: boolean;
+  workOrderIsComplete: boolean;
 
 
   slideConfig;
@@ -66,6 +67,7 @@ export class WipdetailsComponent implements OnInit {
 
         this.workOrderModel = this.cleanData(response.object[0]);
         this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
+        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress') === undefined;
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
@@ -137,6 +139,10 @@ export class WipdetailsComponent implements OnInit {
     // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
     if (!this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.workOrderTaskToView = workOrderTask;
+    }
+
+    if(this.workOrderIsComplete){
+      this.workOrderTaskInProgress = workOrderTask;
     }
 
   }

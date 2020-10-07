@@ -33,8 +33,10 @@
           </div>
           <div class="row mb-2"><selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown></selectworkorderdropdown-wrapper></div>
           <div class="row justify-content-end">
-            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="toggleCancelRemainingStepsDialog()"><i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
-            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printtraveler-report>
+            <button type="button" class="btn btn-sm btn-danger mr-2" *ngIf="!workOrderIsComplete" (click)="toggleCancelRemainingStepsDialog()">
+              <i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
+            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined">
+            </printtraveler-report>
             <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
           </div>
         </div>
@@ -82,11 +84,11 @@
         </carousel>
       </div>
       <div class="row" *ngIf="workOrderTaskInProgress !== undefined"
-        [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id">
+        [hidden]="workOrderTaskInProgress.id !== workOrderTaskToView.id && !workOrderIsComplete">
         <div class="d-flex col-6 justify-content-start pl-0">
-          <!--if user assigned is current user-->
-          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
-            [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="workOrderTaskInProgress.assignedTo === this.globals.getCurrentUser().id"
+          <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks" [workOrderIsComplete]="workOrderIsComplete"
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress" (slideToTaskInProgress)="slideToTaskInProgress()"
+            *ngIf="workOrderTaskInProgress.assignedTo === this.globals.getCurrentUser().id"
             (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
             [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
           </workordertasktimer-wrapper>
@@ -95,9 +97,9 @@
           <!--if user assigned is NOT the current user -->
           <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"  *ngIf="workOrderTaskInProgress.assignedTo !== this.globals.getCurrentUser().id"></take-over-task-button-wrapper>
           <!--next 2 are all users -->
-          <empmbutton-wrapper></empmbutton-wrapper>
+          <empmbutton-wrapper *ngIf="!workOrderIsComplete"></empmbutton-wrapper>
           <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" (addNcrTasks)="addNcrTasks($event)"
-            [(workOrderTaskInProgress)]="workOrderTaskInProgress"></addncrbutton-wrapper>
+            [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="!workOrderIsComplete"></addncrbutton-wrapper>
         </div>
       </div>
       <div class="row">
