@@ -24,6 +24,7 @@ import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.compo
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { QuotesProductsComponent } from './quotes-products/quotes-products.component';
+import {PanelModule} from 'primeng/panel';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -62,7 +63,8 @@ export const routes = [
     MapaelLayersMapModule,
     NewWidgetModule,
     ConfirmDialogModule,
-    SelectButtonModule
+    SelectButtonModule,
+    PanelModule,
   ],
   providers: []
 })

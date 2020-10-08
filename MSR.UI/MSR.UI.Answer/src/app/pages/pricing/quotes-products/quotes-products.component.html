@@ -24,7 +24,7 @@
           class="btn btn-success width-100 mb-xs sm-mrg"
 					role="button"
           data-cy="add-button"
-          [routerLink]="['../quote/create']"
+          (click)="openCSRDialog()"
 				>+ Add</button>
 
         <csv-import
@@ -440,4 +440,839 @@
       </button>
     </div>
   </p-footer>
+</p-dialog>
+
+<p-dialog
+  header="New Requirements"
+  [(visible)]="showCSRDialog"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '70vw'}"
+  data-cy="csr-header"
+>
+  <form
+    data-parsley-validate
+    class="csr-form form-horizontal form-label-left parsleyjs"
+    data-parsley-priority-enabled="false"
+    (ngSubmit)="onCSRSubmit()"
+    novalidate="novalidate"
+  >
+    <section *ngIf="CSRToCreate !== undefined " class="widget mrg-btm-sm" widget>
+      <header>
+        <h3><i class="icon fa fa-plus-circle mr-3"></i>New Requirements</h3>
+      </header>
+      <div class="widget-body">
+        <div class="row clearfix my-4">
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="customer" class="col-md-2  col-form-label text-md-left">
+                Customer:
+              </label>
+              <div class="col-md-8">
+                <p-dropdown
+                  placeholder="Select Client"
+                  optionLabel="name"
+                  name="customer"
+                  [(ngModel)]="CSRCustomer"
+                  [options]="customersData"
+                  (onChange)="setCustomerId()"
+                  appendTo="body"
+                  [baseZIndex]="100002"
+                  required
+                >
+                </p-dropdown>
+                <input
+                  pInputText
+                  type="text"
+                  hidden
+                  class="form-control input-transparent"
+                  name="customerId"
+                  [value]="CSRToCreate.customerId"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                  data-cy="csr-input-customerid"
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="requirementName" class="col-md-2  col-form-label text-md-left">
+                Requirement Name:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="requirementName"
+                  placeholder="Enter a name you will use to Identify this requirement"
+                  [(ngModel)]="CSRToCreate.RequirementName"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-minlength="3"
+                  data-parsley-required="true"
+                  data-cy="csr-input-requirementname"
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="submittedBy" class="col-md-2  col-form-label text-md-left">
+                Submitted By:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="submittedBy"
+                  [(ngModel)]="CSRToCreate.SubmittedBy"
+                  disabled
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-minlength="3"
+                  data-parsley-required="true"
+                  data-cy="csr-input-submittedby"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix">
+          <ul class="nav nav-tabs float-left" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="customerTab" data-toggle="tab" href="#customerInfo" role="tab" aria-controls="customerInfo" aria-expanded="true">Customer Information</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="generalTab" data-toggle="tab" href="#generalInfo" role="tab" aria-controls="generalInfo" aria-expanded="false">General Information</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="generalTab" data-toggle="tab" href="#contaminantInfo" role="tab" aria-controls="contaminantInfo" aria-expanded="false">Contaminant Information</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="generalTab" data-toggle="tab" href="#kitInfo" role="tab" aria-controls="kitInfo" aria-expanded="false">Kit Breakdown By Part</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="generalTab" data-toggle="tab" href="#additionalInfo" role="tab" aria-controls="additionalInfo" aria-expanded="false">Additional Information / Comments</a>
+            </li>
+          </ul>
+        </div>
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="tab-content mb-lg" id="myTabContent">
+            <div
+              role="tabpanel"
+              class="tab-pane active in clearfix"
+              id="customerInfo"
+              aria-labelledby="customerTab"
+              aria-expanded="true"
+            >
+              <div class="row clearfix">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="company" class="col-md-3  col-form-label text-md-right">
+                      Company:
+                    </label>
+                    <div class="col-md-8 ">
+                      <input
+                        pInputText
+                        type="text"
+                        class="form-control input-transparent"
+                        name="company"
+                        [(ngModel)]="CSRToCreate.Company"
+                        data-cy="csr-input-company"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="divisionFab" class="col-md-3  col-form-label text-md-right">
+                      Division / Fab #:
+                    </label>
+                    <div class="col-md-8 ">
+                      <input
+                        pInputText
+                        type="text"
+                        class="form-control input-transparent"
+                        name="divisionFab"
+                        [(ngModel)]="CSRToCreate.DivisionFab"
+                        data-cy="csr-input-divisionfab"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="streetAddress" class="col-md-3  col-form-label text-md-right">
+                      Street Address:
+                    </label>
+                    <div class="col-md-8 ">
+                      <input
+                        pInputText
+                        type="text"
+                        class="form-control input-transparent"
+                        name="streetAddress"
+                        [(ngModel)]="CSRToCreate.StreetAddress"
+                        data-cy="csr-input-streetaddress"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="cityStateZIP" class="col-md-3  col-form-label text-md-right">
+                      City, State, ZIP:
+                    </label>
+                    <div class="col-md-8 ">
+                      <input
+                        pInputText
+                        type="text"
+                        class="form-control input-transparent"
+                        name="cityStateZIP"
+                        [(ngModel)]="CSRToCreate.CityStateZIP"
+                        data-cy="csr-input-citystatezip"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <p-panel header="Commercial Contact Info">
+                    <div class="form-group row">
+                      <label for="commercialName" class="col-md-3  col-form-label text-md-right">
+                        Name:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="commercialName"
+                          [(ngModel)]="CSRToCreate.CommercialName" data-validate="parsley"
+                          data-parsley-trigger="change"
+                          data-parsley-minlength="3"
+                          data-parsley-required="true"
+                          data-cy="csr-input-commercialname"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="commercialTitle" class="col-md-3  col-form-label text-md-right">
+                        Title:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="commercialTitle"
+                          [(ngModel)]="CSRToCreate.CommercialTitle"
+                          data-cy="csr-input-commercialtitle"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="commercialPhone" class="col-md-3  col-form-label text-md-right">
+                        Phone:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="CommercialPhone"
+                          [(ngModel)]="CSRToCreate.CommercialPhone" data-validate="parsley"
+                          data-parsley-trigger="change"
+                          data-parsley-type="number"
+                          data-parsley-required="true"
+                          data-cy="csr-input-commercialphone"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="commercialEmail" class="col-md-3  col-form-label text-md-right">
+                        Email:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="commercialEmail"
+                          [(ngModel)]="CSRToCreate.CommercialEmail"
+                          data-validate="parsley"
+                          data-parsley-trigger="change"
+                          data-parsley-type="email"
+                          data-cy="csr-input-commercialemail"
+                        >
+                      </div>
+                    </div>
+                  </p-panel>
+                </div>
+
+                <div class="col-md-6">
+                  <p-panel header="Technical Contact Info">
+                    <div class="form-group row">
+                      <label for="technicalName" class="col-md-3  col-form-label text-md-right">
+                        Name:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="technicalName"
+                          [(ngModel)]="CSRToCreate.TechnicalName"
+                          data-validate="parsley"
+                          data-parsley-trigger="change"
+                          data-parsley-minlength="3"
+                          data-parsley-required="true"
+                          data-cy="csr-input-technicalname"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="technicalTitle" class="col-md-3  col-form-label text-md-right">
+                        Title:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="technicalTitle"
+                          [(ngModel)]="CSRToCreate.TechnicalTitle"
+                          data-cy="csr-input-technicaltitle"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="technicalPhone" class="col-md-3  col-form-label text-md-right">
+                        Phone:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="technicalPhone"
+                          [(ngModel)]="CSRToCreate.TechnicalPhone" data-validate="parsley"
+                          data-parsley-trigger="change"
+                          data-parsley-type="number"
+                          data-cy="csr-input-technicaltphone"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="technicalEmail" class="col-md-3  col-form-label text-md-right">
+                        Email:
+                      </label>
+                      <div class="col-md-8 ">
+                        <input
+                          pInputText
+                          type="text"
+                          class="form-control input-transparent"
+                          name="technicalEmail"
+                          [(ngModel)]="CSRToCreate.TechnicalEmail"
+                          data-validate="parsley"
+                          data-parsley-trigger="change"
+                          data-parsley-type="email"
+                          data-cy="csr-input-technicalemail"
+                        >
+                      </div>
+                    </div>
+                  </p-panel>
+                </div>
+
+              </div>
+            </div>
+            <div
+              class="tab-pane"
+              id="generalInfo"
+              role="tabpanel"
+              aria-labelledby="generalTab"
+              aria-expanded="false"
+            >
+              <div class="row clearfix">
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="partKitNo" class="col-md-3  col-form-label text-md-right">
+                      Part /Kit No:
+                    </label>
+                    <div class="col-md-8">
+                      <input
+                        pInputText
+                        type="text"
+                        class="form-control input-transparent"
+                        name="partKitNo"
+                        [(ngModel)]="CSRToCreate.PartKitNo"
+                        data-cy="csr-input-partkitno"
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="customerSpecifications" class="col-md-3  col-form-label text-md-right">
+                      Customer Specifications (if any):
+                    </label>
+                    <div class="col-md-8">
+                      <textarea
+                        pTextArea
+                        rows="3"
+                        class="form-control input-transparent"
+                        name="customerSpecifications"
+                        [(ngModel)]="CSRToCreate.CustomerSpecifications"
+                        data-cy="csr-input-customerspecifications"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="inProcessAnalyticalRequirements" class="col-md-3  col-form-label text-md-right">
+                      In-Process Analytical Requirements:
+                    </label>
+                    <div class="col-md-8">
+                      <textarea
+                        pTextArea
+                        rows="3"
+                        class="form-control input-transparent"
+                        name="inProcessAnalyticalRequirements"
+                        [(ngModel)]="CSRToCreate.InProcessAnalyticalRequirements"
+                        data-cy="csr-input-inprocessanalyticalrequirements"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="detailedDescription" class="col-md-3  col-form-label text-md-right">
+                      Detailed Description of Requested Service(s):
+                    </label>
+                    <div class="col-md-8">
+                      <textarea
+                        pTextArea
+                        rows="3"
+                        class="form-control input-transparent"
+                        name="detailedDescription"
+                        [(ngModel)]="CSRToCreate.DetailedDescription"
+                        data-cy="csr-input-detaileddescription"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="CriticalToFunction" class="col-md-3  col-form-label text-md-right">
+                      critical-to-Function Attributes:
+                    </label>
+                    <div class="col-md-8">
+                      <textarea
+                        pTextArea
+                        rows="3"
+                        class="form-control input-transparent"
+                        name="criticalToFunction"
+                        [(ngModel)]="CSRToCreate.CriticalToFunction"
+                        data-cy="csr-input-criticaltofunction"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="specificCustomerQualification" class="col-md-3  col-form-label text-md-right">
+                      Specific Customer Qualification Requirements:
+                    </label>
+                    <div class="col-md-8">
+                      <textarea
+                        pTextArea
+                        rows="3"
+                        class="form-control input-transparent"
+                        name="specificCustomerQualification"
+                        [(ngModel)]="CSRToCreate.SpecificCustomerQualification"
+                        data-cy="csr-input-specificcustomerqualification"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="forecastedVolumes" class="col-md-3  col-form-label text-md-right">
+                      Forecasted Volumes & Start Dates:
+                    </label>
+                    <div class="col-md-8">
+                      <textarea
+                        pTextArea
+                        rows="3"
+                        class="form-control input-transparent"
+                        name="forecastedVolumes"
+                        [(ngModel)]="CSRToCreate.ForecastedVolumes"
+                        data-cy="csr-input-forecastedvolumes"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group row">
+                    <label for="specialPackagingShipping" class="col-md-3  col-form-label text-md-right">
+                      Special Packaging/Shipping:
+                    </label>
+                    <div class="col-md-8">
+                      <textarea
+                        pTextArea
+                        rows="3"
+                        class="form-control input-transparent"
+                        name="specialPackagingShipping"
+                        [(ngModel)]="CSRToCreate.SpecialPackagingShipping"
+                        data-cy="csr-input-specialpackagingshipping"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="expectedQuoteDate" class="col-md-3  col-form-label text-md-right">
+                      Expected Quote Date:
+                    </label>
+                    <p-calendar
+                      placeholder="Select Expected Quote Date"
+                      class="col-md-8"
+                      name="expectedQuoteDate"
+                      [(ngModel)]="CSRToCreate.ExpectedQuoteDate"
+                      showIcon="true"
+                      styleClass="input-group input-group-transparent"
+                      inputStyleClass="form-control input-transparent"
+                      data-cy="csr-input-expectedquotedate"
+                    >
+                    </p-calendar>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="expectedCycleTime" class="col-md-3  col-form-label text-md-right">
+                      Expected Cycle Time:
+                    </label>
+                    <div class="col-md-8 ">
+                      <input
+                        pInputText
+                        type="text"
+                        class="form-control input-transparent"
+                        name="expectedCycleTime"
+                        [(ngModel)]="CSRToCreate.ExpectedCycleTime"
+                        data-validate="parsley"
+                        data-parsley-trigger="change"
+                        data-parsley-type="number"
+                        data-cy="csr-input-expectedcycletime"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="pickupNotification" class="col-md-3  col-form-label text-md-right">
+                      Pickup Notification:
+                    </label>
+                    <div class="col-md-8 ">
+                      <input
+                        pInputText
+                        type="text"
+                        class="form-control input-transparent"
+                        name="pickupNotification"
+                        [(ngModel)]="CSRToCreate.PickupNotification"
+                        data-cy="csr-input-pickupnotification"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="shippingMethod" class="col-md-3  col-form-label text-md-right">
+                      Shipping Method:
+                    </label>
+                    <p-dropdown
+                      class="col-md-8"
+                      placeholder="Select Shipping Method"
+                      name="shippingMethod"
+                      [(ngModel)]="CSRToCreate.ShippingMethod"
+                      [options]="CSRShippingMethods"
+                      appendTo="body"
+                      [baseZIndex]="100002"
+                      [virtualScroll]="true"
+                      itemSize="6"
+                      [filter]="true"
+                      filterBy="label"
+                      data-cy="csr-input-shippingmethod"
+                    >
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="tab-pane"
+              id="contaminantInfo"
+              role="tabpanel"
+              aria-labelledby="contaminantTab"
+              aria-expanded="false"
+            >
+              <div class="row clearfix">
+                <div class="col-md-12 column">
+                  <table class="table table-bordered" id="process_steps">
+                    <thead>
+                      <tr>
+                        <th class="text-center" style="width:10%">
+                          Row #
+                        </th>
+                        <th class="text-center" style="width:90%">
+                          Contaminents By-Products
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let pr of CSRToCreate.Process; index as i;">
+                        <td>{{i + 1}}</td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="process[{{i}}].contaminents"
+                            placeholder="Contaminents By-Products"
+                            [(ngModel)]="CSRToCreate.Process[i].Contaminents"
+                            data-cy="csr-input-process-contaminents"
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-md-12 column">
+                  <button
+                    type="button"
+                    class="btn btn-primary mr-2"
+                    (click)="addCSRProcess()"
+                  >Add Row</button>
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    (click)="removeCSRProcess()"
+                  >Delete Row</button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="tab-pane"
+              id="kitInfo"
+              role="tabpanel"
+              aria-labelledby="kitTab"
+              aria-expanded="false"
+            >
+              <div class="row clearfix">
+                <div class="col-md-12 column">
+                  <table class="table table-bordered" id="kit_parts">
+                    <thead>
+                      <tr>
+                        <th class="text-center" style="width:10%;">
+                          Row #
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          CU/Non CU
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          Part Description
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          Substrate
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          Coating/Surface Treatment
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          Dimensions
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          Cust. Part No.
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          Mfg. Part No.
+                        </th>
+                        <th class="text-center" style="width:10%;">
+                          # Parts per Kit
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="text-center" *ngFor="let part of CSRToCreate.Parts; index as i;">
+                        <td>{{i + 1}}</td>
+                        <td class="text-center">
+                          <p-inputSwitch
+                            name="parts[{{i}}].nonCU"
+                            [(ngModel)]="CSRToCreate.Parts[i].NonCU">
+                          </p-inputSwitch>
+                        </td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="parts[{{i}}].partDescription"
+                            placeholder="Part Description"
+                            [(ngModel)]="CSRToCreate.Parts[i].PartDescription"
+                            data-cy="csr-input-part-description"
+                          >
+                        </td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="parts[{{i}}].substrate"
+                            placeholder="Substrate"
+                            [(ngModel)]="CSRToCreate.Parts[i].Substrate"
+                            data-cy="csr-input-part-substrate"
+                          >
+                        </td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="parts[{{i}}].coatingSurface"
+                            placeholder="Coating/Surface Treatment"
+                            [(ngModel)]="CSRToCreate.Parts[i].CoatingSurface"
+                            data-cy="csr-input-part-coatingsurface"
+                          >
+                        </td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="parts[{{i}}].dimensions"
+                            placeholder="Dimensions"
+                            [(ngModel)]="CSRToCreate.Parts[i].Dimensions"
+                            data-cy="csr-input-part-dimensions"
+                          >
+                        </td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="parts[{{i}}].custPartNo"
+                            placeholder="Cust. Part No."
+                            [(ngModel)]="CSRToCreate.Parts[i].CustPartNo"
+                            data-validate="parsley"
+                            data-parsley-trigger="change"
+                            data-parsley-minlength="3"
+                            data-parsley-required="true"
+                            data-cy="csr-input-part-custpartno"
+                          >
+                        </td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="parts[{{i}}].mfgPartNo"
+                            placeholder="Mfg. Part No."
+                            [(ngModel)]="CSRToCreate.Parts[i].MfgPartNo"
+                            data-cy="csr-input-part-mfgpartno"
+                          >
+                        </td>
+                        <td>
+                          <input
+                            pInputText
+                            type="text"
+                            class="form-control input-transparent"
+                            name="parts[{{i}}].partsPerKit"
+                            placeholder="# Parts per Kit"
+                            [(ngModel)]="CSRToCreate.Parts[i].PartsPerKit"
+                            data-cy="csr-input-part-partsperkit"
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-md-12 column">
+                  <button
+                    type="button"
+                    class="btn btn-primary mr-2"
+                    (click)="addCSRPart()"
+                  >Add Row</button>
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    (click)="removeCSRPart()"
+                  >Delete Row</button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="tab-pane"
+              id="additionalInfo"
+              role="tabpanel"
+              aria-labelledby="additionalTab"
+              aria-expanded="false"
+            >
+              <div class="row clearfix">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="AdditionalInformation" class="col-form-label text-left">
+                      Additional Information or Comments
+                    </label>
+                    <textarea
+                      pTextArea
+                      rows="5"
+                      class="form-control input-transparent"
+                      name="additionalInformation"
+                      [(ngModel)]="CSRToCreate.AdditionalInformation"
+                      data-cy="csr-input-additionalinformation"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+    <p-footer>
+      <div class="pull-right">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button" data-cy="save-button">
+          Save
+        </button>
+        <button type="button" (click)="closeCSRDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
 </p-dialog>
