@@ -121,7 +121,6 @@ export class QuotesProductsComponent implements OnInit {
 
   onClickImportQuote($event) {
     // TODO: Import CSV process;
-    console.log('Click Import Quote');
   }
 
   openConfirmDeleteDialog(quote: QuotesProductsView) {
