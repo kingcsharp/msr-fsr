@@ -58,11 +58,57 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task<string> LoginAsync(SystemLogin command)
         {
-            var user = await _unitOfWork.Users.Query()
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuRolePermission)
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
+            var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role)
                 .Where(x => x.UserName == command.UserName)
+                .Select(x => new User()
+                {
+                    Roles = x.Roles.Select(x => new UserRole()
+                    {
+                        Id = x.Id,
+                        Role = new EntityFramework.Entities.Role()
+                        {
+                            Id = x.RoleId
+                        },
+                        RoleId = x.RoleId
+                    }).ToList(),
+                    Id = x.Id,
+                    PasswordHash = x.PasswordHash,
+                    PasswordSalt = x.PasswordSalt
+                })
                 .FirstOrDefaultAsync();
+
+            var loadRefs = await _unitOfWork.MenuRoles.Query()
+                .Include(x => x.MenuRolePermission)
+                .Include(x => x.MenuItem)
+                .Where(x => user.Roles.Select(x => x.RoleId).Contains(x.RoleId))
+                .Select(x => new MenuRole()
+                {
+                    MenuRolePermission = new MenuRolePermission()
+                    {
+                        Id = x.MenuRolePermission.Id,
+                        CanRead = x.MenuRolePermission.CanRead,
+                        CanActivate = x.MenuRolePermission.CanActivate,
+                        CanApprove = x.MenuRolePermission.CanApprove,
+                        CanCreate = x.MenuRolePermission.CanCreate,
+                        CanDelete = x.MenuRolePermission.CanDelete,
+                        CanEdit = x.MenuRolePermission.CanEdit
+                    },
+                    MenuItem = new MenuItem()
+                    {
+                        Id = x.MenuItem.Id,
+                        Name = x.MenuItem.Name,
+                        MenuGroupId = x.MenuItem.MenuGroupId
+                    },
+                    MenuItemId = x.MenuItemId,
+                    RoleId = x.RoleId,
+                    Id = x.Id
+                })
+                .ToListAsync();
+
+            foreach (var userRole in user.Roles)
+            {
+                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).ToList();
+            }
 
             if (user == null)
             {
@@ -203,9 +249,59 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task<string> GetJWTTokenAsync()
         {
-            var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuRolePermission)
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus).ThenInclude(x => x.MenuItem).ThenInclude(i => i.MenuGroup)
-                .FirstOrDefaultAsync(i => i.Id == CurrentUser.GetId());
+            var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role)
+                .Where(x => x.Id == CurrentUser.GetId())
+                .Select(x => new User()
+                {
+                    Roles = x.Roles.Select(x => new UserRole()
+                    {
+                        Id = x.Id,
+                        Role = new EntityFramework.Entities.Role()
+                        {
+                            Id = x.RoleId
+                        },
+                        RoleId = x.RoleId
+                    }).ToList(),
+                    Id = x.Id,
+                    PasswordHash = x.PasswordHash,
+                    PasswordSalt = x.PasswordSalt
+                })
+                .FirstOrDefaultAsync();
+
+            var loadRefs = await _unitOfWork.MenuRoles.Query()
+                .Include(x => x.MenuRolePermission)
+                .Include(x => x.MenuItem)
+                .Where(x => user.Roles.Select(x => x.RoleId).Contains(x.RoleId))
+                .Select(x => new MenuRole()
+                {
+                    MenuRolePermission = new MenuRolePermission()
+                    {
+                        Id = x.MenuRolePermission.Id,
+                        CanRead = x.MenuRolePermission.CanRead,
+                        CanActivate = x.MenuRolePermission.CanActivate,
+                        CanApprove = x.MenuRolePermission.CanApprove,
+                        CanCreate = x.MenuRolePermission.CanCreate,
+                        CanDelete = x.MenuRolePermission.CanDelete,
+                        CanEdit = x.MenuRolePermission.CanEdit
+                    },
+                    MenuItem = new MenuItem()
+                    {
+                        Id = x.MenuItem.Id,
+                        Name = x.MenuItem.Name,
+                        MenuGroupId = x.MenuItem.MenuGroupId
+                    },
+                    MenuItemId = x.MenuItemId,
+                    RoleId = x.RoleId,
+                    Id = x.Id
+                })
+                .ToListAsync();
+
+            foreach (var userRole in user.Roles)
+            {
+                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).ToList();
+            }
+
+
 
             if (user is null)
             {
@@ -246,8 +342,12 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private async Task<Dictionary<int, int[]>> GetTokenUserActivityRoles(User user)
         {
             var allMyActivitiesPrivileges = await _workflowService.GetAllMyActivitiesPrivileges(user.Id, user.Roles.Select(x => x.RoleId).ToList());
-            var canApproveMenuItemRoles = await _unitOfWork.MenuRoles.Query()
-                .Select(x => new { x.MenuItemId, x.RoleId, x.MenuRolePermission }).Distinct().ToListAsync();
+            //var canApproveMenuItemRoles = await _unitOfWork.MenuRoles.Query()
+            //    .Select(x => new { x.MenuItemId, x.RoleId, x.MenuRolePermission }).Distinct().ToListAsync();
+            //var canApproveMenuItemRoles = user.Roles.Max
+            var canApproveMenuItemRoles = (from userRole in user.Roles
+                                           from menu in userRole.Role.Menus
+                                           select new { menu.MenuItemId, menu.RoleId, menu.MenuRolePermission }).ToList();
 
             var result = new Dictionary<int, int[]>();
 
