@@ -169,7 +169,7 @@ export class PurchaseOrdersComponent implements OnInit {
     return ret;
   }
 
-  clseDialog() {
+  closeDialog() {
     this.display = false;
     jQuery('.parsleyjs').parsley().reset();
   }
@@ -221,7 +221,7 @@ export class PurchaseOrdersComponent implements OnInit {
           .subscribe(responseHandler(response => {
             this.data.push(response.object);
             this.data = this.data.slice(0);
-            ctrl.clseDialog();
+            ctrl.closeDialog();
           }));
       } else {
         this.globals.showLoader(true);
@@ -232,7 +232,7 @@ export class PurchaseOrdersComponent implements OnInit {
             this.data.splice(index, 1);
             this.data.splice(index, 0, response.object);
             this.data = this.data.slice(0);
-            ctrl.clseDialog();
+            ctrl.closeDialog();
           }));
       }
     }
