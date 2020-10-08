@@ -74,7 +74,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.sensorsAvailable = response.object.map(s => ({ label: s.sensorName, value: s.id }));
 
-      this.workOrderMonitorsToView.forEach(workOrderMonitor => {
+      this.workOrderMonitorsToView.map(workOrderMonitor => {
 
         if (workOrderMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderMonitor.procedureStepMonitor.inputType === 'Sensor') {
 
