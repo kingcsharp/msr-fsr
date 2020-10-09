@@ -4,12 +4,12 @@
   [baseZIndex]="100001" [modal]='true' [style]="{width: '33vw'}" data-cy="user-header">
   <div class="container">
     <div class="row">
-      Are you sure you want to take over this WorkOrder?
+      Are you sure you want to take over this step and all remaining steps?
     </div>
   </div>
   <p-footer>
     <div class="pull-right">
-      <button type="submit" (click)="takeOverAsUserConfirmationDialog()" class="btn btn-warning width-100 mb-xs" role="button"
+      <button type="submit" (click)="takeOverStep()" class="btn btn-warning width-100 mb-xs" role="button"
         data-cy="confirmdelete-button">
         Yes
       </button>
