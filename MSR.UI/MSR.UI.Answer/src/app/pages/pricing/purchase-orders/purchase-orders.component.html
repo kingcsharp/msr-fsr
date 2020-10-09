@@ -347,7 +347,7 @@
             </label>
             <div class="col-md-10 col-12">
               <multiselect-wrapper-form *ngIf="showProductsSelect" [(model)]="currentPO.selectedProducts" defaultLabel="Select Products"
-                name="ProductId" defaultId="id" defaultLabelProperty="name" [options]="productsData" [limit]="30">
+                name="ProductId" defaultId="id" defaultLabelProperty="name" [options]="productsData" [limit]="100" showRevision="true">
               </multiselect-wrapper-form>
             </div>
           </div>

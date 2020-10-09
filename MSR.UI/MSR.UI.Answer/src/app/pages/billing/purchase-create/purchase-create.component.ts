@@ -42,7 +42,9 @@ export class PurchaseCreateComponent implements OnInit {
   purchaseSerializeItems: any[] = [];
   serialNumberModal: boolean = false;
   globalDueDate: Date;
+  today = new Date();
   step: number;
+  custLineElem: any;
   selectButtonOptions = [
     {
       label: 'ON',
@@ -95,6 +97,8 @@ export class PurchaseCreateComponent implements OnInit {
         });
         this.getPurchaseOrderFlag = true;
         this.getCustomerData(this.purchaseOrderData.customerId);
+        this.globalDueDate = new Date(this.today.getTime() + (1000 * 60 * 60 * 24 * 7));
+        console.log(this.globalDueDate);
       }));
   }
 
@@ -116,7 +120,9 @@ export class PurchaseCreateComponent implements OnInit {
     this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          this.locationsData.push({ label: x.name, value: x.id });
+          if (x.parentId === null) {
+            this.locationsData.push({ label: x.name, value: x.id });
+          }
         });
         this.getLocationsFlag = true;
       }));
@@ -147,7 +153,7 @@ export class PurchaseCreateComponent implements OnInit {
                 productName: product.name,
                 customerLineNumber: null,
                 mttn: null,
-                dueDate: null,
+                dueDate: this.globalDueDate,
                 qty: product.qty,
                 unitPrice: product.price,
                 extPrice: product.qty * product.price,
@@ -164,7 +170,7 @@ export class PurchaseCreateComponent implements OnInit {
                   productName: product.name,
                   customerLineNumber: null,
                   mttn: null,
-                  dueDate: null,
+                  dueDate: this.globalDueDate,
                   qty: 1,
                   unitPrice: product.price,
                   extPrice: product.price,

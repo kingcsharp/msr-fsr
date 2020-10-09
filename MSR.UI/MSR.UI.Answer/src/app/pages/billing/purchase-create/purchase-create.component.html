@@ -8,6 +8,8 @@
       *ngIf="getPurchaseOrderFlag && purchaseOrderData"
       class="py-4 form-horizontal form-label-left parsleyjs"
       data-parsley-priority-enabled="false"
+      data-parsley-validate="false"
+      data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], input[type=hidden], [disabled], :hidden"
       novalidate="novalidate"
     >
       <div class="row mx-0">
@@ -147,6 +149,7 @@
               <p-calendar
                 [(ngModel)]="globalDueDate"
                 name="globalDueDate"
+                [defaultDate]="globalDueDate"
                 showIcon="true"
                 styleClass="input-group input-group-transparent"
                 inputStyleClass="form-control input-transparent"
@@ -263,13 +266,14 @@
                 <input
                   pInputText
                   type="text"
-                  class="form-control input-transparent"
+                  class="form-control input-transparent custLineNumber"
                   [(ngModel)]="purchaseItems[i].customerLineNumber"
                   name="purchaseItem[{{i}}].CUST_LINE_ITEM"
                   data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-type="number"
                   data-parsley-required="true"
+                  data-parsley-trigger="change"
+                  data-parsley-type="integer"
+                  data-parsley-excluded="true"
                 >
               </td>
               <td>
@@ -284,7 +288,8 @@
               <td>
                 <div class="form-group row mx-0">
                   <p-calendar
-                    [(ngModel)]="purchaseItems[i].dueDate"
+
+                  [(ngModel)]="purchaseItems[i].dueDate"
                     name="purchaseItem[{{i}}].DUE_DATE"
                     showIcon="true"
                     styleClass="input-group input-group-transparent"

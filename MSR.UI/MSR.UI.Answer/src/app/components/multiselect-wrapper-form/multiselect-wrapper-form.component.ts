@@ -13,10 +13,13 @@ export class MultiselectWrapperFormComponent implements OnInit {
   @Input() defaultLabelProperty: string;
   @Input() defaultId: number;
   @Input() limit: number;
+  @Input() showRevision: boolean;
   @Output() modelChange = new EventEmitter<any>();
   currentOptions: any = [];
   selectedObjs: any;
   basicOptions: any;
+  revision: any;
+  revisionLabel: any;
   constructor() {
   }
 
@@ -26,11 +29,14 @@ export class MultiselectWrapperFormComponent implements OnInit {
     this.basicOptions = {
       name: this.defaultLabelProperty || 'name',
       id: this.defaultId || 'id',
-      limit: this.limit || 4
+      limit: this.limit || 4,
+      showRevision: this.showRevision || false,
+      revision: this.revision || 'revision'
     };
-
+    console.log(this.showRevision);
     this.options.map((x) => {
-      this.currentOptions.push({ label: x[ctrl.basicOptions.name], value: { id: x[ctrl.basicOptions.id], name: x[ctrl.basicOptions.name] } });
+      let revisionLabel = (this.showRevision) ? ' (R-' + x[ctrl.basicOptions.revision] + ')' : '';
+      this.currentOptions.push({ label: x[ctrl.basicOptions.name] + revisionLabel, value: { id: x[ctrl.basicOptions.id], name: x[ctrl.basicOptions.name] } });
     });
     this.setSelectedObjects();
   }
@@ -68,7 +74,7 @@ export class MultiselectWrapperFormComponent implements OnInit {
     const ctrl = this;
 
     this.selectedObjs.items.map((x) => {
-      const elem = ctrl.options.find(u => u[this.basicOptions.id] === x.id);
+      const elem = ctrl.options.find(u => u[this.basicOptions.id] === x.id, this.basicOptions.revision === x.revision);
       this.model.push(elem);
     });
     this.modelChange.emit(this.model);
