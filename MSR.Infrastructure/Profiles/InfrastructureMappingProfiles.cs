@@ -70,7 +70,10 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Purchase, PurchaseModel>();
             CreateMap<CreatePurchase, Purchase>().ReverseMap();
             CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
-            CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
+            CreateMap<WorkOrderTask, WorkOrderTaskModel>()
+                .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
+                    src.StartedOn != null && src.StartedOn.Value.Ticks > 0
+                )));
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
             CreateMap<UpdateWorkOrderTaskMonitor, WorkOrderTaskMonitor>();
 
