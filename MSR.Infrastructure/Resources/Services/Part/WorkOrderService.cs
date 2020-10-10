@@ -381,7 +381,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(updatedWOPart, updatedWOPart.Id);
 
-            return _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            _unitOfWork.WorkOrderParts.LoadReference(updatedWOPart, x => x.WorkOrder);
+            _unitOfWork.WorkOrders.LoadReference(updatedWOPart.WorkOrder, x => x.Purchase);
+
+            // On update, we don't need a pointer back to the work order
+            var ret = _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            ret.WorkOrder = null;
+
+            return ret;
         }
 
         public async Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command)
