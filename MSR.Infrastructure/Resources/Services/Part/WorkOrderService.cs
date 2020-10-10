@@ -10,7 +10,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
-using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -362,8 +361,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 throw new DomainException($"{nameof(WorkOrderPart)} not found with ID: {command.WorkOrderPartId}", DomainError.NotFound);
             }
-
             WorkOrderPart updatedWOPart = current.First();
+
+            if (!string.IsNullOrEmpty(command.SerialNumber))
+            {
+                int curid = updatedWOPart.Id;
+                int curpartid = updatedWOPart.PartId;
+                updatedWOPart.CycleCount = _unitOfWork.WorkOrderParts.Count(x =>
+                    x.SerialNumber.Equals(command.SerialNumber) &&
+                    x.PartId == curpartid &&
+                    x.Id != curid
+                ) + 1;
+            }
+
             _ = _mapper.Map(command, updatedWOPart);
 
             _unitOfWork.WorkOrderParts.Update(updatedWOPart);
@@ -371,7 +381,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(updatedWOPart, updatedWOPart.Id);
 
-            return _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            _unitOfWork.WorkOrderParts.LoadReference(updatedWOPart, x => x.WorkOrder);
+            _unitOfWork.WorkOrders.LoadReference(updatedWOPart.WorkOrder, x => x.Purchase);
+
+            // On update, we don't need a pointer back to the work order
+            var ret = _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            ret.WorkOrder = null;
+
+            return ret;
         }
 
         public async Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command)
