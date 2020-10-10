@@ -15,6 +15,7 @@ namespace MSR.Domain.Commands
         public decimal? TotalTaskTime { get; set; }
         public bool? TaskIsRunning { get; set; }
         public DateTime? TaskRunningSince { get; set; }
+        public DateTime? StartedOn { get; set; }
 
         public virtual ICollection<int> WorkOrderTaskMonitorIds { get; set; }
     }

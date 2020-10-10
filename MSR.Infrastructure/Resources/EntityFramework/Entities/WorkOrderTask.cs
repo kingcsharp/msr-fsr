@@ -33,6 +33,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public DateTime? TaskRunningSince { get; set; }
 
+        public DateTime? StartedOn { get; set; }
+
         public virtual ProcedureStep ProcedureStep { get; set; }
 
         public virtual ProcedureStepType ProcedureStepType { get; set; }
