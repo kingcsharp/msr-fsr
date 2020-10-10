@@ -10911,6 +10911,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "cycleCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "parentId": {
             "type": "integer",
             "format": "int32",
@@ -10918,6 +10922,11 @@
           },
           "serialNumber": {
             "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "part": {
