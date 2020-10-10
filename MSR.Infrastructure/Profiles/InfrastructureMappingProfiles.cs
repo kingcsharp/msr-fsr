@@ -74,6 +74,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.TaskStarted, opts => opts.MapFrom(src => (
                     src.StartedOn != null && src.StartedOn.Value.Ticks > 0
                 )));
+            CreateMap<WorkOrderPart, WorkOrderPartModel>()
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => WorkOrderPart_to_WorkOrderPartModel_qty(src)));
+            CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
             CreateMap<UpdateWorkOrderTaskMonitor, WorkOrderTaskMonitor>();
 
@@ -488,6 +491,15 @@ namespace MSR.Infrastructure.Profiles
         private int? GetLocationId(Invoice src)
         {
             return src.InvoiceItems?.FirstOrDefault()?.WorkOrder?.Purchase?.LocationId;
+        }
+
+        private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)
+        {
+            if (src.WorkOrder != null && src.WorkOrder.Purchase != null)
+            {
+                return src.WorkOrder.Purchase.Qty;
+            }
+            return null;
         }
     }
 }
