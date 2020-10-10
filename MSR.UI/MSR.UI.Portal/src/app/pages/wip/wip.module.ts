@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { UtilsModule } from '../../layout/utils/utils.module';
 import { WipComponent } from './wip/wip.component';
-import { WiphistoryComponent } from './wiphistory/wiphistory.component';
-import { WipstatusComponent } from './wipstatus/wipstatus.component';
 import { WipstatusWrapperComponent } from '../../components/wipstatus-wrapper/wipstatus.component';
 import { TableModule } from 'primeng/table';
 import { NewWidgetModule } from '../../layout/new-widget/widget.module';
@@ -13,7 +11,6 @@ import { CalendarModule } from 'primeng/calendar';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { WipdetailsComponent } from './wipdetails/wipdetails.component';
 import { TabViewModule } from 'primeng/tabview';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { WorkordertasktimerWrapperComponent } from '../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
@@ -37,16 +34,13 @@ import { TechnicalDataLabelComponent } from '../../components/technical-data-lab
 import { WorkReportComponent } from '../../components/work-report/work-report.component';
 
 export const routes = [
-  { path: '', redirectTo: 'wipstatus', pathMatch: 'full' },
-  { path: 'wip', component: WipComponent, pathMatch: 'full' },
-  { path: 'wiphistory', component: WiphistoryComponent, pathMatch: 'full' },
-  { path: 'wipstatus', component: WipstatusComponent, pathMatch: 'full' },
-  { path: 'details/:id', component: WipdetailsComponent, pathMatch: 'full' }
+  { path: '', redirectTo: 'engineering', pathMatch: 'full' },
+  { path: 'engineering', component: WipComponent, pathMatch: 'full' }
 ];
 
 
 @NgModule({
-  declarations: [WipComponent, WiphistoryComponent, WipstatusComponent, WipstatusWrapperComponent, WipdetailsComponent,
+  declarations: [WipComponent, WipstatusWrapperComponent,
     WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
     DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent,

@@ -334,7 +334,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             foreach (var userRole in user.Roles)
             {
-                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).ToList();
+                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).Distinct().ToList();
             }
 
             if (user == null)

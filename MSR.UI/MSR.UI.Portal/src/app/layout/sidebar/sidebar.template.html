@@ -9,6 +9,8 @@
   </header>
 </div>
 <ul id="side-nav" class="list-unstyled components side-nav">
+
+
   <li *ngFor="let item of sidebarItems" [ngClass]="item.submenu.length>0?'accordion-group panel':''"
     [routerLinkActive]="['active']">
     <a *ngIf="item.submenu.length > 0" (click)="sidebarBehavior($event)" class="accordion-toggle collapsed"
@@ -18,12 +20,10 @@
     </a>
     <ul *ngIf="item.submenu.length > 0" id="{{item.name}}" class="accordion-body collapse" aria-expanded="false">
       <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']">
-
         <a routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name != 'Support Ticket'">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
         </a>
-
         <a (click)="toggleSupportTicketModal()" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name =='Support Ticket'">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>

@@ -3,9 +3,12 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary } from '../../../services/api.client.generated';
+import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, ReportModel } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
+import { take } from 'rxjs/operators';
+import { GridSaved } from '../../../../app/models/lib/GridSaved';
+import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 
 @Component({
   selector: 'app-wip',
@@ -15,78 +18,57 @@ import { responseHandler } from '../../../utils/responseHandler';
 })
 export class WipComponent implements OnInit {
 
-  gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
+  gridColumns: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
   data: Array<any> = new Array<any>();
   statusOptions: Array<SelectItem>;
   locationOptions: Array<SelectItem>;
+  gridSaved: GridSaved;
+  showReport: boolean = false;
+  reportModel: ReportModel;
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
-
-    this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-
-    this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: false }),
-      new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false }),
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true }),
-      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true }),
-      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true }),
-      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'Purchase Order Number', visible: true }),
-      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true }),
-      new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true }),
-      new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true }),
-      new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true }),
-      new ColumnsSaved({ id: 'actualEndDate', label: 'Actual End Date', visible: true }),
-      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true })
+    this.gridColumns = [
+      new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'Purchase Order Number', type: EnumColumnType.Number, visible: true }),
+      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'actualEndDate', label: 'Actual End Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String })
     ];
 
-
-
-    this.workOrderService.menu(env.apiVersion).subscribe(responseHandler(response => {
-
-      this.data = response.object;
-
-      this.statusOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
-      ).map(x => ({ label: x.status, value: x.status }));
-      this.data.map((elem) => {
-
-        elem.timeLoggedType = 'danger';
-
-        if (elem.percentageOfExpectedDurationTimeLogged < 25) {
-          elem.timeLoggedType = 'warning';
-        } else if (elem.percentageOfExpectedDurationTimeLogged < 50) {
-          elem.timeLoggedType = 'info';
-        } else if (elem.percentageOfExpectedDurationTimeLogged < 75) {
-          elem.timeLoggedType = 'success';
-        }
-
-        elem.tasksCompletedType = 'danger';
-
-        if (elem.percentageOfTasksCompleted < 25) {
-          elem.tasksCompletedType = 'warning';
-        } else if (elem.percentageOfTasksCompleted < 50) {
-          elem.tasksCompletedType = 'info';
-        } else if (elem.percentageOfTasksCompleted < 75) {
-          elem.tasksCompletedType = 'success';
-        }
-
-      });
-      this.locationOptions = this.data.filter(
-        (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
-      ).map(x => ({ label: x.locationName, value: x.locationName }));
-      this.loading = false;
-
-    }));
-
-
+    this.getGridData();
   }
 
+  getGridData() {
+    this.globals.showLoader(true);
+    this.workOrderService.history(env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data = response.object;
+        this.gridSaved = new GridSaved({
+          columnsSaved: this.gridColumns,
+          storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
+          version: '1.0.0'
+        });
+
+        this.reportModel = new ReportModel({
+          name: 'Work Orders'
+        });
+
+        this.showReport = true;
+      }));
+  }
 }

@@ -107,7 +107,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
             foreach (var userRole in user.Roles)
             {
-                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).ToList();
+                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).Distinct().ToList();
             }
 
             if (user == null)
@@ -298,10 +298,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
             foreach (var userRole in user.Roles)
             {
-                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).ToList();
+                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).Distinct().ToList();
             }
-
-
 
             if (user is null)
             {

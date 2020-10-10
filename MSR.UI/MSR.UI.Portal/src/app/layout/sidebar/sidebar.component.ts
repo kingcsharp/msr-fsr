@@ -17,8 +17,87 @@ export class Sidebar {
 
 
   constructor(private renderer: Renderer2, private el: ElementRef, private globals: Globals) {
+    const menus = [{
+      "url": "WIPStatus",
+      "name": "Engineering",
+      "info": "",
+      "icon": "fas fa-cogs",
+      "orderNumber": 1,
+      "menuGroup": {
+        "url": "#",
+        "name": "WIP Views",
+        "info": "",
+        "icon": "fas fa-desktop",
+        "orderNumber": 1
+      },
+      "permissions": null,
+      "inheritedPermissions": null,
+      "roles": [],
+      "enumMenuItem": 31
+    },
+    {
+      "url": "Specifications",
+      "name": "New Requirements",
+      "info": "",
+      "icon": "far fa-plus-circle",
+      "orderNumber": 1,
+      "menuGroup": {
+        "url": "#",
+        "name": "Specifications",
+        "info": "",
+        "icon": "far fa-thermometer-half",
+        "orderNumber": 2
+      },
+      "permissions": null,
+      "inheritedPermissions": null,
+      "roles": [],
+      "enumMenuItem": 31
+    },
+    {
+      // "url": "WIPStatus",
+      // "name": "New Requirements",
+      // "info": "",
+      // "icon": "far fa-plus-circle",
+      // "orderNumber": 1,
+      "menuGroup": {
+        "url": "#",
+        "name": "Part Reporting",
+        "info": "",
+        "icon": "fas fa-line-chart",
+        "orderNumber": 3
+      },
+      // "permissions": null,
+      // "inheritedPermissions": null,
+      // "roles": [],
+      // "enumMenuItem": 31
+    },
+    {
+      // "url": "WIPStatus",
+      // "name": "New Requirements",
+      // "info": "",
+      // "icon": "far fa-plus-circle",
+      // "orderNumber": 1,
+      "menuGroup": {
+        "url": "#",
+        "name": "Profile",
+        "info": "",
+        "icon": "fal fa-user-edit",
+        "orderNumber": 4
+      },
+      // "permissions": null,
+      // "inheritedPermissions": null,
+      // "roles": [],
+      // "enumMenuItem": 31
+    }];
+    const roles = [
+      {
+        id: 0,
+        menus: menus,
+        name: "Administrator",
+      }
+    ];
 
-    this.sidebarItems = this.generateMenu(globals.user.roles);
+    this.sidebarItems = this.generateMenu(roles);//globals.user.roles
   }
 
   generateMenu(roles: any) {
@@ -41,7 +120,18 @@ export class Sidebar {
     menuItems.forEach(function (item) {
       const elem = menuStructure.find(x => x.name === item.menuGroup?.name);
       if (elem === undefined) {
-        let menuItem = { submenu: [{ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info }] };
+        let menuItem = { submenu: [] };
+        if (!isNaN(item.orderNumber)) {
+          menuItem.submenu = [
+            {
+              name: item.name,
+              url: item.url,
+              icon: item.icon,
+              orderNr: item.orderNumber,
+              info: item.info
+            }]
+        }
+
         Object.assign(menuItem, item.menuGroup);
         menuStructure.push(menuItem);
       } else {
