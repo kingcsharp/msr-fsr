@@ -11012,7 +11012,15 @@
             "type": "boolean",
             "nullable": true
           },
+          "taskStarted": {
+            "type": "boolean"
+          },
           "taskRunningSince": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "startedOn": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -13056,6 +13064,11 @@
           "taskRunningSince": {
             "type": "string",
             "description": "Gets or Sets TaskRunningSince",
+            "format": "date-time"
+          },
+          "startedOn": {
+            "type": "string",
+            "description": "Gets or Sets StartedOn",
             "format": "date-time"
           },
           "status": {
