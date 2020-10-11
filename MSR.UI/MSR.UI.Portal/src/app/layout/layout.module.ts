@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { DropdownModule } from 'primeng/dropdown';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { UtilsModule } from '../layout/utils/utils.module';
@@ -26,7 +27,8 @@ import { ApprovalCommentComponent } from '../components/approval-comment/approva
     ProgressbarModule.forRoot(),
     BlockUIModule,
     UtilsModule,
-    DialogModule
+    DialogModule,
+    DropdownModule
   ],
   declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent]
 })

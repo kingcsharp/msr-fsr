@@ -27,6 +27,24 @@ export class Globals {
         comment: new Subject<string>()
     };
 
+    isAnswerUser: boolean = false;
+
+    selectedCustomer;
+    selectCustomerSource: Subject<any> = new Subject<any>();
+    selectCustomerObservable: Observable<any> = this.selectCustomerSource.asObservable();
+
+    isBuyer: boolean = undefined;
+    isBuyerSource: Subject<any> = new Subject<any>();
+    isBuyerObservable: Observable<any> = this.isBuyerSource.asObservable();
+
+    changeBuyer(state) {
+        this.isBuyerSource.next(this.isBuyer = state);
+    }
+
+    changeCustomer(customer) {
+        this.selectCustomerSource.next(this.selectedCustomer = customer);
+    }
+
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
         this.setActiveMenuItem(router);
@@ -73,8 +91,6 @@ export class Globals {
                 }
             });
     }
-
-
 
     loadUserFromLocalStorage() {
         if (localStorage.user === undefined || localStorage.user === undefined) {

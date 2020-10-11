@@ -1,9 +1,9 @@
 <h1 class="page-title" data-cy="page-title">
-    <i class="fas fa-clock-o"></i>
-    Engineering
+    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+    {{globals.activeMenu.name}}
 </h1>
 
-<widget>
+<widget *ngIf="globals.selectedCustomer !== undefined">
     <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
         [data]="data">
     </app-grid>
