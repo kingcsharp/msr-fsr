@@ -156,7 +156,7 @@
                       <td class="d-flex serialinput-td">
                         <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber"
                           class="form-control input-transparent m-2" tooltip="Serial Number" disabled>
-                        <button id="changebutton{{index}}" class="btn btn-warning m-2"
+                        <button id="changebutton{{index}}" class="btn btn-warning m-2" *ngIf="!workOrderIsComplete"
                           (click)="changeSerialNumber(index, workOrderPart.serialNumber, workOrderPart.id)">Change</button>
                         <button id="submitbutton{{index}}" class="btn btn-success d-none m-2"
                           (click)="submitSerialNumber(index, workOrderPart.id)">Submit</button>
