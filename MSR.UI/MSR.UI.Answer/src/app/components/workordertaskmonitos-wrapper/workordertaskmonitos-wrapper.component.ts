@@ -71,7 +71,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     });
 
-    this.sensorService.sensor(null, this.workOrderModel.location.site, env.apiVersion).subscribe(responseHandler(response => {
+    this.sensorService.sensor(null, 415, env.apiVersion).subscribe(responseHandler(response => {
 
       this.sensorsAvailable = response.object.map(s => ({ label: s.sensorName, value: s.id }));
 

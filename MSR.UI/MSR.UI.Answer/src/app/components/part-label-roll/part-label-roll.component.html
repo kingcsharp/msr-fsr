@@ -1,74 +1,75 @@
-<div class="roll-label">
+<div class="roll-label" *ngFor="let workOrderPart of WorkOrder.workOrderParts">
   <table class="tight">
     <tbody>
-        <tr>
-            <td width="60%">
-              <div class="img-responsive" style="margin-top: 16px;width:185px;">
-                <img src="assets/img/msr-label-logo.png" alt="Logo">
-              </div>
-              <p class="date">Date:<strong>{{WorkOrder.actualEndDate}}</strong></p>
-              <p>Site: <strong>MSR-FSR {{WorkOrder.location?.name}}</strong></p>
-              <p>WO: <strong>WO: {{WorkOrder.product?.customer?.name}}-{{ WorkOrder.purchase?.customerPurchaseNumber }}</strong></p>
-              <div class="coded" style="max-width:175px">
-                PO #: <strong>{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</strong><br />
+      <tr>
+        <td width="60%">
+          <div class="img-responsive" style="margin-top: 16px;width:185px;">
+            <img src="assets/img/msr-label-logo.png" alt="Logo">
+          </div>
+          <p class="date">Date:<strong>{{WorkOrder.actualEndDate}}</strong></p>
+          <p>Site: <strong>MSR-FSR {{WorkOrder.location?.name}}</strong></p>
+          <p>WO: <strong>WO:
+              {{WorkOrder.product?.customer?.name}}-{{ WorkOrder.purchase?.customerPurchaseNumber }}</strong></p>
+          <div class="coded" style="max-width:175px">
+            PO #: <strong>{{WorkOrder.purchase?.purchaseOrder?.referencePO}}</strong><br />
+            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+              [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO" [bc-display-value]="false" [bc-height]="20">
+            </ngx-barcode>
+          </div>
+        </td>
+        <td width="40%">
+          <!-- TODO: products do not have images. Parts do. The image needed here is the first file associated with the part-->
+          <div class="image-container img-fluid part-image" *ngIf="workOrderPart.part.files[0] !== undefined">
+            <img src="{{workOrderPart.part.files[0]}}" alt="Product Image">
+          </div>
+          <div class="col-12  justify-content-center d-flex" *ngIf="workOrderPart.part.files[0] === undefined">
+            No Image Available
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div class="coded">
+            Part Desc: <strong>{{workOrderPart?.part?.name}}</strong><br />
+            <table class="tight">
+              <tr>
+                <td width="50%">
+                  Customer Part #: <strong>{{workOrderPart?.part?.partNumber}}</strong><br />
                   <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
-                      [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO" [bc-display-value]="false"
-                      [bc-height]="20"></ngx-barcode>
-              </div>
-            </td>
-            <td width="40%">
-              <!-- TODO: products do not have images. Parts do. The image needed here is the first file associated with the part-->
-              <div class="image-container img-fluid part-image" *ngIf="WorkOrder.product?.part?.files[0] !== undefined" >
-                <img src="{{WorkOrder.product?.productImage}}" alt="Product Image">
-              </div>
-              <div class="col-12  justify-content-center d-flex" *ngIf="WorkOrder.product?.part?.files[0] === undefined">
-                No Image Available
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <div class="coded">
-                Part Desc: <strong>{{WorkOrder.product?.part?.name}}</strong><br />
-                <table class="tight">
-                  <tr>
-                    <td width="50%">
-                        Customer Part #: <strong>{{WorkOrder.product?.part?.partNumber}}</strong><br />
-                        <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
-                          [bc-value]="WorkOrder.product?.part?.partNumber" [bc-display-value]="false" [bc-height]="20">
-                      </ngx-barcode>
-                    </td>
-                    <td width="50%">
-                      OEM Part #:
-                      <span *ngIf="WorkOrder.product?.part?.oemPartNumber !== null; else OEMNotAvailable">
-                        <strong>{{WorkOrder.product?.part?.oemPartNumber}}</strong><br />
-                        <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
-                            [bc-value]="WorkOrder.product?.part?.oemPartNumber" [bc-display-value]="false" [bc-height]="20">
-                        </ngx-barcode>
-                      </span>
-                      <ng-template #OEMNotAvailable>
-                        <strong>Not Provided</strong><br /><br /><br />
-                      </ng-template>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td width="40%">
-              <div class="coded">
-                <!-- TODO: Change to Part CycleCount (including bc-value-->
-                Serial #: <strong>{{WorkOrder.product?.part?.serialNumber}}</strong><br />
-                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderParentPart?.serialNumber"
-                    [bc-display-value]="false" [bc-height]="20">
-                </ngx-barcode>
-                <!-- TODO: Change to Part CycleCount-->
-                  This part processed <strong>{{WorkOrder.product?.part?.cycleCount}}</strong> time(s)
-              </div>
-            </td>
-            <td style="text-align:center">ONLY OPEN IN <br />CLASS 100 CLEANROOM <br />OR BETTER</td>
-          </tr>
-      </tbody>
+                    [bc-value]="workOrderPart?.part?.partNumber" [bc-display-value]="false" [bc-height]="20">
+                  </ngx-barcode>
+                </td>
+                <td width="50%">
+                  OEM Part #:
+                  <span *ngIf="workOrderPart?.part?.oemPartNumber !== null; else OEMNotAvailable">
+                    <strong>{{workOrderPart?.part?.oemPartNumber}}</strong><br />
+                    <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'"
+                      [bc-value]="workOrderPart?.part?.oemPartNumber" [bc-display-value]="false" [bc-height]="20">
+                    </ngx-barcode>
+                  </span>
+                  <ng-template #OEMNotAvailable>
+                    <strong>Not Provided</strong><br /><br /><br />
+                  </ng-template>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td width="40%">
+          <div class="coded">
+            <!-- TODO: Change to Part CycleCount (including bc-value-->
+            Serial #: <strong>{{workOrderPart.serialNumber}}</strong><br />
+            <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.serialNumber"
+              [bc-display-value]="false" [bc-height]="20">
+            </ngx-barcode>
+            <!-- TODO: Change to Part CycleCount-->
+            This part processed <strong>{{workOrderPart.serialNumber}}</strong> time(s)
+          </div>
+        </td>
+        <td style="text-align:center">ONLY OPEN IN <br />CLASS 100 CLEANROOM <br />OR BETTER</td>
+      </tr>
+    </tbody>
   </table>
 </div>
