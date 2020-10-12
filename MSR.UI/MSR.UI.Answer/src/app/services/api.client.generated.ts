@@ -18579,6 +18579,8 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
+    referenceFiles?: Array<FileModel>;
+    referenceFileIds?: Array<number>;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -18637,6 +18639,8 @@ export interface IUpdateWorkOrderTaskRequest {
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
+    referenceFiles?: Array<FileModel>;
+    referenceFileIds?: Array<number>;
 }
 
 /** Base class for an API call with a typed result */
