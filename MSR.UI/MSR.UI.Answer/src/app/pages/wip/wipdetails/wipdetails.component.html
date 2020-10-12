@@ -97,10 +97,8 @@
           </workordertasktimer-wrapper>
         </div>
         <div class="d-flex col-6 justify-content-end pr-0">
-          <!--if user assigned is NOT the current user -->
           <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"  [workOrderModel]="workOrderModel"
           *ngIf="workOrderTaskInProgress.assignedTo !== this.globals.getCurrentUser().id"></take-over-task-button-wrapper>
-          <!--next 2 are all users -->
           <empmbutton-wrapper *ngIf="!workOrderIsComplete"></empmbutton-wrapper>
           <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" (addNcrTasks)="addNcrTasks($event)"
             [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="!workOrderIsComplete"></addncrbutton-wrapper>
