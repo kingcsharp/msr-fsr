@@ -47,7 +47,7 @@
               <ul>
                 <li *ngFor="let part of workOrderParts">
                   Part # {{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
-                  (Qty: {{part.part.Quantity}})
+                  (Qty: {{part.part.qty}})
                 </li>
               </ul>
               </div>
@@ -78,7 +78,8 @@
               [ngClass]="{ 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
                   'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
-                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
+                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed' 
+                  || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled'}">
               <div class="h-100 d-flex">
                 <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title}}</div>
               </div>
