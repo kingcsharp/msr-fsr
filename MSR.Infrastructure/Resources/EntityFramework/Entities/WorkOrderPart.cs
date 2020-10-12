@@ -18,6 +18,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? ParentId { get; set; }
 
+        public int? CycleCount { get; set; }
+
         [StringLength(50)]
         public string SerialNumber { get; set; }
 

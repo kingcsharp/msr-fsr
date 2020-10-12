@@ -69,7 +69,8 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateProduct, ProductApproval>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
             CreateMap<CreatePurchase, Purchase>().ReverseMap();
-            CreateMap<WorkOrderPart, WorkOrderPartModel>().ReverseMap();
+            CreateMap<WorkOrderPart, WorkOrderPartModel>()
+                .ForMember(dest => dest.Qty, opts => opts.MapFrom(src => WorkOrderPart_to_WorkOrderPartModel_qty(src)));
             CreateMap<WorkOrderTask, WorkOrderTaskModel>().ReverseMap();
             CreateMap<WorkOrderTaskMonitor, WorkOrderTaskMonitorModel>().ReverseMap();
             CreateMap<UpdateWorkOrderTaskMonitor, WorkOrderTaskMonitor>();
@@ -485,6 +486,15 @@ namespace MSR.Infrastructure.Profiles
         private int? GetLocationId(Invoice src)
         {
             return src.InvoiceItems?.FirstOrDefault()?.WorkOrder?.Purchase?.LocationId;
+        }
+
+        private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)
+        {
+            if (src.WorkOrder != null && src.WorkOrder.Purchase != null)
+            {
+                return src.WorkOrder.Purchase.Qty;
+            }
+            return null;
         }
     }
 }

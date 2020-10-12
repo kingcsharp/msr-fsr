@@ -10,7 +10,6 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
-using MSR.Infrastructure.Helpers.Abstractions;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -82,6 +81,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             workorders = await query
                 .Include(x => x.WorkOrderParts)
                 .ThenInclude(y => y.Part)
+                .Include(x => x.WorkOrderParts)
+                .ThenInclude(y => y.Children)
 
                 // Work Order Tasks etc.
                 .Include(x => x.WorkOrderTasks)
@@ -168,6 +169,24 @@ namespace MSR.Infrastructure.Resources.Services.Part
             WorkOrder workorder = _mapper.Map<WorkOrder>(command);
 
             var created = _unitOfWork.WorkOrders.Add(workorder);
+
+            // link work order IDs for all parts
+            Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
+            foreach(var p in workorder.WorkOrderParts)
+            {
+                parts.Push(p);
+            }
+            while(parts.Count > 0) {
+                var p = parts.Pop();
+                p.WorkOrder = workorder;
+                if (p.Children != null && p.Children.Count > 0)
+                {
+                    foreach(var sp in p.Children)
+                    {
+                        parts.Push(sp);
+                    }
+                }
+            }
 
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
@@ -279,7 +298,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(CreateWorkOrder command)
         {
-            var product = await _unitOfWork.Products.Query()
+            var product = await _unitOfWork.Products
+                .Query()
+                .Include(x => x.Part)
+                .ThenInclude(y => y.Subparts)
                 .FirstAsync(x => x.Id == command.ProductId);
             int count = 1;
             int quantity = command.Qty;
@@ -293,9 +315,30 @@ namespace MSR.Infrastructure.Resources.Services.Part
             List<WorkOrderPartModel> parts = new List<WorkOrderPartModel>();
             for (int i = 0; i < count; i++)
             {
+                List<WorkOrderPartModel> subs = new List<WorkOrderPartModel>();
+                if (product.Part.Subparts != null && product.Part.Subparts.Count > 0)
+                {
+                    foreach (PartSubPartMap p in product.Part.Subparts)
+                    {
+                        int spquantity = p.Qty;
+                        if (spquantity == 0)
+                        {
+                            spquantity = 1;
+                        }
+
+                        for (int j = 0; j < spquantity; j++)
+                        {
+                            subs.Add(new WorkOrderPartModel() {
+                                PartId = p.PartId,
+                                ParentId = p.ParentPartId
+                            });
+                        }
+                    }
+                }
                 var n = new WorkOrderPartModel()
                 {
-                    PartId = product.PartId
+                    PartId = product.PartId,
+                    Children = subs
                 };
                 parts.Add(n);
             }
@@ -318,8 +361,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 throw new DomainException($"{nameof(WorkOrderPart)} not found with ID: {command.WorkOrderPartId}", DomainError.NotFound);
             }
-
             WorkOrderPart updatedWOPart = current.First();
+
+            if (!string.IsNullOrEmpty(command.SerialNumber))
+            {
+                int curid = updatedWOPart.Id;
+                int curpartid = updatedWOPart.PartId;
+                updatedWOPart.CycleCount = _unitOfWork.WorkOrderParts.Count(x =>
+                    x.SerialNumber.Equals(command.SerialNumber) &&
+                    x.PartId == curpartid &&
+                    x.Id != curid
+                ) + 1;
+            }
+
             _ = _mapper.Map(command, updatedWOPart);
 
             _unitOfWork.WorkOrderParts.Update(updatedWOPart);
@@ -327,7 +381,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(updatedWOPart, updatedWOPart.Id);
 
-            return _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            _unitOfWork.WorkOrderParts.LoadReference(updatedWOPart, x => x.WorkOrder);
+            _unitOfWork.WorkOrders.LoadReference(updatedWOPart.WorkOrder, x => x.Purchase);
+
+            // On update, we don't need a pointer back to the work order
+            var ret = _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            ret.WorkOrder = null;
+
+            return ret;
         }
 
         public async Task<WorkOrderTaskModel> CreateWorkOrderTaskAsync(CreateWorkOrderTask command)
