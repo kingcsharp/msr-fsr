@@ -27,6 +27,14 @@ import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 })
 export class GridComponent implements OnInit {
 
+  /**
+    for template type templates will have as avaiable this data
+    col: col,
+    colData:itemData,
+    colsSaved:gridSaved.columnsSaved,
+    gridData:gridData
+  */
+
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
   @Input() data;
