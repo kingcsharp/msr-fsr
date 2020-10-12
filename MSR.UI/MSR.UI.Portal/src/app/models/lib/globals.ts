@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized, RouteConfigLoadStart } from '@angular/router';
-import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel } from '../../services/api.client.generated';
+import { MenuItem, EnumMenuItem, EnumApprovalTables, UserModel, Customer } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { DOCUMENT } from '@angular/common';
@@ -71,25 +71,27 @@ export class Globals {
     }
 
     setActiveMenuItem(router) {
-        router.events
-            .subscribe((event) => {
-                if (event instanceof NavigationEnd) {
+        this.setActiveMenu(window.location.href);
+        router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.setActiveMenu(event.url);
+            }
+        });
+    }
 
-                    if (this.user !== undefined) {
-                        let splitUrl = event.url.split('/');
-                        const urlTocheck = splitUrl[splitUrl.length - 1];
-                        let currMenuItem: [MenuItem];
-                        let length = this.user.roles.length;
-                        while (length--) {
-                            const elem = this.user.roles[length].menus.filter(x => x.url.toLowerCase() === urlTocheck);
-                            if (elem !== undefined && elem.length > 0) {
-                                this.activeMenu = elem[0];
-                                length = 0;
-                            }
-                        }
-                    }
+    setActiveMenu(url) {
+        if (this.user !== undefined) {
+            let splitUrl = url.split('/');
+            const urlTocheck = splitUrl[splitUrl.length - 1];
+            let length = this.user.roles.length;
+            while (length--) {
+                const elem = this.user.roles[length].menus.filter(x => x.url.toLowerCase() === urlTocheck);
+                if (elem !== undefined && elem.length > 0) {
+                    this.activeMenu = elem[0];
+                    length = 0;
                 }
-            });
+            }
+        }
     }
 
     loadUserFromLocalStorage() {
@@ -105,6 +107,8 @@ export class Globals {
             this.user = JSON.parse(localStorage.user);
             this.user.timezonePipe = this.getOffset();
         }
+        this.setSelectedCustomerAndBuyerStatus();
+
     }
 
     showLoader(isOn) {
@@ -191,6 +195,14 @@ export class Globals {
         this.user = val;
         this.user.timezonePipe = this.getOffset();
         localStorage.setItem('user', JSON.stringify(val));
+        this.setSelectedCustomerAndBuyerStatus();
+    }
+
+    setSelectedCustomerAndBuyerStatus() {
+        if (!this.user.isAnswerUser) {
+            this.isBuyer = this.user.roles[0].name === "Client Buyer";
+            this.selectedCustomer = new Customer({ id: this.user.customerId });
+        }
     }
 
     getCurrentUser() {

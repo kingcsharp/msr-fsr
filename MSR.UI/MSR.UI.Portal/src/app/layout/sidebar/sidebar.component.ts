@@ -61,7 +61,7 @@ export class Sidebar {
   },
   {
     "menuGroup": {
-      "url": "/#/app/wip/engineering",
+      "url": "/#/app/people/profile",
       "name": "Profile",
       "info": "",
       "icon": "fal fa-user-edit",
@@ -115,7 +115,7 @@ export class Sidebar {
   },
   {
     "menuGroup": {
-      "url": "/#/app/wip/engineering",
+      "url": "/#/app/people/profile",
       "name": "Profile",
       "info": "",
       "icon": "fal fa-user-edit",

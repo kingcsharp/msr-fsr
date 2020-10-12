@@ -45,7 +45,9 @@ export class Navbar implements OnInit {
 
 
   ngOnInit(): void {
-    this.getCustomers();
+    if (this.globals.user.isAnswerUser) {
+      this.getCustomers();
+    }
   }
 
   roleChange(ev) {
