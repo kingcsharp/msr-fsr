@@ -465,20 +465,21 @@
         <div class="row clearfix my-4">
           <div class="col-md-12">
             <div class="form-group row">
-              <label for="customer" class="col-md-2  col-form-label text-md-left">
+              <label for="customerId" class="col-md-2  col-form-label text-md-left">
                 Customer:
               </label>
               <div class="col-md-8">
                 <p-dropdown
                   placeholder="Select Client"
                   optionLabel="name"
-                  name="customer"
+                  name="customerId"
                   [(ngModel)]="CSRCustomer"
                   [options]="customersData"
                   (onChange)="setCustomerId()"
                   appendTo="body"
                   [baseZIndex]="100002"
                   required
+                  data-cy="csr-select-customerid"
                 >
                 </p-dropdown>
                 <input
@@ -486,7 +487,7 @@
                   type="text"
                   hidden
                   class="form-control input-transparent"
-                  name="customerId"
+                  name="Customer"
                   [value]="CSRToCreate.customerId"
                   data-validate="parsley"
                   data-parsley-trigger="change"
@@ -506,7 +507,7 @@
                   pInputText
                   type="text"
                   class="form-control input-transparent"
-                  name="requirementName"
+                  name="Requirement Name"
                   placeholder="Enter a name you will use to Identify this requirement"
                   [(ngModel)]="CSRToCreate.RequirementName"
                   data-validate="parsley"
@@ -528,7 +529,7 @@
                   pInputText
                   type="text"
                   class="form-control input-transparent"
-                  name="submittedBy"
+                  name="Submitted By"
                   [(ngModel)]="CSRToCreate.SubmittedBy"
                   disabled
                   data-validate="parsley"
@@ -655,7 +656,7 @@
                           pInputText
                           type="text"
                           class="form-control input-transparent"
-                          name="commercialName"
+                          name="Customer Information / Commercial Name"
                           [(ngModel)]="CSRToCreate.CommercialName" data-validate="parsley"
                           data-parsley-trigger="change"
                           data-parsley-minlength="3"
@@ -690,7 +691,7 @@
                           pInputText
                           type="text"
                           class="form-control input-transparent"
-                          name="CommercialPhone"
+                          name="Customer Information / Commercial PhoneNumber"
                           [(ngModel)]="CSRToCreate.CommercialPhone" data-validate="parsley"
                           data-parsley-trigger="change"
                           data-parsley-type="number"
@@ -709,7 +710,7 @@
                           pInputText
                           type="text"
                           class="form-control input-transparent"
-                          name="commercialEmail"
+                          name="Customer Information / Commercial Email"
                           [(ngModel)]="CSRToCreate.CommercialEmail"
                           data-validate="parsley"
                           data-parsley-trigger="change"
@@ -732,7 +733,7 @@
                           pInputText
                           type="text"
                           class="form-control input-transparent"
-                          name="technicalName"
+                          name="Customer Information / Technical Name"
                           [(ngModel)]="CSRToCreate.TechnicalName"
                           data-validate="parsley"
                           data-parsley-trigger="change"
@@ -760,7 +761,7 @@
                     </div>
 
                     <div class="form-group row">
-                      <label for="technicalPhone" class="col-md-3  col-form-label text-md-right">
+                      <label for="Technical Phone" class="col-md-3  col-form-label text-md-right">
                         Phone:
                       </label>
                       <div class="col-md-8 ">
@@ -768,7 +769,7 @@
                           pInputText
                           type="text"
                           class="form-control input-transparent"
-                          name="technicalPhone"
+                          name="Customer Information / Technical PhoneNumber"
                           [(ngModel)]="CSRToCreate.TechnicalPhone" data-validate="parsley"
                           data-parsley-trigger="change"
                           data-parsley-type="number"
@@ -786,7 +787,7 @@
                           pInputText
                           type="text"
                           class="form-control input-transparent"
-                          name="technicalEmail"
+                          name="Customer Information / Technical Email"
                           [(ngModel)]="CSRToCreate.TechnicalEmail"
                           data-validate="parsley"
                           data-parsley-trigger="change"
@@ -969,18 +970,21 @@
                     <label for="expectedCycleTime" class="col-md-3  col-form-label text-md-right">
                       Expected Cycle Time:
                     </label>
-                    <div class="col-md-8 ">
+                    <div class="col-md-8 input-group input-group-transparent" style="height: min-content;">
                       <input
                         pInputText
                         type="text"
                         class="form-control input-transparent"
-                        name="expectedCycleTime"
+                        name="General Information / Expected CycleTime"
                         [(ngModel)]="CSRToCreate.ExpectedCycleTime"
                         data-validate="parsley"
                         data-parsley-trigger="change"
                         data-parsley-type="number"
                         data-cy="csr-input-expectedcycletime"
                       >
+                      <span class="input-group-addon bg-secondary">
+                        Days
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1056,9 +1060,13 @@
                             pInputText
                             type="text"
                             class="form-control input-transparent"
-                            name="process[{{i}}].contaminents"
+                            name="Contaminant Information / Process Contaminents"
                             placeholder="Contaminents By-Products"
                             [(ngModel)]="CSRToCreate.Process[i].Contaminents"
+                            data-validate="parsley"
+                            data-parsley-trigger="change"
+                            data-parsley-minlength="3"
+                            data-parsley-required="true"
                             data-cy="csr-input-process-contaminents"
                           >
                         </td>
@@ -1182,7 +1190,7 @@
                             pInputText
                             type="text"
                             class="form-control input-transparent"
-                            name="parts[{{i}}].custPartNo"
+                            name="Kit Breakdown By Part / Cust. Part No."
                             placeholder="Cust. Part No."
                             [(ngModel)]="CSRToCreate.Parts[i].CustPartNo"
                             data-validate="parsley"
@@ -1258,6 +1266,15 @@
                     ></textarea>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div class="row clearfix mx-0 pb-5" *ngIf="CSRFormValidErrors.length > 0">
+              <div class="col-md-12 text-left text-danger">
+                <h5>Errors: </h5>
+                <ul class="valid-errors">
+                  <li class="font-weight-bold" *ngFor="let error of CSRFormValidErrors;">{{error}}</li>
+                </ul>
               </div>
             </div>
           </div>

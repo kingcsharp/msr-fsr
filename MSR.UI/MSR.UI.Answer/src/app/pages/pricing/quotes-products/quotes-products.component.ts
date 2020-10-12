@@ -20,6 +20,7 @@ import {
 import { CSRJsonModel, ProcessModel, PartModel } from '../../../models/csr-json-model';
 
 declare let jQuery: any;
+declare let Parsley: any;
 
 @Component({
   selector: 'app-quotes-products',
@@ -62,6 +63,7 @@ export class QuotesProductsComponent implements OnInit {
   customersData: Customer[] = [];
   getCustomersFlag: boolean = false;
   CSRCustomer: Customer;
+  CSRFormValidErrors: string[] = [];
 
   constructor(
     public globals: Globals,
@@ -98,6 +100,12 @@ export class QuotesProductsComponent implements OnInit {
 
     this.getQuotesProducts();
     this.getCustomers();
+    let ctrl = this;
+    Parsley.on('field:error', function() {
+      if (ctrl.CSRFormValidErrors.findIndex(val => val === this.element.name) < 0) {
+        ctrl.CSRFormValidErrors.push(this.element.name);
+      }
+    });
   }
 
   getQuotesProducts() {
@@ -164,6 +172,7 @@ export class QuotesProductsComponent implements OnInit {
   }
 
   openCSRDialog() {
+    this.CSRFormValidErrors = [];
     this.CSRToCreate = new CSRJsonModel();
     this.CSRToCreate.SubmittedBy = this.globals.user.fullName;
     this.CSRToCreate.Process = [new ProcessModel()];
@@ -182,6 +191,7 @@ export class QuotesProductsComponent implements OnInit {
   }
 
   onCSRSubmit() {
+    this.CSRFormValidErrors = [];
     jQuery('.parsleyjs').parsley().validate();
     if (jQuery('.parsleyjs').parsley().isValid()) {
       this.globals.showLoader(true);
