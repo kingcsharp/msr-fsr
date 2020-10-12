@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { ProcedureStepMonitor, WorkOrderTaskMonitorModel, SensorService, SensorModel, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderTaskModel } from '../../services/api.client.generated';
+import { ProcedureStepMonitor, WorkOrderTaskMonitorModel, SensorService, SensorModel, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderTaskModel, WorkOrderModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { forkJoin } from 'rxjs';
@@ -18,6 +18,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   @Input() workOrderMonitorsToView: Array<any>;
   @Input() locationId: number;
   @Input() doNotAllowEditing: boolean = true;
+  @Input() workOrderModel: WorkOrderModel;
   @Output() closeCurrentTaskInProgress = new EventEmitter();
   workOrderMonitorYesOrNoOptions: Array<SelectItem>;
   monitorListItemOptions: Array<SelectItem>;
@@ -70,7 +71,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     });
 
-    this.sensorService.sensor(null, 415, env.apiVersion).subscribe(responseHandler(response => {
+    this.sensorService.sensor(null, this.workOrderModel.location.site, env.apiVersion).subscribe(responseHandler(response => {
 
       this.sensorsAvailable = response.object.map(s => ({ label: s.sensorName, value: s.id }));
 
