@@ -20,6 +20,7 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
   @Input() isDisplayedInWipList: boolean = false;
   @Input() displayWipListDialog: boolean;
   @Input() workOrderTaskInProgress: WorkOrderTaskModel;
+  @Input() workOrderModel: WorkOrderModel;
   @Output() displayWipListDialogChange = new EventEmitter();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   showTakeOverAsUserConfirmationDialog: boolean = false;
@@ -47,7 +48,7 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
     this.showTakeOverAsUserConfirmationDialog = !this.showTakeOverAsUserConfirmationDialog;
   }
 
-  takeOverAsUserConfirmationDialog() {
+  takeOverStep() {
 
     let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
       assignedUserId: this.globals.getCurrentUser().id,
@@ -62,8 +63,38 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
       this.workOrderTaskInProgress.assignedTo = this.globals.getCurrentUser().id;
       this.workOrderTaskInProgress.assignedToUser = this.globals.getCurrentUser();
+      this.takeOverRemainingSteps(this.workOrderTaskInProgress.id);
       this.closeTakeOverAsUserConfirmationDialog();
     }));
+  }
+
+  takeOverRemainingSteps(workOrderTaskId: number){
+
+    let indexOfFirstRemainingStep = this.workOrderModel.workOrderTasks.findIndex(s => s.id === workOrderTaskId) + 1;
+
+    let arrayOfWorkOrderTaskPatches = new Array<any>();
+
+    this.workOrderModel.workOrderTasks.slice(indexOfFirstRemainingStep).map(workOrderTask => {
+
+      let updateWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+        assignedUserId: this.globals.getCurrentUser().id,
+        status: workOrderTask.status.name,
+        taskIsRunning: workOrderTask.taskIsRunning,
+        taskRunningSince: workOrderTask.taskRunningSince,
+        taskStepOrder: workOrderTask.taskStepOrder,
+        workOrderTaskId: workOrderTask.id
+      } as IUpdateWorkOrderTaskRequest);
+
+      arrayOfWorkOrderTaskPatches.push(this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest));
+
+    });
+
+    forkJoin(arrayOfWorkOrderTaskPatches).subscribe(responses => {
+      this.workOrderModel.workOrderTasks.slice(indexOfFirstRemainingStep).map(workOrderTask => {
+        workOrderTask.assignedTo = this.globals.getCurrentUser().id;
+        workOrderTask.assignedToUser = this.globals.getCurrentUser();
+      });
+    });
   }
 
 }

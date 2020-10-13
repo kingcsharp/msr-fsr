@@ -46,8 +46,8 @@
               <div class="ui-tabview-top-right">
               <ul>
                 <li *ngFor="let part of workOrderParts">
-                  Part # {{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.part.CycleCount}})
-                  (Qty: {{part.part.Quantity}})
+                  Part # {{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.cycleCount}})
+                  (Qty: {{part.qty}})
                 </li>
               </ul>
               </div>
@@ -78,7 +78,8 @@
               [ngClass]="{ 'step-waiting': workOrderTask.status?.name === 'Waiting to Start' || workOrderTask.status?.name === 'Approved',
                   'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
-                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed'|| workOrderTask.status?.name === 'Closed'}">
+                  'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed' 
+                  || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled'}">
               <div class="h-100 d-flex">
                 <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title}}</div>
               </div>
@@ -96,9 +97,8 @@
           </workordertasktimer-wrapper>
         </div>
         <div class="d-flex col-6 justify-content-end pr-0">
-          <!--if user assigned is NOT the current user -->
-          <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"  *ngIf="workOrderTaskInProgress.assignedTo !== this.globals.getCurrentUser().id"></take-over-task-button-wrapper>
-          <!--next 2 are all users -->
+          <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"  [workOrderModel]="workOrderModel"
+          *ngIf="workOrderTaskInProgress.assignedTo !== this.globals.getCurrentUser().id"></take-over-task-button-wrapper>
           <empmbutton-wrapper *ngIf="!workOrderIsComplete"></empmbutton-wrapper>
           <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" (addNcrTasks)="addNcrTasks($event)"
             [(workOrderTaskInProgress)]="workOrderTaskInProgress" *ngIf="!workOrderIsComplete"></addncrbutton-wrapper>
@@ -156,7 +156,7 @@
                       <td class="d-flex serialinput-td">
                         <input type="text" id="serialnumber{{index}}" [(ngModel)]="workOrderPart.serialNumber"
                           class="form-control input-transparent m-2" tooltip="Serial Number" disabled>
-                        <button id="changebutton{{index}}" class="btn btn-warning m-2"
+                        <button id="changebutton{{index}}" class="btn btn-warning m-2" *ngIf="!workOrderIsComplete"
                           (click)="changeSerialNumber(index, workOrderPart.serialNumber, workOrderPart.id)">Change</button>
                         <button id="submitbutton{{index}}" class="btn btn-success d-none m-2"
                           (click)="submitSerialNumber(index, workOrderPart.id)">Submit</button>
@@ -171,7 +171,8 @@
           </p-tabPanel>
           <p-tabPanel header="Monitors">
             <span *ngIf="workOrderTaskToView.workOrderTaskMonitors !== undefined">
-              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors" [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
+              <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors" 
+              [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id" (workOrderModel)="workOrderModel"
                 (closeCurrentTaskInProgress)="closeCurrentTask()"></workordertaskmonitos-wrapper>
             </span>
           </p-tabPanel>
@@ -180,7 +181,8 @@
               <div class="container-fluid file-container m-2 wip-details-bottom">
                 <div class="row">
                   <div class="col">
-                    <cmh-file-uploader name="referencefiles" class="col-12"
+                    <button id="workordertaskfiles" class="btn btn-success m-2" (click)="uploadFilesAndDocumentsForTask()">Submit</button>
+                    <cmh-file-uploader name="referencefiles" class="col-12" [showSelectButton]="true" [showUploadButton]="true"
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates" multiple="multiple" [(files)]="workOrderTaskToView.referenceFiles">
                     </cmh-file-uploader>

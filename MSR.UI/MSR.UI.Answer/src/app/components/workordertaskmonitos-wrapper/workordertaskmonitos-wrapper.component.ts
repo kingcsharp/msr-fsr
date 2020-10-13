@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { ProcedureStepMonitor, WorkOrderTaskMonitorModel, SensorService, SensorModel, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderTaskModel } from '../../services/api.client.generated';
+import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { forkJoin } from 'rxjs';
@@ -18,6 +18,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   @Input() workOrderMonitorsToView: Array<any>;
   @Input() locationId: number;
   @Input() doNotAllowEditing: boolean = true;
+  @Input() workOrderModel: WorkOrderModel;
   @Output() closeCurrentTaskInProgress = new EventEmitter();
   workOrderMonitorYesOrNoOptions: Array<SelectItem>;
   monitorListItemOptions: Array<SelectItem>;
@@ -74,7 +75,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.sensorsAvailable = response.object.map(s => ({ label: s.sensorName, value: s.id }));
 
-      this.workOrderMonitorsToView.forEach(workOrderMonitor => {
+      this.workOrderMonitorsToView.map(workOrderMonitor => {
 
         if (workOrderMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderMonitor.procedureStepMonitor.inputType === 'Sensor') {
 
@@ -129,8 +130,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       });
 
-      forkJoin(updateMonitorsRequests).subscribe(responses => {
-        console.log(closeTask);
+      forkJoin(updateMonitorsRequests).subscribe(() => {
         if (closeTask) {
           this.closeCurrentTaskInProgress.emit();
         }
@@ -148,8 +148,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.updateMonitors(false);
 
-    } else {
-      alert('invalid');
     }
   }
 
@@ -160,12 +158,10 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.updateMonitors(true);
 
-    } else {
-      alert('invalid');
     }
   }
 
-  getSensorValue(indexOfMonitor: number, elementName: string, sensorId: number) {
+  getSensorValue(indexOfMonitor: number, sensorId: number) {
 
     this.sensorService.sensor(sensorId, null, env.apiVersion).subscribe(responseHandler(response => {
       this.workOrderMonitorsToView[indexOfMonitor].sensorValue = response.object[0]?.itemCurrentValue === undefined ? '1 p/ft³' : '1 p/ft³';

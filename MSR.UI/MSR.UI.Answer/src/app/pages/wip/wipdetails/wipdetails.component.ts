@@ -69,7 +69,7 @@ export class WipdetailsComponent implements OnInit {
 
         this.workOrderModel = this.cleanData(response.object[0]);
         this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
-        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress') === undefined;
+        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
@@ -356,4 +356,37 @@ export class WipdetailsComponent implements OnInit {
     this.carousel.selectSlide(index);
   }
 
+  uploadFilesAndDocumentsForTask() {
+    // TODO: Uncomment when backend change comes in from David
+    /*
+    let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+      assignedUserId: this.workOrderTaskInProgress.assignedTo,
+      status: this.workOrderTaskInProgress.status.name,
+      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
+      totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
+      workOrderTaskId: this.workOrderTaskInProgress.id,
+      referenceFiles: new Array<FileModel>(),
+      referenceFileIds: new Array<number>()
+    } as IUpdateWorkOrderTaskRequest);
+
+
+    this.workOrderTaskInProgress.referenceFiles.map(referenceFile => {
+
+      if (referenceFile.fileId === undefined) {
+        updatedWorkOrderTaskRequest.referenceFiles.push(referenceFile);
+      } else {
+        updatedWorkOrderTaskRequest.referenceFileIds.push(referenceFile.fileId);
+      }
+
+    });
+
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updatedWorkOrderTaskRequest).subscribe(response => {
+
+      this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskInProgress.id).referenceFiles = response.object.referenceFiles;
+
+    });
+    */
+  }
 }

@@ -31,7 +31,7 @@ export class TechnicalDataLabelComponent implements OnInit {
 
   generateLabels() {
 
-    this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
+    this.WorkOrder.workOrderTasks.map(workOrderTask => {
 
       for (let index = 0; index < workOrderTask.workOrderTaskMonitors.length; index++) {
 
