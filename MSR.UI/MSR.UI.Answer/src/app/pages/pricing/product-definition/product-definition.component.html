@@ -5,10 +5,14 @@
         <span>{{mode === productPageModes.Create ? 'New ' : ''}}Product Definition</span>
       </h1>
     </div>
-    <div class="col-md-6 d-flex justify-content-end align-items-end">
-      <button *ngIf="quoteData" class="pull-right btn btn-primary" tooltip="Generates a Quote Preview"
+    <div *ngIf="quoteData" class="col-md-6 d-flex justify-content-end align-items-end">
+      <button *ngIf="quoteJson" class="pull-right btn btn-primary" tooltip="Generates a Quote Preview"
         (click)="openQuoteViewModal()">
         <i class="fa fa-eye mr-2"></i>Preview Quote
+      </button>
+      <button *ngIf="customerRequirementJson" class="pull-right btn btn-primary" tooltip="View Orginally Submitted Requirements from Customer"
+        (click)="openRequirementViewModal()">
+        <i class="fa fa-eye mr-2"></i>Preview Requirements
       </button>
     </div>
   </div>
@@ -360,9 +364,9 @@
   </widget>
 </div>
 
-<p-dialog header="Quote Preview" *ngIf="showQuoteViewModal" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
+<p-dialog header="Quote Preview" *ngIf="quoteJson" [(visible)]="showQuoteViewModal" [baseZIndex]="100001" [modal]='true'
   [style]="{width: '70vw'}" data-cy="user-header">
-  <div *ngIf="quoteData" class="container">
+  <div class="container">
     <div class="row mr-0 ml-0">
       <table class="table no-border quote-header" width="100%">
         <tbody>
@@ -559,7 +563,719 @@
   <p-footer>
     <div class="pull-right">
       <button type="submit" (click)="closeQuoteViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
-        role="button" data-cy="confirmdelete-button">
+        role="button" data-cy="closequoteview-button">
+        Close
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+
+<p-dialog header="Requirements Preview" *ngIf="customerRequirementJson" [(visible)]="showRequirementViewModal" [baseZIndex]="100001" [modal]='true'
+  [style]="{width: '70vw'}" data-cy="user-header">
+  <section class="widget mrg-btm-sm" widget>
+    <header>
+      <h3>Customer Requirements</h3>
+    </header>
+    <legend>
+    </legend>
+    <div class="widget-body">
+      <div class="row clearfix my-4">
+        <div class="col-md-12">
+          <div class="form-group row">
+            <label for="requirementName" class="col-md-2  col-form-label text-md-left">
+              Requirement Name:
+            </label>
+            <div class="col-md-8 ">
+              <input
+                pInputText
+                type="text"
+                class="form-control input-transparent"
+                disabled
+                name="requirementName"
+                [value]="customerRequirementJson.RequirementName"
+                data-cy="csr-input-requirementname"
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group row">
+            <label for="submittedBy" class="col-md-2  col-form-label text-md-left">
+              Submitted By:
+            </label>
+            <div class="col-md-8 ">
+              <input
+                pInputText
+                type="text"
+                class="form-control input-transparent"
+                name="submittedBy"
+                [value]="customerRequirementJson.SubmittedBy"
+                disabled
+                data-cy="csr-input-submittedby"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p-panel header="Customer Information">
+        <div class="row clearfix">
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="company" class="col-md-3  col-form-label text-md-right">
+                Company:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="company"
+                  [value]="customerRequirementJson.Company"
+                  disabled
+                  data-cy="csr-input-company"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="divisionFab" class="col-md-3  col-form-label text-md-right">
+                Division / Fab #:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="divisionFab"
+                  [value]="customerRequirementJson.DivisionFab"
+                  disabled
+                  data-cy="csr-input-divisionfab"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="streetAddress" class="col-md-3  col-form-label text-md-right">
+                Street Address:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="streetAddress"
+                  [value]="customerRequirementJson.StreetAddress"
+                  disabled
+                  data-cy="csr-input-streetaddress"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="cityStateZIP" class="col-md-3  col-form-label text-md-right">
+                City, State, ZIP:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="cityStateZIP"
+                  [value]="customerRequirementJson.CityStateZIP"
+                  disabled
+                  data-cy="csr-input-citystatezip"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <p-panel header="Commercial Contact Info">
+              <div class="form-group row">
+                <label for="commercialName" class="col-md-3  col-form-label text-md-right">
+                  Name:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="commercialName"
+                    [value]="customerRequirementJson.CommercialName"
+                    disabled
+                    data-cy="csr-input-commercialname"
+                  >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="commercialTitle" class="col-md-3  col-form-label text-md-right">
+                  Title:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="commercialTitle"
+                    [value]="customerRequirementJson.CommercialTitle"
+                    disabled
+                    data-cy="csr-input-commercialtitle"
+                  >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="commercialPhone" class="col-md-3  col-form-label text-md-right">
+                  Phone:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="CommercialPhone"
+                    [value]="customerRequirementJson.CommercialPhone"
+                    disabled
+                    data-cy="csr-input-commercialphone"
+                  >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="commercialEmail" class="col-md-3  col-form-label text-md-right">
+                  Email:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="commercialEmail"
+                    [value]="customerRequirementJson.CommercialEmail"
+                    disabled
+                    data-cy="csr-input-commercialemail"
+                  >
+                </div>
+              </div>
+            </p-panel>
+          </div>
+
+          <div class="col-md-6">
+            <p-panel header="Technical Contact Info">
+              <div class="form-group row">
+                <label for="technicalName" class="col-md-3  col-form-label text-md-right">
+                  Name:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="technicalName"
+                    [value]="customerRequirementJson.TechnicalName"
+                    disabled
+                    data-cy="csr-input-technicalname"
+                  >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="technicalTitle" class="col-md-3  col-form-label text-md-right">
+                  Title:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="technicalTitle"
+                    [value]="customerRequirementJson.TechnicalTitle"
+                    disabled
+                    data-cy="csr-input-technicaltitle"
+                  >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="technicalPhone" class="col-md-3  col-form-label text-md-right">
+                  Phone:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="technicalPhone"
+                    [value]="customerRequirementJson.TechnicalPhone"
+                    disabled
+                    data-cy="csr-input-technicalthone"
+                  >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="technicalEmail" class="col-md-3  col-form-label text-md-right">
+                  Email:
+                </label>
+                <div class="col-md-8 ">
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="technicalEmail"
+                    [value]="customerRequirementJson.TechnicalEmail"
+                    disabled
+                    data-cy="csr-input-technicalemail"
+                  >
+                </div>
+              </div>
+            </p-panel>
+          </div>
+        </div>
+      </p-panel>
+
+      <p-panel header="General Information">
+        <div class="row clearfix">
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="partKitNo" class="col-md-3  col-form-label text-md-right">
+                Part /Kit No:
+              </label>
+              <div class="col-md-8">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="partKitNo"
+                  [value]="customerRequirementJson.PartKitNo"
+                  disabled
+                  data-cy="csr-input-partkitno"
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="customerSpecifications" class="col-md-3  col-form-label text-md-right">
+                Customer Specifications (if any):
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="customerSpecifications"
+                  [value]="customerRequirementJson.CustomerSpecifications"
+                  disabled
+                  data-cy="csr-input-customerspecifications"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="inProcessAnalyticalRequirements" class="col-md-3  col-form-label text-md-right">
+                In-Process Analytical Requirements:
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="inProcessAnalyticalRequirements"
+                  [value]="customerRequirementJson.InProcessAnalyticalRequirements"
+                  disabled
+                  data-cy="csr-input-inprocessanalyticalrequirements"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="detailedDescription" class="col-md-3  col-form-label text-md-right">
+                Detailed Description of Requested Service(s):
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="detailedDescription"
+                  [value]="customerRequirementJson.DetailedDescription"
+                  disabled
+                  data-cy="csr-input-detaileddescription"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="CriticalToFunction" class="col-md-3  col-form-label text-md-right">
+                Critical-to-Function Attributes:
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="criticalToFunction"
+                  [value]="customerRequirementJson.CriticalToFunction"
+                  disabled
+                  data-cy="csr-input-criticaltofunction"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="specificCustomerQualification" class="col-md-3  col-form-label text-md-right">
+                Specific Customer Qualification Requirements:
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="specificCustomerQualification"
+                  [value]="customerRequirementJson.SpecificCustomerQualification"
+                  disabled
+                  data-cy="csr-input-specificcustomerqualification"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="forecastedVolumes" class="col-md-3  col-form-label text-md-right">
+                Forecasted Volumes & Start Dates:
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="forecastedVolumes"
+                  [value]="customerRequirementJson.ForecastedVolumes"
+                  disabled
+                  data-cy="csr-input-forecastedvolumes"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="specialPackagingShipping" class="col-md-3  col-form-label text-md-right">
+                Special Packaging/Shipping:
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="specialPackagingShipping"
+                  [value]="customerRequirementJson.SpecialPackagingShipping"
+                  disabled
+                  data-cy="csr-input-specialpackagingshipping"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="customerSpecifications" class="col-md-3  col-form-label text-md-right">
+                Customer Specifications (if any):
+              </label>
+              <div class="col-md-8">
+                <textarea
+                  pTextArea
+                  rows="3"
+                  class="form-control input-transparent"
+                  name="customerSpecifications"
+                  [value]="customerRequirementJson.CustomerSpecifications"
+                  disabled
+                  data-cy="csr-input-customerspecifications"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="expectedQuoteDate" class="col-md-3  col-form-label text-md-right">
+                Expected Quote Date:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="expectedQuoteDate"
+                  [value]="customerRequirementJson.ExpectedQuoteDate | userTimezone"
+                  disabled
+                  data-cy="csr-input-expectedquotedate"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="expectedCycleTime" class="col-md-3  col-form-label text-md-right">
+                Expected Cycle Time:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="expectedCycleTime"
+                  [value]="customerRequirementJson.ExpectedCycleTime"
+                  disabled
+                  data-cy="csr-input-expectedcycletime"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="pickupNotification" class="col-md-3  col-form-label text-md-right">
+                Pickup Notification:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="pickupNotification"
+                  [value]="customerRequirementJson.PickupNotification"
+                  disabled
+                  data-cy="csr-input-pickupnotification"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="shippingMethod" class="col-md-3  col-form-label text-md-right">
+                Shipping Method:
+              </label>
+              <div class="col-md-8 ">
+                <input
+                  pInputText
+                  type="text"
+                  class="form-control input-transparent"
+                  name="shippingMethod"
+                  [value]="customerRequirementJson.ShippingMethod"
+                  disabled
+                  data-cy="csr-input-shippingmethod"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-panel>
+
+      <p-panel header="Contaminant Information">
+        <div class="row clearfix">
+          <div class="col-md-12 column">
+            <table class="table table-bordered" id="process_steps">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width:10%">
+                    Row #
+                  </th>
+                  <th class="text-center" style="width:90%">
+                    Contaminents By-Products
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let process of customerRequirementJson.Process; index as i;">
+                  <td>{{i + 1}}</td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="process[{{i}}].contaminents"
+                      [value]="process.Contaminents"
+                      disabled
+                      data-cy="csr-input-process-contaminents"
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-panel>
+
+      <p-panel header="Kit Breakdown by Part">
+        <div class="row clearfix">
+          <div class="col-md-12 column">
+            <table class="table table-bordered" id="kit_parts">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width:10%;">
+                    Row #
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    CU/Non CU
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    Part Description
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    Substrate
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    Coating/Surface Treatment
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    Dimensions
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    Cust. Part No.
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    Mfg. Part No.
+                  </th>
+                  <th class="text-center" style="width:10%;">
+                    # Parts per Kit
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center" *ngFor="let part of customerRequirementJson.Parts; index as i;">
+                  <td>{{i + 1}}</td>
+                  <td class="text-center">
+                    <p-inputSwitch
+                      name="parts[{{i}}].nonCU"
+                      disabled="true"
+                      [(ngModel)]="part.NonCU">
+                    </p-inputSwitch>
+                  </td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="parts[{{i}}].partDescription"
+                      [value]="part.PartDescription"
+                      disabled
+                      data-cy="csr-input-part-description"
+                    >
+                  </td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="parts[{{i}}].substrate"
+                      [value]="part.Substrate"
+                      disabled
+                      data-cy="csr-input-part-substrate"
+                    >
+                  </td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="parts[{{i}}].coatingSurface"
+                      [value]="part.CoatingSurface"
+                      disabled
+                      data-cy="csr-input-part-coatingsurface"
+                    >
+                  </td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="parts[{{i}}].dimensions"
+                      [value]="part.Dimensions"
+                      disabled
+                      data-cy="csr-input-part-dimensions"
+                    >
+                  </td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="parts[{{i}}].custPartNo"
+                      [value]="part.CustPartNo"
+                      disabled
+                      data-cy="csr-input-part-custpartno"
+                    >
+                  </td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="parts[{{i}}].mfgPartNo"
+                      [value]="part.MfgPartNo"
+                      disabled
+                      data-cy="csr-input-part-mfgpartno"
+                    >
+                  </td>
+                  <td>
+                    <input
+                      pInputText
+                      type="text"
+                      class="form-control input-transparent"
+                      name="parts[{{i}}].partsPerKit"
+                      [value]="part.PartsPerKit"
+                      disabled
+                      data-cy="csr-input-part-partsperkit"
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-panel>
+
+      <p-panel header="Additional Information / Comments">
+        <div class="row clearfix">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="AdditionalInformation" class="col-form-label text-left">
+                Additional Information or Comments
+              </label>
+              <textarea
+                pTextArea
+                rows="5"
+                class="form-control input-transparent"
+                name="additionalInformation"
+                [value]="customerRequirementJson.AdditionalInformation"
+                disabled
+                data-cy="csr-input-additionalinformation"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </p-panel>
+    </div>
+  </section>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="closeRequirementViewModal()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button" data-cy="closerequirementview-button">
         Close
       </button>
     </div>

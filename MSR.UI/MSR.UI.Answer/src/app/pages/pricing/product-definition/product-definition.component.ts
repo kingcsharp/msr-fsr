@@ -17,6 +17,7 @@ import { Globals } from '../../../models/lib/globals';
 import { ActivatedRoute } from '@angular/router';
 import { EnumProductPageModes } from '../../../models/enums/ProductPageModes';
 import { Router } from '@angular/router';
+import { CSRJsonModel } from '../../../models/csr-json-model';
 
 declare let jQuery: any;
 
@@ -65,6 +66,8 @@ export class ProductDefinitionComponent implements OnInit {
   getQuoteDataFlag: boolean = false;
   showQuoteViewModal: boolean = false;
   quoteJson: any;
+  customerRequirementJson: CSRJsonModel;
+  showRequirementViewModal: boolean = false;
   adminCostSettings: AdminCostSettingsModel;
   getAdminCostSettingsFlag: boolean = false;
 
@@ -144,7 +147,13 @@ export class ProductDefinitionComponent implements OnInit {
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.quoteData = response.object[0];
-        this.quoteJson = JSON.parse(this.quoteData.quoteJson);
+        if (this.quoteData.quoteJson) {
+          this.quoteJson = JSON.parse(this.quoteData.quoteJson);
+        }
+        if (this.quoteData.customerRequirementJson) {
+          this.customerRequirementJson = JSON.parse(this.quoteData.customerRequirementJson);
+        }
+
         this.getQuoteDataFlag = true;
 
         if (isCreateMode) {
@@ -382,6 +391,14 @@ export class ProductDefinitionComponent implements OnInit {
 
   closeQuoteViewModal() {
     this.showQuoteViewModal = false;
+  }
+
+  openRequirementViewModal() {
+    this.showRequirementViewModal = true;
+  }
+
+  closeRequirementViewModal() {
+    this.showRequirementViewModal = false;
   }
 
   openUrlWithNewTab(urlTree: string) {
