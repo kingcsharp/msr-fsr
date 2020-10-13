@@ -204,7 +204,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.QuoteId = command.QuoteId ?? product.QuoteId;
             product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
-            product.ProductSteps = _mapper.Map<ICollection<ProductStep>>(command.ProductSteps);
+            product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
 
             foreach (var ps in product.ProductSteps)
             {

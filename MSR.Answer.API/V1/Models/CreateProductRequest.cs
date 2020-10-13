@@ -1,3 +1,4 @@
+using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -43,6 +44,6 @@ namespace MSR.Answer.API.V1.Models
 
         public string DivisionFab { get; set; }
 
-        public ICollection<CreateProductStepRequest> ProductSteps { get; set; }
+        public ICollection<ProductStep> ProductSteps { get; set; }
     }
 }

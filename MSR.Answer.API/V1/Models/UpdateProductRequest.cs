@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MSR.Domain.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Answer.API.V1.Models
@@ -22,6 +23,6 @@ namespace MSR.Answer.API.V1.Models
         public int? CycleTime { get; set; }
         public int? QuoteId { get; set; }
         public string DivisionFab { get; set; }
-        public ICollection<UpdateProductStepRequest> ProductSteps { get; set; }
+        public ICollection<ProductStep> ProductSteps { get; set; }
     }
 }

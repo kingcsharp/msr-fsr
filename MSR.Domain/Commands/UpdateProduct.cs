@@ -1,4 +1,5 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Models;
 using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
@@ -21,6 +22,6 @@ namespace MSR.Domain.Commands
         public int? QuoteId { get; set; }
         public string DivisionFab { get; set; }
         public string Comment { get; set; }
-        public ICollection<UpdateProductStep> ProductSteps { get; set; }
+        public ICollection<ProductStep> ProductSteps { get; set; }
     }
 }

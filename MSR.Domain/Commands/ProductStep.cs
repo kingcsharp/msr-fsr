@@ -1,12 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MSR.Answer.API.V1.Models
+namespace MSR.Domain.Models
 {
-    public class CreateProductStepRequest
+    public class ProductStep
     {
+        public int? ProductId { get; set; }
+
         [Required]
         public int? ProcedureStepId { get; set; }
 
+        [Required]
         public int? LaborMinutes { get; set; }
 
         public int? EquipmentMinutes { get; set; }
@@ -22,5 +25,11 @@ namespace MSR.Answer.API.V1.Models
         public decimal? RMAnnualRate { get; set; }
 
         public decimal? RMPerMinuteRate { get; set; }
+
+        [MaxLength(100)]
+        public string Title { get; set; }
+
+        public int? PrintOrder { get; set; }
+
     }
 }
