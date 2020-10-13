@@ -61,6 +61,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<DocumentRoleMap> _documentRoleMaps;
         private IRepository<DocumentEntityMap> _documentEntityMap;
         private IRepository<Product> _products;
+        private IRepository<ProductStep> _productSteps;
         private IRepository<PurchaseOrder> _purchaseOrders;
         private IRepository<PurchaseOrderProduct> _purchaseOrderProducts;
         private IRepository<Purchase> _purchases;
@@ -91,6 +92,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }
+        public IRepository<ProductStep> ProductSteps { get { return _productSteps ?? (_productSteps = new EFRepository<ProductStep>(Context)); } }
         public IRepository<PurchaseOrder> PurchaseOrders { get { return _purchaseOrders ?? (_purchaseOrders = new EFRepository<PurchaseOrder>(Context)); } }
         public IRepository<PurchaseOrderProduct> PurchaseOrderProducts { get { return _purchaseOrderProducts ?? (_purchaseOrderProducts = new EFRepository<PurchaseOrderProduct>(Context)); } }
         public IRepository<Purchase> Purchases { get { return _purchases ?? (_purchases = new EFRepository<Purchase>(Context)); } }

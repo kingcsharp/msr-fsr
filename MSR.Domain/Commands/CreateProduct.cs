@@ -1,4 +1,5 @@
 ﻿using MSR.Domain.Commanding;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
@@ -19,5 +20,6 @@ namespace MSR.Domain.Commands
         public int? QuoteId { get; set; }
         public string DivisionFab { get; set; }
         public string Comment { get; set; }
+        public ICollection<CreateProductStep> ProductSteps { get; set; }
     }
 }

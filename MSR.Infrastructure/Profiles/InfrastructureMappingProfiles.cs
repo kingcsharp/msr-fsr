@@ -67,6 +67,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Product, ProductModel>().ReverseMap();
             CreateMap<UpdateProduct, ProductApproval>().ReverseMap();
             CreateMap<CreateProduct, ProductApproval>().ReverseMap();
+            CreateMap<ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
             CreateMap<CreatePurchase, Purchase>().ReverseMap();
             CreateMap<WorkOrderPart, WorkOrderPartModel>()
@@ -246,6 +247,12 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateProcedureType, ProcedureType>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
+
+            CreateMap<ProcedureStep, ProductStepModel>()
+                .ForMember(dest => dest.LaborMinutes, opts => opts.MapFrom(src => src.LaborTime))
+                .ForMember(dest => dest.EquipmentMinutes, opts => opts.MapFrom(src => src.EquipmentTime));
+
+            CreateMap<UpdateProductStep, ProductStep>();
             #endregion
 
             // Monitor
@@ -311,6 +318,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<ProductModel, Product>();
             CreateMap<CreateProduct, ProductApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
+            CreateMap<CreateProductStep, ProductStep>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<UpdateProduct, ProductApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());

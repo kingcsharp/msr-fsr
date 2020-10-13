@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Answer.API.V1.Models
@@ -41,5 +42,7 @@ namespace MSR.Answer.API.V1.Models
         public int? QuoteId { get; set; }
 
         public string DivisionFab { get; set; }
+
+        public ICollection<CreateProductStepRequest> ProductSteps { get; set; }
     }
 }
