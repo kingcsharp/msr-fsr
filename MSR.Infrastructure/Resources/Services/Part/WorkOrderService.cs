@@ -400,6 +400,21 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
+            ProcedureStep step = _unitOfWork.ProcedureSteps
+                .Query()
+                .FirstOrDefault(x => x.Id == command.ProcedureStepId);
+
+            if (step == null)
+            {
+                throw new DomainException(
+                    $"No {nameof(ProcedureStep)} with ID {command.ProcedureStepId}",
+                    DomainError.NotFound);
+            }
+
+            if (!command.ProcedureStepTypeId.HasValue) {
+                command.ProcedureStepTypeId = step.ProcedureStepTypeId;
+            }
+
             WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
 
             var created = _unitOfWork.WorkOrderTasks.Add(newTask);
@@ -409,6 +424,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             created.Context.Entry(newTask)
                 .Reference(x => x.ProcedureStep).Load();
+            created.Context.Entry(newTask.ProcedureStep)
+                .Reference(x => x.StepType).Load();
 
             return _mapper.Map<WorkOrderTaskModel>(newTask);
         }
