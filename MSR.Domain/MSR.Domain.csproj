@@ -11,15 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Commands\UpdateProductStep.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Commands\Abstractions\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Commands\UpdateProductStep.cs" />
   </ItemGroup>
 
   <ItemGroup>
