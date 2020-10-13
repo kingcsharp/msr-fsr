@@ -186,7 +186,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization))
                 .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.ProcedureStepRoles))
-                .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.StepType.Id));
+                .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.ProcedureStepTypeId.ToString()));
             CreateMap<ProcedureStepRoleMap, Domain.Models.Role>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Role.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Role.Name));
