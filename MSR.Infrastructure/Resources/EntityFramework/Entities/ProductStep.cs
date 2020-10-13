@@ -32,6 +32,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public decimal? RMPerMinuteRate { get; set; }
 
+        [MaxLength(100)]
+        public string Title { get; set; }
+
+        public int? PrintOrder { get; set; }
+
         public virtual ProcedureStep ProcedureStep { get; set; }
 
         public virtual Product Product{ get; set; }

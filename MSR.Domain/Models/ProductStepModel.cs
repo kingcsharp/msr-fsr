@@ -66,15 +66,19 @@ namespace MSR.Domain.Models
         /// </summary>
         public decimal? RMPerMinuteRate { get; set; }
 
+        public string Title { get; set; }
+
+        public int? PrintOrder { get; set; }
+
         /// <summary>
         /// Product that contains this step
         /// </summary>
-        public ProductModel Product { get; set; }
+        public virtual ProductModel Product { get; set; }
 
         /// <summary>
         /// ProcedureStep that contains this step
         /// </summary>
-        public ProcedureStepModel ProcedureStep { get; set; }
+        public virtual ProcedureStepModel ProcedureStep { get; set; }
 
     }
 }
