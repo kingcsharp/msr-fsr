@@ -15446,7 +15446,9 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     assignedToUser?: UserModel | undefined;
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
+    taskStarted?: boolean;
     taskRunningSince?: Date | undefined;
+    startedOn?: Date | undefined;
     procedureStep?: ProcedureStepModel | undefined;
     procedureStepType?: ProcedureStepTypeModel | undefined;
     status?: StatusModel | undefined;
@@ -15475,7 +15477,9 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             this.assignedToUser = _data["assignedToUser"] ? UserModel.fromJS(_data["assignedToUser"]) : <any>undefined;
             this.totalTaskTime = _data["totalTaskTime"];
             this.taskIsRunning = _data["taskIsRunning"];
+            this.taskStarted = _data["taskStarted"];
             this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
+            this.startedOn = _data["startedOn"] ? new Date(_data["startedOn"].toString()) : <any>undefined;
             this.procedureStep = _data["procedureStep"] ? ProcedureStepModel.fromJS(_data["procedureStep"]) : <any>undefined;
             this.procedureStepType = _data["procedureStepType"] ? ProcedureStepTypeModel.fromJS(_data["procedureStepType"]) : <any>undefined;
             this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
@@ -15512,7 +15516,9 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
         data["assignedToUser"] = this.assignedToUser ? this.assignedToUser.toJSON() : <any>undefined;
         data["totalTaskTime"] = this.totalTaskTime;
         data["taskIsRunning"] = this.taskIsRunning;
+        data["taskStarted"] = this.taskStarted;
         data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
+        data["startedOn"] = this.startedOn ? this.startedOn.toISOString() : <any>undefined;
         data["procedureStep"] = this.procedureStep ? this.procedureStep.toJSON() : <any>undefined;
         data["procedureStepType"] = this.procedureStepType ? this.procedureStepType.toJSON() : <any>undefined;
         data["status"] = this.status ? this.status.toJSON() : <any>undefined;
@@ -15542,7 +15548,9 @@ export interface IWorkOrderTaskModel {
     assignedToUser?: UserModel | undefined;
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
+    taskStarted?: boolean;
     taskRunningSince?: Date | undefined;
+    startedOn?: Date | undefined;
     procedureStep?: ProcedureStepModel | undefined;
     procedureStepType?: ProcedureStepTypeModel | undefined;
     status?: StatusModel | undefined;
@@ -18575,6 +18583,8 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     taskIsRunning?: boolean | undefined;
     /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
+    /** Gets or Sets StartedOn */
+    startedOn?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
     /** Get or set TotalTaskTime */
@@ -18598,6 +18608,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             this.assignedUserId = _data["assignedUserId"];
             this.taskIsRunning = _data["taskIsRunning"];
             this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
+            this.startedOn = _data["startedOn"] ? new Date(_data["startedOn"].toString()) : <any>undefined;
             this.status = _data["status"];
             this.totalTaskTime = _data["totalTaskTime"];
         }
@@ -18617,6 +18628,7 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
         data["assignedUserId"] = this.assignedUserId;
         data["taskIsRunning"] = this.taskIsRunning;
         data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
+        data["startedOn"] = this.startedOn ? this.startedOn.toISOString() : <any>undefined;
         data["status"] = this.status;
         data["totalTaskTime"] = this.totalTaskTime;
         return data; 
@@ -18635,6 +18647,8 @@ export interface IUpdateWorkOrderTaskRequest {
     taskIsRunning?: boolean | undefined;
     /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
+    /** Gets or Sets StartedOn */
+    startedOn?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
     /** Get or set TotalTaskTime */

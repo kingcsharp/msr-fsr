@@ -57,6 +57,12 @@ namespace MSR.Answer.API.V1.Models
         public DateTime TaskRunningSince { get; set; }
 
         /// <summary>
+        /// Gets or Sets StartedOn
+        /// </summary>
+        [DataMember(Name="startedOn ")]
+        public DateTime StartedOn { get; set; }
+
+        /// <summary>
         /// Gets or Sets Status
         /// </summary>
         [DataMember(Name="status")]
