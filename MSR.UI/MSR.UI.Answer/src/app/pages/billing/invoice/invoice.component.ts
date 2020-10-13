@@ -105,6 +105,7 @@ export class InvoiceComponent implements OnInit {
 
   getWorkOrders() {
     if (this.currentInvoice.customerId !== undefined && this.currentInvoice.locationId !== undefined) {
+      this.globals.showLoader(true);
       this.workOrderService.workOrder(null, this.currentInvoice.customerId,
         this.currentInvoice.locationId, null, null , env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
@@ -199,8 +200,8 @@ export class InvoiceComponent implements OnInit {
         workOrderId: workorder.id,
       });
 
-      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'purchaseOrderId');
-      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'purchaseOrderId');
+      pushIfNotExists(addInvoiceItem, this.invoiceItemOptions, 'purchaseNumber');
+      pushIfNotExists(addInvoiceItem, this.currentInvoice.invoiceItems, 'purchaseNumber');
 
       setTimeout(() => {
         this.showInvoiceItems = true;
@@ -226,7 +227,8 @@ export class InvoiceComponent implements OnInit {
   onInvoiceSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
-    if (jQuery('.parsleyjs').parsley().isValid()) {
+    const isValid = jQuery('.parsleyjs').parsley().isValid();
+    if (isValid) {
       this.globals.showLoader(true);
       let method: Observable<AuditActionResultOfInvoiceView> = null;
       let basicReqData: any = {
