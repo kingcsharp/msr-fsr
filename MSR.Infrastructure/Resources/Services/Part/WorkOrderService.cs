@@ -283,6 +283,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             foreach (var step in steps)
             {
                 var wot = _mapper.Map<WorkOrderTask>(step);
+
+                // This should probably not be a nullable field in the
+                // database.  Carrying through the null causes problems
+                // down the line, so for now, the code will default to 1.
+                if (!step.ProcedureStepTypeId.HasValue)
+                {
+                    wot.ProcedureStepTypeId = 1;
+                }
+
                 wot.WorkOrderTaskMonitors = step.ProcedureStepMonitors
                     .Select(x => _mapper.Map<WorkOrderTaskMonitor>(x))
                     .ToList();
