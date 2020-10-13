@@ -131,7 +131,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       });
 
       forkJoin(updateMonitorsRequests).subscribe(() => {
-        console.log(closeTask);
         if (closeTask) {
           this.closeCurrentTaskInProgress.emit();
         }
@@ -149,8 +148,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.updateMonitors(false);
 
-    } else {
-      alert('invalid');
     }
   }
 
@@ -161,8 +158,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.updateMonitors(true);
 
-    } else {
-      alert('invalid');
     }
   }
 
