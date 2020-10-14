@@ -18589,6 +18589,8 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
+    /** List of file IDs to attach to this work order task */
+    referenceFilesIds?: number[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -18609,6 +18611,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             this.startedOn = _data["startedOn"] ? new Date(_data["startedOn"].toString()) : <any>undefined;
             this.status = _data["status"];
             this.totalTaskTime = _data["totalTaskTime"];
+            if (Array.isArray(_data["referenceFilesIds"])) {
+                this.referenceFilesIds = [] as any;
+                for (let item of _data["referenceFilesIds"])
+                    this.referenceFilesIds!.push(item);
+            }
         }
     }
 
@@ -18629,6 +18636,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
         data["startedOn"] = this.startedOn ? this.startedOn.toISOString() : <any>undefined;
         data["status"] = this.status;
         data["totalTaskTime"] = this.totalTaskTime;
+        if (Array.isArray(this.referenceFilesIds)) {
+            data["referenceFilesIds"] = [];
+            for (let item of this.referenceFilesIds)
+                data["referenceFilesIds"].push(item);
+        }
         return data; 
     }
 }
@@ -18651,6 +18663,8 @@ export interface IUpdateWorkOrderTaskRequest {
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
+    /** List of file IDs to attach to this work order task */
+    referenceFilesIds?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

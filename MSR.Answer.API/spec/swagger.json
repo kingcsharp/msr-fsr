@@ -13081,6 +13081,15 @@
             "description": "Get or set TotalTaskTime",
             "format": "decimal",
             "nullable": true
+          },
+          "referenceFilesIds": {
+            "type": "array",
+            "description": "List of file IDs to attach to this work order task",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         }
       },
