@@ -104,6 +104,7 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<Sensor, SensorModel>().ReverseMap();
+            CreateMap<SensorValue, SensorValueModel>().ReverseMap();
             CreateMap<LocationImportItem, CreateLocation>();
             CreateMap<LocationImportItem, UpdateLocation>();
             #endregion

@@ -5678,6 +5678,114 @@ export class SensorService {
         }
         return _observableOf<AuditActionResultOfIEnumerableOfSensorModel>(<any>null);
     }
+
+    name(version: string): Observable<AuditActionResultOfIEnumerableOfString> {
+        let url_ = this.baseUrl + "/v{version}/Sensor/Name";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processName(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfString>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfString>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processName(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfString> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfString.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfString>(<any>null);
+    }
+
+    value(sensorName: string | null | undefined, siteId: number | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
+        let url_ = this.baseUrl + "/v{version}/Sensor/Value?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (sensorName !== undefined && sensorName !== null)
+            url_ += "SensorName=" + encodeURIComponent("" + sensorName) + "&";
+        if (siteId === null)
+            throw new Error("The parameter 'siteId' cannot be null.");
+        else if (siteId !== undefined)
+            url_ += "SiteId=" + encodeURIComponent("" + siteId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processValue(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processValue(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfSensorValueModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfSensorValueModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processValue(response: HttpResponseBase): Observable<AuditActionResultOfSensorValueModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfSensorValueModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfSensorValueModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -17484,6 +17592,129 @@ export interface ISearchView {
     description?: string | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedBy?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfIEnumerableOfString extends AuditActionResult implements IAuditActionResultOfIEnumerableOfString {
+    object?: string[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfString) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item);
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfIEnumerableOfString extends IAuditActionResult {
+    object?: string[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfSensorValueModel extends AuditActionResult implements IAuditActionResultOfSensorValueModel {
+    object?: SensorValueModel | undefined;
+
+    constructor(data?: IAuditActionResultOfSensorValueModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? SensorValueModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfSensorValueModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfSensorValueModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfSensorValueModel extends IAuditActionResult {
+    object?: SensorValueModel | undefined;
+}
+
+export class SensorValueModel extends CreatableModel implements ISensorValueModel {
+    sensor?: SensorModel | undefined;
+    itemCurrentValue?: string | undefined;
+    alarmDescription?: string | undefined;
+    isAlarm?: boolean | undefined;
+
+    constructor(data?: ISensorValueModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.sensor = _data["sensor"] ? SensorModel.fromJS(_data["sensor"]) : <any>undefined;
+            this.itemCurrentValue = _data["itemCurrentValue"];
+            this.alarmDescription = _data["alarmDescription"];
+            this.isAlarm = _data["isAlarm"];
+        }
+    }
+
+    static fromJS(data: any): SensorValueModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SensorValueModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sensor"] = this.sensor ? this.sensor.toJSON() : <any>undefined;
+        data["itemCurrentValue"] = this.itemCurrentValue;
+        data["alarmDescription"] = this.alarmDescription;
+        data["isAlarm"] = this.isAlarm;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ISensorValueModel extends ICreatableModel {
+    sensor?: SensorModel | undefined;
+    itemCurrentValue?: string | undefined;
+    alarmDescription?: string | undefined;
+    isAlarm?: boolean | undefined;
 }
 
 /** Base class for an API call with a typed result */

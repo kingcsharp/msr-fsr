@@ -76,6 +76,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
         private IRepository<Sensor> _sensor;
+        private IRepository<SensorValue> _sensorValue;
         private IRepository<Quote> _quotes;
         private IRepository<TimeZone> _timezone;
         private IRepository<WorkOrderTaskMonitor> _workOrderTasksMonitors;
@@ -149,6 +150,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
         public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
+        public IRepository<SensorValue> SensorValues { get { return _sensorValue ??= new EFRepository<SensorValue>(Context); } }
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
         public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
         public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }

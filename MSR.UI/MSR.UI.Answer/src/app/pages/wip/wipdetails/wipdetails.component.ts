@@ -13,6 +13,7 @@ import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
+import { SelectItem } from 'primeng/api';
 
 const moment = require('moment');
 const today = moment();
@@ -50,6 +51,7 @@ export class WipdetailsComponent implements OnInit {
   hasSerializationStep: boolean;
   workOrderIsComplete: boolean;
   startSlideIndex: number = 0;
+  monitorTypes: Array<SelectItem>;
 
   slideConfig;
 
@@ -60,6 +62,16 @@ export class WipdetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.monitorTypes = [
+      { label: 'Equipment', value: 1 },
+      { label: 'Number', value: 2 },
+      { label: 'Yes or No', value: 3 },
+      { label: 'Text', value: 4 },
+      { label: 'Pass or Fail', value: 5 },
+      { label: 'Select', value: 6 },
+    ];
+
 
     this.route.params.subscribe(params => {
 
@@ -126,7 +138,47 @@ export class WipdetailsComponent implements OnInit {
         s.procedureStep.referenceFiles = new Array<FileModel>();
       }
 
+      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+
+        if (u.monitorTypeId === 1 && u.inputTypeId === 1) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 2 && u.inputTypeId === 5) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 2 && u.inputTypeId === 6) {
+          u.inputType = 'Sensor';
+        }
+
+        if (u.monitorTypeId === 3 && u.inputTypeId === 8) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 4 && u.inputTypeId === 12) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 5 && u.inputTypeId === 16) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 6 && u.inputTypeId === 19) {
+          u.inputType = 'Manual';
+        }
+
+
+      });
+
+      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+
+        u.monitorType = this.monitorTypes.find(t => t.value === u.monitorTypeId).label;
+
+      });
+
     });
+
 
     return workOrderModel;
 

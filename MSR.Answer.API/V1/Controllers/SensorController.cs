@@ -6,6 +6,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using NSwag.Annotations;
 
@@ -30,6 +31,24 @@ namespace MSR.Answer.API.V1.Controllers
             var command = request.ToGetSensorCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<IEnumerable<SensorModel>>();
+        }
+
+        [HttpGet("Name"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<string>>))]
+        public async Task<IActionResult> GetSensorName()
+        {
+            var command = new GetSensorName();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<IEnumerable<string>>();
+
+        }
+
+        [HttpGet("Value"), SwaggerResponse(typeof(AuditActionResult<SensorValueModel>))]
+        public async Task<IActionResult> GetSensorValue([FromQuery] GetSensorValueRequest request)
+        {
+            var command = request.ToGetSensorValueCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<SensorValueModel>();
+
         }
     }
 }
