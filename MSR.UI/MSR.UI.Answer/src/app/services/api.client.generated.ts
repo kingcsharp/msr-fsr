@@ -13109,7 +13109,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepType?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13219,7 +13219,7 @@ export interface IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepType?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -18589,8 +18589,6 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
-    referenceFiles?: Array<FileModel>;
-    referenceFileIds?: Array<number>;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -18653,8 +18651,6 @@ export interface IUpdateWorkOrderTaskRequest {
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
-    referenceFiles?: Array<FileModel>;
-    referenceFileIds?: Array<number>;
 }
 
 /** Base class for an API call with a typed result */
