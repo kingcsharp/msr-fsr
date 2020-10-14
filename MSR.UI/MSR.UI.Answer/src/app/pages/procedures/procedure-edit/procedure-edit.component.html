@@ -416,6 +416,16 @@
                     </p-dropdown>
                 </div>
             </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.inputType === 'Sensor'">
+                <label for="sensorname" class="col-form-label text-left col-3">
+                    Available Sensors
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Sensor" name="sensorname" [options]="sensorNamesAvailable"
+                        showClear="true" [(ngModel)]="monitorToEdit.sensorName">
+                    </p-dropdown>
+                </div>
+            </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.monitorType === 'Select'">
                 <label for="listsource" class="col-form-label text-left col-3">
                     List Source
@@ -536,6 +546,16 @@
                 <div class="col-9 px-0">
                     <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptions"
                         showClear="true" [(ngModel)]="monitorToAdd.inputType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.inputType === 'Sensor'">
+                <label for="sensorname" class="col-form-label text-left col-3">
+                    Available Sensors
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Sensor" name="sensorname" [options]="sensorNamesAvailable"
+                        showClear="true" [(ngModel)]="monitorToAdd.sensorName">
                     </p-dropdown>
                 </div>
             </div>

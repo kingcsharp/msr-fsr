@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DraggableItemService } from 'ngx-bootstrap/sortable';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService,
+import { RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService, SensorService,
 ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, CreateProcedureStepMonitorRequest, UpdateProcedureStepRequest,
 RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest, Role } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
@@ -16,7 +16,7 @@ import { Globals } from '../../../models/lib/globals';
   templateUrl: './procedure-edit.component.html',
   styleUrls: ['./procedure-edit.component.scss'],
   providers: [DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService,
-    ProcedureTypeService, ProcedureStepTypeService]
+    ProcedureTypeService, ProcedureStepTypeService, SensorService]
 })
 export class ProcedureEditComponent implements OnInit {
 
@@ -51,10 +51,11 @@ export class ProcedureEditComponent implements OnInit {
   inputTypeOptions: Array<SelectItem>;
   yesNoOptions: Array<SelectItem>;
   passFailOptions: Array<SelectItem>;
+  sensorNamesAvailable: Array<SelectItem>;
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
-    private procedureService: ProcedureService, private procedureStepMonitorService: ProcedureStepMonitorService,
+    private procedureService: ProcedureService, private procedureStepMonitorService: ProcedureStepMonitorService, private sensorService: SensorService,
     private procedureStepTypeService: ProcedureStepTypeService, private procedureTypeService: ProcedureTypeService) { }
 
   ngOnInit(): void {
@@ -101,6 +102,8 @@ export class ProcedureEditComponent implements OnInit {
     this.listSource = [
       { label: 'NCR Category', value: 'NCR Category' }
     ];
+
+    this.getSensorNames();
 
     this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
@@ -237,8 +240,17 @@ export class ProcedureEditComponent implements OnInit {
           procedureStep.selectedRoles.push(role);
 
         });
-
       }));
+
+    });
+
+  }
+
+  getSensorNames() {
+
+    this.sensorService.name(env.apiVersion).subscribe(response => {
+
+      this.sensorNamesAvailable = response.object.map(s => ({ label: s, value: s }));
 
     });
 
@@ -299,6 +311,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepMonitorRequest.id = this.monitorToEdit.id;
     updateProcedureStepMonitorRequest.lowTarget = this.monitorToEdit.lowTarget;
     updateProcedureStepMonitorRequest.highTarget = this.monitorToEdit.highTarget;
+    updateProcedureStepMonitorRequest.sensorName = this.monitorToEdit.sensorName;
     this.globals.showLoader(true);
     this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion, updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
@@ -331,6 +344,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepMonitorRequest.procedureStepId = this.procedureStepToAddMonitorTo.id;
     createProcedureStepMonitorRequest.lowTarget = this.monitorToAdd.lowTarget;
     createProcedureStepMonitorRequest.highTarget = this.monitorToAdd.highTarget;
+    createProcedureStepMonitorRequest.sensorName = this.monitorToAdd.sensorName;
     this.globals.showLoader(true);
     this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 

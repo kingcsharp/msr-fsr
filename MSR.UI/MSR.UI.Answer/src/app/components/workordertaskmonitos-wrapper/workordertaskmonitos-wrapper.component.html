@@ -60,12 +60,12 @@
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
-          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
+          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
           <label for="equipmentsensorresult" class="col-form-label text-left col-3">
             Sensor:
           </label>
           <div class="col-9 px-0">
-            {{workOrderTaskMonitor.sensorName}}
+            {{workOrderTaskMonitor.procedureStepMonitor?.sensorName}}
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
@@ -88,7 +88,7 @@
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
-          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
+          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
           <label for="equipmentsensorresult" class="col-form-label text-left col-3">
             Result:
           </label>
@@ -99,12 +99,12 @@
               <li class="parsley-custom-error-message">You must retrieve the value for the sensor</li>
             </ul>
             <button type="button" class="btn btn-primary m-2"
-              (click)="getSensorValue(i,'equipmentsensorresult' + i,workOrderTaskMonitor.procedureStepMonitor.targetValue)">Get
+              (click)="getSensorValue(i, workOrderTaskMonitor.procedureStepMonitor?.sensorName)">Get
               Value</button>
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
-          *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number'">
+          *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number' && workOrderTaskMonitor.procedureStepMonitor.inputType !== 'Sensor'">
           <label for="result" class="col-form-label text-left col-3">
             Result:
           </label>
