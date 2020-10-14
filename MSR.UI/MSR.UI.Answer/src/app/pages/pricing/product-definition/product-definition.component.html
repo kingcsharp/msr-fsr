@@ -49,13 +49,20 @@
           <div class="form-group">
             <label for="cycleTime">Cycle Time :</label>
             <div class="input-group input-group-transparent row mx-0">
-              <input [class.hide]="mode !== productPageModes.View" pInputText type="number"
-                class="form-control input-transparent" name="CycleTime" [(ngModel)]="productData.cycleTime" readonly
-                data-cy="product-cycletime">
-              <p-inputNumber [(ngModel)]="productData.cycleTime" mode="decimal" name="CycleTime" [useGrouping]="false"
-                *ngIf="mode !== productPageModes.View" data-cy="product-cycletime" data-validate="parsley"
-                data-parsley-trigger="change" data-parsley-required="true" data-parsley-type="integer">
-              </p-inputNumber>
+              <input
+                id="cycleTime"
+                pInputText
+                type="text"
+                class="form-control input-transparent"
+                name="CycleTime"
+                [(ngModel)]="productData.cycleTime"
+                [readonly]="mode === productPageModes.View"
+                (change)="onChangeCycleTime($event)"
+                data-validate="parsley"
+                data-parsley-trigger="change"
+                data-parsley-type="integer"
+                data-cy="product-cycletime"
+              >
               <span class="input-group-addon bg-secondary">
                 Days
               </span>
@@ -188,31 +195,50 @@
                   </p-dropdown>
                 </td>
                 <td>
-                  <input pInputText [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
-                    name="Step{{i}}_printOrder" [(ngModel)]="productSteps[i].printOrder" readyonly
-                    data-cy="procedure-step-printorder">
-                  <p-inputNumber [(ngModel)]="productSteps[i].printOrder" mode="decimal"
-                    name="Step{{i}}_printOrder" [useGrouping]="false" [class.hide]="mode === productPageModes.View"
-                    data-cy="procedure-step-printorder">
-                  </p-inputNumber>
+                  <input
+                    id="printOrder_{{i}}"
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="Step{{i}}_printOrder"
+                    [(ngModel)]="productSteps[i].printOrder"
+                    [readonly]="mode === productPageModes.View"
+                    (change)="onChangePrintOrder($event, i)"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-type="integer"
+                    data-cy="procedure-step-printorder"
+                  >
                 </td>
                 <td>
-                  <input pInputText [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
-                    name="Step{{i}}_laborTime" [(ngModel)]="productSteps[i].laborTime" readonly
-                    data-cy="procedure-step-labortime">
-                  <p-inputNumber [(ngModel)]="productSteps[i].laborMinutes" mode="decimal" name="Step{{i}}_laborTime"
-                    [useGrouping]="false" [class.hide]="mode === productPageModes.View" (onBlur)="onChangeLaborTime(i)"
-                    data-cy="procedure-step-labortime">
-                  </p-inputNumber>
+                  <input
+                    id="laborMinutes_{{i}}"
+                    pInputText
+                    class="form-control input-transparent"
+                    name="Step{{i}}_laborTime"
+                    [(ngModel)]="productSteps[i].laborTime"
+                    [readonly]="mode === productPageModes.View"
+                    (change)="onChangeLaborTime($event, i)"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-type="integer"
+                    data-cy="procedure-step-labortime"
+                  >
                 </td>
                 <td>
-                  <input pInputText [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
-                    name="Step{{i}}_equipmentTime" [(ngModel)]="productSteps[i].equipmentMinutes" readonly
-                    data-cy="procedure-step-equipmenttime">
-                  <p-inputNumber [(ngModel)]="productSteps[i].equipmentMinutes" mode="decimal"
-                    name="Step{{i}}_equipmentTime" [useGrouping]="false" [class.hide]="mode === productPageModes.View"
-                    (onBlur)="onChangeEquipmentTime(i)" data-cy="procedure-step-equipmenttime">
-                  </p-inputNumber>
+                  <input
+                    id="equipmentMinutes_{{i}}"
+                    pInputText
+                    class="form-control input-transparent"
+                    name="Step{{i}}_equipmentTime"
+                    [(ngModel)]="productSteps[i].equipmentMinutes"
+                    [readonly]="mode === productPageModes.View"
+                    (change)="onChangeEquipmentTime($event, i)"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-type="integer"
+                    data-cy="procedure-step-equipmenttime"
+                  >
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
@@ -307,13 +333,20 @@
                 <td class="text-right">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input pInputText [class.hide]="mode !== productPageModes.View"
-                      class="form-control input-transparent" name="MaterialCost" type="text" readonly
-                      [(ngModel)]="productData.materialCost" data-cy="product-materialcost">
-                    <p-inputNumber [(ngModel)]="productData.materialCost" name="MaterialCost" [useGrouping]="false"
-                      [class.hide]="mode === productPageModes.View" (onBlur)="getStepsValues(true)"
-                      data-cy="product-materialcost">
-                    </p-inputNumber>
+                    <input
+                      id="materialCost"
+                      pInputText
+                      class="form-control input-transparent"
+                      name="MaterialCost"
+                      type="text"
+                      [(ngModel)]="productData.materialCost"
+                      [readonly]="mode === productPageModes.View"
+                      (change)="onChangeMaterialCost($event)"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-type="number"
+                      data-cy="product-materialcost"
+                    >
                   </div>
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>
@@ -324,12 +357,19 @@
                 <td class="text-right">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
-                      name="TotalSalePrice" type="text" readonly [(ngModel)]="productData.totalSalePrice"
-                      data-cy="product-totalsaleprice">
-                    <p-inputNumber [(ngModel)]="productData.totalSalePrice" name="TotalSalePrice" [useGrouping]="false"
-                      [class.hide]="mode === productPageModes.View" data-cy="product-totalsaleprice">
-                    </p-inputNumber>
+                    <input
+                      id="totalSalePrice"
+                      class="form-control input-transparent"
+                      name="TotalSalePrice"
+                      type="text"
+                      [(ngModel)]="productData.totalSalePrice"
+                      [readonly]="mode === productPageModes.View"
+                      (change)="onChangeTotalSalePrice($event)"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-type="number"
+                      data-cy="product-totalsaleprice"
+                    >
                   </div>
                 </td>
                 <td colspan="6" [class.hide]="!showAllStepColumns"></td>

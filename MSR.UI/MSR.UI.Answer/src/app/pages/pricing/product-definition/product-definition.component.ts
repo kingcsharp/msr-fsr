@@ -10,6 +10,7 @@ import {
   ProcedureStepModel,
   AdminCostSettingsService, AdminCostSettingsModel,
   ProductStepModel,
+  ProductStep,
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -106,6 +107,7 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   initPage() {
+    this.globals.showLoader(true);
     switch (this.mode) {
       case this.productPageModes.Create:
         this.initPageCreateMode();
@@ -160,7 +162,6 @@ export class ProductDefinitionComponent implements OnInit {
 
         if (isCreateMode) {
           this.productData = new CreateProductRequest();
-          // this.productData.name = this.quoteData.productName;
           this.productData.quoteId = this.quoteData.id;
           this.productData.revision = 0;
           this.productData.laborCost = 0;
@@ -181,7 +182,6 @@ export class ProductDefinitionComponent implements OnInit {
       .subscribe(responseHandler(response => {
         this.productData = response.object[0];
         this.getProductDataFlag = true;
-        // this.getProcedureSteps(this.productData.procedureId);
         if (this.productData.productSteps && this.productData.productSteps.length > 0) {
           this.productData.productSteps.forEach((value) => {
             const productStepValue = this.calculateProductStepValues(value);
@@ -344,38 +344,104 @@ export class ProductDefinitionComponent implements OnInit {
   }
 
   getStepsValues(isRefresh: boolean = false) {
-    const values = {
-      totalLaborMins: 0,
-      totalMachineMins: 0,
-      totalLaborCharge: 0,
-      totalEquipmentCharge: 0
-    };
+    let totalLaborMins = 0;
+    let totalMachineMins = 0;
+    let totalLaborCharge = 0;
+    let totalEquipmentCharge = 0;
+
     this.productSteps.forEach(step => {
-      values.totalLaborMins += (step.laborMinutes ? step.laborMinutes : 0);
-      values.totalMachineMins += (step.equipmentMinutes ? step.equipmentMinutes : 0);
-      values.totalLaborCharge += step.laborCharge;
-      values.totalEquipmentCharge += step.equipmentCharge;
+      totalLaborMins += (step.laborMinutes ? step.laborMinutes : 0);
+      totalMachineMins += (step.equipmentMinutes ? step.equipmentMinutes : 0);
+      totalLaborCharge += step.laborCharge;
+      totalEquipmentCharge += step.equipmentCharge;
     });
-    this.productData.totalLaborMins = values.totalLaborMins;
-    this.productData.totalMachineMins = values.totalMachineMins;
+    this.productData.totalLaborMins = totalLaborMins;
+    this.productData.totalMachineMins = totalMachineMins;
 
     if (isRefresh) {
-      this.productData.laborCost = values.totalLaborCharge.toFixed(2);
-      this.productData.equipmentCost = values.totalEquipmentCharge.toFixed(2);
+      this.productData.laborCost = parseFloat(totalLaborCharge.toFixed(2));
+      this.productData.equipmentCost = parseFloat(totalEquipmentCharge.toFixed(2));
       this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + (this.productData.materialCost ? this.productData.materialCost : 0);
     }
   }
 
-  onChangeLaborTime(index: number) {
-    this.productSteps[index].laborCharge = this.productSteps[index].laborMinutes ? this.productSteps[index].laborMinutes * this.adminCostSettings.laborRateMinute : 0;
+  onChangeLaborTime($event, index: number) {
+    jQuery(`#laborMinutes_${index}`).parsley().validate();
+    if (jQuery(`#laborMinutes_${index}`).parsley().isValid()) {
+      let laborMinutes = 0;
+      if ($event.target.value) {
+        laborMinutes = parseInt($event.target.value, 10);
+      }
 
-    this.getStepsValues(true);
+      this.productSteps[index].laborMinutes = laborMinutes;
+      this.productSteps[index].laborCharge = laborMinutes * this.adminCostSettings.laborRateMinute;
+
+      this.getStepsValues(true);
+    }
   }
 
-  onChangeEquipmentTime(index: number) {
-    this.productSteps[index].equipmentCharge = this.productSteps[index].equipmentMinutes ? this.productSteps[index].equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute + this.productSteps[index].equipmentMinutes * this.productSteps[index].rmPerMinuteRate : 0;
+  onChangeEquipmentTime($event, index: number) {
+    jQuery(`#equipmentMinutes_${index}`).parsley().validate();
+    if (jQuery(`#equipmentMinutes_${index}`).parsley().isValid()) {
+      let equipmentMinutes = 0;
+      if ($event.target.value) {
+        equipmentMinutes = parseInt($event.target.value, 10);
+      }
 
-    this.getStepsValues(true);
+      this.productSteps[index].equipmentMinutes = equipmentMinutes;
+      this.productSteps[index].equipmentCharge = equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute + equipmentMinutes * this.productSteps[index].rmPerMinuteRate;
+
+      this.getStepsValues(true);
+    }
+  }
+
+  onChangeMaterialCost($event) {
+    jQuery('#materialCost').parsley().validate();
+    if (jQuery('#materialCost').parsley().isValid()) {
+      let materialCost = 0.0;
+      if ($event.target.value) {
+        materialCost = parseFloat(parseFloat($event.target.value).toFixed(2));
+        this.productData.materialCost = materialCost;
+      } else {
+        this.productData.materialCost = null;
+      }
+      this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + materialCost;
+    }
+  }
+
+  onChangeTotalSalePrice($event) {
+    jQuery('#totalSalePrice').parsley().validate();
+    if (jQuery('#totalSalePrice').parsley().isValid()) {
+      if ($event.target.value) {
+        const totalSalePrice = parseFloat(parseFloat($event.target.value).toFixed(2));
+        this.productData.totalSalePrice = totalSalePrice;
+      } else {
+        this.productData.totalSalePrice = null;
+      }
+    }
+  }
+
+  onChangeCycleTime($event) {
+    jQuery('#cycleTime').parsley().validate();
+    if (jQuery('#cycleTime').parsley().isValid()) {
+      if ($event.target.value) {
+        const cycleTime = parseInt($event.target.value, 10);
+        this.productData.cycleTime = cycleTime;
+      } else {
+        this.productData.cycleTime = null;
+      }
+    }
+  }
+
+  onChangePrintOrder($event, index: number) {
+    jQuery(`#printOrder_${index}`).parsley().validate();
+    if (jQuery(`#printOrder_${index}`).parsley().isValid()) {
+      let printOrder = index+1;
+      if ($event.target.value) {
+        printOrder = parseInt($event.target.value, 10);
+      }
+      this.productSteps[index].printOrder = printOrder;
+    }
   }
 
   calculateProcedureStepValues(step: ProcedureStepModel) {
@@ -393,8 +459,8 @@ export class ProductDefinitionComponent implements OnInit {
       ...step,
       procedureStepId: step.id,
       utilization: step.utilizationTime,
-      laborMinutes: step.laborTime,
-      equipmentMinutes: step.equipmentTime,
+      laborMinutes: step.laborTime || 0,
+      equipmentMinutes: step.equipmentTime || 0,
       rmAnnualRate,
       rmPerMinuteRate,
       equipmentExpensePerMinute,
@@ -416,6 +482,8 @@ export class ProductDefinitionComponent implements OnInit {
 
     return {
       ...step,
+      laborMinutes: step.laborMinutes || 0,
+      equipmentMinutes: step.equipmentMinutes || 0,
       rmAnnualRate,
       rmPerMinuteRate,
       equipmentExpensePerMinute,
@@ -453,29 +521,34 @@ export class ProductDefinitionComponent implements OnInit {
 
   onSubmit() {
     jQuery('.parsleyjs').parsley().validate();
-    const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
+      const productData = this.productData;
+      productData.productSteps = [];
+      this.productSteps.forEach((step) => {
+        const productStep = new ProductStep();
+        productStep.init(step);
+        productStep.productId = this.mode === this.productPageModes.Create ? null : this.id;
+        productData.productSteps.push(productStep);
+      });
       this.globals.showLoader(true);
-      if (ctrl.mode === ctrl.productPageModes.Create) {
-        const requestData = new CreateProductRequest(ctrl.productData);
-        console.log(requestData.divisionFab);
+      if (this.mode === this.productPageModes.Create) {
+        const requestData = new CreateProductRequest();
+        requestData.init(productData);
         this.productService.productPost(env.apiVersion, requestData)
           .pipe(take(1))
           .subscribe(responseHandler((resp) => {
-            this.globals.showLoader(true);
             if (!resp.hasErrors) {
-              ctrl.router.navigate(['app/pricing/products']);
+              this.router.navigate(['app/pricing/products']);
             }
           }));
-      } else if (ctrl.mode === ctrl.productPageModes.Edit) {
-        const updateData = new UpdateProductRequest(ctrl.productData);
-        console.log(updateData.divisionFab);
+      } else if (this.mode === this.productPageModes.Edit) {
+        const updateData = new UpdateProductRequest();
+        updateData.init(productData);
         this.productService.productPatch(env.apiVersion, updateData)
           .pipe(take(1))
           .subscribe(responseHandler((resp) => {
-            this.globals.showLoader(true);
             if (!resp.hasErrors) {
-              ctrl.router.navigate(['app/pricing/products']);
+              this.router.navigate(['app/pricing/products']);
             }
           }));
       }
