@@ -1,5 +1,6 @@
 ﻿using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,20 +22,8 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderHistory command);
         Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command);
         Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command);
-
-        public static string GetWorkOrderItemNumber(WorkOrderModel model)
-        {
-            string customerName = model.Purchase?.PurchaseOrder?.Customer?.Name;
-            if (string.IsNullOrEmpty(customerName))
-            {
-                customerName = "";
-            }
-            string customerPNum = model.Purchase?.CustomerPurchaseNumber;
-            if (string.IsNullOrEmpty(customerPNum))
-            {
-                customerPNum = "";
-            }
-            return $"{customerName}-{customerPNum}";
-        }
+        string GetWorkOrderItemNumber(WorkOrderModel model);
+        Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command);
+         
     }
 }
