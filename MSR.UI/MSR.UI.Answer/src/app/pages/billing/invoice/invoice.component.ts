@@ -131,6 +131,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   getCustomers() {
+    this.globals.showLoader(true);
     this.customerService.customerGet(null, null, null, null, null, null, null, true, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.customers = response.object;
@@ -178,6 +179,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   getLocations() {
+    this.globals.showLoader(true);
     this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.locations = response.object.filter(x => x.parentId === null);
@@ -219,7 +221,6 @@ export class InvoiceComponent implements OnInit {
     this.invoiceService.invoiceGet(null, null, null, null, null, null, null, null, null, null, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
         this.data = response.object;
       }));
   }
@@ -240,7 +241,7 @@ export class InvoiceComponent implements OnInit {
       if (this.currentInvoice.id !== undefined) {
         basicReqData.id = this.currentInvoice.id;
         basicReqData.invoiceItems = this.currentInvoice.invoiceItems.map((item) => {
-          return new UpdateInvoiceItemRequest(item);
+          return new UpdateInvoiceItemRequest({id:item.workOrderId});
         });
         method = this.invoiceService.invoicePatch(env.apiVersion, new UpdateInvoiceRequest(basicReqData));
       } else {
