@@ -23,7 +23,7 @@ namespace MSR.Infrastructure.Resources.Services.Sensor
         }
 
         public async Task<IEnumerable<SensorModel>> GetSensor(GetSensor command)
-        { 
+        {
             if (command.SensorId.HasValue)
             {
                 var retSensors = new List<SensorModel>();
@@ -39,17 +39,18 @@ namespace MSR.Infrastructure.Resources.Services.Sensor
             {
                 sensors = sensors.Where(i => i.SiteId == command.SiteId);
             }
-            
+
 
             return sensors.Include(i => i.AssignedLocation).Include(i => i.Site).Where(i => !i.AssignedLocationId.HasValue).Select(i => _mapper.Map<SensorModel>(i)).AsEnumerable();
         }
 
-        public async Task<IEnumerable<string>> GetSensorName(GetSensorName command) { 
-            
+        public async Task<IEnumerable<string>> GetSensorName(GetSensorName command)
+        {
+
             var sensorName = await _unitOfwork.Sensors.Query().Select(s => s.SensorName).Distinct().ToListAsync();
 
             return sensorName;
-            
+
         }
 
         public async Task<SensorValueModel> GetSensorValue(GetSensorValue command)

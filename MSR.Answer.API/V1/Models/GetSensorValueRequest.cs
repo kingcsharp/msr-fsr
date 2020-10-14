@@ -11,6 +11,6 @@ namespace MSR.Answer.API.V1.Models
         [Required]
         public string SensorName { get; set; }
         [Required]
-        public int SiteId { get; set; }
+        public int? SiteId { get; set; }
     }
 }
