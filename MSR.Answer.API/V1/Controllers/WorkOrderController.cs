@@ -9,6 +9,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -130,7 +131,22 @@ namespace MSR.Answer.API.V1.Controllers
                     StartDate = new DateTimeOffset(DateTime.UtcNow),
                     Status = "In Progress",
                     Supplier = "Supplier1",
-                    WorkOrderItemNumber = 1
+                    WorkOrderItemNumber = 1,
+                    Notes = new List<NoteModel>()
+                    {
+                        new NoteModel()
+                        {
+                            Date = DateTime.UtcNow,
+                            Name = "Tester Mc Testerson",
+                            Note = "This is a test"
+                        },
+                        new NoteModel()
+                        {
+                            Date = DateTime.UtcNow,
+                            Name = "Tester Mc Testerson",
+                            Note = "This is also a test"
+                        }
+                    }
                 },
                 new PortalWorkOrderView()
                 {
@@ -157,7 +173,8 @@ namespace MSR.Answer.API.V1.Controllers
                     StartDate = new DateTimeOffset(DateTime.UtcNow),
                     Status = "In Progress",
                     Supplier = "Supplier1",
-                    WorkOrderItemNumber = 1
+                    WorkOrderItemNumber = 1,
+                    Notes = new List<NoteModel>()
                 },
                 new PortalWorkOrderView()
                 {
@@ -184,7 +201,8 @@ namespace MSR.Answer.API.V1.Controllers
                     StartDate = new DateTimeOffset(DateTime.UtcNow),
                     Status = "In Progress",
                     Supplier = "Supplier1",
-                    WorkOrderItemNumber = 1
+                    WorkOrderItemNumber = 1,
+                    Notes = null
                 },
                 new PortalWorkOrderView()
                 {
@@ -211,7 +229,22 @@ namespace MSR.Answer.API.V1.Controllers
                     StartDate = new DateTimeOffset(DateTime.UtcNow),
                     Status = "In Progress",
                     Supplier = "Supplier1",
-                    WorkOrderItemNumber = 1
+                    WorkOrderItemNumber = 1,
+                    Notes = new List<NoteModel>()
+                    {
+                        new NoteModel()
+                        {
+                            Date = DateTime.UtcNow,
+                            Name = "Tester Mc Testerson",
+                            Note = "This is a test"
+                        },
+                        new NoteModel()
+                        {
+                            Date = DateTime.UtcNow,
+                            Name = "Tester Mc Testerson",
+                            Note = "This is also a test"
+                        }
+                    }
                 },
                 new PortalWorkOrderView()
                 {
@@ -238,7 +271,22 @@ namespace MSR.Answer.API.V1.Controllers
                     StartDate = new DateTimeOffset(DateTime.UtcNow),
                     Status = "In Progress",
                     Supplier = "Supplier1",
-                    WorkOrderItemNumber = 1
+                    WorkOrderItemNumber = 1,
+                    Notes = new List<NoteModel>()
+                    {
+                        new NoteModel()
+                        {
+                            Date = DateTime.UtcNow,
+                            Name = "Tester Mc Testerson",
+                            Note = "This is a test"
+                        },
+                        new NoteModel()
+                        {
+                            Date = DateTime.UtcNow,
+                            Name = "Tester Mc Testerson",
+                            Note = "This is also a test"
+                        }
+                    }
                 }
             };
 
@@ -255,6 +303,17 @@ namespace MSR.Answer.API.V1.Controllers
             }
 
             return new CommandResponse<ICollection<PortalWorkOrderView>>(result.ToList()).ToOkObjectResponse<ICollection<PortalWorkOrderView>>();
+        }
+
+        [HttpPatch("{id}/Note")]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> AddNote([Required]int Id, [FromBody, Required]CreateWorkOrderNoteRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Note))
+            {
+                return new BadRequestObjectResult(new AuditActionResult("Note is required"));
+            }
+            return CommandResponse.SuccessCommand.ToOkObjectResponse("Note Added Successfully");
         }
     }
 }
