@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSR.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -30,5 +31,6 @@ namespace MSR.Domain.Views
         public double? InvoiceAmount { get; set; }
         public DateTimeOffset? InvoiceDate { get; set; }
         public string InvoiceName { get; set; }
+        public ICollection<NoteModel> Notes { get; set; }
     }
 }
