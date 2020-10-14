@@ -11,7 +11,8 @@ namespace MSR.Application.ApplicationServices
 {
     public class SensorAppService :
         ICommandHandler<GetSensor>,
-        ICommandHandler<GetSensorName>
+        ICommandHandler<GetSensorName>,
+        ICommandHandler<GetSensorValue>
     {
         private readonly ISensorService _sensorService;
 
@@ -29,6 +30,12 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _sensorService.GetSensorName(command);
             return new CommandResponse<IEnumerable<string>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetSensorValue command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _sensorService.GetSensorValue(command);
+            return new CommandResponse<SensorValueModel>(ret);
         }
     }
 }

@@ -9,5 +9,6 @@ namespace MSR.Domain.Abstractions.Services
     {
         Task<IEnumerable<SensorModel>> GetSensor(GetSensor command);
         Task<IEnumerable<string>> GetSensorName(GetSensorName command);
+        Task<SensorValueModel> GetSensorValue(GetSensorValue command);
     }
 }

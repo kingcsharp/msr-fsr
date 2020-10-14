@@ -41,5 +41,14 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<IEnumerable<string>>();
 
         }
+
+        [HttpGet("Value"), SwaggerResponse(typeof(AuditActionResult<SensorValueModel>))]
+        public async Task<IActionResult> GetSensorValue([FromQuery] GetSensorValueRequest request)
+        {
+            var command = request.ToGetSensorValueCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse<SensorValueModel>();
+
+        }
     }
 }

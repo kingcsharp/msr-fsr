@@ -4,6 +4,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,5 +52,10 @@ namespace MSR.Infrastructure.Resources.Services.Sensor
             
         }
 
+        public async Task<SensorValueModel> GetSensorValue(GetSensorValue command)
+        {
+            var sensorValueEntity = await _unitOfwork.SensorValues.Query().FirstOrDefaultAsync(s => s.Sensor.SensorName == command.SensorName && s.Sensor.SiteId == command.SiteId);
+            return _mapper.Map<SensorValueModel>(sensorValueEntity);
+        }
     }
 }
