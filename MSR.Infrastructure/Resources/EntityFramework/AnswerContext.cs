@@ -58,11 +58,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Procedure> Procedure { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
+        public DbSet<ProductStep> ProductStep { get; set; }
         public DbSet<PartSubPartMap> PartSubPartMap { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<File> File { get; set; }
         public DbSet<FileEntityMap> FileEntityMap { get; set; }
         public DbSet<Sensor> SensorItem { get; set; }
+        public DbSet<SensorValue> SensorValue { get; set; }
         public DbSet<Quote> Quote { get; set; }
         public DbSet<TimeZone> Timezone { get; set; }
         public DbSet<AdminCostSetting> AdminCostSetting { get; set; }

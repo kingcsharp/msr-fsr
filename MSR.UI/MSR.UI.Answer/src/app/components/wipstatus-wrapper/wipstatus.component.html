@@ -49,7 +49,7 @@
                   <strong>Purchase Order / Line Number:</strong> {{ workOrderSummary.purchaseOrderLineNumber }}<br />
                   <strong>Serial Number:</strong> {{ workOrderSummary.workOrderPartSerialNumber }}<br />
                   <strong>Status:</strong> {{ workOrderSummary.workOrderStatus }}<br />
-                  <strong>Assigned To:</strong> {{ workOrderSummary.workOrderAssignedTo }}<br />
+                  <strong>Assigned To:</strong> {{ workOrderSummary.workOrderAssignedTo === '' ? 'Not Assigned' : workOrderSummary.workOrderAssignedTo}}<br />
                   <strong>Due Date:</strong> {{ workOrderSummary.workOrderScheduledEndDate | userTimezone}}
                 </ng-template>
             </button>

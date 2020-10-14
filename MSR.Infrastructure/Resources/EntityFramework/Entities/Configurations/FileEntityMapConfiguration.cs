@@ -16,6 +16,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
             builder.HasOne(x => x.Procedure)
                 .WithMany(y => y.ReferenceFiles)
                 .HasForeignKey(z => z.EntityId);
+
+            builder.HasOne(x => x.WorkOrderTask)
+                .WithMany(y => y.ReferenceFiles)
+                .HasForeignKey(z => z.EntityId);
         }
     }
 }

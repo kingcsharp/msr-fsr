@@ -13,6 +13,7 @@ import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
+import { SelectItem } from 'primeng/api';
 
 const moment = require('moment');
 const today = moment();
@@ -50,6 +51,7 @@ export class WipdetailsComponent implements OnInit {
   hasSerializationStep: boolean;
   workOrderIsComplete: boolean;
   startSlideIndex: number = 0;
+  monitorTypes: Array<SelectItem>;
 
   slideConfig;
 
@@ -61,6 +63,16 @@ export class WipdetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.monitorTypes = [
+      { label: 'Equipment', value: 1 },
+      { label: 'Number', value: 2 },
+      { label: 'Yes or No', value: 3 },
+      { label: 'Text', value: 4 },
+      { label: 'Pass or Fail', value: 5 },
+      { label: 'Select', value: 6 },
+    ];
+
+
     this.route.params.subscribe(params => {
 
       let workOrderId = params['id'] == null ? 0 : Number(params['id']);
@@ -69,7 +81,7 @@ export class WipdetailsComponent implements OnInit {
 
         this.workOrderModel = this.cleanData(response.object[0]);
         this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
-        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress') === undefined;
+        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
@@ -126,7 +138,47 @@ export class WipdetailsComponent implements OnInit {
         s.procedureStep.referenceFiles = new Array<FileModel>();
       }
 
+      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+
+        if (u.monitorTypeId === 1 && u.inputTypeId === 1) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 2 && u.inputTypeId === 5) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 2 && u.inputTypeId === 6) {
+          u.inputType = 'Sensor';
+        }
+
+        if (u.monitorTypeId === 3 && u.inputTypeId === 8) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 4 && u.inputTypeId === 12) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 5 && u.inputTypeId === 16) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 6 && u.inputTypeId === 19) {
+          u.inputType = 'Manual';
+        }
+
+
+      });
+
+      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+
+        u.monitorType = this.monitorTypes.find(t => t.value === u.monitorTypeId).label;
+
+      });
+
     });
+
 
     return workOrderModel;
 
@@ -356,4 +408,37 @@ export class WipdetailsComponent implements OnInit {
     this.carousel.selectSlide(index);
   }
 
+  uploadFilesAndDocumentsForTask() {
+    // TODO: Uncomment when backend change comes in from David
+    /*
+    let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+      assignedUserId: this.workOrderTaskInProgress.assignedTo,
+      status: this.workOrderTaskInProgress.status.name,
+      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
+      totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
+      workOrderTaskId: this.workOrderTaskInProgress.id,
+      referenceFiles: new Array<FileModel>(),
+      referenceFileIds: new Array<number>()
+    } as IUpdateWorkOrderTaskRequest);
+
+
+    this.workOrderTaskInProgress.referenceFiles.map(referenceFile => {
+
+      if (referenceFile.fileId === undefined) {
+        updatedWorkOrderTaskRequest.referenceFiles.push(referenceFile);
+      } else {
+        updatedWorkOrderTaskRequest.referenceFileIds.push(referenceFile.fileId);
+      }
+
+    });
+
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updatedWorkOrderTaskRequest).subscribe(response => {
+
+      this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskInProgress.id).referenceFiles = response.object.referenceFiles;
+
+    });
+    */
+  }
 }

@@ -16,7 +16,9 @@ namespace MSR.Domain.Models
         public virtual UserModel AssignedToUser { get; set; }
         public decimal? TotalTaskTime { get; set; }
         public bool? TaskIsRunning { get; set; }
+        public bool TaskStarted { get; set; }
         public DateTime? TaskRunningSince { get; set; }
+        public DateTime? StartedOn { get; set; }
         public virtual ProcedureStepModel ProcedureStep { get; set; }
         public virtual ProcedureStepTypeModel ProcedureStepType { get; set; }
         public virtual StatusModel Status { get; set; }

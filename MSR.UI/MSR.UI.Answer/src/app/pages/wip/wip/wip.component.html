@@ -86,13 +86,6 @@
                                 </pcalendar-wrapper>
                             </div>
                         </th>
-                        <th [hidden]="!commonGrid.isVisibleCol('actualEndDate',gridSettings)">
-                            <div class="position-relative" tooltip="Search by Created On">
-                                <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="actualEndDate"
-                                    [datatable]="dt">
-                                </pcalendar-wrapper>
-                            </div>
-                        </th>
                         <th grid-input-filter [dt]="dt" searchField="productName"
                             [hidden]="!commonGrid.isVisibleCol('productName',gridSettings)"
                             [gridSettings]="gridSettings">
@@ -153,9 +146,6 @@
                         <td [hidden]="!commonGrid.isVisibleCol('actualStartDate', gridSettings)">
                             {{model.actualStartDate | userTimezone }}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('actualEndDate', gridSettings)">
-                            {{model.actualEndDate | userTimezone }}
-                        </td>
                         <td [hidden]="!commonGrid.isVisibleCol('productName', gridSettings)">
                             {{model.productName}}
                         </td>
@@ -181,7 +171,7 @@
                                         [type]="model.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
                                     <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
                                         {{model.percentageOfExpectedDurationTimeLogged | number : '1.2-2'}}%</div>
-                                    <ng-template #percentageOfExpectedDurationTimeLogged>Percentage of Tasks Completed
+                                    <ng-template #percentageOfExpectedDurationTimeLogged>Percentage of Expected Duration Time Logged
                                     </ng-template>
                                 </div>
                             </div>

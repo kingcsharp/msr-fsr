@@ -26,8 +26,8 @@
             <th scope="row">{{workOrderTask.taskStepOrder}}</th>
             <td>{{workOrderTask.procedureStep?.title}}</td>
             <td>{{workOrderTask.assignedToUser?.fullName}}</td>
-            <td>{{workOrderTask.assignedToUser?.actualStartDate}}</td>
-            <td>{{workOrderTask.assignedToUser?.actualStopDate}}</td>
+            <td>{{workOrderTask.startedOn | userTimezone}}</td>
+            <td></td>
             <td><!-- TODO: Remove this column since there is no location for a task --></td>
             <td>{{workOrderTask.status?.name}}</td>
           </tr>

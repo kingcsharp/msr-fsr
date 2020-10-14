@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { ProcedureStepMonitor, WorkOrderTaskMonitorModel, SensorService, SensorModel, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderTaskModel } from '../../services/api.client.generated';
+import { SensorService, WorkOrderTaskMonitorService, UpdateWorkOrderTaskMonitorRequest, IUpdateWorkOrderTaskMonitorRequest, WorkOrderModel } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { forkJoin } from 'rxjs';
@@ -18,6 +18,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   @Input() workOrderMonitorsToView: Array<any>;
   @Input() locationId: number;
   @Input() doNotAllowEditing: boolean = true;
+  @Input() workOrderModel: WorkOrderModel;
   @Output() closeCurrentTaskInProgress = new EventEmitter();
   workOrderMonitorYesOrNoOptions: Array<SelectItem>;
   monitorListItemOptions: Array<SelectItem>;
@@ -70,23 +71,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     });
 
-    this.sensorService.sensor(null, 415, env.apiVersion).subscribe(responseHandler(response => {
-
-      this.sensorsAvailable = response.object.map(s => ({ label: s.sensorName, value: s.id }));
-
-      this.workOrderMonitorsToView.forEach(workOrderMonitor => {
-
-        if (workOrderMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderMonitor.procedureStepMonitor.inputType === 'Sensor') {
-
-          workOrderMonitor.sensorName = this.sensorsAvailable.find(s => s.value === Number(workOrderMonitor.procedureStepMonitor.targetValue)).label;
-
-        }
-
-      });
-    }));
-
-
-
   }
 
   areDropDownsValid(): boolean {
@@ -98,7 +82,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       || s.procedureStepMonitor.monitorType === 'Select') && s.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED').forEach(m => {
 
         if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
-        || m.procedureStepMonitor.monitorType === 'Yes or No')) {
+          || m.procedureStepMonitor.monitorType === 'Yes or No')) {
           dropDownsAreValid = false;
         } else if (m.procedureStepMonitor.monitorType === 'Select' && m.numVal === undefined) {
           dropDownsAreValid = false;
@@ -107,34 +91,33 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       });
 
-      return dropDownsAreValid;
+    return dropDownsAreValid;
   }
 
   updateMonitors(closeTask: boolean = false) {
 
     let updateMonitorsRequests = new Array<any>();
 
-      this.workOrderMonitorsToView.forEach(monitor => {
+    this.workOrderMonitorsToView.forEach(monitor => {
 
-        let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
-          comment: monitor.comment === undefined ? '' : monitor.comment,
-          multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
-          sensorValue: monitor.sensorValue === undefined ? '' : monitor.sensorValue,
-          textVal: monitor.textVal === undefined ? '' : monitor.textVal,
-          numVal: monitor.numVal === undefined ? undefined : monitor.numVal,
-          workOrderTaskMonitorId: monitor.id
-        } as IUpdateWorkOrderTaskMonitorRequest);
+      let updateWorkOrderTaskMonitorRequest = new UpdateWorkOrderTaskMonitorRequest({
+        comment: monitor.comment === undefined ? '' : monitor.comment,
+        multiVal: monitor.multiVal === undefined ? '' : monitor.multiVal,
+        sensorValue: monitor.sensorValue === undefined ? '' : monitor.sensorValue,
+        textVal: monitor.textVal === undefined ? '' : monitor.textVal,
+        numVal: monitor.numVal === undefined ? undefined : monitor.numVal,
+        workOrderTaskMonitorId: monitor.id
+      } as IUpdateWorkOrderTaskMonitorRequest);
 
-        updateMonitorsRequests.push(this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest));
+      updateMonitorsRequests.push(this.workOrderTaskMonitorService.workOrderTaskMonitor(env.apiVersion, updateWorkOrderTaskMonitorRequest));
 
-      });
+    });
 
-      forkJoin(updateMonitorsRequests).subscribe(responses => {
-        console.log(closeTask);
-        if (closeTask) {
-          this.closeCurrentTaskInProgress.emit();
-        }
-      });
+    forkJoin(updateMonitorsRequests).subscribe(() => {
+      if (closeTask) {
+        this.closeCurrentTaskInProgress.emit();
+      }
+    });
 
 
   }
@@ -148,8 +131,6 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.updateMonitors(false);
 
-    } else {
-      alert('invalid');
     }
   }
 
@@ -160,16 +141,24 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       this.updateMonitors(true);
 
-    } else {
-      alert('invalid');
     }
   }
 
-  getSensorValue(indexOfMonitor: number, elementName: string, sensorId: number) {
+  getSensorValue(indexOfMonitor: number, sensorName: string) {
 
-    this.sensorService.sensor(sensorId, null, env.apiVersion).subscribe(responseHandler(response => {
-      this.workOrderMonitorsToView[indexOfMonitor].sensorValue = response.object[0]?.itemCurrentValue === undefined ? '1 p/ft³' : '1 p/ft³';
-    }));
+    let siteId = this.workOrderModel.location.site === undefined || this.workOrderModel.location.site === null ? this.workOrderModel.location.id : this.workOrderModel.location.site;
+
+    this.sensorService.value(sensorName, siteId, env.apiVersion).subscribe(response => {
+
+      if (response.object === undefined) {
+        this.workOrderMonitorsToView[indexOfMonitor].sensorValue = 'No Sensor Value Available';
+      } else {
+        this.workOrderMonitorsToView[indexOfMonitor].sensorValue = response.object.itemCurrentValue;
+      }
+
+
+    });
+
   }
 
 }

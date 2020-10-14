@@ -73,6 +73,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<AdminCostSetting> AdminCostSettings { get; }
         IRepository<RoleChildRoleMap> RoleChildRoleMaps { get; }
         IRepository<Sensor> Sensors { get; }
+        IRepository<SensorValue> SensorValues { get; }
         IRepository<Quote> Quotes { get; }
         IRepository<TimeZone> Timezones { get; }
         IRepository<WorkOrderTaskMonitor> WorkOrderTaskMonitors { get; }

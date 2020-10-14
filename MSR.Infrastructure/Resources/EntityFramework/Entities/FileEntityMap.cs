@@ -19,6 +19,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public ProcedureStepTemplate ProcedureTemplate { get; set; }
         public Procedure Procedure { get; set; }
+        public WorkOrderTask WorkOrderTask { get; set; }
         // Procedure
         // Part
         // Anything else files can be attached to

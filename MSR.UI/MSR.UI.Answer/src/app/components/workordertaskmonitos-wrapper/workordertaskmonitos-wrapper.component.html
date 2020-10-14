@@ -60,12 +60,12 @@
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
-          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
+          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
           <label for="equipmentsensorresult" class="col-form-label text-left col-3">
             Sensor:
           </label>
           <div class="col-9 px-0">
-            {{workOrderTaskMonitor.sensorName}}
+            {{workOrderTaskMonitor.procedureStepMonitor?.sensorName}}
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
@@ -88,7 +88,7 @@
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
-          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Equipment' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
+          *ngIf="(workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number' && workOrderTaskMonitor.procedureStepMonitor.inputType === 'Sensor')">
           <label for="equipmentsensorresult" class="col-form-label text-left col-3">
             Result:
           </label>
@@ -99,20 +99,20 @@
               <li class="parsley-custom-error-message">You must retrieve the value for the sensor</li>
             </ul>
             <button type="button" class="btn btn-primary m-2"
-              (click)="getSensorValue(i,'equipmentsensorresult' + i,workOrderTaskMonitor.procedureStepMonitor.targetValue)">Get
+              (click)="getSensorValue(i, workOrderTaskMonitor.procedureStepMonitor?.sensorName)">Get
               Value</button>
           </div>
         </div>
         <div class="form-group col-12 d-flex flex-row"
-          *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number'">
+          *ngIf="workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number' && workOrderTaskMonitor.procedureStepMonitor.inputType !== 'Sensor'">
           <label for="result" class="col-form-label text-left col-3">
             Result:
           </label>
           <div class="col-9 px-0" *ngIf="workOrderTaskMonitor.holdIfFails !== undefined">
-            <input type="hidden" id="hiddentargetvalueforparsley{{i}}"
+            <input type="hidden" id="hiddentargetvalueforparsley"
               value="{{workOrderTaskMonitor.procedureStepMonitor.targetValue}}">
             <input type="number" name="numberresult{{i}}" [(ngModel)]="workOrderTaskMonitor.numVal"
-              data-parsley-trigger="change" data-parsley-equalto="#hiddentargetvalueforparsley{{i}}"
+              data-parsley-trigger="change" data-parsley-equalto="#hiddentargetvalueforparsley"
               [attr.data-parsley-required]="workOrderTaskMonitor.holdIfFails" class="form-control input-transparent"
               tooltip="Result" data-parsley-error-message="Value is not equal to target value"
               *ngIf="workOrderTaskMonitor.procedureStepMonitor.shouldBe === 'EQUAL'">
