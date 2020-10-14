@@ -183,7 +183,7 @@
                                         Labor Time
                                     </label>
                                     <div class="input-group col-3" style="margin-left:-15px">
-                                        <input type="text" name="labortime{{i}}"
+                                        <input type="number" name="labortime{{i}}"
                                             [(ngModel)]="procedureStep.value.laborTime" data-validate="parsley"
                                             data-parsley-trigger="change" data-parsley-minlength="3"
                                             data-parsley-required="true" class="form-control input-transparent ml-2"
@@ -196,7 +196,7 @@
                                         Equipment Time
                                     </label>
                                     <div class="input-group col-3" style="margin-right:-15px">
-                                        <input type="text" name="equipmenttime{{i}}"
+                                        <input type="number" name="equipmenttime{{i}}"
                                             [(ngModel)]="procedureStep.value.equipmentTime" data-validate="parsley"
                                             data-parsley-trigger="change" data-parsley-minlength="3"
                                             data-parsley-required="true" class="form-control input-transparent"
