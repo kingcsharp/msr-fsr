@@ -471,16 +471,56 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderTaskModel ret;
             WorkOrderTask workordertask = _mapper.Map(command, current);
+
             _unitOfWork.WorkOrderTasks.Update(workordertask);
+
+            // attach files, if any
+            if (command.ReferenceFilesIds != null &&
+                command.ReferenceFilesIds.Count > 0 &&
+                command.ReferenceFilesIds.Any(x => x > 0))
+            {
+                // First, blank the existing list and the attach the new one.
+                List<int> origList = _unitOfWork.FileEntityMap.Query().Where(x =>
+                    x.EntityId == workordertask.Id &&
+                    x.EntityTableName.ToUpper().Equals("WorkOrderTask")
+                ).Select(x => x.Id).ToList();
+
+                foreach (int id in origList)
+                {
+                    _unitOfWork.FileEntityMap.Delete(false, id);
+                }
+
+                workordertask.ReferenceFiles = new List<FileEntityMap>();
+                foreach (int id in command.ReferenceFilesIds)
+                {
+                    FileEntityMap fem = new FileEntityMap() {
+                        EntityId = workordertask.Id,
+                        EntityTableName = "WorkOrderTask",
+                        FileId = id
+                    };
+                    workordertask.ReferenceFiles.Add(fem);
+                }
+            }
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workordertask, workordertask.Id);
 
+            // Load any attached files
+            _unitOfWork.WorkOrderTasks.LoadCollection(workordertask, "ReferenceFiles");
+            foreach (FileEntityMap m in workordertask.ReferenceFiles)
+            {
+                _unitOfWork.FileEntityMap.LoadReference(m, x => x.FileObject);
+            }
+
+            // Build the return object model
             ret = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workordertask);
 
             // Update the work order datetimes, if needed
+            // IMPORTANT: the return object cannot be remapped after this
+            // point because it will cause a backreference and break things.
             _unitOfWork.WorkOrderTasks.LoadReference(workordertask, x => x.Status);
             _unitOfWork.WorkOrderTasks.LoadReference(workordertask, x => x.WorkOrder);
+
             WorkOrder wo = workordertask.WorkOrder;
             _unitOfWork.WorkOrders.LoadCollection(wo, "WorkOrderTasks");
             // "DONE" states are:
@@ -507,9 +547,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     await _unitOfWork.SaveChangesAsync();
                 }
             }
-
-
-
 
             return ret;
         }
