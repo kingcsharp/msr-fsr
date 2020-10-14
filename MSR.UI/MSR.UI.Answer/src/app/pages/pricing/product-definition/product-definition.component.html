@@ -178,10 +178,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let step of procedureStepsData; index as i">
+              <tr *ngFor="let step of productSteps; index as i">
                 <td>
-                  <span [class.hide]="i >= procedureStepsData.length - newStepsCounts">{{step.title}}</span>
-                  <p-dropdown *ngIf="getProcedureStepTemplatesFlag && i >= procedureStepsData.length - newStepsCounts"
+                  <span [class.hide]="i >= productSteps.length - newStepsCounts">{{step.title}}</span>
+                  <p-dropdown *ngIf="getProcedureStepTemplatesFlag && i >= productSteps.length - newStepsCounts"
                     placeholder="Select Step" name="procedureStepId" [options]="procedureStepTemplatesData"
                     [baseZIndex]="100005" (onChange)="onSelectStepTemplate($event, i)" data-cy="product-select-stepid"
                     [virtualScroll]="true" itemSize="30" [filter]="true" filterBy="label">
@@ -189,27 +189,27 @@
                 </td>
                 <td>
                   <input pInputText [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
-                    name="Step{{i}}_printOrder" [(ngModel)]="procedureStepsData[i].printOrder" readyonly
+                    name="Step{{i}}_printOrder" [(ngModel)]="productSteps[i].printOrder" readyonly
                     data-cy="procedure-step-printorder">
-                  <p-inputNumber [(ngModel)]="procedureStepsData[i].printOrder" mode="decimal"
+                  <p-inputNumber [(ngModel)]="productSteps[i].printOrder" mode="decimal"
                     name="Step{{i}}_printOrder" [useGrouping]="false" [class.hide]="mode === productPageModes.View"
                     data-cy="procedure-step-printorder">
                   </p-inputNumber>
                 </td>
                 <td>
                   <input pInputText [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
-                    name="Step{{i}}_laborTime" [(ngModel)]="procedureStepsData[i].laborTime" readonly
+                    name="Step{{i}}_laborTime" [(ngModel)]="productSteps[i].laborTime" readonly
                     data-cy="procedure-step-labortime">
-                  <p-inputNumber [(ngModel)]="procedureStepsData[i].laborTime" mode="decimal" name="Step{{i}}_laborTime"
+                  <p-inputNumber [(ngModel)]="productSteps[i].laborMinutes" mode="decimal" name="Step{{i}}_laborTime"
                     [useGrouping]="false" [class.hide]="mode === productPageModes.View" (onBlur)="onChangeLaborTime(i)"
                     data-cy="procedure-step-labortime">
                   </p-inputNumber>
                 </td>
                 <td>
                   <input pInputText [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
-                    name="Step{{i}}_equipmentTime" [(ngModel)]="procedureStepsData[i].equipmentTime" readonly
+                    name="Step{{i}}_equipmentTime" [(ngModel)]="productSteps[i].equipmentMinutes" readonly
                     data-cy="procedure-step-equipmenttime">
-                  <p-inputNumber [(ngModel)]="procedureStepsData[i].equipmentTime" mode="decimal"
+                  <p-inputNumber [(ngModel)]="productSteps[i].equipmentMinutes" mode="decimal"
                     name="Step{{i}}_equipmentTime" [useGrouping]="false" [class.hide]="mode === productPageModes.View"
                     (onBlur)="onChangeEquipmentTime(i)" data-cy="procedure-step-equipmenttime">
                   </p-inputNumber>
@@ -218,46 +218,46 @@
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
                     <input pInputText type="text" readonly class="form-control input-transparent"
-                      [value]="procedureStepsData[i].replacementCost || 0" data-cy="procedure-step-replacementcost">
+                      [value]="productSteps[i].replacementCost" data-cy="procedure-step-replacementcost">
                     <span class="input-group-addon bg-secondary">.00</span>
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <input pInputText class="form-control form-control input-transparent " readonly type="text"
-                      [value]="procedureStepsData[i].utilizationTime || 0" data-cy="procedure-step-utilization">
+                      [value]="productSteps[i].utilization" data-cy="procedure-step-utilization">
                     <span class="input-group-addon bg-secondary">%</span>
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <input pInputText class="form-control form-control input-transparent useful-life" readonly type="text"
-                    [value]="procedureStepsData[i].usefulLife || 0" data-cy="procedure-step-usefullife">
+                    [value]="productSteps[i].usefulLife" data-cy="procedure-step-usefullife">
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
                     <input pInputText class="form-control input-transparent" readonly type="text"
-                      [value]="procedureStepsData[i].ex_per_min || 0" data-cy="equip-per-min">
+                      [value]="productSteps[i].equipmentExpensePerMinute" data-cy="equip-per-min">
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
                     <input pInputText class="form-control input-transparent" readonly type="text"
-                      [value]="procedureStepsData[i].annual_rm || 0" data-cy="anual-rm">
+                      [value]="productSteps[i].rmAnnualRate" data-cy="anual-rm">
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
                     <input pInputText class="form-control input-transparent" readonly="readonly" type="text"
-                      [value]="procedureStepsData[i].rm_per_min || 0" data-cy="rm-per-min">
+                      [value]="productSteps[i].rmPerMinuteRate" data-cy="rm-per-min">
                   </div>
                 </td>
               </tr>
-              <tr *ngIf="procedureStepsData.length === 0">
+              <tr *ngIf="productSteps.length === 0">
                 <td></td>
-                <td> </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td [class.hide]="!showAllStepColumns"></td>
@@ -340,11 +340,11 @@
 
         <div *ngIf="mode === productPageModes.Create || mode === productPageModes.Edit"
           class="col-md-12 d-flex justify-content-end mb-3">
-          <a class="btn btn-primary pull-left" tooltip="Add a Step to the Definition" (click)="onAddProcedureStep()">
+          <a class="btn btn-primary pull-left" tooltip="Add a Step to the Definition" (click)="onAddProductStep()">
             <i class="fa fa-plus-circle"></i> Add Step
           </a>
           <a class="pull-left btn btn-warning ml-2" tooltip="Removes Last Step from Definition"
-            (click)="onRemoveProcedureStep()">
+            (click)="onRemoveProductStep()">
             <i class="fa fa-minus-circle"></i> Remove Step
           </a>
         </div>

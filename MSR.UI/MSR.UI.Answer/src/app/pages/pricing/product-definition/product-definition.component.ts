@@ -9,6 +9,7 @@ import {
   QuoteService, QuoteModel,
   ProcedureStepModel,
   AdminCostSettingsService, AdminCostSettingsModel,
+  ProductStepModel,
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -70,6 +71,7 @@ export class ProductDefinitionComponent implements OnInit {
   showRequirementViewModal: boolean = false;
   adminCostSettings: AdminCostSettingsModel;
   getAdminCostSettingsFlag: boolean = false;
+  productSteps: any[] = [];
 
   constructor(
     public globals: Globals,
@@ -173,12 +175,23 @@ export class ProductDefinitionComponent implements OnInit {
 
   getProductData() {
     this.getProductDataFlag = false;
+    this.productSteps = [];
     this.productService.productGet(this.id, null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
         this.productData = response.object[0];
         this.getProductDataFlag = true;
-        this.getProcedureSteps(this.productData.procedureId);
+        // this.getProcedureSteps(this.productData.procedureId);
+        if (this.productData.productSteps && this.productData.productSteps.length > 0) {
+          this.productData.productSteps.forEach((value) => {
+            const productStepValue = this.calculateProductStepValues(value);
+            this.productSteps.push(productStepValue);
+          });
+          this.getStepsValues(this.mode === this.productPageModes.Create);
+          this.getProcedureStepsFlag = true;
+        } else {
+          this.getProcedureSteps(this.productData.procedureId);
+        }
         this.getQuoteData(this.productData.quoteId);
       }));
   }
@@ -260,6 +273,7 @@ export class ProductDefinitionComponent implements OnInit {
   onSelectStepTemplate($event, index: number) {
     if ($event.value) {
       const step = new ProcedureStepModel({
+        id: null,
         equipmentTime: $event.value.equipmentTime,
         laborTime: $event.value.laborTime,
         replacementCost: $event.value.replacementCost,
@@ -270,8 +284,8 @@ export class ProductDefinitionComponent implements OnInit {
         title: $event.value.title
       });
 
-      const stepValues = this.calculateStepValues(step);
-      this.procedureStepsData[index] = { ...step, ...stepValues };
+      const productStepValue = this.calculateProcedureStepValues(step);
+      this.productSteps[index] = productStepValue;
       this.getStepsValues(true);
     }
   }
@@ -296,14 +310,13 @@ export class ProductDefinitionComponent implements OnInit {
   getProcedureSteps(id: number) {
     this.getProcedureStepsFlag = false;
     this.globals.showLoader(true);
-    this.procedureStepsData = [];
-
+    this.productSteps = [];
     this.procedureService.stepGet(id, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.object.forEach(step => {
+        response.object.forEach((value) => {
           // Calculate each step values
-          const stepValues = this.calculateStepValues(step);
-          this.procedureStepsData.push({ ...step, ...stepValues });
+          const productStepValue = this.calculateProcedureStepValues(value);
+          this.productSteps.push(productStepValue);
         });
         this.getProcedureStepsFlag = true;
 
@@ -317,14 +330,14 @@ export class ProductDefinitionComponent implements OnInit {
     this.getProcedureSteps($event.target.value);
   }
 
-  onAddProcedureStep() {
-    this.procedureStepsData.push(new ProcedureStepModel());
+  onAddProductStep() {
+    this.productSteps.push({});
     this.newStepsCounts++;
   }
 
-  onRemoveProcedureStep() {
+  onRemoveProductStep() {
     if (this.newStepsCounts > 0) {
-      this.procedureStepsData.pop();
+      this.productSteps.pop();
       this.newStepsCounts--;
       this.getStepsValues(true);
     }
@@ -337,48 +350,78 @@ export class ProductDefinitionComponent implements OnInit {
       totalLaborCharge: 0,
       totalEquipmentCharge: 0
     };
-    this.procedureStepsData.forEach(step => {
-      values.totalLaborMins += step.laborTime ? step.laborTime : 0;
-      values.totalMachineMins += step.equipmentTime ? step.equipmentTime : 0;
-      values.totalLaborCharge += step.laboar_charge ? step.laboar_charge : 0;
-      values.totalEquipmentCharge += step.equipment_charge ? step.equipment_charge : 0;
+    this.productSteps.forEach(step => {
+      values.totalLaborMins += (step.laborMinutes ? step.laborMinutes : 0);
+      values.totalMachineMins += (step.equipmentMinutes ? step.equipmentMinutes : 0);
+      values.totalLaborCharge += step.laborCharge;
+      values.totalEquipmentCharge += step.equipmentCharge;
     });
     this.productData.totalLaborMins = values.totalLaborMins;
     this.productData.totalMachineMins = values.totalMachineMins;
 
     if (isRefresh) {
-      this.productData.laborCost = values.totalLaborCharge;
-      this.productData.equipmentCost = values.totalEquipmentCharge;
-      this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + (this.productData.materialCost || 0);
+      this.productData.laborCost = values.totalLaborCharge.toFixed(2);
+      this.productData.equipmentCost = values.totalEquipmentCharge.toFixed(2);
+      this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + (this.productData.materialCost ? this.productData.materialCost : 0);
     }
   }
 
   onChangeLaborTime(index: number) {
-    this.procedureStepsData[index].laboar_charge = this.procedureStepsData[index].laborTime * LABOR_RATE_PER_MIN;
+    this.productSteps[index].laborCharge = this.productSteps[index].laborMinutes ? this.productSteps[index].laborMinutes * this.adminCostSettings.laborRateMinute : 0;
 
     this.getStepsValues(true);
   }
 
   onChangeEquipmentTime(index: number) {
-    this.procedureStepsData[index].equipment_charge = this.procedureStepsData[index].equipmentTime * this.procedureStepsData[index].ex_per_min + this.procedureStepsData[index].equipmentTime * this.procedureStepsData[index].rm_per_min;
+    this.productSteps[index].equipmentCharge = this.productSteps[index].equipmentMinutes ? this.productSteps[index].equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute + this.productSteps[index].equipmentMinutes * this.productSteps[index].rmPerMinuteRate : 0;
 
     this.getStepsValues(true);
   }
 
-  calculateStepValues(step: ProcedureStepModel) {
-    const laboar_chage = step.laborTime * this.adminCostSettings.laborRateMinute;
-    const annual_rm = step.replacementCost * this.adminCostSettings.rmAnnualRate;
-    const rm_per_min = annual_rm / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
-    const ex_per_min = (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
-    const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
+  calculateProcedureStepValues(step: ProcedureStepModel) {
+    const rmAnnualRate = step.replacementCost ? step.replacementCost * this.adminCostSettings.rmAnnualRate : 0;
+
+    const rmPerMinuteRate = step.utilizationTime ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime)) : 0;
+
+    const equipmentExpensePerMinute = (step.replacementCost && step.utilizationTime && step.usefulLife) ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime) : 0;
+
+    const laborCharge = step.laborTime ? step.laborTime * this.adminCostSettings.laborRateMinute : 0;
+
+    const equipmentCharge = step.equipmentTime ? step.equipmentTime * equipmentExpensePerMinute + step.equipmentTime * rmPerMinuteRate : 0;
 
     return {
-      laboar_charge: laboar_chage,
-      annual_rm: annual_rm,
-      rm_per_min: rm_per_min,
-      ex_per_min: ex_per_min,
-      equipment_charge: equipment_charge
+      ...step,
+      procedureStepId: step.id,
+      utilization: step.utilizationTime,
+      laborMinutes: step.laborTime,
+      equipmentMinutes: step.equipmentTime,
+      rmAnnualRate,
+      rmPerMinuteRate,
+      equipmentExpensePerMinute,
+      laborCharge,
+      equipmentCharge,
     };
+  }
+
+  calculateProductStepValues(step: ProductStepModel) {
+    const rmAnnualRate = step.rmAnnualRate ? step.rmAnnualRate : (step.replacementCost ? step.replacementCost * this.adminCostSettings.rmAnnualRate : 0);
+
+    const rmPerMinuteRate = step.rmPerMinuteRate ? step.rmPerMinuteRate : (step.utilization ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization)) : 0);
+
+    const equipmentExpensePerMinute = step.equipmentExpensePerMinute ? step.equipmentExpensePerMinute : ((step.replacementCost && step.utilization && step.usefulLife) ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization) : 0);
+
+    const laborCharge = step.laborMinutes ? step.laborMinutes * this.adminCostSettings.laborRateMinute : 0;
+
+    const equipmentCharge = step.equipmentMinutes ? step.equipmentMinutes * equipmentExpensePerMinute + step.equipmentMinutes * rmPerMinuteRate : 0;
+
+    return {
+      ...step,
+      rmAnnualRate,
+      rmPerMinuteRate,
+      equipmentExpensePerMinute,
+      laborCharge,
+      equipmentCharge,
+    }
   }
 
   onToggle($event: boolean) {
