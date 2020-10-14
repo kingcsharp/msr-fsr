@@ -41,7 +41,33 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
         public async Task<ProductModel> CreateProductAsync(CreateProduct command)
         {
+            var curCustomer = await _unitOfWork.Customers.FirstOrDefaultAsync(false, i => i.Id == command.CustomerId);
+
+            if (curCustomer is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Customer)} not found with ID: {command.CustomerId}", DomainError.NotFound);
+            }
+
+            var curProcedure = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.ProcedureId);
+
+            if (curProcedure is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.ProcedureId}", DomainError.NotFound);
+            }
+
+            var curPart = await _unitOfWork.Parts.FirstOrDefaultAsync(false, i => i.Id == command.PartId);
+
+            if (curPart is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.PartId}", DomainError.NotFound);
+            }
+
             var product = _mapper.Map<Product>(command);
+
+            foreach (var ps in product.ProductSteps?.ToList())
+            {
+                ps.Product = product;
+            }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
@@ -69,7 +95,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                         .Query()
                         .Include(x => x.Customer)
                         .Include(x => x.Part)
-                        .Include(x => x.Procedure);
+                        .Include(x => x.Procedure)
+                        .Include(x => x.ProductSteps);
 
             if (command.Id.HasValue)
             {
@@ -81,12 +108,36 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 productQuery = productQuery.Where(x => x.CustomerId == command.CustomerId.Value);
             }
 
-            var product = await productQuery
+            var products = await productQuery
                         .Select(x => _mapper.Map<ProductModel>(x))
                         .ToListAsync();
-            
 
-            return product;
+            // removing child product from the Model to avoid loop
+            products.ForEach(p => p.ProductSteps?.ToList().ForEach(ps => ps.Product = null));
+
+            // if ID is specified and ProductStep missing, we fall back to ProcedureStep
+            if (command.Id.HasValue)
+            {
+                foreach (var p in products)
+                {
+                    if (!p.ProductSteps.Any())
+                    {
+                        var procedure = await _unitOfWork.Procedures.Query().Include(p => p.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == p.ProcedureId);
+
+                        if (procedure != null)
+                        {
+                            p.ProductSteps = _mapper.Map<ICollection<ProductStepModel>>(procedure.ProcedureSteps);
+
+                            foreach (var ps in p.ProductSteps)
+                            {
+                                ps.ProductId = p.Id;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return products;
         }
 
 
@@ -95,11 +146,48 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // Retreive product to update
             var product = await _unitOfWork.Products
                                 .Query()
+                                .Include(x => x.ProductSteps)
                                 .FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if (product is null)
             {
                 throw new DomainException($"{nameof(Product)} not found with ID: {command.Id}");
+            }
+
+            var quote = await _unitOfWork.Quotes
+                                .Query()
+                                .FirstOrDefaultAsync(i => i.Id == command.QuoteId);
+
+            if (quote is null)
+            {
+                throw new DomainException($"{nameof(Quote)} not found with ID: {command.QuoteId}");
+            }
+
+            var customer = await _unitOfWork.Customers
+                                .Query()
+                                .FirstOrDefaultAsync(i => i.Id == command.CustomerId);
+
+            if (customer is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Customer)} not found with ID: {command.CustomerId}");
+            }
+
+            var procedure = await _unitOfWork.Procedures
+                                .Query()
+                                .FirstOrDefaultAsync(i => i.Id == command.ProcedureId);
+
+            if (procedure is null)
+            {
+                throw new DomainException($"{nameof(Product)} not found with ID: {command.ProcedureId}");
+            }
+
+            var part = await _unitOfWork.Parts
+                                .Query()
+                                .FirstOrDefaultAsync(i => i.Id == command.PartId);
+
+            if (part is null)
+            {
+                throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.PartId}");
             }
 
             // Update product details and items
@@ -115,6 +203,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.SalesTax = command.SalesTax ?? product.SalesTax;
             product.QuoteId = command.QuoteId ?? product.QuoteId;
             product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
+
+            product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
+
+            foreach (var ps in product.ProductSteps)
+            {
+                ps.Product = null;
+                ps.ProductId = product.Id;
+            }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {

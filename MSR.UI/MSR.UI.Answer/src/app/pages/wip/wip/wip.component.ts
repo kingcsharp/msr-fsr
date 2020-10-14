@@ -21,8 +21,9 @@ export class WipComponent implements OnInit {
   data: Array<any> = new Array<any>();
   statusOptions: Array<SelectItem>;
   locationOptions: Array<SelectItem>;
+  gridVersion: string;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
+  constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
 

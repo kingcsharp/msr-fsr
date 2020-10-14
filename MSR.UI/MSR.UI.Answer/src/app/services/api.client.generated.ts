@@ -13109,7 +13109,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepType?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13219,7 +13219,7 @@ export interface IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepType?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */

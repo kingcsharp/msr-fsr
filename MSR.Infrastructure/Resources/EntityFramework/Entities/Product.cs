@@ -68,5 +68,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [MaxLength(50)]
         public string DivisionFab { get; set; }
 
+        public virtual ICollection<ProductStep> ProductSteps { get; set; }
+
     }
 }
