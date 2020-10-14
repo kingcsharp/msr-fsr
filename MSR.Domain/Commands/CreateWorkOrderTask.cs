@@ -18,5 +18,6 @@ namespace MSR.Domain.Commands
         public DateTime? StartedOn { get; set; }
 
         public virtual ICollection<int> WorkOrderTaskMonitorIds { get; set; }
+        public virtual ICollection<int> ReferenceFilesIds { get; set; }
     }
 }

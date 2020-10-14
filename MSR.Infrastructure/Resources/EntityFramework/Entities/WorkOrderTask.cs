@@ -44,5 +44,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual WorkOrder WorkOrder { get; set; }
 
         public virtual ICollection<WorkOrderTaskMonitor> WorkOrderTaskMonitors { get; set; }
+
+        public ICollection<FileEntityMap> ReferenceFiles { get; set; }
     }
 }

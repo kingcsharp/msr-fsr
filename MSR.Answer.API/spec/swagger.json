@@ -9299,8 +9299,9 @@
             "nullable": true
           },
           "procedureStepType": {
-            "type": "string",
+            "type": "integer",
             "description": "Procedure Step Type",
+            "format": "int32",
             "nullable": true
           },
           "printOrder": {
@@ -10422,6 +10423,13 @@
                     "$ref": "#/components/schemas/FileModel"
                   }
                 ]
+              },
+              "productSteps": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ProductStepModel"
+                }
               }
             }
           }
@@ -11146,6 +11154,89 @@
           }
         ]
       },
+      "ProductStepModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "laborMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "equipmentMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "usefulLife": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "equipmentExpensePerMinute": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "rmAnnualRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "rmPerMinuteRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "printOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "product": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProductModel"
+              }
+            ]
+          },
+          "procedureStep": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProcedureStepModel"
+              }
+            ]
+          }
+        }
+      },
       "CreateProductRequest": {
         "type": "object",
         "additionalProperties": true,
@@ -11220,6 +11311,81 @@
           },
           "divisionFab": {
             "type": "string",
+            "nullable": true
+          },
+          "productSteps": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProductStep"
+            }
+          }
+        }
+      },
+      "ProductStep": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "procedureStepId",
+          "laborMinutes"
+        ],
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "procedureStepId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "laborMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "equipmentMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "utilization": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "usefulLife": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "equipmentExpensePerMinute": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "rmAnnualRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "rmPerMinuteRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 100,
+            "nullable": true
+          },
+          "printOrder": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         }
@@ -11323,6 +11489,13 @@
           "divisionFab": {
             "type": "string",
             "nullable": true
+          },
+          "productSteps": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProductStep"
+            }
           }
         }
       },
@@ -13081,6 +13254,15 @@
             "description": "Get or set TotalTaskTime",
             "format": "decimal",
             "nullable": true
+          },
+          "referenceFilesIds": {
+            "type": "array",
+            "description": "List of file IDs to attach to this work order task",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         }
       },
