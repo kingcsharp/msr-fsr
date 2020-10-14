@@ -50,8 +50,8 @@
     <td *ngIf="colsDataAndSettings.col.type === enumColumnType.Template">
         <ng-container [ngTemplateOutlet]="colsDataAndSettings.col.templateName"
             [ngTemplateOutletContext]="{colsDataAndSettings: { 
-                col: col,
-                colData:itemData,
+                col: colsDataAndSettings.col,
+                colData:colsDataAndSettings.colData,
                 colsSaved:gridSaved.columnsSaved,
                 gridData:gridData
             } }">

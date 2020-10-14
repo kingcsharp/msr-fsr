@@ -15412,8 +15412,10 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
     id?: number;
     workOrderId?: number;
     partId?: number;
+    cycleCount?: number;
     parentId?: number | undefined;
     serialNumber?: string | undefined;
+    qty?: number | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;
@@ -15433,8 +15435,10 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
             this.id = _data["id"];
             this.workOrderId = _data["workOrderId"];
             this.partId = _data["partId"];
+            this.cycleCount = _data["cycleCount"];
             this.parentId = _data["parentId"];
             this.serialNumber = _data["serialNumber"];
+            this.qty = _data["qty"];
             this.part = _data["part"] ? PartModel.fromJS(_data["part"]) : <any>undefined;
             this.workOrder = _data["workOrder"] ? WorkOrderModel.fromJS(_data["workOrder"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
@@ -15458,8 +15462,10 @@ export class WorkOrderPartModel implements IWorkOrderPartModel {
         data["id"] = this.id;
         data["workOrderId"] = this.workOrderId;
         data["partId"] = this.partId;
+        data["cycleCount"] = this.cycleCount;
         data["parentId"] = this.parentId;
         data["serialNumber"] = this.serialNumber;
+        data["qty"] = this.qty;
         data["part"] = this.part ? this.part.toJSON() : <any>undefined;
         data["workOrder"] = this.workOrder ? this.workOrder.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
@@ -15476,8 +15482,10 @@ export interface IWorkOrderPartModel {
     id?: number;
     workOrderId?: number;
     partId?: number;
+    cycleCount?: number;
     parentId?: number | undefined;
     serialNumber?: string | undefined;
+    qty?: number | undefined;
     part?: PartModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     children?: WorkOrderPartModel[] | undefined;

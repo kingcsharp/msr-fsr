@@ -199,7 +199,7 @@ export class Globals {
     }
 
     setSelectedCustomerAndBuyerStatus() {
-        if (!this.user.isAnswerUser) {
+        if (this.user && !this.user.isAnswerUser) {
             this.isBuyer = this.user.roles[0].name === "Client Buyer";
             this.selectedCustomer = new Customer({ id: this.user.customerId });
         }

@@ -27,6 +27,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   gridSaved: GridSaved;
   showReport: boolean = false;
   reportModel: ReportModel;
+  showNcrModal: boolean = false;
   @ViewChild('ncrItem') ncrItem: ElementRef;
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
@@ -64,10 +65,14 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Money }),
       new ColumnsSaved({ id: 'invoiceAmount', label: 'Amount', visible: true, type: EnumColumnType.Money }),
       new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
-      new ColumnsSaved({ id: 'aaa', label: 'Invoice Date', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem, isRanged: true })
-
+      new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem, isRanged: true })
 
     ];
+  }
+
+  showNcr(row) {
+    console.log(row);
+    this.showNcrModal = true;
   }
 
   getEngineerColumns() {
@@ -112,6 +117,11 @@ export class WipComponent implements OnInit, AfterViewInit {
     //     this.getGridData();
     //   }
     // });
+  }
+
+  getWo(row) {
+    console.log(row);
+    // this.workOrderService.workOrder() 
   }
 
   getGridData() {
