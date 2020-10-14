@@ -5678,6 +5678,57 @@ export class SensorService {
         }
         return _observableOf<AuditActionResultOfIEnumerableOfSensorModel>(<any>null);
     }
+
+    name(version: string): Observable<AuditActionResultOfIEnumerableOfString> {
+        let url_ = this.baseUrl + "/v{version}/Sensor/Name";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processName(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfString>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfString>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processName(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfString> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfString.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfString>(<any>null);
+    }
 }
 
 @Injectable()
@@ -14694,6 +14745,7 @@ export class ProductModel extends TrackableModel implements IProductModel {
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
     productImage?: FileModel | undefined;
+    productSteps?: ProductStepModel[] | undefined;
 
     constructor(data?: IProductModel) {
         super(data);
@@ -14727,6 +14779,11 @@ export class ProductModel extends TrackableModel implements IProductModel {
                     this.workOrders!.push(WorkOrderModel.fromJS(item));
             }
             this.productImage = _data["productImage"] ? FileModel.fromJS(_data["productImage"]) : <any>undefined;
+            if (Array.isArray(_data["productSteps"])) {
+                this.productSteps = [] as any;
+                for (let item of _data["productSteps"])
+                    this.productSteps!.push(ProductStepModel.fromJS(item));
+            }
         }
     }
 
@@ -14764,6 +14821,11 @@ export class ProductModel extends TrackableModel implements IProductModel {
                 data["workOrders"].push(item.toJSON());
         }
         data["productImage"] = this.productImage ? this.productImage.toJSON() : <any>undefined;
+        if (Array.isArray(this.productSteps)) {
+            data["productSteps"] = [];
+            for (let item of this.productSteps)
+                data["productSteps"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
@@ -14791,6 +14853,7 @@ export interface IProductModel extends ITrackableModel {
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
     productImage?: FileModel | undefined;
+    productSteps?: ProductStepModel[] | undefined;
 }
 
 export class QuoteModel implements IQuoteModel {
@@ -15636,6 +15699,98 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     monitorNumber?: number;
 }
 
+export class ProductStepModel implements IProductStepModel {
+    id?: number;
+    productId?: number;
+    procedureStepId?: number;
+    laborMinutes?: number | undefined;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
+    product?: ProductModel | undefined;
+    procedureStep?: ProcedureStepModel | undefined;
+
+    constructor(data?: IProductStepModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.productId = _data["productId"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.laborMinutes = _data["laborMinutes"];
+            this.equipmentMinutes = _data["equipmentMinutes"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
+            this.equipmentExpensePerMinute = _data["equipmentExpensePerMinute"];
+            this.rmAnnualRate = _data["rmAnnualRate"];
+            this.rmPerMinuteRate = _data["rmPerMinuteRate"];
+            this.title = _data["title"];
+            this.printOrder = _data["printOrder"];
+            this.product = _data["product"] ? ProductModel.fromJS(_data["product"]) : <any>undefined;
+            this.procedureStep = _data["procedureStep"] ? ProcedureStepModel.fromJS(_data["procedureStep"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ProductStepModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductStepModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["productId"] = this.productId;
+        data["procedureStepId"] = this.procedureStepId;
+        data["laborMinutes"] = this.laborMinutes;
+        data["equipmentMinutes"] = this.equipmentMinutes;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
+        data["equipmentExpensePerMinute"] = this.equipmentExpensePerMinute;
+        data["rmAnnualRate"] = this.rmAnnualRate;
+        data["rmPerMinuteRate"] = this.rmPerMinuteRate;
+        data["title"] = this.title;
+        data["printOrder"] = this.printOrder;
+        data["product"] = this.product ? this.product.toJSON() : <any>undefined;
+        data["procedureStep"] = this.procedureStep ? this.procedureStep.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IProductStepModel {
+    id?: number;
+    productId?: number;
+    procedureStepId?: number;
+    laborMinutes?: number | undefined;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
+    product?: ProductModel | undefined;
+    procedureStep?: ProcedureStepModel | undefined;
+}
+
 export class CreateProductRequest implements ICreateProductRequest {
     name!: string;
     revision!: number;
@@ -15651,6 +15806,7 @@ export class CreateProductRequest implements ICreateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
 
     constructor(data?: ICreateProductRequest) {
         if (data) {
@@ -15677,6 +15833,11 @@ export class CreateProductRequest implements ICreateProductRequest {
             this.cycleTime = _data["cycleTime"];
             this.quoteId = _data["quoteId"];
             this.divisionFab = _data["divisionFab"];
+            if (Array.isArray(_data["productSteps"])) {
+                this.productSteps = [] as any;
+                for (let item of _data["productSteps"])
+                    this.productSteps!.push(ProductStep.fromJS(item));
+            }
         }
     }
 
@@ -15703,6 +15864,11 @@ export class CreateProductRequest implements ICreateProductRequest {
         data["cycleTime"] = this.cycleTime;
         data["quoteId"] = this.quoteId;
         data["divisionFab"] = this.divisionFab;
+        if (Array.isArray(this.productSteps)) {
+            data["productSteps"] = [];
+            for (let item of this.productSteps)
+                data["productSteps"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -15722,6 +15888,87 @@ export interface ICreateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
+}
+
+export class ProductStep implements IProductStep {
+    productId?: number | undefined;
+    procedureStepId!: number;
+    laborMinutes!: number;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
+
+    constructor(data?: IProductStep) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.laborMinutes = _data["laborMinutes"];
+            this.equipmentMinutes = _data["equipmentMinutes"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
+            this.equipmentExpensePerMinute = _data["equipmentExpensePerMinute"];
+            this.rmAnnualRate = _data["rmAnnualRate"];
+            this.rmPerMinuteRate = _data["rmPerMinuteRate"];
+            this.title = _data["title"];
+            this.printOrder = _data["printOrder"];
+        }
+    }
+
+    static fromJS(data: any): ProductStep {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductStep();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["procedureStepId"] = this.procedureStepId;
+        data["laborMinutes"] = this.laborMinutes;
+        data["equipmentMinutes"] = this.equipmentMinutes;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
+        data["equipmentExpensePerMinute"] = this.equipmentExpensePerMinute;
+        data["rmAnnualRate"] = this.rmAnnualRate;
+        data["rmPerMinuteRate"] = this.rmPerMinuteRate;
+        data["title"] = this.title;
+        data["printOrder"] = this.printOrder;
+        return data; 
+    }
+}
+
+export interface IProductStep {
+    productId?: number | undefined;
+    procedureStepId: number;
+    laborMinutes: number;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -15783,6 +16030,7 @@ export class UpdateProductRequest implements IUpdateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
 
     constructor(data?: IUpdateProductRequest) {
         if (data) {
@@ -15810,6 +16058,11 @@ export class UpdateProductRequest implements IUpdateProductRequest {
             this.cycleTime = _data["cycleTime"];
             this.quoteId = _data["quoteId"];
             this.divisionFab = _data["divisionFab"];
+            if (Array.isArray(_data["productSteps"])) {
+                this.productSteps = [] as any;
+                for (let item of _data["productSteps"])
+                    this.productSteps!.push(ProductStep.fromJS(item));
+            }
         }
     }
 
@@ -15837,6 +16090,11 @@ export class UpdateProductRequest implements IUpdateProductRequest {
         data["cycleTime"] = this.cycleTime;
         data["quoteId"] = this.quoteId;
         data["divisionFab"] = this.divisionFab;
+        if (Array.isArray(this.productSteps)) {
+            data["productSteps"] = [];
+            for (let item of this.productSteps)
+                data["productSteps"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -15857,6 +16115,7 @@ export interface IUpdateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -17276,6 +17535,49 @@ export interface ISearchView {
     description?: string | undefined;
     lastUpdatedOn?: Date;
     lastUpdatedBy?: string | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfIEnumerableOfString extends AuditActionResult implements IAuditActionResultOfIEnumerableOfString {
+    object?: string[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfString) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item);
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfIEnumerableOfString extends IAuditActionResult {
+    object?: string[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

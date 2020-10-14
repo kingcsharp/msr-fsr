@@ -42,5 +42,14 @@ namespace MSR.Infrastructure.Resources.Services.Sensor
 
             return sensors.Include(i => i.AssignedLocation).Include(i => i.Site).Where(i => !i.AssignedLocationId.HasValue).Select(i => _mapper.Map<SensorModel>(i)).AsEnumerable();
         }
+
+        public async Task<IEnumerable<string>> GetSensorName(GetSensorName command) { 
+            
+            var sensorName = await _unitOfwork.Sensors.Query().Select(s => s.SensorName).Distinct().ToListAsync();
+
+            return sensorName;
+            
+        }
+
     }
 }

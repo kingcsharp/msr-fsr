@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace MSR.Application.ApplicationServices
 {
     public class SensorAppService :
-        ICommandHandler<GetSensor>
+        ICommandHandler<GetSensor>,
+        ICommandHandler<GetSensorName>
     {
         private readonly ISensorService _sensorService;
 
@@ -23,6 +24,11 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _sensorService.GetSensor(command);
             return new CommandResponse<IEnumerable<SensorModel>>(ret);
+        }
+        public async Task<ICommandResponse> HandleAsync(GetSensorName command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _sensorService.GetSensorName(command);
+            return new CommandResponse<IEnumerable<string>>(ret);
         }
     }
 }

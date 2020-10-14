@@ -8,5 +8,6 @@ namespace MSR.Domain.Abstractions.Services
     public interface ISensorService
     {
         Task<IEnumerable<SensorModel>> GetSensor(GetSensor command);
+        Task<IEnumerable<string>> GetSensorName(GetSensorName command);
     }
 }
