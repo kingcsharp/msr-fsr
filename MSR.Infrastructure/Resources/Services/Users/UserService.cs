@@ -271,9 +271,19 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.UserModel> GetLoggedInUserData(int Id)
         {
-            var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role)
+            var user = await _unitOfWork.Users.Query().Include(x=>x.Location).Include(x => x.Roles).ThenInclude(x => x.Role)
                 .Where(x => x.Id == CurrentUser.GetId()).Select(x => new User()
                 {
+                    CustomerId=x.CustomerId,
+                    IsAnswerUser=x.IsAnswerUser,
+                    FirstName=x.FirstName,
+                    LastName=x.LastName,
+                    Email=x.Email,
+                    LocationId=x.LocationId,
+                    Location=x.Location,
+                    Phone=x.Phone,
+                    UserName=x.UserName,
+                    TimeZoneId=x.TimeZoneId,
                     Roles = x.Roles.Select(x => new UserRole()
                     {
                         Id = x.Id,

@@ -8,29 +8,30 @@
     </a>
   </header>
 </div>
-<ul id="side-nav" class="list-unstyled components side-nav">
-
-
+<ul *ngIf="globals.isBuyer !== undefined" id="side-nav" class="list-unstyled components side-nav">
   <li *ngFor="let item of sidebarItems" [ngClass]="item.submenu.length>0?'accordion-group panel':''"
     [routerLinkActive]="['active']">
     <a *ngIf="item.submenu.length > 0" (click)="sidebarBehavior($event)" class="accordion-toggle collapsed"
-      data-toggle="collapse" data-parent="#side-nav" href="#{{item.name}}" tooltip="{{item.info}}" [delay]="600" [container]="body">
+      data-toggle="collapse" data-parent="#side-nav" href="#{{item.name.replace(' ','')}}" tooltip="{{item.info}}" [delay]="600"
+      [container]="body">
       <i [ngClass]="'fas '+item.icon"></i> &nbsp;
       <span class="name">{{item.name}}</span>
     </a>
-    <ul *ngIf="item.submenu.length > 0" id="{{item.name}}" class="accordion-body collapse" aria-expanded="false">
+    <ul *ngIf="item.submenu.length > 0" id="{{item.name.replace(' ','')}}" class="accordion-body collapse" aria-expanded="false">
       <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']">
-        <a routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name != 'Support Ticket'">
+        <a routerLink="{{subItem.url}}" tooltip="{{subItem.info}}" [delay]="600"
+          [container]="body" *ngIf="subItem.name != 'Support Ticket'">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
         </a>
-        <a (click)="toggleSupportTicketModal()" tooltip="{{subItem.info}}" [delay]="600" [container]="body" *ngIf="subItem.name =='Support Ticket'">
+        <a (click)="toggleSupportTicketModal()" tooltip="{{subItem.info}}" [delay]="600" [container]="body"
+          *ngIf="subItem.name =='Support Ticket'">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
         </a>
       </li>
     </ul>
-    <a *ngIf="item.submenu.length === 0" routerLink="profile">
+    <a *ngIf="item.submenu.length === 0" href="{{item.url}}">
       <i [ngClass]="'fas '+item.icon"></i> &nbsp;
       <span class="name">{{item.name}}</span>
     </a>

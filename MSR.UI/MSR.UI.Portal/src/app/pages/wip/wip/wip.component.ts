@@ -18,7 +18,7 @@ import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 })
 export class WipComponent implements OnInit {
 
-  gridColumns: Array<ColumnsSaved> = new Array<ColumnsSaved>();
+  // gridColumns: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
   data: Array<any> = new Array<any>();
@@ -30,36 +30,75 @@ export class WipComponent implements OnInit {
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
 
-  ngOnInit(): void {
-    this.gridColumns = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
-      new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false, type: EnumColumnType.Number }),
+  getBuyerColumns() {
+    return [
       new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
-      new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'Purchase Order Number', type: EnumColumnType.Number, visible: true }),
-      new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
-      new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
-      new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
-      new ColumnsSaved({ id: 'actualStartDate', label: 'Actual Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
-      new ColumnsSaved({ id: 'actualEndDate', label: 'Actual End Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
-      new ColumnsSaved({ id: 'productName', label: 'Product', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String })
+      new ColumnsSaved({ id: 'supplier', label: 'Supplier', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
+      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
+      //Current Step/Status
+      new ColumnsSaved({ id: 'invoiceName', label: 'Invoice #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Money }),
+      new ColumnsSaved({ id: 'invoiceAmount', label: 'Amount', visible: true, type: EnumColumnType.Money }),
+      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, isRanged: true })
     ];
+  }
 
-    this.getGridData();
+  getEngineerColumns() {
+    return [
+      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WO Item #', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String }),
+    ];
+  }
+
+
+  ngOnInit(): void {
+
+    //   "hasPhotos": true,
+    //   "hasNCRs": true,
+    //   "hasFiles": true,
+    //   "hasMonitors": true,
+
+    if (this.globals.selectedCustomer !== undefined) {
+      this.getGridData();
+    }
+
+    this.globals.isBuyerObservable.subscribe(response => {
+      if (this.globals.selectedCustomer !== undefined) {
+        this.getGridData();
+      }
+    });
+
+    this.globals.selectCustomerObservable.subscribe(response => {
+      if (response !== null) {
+        this.getGridData();
+      }
+    });
   }
 
   getGridData() {
     this.globals.showLoader(true);
-    this.workOrderService.history(env.apiVersion).pipe(take(1))
+    this.workOrderService.portal(this.globals.selectedCustomer.id, '', null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object;
         this.gridSaved = new GridSaved({
-          columnsSaved: this.gridColumns,
+          columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0'
         });

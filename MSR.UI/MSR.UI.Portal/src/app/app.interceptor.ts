@@ -5,6 +5,8 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
+import { LoginService } from './pages/login/login.service';
+import { Router } from '@angular/router';
 
 
 @Injectable()
@@ -12,10 +14,8 @@ export class AppInterceptor implements HttpInterceptor {
   config;
   requests: number = 0;
   constructor(
-    appConfig: AppConfig,
-    private toastr: ToastrService,
-    private globals: Globals
-  ) {
+    appConfig: AppConfig, private toastr: ToastrService, private globals: Globals
+    , private loginService: LoginService, private router: Router) {
     this.config = appConfig.getConfig();
   }
 
@@ -46,6 +46,13 @@ export class AppInterceptor implements HttpInterceptor {
     this.requests++;
     const method = req.method;
     const token: string = localStorage.getItem('token');
+
+    if (this.loginService.isAuthenticated() !== undefined && !this.loginService.isAuthenticated()) {
+      this.toastr.error("Your token has expired, please log in again.");
+      this.router.navigate(['/login']);
+      return throwError(undefined);
+    }
+
     req = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + token)
     });
@@ -96,5 +103,10 @@ export class AppInterceptor implements HttpInterceptor {
         }
         return event;
       }));
+  }
+
+  validateToken(token) {
+    console.log(token);
+
   }
 }

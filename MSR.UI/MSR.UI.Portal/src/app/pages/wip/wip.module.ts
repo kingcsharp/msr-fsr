@@ -32,10 +32,11 @@ import { NcrReportComponent } from '../../components/ncr-report/ncr-report.compo
 import { PartLabelRollComponent } from '../../components/part-label-roll/part-label-roll.component';
 import { TechnicalDataLabelComponent } from '../../components/technical-data-label/technical-data-label.component';
 import { WorkReportComponent } from '../../components/work-report/work-report.component';
+import { AppGuard } from '../../../app/app.guard';
 
 export const routes = [
-  { path: '', redirectTo: 'engineering', pathMatch: 'full' },
-  { path: 'engineering', component: WipComponent, pathMatch: 'full' }
+  { path: '', canActivate: [AppGuard], redirectTo: 'engineering', pathMatch: 'full' },
+  { path: 'engineering', canActivate: [AppGuard], component: WipComponent, pathMatch: 'full' }
 ];
 
 
