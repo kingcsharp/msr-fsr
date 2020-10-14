@@ -194,6 +194,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.ProcedureStepRoles))
                 .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.ProcedureStepTypeId.ToString()));
+            CreateMap<Domain.Models.Role, ProcedureStepRoleMap>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.RoleId, opts => opts.MapFrom(src => src.Id));
             CreateMap<ProcedureStepRoleMap, Domain.Models.Role>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Role.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Role.Name));
@@ -237,6 +240,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateProcedureStep, ProcedureStepApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateProcedureStep, ProcedureStep>()
+                .ForMember(dest => dest.ProcedureStepRoles, opts => opts.MapFrom(src => src.Roles))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>()

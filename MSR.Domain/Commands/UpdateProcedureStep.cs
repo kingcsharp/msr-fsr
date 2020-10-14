@@ -1,4 +1,6 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Models;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Commands
 {
@@ -15,7 +17,7 @@ namespace MSR.Domain.Commands
         public decimal? ReplacementCost { get; set; }
         public float? Utilization { get; set; }
         public double? EquipmentTime { get; set; }
-        public string Roles { get; set; }
+        public List<Role> Roles { get; set; }
         public string procedureStepType { get; set; }
     }
 }
