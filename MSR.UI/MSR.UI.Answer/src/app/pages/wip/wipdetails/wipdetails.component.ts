@@ -90,7 +90,7 @@ export class WipdetailsComponent implements OnInit {
         this.purchase = this.workOrderModel.purchase;
 
         // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
-        if (!this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
+        if (this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
 
 
           for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
@@ -191,7 +191,7 @@ export class WipdetailsComponent implements OnInit {
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
 
     // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
-    if (!this.canUserAccessWorkOrderTask(workOrderTask)) {
+    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.workOrderTaskToView = workOrderTask;
     }
 
