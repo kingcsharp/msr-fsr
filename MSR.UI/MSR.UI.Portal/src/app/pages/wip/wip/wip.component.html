@@ -8,3 +8,50 @@
         [data]="data">
     </app-grid>
 </widget>
+
+
+<ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
+    <div>Monitors</div>
+    <div>NCR</div>
+    <button type="button" class="btn btn-sm btn-primary mr-0" (click)="showNcr(colsDataAndSettings)"><i
+            class="fas fa-print mx-1"></i>NCR</button>
+
+    <div>Photos</div>
+    <div>Files</div>
+</ng-template>
+
+
+
+<p-dialog [(visible)]="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true'
+    [style]="{width: '50vw'}" data-cy="user-header">
+    <p-header>
+        NCR
+    </p-header>
+    <div class="row printotherreport-dropdown">
+        <div class="col-2 d-flex justify-content-end">
+            <div class="my-auto">NCR Report</div>
+        </div>
+    </div>
+    <div class="report-viewport m-4 d-print-flex">
+        <ncr-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'NCRReport'"></ncr-report>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="print()" class="btn btn-primary mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-print mx-1"></i>Print
+            </button>
+            <button type="submit" (click)="showNcr = false" class="btn btn-warning mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-times-circle mx-1"></i>Close
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<!-- 
+    {{colsDataAndSettings.colData
+    col: col,
+colData:itemData,
+colsSaved:gridSaved.columnsSaved,
+gridData:gridData -->

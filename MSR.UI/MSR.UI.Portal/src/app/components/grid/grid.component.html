@@ -9,7 +9,8 @@
     stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
     <ng-template pTemplate="caption">
         <div class="pull-left">
-            <h3><span class="fw-semi-bold">{{reportInfo.name}}</span> <span *ngIf="reportInfo.subtitle !== undefiend">-</span> {{reportInfo.subtitle}}</h3>
+            <h3><span class="fw-semi-bold">{{reportInfo.name}}</span> <span
+                    *ngIf="reportInfo.subtitle !== undefiend">-</span> {{reportInfo.subtitle}}</h3>
         </div>
         <div class="pull-right">
             <grid-options [(defaultColumns)]="gridSaved.columnsSaved" [gridStorageId]="gridSaved.storageId"
@@ -46,6 +47,16 @@
 </p-table>
 
 <ng-template #rowViewData let-colsDataAndSettings='colsDataAndSettings'>
+    <td *ngIf="colsDataAndSettings.col.type === enumColumnType.Template">
+        <ng-container [ngTemplateOutlet]="colsDataAndSettings.col.templateName"
+            [ngTemplateOutletContext]="{colsDataAndSettings: { 
+                col: colsDataAndSettings.col,
+                colData:colsDataAndSettings.colData,
+                colsSaved:gridSaved.columnsSaved,
+                gridData:gridData
+            } }">
+        </ng-container>
+    </td>
     <td container="body" tooltip="{{colsDataAndSettings.colData[colsDataAndSettings.col.id]}}" class="text-capitalize"
         *ngIf="colsDataAndSettings.col.type === enumColumnType.String || colsDataAndSettings.col.type === enumColumnType.Number"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">

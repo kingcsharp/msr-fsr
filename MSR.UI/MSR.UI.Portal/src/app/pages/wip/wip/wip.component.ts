@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
@@ -16,7 +16,7 @@ import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
   styleUrls: ['./wip.component.scss'],
   providers: [WorkOrderService]
 })
-export class WipComponent implements OnInit {
+export class WipComponent implements OnInit, AfterViewInit {
 
   // gridColumns: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
@@ -27,8 +27,27 @@ export class WipComponent implements OnInit {
   gridSaved: GridSaved;
   showReport: boolean = false;
   reportModel: ReportModel;
+  showNcrModal: boolean = false;
+  @ViewChild('ncrItem') ncrItem: ElementRef;
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
+  ngAfterViewInit(): void {
+    if (this.globals.selectedCustomer !== undefined) {
+      this.getGridData();
+    }
+
+    this.globals.isBuyerObservable.subscribe(response => {
+      if (this.globals.selectedCustomer !== undefined) {
+        this.getGridData();
+      }
+    });
+
+    this.globals.selectCustomerObservable.subscribe(response => {
+      if (response !== null) {
+        this.getGridData();
+      }
+    });
+  }
 
   getBuyerColumns() {
     return [
@@ -45,8 +64,15 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'invoiceName', label: 'Invoice #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Money }),
       new ColumnsSaved({ id: 'invoiceAmount', label: 'Amount', visible: true, type: EnumColumnType.Money }),
-      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, isRanged: true })
+      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem, isRanged: true })
+
     ];
+  }
+
+  showNcr(row) {
+    console.log(row);
+    this.showNcrModal = true;
   }
 
   getEngineerColumns() {
@@ -68,6 +94,7 @@ export class WipComponent implements OnInit {
   }
 
 
+
   ngOnInit(): void {
 
     //   "hasPhotos": true,
@@ -75,21 +102,26 @@ export class WipComponent implements OnInit {
     //   "hasFiles": true,
     //   "hasMonitors": true,
 
-    if (this.globals.selectedCustomer !== undefined) {
-      this.getGridData();
-    }
+    // if (this.globals.selectedCustomer !== undefined) {
+    //   this.getGridData();
+    // }
 
-    this.globals.isBuyerObservable.subscribe(response => {
-      if (this.globals.selectedCustomer !== undefined) {
-        this.getGridData();
-      }
-    });
+    // this.globals.isBuyerObservable.subscribe(response => {
+    //   if (this.globals.selectedCustomer !== undefined) {
+    //     this.getGridData();
+    //   }
+    // });
 
-    this.globals.selectCustomerObservable.subscribe(response => {
-      if (response !== null) {
-        this.getGridData();
-      }
-    });
+    // this.globals.selectCustomerObservable.subscribe(response => {
+    //   if (response !== null) {
+    //     this.getGridData();
+    //   }
+    // });
+  }
+
+  getWo(row) {
+    console.log(row);
+    // this.workOrderService.workOrder() 
   }
 
   getGridData() {
