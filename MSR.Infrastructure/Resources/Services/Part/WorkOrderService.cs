@@ -484,7 +484,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // First, blank the existing list and the attach the new one.
                 List<int> origList = _unitOfWork.FileEntityMap.Query().Where(x =>
                     x.EntityId == workordertask.Id &&
-                    x.EntityTableName.ToUpper().Equals("WorkOrderTask")
+                    x.EntityTableName.ToUpper().Equals("WORKORDERTASK")
                 ).Select(x => x.Id).ToList();
 
                 foreach (int id in origList)
