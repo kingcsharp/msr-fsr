@@ -60,13 +60,13 @@ export class WipdetailsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   getScreenSize() {
-    console.log(window.innerWidth);
 
     if (window.innerWidth > 1100 && window.innerWidth < 1400) {
       this.itemsPerASlide = 7;
     } else if (window.innerWidth > 1400) {
       this.itemsPerASlide = 11;
     }
+
   }
 
   ngOnInit(): void {

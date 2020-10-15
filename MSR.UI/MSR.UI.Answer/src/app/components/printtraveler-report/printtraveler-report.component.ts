@@ -10,12 +10,17 @@ import { WorkOrderModel } from '../../services/api.client.generated';
 export class PrinttravelerReportComponent implements OnInit {
 
   @Input() WorkOrder: WorkOrderModel;
+  parentPartImageUrl: string;
 
   showPrintTravelerDialog: boolean = false;
 
   constructor() { }
 
   ngOnInit(): void {
+
+    if(this.WorkOrder.workOrderParts?.length > 0 && this.WorkOrder.workOrderParts[0].part?.files?.length > 0){
+      this.parentPartImageUrl = this.WorkOrder.workOrderParts[0].part.files[0].fileURL;
+    }
 
   }
 
