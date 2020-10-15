@@ -22,11 +22,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<ICollection<Domain.Models.WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
@@ -505,6 +507,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(workordertask, workordertask.Id);
 
+            // upload files, if any.
+            // This has to happen _after_ the reference file ID list
+            // is re-created.
+            Dictionary<int, FileModel> uploadedFiles = new Dictionary<int, FileModel>();
+            if (command.ReferenceFiles != null &&
+                command.ReferenceFiles.Count > 0 &&
+                command.ReferenceFiles.All(x => x != null))
+            {
+                foreach (FileModel fmodel in command.ReferenceFiles)
+                {
+                    FileModel m =
+                        await _fileService.CreateFileAsync("WorkOrderTask", current.Id, fmodel);
+                    uploadedFiles.Add(m.FileId.Value, m);
+                }
+            }
+
             // Load any attached files
             _unitOfWork.WorkOrderTasks.LoadCollection(workordertask, "ReferenceFiles");
             foreach (FileEntityMap m in workordertask.ReferenceFiles)
@@ -514,6 +532,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             // Build the return object model
             ret = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workordertask);
+
+            // If this is a file we just uploaded, then we have the exact
+            // temporary URL.
+            foreach (FileModel m in ret.ReferenceFiles)
+            {
+                if (uploadedFiles.ContainsKey(m.FileId.Value))
+                {
+                    m.FileURL = uploadedFiles[m.FileId.Value].FileURL;
+                }
+            }
 
             // Update the work order datetimes, if needed
             // IMPORTANT: the return object cannot be remapped after this

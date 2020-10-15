@@ -25,6 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Part> _parts;
         private IRepository<Procedure> _procedures;
         private IRepository<ProcedureStep> _procedureSteps;
+        private IRepository<ProcedureStepRoleMap> _procedureStepRoleMaps;
         private IRepository<ProcedureStepMonitor> _monitors;
         private IRepository<ProcedureStepTemplate> _procedureStepTemplates;
         private IRepository<ProcedureStepType> _procedureStepTypes;
@@ -130,6 +131,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get { return _workflowGroupUserMap ?? (_workflowGroupUserMap = new EFRepository<WorkflowGroupUserMap>(Context)); } }
         public IRepository<WorkflowGroupStageMap> WorkflowGroupStageMaps { get { return _workflowGroupStageMaps ?? (_workflowGroupStageMaps = new EFRepository<WorkflowGroupStageMap>(Context)); } }
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
+        public IRepository<ProcedureStepRoleMap> ProcedureStepRoleMaps { get { return _procedureStepRoleMaps ??= new EFRepository<ProcedureStepRoleMap>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
         public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
         public IRepository<ProcedureStepType> ProcedureStepTypes { get { return _procedureStepTypes ??= new EFRepository<ProcedureStepType>(Context); } }
