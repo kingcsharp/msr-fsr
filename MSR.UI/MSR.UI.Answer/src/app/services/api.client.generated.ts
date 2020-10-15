@@ -18535,7 +18535,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     disposition?: string | undefined;
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
 
     constructor(data?: IWorkOrderGridSummary) {
@@ -18567,7 +18571,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.disposition = _data["disposition"];
             this.currentActiveTaskName = _data["currentActiveTaskName"];
             this.percentageOfTasksCompleted = _data["percentageOfTasksCompleted"];
+            this.percentageOfTasksCompletedNumerator = _data["percentageOfTasksCompletedNumerator"];
+            this.percentageOfTasksCompletedDenominator = _data["percentageOfTasksCompletedDenominator"];
             this.percentageOfExpectedDurationTimeLogged = _data["percentageOfExpectedDurationTimeLogged"];
+            this.percentageOfExpectedDurationTimeLoggedNumerator = _data["percentageOfExpectedDurationTimeLoggedNumerator"];
+            this.percentageOfExpectedDurationTimeLoggedDenominator = _data["percentageOfExpectedDurationTimeLoggedDenominator"];
             this.hasNcr = _data["hasNcr"];
         }
     }
@@ -18599,7 +18607,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["disposition"] = this.disposition;
         data["currentActiveTaskName"] = this.currentActiveTaskName;
         data["percentageOfTasksCompleted"] = this.percentageOfTasksCompleted;
+        data["percentageOfTasksCompletedNumerator"] = this.percentageOfTasksCompletedNumerator;
+        data["percentageOfTasksCompletedDenominator"] = this.percentageOfTasksCompletedDenominator;
         data["percentageOfExpectedDurationTimeLogged"] = this.percentageOfExpectedDurationTimeLogged;
+        data["percentageOfExpectedDurationTimeLoggedNumerator"] = this.percentageOfExpectedDurationTimeLoggedNumerator;
+        data["percentageOfExpectedDurationTimeLoggedDenominator"] = this.percentageOfExpectedDurationTimeLoggedDenominator;
         data["hasNcr"] = this.hasNcr;
         return data; 
     }
@@ -18624,7 +18636,11 @@ export interface IWorkOrderGridSummary {
     disposition?: string | undefined;
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
 }
 

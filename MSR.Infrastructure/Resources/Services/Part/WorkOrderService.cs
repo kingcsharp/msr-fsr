@@ -758,6 +758,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
         {
+// HACK
+// HACK
+// HACK
+// HACK
+// HACK
+ICollection<WorkOrderStatus> rrrret = new List<WorkOrderStatus>();
+return rrrret;
+// HACK
+// HACK
+// HACK
+// HACK
+// HACK
+
             var gwo = _mapper.Map<GetWorkOrder>(command);
 
             gwo.completedOnly = false;

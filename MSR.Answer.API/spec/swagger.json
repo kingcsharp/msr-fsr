@@ -13129,7 +13129,27 @@
             "format": "decimal",
             "nullable": true
           },
+          "percentageOfTasksCompletedNumerator": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "percentageOfTasksCompletedDenominator": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "percentageOfExpectedDurationTimeLogged": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLoggedNumerator": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLoggedDenominator": {
             "type": "number",
             "format": "decimal",
             "nullable": true
