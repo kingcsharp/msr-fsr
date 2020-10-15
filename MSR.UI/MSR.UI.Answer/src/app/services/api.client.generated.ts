@@ -5730,16 +5730,14 @@ export class SensorService {
         return _observableOf<AuditActionResultOfIEnumerableOfString>(<any>null);
     }
 
-    value(sensorName: string | null | undefined, siteId: number | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
+    value(sensorName: string | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
         let url_ = this.baseUrl + "/v{version}/Sensor/Value?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (sensorName !== undefined && sensorName !== null)
             url_ += "SensorName=" + encodeURIComponent("" + sensorName) + "&";
-        if (siteId === null)
-            throw new Error("The parameter 'siteId' cannot be null.");
-        else if (siteId !== undefined)
+        if (siteId !== undefined && siteId !== null)
             url_ += "SiteId=" + encodeURIComponent("" + siteId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -19030,6 +19028,8 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -19054,6 +19054,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
                 this.referenceFilesIds = [] as any;
                 for (let item of _data["referenceFilesIds"])
                     this.referenceFilesIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -19080,6 +19085,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             for (let item of this.referenceFilesIds)
                 data["referenceFilesIds"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -19104,6 +19114,8 @@ export interface IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
