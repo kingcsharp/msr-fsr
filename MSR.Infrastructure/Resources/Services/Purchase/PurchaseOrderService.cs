@@ -159,6 +159,11 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             {
                 _mapper.Map(command, purchaseOrder);
                 purchaseOrder.Revision = purchaseOrder.Revision == null ? 1 : purchaseOrder.Revision + 1;
+                if(command.ClosePurchaseOrder || command.CloseDate.HasValue)
+                {
+                    purchaseOrder.CloseDate = command.CloseDate;
+                    purchaseOrder.StatusId = (int)PurchaseOrderStatusEnum.Closed;
+                }
                 _unitOfWork.PurchaseOrders.Update(purchaseOrder);
 
                 var productIds = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id).Select(i => i.ProductId).ToListAsync();
