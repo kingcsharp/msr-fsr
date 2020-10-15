@@ -33,7 +33,6 @@ export class MultiselectWrapperFormComponent implements OnInit {
       showRevision: this.showRevision || false,
       revision: this.revision || 'revision'
     };
-    console.log(this.showRevision);
     this.options.map((x) => {
       let revisionLabel = (this.showRevision) ? ' (R-' + x[ctrl.basicOptions.revision] + ')' : '';
       this.currentOptions.push({ label: x[ctrl.basicOptions.name] + revisionLabel, value: { id: x[ctrl.basicOptions.id], name: x[ctrl.basicOptions.name] } });
