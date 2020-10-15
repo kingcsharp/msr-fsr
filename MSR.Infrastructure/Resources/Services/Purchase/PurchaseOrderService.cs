@@ -159,7 +159,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
             {
                 _mapper.Map(command, purchaseOrder);
                 purchaseOrder.Revision = purchaseOrder.Revision == null ? 1 : purchaseOrder.Revision + 1;
-                if(command.ClosePurchaseOrder || command.CloseDate.HasValue)
+                if(command.ClosePurchaseOrder && command.CloseDate.HasValue)
                 {
                     purchaseOrder.CloseDate = command.CloseDate;
                     purchaseOrder.StatusId = (int)PurchaseOrderStatusEnum.Closed;
