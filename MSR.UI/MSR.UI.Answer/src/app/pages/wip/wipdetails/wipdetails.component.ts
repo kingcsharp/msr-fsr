@@ -440,9 +440,20 @@ export class WipdetailsComponent implements OnInit {
       taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
       totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
       workOrderTaskId: this.workOrderTaskInProgress.id,
-      referenceFiles: this.workOrderTaskInProgress.referenceFiles
+      referenceFiles: new Array<FileModel>(),
+      referenceFilesIds: new Array<number>()
     } as IUpdateWorkOrderTaskRequest);
 
+
+    this.workOrderTaskInProgress.referenceFiles.map(referenceFile => {
+
+      if (referenceFile.fileId === undefined) {
+        updatedWorkOrderTaskRequest.referenceFiles.push(referenceFile);
+      } else {
+        updatedWorkOrderTaskRequest.referenceFilesIds.push(referenceFile.fileId);
+      }
+
+    });
 
     this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updatedWorkOrderTaskRequest).subscribe(response => {
 
