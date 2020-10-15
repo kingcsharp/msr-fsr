@@ -101,9 +101,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.Status)
-                //.Include(x => x.WorkOrderTasks)
-                //.ThenInclude(y => y.ReferenceFiles)
-                //.ThenInclude(y => y.FileObject)
+
 
                 // Product etc.
                 .Include(x => x.Product)
@@ -150,16 +148,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                     wot.WorkOrderTaskMonitors = wotmList;
                     wot.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), wot.Id).ToList();
-                    /*
-                    wot.ReferenceFiles = new List<Domain.Models.FileModel>();
 
-                    var workorderTaskEntity = workorders.FirstOrDefault(s => s.Id == wo.Id).WorkOrderTasks.FirstOrDefault(s => s.Id == wot.Id);
-                    workorderTaskEntity.ReferenceFiles.ToList().ForEach(referenceFileEntity => { 
-                        
-                        wot.ReferenceFiles.Add(_mapper.Map<Domain.Models.FileModel>(referenceFileEntity.FileObject));
-                        
-                    });
-                    */
                 }
                 result.Add(DetachBackPointers(wom));
             };
