@@ -98,7 +98,6 @@ export class PurchaseCreateComponent implements OnInit {
         this.getPurchaseOrderFlag = true;
         this.getCustomerData(this.purchaseOrderData.customerId);
         this.globalDueDate = new Date(this.today.getTime() + (1000 * 60 * 60 * 24 * 7));
-        console.log(this.globalDueDate);
       }));
   }
 
