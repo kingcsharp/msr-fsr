@@ -305,15 +305,14 @@ namespace MSR.Answer.API.V1.Controllers
             return new CommandResponse<ICollection<PortalWorkOrderView>>(result.ToList()).ToOkObjectResponse<ICollection<PortalWorkOrderView>>();
         }
 
-        [HttpPatch("{id}/Note")]
+        [HttpPatch("{id}/Message")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> AddNote([Required]int Id, [FromBody, Required]CreateWorkOrderNoteRequest request)
+        public async Task<IActionResult> AddMessage([Required]int Id, [FromBody, Required]CreateWorkOrderMessageRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Note))
-            {
-                return new BadRequestObjectResult(new AuditActionResult("Note is required"));
-            }
-            return CommandResponse.SuccessCommand.ToOkObjectResponse("Note Added Successfully");
+            var command = request.ToCreateWorkOrderMessageCommand(Id);
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToOkObjectResponse();
+
         }
     }
 }

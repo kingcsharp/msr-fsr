@@ -82,6 +82,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ReportDashboard> ReportDashboards { get; }
         IRepository<ReportDashboardMap> ReportDashboardMaps { get; }
         IRepository<EquipmentMaintenance> EquipmentMaintenances { get; }
+        IRepository<WorkOrderMessage> WorkOrderMessages { get; }
         
         void SaveChanges();
         Task SaveChangesAsync();

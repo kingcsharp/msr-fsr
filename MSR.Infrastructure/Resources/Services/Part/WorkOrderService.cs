@@ -569,12 +569,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     if (curstep.AssignedToUser == null)
                     {
                         wosum.WorkOrderAssignedTo = "";
-                        wosum.AssignedTo = null;
                     }
                     else
                     {
                         wosum.WorkOrderAssignedTo = curstep.AssignedToUser.FullName;
-                        wosum.AssignedTo = curstep.AssignedToUser.Id;
                     }
                 }
                 else if (m.WorkOrderTasks != null && m.WorkOrderTasks.Count > 0)
@@ -678,6 +676,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var totWorkOrders = await workOrders.ToListAsync();
 
             return totWorkOrders.Select(i => _mapper.Map<PortalWorkOrderView>(i)).ToList();
+        }
+        public async Task CreateWorkOrderMessageAsync(CreateWorkOrderMessage command)
+        {
+            var message = new WorkOrderMessage()
+            {
+                Message = command.Message,
+                WorkOrderId = command.WorkOrderId
+            };
+
+            await _unitOfWork.WorkOrderMessages.AddAsync(message);
+            await _unitOfWork.SaveChangesAsync();
         }
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)
         {
@@ -846,6 +855,5 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             return ret;
         }
-
     }
 }

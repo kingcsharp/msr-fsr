@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Models
 {
-    public class CreateWorkOrderNoteRequest
+    public class CreateWorkOrderMessageRequest
     {
         [Required]
-        public string Note { get; set; }
+        public string Message { get; set; }
     }
 }

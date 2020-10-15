@@ -979,5 +979,12 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static GetSearch ToGetSearchCommand(this GetSearchRequest request) => AutoMapperHelper.Mapper.Map<GetSearch>(request);
         public static GetDashboard ToGetDashboardCommand(this GetDashboardRequest request) => AutoMapperHelper.Mapper.Map<GetDashboard>(request);
+
+        public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request, int id)
+        {
+            var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
+            command.WorkOrderId = id;
+            return command;
+        }
     }
 }

@@ -84,6 +84,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ReportDashboard> _reportDashboard;
         private IRepository<ReportDashboardMap> _reportDashboardMap;
         private IRepository<EquipmentMaintenance> _equipmentMaintenances;
+        private IRepository<WorkOrderMessage> _workOrderMessage;
 
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<DocumentRoleMap> DocumentRoles { get { return _documentRoleMaps ?? (_documentRoleMaps = new EFRepository<DocumentRoleMap>(Context)); } }
@@ -157,6 +158,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ReportCategoryMap> ReportCategoryMaps { get { return _reportCategoryMap ??= new EFRepository<ReportCategoryMap>(Context); } }
         public IRepository<ReportDashboard> ReportDashboards { get { return _reportDashboard ??= new EFRepository<ReportDashboard>(Context); } }
         public IRepository<ReportDashboardMap> ReportDashboardMaps { get { return _reportDashboardMap ??= new EFRepository<ReportDashboardMap>(Context); } }
+        public IRepository<WorkOrderMessage> WorkOrderMessages { get { return _workOrderMessage ??= new EFRepository<WorkOrderMessage>(Context); } }
 
         #endregion Repositories
 
