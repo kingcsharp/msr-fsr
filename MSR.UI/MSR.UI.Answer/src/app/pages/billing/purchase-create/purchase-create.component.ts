@@ -108,7 +108,6 @@ export class PurchaseCreateComponent implements OnInit {
       .subscribe(responseHandler(response => {
         this.customerData = response.object[0];
         this.getCustomerFlag = true;
-        this.globals.showLoader(false);
       }));
   }
 
@@ -191,14 +190,14 @@ export class PurchaseCreateComponent implements OnInit {
           if (item.serializeIndividually) {
             this.purchaseSerializeItems.push({
               serialKitNo: null,
-              locationId: this.locationsData[0].value,
+              locationId: null,
               ...item,
             });
           } else {
             for (let i = 0; i < item.qty; i++) {
               this.purchaseSerializeItems.push({
                 serialKitNo: null,
-                locationId:  this.locationsData[0].value,
+                locationId:  null,
                 ...item,
                 qty: 1,
               });
