@@ -125,6 +125,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             foreach (var wo in workorders)
             {
+                foreach (WorkOrderTask wot in wo.WorkOrderTasks)
+                {
+                    foreach (EntityFramework.Entities.ProcedureStepMonitor psm in wot.ProcedureStep.ProcedureStepMonitors)
+                    {
+                        // populate type objects
+                        _unitOfWork.ProcedureStepMonitors.LoadReference(
+                            psm,
+                            x => x.MonitorType);
+                        _unitOfWork.ProcedureStepMonitors.LoadReference(
+                            psm,
+                            x => x.InputType);
+                    }
+                }
+
                 var wom = _mapper.Map<WorkOrderModel>(wo);
 
                 // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
