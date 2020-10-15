@@ -108,6 +108,7 @@ namespace MSR.Answer.API.V1.Controllers
             {
                 new PortalWorkOrderView()
                 {
+                    Id = 18331,
                     CustomerId = 1,
                     CompanyPartNumber = "1",
                     CycleCount = 1,
@@ -150,6 +151,7 @@ namespace MSR.Answer.API.V1.Controllers
                 },
                 new PortalWorkOrderView()
                 {
+                    Id = 18332,
                     CustomerId = 1,
                     CompanyPartNumber = "1",
                     CycleCount = 1,
@@ -178,6 +180,7 @@ namespace MSR.Answer.API.V1.Controllers
                 },
                 new PortalWorkOrderView()
                 {
+                    Id = 18333,
                     CustomerId = 1,
                     CompanyPartNumber = "1",
                     CycleCount = 1,

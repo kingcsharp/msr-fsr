@@ -21,19 +21,25 @@
     </ng-template>
     <ng-template pTemplate="header">
         <tr>
+            <th  *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
             <th *ngFor="let col of gridSaved.columnsSaved" [hidden]="!col.visible" [pSortableColumn]="col.id"
                 data-cy="usertable-header">
                 {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
             </th>
         </tr>
         <tr>
+            <th  *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
             <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowView"
                 [ngTemplateOutletContext]="{colsAndSettings: { col: col,dt:dt,gridSaved:gridSaved} }">
             </ng-container>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-itemData>
+    <ng-template pTemplate="body" let-itemData let-expanded="expanded">
         <tr class="ui-selectable-row">
+            <td *ngIf="gridSaved.expandRows">
+                <i class="fad pointer" [pRowToggler]="itemData"
+                    [ngClass]="{'fa-plus': expanded !== true, 'fa-minus':expanded===true}"></i>
+            </td>
             <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowViewData"
                 [ngTemplateOutletContext]="{colsDataAndSettings: { col: col,colData:itemData,colsSaved:gridSaved.columnsSaved} }">
             </ng-container>
@@ -44,12 +50,21 @@
             <td [attr.colspan]="gridSaved.visibleColumns" style="text-align:left">No items found.</td>
         </tr>
     </ng-template>
+
+    <ng-template pTemplate="rowexpansion" let-itemData>
+        <tr>
+            <td [attr.colspan]="gridSaved.visibleColumns">
+                <div class="p-p-3">
+                    {{itemData | json}}
+                </div>
+            </td>
+        </tr>
+    </ng-template>
 </p-table>
 
 <ng-template #rowViewData let-colsDataAndSettings='colsDataAndSettings'>
     <td *ngIf="colsDataAndSettings.col.type === enumColumnType.Template">
-        <ng-container [ngTemplateOutlet]="colsDataAndSettings.col.templateName"
-            [ngTemplateOutletContext]="{colsDataAndSettings: { 
+        <ng-container [ngTemplateOutlet]="colsDataAndSettings.col.templateName" [ngTemplateOutletContext]="{colsDataAndSettings: { 
                 col: colsDataAndSettings.col,
                 colData:colsDataAndSettings.colData,
                 colsSaved:gridSaved.columnsSaved,

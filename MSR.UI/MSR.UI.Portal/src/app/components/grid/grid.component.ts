@@ -47,6 +47,7 @@ export class GridComponent implements OnInit {
   gridData: any = [];
   privileges = EnumPrivilege;
   enumColumnType = EnumColumnType;
+  // expanded: boolean = false;
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
     private reportCubeService: ReportCubeService) {

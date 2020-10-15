@@ -3,7 +3,7 @@ import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, ReportModel } from '../../../services/api.client.generated';
+import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, ReportModel, PortalWorkOrderView } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
@@ -51,6 +51,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   getBuyerColumns() {
     return [
+      new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
       new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'supplier', label: 'Supplier', visible: true, type: EnumColumnType.String }),
@@ -70,8 +71,9 @@ export class WipComponent implements OnInit, AfterViewInit {
     ];
   }
 
-  showNcr(row) {
+  showNcr(row: PortalWorkOrderView) {
     console.log(row);
+    // this.workOrderService.workOrder(row.)
     this.showNcrModal = true;
   }
 
@@ -119,10 +121,7 @@ export class WipComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  getWo(row) {
-    console.log(row);
-    // this.workOrderService.workOrder() 
-  }
+
 
   getGridData() {
     this.globals.showLoader(true);
@@ -132,7 +131,8 @@ export class WipComponent implements OnInit, AfterViewInit {
         this.gridSaved = new GridSaved({
           columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
-          version: '1.0.0'
+          version: '1.0.0',
+          expandRows: true
         });
 
         this.reportModel = new ReportModel({
