@@ -203,7 +203,7 @@ export class ProcedureEditComponent implements OnInit {
         }
 
 
-        procedureStep.selectedRole = new Array<Role>();
+        procedureStep.selectedRoles = new Array<Role>();
         procedureStep.roles?.forEach(role => {
           procedureStep.selectedRoles.push(this.availableRoles.find(s => s.id === role.id));
         });

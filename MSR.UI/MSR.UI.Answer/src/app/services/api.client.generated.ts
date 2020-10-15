@@ -19028,6 +19028,8 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -19052,6 +19054,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
                 this.referenceFilesIds = [] as any;
                 for (let item of _data["referenceFilesIds"])
                     this.referenceFilesIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -19078,6 +19085,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             for (let item of this.referenceFilesIds)
                 data["referenceFilesIds"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -19102,6 +19114,8 @@ export interface IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

@@ -23,6 +23,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Part> Parts { get; }
         IRepository<Procedure> Procedures { get; }
         IRepository<ProcedureStep> ProcedureSteps { get; }
+        IRepository<ProcedureStepRoleMap> ProcedureStepRoleMaps { get; }
         IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get; }
         IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get; }
         IRepository<ProcedureStepType> ProcedureStepTypes { get; }
