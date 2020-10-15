@@ -76,6 +76,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 await _unitOfWork.Products.AddAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
+                foreach (var ps in product.ProductSteps)
+                {
+                    ps.Product = null;
+                }
+
                 return _mapper.Map<ProductModel>(product);
             }
 
@@ -85,6 +90,11 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
             _unitOfWork.ProductApprovals.Add(approval);
             await _unitOfWork.SaveChangesAsync();
+
+            foreach (var ps in product.ProductSteps)
+            {
+                ps.Product = null;
+            }
 
             return _mapper.Map<ProductModel>(approval);
         }
