@@ -101,6 +101,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .ThenInclude(y => y.ProcedureStepType)
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.Status)
+                .Include(x => x.WorkOrderTasks)
+                .ThenInclude(y => y.ReferenceFiles)
 
                 // Product etc.
                 .Include(x => x.Product)
