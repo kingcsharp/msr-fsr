@@ -187,11 +187,11 @@
             (click)="showPurchaseOrderModal(purcahseordermodel)">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canEdit && purcahseordermodel.status !== 'Closed'"
-            class="fa fa-close pointer" tooltip="Close" data-cy="closeRow" (click)="onClickClose(purcahseordermodel)">
+            class="fa fa-close pointer" tooltip="Close" data-cy="closeRow" (click)="openConfirmDialog(purcahseordermodel, false)">
           </i>
           <i *ngIf="purchaseOrderPrivileges.canDelete && purcahseordermodel.isDeletable"
             class="far fa-trash-alt pointer" tooltip="Delete" data-cy="deleteRow"
-            (click)="onClickDelete(purcahseordermodel)">
+            (click)="openConfirmDialog(purcahseordermodel, true)">
           </i>
         </td>
       </tr>
@@ -204,9 +204,33 @@
   </p-table>
 </widget>
 
-<p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle" acceptLabel="Yes" rejectLabel="No"
-  position="top">
-</p-confirmDialog>
+<p-dialog
+  *ngIf="poToCloseOrDelete"
+  header="Confirm Dialog"
+  [(visible)]="showConfirmDeleteDialog || showConfirmCloseDialog"
+  [baseZIndex]="100001"
+  [modal]='true'
+  [style]="{width: '50vw'}"
+  data-cy="user-header"
+>
+  <div class="container">
+    <div class="row">
+      Are you sure you want to {{showConfirmDeleteDialog ? 'Delete' : 'Close'}} this record?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="deleteOrClosePO()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        {{showConfirmDeleteDialog ? 'Delete' : 'Close'}}
+      </button>
+      <button type="button" (click)="closeConfirmDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
 
 <p-dialog header="{{ currentPO.id === undefined ?'Create Purchase Order':'Edit Purchase Order'}}" *ngIf="display"
   [(visible)]="display" [appendTo]="'body'" [modal]='true' [style]="{width: '50vw'}" data-cy="purchase-order-header">

@@ -16629,6 +16629,7 @@ export interface ICreatePurchaseOrderRequest {
 
 export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest implements IUpdatePurchaseOrderRequest {
     id!: number;
+    closePurchaseOrder?: boolean;
 
     constructor(data?: IUpdatePurchaseOrderRequest) {
         super(data);
@@ -16638,6 +16639,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
         super.init(_data);
         if (_data) {
             this.id = _data["id"];
+            this.closePurchaseOrder = _data["closePurchaseOrder"];
         }
     }
 
@@ -16651,6 +16653,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["closePurchaseOrder"] = this.closePurchaseOrder;
         super.toJSON(data);
         return data; 
     }
@@ -16658,6 +16661,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
 
 export interface IUpdatePurchaseOrderRequest extends ICreatePurchaseOrderRequest {
     id: number;
+    closePurchaseOrder?: boolean;
 }
 
 /** Base class for an API call with a typed result */

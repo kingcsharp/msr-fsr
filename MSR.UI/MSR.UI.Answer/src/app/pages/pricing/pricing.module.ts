@@ -21,7 +21,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { QuoteCreateComponent } from './quote-create/quote-create.component';
 import { ProductDefinitionComponent } from './product-definition/product-definition.component';
 import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.component';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { QuotesProductsComponent } from './quotes-products/quotes-products.component';
 import {PanelModule} from 'primeng/panel';
@@ -62,7 +61,6 @@ export const routes = [
     WidgetModule,
     MapaelLayersMapModule,
     NewWidgetModule,
-    ConfirmDialogModule,
     SelectButtonModule,
     PanelModule,
   ],
