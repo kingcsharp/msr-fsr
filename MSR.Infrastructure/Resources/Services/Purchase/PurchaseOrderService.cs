@@ -163,8 +163,10 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 {
                     purchaseOrder.CloseDate = command.CloseDate;
                     purchaseOrder.StatusId = (int)PurchaseOrderStatusEnum.Closed;
+                    purchaseOrder.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)PurchaseOrderStatusEnum.Closed);
                 }
                 _unitOfWork.PurchaseOrders.Update(purchaseOrder);
+                await _unitOfWork.SaveChangesAsync();
 
                 var productIds = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id).Select(i => i.ProductId).ToListAsync();
 
@@ -172,13 +174,15 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                 var productsToRemove = productIds.Except(command.Products);
                 //Does not Exist in DB: Add
                 var productsToAdd = command.Products.Except(productIds);
-
-                var removeProducts = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id && productsToRemove.Contains(i.ProductId)).ToListAsync();
+                var usedProducts = await _unitOfWork.Purchases.Query().Where(i => i.PurchaseOrderId == command.Id).Select(i => i.PurchaseOrderProductId).ToListAsync();
+                var removeProducts = await _unitOfWork.PurchaseOrderProducts.Query().Where(i => i.PurchaseOrderId == purchaseOrder.Id && productsToRemove.Contains(i.ProductId) && !usedProducts.Contains(i.Id)).ToListAsync();
+                
                 foreach (var removeProduct in removeProducts)
                 {
                     _unitOfWork.PurchaseOrderProducts.Delete(false, removeProduct);
                 }
 
+                await _unitOfWork.SaveChangesAsync();
                 foreach (var addProduct in productsToAdd)
                 {
                     var map = new PurchaseOrderProduct()
@@ -190,6 +194,7 @@ namespace MSR.Infrastructure.Resources.Services.PurchaseOrder
                     await _unitOfWork.PurchaseOrderProducts.AddAsync(map);
                 }
 
+                await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.LogApprovalTransaction(purchaseOrder, purchaseOrder.Id, "Approved", "Auto Approved");
                 var result = await GetPurchaseOrderAsync(new GetPurchaseOrder() { Id = command.Id });
                 return result.FirstOrDefault();
