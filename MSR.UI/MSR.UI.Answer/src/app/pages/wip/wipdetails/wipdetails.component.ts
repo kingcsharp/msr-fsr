@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDetectorRef, Inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDetectorRef, Inject, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel, CreateInvoiceItemRequest, ICreateInvoiceRequest, CreateInvoiceRequest, ICreateInvoiceItemRequest
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -16,8 +16,6 @@ import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
 
 const moment = require('moment');
-const today = moment();
-declare let jQuery: any;
 
 @Component({
   selector: 'app-wipdetails',
@@ -53,15 +51,26 @@ export class WipdetailsComponent implements OnInit {
   startSlideIndex: number = 0;
   monitorTypes: Array<SelectItem>;
 
+  itemsPerASlide: number = 6;
   slideConfig;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService,
-    private userService: UserService, private elementReference: ElementRef, private invoiceService: InvoiceService) { }
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService) { }
 
+  @HostListener('window:resize', ['$event'])
+  getScreenSize() {
+    console.log(window.innerWidth);
+
+    if (window.innerWidth > 1100 && window.innerWidth < 1400) {
+      this.itemsPerASlide = 7;
+    } else if (window.innerWidth > 1400) {
+      this.itemsPerASlide = 11;
+    }
+  }
 
   ngOnInit(): void {
+    this.getScreenSize();
 
     this.monitorTypes = [
       { label: 'Equipment', value: 1 },
@@ -388,13 +397,13 @@ export class WipdetailsComponent implements OnInit {
 
     }
 
-    newWorkOrderTasks.reverse().map((updatedWorkOrderTask, index) => {
+    newWorkOrderTasks.reverse().map((updatedWorkOrderTask) => {
 
       workOrderTasksToAddBack.push(updatedWorkOrderTask);
 
     });
 
-    workOrderTasksToAddBack.reverse().map((workOrderTask, index) => {
+    workOrderTasksToAddBack.reverse().map((workOrderTask) => {
       this.workOrderModel.workOrderTasks.push(workOrderTask);
     });
 

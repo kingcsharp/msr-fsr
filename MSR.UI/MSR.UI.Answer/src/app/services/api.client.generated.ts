@@ -5730,16 +5730,14 @@ export class SensorService {
         return _observableOf<AuditActionResultOfIEnumerableOfString>(<any>null);
     }
 
-    value(sensorName: string | null | undefined, siteId: number | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
+    value(sensorName: string | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
         let url_ = this.baseUrl + "/v{version}/Sensor/Value?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (sensorName !== undefined && sensorName !== null)
             url_ += "SensorName=" + encodeURIComponent("" + sensorName) + "&";
-        if (siteId === null)
-            throw new Error("The parameter 'siteId' cannot be null.");
-        else if (siteId !== undefined)
+        if (siteId !== undefined && siteId !== null)
             url_ += "SiteId=" + encodeURIComponent("" + siteId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
