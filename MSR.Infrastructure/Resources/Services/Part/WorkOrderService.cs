@@ -438,6 +438,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             ProcedureStep step = _unitOfWork.ProcedureSteps
                 .Query()
+                .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
             if (step == null)
@@ -453,6 +454,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
 
+            newTask.WorkOrderTaskMonitors =
+                _mapper.Map<List<WorkOrderTaskMonitor>>(step.ProcedureStepMonitors);
+
             var created = _unitOfWork.WorkOrderTasks.Add(newTask);
 
             // This will call SaveChangesAsync
@@ -463,7 +467,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             created.Context.Entry(newTask.ProcedureStep)
                 .Reference(x => x.StepType).Load();
 
-            return _mapper.Map<WorkOrderTaskModel>(newTask);
+            var ret = _mapper.Map<WorkOrderTaskModel>(newTask);
+
+            // detach backpointer to self
+            foreach (WorkOrderTaskMonitorModel wotm in ret.WorkOrderTaskMonitors)
+            {
+                wotm.WorkOrderTask = null;
+            }
+
+            return ret;
         }
 
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
