@@ -52,8 +52,8 @@ export class WipdetailsComponent implements OnInit {
   workOrderIsComplete: boolean;
   startSlideIndex: number = 0;
   monitorTypes: Array<SelectItem>;
-
-  slideConfig;
+  rolesRequiredToViewTask: Array<string> = new Array<string>();
+  nameOfTaskThatIsRestricted: string;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
@@ -89,28 +89,37 @@ export class WipdetailsComponent implements OnInit {
         this.product = this.workOrderModel.product;
         this.purchase = this.workOrderModel.purchase;
 
-        // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
-        if (this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
+        for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
+          if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress' || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
 
-
-          for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
-            if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress' || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
-              this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[index];
-              this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
-              this.startSlideIndex = index;
-              break;
-            }
-          }
-
-          if (this.workOrderTaskInProgress === undefined) {
-            this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
-            this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
+            this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[index]);
+            this.startSlideIndex = index;
+            break;
           }
         }
+
+        if (this.workOrderTaskInProgress === undefined) {
+
+          this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
+        }
+
 
       }));
 
     });
+
+  }
+
+  checkRoleAccessAndSetTaskAsViewable(workOrderTask: WorkOrderTaskModel) {
+
+    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+      this.workOrderTaskInProgress = workOrderTask;
+      this.workOrderTaskToView = workOrderTask;
+      this.rolesRequiredToViewTask.length = 0;
+    } else {
+      this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
+      this.rolesRequiredToViewTask = workOrderTask.procedureStep.roles.map(s => s.name);
+    }
 
   }
 
@@ -190,9 +199,12 @@ export class WipdetailsComponent implements OnInit {
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
 
-    // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
     if (this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.workOrderTaskToView = workOrderTask;
+      this.rolesRequiredToViewTask.length = 0;
+    } else {
+      this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
+      this.rolesRequiredToViewTask = workOrderTask.procedureStep.roles.map(s => s.name);
     }
 
     if (this.workOrderIsComplete) {
