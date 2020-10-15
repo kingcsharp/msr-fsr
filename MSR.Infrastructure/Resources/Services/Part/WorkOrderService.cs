@@ -736,25 +736,34 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 decimal pctComplete;
                 if (denom > 0)
                 {
-                    pctComplete = numer / denom;
+                    pctComplete = (decimal)(((double)numer * 100.00) / (double)denom);
                 }
                 else
                 {
                     pctComplete = 0m;
                 }
+                sum.PercentageOfTasksCompletedNumerator = numer;
+                sum.PercentageOfTasksCompletedDenominator = denom;
                 sum.PercentageOfTasksCompleted = pctComplete;
 
                 // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = m.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
-                decimal numerTime = m.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
+                decimal denomTime = m.WorkOrderTasks.Select(x =>
+                        x.ProcedureStep.LaborTime.GetValueOrDefault(0) +
+                        x.ProcedureStep.EquipmentTime.GetValueOrDefault(0)
+                    ).Sum();
+                decimal numerTime = m.WorkOrderTasks.Select(x =>
+                        x.TotalTaskTime.GetValueOrDefault(0m)
+                    ).Sum();
                 if (denomTime > 0)
                 {
-                    sum.PercentageOfExpectedDurationTimeLogged = numerTime / denomTime;
+                    sum.PercentageOfExpectedDurationTimeLogged = ((numerTime * 100.00m)/ denomTime);
                 }
                 else
                 {
-                    sum.PercentageOfExpectedDurationTimeLogged = 0;
+                    sum.PercentageOfExpectedDurationTimeLogged = 0m;
                 }
+                sum.PercentageOfExpectedDurationTimeLoggedNumerator = numerTime;
+                sum.PercentageOfExpectedDurationTimeLoggedDenominator = denomTime;
 
                 ret.Add(sum);
             }

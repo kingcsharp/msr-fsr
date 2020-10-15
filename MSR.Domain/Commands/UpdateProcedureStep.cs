@@ -19,5 +19,6 @@ namespace MSR.Domain.Commands
         public double? EquipmentTime { get; set; }
         public List<Role> Roles { get; set; }
         public string procedureStepType { get; set; }
+        public int? LaborTime { get; set; }
     }
 }
