@@ -29,6 +29,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   reportModel: ReportModel;
   showNcrModal: boolean = false;
   @ViewChild('ncrItem') ncrItem: ElementRef;
+  @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
 
   constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
   ngAfterViewInit(): void {
@@ -103,22 +104,6 @@ export class WipComponent implements OnInit, AfterViewInit {
     //   "hasNCRs": true,
     //   "hasFiles": true,
     //   "hasMonitors": true,
-
-    // if (this.globals.selectedCustomer !== undefined) {
-    //   this.getGridData();
-    // }
-
-    // this.globals.isBuyerObservable.subscribe(response => {
-    //   if (this.globals.selectedCustomer !== undefined) {
-    //     this.getGridData();
-    //   }
-    // });
-
-    // this.globals.selectCustomerObservable.subscribe(response => {
-    //   if (response !== null) {
-    //     this.getGridData();
-    //   }
-    // });
   }
 
 
@@ -132,7 +117,8 @@ export class WipComponent implements OnInit, AfterViewInit {
           columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0',
-          expandRows: true
+          expandRows: true,
+          expandRowsTemplate: this.expandedRowTemplate
         });
 
         this.reportModel = new ReportModel({

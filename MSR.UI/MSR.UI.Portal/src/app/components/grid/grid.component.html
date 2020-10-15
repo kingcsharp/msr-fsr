@@ -21,14 +21,14 @@
     </ng-template>
     <ng-template pTemplate="header">
         <tr>
-            <th  *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
+            <th *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
             <th *ngFor="let col of gridSaved.columnsSaved" [hidden]="!col.visible" [pSortableColumn]="col.id"
                 data-cy="usertable-header">
                 {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
             </th>
         </tr>
         <tr>
-            <th  *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
+            <th *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
             <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowView"
                 [ngTemplateOutletContext]="{colsAndSettings: { col: col,dt:dt,gridSaved:gridSaved} }">
             </ng-container>
@@ -53,10 +53,13 @@
 
     <ng-template pTemplate="rowexpansion" let-itemData>
         <tr>
-            <td [attr.colspan]="gridSaved.visibleColumns">
-                <div class="p-p-3">
-                    {{itemData | json}}
-                </div>
+            <td [attr.colspan]="gridSaved.visibleColumns+1">
+                <ng-container [ngTemplateOutlet]="gridSaved.expandRowsTemplate" [ngTemplateOutletContext]="{expandRowData: { 
+                    rowData:itemData,
+                    gridSaved:gridSaved,
+                    gridData:gridData
+                } }">
+                </ng-container>
             </td>
         </tr>
     </ng-template>

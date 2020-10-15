@@ -20,6 +20,15 @@
     <div>Files</div>
 </ng-template>
 
+<ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
+    <div>{{expandRowData.rowData|json}}</div>
+    <div>NCR</div>
+    <div>Photos</div>
+    <div>Files</div>
+</ng-template>
+
+
+
 
 
 <p-dialog [(visible)]="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true'

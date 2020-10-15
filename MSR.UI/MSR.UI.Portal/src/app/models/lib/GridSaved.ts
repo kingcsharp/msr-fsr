@@ -1,3 +1,4 @@
+import { ElementRef } from '@angular/core';
 import { ColumnsSaved } from './ColumnsSaved';
 
 export interface IGridSaved {
@@ -6,6 +7,7 @@ export interface IGridSaved {
     version?: string | undefined;
     visibleColumns?: number | undefined;
     expandRows?: boolean | undefined;
+    expandRowsTemplate?: ElementRef | undefined;
 }
 export class GridSaved implements IGridSaved {
     columnsSaved?: ColumnsSaved[] | undefined;
@@ -13,6 +15,7 @@ export class GridSaved implements IGridSaved {
     storageId?: string | undefined;
     visibleColumns?: number | undefined;
     expandRows?: boolean | undefined;
+    expandRowsTemplate?: ElementRef | undefined;
 
     constructor(data?: IGridSaved) {
         if (data) {
@@ -37,6 +40,7 @@ export class GridSaved implements IGridSaved {
             this.storageId = _data['storageId'];
             this.version = _data['version'];
             this.expandRows = _data['expandRows'];
+            this.expandRowsTemplate = _data['expandRowsTemplate']
             
 
             if (Array.isArray(_data['columnsSaved'])) {
@@ -57,6 +61,7 @@ export class GridSaved implements IGridSaved {
         data['version'] = this.version;
         data['visibleColumns'] = this.visibleColumns;
         data['expandRows'] = this.expandRows;
+        data['expandRowsTemplate'] = this.expandRowsTemplate;
 
         if (Array.isArray(this.columnsSaved)) {
             data['columnsSaved'] = [];
