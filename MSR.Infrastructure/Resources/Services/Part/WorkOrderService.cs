@@ -102,6 +102,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.Status)
 
+
                 // Product etc.
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Part)
@@ -171,6 +172,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         i += 1;
                     }
                     wot.WorkOrderTaskMonitors = wotmList;
+                    wot.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), wot.Id).ToList();
+
                 }
                 result.Add(DetachBackPointers(wom));
             };
