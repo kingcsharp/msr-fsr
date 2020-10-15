@@ -132,9 +132,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 foreach (var wot in wom.WorkOrderTasks)
                 {
-
                     // enforce sane data by limiting the status IDs returned by the API
                     wot.StatusId = TranslateWOTaskStatusToViewModel(wot);
+
+                    // Include files for this work order task.  Doing this
+                    // include in the EF query doesn't work because it must
+                    // be limited by table name.
+                    List<FileEntityMap> files = _unitOfWork.FileEntityMap.Query()
+                        .Where(x =>
+                                x.EntityId == wot.Id &&
+                                x.EntityTableName.ToUpper().Equals("WORKORDERTASK"))
+                        .Include(x => x.FileObject)
+                        .ToList();
+
+                    wot.ReferenceFiles = _mapper.Map<List<FileModel>>(files);
 
                     var wotmList = new List<WorkOrderTaskMonitorModel>();
                     int i = 1; // Monitor Number starts at 1
@@ -484,7 +495,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // First, blank the existing list and the attach the new one.
                 List<int> origList = _unitOfWork.FileEntityMap.Query().Where(x =>
                     x.EntityId == workordertask.Id &&
-                    x.EntityTableName.ToUpper().Equals("WorkOrderTask")
+                    x.EntityTableName.ToUpper().Equals("WORKORDERTASK")
                 ).Select(x => x.Id).ToList();
 
                 foreach (int id in origList)
