@@ -181,7 +181,7 @@
               <div class="container-fluid file-container m-2 wip-details-bottom">
                 <div class="row">
                   <div class="col">
-                    <button id="workordertaskfiles" class="btn btn-success m-2" (click)="uploadFilesAndDocumentsForTask()">Submit</button>
+                    <button id="workordertaskfiles" class="btn btn-primary mb-2" (click)="uploadFilesAndDocumentsForTask()">Submit</button>
                     <cmh-file-uploader name="referencefiles" class="col-12" [showSelectButton]="true" [showUploadButton]="true"
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates" multiple="multiple" [(files)]="workOrderTaskToView.referenceFiles">
