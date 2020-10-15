@@ -283,9 +283,11 @@ export class ProductDefinitionComponent implements OnInit {
         stepText: $event.value.stepText,
         title: $event.value.title
       });
+      const stepTemplateIndex = this.procedureStepTemplatesData.findIndex((v) => v.id === $event.value.id);
+      const stepTemplate = stepTemplateIndex > -1 ? this.procedureStepTemplatesData[stepTemplateIndex] : null;
 
       const productStepValue = this.calculateProcedureStepValues(step);
-      this.productSteps[index] = productStepValue;
+      this.productSteps[index] = {...productStepValue, stepTemplate};
       this.getStepsValues(true);
     }
   }
@@ -297,9 +299,7 @@ export class ProductDefinitionComponent implements OnInit {
     this.procedureStepTemplateService.procedureStepTemplateGet(null, env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
-        response.object.map((x) => {
-          this.procedureStepTemplatesData.push({ label: x.title, value: x });
-        });
+        this.procedureStepTemplatesData = response.object;
         this.getProcedureStepTemplatesFlag = true;
       }));
   }

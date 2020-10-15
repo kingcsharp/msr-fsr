@@ -188,10 +188,19 @@
               <tr *ngFor="let step of productSteps; index as i">
                 <td>
                   <span [class.hide]="i >= productSteps.length - newStepsCounts">{{step.title}}</span>
-                  <p-dropdown *ngIf="getProcedureStepTemplatesFlag && i >= productSteps.length - newStepsCounts"
-                    placeholder="Select Step" name="procedureStepId" [options]="procedureStepTemplatesData"
-                    [baseZIndex]="100005" (onChange)="onSelectStepTemplate($event, i)" data-cy="product-select-stepid"
-                    [virtualScroll]="true" itemSize="30" [filter]="true" filterBy="label">
+                  <p-dropdown
+                    *ngIf="getProcedureStepTemplatesFlag && i >= productSteps.length - newStepsCounts"
+                    placeholder="Select Step"
+                    name="procedureStepId" [options]="procedureStepTemplatesData"
+                    optionLabel="title"
+                    [(ngModel)]="productSteps[i].stepTemplate"
+                    [baseZIndex]="100005"
+                    (onChange)="onSelectStepTemplate($event, i)" data-cy="product-select-stepid"
+                    [virtualScroll]="true"
+                    itemSize="30"
+                    [filter]="true"
+                    filterBy="label"
+                  >
                   </p-dropdown>
                 </td>
                 <td>
@@ -216,7 +225,7 @@
                     pInputText
                     class="form-control input-transparent"
                     name="Step{{i}}_laborTime"
-                    [(ngModel)]="productSteps[i].laborTime"
+                    [(ngModel)]="productSteps[i].laborMinutes"
                     [readonly]="mode === productPageModes.View"
                     (change)="onChangeLaborTime($event, i)"
                     data-validate="parsley"
