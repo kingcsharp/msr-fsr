@@ -732,8 +732,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 sum.PercentageOfTasksCompleted = pctComplete;
 
                 // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = m.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
-                decimal numerTime = m.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
+                decimal denomTime = m.WorkOrderTasks.Select(x =>
+                        x.ProcedureStep.LaborTime.GetValueOrDefault(0) +
+                        x.ProcedureStep.EquipmentTime.GetValueOrDefault(0)
+                    ).Sum();
+                decimal numerTime = m.WorkOrderTasks.Select(x =>
+                        x.TotalTaskTime.GetValueOrDefault(0m)
+                    ).Sum();
                 if (denomTime > 0)
                 {
                     sum.PercentageOfExpectedDurationTimeLogged = ((numerTime * 100.00m)/ denomTime);
