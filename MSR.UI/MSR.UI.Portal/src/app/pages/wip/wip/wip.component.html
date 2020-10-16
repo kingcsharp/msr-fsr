@@ -11,41 +11,22 @@
 
 
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-
-    <span class="pointer badge mr-xs badge-info ng-star-inserted" tooltip="Show NCR reports" (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
-        <i class="fas fa-print mx-1"></i>
-        NCR
-    </span>
-
-    <span class="pointer badge mr-xs badge-warning ng-star-inserted" tooltip="Show Monitors reports" (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
-        <i class="fas fa-chart-bar"></i>
-        Monitors
-    </span>
-
-    <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip="Show photos">
-        <i class="fas fa-images"></i>
-        Photos
-    </span>
-
-    <span class="pointer badge mr-xs badge-secondary ng-star-inserted" tooltip="Show files">
-        <i class="fal fa-file-alt"></i>
-        Files
-    </span>
-
-    <!-- <button type="button" class="btn btn-sm btn-primary mr-0"
+    <span class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth" tooltip="Show NCR reports"
         (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
-        <i class="fas fa-print mx-1"></i>
-        NCR
-    </button>
-
-    <button type="button" class="btn btn-sm btn-primary mr-0"
+        <i class="fas fa-print mx-1"></i> NCR </span>
+    <span class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
         (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
-        <i class="fas fa-chart-bar"></i>
-        Monitors
-    </button> -->
+        <i class="fas fa-chart-bar"></i> Monitors </span>
+    <span class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
+        <i class="fas fa-images"></i> Photos </span>
+    <span class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
+        <i class="fal fa-file-alt"></i> Files </span>
+</ng-template>
 
-    <!-- <div>Photos</div>
-    <div>Files</div> -->
+<ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
+    <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
+        (click)="addInstructions(colsDataAndSettings.colData)">
+        Add Insturctions </span>
 </ng-template>
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
@@ -82,10 +63,3 @@
         </div>
     </p-footer>
 </p-dialog>
-
-<!-- 
-    {{colsDataAndSettings.colData
-    col: col,
-colData:itemData,
-colsSaved:gridSaved.columnsSaved,
-gridData:gridData -->
