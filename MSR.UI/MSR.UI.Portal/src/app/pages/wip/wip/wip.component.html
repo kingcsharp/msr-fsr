@@ -11,7 +11,28 @@
 
 
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-    <button type="button" class="btn btn-sm btn-primary mr-0"
+
+    <span class="pointer badge mr-xs badge-info ng-star-inserted" tooltip="Show NCR reports" (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
+        <i class="fas fa-print mx-1"></i>
+        NCR
+    </span>
+
+    <span class="pointer badge mr-xs badge-warning ng-star-inserted" tooltip="Show Monitors reports" (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
+        <i class="fas fa-chart-bar"></i>
+        Monitors
+    </span>
+
+    <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip="Show photos">
+        <i class="fas fa-images"></i>
+        Photos
+    </span>
+
+    <span class="pointer badge mr-xs badge-secondary ng-star-inserted" tooltip="Show files">
+        <i class="fal fa-file-alt"></i>
+        Files
+    </span>
+
+    <!-- <button type="button" class="btn btn-sm btn-primary mr-0"
         (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
         <i class="fas fa-print mx-1"></i>
         NCR
@@ -21,10 +42,10 @@
         (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
         <i class="fas fa-chart-bar"></i>
         Monitors
-    </button>
+    </button> -->
 
-    <div>Photos</div>
-    <div>Files</div>
+    <!-- <div>Photos</div>
+    <div>Files</div> -->
 </ng-template>
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
