@@ -19,19 +19,8 @@
 </ng-template>
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
-    <!-- *ngIf="showReport" [showReport]="showReport" 
-    expandRowData.rowData.workOrderParts
-    -->
-    <app-grid [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel" [data]="dataaa">
+    <app-grid class="innerGrid" [showReport]="true" [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel" [data]="expandRowData.rowData.workOrderParts">
     </app-grid>
-
-    <!-- <div *ngFor="let item of expandRowData.rowData.workOrderParts">
-        Serial #- {{item.serialNumber}}
-        <br />Company Part #- {{item.part.partNumber}}
-        <br />Cycle Count #- {{item.cycleCount}}
-        <br />Qty #- {{item.qty}}
-        <br />Part Name #- {{item.part.name}}
-    </div> -->
 </ng-template>
 
 <p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001"

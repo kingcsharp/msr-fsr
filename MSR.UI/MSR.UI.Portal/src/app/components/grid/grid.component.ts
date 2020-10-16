@@ -37,6 +37,7 @@ export class GridComponent implements OnInit {
 
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
+  @Input() saveToLocalStorage: boolean;
   @Input() data;
   @Input() reportInfo: ReportModel;
   @Output() expandRowClick = new EventEmitter<any>();
@@ -56,11 +57,14 @@ export class GridComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.saveToLocalStorage === undefined) {
+      this.saveToLocalStorage = true;
+    }
     this.getReport(this.data, this.reportInfo);
   }
 
   expandRow(expanded, row) {
-    if(!expanded){
+    if (!expanded) {
       this.expandRowClick.emit(row);
     }
   }

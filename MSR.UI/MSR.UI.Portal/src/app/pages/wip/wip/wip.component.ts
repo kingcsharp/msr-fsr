@@ -30,7 +30,6 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   gridPartsSaved: GridSaved;
   reportPartsModel: ReportModel;
-  dataaa: any;
   showReport: boolean = false;
   reportModel: ReportModel;
   showNcrModal: boolean = false;
@@ -43,20 +42,16 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.dataaa = [];
-    //   "hasPhotos": true,
-    //   "hasNCRs": true,
-    //   "hasFiles": true,
-    //   "hasMonitors": true,
-
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
+        new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
         new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
-        // new ColumnsSaved({ id: 'part.partNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
+        new ColumnsSaved({ id: 'partNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
         new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
         new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
-        // new ColumnsSaved({ id: 'part.name', label: 'Part Name', visible: true, type: EnumColumnType.String }),
+        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String }),
       ],
+      showMyViewsFeature: false,
       storageId: 'wip_engineering_parts' + this.elementReference.nativeElement.tagName.toLowerCase(),
       version: '1.0.0'
     });
@@ -88,9 +83,9 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.globals.showLoader(true);
     this.workOrderService.workOrder(data.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        // debugger;
-
         response.object[0].workOrderParts.forEach(element => {
+          element.partNumber = element.part.partNumber;
+          element.name = element.part.name;
           pushIfNotExists(element, data.workOrderParts, 'id');
         });
 

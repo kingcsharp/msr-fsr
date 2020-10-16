@@ -12,7 +12,7 @@
             <h3><span class="fw-semi-bold">{{reportInfo.name}}</span> <span
                     *ngIf="reportInfo.subtitle !== undefiend">-</span> {{reportInfo.subtitle}}</h3>
         </div>
-        <div class="pull-right">
+        <div *ngIf="gridSaved.showMyViewsFeature" class="pull-right">
             <grid-options [(defaultColumns)]="gridSaved.columnsSaved" [gridStorageId]="gridSaved.storageId"
                 [ptable]="dt" [gridVersion]="gridSaved.version" data-cy="usergrid-options"
                 [(visibleColumnsCount)]="gridSaved.visibleColumns">
