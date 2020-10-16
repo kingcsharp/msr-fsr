@@ -25,6 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Part> _parts;
         private IRepository<Procedure> _procedures;
         private IRepository<ProcedureStep> _procedureSteps;
+        private IRepository<ProcedureStepRoleMap> _procedureStepRoleMaps;
         private IRepository<ProcedureStepMonitor> _monitors;
         private IRepository<ProcedureStepTemplate> _procedureStepTemplates;
         private IRepository<ProcedureStepType> _procedureStepTypes;
@@ -61,6 +62,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<DocumentRoleMap> _documentRoleMaps;
         private IRepository<DocumentEntityMap> _documentEntityMap;
         private IRepository<Product> _products;
+        private IRepository<ProductStep> _productSteps;
         private IRepository<PurchaseOrder> _purchaseOrders;
         private IRepository<PurchaseOrderProduct> _purchaseOrderProducts;
         private IRepository<Purchase> _purchases;
@@ -75,6 +77,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<FileEntityMap> _fileEntityMap;
         private IRepository<RoleChildRoleMap> _roleChildRoleMap;
         private IRepository<Sensor> _sensor;
+        private IRepository<SensorValue> _sensorValue;
         private IRepository<Quote> _quotes;
         private IRepository<TimeZone> _timezone;
         private IRepository<WorkOrderTaskMonitor> _workOrderTasksMonitors;
@@ -92,6 +95,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<Part> Parts { get { return _parts ?? (_parts = new EFRepository<Part>(Context)); } }
         public IRepository<Procedure> Procedures { get { return _procedures ?? (_procedures = new EFRepository<Procedure>(Context)); } }
         public IRepository<Product> Products { get { return _products ?? (_products = new EFRepository<Product>(Context)); } }
+        public IRepository<ProductStep> ProductSteps { get { return _productSteps ?? (_productSteps = new EFRepository<ProductStep>(Context)); } }
         public IRepository<PurchaseOrder> PurchaseOrders { get { return _purchaseOrders ?? (_purchaseOrders = new EFRepository<PurchaseOrder>(Context)); } }
         public IRepository<PurchaseOrderProduct> PurchaseOrderProducts { get { return _purchaseOrderProducts ?? (_purchaseOrderProducts = new EFRepository<PurchaseOrderProduct>(Context)); } }
         public IRepository<Purchase> Purchases { get { return _purchases ?? (_purchases = new EFRepository<Purchase>(Context)); } }
@@ -128,6 +132,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get { return _workflowGroupUserMap ?? (_workflowGroupUserMap = new EFRepository<WorkflowGroupUserMap>(Context)); } }
         public IRepository<WorkflowGroupStageMap> WorkflowGroupStageMaps { get { return _workflowGroupStageMaps ?? (_workflowGroupStageMaps = new EFRepository<WorkflowGroupStageMap>(Context)); } }
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
+        public IRepository<ProcedureStepRoleMap> ProcedureStepRoleMaps { get { return _procedureStepRoleMaps ??= new EFRepository<ProcedureStepRoleMap>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
         public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
         public IRepository<ProcedureStepType> ProcedureStepTypes { get { return _procedureStepTypes ??= new EFRepository<ProcedureStepType>(Context); } }
@@ -148,6 +153,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<File> Files { get { return _files ??= new EFRepository<File>(Context); } }
         public IRepository<FileEntityMap> FileEntityMap { get { return _fileEntityMap ??= new EFRepository<FileEntityMap>(Context); } }
         public IRepository<Sensor> Sensors { get { return _sensor ??= new EFRepository<Sensor>(Context); } }
+        public IRepository<SensorValue> SensorValues { get { return _sensorValue ??= new EFRepository<SensorValue>(Context); } }
         public IRepository<Quote> Quotes { get { return _quotes ??= new EFRepository<Quote>(Context); } }
         public IRepository<TimeZone> Timezones { get { return _timezone ??= new EFRepository<TimeZone>(Context); } }
         public IRepository<AdminCostSetting> AdminCostSettings { get { return _adminCostSettings ??= new EFRepository<AdminCostSetting>(Context); } }

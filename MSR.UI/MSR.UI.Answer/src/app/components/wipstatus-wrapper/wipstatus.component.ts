@@ -143,7 +143,7 @@ export class WipstatusWrapperComponent implements OnInit {
 
           let workOrderTaskPatchRequests = new Array<any>();
 
-          tasks.forEach(task => {
+          tasks.map(task => {
 
             if (task.status?.name === 'Waiting to Start' || task.status?.name === 'Approved' || task.assignedTo !== this.globals.getCurrentUser().id) {
 

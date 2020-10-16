@@ -10,6 +10,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Part
@@ -140,12 +141,16 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<ICollection<Domain.Models.ProcedureStepModel>> GetProcedureStepAsync(GetProcedureStep command)
         {
             List<EntityFramework.Entities.ProcedureStep> steps;
+            var query = _unitOfWork.ProcedureSteps
+                    .Query()
+                    .Include(x => x.StepType)
+                    .Include(x => x.ProcedureStepRoles)
+                    .ThenInclude(y => y.Role);
+
             if (command.stepId.HasValue)
             {
-                steps = await _unitOfWork.ProcedureSteps
-                    .Query()
+                steps = await query
                     .Where(x => x.Id == command.stepId.Value)
-                    .Include(x => x.StepType)
                     .ToListAsync();
                 if (steps.Count == 0)
                 {
@@ -154,10 +159,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             else
             {
-                steps = await _unitOfWork.ProcedureSteps
-                    .Query()
+                steps = await query
                     .Where(x => x.ProcedureId == command.procedureId)
-                    .Include(x => x.StepType)
                     .ToListAsync();
             }
             var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
@@ -195,6 +198,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i =>
                 i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
+            _unitOfWork.ProcedureSteps.LoadCollection(current, "ProcedureStepRoles");
 
             if (current is null)
             {
@@ -208,7 +212,26 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
+                if (command.Roles != null &&
+                    command.Roles.Count > 0 &&
+                    command.Roles.All(x => x != null))
+                {
+                    foreach (ProcedureStepRoleMap m in current.ProcedureStepRoles)
+                    {
+                        _unitOfWork.ProcedureStepRoleMaps.Delete(false, m);
+                    }
+                }
+
+                // update EF object with update command data
                 var step = _mapper.Map(command, current);
+
+                if (step.ProcedureStepRoles != null)
+                {
+                    foreach (ProcedureStepRoleMap m in step.ProcedureStepRoles)
+                    {
+                        m.ProcedureStepId = step.Id;
+                    }
+                }
                 _unitOfWork.ProcedureSteps.Update(step);
 
                 // This will call SaveChangesAsync
@@ -219,6 +242,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
             else
             {
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
+
+                // TODO: how to store changes in roles pending approval?
+
                 _unitOfWork.ProcedureStepApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 

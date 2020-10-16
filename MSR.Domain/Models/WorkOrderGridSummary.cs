@@ -128,18 +128,40 @@ namespace MSR.Domain.Models
         public string CurrentActiveTaskName { get; set; }
 
         /// <summary>
-        /// Tasks Completed / Total Tasks
+        /// (Tasks Completed / Total Tasks) * 100
         /// </summary>
-        /// <value>Tasks Completed / Total Tasks</value>
         [DataMember(Name="percentageOfTasksCompleted")]
         public decimal? PercentageOfTasksCompleted { get; set; }
 
         /// <summary>
-        /// Sum of time logged per a task / Sum of the expected duration time of all tasks
+        /// Count of tasks completed
         /// </summary>
-        /// <value>Sum of time logged per a task / Sum of the expected duration time of all tasks</value>
+        [DataMember(Name="percentageOfTasksCompletedNumerator")]
+        public int? PercentageOfTasksCompletedNumerator { get; set; }
+
+        /// <summary>
+        /// Count of total tasks
+        /// </summary>
+        [DataMember(Name="percentageOfTasksCompletedNumeratorDenominator")]
+        public int? PercentageOfTasksCompletedDenominator { get; set; }
+
+        /// <summary>
+        /// (Sum of time logged per a task / Sum of the expected duration time of all tasks) * 100
+        /// </summary>
         [DataMember(Name="percentageOfExpectedDurationTimeLogged")]
         public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
+
+        /// <summary>
+        /// Sum of time logged
+        /// </summary>
+        [DataMember(Name="percentageOfExpectedDurationTimeLoggedNumerator")]
+        public decimal? PercentageOfExpectedDurationTimeLoggedNumerator { get; set; }
+
+        /// <summary>
+        /// Sum of the expected time
+        /// </summary>
+        [DataMember(Name="percentageOfExpectedDurationTimeLoggedDenominator")]
+        public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
 
         /// <summary>
         /// Has NCR

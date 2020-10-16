@@ -84,6 +84,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateInvoiceItemRequest, CreateUpdateInvoiceItem>();
             CreateMap<ImportRequest, ImportFile>();
             CreateMap<GetSensorRequest, GetSensor>();
+            CreateMap<GetSensorValueRequest, GetSensorValue>();
             CreateMap<GetPurchasesRequest, GetPurchases>();
             CreateMap<CreatePurchaseRequest, CreatePurchase>();
             CreateMap<GetPurchaseOrderRequest, GetPurchaseOrder>();

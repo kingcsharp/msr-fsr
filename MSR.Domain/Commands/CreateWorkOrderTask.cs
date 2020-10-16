@@ -1,4 +1,5 @@
 ﻿using MSR.Domain.Commanding;
+using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
 
@@ -15,7 +16,10 @@ namespace MSR.Domain.Commands
         public decimal? TotalTaskTime { get; set; }
         public bool? TaskIsRunning { get; set; }
         public DateTime? TaskRunningSince { get; set; }
+        public DateTime? StartedOn { get; set; }
 
         public virtual ICollection<int> WorkOrderTaskMonitorIds { get; set; }
+        public virtual ICollection<FileModel> ReferenceFiles { get; set; }
+        public virtual ICollection<int> ReferenceFilesIds { get; set; }
     }
 }

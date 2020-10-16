@@ -6,6 +6,11 @@ namespace MSR.Domain.Models
 {
     public class ProductModel : TrackableModel
     {
+        public ProductModel ()
+        {
+            ProductSteps = new List<ProductStepModel>();
+        }
+
         public string Name { get; set; }
         public int Revision { get; set; }
         public int CustomerId { get; set; }
@@ -34,5 +39,7 @@ namespace MSR.Domain.Models
 
         // Copy of the status field of the ProductApproval row
         public string ApprovalStatus;
+
+        public virtual ICollection<ProductStepModel> ProductSteps { get; set; }
     }
 }

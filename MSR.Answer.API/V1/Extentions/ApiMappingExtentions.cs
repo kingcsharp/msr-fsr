@@ -820,6 +820,8 @@ namespace MSR.Answer.API.V1.Extentions
         /// <returns></returns>
         public static GetSensor ToGetSensorCommand(this GetSensorRequest request) => AutoMapperHelper.Mapper.Map<GetSensor>(request);
 
+        public static GetSensorValue ToGetSensorValueCommand(this GetSensorValueRequest request) => AutoMapperHelper.Mapper.Map<GetSensorValue>(request);
+
         public static CreateQuote ToCreateQuoteCommand(this CreateQuoteRequest request)
         {
             return AutoMapperHelper.Mapper.Map<CreateQuote>(request);

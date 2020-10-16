@@ -86,10 +86,6 @@ namespace MSR.Application.ApplicationServices
             {
                 command.StatusId = 1;
             }
-            if (!command.ProcedureStepTypeId.HasValue)
-            {
-                command.ProcedureStepTypeId = 1;
-            }
 
             var ret = await _workOrderService.CreateWorkOrderTaskAsync(command);
             return new CommandResponse<WorkOrderTaskModel>(ret);

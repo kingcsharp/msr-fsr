@@ -74,7 +74,8 @@ ol{
 .report.ui-dialog .ui-dialog-content{
     min-height: 300px;
 }
-#ui-tabpanel-2, #ui-tabpanel-3 {
+
+.content-tabs > .ui-tabview-panel {
   min-height:30vh;
   overflow-y:auto
 }
@@ -214,3 +215,6 @@ ol{
   }
 }
 
+.wip-controller{
+  min-height: 50px;
+}

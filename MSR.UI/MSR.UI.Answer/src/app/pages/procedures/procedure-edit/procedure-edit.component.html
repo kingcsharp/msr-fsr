@@ -183,7 +183,7 @@
                                         Labor Time
                                     </label>
                                     <div class="input-group col-3" style="margin-left:-15px">
-                                        <input type="text" name="labortime{{i}}"
+                                        <input type="number" name="labortime{{i}}"
                                             [(ngModel)]="procedureStep.value.laborTime" data-validate="parsley"
                                             data-parsley-trigger="change" data-parsley-minlength="3"
                                             data-parsley-required="true" class="form-control input-transparent ml-2"
@@ -196,7 +196,7 @@
                                         Equipment Time
                                     </label>
                                     <div class="input-group col-3" style="margin-right:-15px">
-                                        <input type="text" name="equipmenttime{{i}}"
+                                        <input type="number" name="equipmenttime{{i}}"
                                             [(ngModel)]="procedureStep.value.equipmentTime" data-validate="parsley"
                                             data-parsley-trigger="change" data-parsley-minlength="3"
                                             data-parsley-required="true" class="form-control input-transparent"
@@ -416,6 +416,16 @@
                     </p-dropdown>
                 </div>
             </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.inputType === 'Sensor'">
+                <label for="sensorname" class="col-form-label text-left col-3">
+                    Available Sensors
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Sensor" name="sensorname" [options]="sensorNamesAvailable"
+                        showClear="true" [(ngModel)]="monitorToEdit.sensorName">
+                    </p-dropdown>
+                </div>
+            </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.monitorType === 'Select'">
                 <label for="listsource" class="col-form-label text-left col-3">
                     List Source
@@ -427,7 +437,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToEdit.monitorType === 'Number' && monitorToEdit.monitorType !== 'Pass or Fail'">
+                *ngIf="monitorToEdit.monitorType === 'Number' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.inputType !== 'Sensor'">
                 <label for="shouldbe" class="col-form-label text-left col-3">
                     Should Be
                 </label>
@@ -458,7 +468,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToEdit.type !== 'Select'">
+                *ngIf="monitorToEdit.monitorType !== 'Select' && monitorToEdit.inputType !== 'Sensor'">
                 <label for="targetvalue" class="col-form-label text-left col-3">
                     Target Value
                 </label>
@@ -539,6 +549,16 @@
                     </p-dropdown>
                 </div>
             </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.inputType === 'Sensor'">
+                <label for="sensorname" class="col-form-label text-left col-3">
+                    Available Sensors
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Sensor" name="sensorname" [options]="sensorNamesAvailable"
+                        showClear="true" [(ngModel)]="monitorToAdd.sensorName">
+                    </p-dropdown>
+                </div>
+            </div>
             <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.monitorType === 'Select'">
                 <label for="listsource" class="col-form-label text-left col-3">
                     List Source
@@ -550,7 +570,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToAdd.monitorType === 'Number' && monitorToAdd.monitorType !== 'Pass or Fail'">
+                *ngIf="monitorToAdd.monitorType === 'Number' && monitorToAdd.monitorType !== 'Pass or Fail' && monitorToAdd.inputType !== 'Sensor'">
                 <label for="shouldbe" class="col-form-label text-left col-3">
                     Should Be
                 </label>
@@ -581,7 +601,7 @@
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToAdd.monitorType !== 'Select'">
+                *ngIf="monitorToAdd.monitorType !== 'Select' && monitorToAdd.inputType !== 'Sensor'">
                 <label for="targetvalue" class="col-form-label text-left col-3">
                     Target Value
                 </label>

@@ -25,8 +25,9 @@ export class WiphistoryComponent implements OnInit {
   canRead: boolean = false;
   privileges = EnumPrivilege;
   locationOptions: Array<SelectItem>;
+  gridVersion: string;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router, private workOrderService: WorkOrderService) { }
+  constructor(public commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private router: Router, private workOrderService: WorkOrderService) { }
 
   ngOnInit(): void {
 

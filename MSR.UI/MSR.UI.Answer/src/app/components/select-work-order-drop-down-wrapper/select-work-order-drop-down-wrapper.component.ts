@@ -28,7 +28,7 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
       let workOrders = <Array<WorkOrderModel>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();
-      workOrders.forEach(workOrder => {
+      workOrders.map(workOrder => {
 
         let workOrderItem = new WorkOrderItem();
         workOrderItem.WorkOrderId = workOrder.id;

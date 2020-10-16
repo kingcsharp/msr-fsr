@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDetectorRef, Inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDetectorRef, Inject, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, UserModel, CreateInvoiceItemRequest, ICreateInvoiceRequest, CreateInvoiceRequest, ICreateInvoiceItemRequest
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -13,10 +13,9 @@ import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
+import { SelectItem } from 'primeng/api';
 
 const moment = require('moment');
-const today = moment();
-declare let jQuery: any;
 
 @Component({
   selector: 'app-wipdetails',
@@ -50,16 +49,41 @@ export class WipdetailsComponent implements OnInit {
   hasSerializationStep: boolean;
   workOrderIsComplete: boolean;
   startSlideIndex: number = 0;
+  monitorTypes: Array<SelectItem>;
+  itemsPerASlide: number = 6;
+  rolesRequiredToViewTask: Array<string> = new Array<string>();
+  rolesRequiredMessage: string = '';
+  nameOfTaskThatIsRestricted: string;
+  hasAccessToTaskBeingViewed: boolean = false;
 
-  slideConfig;
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
     @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef,
-    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService,
-    private userService: UserService, private elementReference: ElementRef, private invoiceService: InvoiceService) { }
+    public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService) { }
 
+  @HostListener('window:resize', ['$event'])
+  getScreenSize() {
+
+    if (window.innerWidth > 1100 && window.innerWidth < 1400) {
+      this.itemsPerASlide = 7;
+    } else if (window.innerWidth > 1400) {
+      this.itemsPerASlide = 11;
+    }
+
+  }
 
   ngOnInit(): void {
+    this.getScreenSize();
+
+    this.monitorTypes = [
+      { label: 'Equipment', value: 1 },
+      { label: 'Number', value: 2 },
+      { label: 'Yes or No', value: 3 },
+      { label: 'Text', value: 4 },
+      { label: 'Pass or Fail', value: 5 },
+      { label: 'Select', value: 6 },
+    ];
+
 
     this.route.params.subscribe(params => {
 
@@ -69,7 +93,7 @@ export class WipdetailsComponent implements OnInit {
 
         this.workOrderModel = this.cleanData(response.object[0]);
         this.hasSerializationStep = this.workOrderModel.workOrderTasks.map(s => s.procedureStep.title).find(m => m.trim().toLocaleUpperCase() === 'SERIALIZE') !== undefined;
-        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress') === undefined;
+        this.workOrderIsComplete = this.workOrderModel.workOrderTasks.find(s => s.status.name.trim() === 'Waiting to Start' || s.status.name.trim() === 'In Progress' || s.status.name.trim() === 'Approved') === undefined;
         this.workOrderParts = this.workOrderModel.workOrderParts;
         this.parentPart = this.workOrderModel.workOrderParts[0];
         this.procedure = this.workOrderModel.product.procedure;
@@ -77,28 +101,41 @@ export class WipdetailsComponent implements OnInit {
         this.product = this.workOrderModel.product;
         this.purchase = this.workOrderModel.purchase;
 
-        // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
-        if (!this.canUserAccessWorkOrderTask(this.workOrderModel.workOrderTasks[0])) {
+        for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
+          if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress' || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
 
-
-          for (let index = 0; index < this.workOrderModel.workOrderTasks.length; index++) {
-            if (this.workOrderModel.workOrderTasks[index].status.name === 'In Progress' || this.workOrderModel.workOrderTasks[index].status.name === 'Approved' || this.workOrderModel.workOrderTasks[index].status.name === 'Waiting to Start') {
-              this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[index];
-              this.workOrderTaskToView = this.workOrderModel.workOrderTasks[index];
-              this.startSlideIndex = index;
-              break;
-            }
-          }
-
-          if (this.workOrderTaskInProgress === undefined) {
-            this.workOrderTaskInProgress = this.workOrderModel.workOrderTasks[0];
-            this.workOrderTaskToView = this.workOrderModel.workOrderTasks[0];
+            this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[index]);
+            this.startSlideIndex = index;
+            break;
           }
         }
+
+        if (this.workOrderTaskInProgress === undefined) {
+
+          this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
+        }
+
 
       }));
 
     });
+
+  }
+
+  checkRoleAccessAndSetTaskAsViewable(workOrderTask: WorkOrderTaskModel) {
+
+    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+      this.workOrderTaskInProgress = workOrderTask;
+      this.workOrderTaskToView = workOrderTask;
+      this.rolesRequiredToViewTask.length = 0;
+      this.hasAccessToTaskBeingViewed = true;
+    } else {
+      this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
+      this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
+      this.hasAccessToTaskBeingViewed = false;
+      this.workOrderTaskInProgress = workOrderTask;
+      this.workOrderTaskToView = workOrderTask;
+    }
 
   }
 
@@ -126,7 +163,47 @@ export class WipdetailsComponent implements OnInit {
         s.procedureStep.referenceFiles = new Array<FileModel>();
       }
 
+      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+
+        if (u.monitorTypeId === 1 && u.inputTypeId === 1) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 2 && u.inputTypeId === 5) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 2 && u.inputTypeId === 6) {
+          u.inputType = 'Sensor';
+        }
+
+        if (u.monitorTypeId === 3 && u.inputTypeId === 8) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 4 && u.inputTypeId === 12) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 5 && u.inputTypeId === 16) {
+          u.inputType = 'Manual';
+        }
+
+        if (u.monitorTypeId === 6 && u.inputTypeId === 19) {
+          u.inputType = 'Manual';
+        }
+
+
+      });
+
+      s.workOrderTaskMonitors.map(m => m.procedureStepMonitor).map(u => {
+
+        u.monitorType = this.monitorTypes.find(t => t.value === u.monitorTypeId).label;
+
+      });
+
     });
+
 
     return workOrderModel;
 
@@ -138,14 +215,38 @@ export class WipdetailsComponent implements OnInit {
 
   selectTaskForViewing(workOrderTask: WorkOrderTaskModel) {
 
-    // TODO: Remove ! when roles are included in WorkOrder.workOrderTaskModel.procedureStepModel.roles
-    if (!this.canUserAccessWorkOrderTask(workOrderTask)) {
+    if (this.canUserAccessWorkOrderTask(workOrderTask)) {
+      this.workOrderTaskToView = workOrderTask;
+      this.rolesRequiredToViewTask.length = 0;
+      this.hasAccessToTaskBeingViewed = true;
+    } else {
+      this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
+      this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
+      this.hasAccessToTaskBeingViewed = false;
+      this.workOrderTaskInProgress = workOrderTask;
       this.workOrderTaskToView = workOrderTask;
     }
 
     if (this.workOrderIsComplete) {
       this.workOrderTaskInProgress = workOrderTask;
     }
+
+  }
+
+  generateRolesRequiredMessage(roles: Array<string>) {
+    this.rolesRequiredMessage = '';
+    roles.map((role, index) => {
+
+      if (index === 0) {
+        this.rolesRequiredMessage += role;
+      } else if (index === roles.length - 1) {
+        this.rolesRequiredMessage += ' or ' + role;
+      } else {
+        this.rolesRequiredMessage += ', ' + role;
+      }
+
+
+    });
 
   }
 
@@ -336,13 +437,13 @@ export class WipdetailsComponent implements OnInit {
 
     }
 
-    newWorkOrderTasks.reverse().map((updatedWorkOrderTask, index) => {
+    newWorkOrderTasks.reverse().map((updatedWorkOrderTask) => {
 
       workOrderTasksToAddBack.push(updatedWorkOrderTask);
 
     });
 
-    workOrderTasksToAddBack.reverse().map((workOrderTask, index) => {
+    workOrderTasksToAddBack.reverse().map((workOrderTask) => {
       this.workOrderModel.workOrderTasks.push(workOrderTask);
     });
 
@@ -356,4 +457,36 @@ export class WipdetailsComponent implements OnInit {
     this.carousel.selectSlide(index);
   }
 
+  uploadFilesAndDocumentsForTask() {
+
+    let updatedWorkOrderTaskRequest = new UpdateWorkOrderTaskRequest({
+      assignedUserId: this.workOrderTaskInProgress.assignedTo,
+      status: this.workOrderTaskInProgress.status.name,
+      taskIsRunning: this.workOrderTaskInProgress.taskIsRunning,
+      taskRunningSince: this.workOrderTaskInProgress.taskRunningSince,
+      taskStepOrder: this.workOrderTaskInProgress.taskStepOrder,
+      totalTaskTime: this.workOrderTaskInProgress.totalTaskTime,
+      workOrderTaskId: this.workOrderTaskInProgress.id,
+      referenceFiles: new Array<FileModel>(),
+      referenceFilesIds: new Array<number>()
+    } as IUpdateWorkOrderTaskRequest);
+
+
+    this.workOrderTaskInProgress.referenceFiles.map(referenceFile => {
+
+      if (referenceFile.fileId === undefined) {
+        updatedWorkOrderTaskRequest.referenceFiles.push(referenceFile);
+      } else {
+        updatedWorkOrderTaskRequest.referenceFilesIds.push(referenceFile.fileId);
+      }
+
+    });
+
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).subscribe(response => {
+
+      this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskInProgress.id).referenceFiles = response.object.referenceFiles;
+
+    });
+
+  }
 }
