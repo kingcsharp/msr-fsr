@@ -95,7 +95,7 @@
           <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks" [hasAccessToTaskBeingViewed]="hasAccessToTaskBeingViewed"
             [workOrderIsComplete]="workOrderIsComplete" [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             (slideToTaskInProgress)="slideToTaskInProgress()"
-            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === this.globals.getCurrentUser().id"
+            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id"
             (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
             [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
           </workordertasktimer-wrapper>
@@ -109,7 +109,7 @@
         <div class="d-flex col-4 justify-content-end pr-0">
           <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             [workOrderModel]="workOrderModel"
-            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo !== this.globals.getCurrentUser().id">
+            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo !== globals.getCurrentUser().id">
           </take-over-task-button-wrapper>
           <empmbutton-wrapper *ngIf="hasAccessToTaskBeingViewed && workOrderTaskInProgress !== undefined && !workOrderIsComplete"></empmbutton-wrapper>
           <addncrbutton-wrapper [(workOrderModel)]="workOrderModel" (addNcrTasks)="addNcrTasks($event)"
