@@ -15,6 +15,7 @@ import {
   CreatePurchaseRequest
 } from '../../../services/api.client.generated';
 import { Router, ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 declare let jQuery: any;
 
@@ -42,7 +43,6 @@ export class PurchaseCreateComponent implements OnInit {
   purchaseSerializeItems: any[] = [];
   serialNumberModal: boolean = false;
   globalDueDate: Date;
-  today = new Date();
   step: number;
   custLineElem: any;
   selectButtonOptions = [
@@ -97,7 +97,7 @@ export class PurchaseCreateComponent implements OnInit {
         });
         this.getPurchaseOrderFlag = true;
         this.getCustomerData(this.purchaseOrderData.customerId);
-        this.globalDueDate = new Date(this.today.getTime() + (1000 * 60 * 60 * 24 * 7));
+        this.globalDueDate = moment().add(7, 'days').toDate();
       }));
   }
 
