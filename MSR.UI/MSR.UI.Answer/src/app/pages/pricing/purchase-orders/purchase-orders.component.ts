@@ -106,7 +106,12 @@ export class PurchaseOrdersComponent implements OnInit {
       this.productService.productGet(null, purchaseOrder.customerId, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.showProductsSelect = false;
-          replaceArrayItems(this.productsData, response.object);
+          response.object.map(product => {
+            this.productsData.push({
+              id: product.id,
+              label: `${product.name} (R-${product.revision})`,
+            });
+          });
           this.currentPO = this.getPuchaseOrder(purchaseOrder);
           this.display = true;
           setTimeout(() => {
@@ -197,7 +202,7 @@ export class PurchaseOrdersComponent implements OnInit {
           ctrl.productsData.push({
             id: product.id,
             label: `${product.name} (R-${product.revision})`,
-          })
+          });
         });
         setTimeout(() => {
           ctrl.showProductsSelect = true;
