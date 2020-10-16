@@ -52,7 +52,9 @@ export class WipdetailsComponent implements OnInit {
   monitorTypes: Array<SelectItem>;
   itemsPerASlide: number = 6;
   rolesRequiredToViewTask: Array<string> = new Array<string>();
+  rolesRequiredMessage: string = '';
   nameOfTaskThatIsRestricted: string;
+  hasAccessToTaskBeingViewed: boolean = false;
 
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
@@ -126,9 +128,13 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskInProgress = workOrderTask;
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
+      this.hasAccessToTaskBeingViewed = true;
     } else {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
-      this.rolesRequiredToViewTask = workOrderTask.procedureStep.roles.map(s => s.name);
+      this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
+      this.hasAccessToTaskBeingViewed = false;
+      this.workOrderTaskInProgress = workOrderTask;
+      this.workOrderTaskToView = workOrderTask;
     }
 
   }
@@ -212,14 +218,35 @@ export class WipdetailsComponent implements OnInit {
     if (this.canUserAccessWorkOrderTask(workOrderTask)) {
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
+      this.hasAccessToTaskBeingViewed = true;
     } else {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
-      this.rolesRequiredToViewTask = workOrderTask.procedureStep.roles.map(s => s.name);
+      this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
+      this.hasAccessToTaskBeingViewed = false;
+      this.workOrderTaskInProgress = workOrderTask;
+      this.workOrderTaskToView = workOrderTask;
     }
 
     if (this.workOrderIsComplete) {
       this.workOrderTaskInProgress = workOrderTask;
     }
+
+  }
+
+  generateRolesRequiredMessage(roles: Array<string>) {
+    this.rolesRequiredMessage = '';
+    roles.map((role, index) => {
+      
+      if (index === 0) {
+        this.rolesRequiredMessage += role;
+      } else if (index === roles.length - 1) {
+        this.rolesRequiredMessage += ' or ' + role;
+      } else {
+        this.rolesRequiredMessage += ', ' + role;
+      }
+
+
+    });
 
   }
 
@@ -455,7 +482,7 @@ export class WipdetailsComponent implements OnInit {
 
     });
 
-    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion,updatedWorkOrderTaskRequest).subscribe(response => {
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).subscribe(response => {
 
       this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskInProgress.id).referenceFiles = response.object.referenceFiles;
 

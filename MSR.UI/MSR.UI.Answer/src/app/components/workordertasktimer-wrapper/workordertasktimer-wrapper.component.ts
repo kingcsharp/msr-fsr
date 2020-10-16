@@ -23,6 +23,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Input() workOrderTaskToView: WorkOrderTaskModel;
   @Input() currentUser: UserModel;
   @Input() workOrderIsComplete: boolean = false;
+  @Input() hasAccessToTaskBeingViewed: boolean = true;
   @Output() workOrderTasksChange = new EventEmitter<any>();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
