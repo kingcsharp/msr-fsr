@@ -11,22 +11,32 @@
 
 
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-    <div>Monitors</div>
-    <button type="button" class="btn btn-sm btn-primary mr-0" (click)="showNcr(colsDataAndSettings)"><i
-            class="fas fa-print mx-1"></i>NCR</button>
+    <button type="button" class="btn btn-sm btn-primary mr-0"
+        (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
+        <i class="fas fa-print mx-1"></i>
+        NCR
+    </button>
+
+    <button type="button" class="btn btn-sm btn-primary mr-0"
+        (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
+        <i class="fas fa-chart-bar"></i>
+        Monitors
+    </button>
+
     <div>Photos</div>
     <div>Files</div>
 </ng-template>
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
-    <app-grid class="innerGrid" [showReport]="true" [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel" [data]="expandRowData.rowData.workOrderParts">
+    <app-grid class="innerGrid" [showReport]="true" [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel"
+        [data]="expandRowData.rowData.workOrderParts">
     </app-grid>
 </ng-template>
 
 <p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001"
     [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <p-header>
-        NCR Report
+        {{selectedReport === enumReportTypes.NCRReport?'NCR Report':'WIP History Report'}}
     </p-header>
     <!-- <div class="row printotherreport-dropdown">
         <div class="col-2 d-flex justify-content-end">
@@ -34,7 +44,9 @@
         </div>
     </div> -->
     <div class="report-viewport m-4 d-print-flex">
-        <ncr-report [WorkOrder]="ncrWorkOrder"></ncr-report>
+        <ncr-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.NCRReport"></ncr-report>
+        <wip-history-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.WIPHistoryReport">
+        </wip-history-report>
     </div>
     <p-footer>
         <div class="pull-right">

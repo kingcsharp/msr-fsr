@@ -11,6 +11,7 @@ import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
 import { pushIfNotExists } from '../../../models/lib/Utils';
+import { EnumReport } from '../../../../app/models/enums/ReportType';
 
 @Component({
   selector: 'app-wip',
@@ -19,7 +20,7 @@ import { pushIfNotExists } from '../../../models/lib/Utils';
   providers: [WorkOrderService]
 })
 export class WipComponent implements OnInit, AfterViewInit {
-
+  enumReportTypes = EnumReport;
   // gridColumns: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
   gridStorageId: string;
@@ -27,6 +28,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   statusOptions: Array<SelectItem>;
   locationOptions: Array<SelectItem>;
   gridSaved: GridSaved;
+  selectedReport: EnumReport;
 
   gridPartsSaved: GridSaved;
   reportPartsModel: ReportModel;
@@ -96,8 +98,9 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
 
-  showNcr(row: any) {
+  showReportInfo(reportType: EnumReport, row: any) {
     this.globals.showLoader(true);
+    this.selectedReport = reportType;
     if (this.ncrWorkOrder?.id !== row.colData.id)
       this.workOrderService.workOrder(row.colData.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
