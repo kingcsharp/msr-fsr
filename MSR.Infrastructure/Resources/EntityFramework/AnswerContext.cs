@@ -75,6 +75,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<ReportDashboardMap> ReportDashboardMap { get; set; }
 
         public DbSet<EquipmentMaintenance> EquipmentMaintenance { get; set; }
+        public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }
 
         public AnswerContext() : base()
         {

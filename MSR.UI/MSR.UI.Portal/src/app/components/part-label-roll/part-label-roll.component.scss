@@ -1,0 +1,59 @@
+@media print {
+  @page {
+      size: 4.125in auto;
+  }
+  body {
+      margin-top: .0625in;
+      margin-left: .0625in;
+  }
+}
+
+.roll-container {
+  display: table-cell;
+  vertical-align: middle;
+  margin-top: .0625in;
+  margin-left: .0625in;
+  width: 4.125in;
+}
+table.tight {
+  font: small Arial, Helvetica, sans-serif !important;
+  font-size: 12px !important;
+  table-layout: fixed;
+  width: 100%;
+}
+tr {
+  height: 20px;
+  padding: 3px;
+}
+table.tight td {
+  text-align: left;
+  padding: 4px;
+}
+.roll-label {
+  height: 4in;
+  width: 4in;
+  margin-bottom: 0.125in;
+  padding: 0 .1in;
+  left: 0in;
+  top: 0in;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+}
+.coded {
+  border: 1px solid #000;
+  width: 100%;
+  display: block;
+  padding: 5px;
+}
+p {
+  margin: 0 0 2px;
+}
+.part-image {
+  margin-top: 36px;
+}
+.part-image img {
+    width: 136px;
+    max-width: 136px;
+    min-width: 136px;
+}
+

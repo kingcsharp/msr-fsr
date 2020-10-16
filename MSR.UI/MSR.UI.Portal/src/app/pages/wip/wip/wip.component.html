@@ -1,0 +1,65 @@
+<h1 class="page-title" data-cy="page-title">
+    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+    {{globals.activeMenu.name}}
+</h1>
+
+<widget *ngIf="globals.selectedCustomer !== undefined">
+    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
+        (expandRowClick)="expandRow($event)" [data]="data">
+    </app-grid>
+</widget>
+
+
+<ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
+    <span class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth" tooltip="Show NCR reports"
+        (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
+        <i class="fas fa-print mx-1"></i> NCR </span>
+    <span class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
+        (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
+        <i class="fas fa-chart-bar"></i> Monitors </span>
+    <span class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
+        <i class="fas fa-images"></i> Photos </span>
+    <span class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
+        <i class="fal fa-file-alt"></i> Files </span>
+</ng-template>
+
+<ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
+    <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
+        (click)="addInstructions(colsDataAndSettings.colData)">
+        Add Insturctions </span>
+</ng-template>
+
+<ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
+    <app-grid class="innerGrid" [showReport]="true" [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel"
+        [data]="expandRowData.rowData.workOrderParts">
+    </app-grid>
+</ng-template>
+
+<p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <p-header>
+        {{selectedReport === enumReportTypes.NCRReport?'NCR Report':'WIP History Report'}}
+    </p-header>
+    <!-- <div class="row printotherreport-dropdown">
+        <div class="col-2 d-flex justify-content-end">
+            <div class="my-auto">NCR Report</div>
+        </div>
+    </div> -->
+    <div class="report-viewport m-4 d-print-flex">
+        <ncr-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.NCRReport"></ncr-report>
+        <wip-history-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.WIPHistoryReport">
+        </wip-history-report>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="print()" class="btn btn-primary mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-print mx-1"></i>Print
+            </button>
+            <button type="submit" (click)="showNcrModal = false" class="btn btn-warning mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-times-circle mx-1"></i>Close
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>

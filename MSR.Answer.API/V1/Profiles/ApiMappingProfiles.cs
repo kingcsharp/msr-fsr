@@ -132,6 +132,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetDocumentRequest, GetDocument>();
             CreateMap<CreateDocumentRequest, CreateDocument>();
             CreateMap<UpdateDocumentRequest, UpdateDocument>();
+            CreateMap<CreateWorkOrderMessageRequest, CreateWorkOrderMessage>();
         }
     }
 }

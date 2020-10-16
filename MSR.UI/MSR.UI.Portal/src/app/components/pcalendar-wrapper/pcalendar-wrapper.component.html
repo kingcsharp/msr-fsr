@@ -1,0 +1,2 @@
+<p-calendar [(ngModel)]="selectedDate" (onSelect)="filterGrid()" selectionMode="{{isRanged?'range':'single'}}" appendTo="body" [locale]="en"></p-calendar>
+<i *ngIf="datatable.filters[filterId]?.value" class="fclear fextra pi pi-times pointer" (click)="clearFilter()"></i>

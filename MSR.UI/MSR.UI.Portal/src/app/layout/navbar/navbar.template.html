@@ -1,0 +1,61 @@
+<nav class="navbar-collapse">
+  <!-- {{globals.user | json}} -->
+  <form *ngIf="globals.user.isAnswerUser" id="search-form" class="navbar-form" name="selectUser" role="search">
+    <div class="form-group mb-0">
+      <div class="emulateLabel">Role/Customer to Emulate:</div>
+      <div class="input-group-transparent input-group">
+        <p-dropdown [options]="roles" [(ngModel)]="selectedRole" optionLabel="name" (onChange)="roleChange($event,a)"
+          [ngModelOptions]="{standalone: true}" placeholder="Select Role" [filter]="false">
+        </p-dropdown>
+
+        <p-dropdown [options]="customers" [(ngModel)]="selectedCustomer" (onChange)="customerChange()"
+          optionLabel="name" [filter]="true" [showClear]="true" placeholder="Select Customer" name="selectCust"
+          [virtualScroll]="true" [itemSize]="31" ngDefaultControl [ngModelOptions]="{standalone: true}">
+          <ng-template pTemplate="selectedItem">
+            <div class="customer-item customer-item-value" *ngIf="selectedCustomer">
+              <div>{{selectedCustomer.name}}</div>
+            </div>
+          </ng-template>
+          <ng-template let-customer pTemplate="item">
+            <div class="customer-item">
+              <div>{{customer.value.name}}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+  </form>
+  <ul class="nav navbar-nav">
+    <li class="nav-item dropdown d-sm-down-none">
+      <a href="javascript:;" id="account" data-cy="account-a" tooltip="Account" class="nav-link dropdown-toggle"
+        data-toggle="dropdown">
+        <img *ngIf="globals.user?.fileModel === undefined || hideImg" width="34" src="assets/img/2.png" alt="">
+        <img *ngIf="globals.user?.fileModel !== undefined || !hideImg" width="34"
+          [src]="globals.user?.fileModel?.fileURL" (error)="updateUrl($event)" alt="">
+      </a>
+      <ul id="account-menu" class="dropdown-menu dropdown-menu-right account" role="menu">
+        <li role="presentation" class="account-picture">
+          <img *ngIf="globals.user?.fileModel === undefined || hideImg" width="34" src="assets/img/2.png" alt="">
+          <img *ngIf="globals.user?.fileModel !== undefined || !hideImg" width="34"
+            [src]="globals.user?.fileModel?.fileURL" (error)="updateUrl($event)" alt="">
+          {{globals.user.firstName + ' ' + globals.user.lastName}}
+        </li>
+        <li role="presentation">
+          <a data-cy="profile-link" routerLink="../app/people/profile" class="dropdown-item">
+            <i class="fad fa-user"></i>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="d-md-none mr-3">
+      <a href="#" (click)="sidebarOpen()" class="btn-navbar" data-toggle="collapse" data-target=".sidebar" title="">
+        <i class="fa fa-bars"></i>
+      </a>
+    </li>
+    <li class="nav-item d-sm-down-none">
+      <a class="nav-link" (click)="logout()" tooltip="Logout" data-cy="logout-link"><i
+          class="glyphicon glyphicon-off"></i></a>
+    </li>
+  </ul>
+</nav>

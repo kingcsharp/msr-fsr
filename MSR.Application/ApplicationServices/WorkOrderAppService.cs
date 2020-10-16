@@ -26,7 +26,9 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<CreateWorkOrderTask>,
         ICommandHandler<UpdateWorkOrderTask>,
         ICommandHandler<UpdateWorkOrderTaskMonitor>,
-        ICommandHandler<UpdateWorkOrder>
+        ICommandHandler<UpdateWorkOrder>,
+        ICommandHandler<GetPortalWorkOrder>,
+        ICommandHandler<CreateWorkOrderMessage>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
@@ -99,6 +101,17 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.UpdateWorkOrderTaskMonitorAsync(command);
             return new CommandResponse<WorkOrderTaskMonitorModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetPortalWorkOrder command, CancellationToken cancellationToken = default)
+        {
+            return CommandResponse.SuccessCommand;
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateWorkOrderMessage command, CancellationToken cancellationToken = default)
+        {
+            await _workOrderService.CreateWorkOrderMessageAsync(command);
+            return CommandResponse.SuccessCommand;
         }
     }
 }

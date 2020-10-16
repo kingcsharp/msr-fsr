@@ -1,0 +1,22 @@
+<button class="btn btn-lg btn-warning mt-0 mr-2 mb-2" (click)="openTakeOverAsUserConfirmationDialog(workOrderToTakeOverId)"><i class="fas fa-step-forward"></i> Take Over This Task</button>
+
+<p-dialog header="Attention" [(visible)]="showTakeOverAsUserConfirmationDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '33vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      Are you sure you want to take over this WorkOrder?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="takeOverAsUserConfirmationDialog()" class="btn btn-warning width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Yes
+      </button>
+      <button type="button" (click)="closeTakeOverAsUserConfirmationDialog()" class="btn btn-danger width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

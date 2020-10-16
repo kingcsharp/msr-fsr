@@ -1,0 +1,150 @@
+<div class="container-flex">
+    <div class="row">
+      <div class="col-6">
+        <h1 class="page-title">
+          <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
+          {{globals.activeMenu.name}}
+        </h1>
+      </div>
+      <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
+        <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
+      </div>
+    </div>
+    <div class="row">
+        <widget>
+            <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+                [showCurrentPageReport]="true"  currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+                [rowsPerPageOptions]="[10,25,50,100]"  [loading]="loading"  [paginator]="true"  [filterDelay]="0"
+                stateStorage="local"  stateKey="{{gridStorageId}}">
+                <ng-template pTemplate="caption">
+                    <div class="text-right">
+                        <button *ngIf="canAdd" [routerLink]="['../procedure-create']"
+                            class="btn btn-success width-100 mb-xs sm-mrg" role="button" data-cy="add-button">
+                            + Add
+                        </button>
+                        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+                            [gridVersion]="gridVersion"  data-cy="usergrid-options"  [hidden]="false">
+                        </grid-options>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id"
+                         data-cy="grid-header">
+                            {{col.label}} <p-sortIcon [field]="col.id" *ngIf="col.label !== 'Actions'"></p-sortIcon>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th grid-input-filter [dt]="dt" searchField="id"
+                            [hidden]="!commonGrid.isVisibleCol('id',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="name"
+                            [hidden]="!commonGrid.isVisibleCol('name',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="procedureType.name"
+                            [hidden]="!commonGrid.isVisibleCol('procedureType.name',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="duration"
+                            [hidden]="!commonGrid.isVisibleCol('duration',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="durationType"
+                            [hidden]="!commonGrid.isVisibleCol('durationType',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="revision"
+                            [hidden]="!commonGrid.isVisibleCol('revision',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="referenceFiles"
+                            [hidden]="!commonGrid.isVisibleCol('referenceFiles',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="created.fullName"
+                            [hidden]="!commonGrid.isVisibleCol('created.fullName',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="createdOn"
+                            [hidden]="!commonGrid.isVisibleCol('createdOn',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="lastUpdated.fullName"
+                            [hidden]="!commonGrid.isVisibleCol('lastUpdated.fullName',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th grid-input-filter [dt]="dt" searchField="lastUpdatedOn"
+                            [hidden]="!commonGrid.isVisibleCol('lastUpdatedOn',gridSettings)" [gridSettings]="gridSettings">
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-model>
+                    <tr class="ui-selectable-row" data-cy="row">
+                        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
+                            {{model.id}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('name', gridSettings)">
+                            {{model.name}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('procedureType.name', gridSettings)">
+                            {{model.procedureType?.name}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('duration', gridSettings)">
+                            {{model.duration}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('durationType', gridSettings)">
+                            {{model.durationType}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('revision', gridSettings)">
+                            {{model.revision}}
+                        </td>
+                        <td>
+                            <grid-file-viewer [menuItem]="model.referenceFiles" [files]="model.referenceFiles"></grid-file-viewer>
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('created.fullName', gridSettings)">
+                            {{model.created?.fullName}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('createdOn', gridSettings)">
+                            {{model.createdOn | userTimezone }}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('lastUpdated.fullName', gridSettings)">
+                            {{model.lastUpdated.fullName}}
+                        </td>
+                        <td [hidden]="!commonGrid.isVisibleCol('lastUpdatedOn', gridSettings)">
+                            {{model.lastUpdatedOn | userTimezone }}
+                        </td>
+                        <td>
+                            <i *ngIf="canEdit" class="far fa-edit pointer" tooltip="Edit Procedure"
+                                data-cy="edit-button" [routerLink]="['../procedure-edit']"
+                                [queryParams]="{id: model.id}"></i>
+                            <i *ngIf="canDelete" class="fa fa-trash pointer" tooltip="Delete Procedure"
+                                data-cy="delete-button" (click)="openConfirmDeleteDialog(model)"></i>
+                            <i class="fal fa-eye pointer" tooltip="View Procedure Summary and Steps"
+                                [routerLink]="['../procedure-view']" [queryParams]="{id: model.id}" data-cy="view-button"></i>
+                            <i *ngIf="false" class="far fa-copy pointer" tooltip="Copy Procedure" (click)="copyProcedure(model)"
+                                data-cy="copy-button"></i>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6" style="text-align:left">No Procedure Types to display</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </widget>
+    </div>
+  </div>
+  <p-dialog header="Confirm Delete Procedure" [(visible)]="showConfirmDeleteDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      Are you sure you want to Delete this Procedure?
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="submit" (click)="delete()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
+        data-cy="confirmdelete-button">
+        Delete
+      </button>
+      <button type="button" (click)="closeConfirmDeleteDialog()" class="btn btn-outline-inverse width-100 mb-xs"
+        role="button">
+        Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

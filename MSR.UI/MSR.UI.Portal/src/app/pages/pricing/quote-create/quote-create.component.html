@@ -1,0 +1,410 @@
+
+<div class="container">
+  <h1 class="page-title">
+    <i class="icon fa fa-usd"></i>
+    Freeform Quote
+  </h1>
+
+  <widget class="mt-4">
+    <form
+      data-parsley-validate
+      data-cy="quote-create-form"
+      class="parsleyjs"
+      data-parsley-priority-enabled="false"
+      (ngSubmit)="submit()"
+      novalidate="novalidate"
+    >
+      <div class="row mr-0 ml-0">
+        <table class="table no-border quote-header" width="100%">
+          <tbody>
+            <tr>
+              <td rowspan="2" width="60%" class="text-left"><img src="/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2"></td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-center">
+                <h2>Quotation</h2>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table quote-header" width="100%">
+          <tbody>
+            <tr>
+                <th class="text-right">Customer:</th>
+                <td>
+                  <p-dropdown
+                    placeholder="Select Customer"
+                    name="customerSelectId"
+                    [options]="customersData"
+                    appendTo="body"
+                    [baseZIndex]="100001"
+                    [(ngModel)]="data.customerId"
+                    [virtualScroll]="true"
+                    itemSize="30"
+                    data-cy="quote-select-customerid"
+                  >
+                  </p-dropdown>
+                  <p-inputNumber
+                    [(ngModel)]="data.customerId"
+                    mode="decimal"
+                    name="customerId"
+                    inputId="customerId"
+                    [useGrouping]="false"
+                    class="hide"
+                    data-cy="quote-customerid"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                    data-parsley-type="integer"
+                  >
+                  </p-inputNumber>
+                </td>
+                <th class="text-right">Contact:</th>
+                <td>
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="contact"
+                    [(ngModel)]="data.contact"
+                    data-cy="quote-contact"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                  >
+                </td>
+                <th class="text-right">Delivery</th>
+                <td>
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="delivery"
+                    [(ngModel)]="data.delivery"
+                    data-cy="quote-contact"
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th class="text-right"></th>
+                <td></td>
+                <th class="text-right">Title:</th>
+                <td>
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="title"
+                    [(ngModel)]="data.title"
+                    data-cy="quote-title"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-required="true"
+                  >
+                </td>
+                <th class="text-right"></th>
+                <td></td>
+              </tr>
+              <tr>
+                <th class="text-right"></th>
+                <td></td>
+                <th class="text-right">Phone:</th>
+                <td>
+                  <input
+                    pInputText
+                    type="text"
+                    class="form-control input-transparent"
+                    name="phone"
+                    [(ngModel)]="data.phone"
+                    data-cy="quote-phone"
+                  >
+                </td>
+                <th class="text-right"></th>
+                <td></td>
+              </tr>
+              <tr>
+                <td colspan="6"></td>
+              </tr>
+          </tbody>
+        </table>
+        <table
+          class="table table-bordered table-striped items-table mb-0" width="100%"
+        >
+          <thead>
+            <tr>
+              <th width="10%">Item No.</th>
+              <th width="10%">Quantity</th>
+              <th width="30%" style="text-align: left !important">Description</th>
+              <th>Lead Time</th>
+              <th>Customer Part No.</th>
+              <th>Price</th>
+              <th>Extension</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let quoteItem of data.quoteItems; index as i;">
+              <td>{{i+1}}</td>
+              <td>
+                <p-inputNumber
+                  [(ngModel)]="data.quoteItems[i].qty"
+                  mode="decimal"
+                  name="quoteItem{{i}}_qty"
+                  [useGrouping]="false"
+                  inputStyleClass="form-control input-transparent"
+                  data-cy="quote-item-qty"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                  data-parsley-type="integer"
+                >
+                </p-inputNumber>
+              </td>
+              <td>
+                <input
+                  pInputText
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_description"
+                  [(ngModel)]="data.quoteItems[i].description"
+                  data-cy="quote-item-description"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </td>
+              <td>
+                <input
+                  pInputText
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_leadTime"
+                  [(ngModel)]="data.quoteItems[i].leadTime"
+                  data-cy="quote-item-leadtime"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </td>
+              <td>
+                <input
+                  pInputText
+                  class="form-control input-transparent"
+                  name="quoteItem{{i}}_customerPartNo"
+                  [(ngModel)]="data.quoteItems[i].customerPartNo"
+                  data-cy="quote-item-partno"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </td>
+              <td>
+                <p-inputNumber
+                  [(ngModel)]="data.quoteItems[i].price"
+                  name="quoteItem{{i}}_price"
+                  [minFractionDigits]="2"
+                  inputStyleClass="form-control input-transparent"
+                  data-cy="quote-item-price"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                  data-parsley-type="integer"
+                >
+                </p-inputNumber>
+              </td>
+              <td>
+                <p-inputNumber
+                  [(ngModel)]="data.quoteItems[i].extension"
+                  name="quoteItem{{i}}_extension"
+                  [minFractionDigits]="2"
+                  inputStyleClass="form-control input-transparent"
+                  data-cy="quote-item-extension"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-type="integer"
+                >
+                </p-inputNumber>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7">
+                <a
+                  class="btn btn-primary pull-left"
+                  tooltip="Add an Item to the Quote"
+                  (click)="addQuoteItem()"
+                  data-cy="add-quote-item"
+                >
+                  <i class="fa fa-plus-circle"></i> Add Item
+                </a>
+                <a
+                  class="pull-left btn btn-warning ml-2"
+                  tooltip="Removes Last Item from the Quote"
+                  (click)="removeQuoteItem()"
+                  data-cy="remove-quote-item"
+                >
+                  <i class="fa fa-minus-circle"></i> Remove Item
+                </a>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <table class="table table-bordered table-striped items-table" width="100%">
+          <thead>
+            <tr>
+              <th width="20%">Existing Process Spec. # or New</th>
+              <th width="80%">Process Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <textarea
+                  pTextArea
+                  class="form-control input-transparent"
+                  cols="20"
+                  rows="3"
+                  style="width:100"
+                  name="existingProcess"
+                  [(ngModel)]="data.processName"
+                  data-cy='quote-processname'
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                ></textarea>
+              </td>
+              <td>
+                <textarea
+                  pTextArea
+                  class="form-control input-transparent"
+                  cols="20"
+                  rows="3"
+                  style="width:100"
+                  name="processDescription"
+                  [(ngModel)]="data.description"
+                  data-cy="quote-description"
+                ></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table" width="100%">
+          <tbody>
+            <tr>
+              <td width="100%">
+                <small>
+                  This quotation is subject to the following terms and conditions, and is good only for 30 Days from date of quotation.<br>
+                  <ol>
+                    <li>
+                      All orders tendered to MSR-FSR are subject to credit approval and final acceptance by MSR-FSR<br>
+                      MSR-FSR reserves the right to refuse any order tendered pursuant to this quotation without incurring any liability because of such refusal.
+                    </li>
+                    <li>
+                      MSR-FSR guarantees to the purchaser that all goods sold pursuant to an accepted purchase order(s) shall conform to MSR-FSR process specifications and shall be free from defects in materials and workmanship. MSR-FSR expressly disclaims all other warranties, whether express, implied or statutory, including the warranty of merchantability and fitness for use.<br>
+                      In no event will MSR-FSR be liable for consequential damages arising out of the use of the products described herein.
+                    </li>
+                    <li>MSR-FSR will use its reasonably best efforts to expedite the delivery of any goods sold: however, MSR-FSR does not guarantee any specific delivery date nor assume any responsibility for delays due to any cause beyond the control of MSR-FSR.</li>
+                    <li>Prices indicated are good for thirty (30) days from date of this quotation and based on quantities specificed unless otherwise noted.</li>
+                    <li>Prices are in USD unless specified otherwise. If services are provided outside of the US and in USD, pricing may be adjusted based on foreign currency effects.</li>
+                    <li>This quote is based on a projected process flow derived from best known methods, and may require re-negotiation and change based on subsequent validation results or process changes. </li>
+                  </ol>
+                </small>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table  no-border quote-footer" width="100%">
+          <tbody>
+            <tr>
+              <td colspan="5" width="60%"></td>
+              <td colspan="2">Respectfully submitted,</td>
+            </tr>
+            <tr>
+              <td colspan="5" width="60%"></td>
+              <td
+                width="20%"
+                style="border-bottom: 1px solid #000 !important;"
+              >
+                <input
+                  pInputText
+                  class="form-control input-transparent single-line" name="createdByName"
+                  [(ngModel)]="data.representative"
+                  data-cy="quote-representative"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </td>
+              <td
+                width="30%"
+                style="border-bottom: 1px solid #000 !important;"
+              >
+                <input
+                  pInputText
+                  class="form-control input-transparent single-line" name="titleSubmit"
+                  [(ngModel)]="data.representativeTitle"
+                  data-cy="quote-representative-title"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5" width="60%"></td>
+              <td width="20%" class="line-caption">Created By</td>
+              <td width="30%" class="line-caption">Title</td>
+            </tr>
+            <tr>
+              <td colspan="5" width="60%"></td>
+              <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
+                <input
+                  pInputText
+                  class="form-control input-transparent single-line" name="address"
+                  [(ngModel)]="data.representativeAddress"
+                  data-cy="quote-representative-address"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5" width="60%"></td>
+              <td colspan="2" width="40%" class="line-caption">Address</td>
+            </tr>
+            <tr>
+              <td colspan="5" width="60%"></td>
+              <td colspan="2" width="40%">MSR-FSR LLC</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="col-12 my-3 d-flex justify-content-end">
+          <a
+            class="pull-right btn btn-danger fa"
+            [routerLink]="['../../products']"
+          >
+            Cancel
+          </a>
+
+          <input
+            type="submit"
+            class="pull-right btn btn-success fa fa-send ml-2"
+            tooltip="Save and Send Quote to Client"
+            value="Save & Submit"
+          >
+        </div>
+      </div>
+    </form>
+  </widget>
+</div>
