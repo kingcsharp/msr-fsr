@@ -29,11 +29,11 @@
               </div>
             </div>
             <div class="col-3 mr-0 pr-0 justify-content-end align-middle">
-              <wiplistbutton-wrapper class="d-flex justify-content-end" ></wiplistbutton-wrapper>
+              <wiplistbutton-wrapper class="d-flex justify-content-end" *ngIf="false" ></wiplistbutton-wrapper>
             </div>
           </div>
           <div class="row mb-2">
-            <selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown>
+            <selectworkorderdropdown-wrapper [ngClass]="['w-100']" #selectworkorderdropdown *ngIf="false">
             </selectworkorderdropdown-wrapper>
           </div>
           <div class="row justify-content-end">
@@ -74,7 +74,7 @@
           </p-tabView>
         </div>
       </div>
-      <div class="row mb-3" *ngIf="workOrderModel.workOrderTasks !== undefined">
+      <div class="row mb-3 v-25" *ngIf="workOrderModel.workOrderTasks !== undefined">
         <carousel id="step-carousel" #stepCarousel class="col-12 align-items-center" style="margin-left:25px"
           [itemsPerSlide]="itemsPerASlide" [singleSlideOffset]="false" [noWrap]="true" [showIndicators]="false"
           [interval]="false" [startFromIndex]="startSlideIndex" [(activeSlide)]="activeSlideIndex" data-ride="carousel">
@@ -90,7 +90,7 @@
           </slide>
         </carousel>
       </div>
-      <div class="row v-25" [hidden]="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.id !== workOrderTaskToView.id && !workOrderIsComplete">
+      <div class="row wip-controller">
         <div class="d-flex col-4 justify-content-start pl-0">
           <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks" [hasAccessToTaskBeingViewed]="hasAccessToTaskBeingViewed"
             [workOrderIsComplete]="workOrderIsComplete" [(workOrderTaskInProgress)]="workOrderTaskInProgress"
@@ -106,7 +106,7 @@
             <i class="fas fa-exclamation-triangle"></i> You do not have the proper role to access <span class="font-weight-bold">{{nameOfTaskThatIsRestricted}}</span> 
             <br>The <strong>{{rolesRequiredMessage}}</strong> role is Required</div>
         </div>
-        <div class="d-flex col-4 justify-content-end pr-0">
+        <div class="d-flex col-4 justify-content-end pr-0" *ngIf="workOrderTaskInProgress?.id === workOrderTaskToView?.id && !workOrderIsComplete">
           <take-over-task-button-wrapper [(workOrderTaskInProgress)]="workOrderTaskInProgress"
             [workOrderModel]="workOrderModel"
             *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo !== globals.getCurrentUser().id">
