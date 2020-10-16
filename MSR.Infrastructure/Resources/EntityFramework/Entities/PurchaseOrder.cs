@@ -41,6 +41,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("StatusId")]
         public virtual Status Status { get; set; }
 
+        public virtual int StatusId { get; set; }
         public virtual ICollection<PurchaseOrderProduct> PurchaseOrderProducts { get; set; }
     }
 }
