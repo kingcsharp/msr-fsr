@@ -7,12 +7,10 @@ namespace MSR.Answer.API.V1.Models
     {
         [Required]
         public int? CustomerId { get; set; }
-        [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         public string CustomerReferencePO { get; set; }
-        [Required]
-        public string ReferenceName { get; set; }
+        public string? ReferenceName { get; set; }
         [Required]
         public int[] Products { get; set; }
         public DateTime OpenDate { get; set; }

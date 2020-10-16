@@ -16546,9 +16546,9 @@ export interface IAuditActionResultOfPurchaseOrderView extends IAuditActionResul
 
 export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
     customerId!: number;
-    name!: string;
+    name?: string | undefined;
     customerReferencePO!: string;
-    referenceName!: string;
+    referenceName?: string | undefined;
     products!: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
@@ -16616,9 +16616,9 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
 
 export interface ICreatePurchaseOrderRequest {
     customerId: number;
-    name: string;
+    name?: string | undefined;
     customerReferencePO: string;
-    referenceName: string;
+    referenceName?: string | undefined;
     products: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
