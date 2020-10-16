@@ -27,6 +27,10 @@ export class WipComponent implements OnInit, AfterViewInit {
   statusOptions: Array<SelectItem>;
   locationOptions: Array<SelectItem>;
   gridSaved: GridSaved;
+
+  gridPartsSaved: GridSaved;
+  reportPartsModel: ReportModel;
+  dataaa: any;
   showReport: boolean = false;
   reportModel: ReportModel;
   showNcrModal: boolean = false;
@@ -34,7 +38,34 @@ export class WipComponent implements OnInit, AfterViewInit {
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) { }
+  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) {
+
+  }
+
+  ngOnInit(): void {
+    this.dataaa = [];
+    //   "hasPhotos": true,
+    //   "hasNCRs": true,
+    //   "hasFiles": true,
+    //   "hasMonitors": true,
+
+    this.gridPartsSaved = new GridSaved({
+      columnsSaved: [
+        new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
+        // new ColumnsSaved({ id: 'part.partNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
+        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
+        new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+        // new ColumnsSaved({ id: 'part.name', label: 'Part Name', visible: true, type: EnumColumnType.String }),
+      ],
+      storageId: 'wip_engineering_parts' + this.elementReference.nativeElement.tagName.toLowerCase(),
+      version: '1.0.0'
+    });
+
+    this.reportPartsModel = new ReportModel({
+      name: 'Sub Parts'
+    });
+  }
+
   ngAfterViewInit(): void {
     if (this.globals.selectedCustomer !== undefined) {
       this.getGridData();
@@ -64,28 +95,24 @@ export class WipComponent implements OnInit, AfterViewInit {
         });
 
       }));
+
+
+    // [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel" [data]="expandRowData.rowData.workOrderParts"
   }
 
 
   showNcr(row: any) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(row.colData.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.ncrWorkOrder = response.object[0];
-        this.showNcrModal = true;
-      }));
+    if (this.ncrWorkOrder?.id !== row.colData.id)
+      this.workOrderService.workOrder(row.colData.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.ncrWorkOrder = response.object[0];
+          this.showNcrModal = true;
+        }));
   }
 
   print() {
     window.print();
-  }
-
-  ngOnInit(): void {
-
-    //   "hasPhotos": true,
-    //   "hasNCRs": true,
-    //   "hasFiles": true,
-    //   "hasMonitors": true,
   }
 
 

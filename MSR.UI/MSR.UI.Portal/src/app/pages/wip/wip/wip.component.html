@@ -12,26 +12,30 @@
 
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
     <div>Monitors</div>
-    <div>NCR</div>
     <button type="button" class="btn btn-sm btn-primary mr-0" (click)="showNcr(colsDataAndSettings)"><i
             class="fas fa-print mx-1"></i>NCR</button>
-
     <div>Photos</div>
     <div>Files</div>
 </ng-template>
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
-    <div *ngFor="let item of expandRowData.rowData.workOrderParts">
+    <!-- *ngIf="showReport" [showReport]="showReport" 
+    expandRowData.rowData.workOrderParts
+    -->
+    <app-grid [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel" [data]="dataaa">
+    </app-grid>
+
+    <!-- <div *ngFor="let item of expandRowData.rowData.workOrderParts">
         Serial #- {{item.serialNumber}}
         <br />Company Part #- {{item.part.partNumber}}
         <br />Cycle Count #- {{item.cycleCount}}
         <br />Qty #- {{item.qty}}
         <br />Part Name #- {{item.part.name}}
-    </div>
+    </div> -->
 </ng-template>
 
-<p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true'
-    [style]="{width: '50vw'}" data-cy="user-header">
+<p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <p-header>
         NCR Report
     </p-header>
