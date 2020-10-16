@@ -5,7 +5,7 @@
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
     <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
-        [data]="data">
+        (expandRowClick)="expandRow($event)" [data]="data">
     </app-grid>
 </widget>
 
@@ -21,28 +21,27 @@
 </ng-template>
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
-    <div>{{expandRowData.rowData|json}}</div>
-    <div>NCR</div>
-    <div>Photos</div>
-    <div>Files</div>
+    <div *ngFor="let item of expandRowData.rowData.workOrderParts">
+        Serial #- {{item.serialNumber}}
+        <br />Company Part #- {{item.part.partNumber}}
+        <br />Cycle Count #- {{item.cycleCount}}
+        <br />Qty #- {{item.qty}}
+        <br />Part Name #- {{item.part.name}}
+    </div>
 </ng-template>
 
-
-
-
-
-<p-dialog [(visible)]="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true'
+<p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001" [modal]='true'
     [style]="{width: '50vw'}" data-cy="user-header">
     <p-header>
-        NCR
+        NCR Report
     </p-header>
-    <div class="row printotherreport-dropdown">
+    <!-- <div class="row printotherreport-dropdown">
         <div class="col-2 d-flex justify-content-end">
             <div class="my-auto">NCR Report</div>
         </div>
-    </div>
+    </div> -->
     <div class="report-viewport m-4 d-print-flex">
-        <ncr-report [WorkOrder]="WorkOrder" *ngIf="selectedReport === 'NCRReport'"></ncr-report>
+        <ncr-report [WorkOrder]="ncrWorkOrder"></ncr-report>
     </div>
     <p-footer>
         <div class="pull-right">
@@ -50,7 +49,7 @@
                 data-cy="confirmdelete-button">
                 <i class="fas fa-print mx-1"></i>Print
             </button>
-            <button type="submit" (click)="showNcr = false" class="btn btn-warning mb-xs" role="button"
+            <button type="submit" (click)="showNcrModal = false" class="btn btn-warning mb-xs" role="button"
                 data-cy="confirmdelete-button">
                 <i class="fas fa-times-circle mx-1"></i>Close
             </button>

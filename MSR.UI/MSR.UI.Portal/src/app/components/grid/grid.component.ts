@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
   ReportService, ReportModel
@@ -39,6 +39,7 @@ export class GridComponent implements OnInit {
   @Input() showReport: boolean;
   @Input() data;
   @Input() reportInfo: ReportModel;
+  @Output() expandRowClick = new EventEmitter<any>();
   showCharts: boolean = false;
   hasChart: boolean = false;
   Highcharts: typeof Highcharts = Highcharts;
@@ -56,6 +57,12 @@ export class GridComponent implements OnInit {
 
   ngOnInit(): void {
     this.getReport(this.data, this.reportInfo);
+  }
+
+  expandRow(expanded, row) {
+    if(!expanded){
+      this.expandRowClick.emit(row);
+    }
   }
 
   handleFilter(ev, filteredData) {

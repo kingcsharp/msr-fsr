@@ -37,7 +37,7 @@
     <ng-template pTemplate="body" let-itemData let-expanded="expanded">
         <tr class="ui-selectable-row">
             <td *ngIf="gridSaved.expandRows">
-                <i class="fad pointer" [pRowToggler]="itemData"
+                <i class="fad pointer" [pRowToggler]="itemData" (click)="expandRow(expanded,itemData)"
                     [ngClass]="{'fa-plus': expanded !== true, 'fa-minus':expanded===true}"></i>
             </td>
             <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowViewData"

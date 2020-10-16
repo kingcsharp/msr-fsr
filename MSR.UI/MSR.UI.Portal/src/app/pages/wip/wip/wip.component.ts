@@ -9,6 +9,8 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
+import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
+import { pushIfNotExists } from '../../../models/lib/Utils';
 
 @Component({
   selector: 'app-wip',
@@ -28,6 +30,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   showReport: boolean = false;
   reportModel: ReportModel;
   showNcrModal: boolean = false;
+  ncrWorkOrder: any;
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
 
@@ -50,6 +53,85 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
   }
 
+  expandRow(data: PortalWorkOrderPartsView) {
+    this.globals.showLoader(true);
+    this.workOrderService.workOrder(data.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        // debugger;
+
+        response.object[0].workOrderParts.forEach(element => {
+          pushIfNotExists(element, data.workOrderParts, 'id');
+        });
+
+      }));
+  }
+
+
+  showNcr(row: any) {
+    this.globals.showLoader(true);
+    this.workOrderService.workOrder(row.colData.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.ncrWorkOrder = response.object[0];
+        this.showNcrModal = true;
+      }));
+  }
+
+  print() {
+    window.print();
+  }
+
+  ngOnInit(): void {
+
+    //   "hasPhotos": true,
+    //   "hasNCRs": true,
+    //   "hasFiles": true,
+    //   "hasMonitors": true,
+  }
+
+
+
+  getGridData() {
+    this.globals.showLoader(true);
+    this.workOrderService.portal(this.globals.selectedCustomer.id, '', null, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data = response.object.map(x => {
+          let ret = new PortalWorkOrderPartsView(x);
+          ret.workOrderParts = [];
+          return ret;
+        });
+        this.gridSaved = new GridSaved({
+          columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
+          storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
+          version: '1.0.0',
+          expandRows: true,
+          expandRowsTemplate: this.expandedRowTemplate
+        });
+
+        this.reportModel = new ReportModel({
+          name: 'Work Orders'
+        });
+
+        this.showReport = true;
+      }));
+  }
+
+  getEngineerColumns() {
+    return [
+      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WO Item #', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String }),
+    ];
+  }
   getBuyerColumns() {
     return [
       new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
@@ -70,62 +152,5 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem, isRanged: true })
 
     ];
-  }
-
-  showNcr(row: PortalWorkOrderView) {
-    console.log(row);
-    // this.workOrderService.workOrder(row.)
-    this.showNcrModal = true;
-  }
-
-  getEngineerColumns() {
-    return [
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WO Item #', type: EnumColumnType.String, visible: true }),
-      new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
-      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
-      new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
-      new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
-      new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.String }),
-    ];
-  }
-
-
-
-  ngOnInit(): void {
-
-    //   "hasPhotos": true,
-    //   "hasNCRs": true,
-    //   "hasFiles": true,
-    //   "hasMonitors": true,
-  }
-
-
-
-  getGridData() {
-    this.globals.showLoader(true);
-    this.workOrderService.portal(this.globals.selectedCustomer.id, '', null, env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        this.data = response.object;
-        this.gridSaved = new GridSaved({
-          columnsSaved: this.globals.isBuyer ? this.getBuyerColumns() : this.getEngineerColumns(),
-          storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
-          version: '1.0.0',
-          expandRows: true,
-          expandRowsTemplate: this.expandedRowTemplate
-        });
-
-        this.reportModel = new ReportModel({
-          name: 'Work Orders'
-        });
-
-        this.showReport = true;
-      }));
   }
 }
