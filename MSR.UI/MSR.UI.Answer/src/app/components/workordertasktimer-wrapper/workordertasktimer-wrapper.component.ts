@@ -7,6 +7,7 @@ import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Input() workOrderTaskToView: WorkOrderTaskModel;
   @Input() currentUser: UserModel;
   @Input() workOrderIsComplete: boolean = false;
+  @Input() hasAccessToTaskBeingViewed: boolean = true;
   @Output() workOrderTasksChange = new EventEmitter<any>();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
@@ -34,7 +36,7 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   stepHours: number = 0;
   timerStartTime: Date;
 
-  constructor(private workOrderTaskService: WorkOrderTaskService, private userService: UserService, private globals: Globals) { }
+  constructor(private workOrderTaskService: WorkOrderTaskService, private userService: UserService, private globals: Globals,  private router: Router) { }
 
   ngOnInit(): void {
 
@@ -131,6 +133,8 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
       this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
         this.slideToTask();
       }));
+    } else {
+      this.router.navigate(['/app/wip/wipstatus']);
     }
 
 

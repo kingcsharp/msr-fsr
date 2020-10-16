@@ -5730,16 +5730,14 @@ export class SensorService {
         return _observableOf<AuditActionResultOfIEnumerableOfString>(<any>null);
     }
 
-    value(sensorName: string | null | undefined, siteId: number | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
+    value(sensorName: string | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
         let url_ = this.baseUrl + "/v{version}/Sensor/Value?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (sensorName !== undefined && sensorName !== null)
             url_ += "SensorName=" + encodeURIComponent("" + sensorName) + "&";
-        if (siteId === null)
-            throw new Error("The parameter 'siteId' cannot be null.");
-        else if (siteId !== undefined)
+        if (siteId !== undefined && siteId !== null)
             url_ += "SiteId=" + encodeURIComponent("" + siteId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -16631,6 +16629,7 @@ export interface ICreatePurchaseOrderRequest {
 
 export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest implements IUpdatePurchaseOrderRequest {
     id!: number;
+    closePurchaseOrder?: boolean;
 
     constructor(data?: IUpdatePurchaseOrderRequest) {
         super(data);
@@ -16640,6 +16639,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
         super.init(_data);
         if (_data) {
             this.id = _data["id"];
+            this.closePurchaseOrder = _data["closePurchaseOrder"];
         }
     }
 
@@ -16653,6 +16653,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["closePurchaseOrder"] = this.closePurchaseOrder;
         super.toJSON(data);
         return data; 
     }
@@ -16660,6 +16661,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
 
 export interface IUpdatePurchaseOrderRequest extends ICreatePurchaseOrderRequest {
     id: number;
+    closePurchaseOrder?: boolean;
 }
 
 /** Base class for an API call with a typed result */
@@ -18537,7 +18539,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     disposition?: string | undefined;
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
 
     constructor(data?: IWorkOrderGridSummary) {
@@ -18569,7 +18575,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.disposition = _data["disposition"];
             this.currentActiveTaskName = _data["currentActiveTaskName"];
             this.percentageOfTasksCompleted = _data["percentageOfTasksCompleted"];
+            this.percentageOfTasksCompletedNumerator = _data["percentageOfTasksCompletedNumerator"];
+            this.percentageOfTasksCompletedDenominator = _data["percentageOfTasksCompletedDenominator"];
             this.percentageOfExpectedDurationTimeLogged = _data["percentageOfExpectedDurationTimeLogged"];
+            this.percentageOfExpectedDurationTimeLoggedNumerator = _data["percentageOfExpectedDurationTimeLoggedNumerator"];
+            this.percentageOfExpectedDurationTimeLoggedDenominator = _data["percentageOfExpectedDurationTimeLoggedDenominator"];
             this.hasNcr = _data["hasNcr"];
         }
     }
@@ -18601,7 +18611,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["disposition"] = this.disposition;
         data["currentActiveTaskName"] = this.currentActiveTaskName;
         data["percentageOfTasksCompleted"] = this.percentageOfTasksCompleted;
+        data["percentageOfTasksCompletedNumerator"] = this.percentageOfTasksCompletedNumerator;
+        data["percentageOfTasksCompletedDenominator"] = this.percentageOfTasksCompletedDenominator;
         data["percentageOfExpectedDurationTimeLogged"] = this.percentageOfExpectedDurationTimeLogged;
+        data["percentageOfExpectedDurationTimeLoggedNumerator"] = this.percentageOfExpectedDurationTimeLoggedNumerator;
+        data["percentageOfExpectedDurationTimeLoggedDenominator"] = this.percentageOfExpectedDurationTimeLoggedDenominator;
         data["hasNcr"] = this.hasNcr;
         return data; 
     }
@@ -18626,7 +18640,11 @@ export interface IWorkOrderGridSummary {
     disposition?: string | undefined;
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
 }
 
@@ -19030,6 +19048,8 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -19054,6 +19074,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
                 this.referenceFilesIds = [] as any;
                 for (let item of _data["referenceFilesIds"])
                     this.referenceFilesIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -19080,6 +19105,11 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             for (let item of this.referenceFilesIds)
                 data["referenceFilesIds"].push(item);
         }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -19104,6 +19134,8 @@ export interface IUpdateWorkOrderTaskRequest {
     totalTaskTime?: number | undefined;
     /** List of file IDs to attach to this work order task */
     referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

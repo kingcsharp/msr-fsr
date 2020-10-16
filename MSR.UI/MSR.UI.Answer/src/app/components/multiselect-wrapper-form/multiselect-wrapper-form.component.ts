@@ -26,9 +26,8 @@ export class MultiselectWrapperFormComponent implements OnInit {
     this.basicOptions = {
       name: this.defaultLabelProperty || 'name',
       id: this.defaultId || 'id',
-      limit: this.limit || 4
+      limit: this.limit || 4,
     };
-
     this.options.map((x) => {
       this.currentOptions.push({ label: x[ctrl.basicOptions.name], value: { id: x[ctrl.basicOptions.id], name: x[ctrl.basicOptions.name] } });
     });

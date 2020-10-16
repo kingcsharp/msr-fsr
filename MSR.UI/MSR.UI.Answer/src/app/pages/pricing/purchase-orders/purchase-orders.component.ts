@@ -10,10 +10,7 @@ import { EnumMenuItem, PurchaseOrderService, CustomerService, ProductService, Up
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
-import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
-import { Utils } from 'ngx-bootstrap/utils';
 
 declare let jQuery: any;
 
@@ -52,6 +49,9 @@ export class PurchaseOrdersComponent implements OnInit {
       value: 'Closed'
     }
   ];
+  showConfirmDeleteDialog: boolean = false;
+  showConfirmCloseDialog: boolean = false;
+  poToCloseOrDelete: PurchaseOrderView;
 
   constructor(
     public globals: Globals,
@@ -98,55 +98,58 @@ export class PurchaseOrdersComponent implements OnInit {
   }
 
   showPurchaseOrderModal(purchaseOrder: PurchaseOrderView) {
-    this.currentPO = this.getPuchaseOrder(purchaseOrder === undefined ? new PurchaseOrderView() : purchaseOrder);
-    this.display = true;
+    if (purchaseOrder === undefined) {
+      this.currentPO = this.getPuchaseOrder(new PurchaseOrderView());
+      this.display = true;
+    } else {
+      this.globals.showLoader(true);
+      this.productService.productGet(null, purchaseOrder.customerId, env.apiVersion).pipe(take(1))
+        .subscribe(responseHandler(response => {
+          this.showProductsSelect = false;
+          response.object.map(product => {
+            this.productsData.push({
+              id: product.id,
+              label: `${product.name} (R-${product.revision})`,
+            });
+          });
+          this.currentPO = this.getPuchaseOrder(purchaseOrder);
+          this.display = true;
+          setTimeout(() => {
+            this.showProductsSelect = true;
+          }, 10);
+        }));
+    }
   }
 
   setCurrentCustomer(currentPO, purchaseOrder) {
     currentPO.customer = this.customersData.find(x => x.id === purchaseOrder.customerId);
   }
 
-  onClickDelete(purchaseOrder: PurchaseOrderView) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to Delete this record?',
-      accept: () => {
-        this.deletePurchaseOrder(purchaseOrder);
-      }
-    });
-  }
-
-  deletePurchaseOrder(purchaseOrder: PurchaseOrderView) {
+  deletePurchaseOrder() {
     this.globals.showLoader(true);
-    this.purchaseOrderService.purchaseOrderDelete(purchaseOrder.id, env.apiVersion).pipe(take(1))
+    this.purchaseOrderService.purchaseOrderDelete(this.poToCloseOrDelete.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        const index = this.data.findIndex(x => x.id === purchaseOrder.id);
+        const index = this.data.findIndex(x => x.id === this.poToCloseOrDelete.id);
         this.data.splice(index, 1);
         this.data = this.data.slice(0);
+        this.closeConfirmDialog();
       }));
   }
 
-  onClickClose(purchaseOrder: PurchaseOrderView) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to Close this record?',
-      accept: () => {
-        this.closePurchaseOrder(purchaseOrder);
-      }
-    });
-  }
-
-  closePurchaseOrder(purchaseOrder: PurchaseOrderView) {
+  closePurchaseOrder() {
     this.globals.showLoader(true);
     let purchaseOrderRequest = new UpdatePurchaseOrderRequest();
-    Object.assign(purchaseOrderRequest, purchaseOrder);
-    purchaseOrderRequest.products = purchaseOrder.products.map((elem) => elem.id);
+    Object.assign(purchaseOrderRequest, this.poToCloseOrDelete);
+    purchaseOrderRequest.products = this.poToCloseOrDelete.products.map((elem) => elem.id);
     purchaseOrderRequest.closeDate = new Date();
-    // BACKEND ENDPOINT TBD
+    purchaseOrderRequest.closePurchaseOrder = true;
     this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseOrderRequest).pipe(take(1))
       .subscribe(responseHandler(response => {
-        const index = this.data.findIndex(x => x.id === purchaseOrder.id);
+        const index = this.data.findIndex(x => x.id === this.poToCloseOrDelete.id);
         this.data.splice(index, 1);
         this.data.splice(index, 0, response.object);
         this.data = this.data.slice(0);
+        this.closeConfirmDialog();
       }));
   }
 
@@ -194,7 +197,13 @@ export class PurchaseOrdersComponent implements OnInit {
     this.productService.productGet(null, this.currentPO.customer.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.showProductsSelect = false;
-        replaceArrayItems(ctrl.productsData, response.object);
+        ctrl.productsData = [];
+        response.object.map(product => {
+          ctrl.productsData.push({
+            id: product.id,
+            label: `${product.name} (R-${product.revision})`,
+          });
+        });
         setTimeout(() => {
           ctrl.showProductsSelect = true;
         }, 10);
@@ -235,6 +244,25 @@ export class PurchaseOrdersComponent implements OnInit {
             ctrl.closeDialog();
           }));
       }
+    }
+  }
+
+  openConfirmDialog(purchaseOrder: PurchaseOrderView, isDelete: boolean) {
+    isDelete ? this.showConfirmDeleteDialog = true : this.showConfirmCloseDialog = true;
+    this.poToCloseOrDelete = purchaseOrder;
+  }
+
+  closeConfirmDialog() {
+    this.showConfirmDeleteDialog = false;
+    this.showConfirmCloseDialog = false;
+    this.poToCloseOrDelete = null;
+  }
+
+  deleteOrClosePO() {
+    if (this.showConfirmDeleteDialog) {
+      this.deletePurchaseOrder();
+    } else {
+      this.closePurchaseOrder();
     }
   }
 }

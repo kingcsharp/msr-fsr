@@ -4357,6 +4357,87 @@
         }
       }
     },
+    "/v{version}/Sensor/Name": {
+      "get": {
+        "tags": [
+          "Sensor"
+        ],
+        "operationId": "Sensor_GetSensorName",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfIEnumerableOfString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v{version}/Sensor/Value": {
+      "get": {
+        "tags": [
+          "Sensor"
+        ],
+        "operationId": "Sensor_GetSensorValue",
+        "parameters": [
+          {
+            "name": "SensorName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SiteId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfSensorValueModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v{version}/Timezone": {
       "get": {
         "tags": [
@@ -11156,7 +11237,7 @@
       },
       "ProductStepModel": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": {
           "id": {
             "type": "integer",
@@ -11324,7 +11405,7 @@
       },
       "ProductStep": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": true,
         "required": [
           "procedureStepId",
           "laborMinutes"
@@ -12389,6 +12470,82 @@
           }
         }
       },
+      "AuditActionResultOfIEnumerableOfString": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AuditActionResultOfSensorValueModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": true,
+            "properties": {
+              "object": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/SensorValueModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "SensorValueModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreatableModel"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "sensor": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/SensorModel"
+                  }
+                ]
+              },
+              "itemCurrentValue": {
+                "type": "string",
+                "nullable": true
+              },
+              "alarmDescription": {
+                "type": "string",
+                "nullable": true
+              },
+              "isAlarm": {
+                "type": "boolean",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
       "AuditActionResultOfICollectionOfTimeZoneModel": {
         "allOf": [
           {
@@ -12972,7 +13129,27 @@
             "format": "decimal",
             "nullable": true
           },
+          "percentageOfTasksCompletedNumerator": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "percentageOfTasksCompletedDenominator": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "percentageOfExpectedDurationTimeLogged": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLoggedNumerator": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLoggedDenominator": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -13262,6 +13439,14 @@
             "items": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          "referenceFiles": {
+            "type": "array",
+            "description": "List of files to UPLOAD and attach to this work order task",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FileModel"
             }
           }
         }

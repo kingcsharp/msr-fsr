@@ -22,11 +22,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public WorkOrderService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<ICollection<Domain.Models.WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
@@ -100,6 +102,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.WorkOrderTasks)
                 .ThenInclude(y => y.Status)
 
+
                 // Product etc.
                 .Include(x => x.Product)
                 .ThenInclude(y => y.Part)
@@ -123,6 +126,20 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             foreach (var wo in workorders)
             {
+                foreach (WorkOrderTask wot in wo.WorkOrderTasks)
+                {
+                    foreach (EntityFramework.Entities.ProcedureStepMonitor psm in wot.ProcedureStep.ProcedureStepMonitors)
+                    {
+                        // populate type objects
+                        _unitOfWork.ProcedureStepMonitors.LoadReference(
+                            psm,
+                            x => x.MonitorType);
+                        _unitOfWork.ProcedureStepMonitors.LoadReference(
+                            psm,
+                            x => x.InputType);
+                    }
+                }
+
                 var wom = _mapper.Map<WorkOrderModel>(wo);
 
                 // Status ['Waiting to Start', 'In Progress', 'Cancelled', 'Completed']
@@ -130,7 +147,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 foreach (var wot in wom.WorkOrderTasks)
                 {
-
                     // enforce sane data by limiting the status IDs returned by the API
                     wot.StatusId = TranslateWOTaskStatusToViewModel(wot);
 
@@ -144,6 +160,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         i += 1;
                     }
                     wot.WorkOrderTaskMonitors = wotmList;
+                    wot.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), wot.Id).ToList();
+
                 }
                 result.Add(DetachBackPointers(wom));
             };
@@ -411,6 +429,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             ProcedureStep step = _unitOfWork.ProcedureSteps
                 .Query()
+                .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
             if (step == null)
@@ -426,6 +445,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             WorkOrderTask newTask = _mapper.Map<WorkOrderTask>(command);
 
+            newTask.WorkOrderTaskMonitors =
+                _mapper.Map<List<WorkOrderTaskMonitor>>(step.ProcedureStepMonitors);
+
             var created = _unitOfWork.WorkOrderTasks.Add(newTask);
 
             // This will call SaveChangesAsync
@@ -436,7 +458,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             created.Context.Entry(newTask.ProcedureStep)
                 .Reference(x => x.StepType).Load();
 
-            return _mapper.Map<WorkOrderTaskModel>(newTask);
+            var ret = _mapper.Map<WorkOrderTaskModel>(newTask);
+
+            // detach backpointer to self
+            foreach (WorkOrderTaskMonitorModel wotm in ret.WorkOrderTaskMonitors)
+            {
+                wotm.WorkOrderTask = null;
+            }
+
+            return ret;
         }
 
         public async Task<WorkOrderTaskModel> UpdateWorkOrderTaskAsync(UpdateWorkOrderTask command)
@@ -457,22 +487,21 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!String.IsNullOrEmpty(command.Status))
             {
-                var statusObj = await _unitOfWork
+                var statusEntity = await _unitOfWork
                     .Status
                     .Query()
                     .FirstOrDefaultAsync(x =>
                         x.Name.ToUpper().Equals(command.Status.ToUpper()));
-                if (statusObj == null)
+                if (statusEntity == null)
                 {
                     throw new DomainException($"{nameof(Status)} not found with Name: {command.Status}", DomainError.NotFound);
                 }
-                current.StatusId = statusObj.Id;
+                current.StatusId = statusEntity.Id;
             }
 
-            WorkOrderTaskModel ret;
-            WorkOrderTask workordertask = _mapper.Map(command, current);
+            WorkOrderTask workOrderTaskEntity = _mapper.Map(command, current);
 
-            _unitOfWork.WorkOrderTasks.Update(workordertask);
+            _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
             // attach files, if any
             if (command.ReferenceFilesIds != null &&
@@ -481,8 +510,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 // First, blank the existing list and the attach the new one.
                 List<int> origList = _unitOfWork.FileEntityMap.Query().Where(x =>
-                    x.EntityId == workordertask.Id &&
-                    x.EntityTableName.ToUpper().Equals("WorkOrderTask")
+                    x.EntityId == workOrderTaskEntity.Id &&
+                    x.EntityTableName.ToUpper().Equals("WORKORDERTASK")
                 ).Select(x => x.Id).ToList();
 
                 foreach (int id in origList)
@@ -490,38 +519,54 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     _unitOfWork.FileEntityMap.Delete(false, id);
                 }
 
-                workordertask.ReferenceFiles = new List<FileEntityMap>();
+                workOrderTaskEntity.ReferenceFiles = new List<FileEntityMap>();
                 foreach (int id in command.ReferenceFilesIds)
                 {
                     FileEntityMap fem = new FileEntityMap() {
-                        EntityId = workordertask.Id,
+                        EntityId = workOrderTaskEntity.Id,
                         EntityTableName = "WorkOrderTask",
                         FileId = id
                     };
-                    workordertask.ReferenceFiles.Add(fem);
+                    workOrderTaskEntity.ReferenceFiles.Add(fem);
                 }
             }
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(workordertask, workordertask.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderTaskEntity, workOrderTaskEntity.Id);
+
+            // upload files, if any.
+            // This has to happen _after_ the reference file ID list
+            // is re-created.
+            if (command.ReferenceFiles != null &&
+                command.ReferenceFiles?.Count > 0 &&
+                command.ReferenceFiles.All(x => x != null))
+            {
+                foreach (FileModel fmodel in command.ReferenceFiles)
+                {
+                    FileModel m =
+                        await _fileService.CreateFileAsync("WorkOrderTask", current.Id, fmodel);
+                }
+            }
 
             // Load any attached files
-            _unitOfWork.WorkOrderTasks.LoadCollection(workordertask, "ReferenceFiles");
-            foreach (FileEntityMap m in workordertask.ReferenceFiles)
+            _unitOfWork.WorkOrderTasks.LoadCollection(workOrderTaskEntity, "ReferenceFiles");
+            foreach (FileEntityMap m in workOrderTaskEntity.ReferenceFiles)
             {
                 _unitOfWork.FileEntityMap.LoadReference(m, x => x.FileObject);
             }
 
             // Build the return object model
-            ret = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workordertask);
+            WorkOrderTaskModel workOrderTaskModel = _mapper.Map<Domain.Models.WorkOrderTaskModel>(workOrderTaskEntity);
+
+            workOrderTaskModel.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), workOrderTaskModel.Id).ToList();
 
             // Update the work order datetimes, if needed
             // IMPORTANT: the return object cannot be remapped after this
             // point because it will cause a backreference and break things.
-            _unitOfWork.WorkOrderTasks.LoadReference(workordertask, x => x.Status);
-            _unitOfWork.WorkOrderTasks.LoadReference(workordertask, x => x.WorkOrder);
+            _unitOfWork.WorkOrderTasks.LoadReference(workOrderTaskEntity, x => x.Status);
+            _unitOfWork.WorkOrderTasks.LoadReference(workOrderTaskEntity, x => x.WorkOrder);
 
-            WorkOrder wo = workordertask.WorkOrder;
+            WorkOrder wo = workOrderTaskEntity.WorkOrder;
             _unitOfWork.WorkOrders.LoadCollection(wo, "WorkOrderTasks");
             // "DONE" states are:
             // 4   Cancelled
@@ -529,9 +574,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
             // 3   Complete
             // 6   Rejected
             int[] completed = { 3, 4, 6, 8 };
-            if (workordertask.Status.Name.ToUpper().Equals("IN PROGRESS"))
+            if (workOrderTaskEntity.Status.Name.ToUpper().Equals("IN PROGRESS"))
             {
-                if (!workordertask.WorkOrder.ActualStartDate.HasValue)
+                if (!workOrderTaskEntity.WorkOrder.ActualStartDate.HasValue)
                 {
                     wo.ActualStartDate = DateTime.Now;
                     _unitOfWork.WorkOrders.Update(wo);
@@ -540,7 +585,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             else if (wo.WorkOrderTasks.All(x => completed.Contains(x.StatusId)))
             {
-                if (!workordertask.WorkOrder.ActualEndDate.HasValue)
+                if (!workOrderTaskEntity.WorkOrder.ActualEndDate.HasValue)
                 {
                     wo.ActualEndDate = DateTime.Now;
                     _unitOfWork.WorkOrders.Update(wo);
@@ -548,7 +593,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            return ret;
+            return workOrderTaskModel;
         }
 
         public async Task<WorkOrderTaskMonitorModel> UpdateWorkOrderTaskMonitorAsync(UpdateWorkOrderTaskMonitor command)
@@ -668,25 +713,34 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 decimal pctComplete;
                 if (denom > 0)
                 {
-                    pctComplete = numer / denom;
+                    pctComplete = (decimal)(((double)numer * 100.00) / (double)denom);
                 }
                 else
                 {
                     pctComplete = 0m;
                 }
+                sum.PercentageOfTasksCompletedNumerator = numer;
+                sum.PercentageOfTasksCompletedDenominator = denom;
                 sum.PercentageOfTasksCompleted = pctComplete;
 
                 // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = m.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
-                decimal numerTime = m.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
+                decimal denomTime = m.WorkOrderTasks.Select(x =>
+                        x.ProcedureStep.LaborTime.GetValueOrDefault(0) +
+                        x.ProcedureStep.EquipmentTime.GetValueOrDefault(0)
+                    ).Sum();
+                decimal numerTime = m.WorkOrderTasks.Select(x =>
+                        x.TotalTaskTime.GetValueOrDefault(0m)
+                    ).Sum();
                 if (denomTime > 0)
                 {
-                    sum.PercentageOfExpectedDurationTimeLogged = numerTime / denomTime;
+                    sum.PercentageOfExpectedDurationTimeLogged = ((numerTime * 100.00m)/ denomTime);
                 }
                 else
                 {
-                    sum.PercentageOfExpectedDurationTimeLogged = 0;
+                    sum.PercentageOfExpectedDurationTimeLogged = 0m;
                 }
+                sum.PercentageOfExpectedDurationTimeLoggedNumerator = numerTime;
+                sum.PercentageOfExpectedDurationTimeLoggedDenominator = denomTime;
 
                 ret.Add(sum);
             }
