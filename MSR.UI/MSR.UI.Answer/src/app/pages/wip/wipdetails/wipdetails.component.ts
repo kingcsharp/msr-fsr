@@ -236,7 +236,7 @@ export class WipdetailsComponent implements OnInit {
   generateRolesRequiredMessage(roles: Array<string>) {
     this.rolesRequiredMessage = '';
     roles.map((role, index) => {
-      
+
       if (index === 0) {
         this.rolesRequiredMessage += role;
       } else if (index === roles.length - 1) {
