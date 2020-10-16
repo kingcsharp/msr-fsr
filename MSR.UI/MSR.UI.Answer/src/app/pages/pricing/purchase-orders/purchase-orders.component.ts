@@ -192,7 +192,13 @@ export class PurchaseOrdersComponent implements OnInit {
     this.productService.productGet(null, this.currentPO.customer.id, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         ctrl.showProductsSelect = false;
-        replaceArrayItems(ctrl.productsData, response.object);
+        ctrl.productsData = [];
+        response.object.map(product => {
+          ctrl.productsData.push({
+            id: product.id,
+            label: `${product.name} (R-${product.revision})`,
+          })
+        });
         setTimeout(() => {
           ctrl.showProductsSelect = true;
         }, 10);
