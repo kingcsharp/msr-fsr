@@ -249,9 +249,16 @@
               Customer:
             </label>
             <div class="col-md-8">
-              <p-dropdown placeholder="Select Client" optionLabel="name" name="CutomerId"
-                [(ngModel)]="currentPO.customer" [options]="customersData" (onChange)="getProducts()" appendTo="body"
-                [baseZIndex]="100002" required>
+              <p-dropdown
+                placeholder="Select Client"
+                optionLabel="name" name="CutomerId"
+                [(ngModel)]="currentPO.customer"
+                [options]="customersData"
+                (onChange)="getProducts()"
+                appendTo="body"
+                [baseZIndex]="100002"
+                required
+              >
               </p-dropdown>
             </div>
           </div>
@@ -260,9 +267,15 @@
               PO Name :
             </label>
             <div class="col-md-8 ">
-              <input placeholder="Enter PO Name" type="text" class="form-control input-transparent" name="POName"
-                [(ngModel)]="currentPO.name" data-parsley-trigger="change" data-parsley-required="true"
-                tooltip="PO Name" data-cy="poname-input">
+              <input
+                pInputText
+                placeholder="Enter PO Name"
+                type="text"
+                class="form-control input-transparent"
+                name="POName"
+                [(ngModel)]="currentPO.name"
+                tooltip="PO Name" data-cy="poname-input"
+              >
             </div>
           </div>
 
@@ -271,9 +284,16 @@
               Reference Name :
             </label>
             <div class="col-md-8 ">
-              <input placeholder="Enter Reference Name" type="text" class="form-control input-transparent"
-                name="referenceName" [(ngModel)]="currentPO.referenceName" data-parsley-trigger="change"
-                data-parsley-required="true" tooltip="Reference Name" data-cy="referenceName-input">
+              <input
+                pInputText
+                placeholder="Enter Reference Name"
+                type="text"
+                class="form-control input-transparent"
+                name="referenceName"
+                [(ngModel)]="currentPO.referenceName"
+                tooltip="Reference Name"
+                data-cy="referenceName-input"
+              >
             </div>
           </div>
           <div class="form-group row">
@@ -281,10 +301,13 @@
               Reference Cust PO #:
             </label>
             <div class="col-md-8 col-12">
-              <input placeholder="Enter Reference Customer PO # (typically a blanket PO)" type="text"
+              <input
+                pInputText
+                placeholder="Enter Reference Customer PO # (typically a blanket PO)" type="text"
                 [(ngModel)]="currentPO.customerReferencePO" name="RefCustPO" class="form-control input-transparent"
                 data-parsley-trigger="change" data-parsley-required="true" data-parsley-validation-threshold="1"
-                data-cy="refcustpo-input">
+                data-cy="refcustpo-input"
+              >
             </div>
           </div>
 
@@ -293,9 +316,17 @@
               Cust Ref# / MTTN:
             </label>
             <div class="col-md-8 col-12 ">
-              <input placeholder="Enter Reference Number" [(ngModel)]="currentPO.customerReferenceNo" type="text"
-                class="form-control input-transparent" name="CustRefNum" data-parsley-trigger="change"
-                data-parsley-required="true" tooltip="Customer Reference Number" data-cy="custrefnum-input">
+              <input
+                pInputText
+                placeholder="Enter Reference Number"
+                [(ngModel)]="currentPO.customerReferenceNo"
+                type="text"
+                class="form-control input-transparent"
+                name="CustRefNum" data-parsley-trigger="change"
+                data-parsley-required="true"
+                tooltip="Customer Reference Number"
+                data-cy="custrefnum-input"
+              >
             </div>
           </div>
 
@@ -303,19 +334,34 @@
             <label class="form-control-label col-md-4 col-12 text-md-right" for="OpenDate">
               Open Date:
             </label>
-            <p-calendar [(ngModel)]="currentPO.openDate" placeholder="Select Open Date" class="col-md-8 col-12"
-              name="OpenDate" showIcon="true" styleClass="input-group input-group-transparent"
+            <p-calendar
+              [(ngModel)]="currentPO.openDate"
+              placeholder="Select Open Date"
+              class="col-md-8 col-12"
+              name="OpenDate"
+              showIcon="true"
+              styleClass="input-group input-group-transparent"
               inputStyleClass="form-control input-transparent" data-parsley-trigger="change"
-              data-parsley-required="true" tooltip="Open Date" data-cy="opendate-input">
+              data-parsley-required="true"
+              tooltip="Open Date"
+              data-cy="opendate-input"
+            >
             </p-calendar>
           </div>
           <div class="form-group row">
             <label class="form-control-label col-md-4 col-12 text-md-right" for="ClosedDate">
               Close Date:
             </label>
-            <p-calendar [(ngModel)]="currentPO.closeDate" placeholder="Select Closed Date" class="col-md-8 col-12"
-              name="ClosedDate" showIcon="true" styleClass="input-group input-group-transparent"
-              inputStyleClass="form-control input-transparent" tooltip="Closed Date" data-cy="closedate-input">
+            <p-calendar
+              [(ngModel)]="currentPO.closeDate"
+              placeholder="Select Closed Date"
+              class="col-md-8 col-12"
+              name="ClosedDate"
+              showIcon="true"
+              styleClass="input-group input-group-transparent"
+              inputStyleClass="form-control input-transparent"
+              tooltip="Closed Date" data-cy="closedate-input"
+            >
             </p-calendar>
           </div>
 
@@ -325,8 +371,15 @@
             </label>
             <div class="col-md-8 col-12 input-group input-group-transparent">
               <span class="input-group-addon bg-secondary">$</span>
-              <input [(ngModel)]="currentPO.totalPurchaseLimit" placeholder="Enter total amount" type="number"
-                class="form-control input-transparent" name="TotalPurchaseLimit" data-cy="totalamount-input">
+              <input
+                pInputText
+                [(ngModel)]="currentPO.totalPurchaseLimit"
+                placeholder="Enter total amount"
+                type="number"
+                class="form-control input-transparent"
+                name="TotalPurchaseLimit"
+                data-cy="totalamount-input"
+              >
               <span class="input-group-addon bg-secondary">.00</span>
             </div>
           </div>
@@ -336,8 +389,13 @@
               Tax %:
             </label>
             <div class="col-md-8 col-12 input-group input-group-transparent">
-              <input placeholder="Enter Tax %" type="number"
-                class="form-control input-transparent" name="Tax">
+              <input
+                pInputText
+                placeholder="Enter Tax %"
+                type="number"
+                class="form-control input-transparent"
+                name="Tax"
+              >
               <span class="input-group-addon bg-secondary">%</span>
             </div>
           </div>
@@ -346,8 +404,16 @@
               Products:
             </label>
             <div class="col-md-10 col-12">
-              <multiselect-wrapper-form *ngIf="showProductsSelect" [(model)]="currentPO.selectedProducts" defaultLabel="Select Products"
-                name="ProductId" defaultId="id" defaultLabelProperty="label" [options]="productsData" [limit]="100">
+              <multiselect-wrapper-form
+                *ngIf="showProductsSelect"
+                [(model)]="currentPO.selectedProducts"
+                defaultLabel="Select Products"
+                name="ProductId"
+                defaultId="id"
+                defaultLabelProperty="label"
+                [options]="productsData"
+                [limit]="100"
+              >
               </multiselect-wrapper-form>
             </div>
           </div>
