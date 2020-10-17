@@ -210,7 +210,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             var serialNumber = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
-            var parentPart = workorder.WorkOrderParts.FirstOrDefault();
+            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s=> s.ParentId == null);
             
             if (parentPart != null)
             {
@@ -227,7 +227,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                     if (workOrderPartsFromHistoryTable.Any())
                     {
-                        parentPart.CycleCount = workOrderPartsFromHistoryTable.OrderBy(s => s.CycleCount).FirstOrDefault()
+                        parentPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
                             ?.CycleCount + 1;
                     }
                     else
@@ -237,7 +237,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
                 else
                 {
-                    parentPart.CycleCount = workOrderParts.OrderBy(s => s.CycleCount).FirstOrDefault()
+                    parentPart.CycleCount = workOrderParts.OrderByDescending(s => s.CycleCount).FirstOrDefault()
                         ?.CycleCount + 1;
                 }
 
