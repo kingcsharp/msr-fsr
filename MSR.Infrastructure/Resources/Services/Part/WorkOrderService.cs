@@ -172,7 +172,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-            WorkOrderModel ret = null;
+            
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
@@ -209,6 +209,43 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
+            var serialNumber = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
+            var parentPart = workorder.WorkOrderParts.FirstOrDefault();
+            
+            if (parentPart != null)
+            {
+                parentPart.SerialNumber = serialNumber.SerialNumber;
+                var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
+                    .Where(s => s.SerialNumber == parentPart.SerialNumber &&
+                                s.Part.PartNumber == parentPart.Part.PartNumber).ToListAsync();
+
+                if (!workOrderParts.Any())
+                {
+                    var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
+                        s.SerialNumber == parentPart.SerialNumber &&
+                        s.PartNumber == parentPart.Part.PartNumber).ToListAsync();
+
+                    if (workOrderPartsFromHistoryTable.Any())
+                    {
+                        parentPart.CycleCount = workOrderPartsFromHistoryTable.OrderBy(s => s.CycleCount).FirstOrDefault()
+                            ?.CycleCount + 1;
+                    }
+                    else
+                    {
+                        parentPart.CycleCount = 1;
+                    }
+                }
+                else
+                {
+                    parentPart.CycleCount = workOrderParts.OrderBy(s => s.CycleCount).FirstOrDefault()
+                        ?.CycleCount + 1;
+                }
+
+
+            }
+
+            
+
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
             // load required navigation fields
@@ -223,11 +260,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
             created.Context.Entry(workorder.Purchase.PurchaseOrder)
                 .Reference(x => x.Customer).Load();
 
-            ret = DetachBackPointers(
+            WorkOrderModel workOrderModel = DetachBackPointers(
                 _mapper.Map<WorkOrderModel>(workorder)
             );
 
-            return ret;
+            return workOrderModel;
         }
         public async Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {

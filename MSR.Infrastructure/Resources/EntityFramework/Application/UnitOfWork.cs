@@ -88,7 +88,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ReportDashboardMap> _reportDashboardMap;
         private IRepository<EquipmentMaintenance> _equipmentMaintenances;
         private IRepository<WorkOrderMessage> _workOrderMessage;
+        private IRepository<CycleCountHistory> _cycleCountHistory;
 
+        public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<DocumentRoleMap> DocumentRoles { get { return _documentRoleMaps ?? (_documentRoleMaps = new EFRepository<DocumentRoleMap>(Context)); } }
         public IRepository<DocumentEntityMap> DocumentEntityMap { get { return _documentEntityMap ?? (_documentEntityMap = new EFRepository<DocumentEntityMap>(Context)); } }

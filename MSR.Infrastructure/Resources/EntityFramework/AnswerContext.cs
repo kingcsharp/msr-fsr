@@ -18,6 +18,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerApproval> CustomerApproval { get; set; }
+        public DbSet<CycleCountHistory> CycleCountHistory { get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<LocationApproval> LocationApproval { get; set; }
         public DbSet<MenuGroup> MenuGroup { get; set; }
