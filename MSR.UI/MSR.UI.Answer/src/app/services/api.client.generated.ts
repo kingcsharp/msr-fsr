@@ -6870,6 +6870,121 @@ export class WorkOrderService {
         }
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderModel>(<any>null);
     }
+
+    portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (customerId !== undefined && customerId !== null)
+            url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
+        if (partName !== undefined && partName !== null)
+            url_ += "PartName=" + encodeURIComponent("" + partName) + "&";
+        if (partId !== undefined && partId !== null)
+            url_ += "PartId=" + encodeURIComponent("" + partId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPortal(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPortal(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfPortalWorkOrderView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfPortalWorkOrderView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPortal(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfPortalWorkOrderView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfPortalWorkOrderView>(<any>null);
+    }
+
+    message(id: number, version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/{id}/Message";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{Id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMessage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMessage(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processMessage(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
+    }
 }
 
 @Injectable()
@@ -16546,9 +16661,9 @@ export interface IAuditActionResultOfPurchaseOrderView extends IAuditActionResul
 
 export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
     customerId!: number;
-    name!: string;
+    name?: string | undefined;
     customerReferencePO!: string;
-    referenceName!: string;
+    referenceName?: string | undefined;
     products!: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
@@ -16616,9 +16731,9 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
 
 export interface ICreatePurchaseOrderRequest {
     customerId: number;
-    name: string;
+    name?: string | undefined;
     customerReferencePO: string;
-    referenceName: string;
+    referenceName?: string | undefined;
     products: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
@@ -18852,6 +18967,273 @@ export class AuditActionResultOfICollectionOfWorkOrderModel extends AuditActionR
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfICollectionOfWorkOrderModel extends IAuditActionResult {
     object?: WorkOrderModel[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfPortalWorkOrderView extends AuditActionResult implements IAuditActionResultOfICollectionOfPortalWorkOrderView {
+    object?: PortalWorkOrderView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfPortalWorkOrderView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(PortalWorkOrderView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfPortalWorkOrderView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfPortalWorkOrderView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfPortalWorkOrderView extends IAuditActionResult {
+    object?: PortalWorkOrderView[] | undefined;
+}
+
+export class PortalWorkOrderView implements IPortalWorkOrderView {
+    id?: number;
+    customerId?: number;
+    workOrderItemNumber?: number;
+    serialNumber?: string | undefined;
+    companyPartNumber?: string | undefined;
+    cycleCount?: number;
+    purchaseOrderNumber?: string | undefined;
+    qty?: number;
+    startDate?: Date;
+    dueDate?: Date | undefined;
+    partName?: string | undefined;
+    partId?: number | undefined;
+    productName?: string | undefined;
+    procedureName?: string | undefined;
+    status?: string | undefined;
+    hasPhotos?: boolean;
+    hasNCRs?: boolean;
+    hasFiles?: boolean;
+    hasMonitors?: boolean;
+    disposition?: string | undefined;
+    supplier?: string | undefined;
+    price?: number | undefined;
+    invoiceAmount?: number | undefined;
+    invoiceDate?: Date | undefined;
+    invoiceName?: string | undefined;
+    notes?: NoteModel[] | undefined;
+
+    constructor(data?: IPortalWorkOrderView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.customerId = _data["customerId"];
+            this.workOrderItemNumber = _data["workOrderItemNumber"];
+            this.serialNumber = _data["serialNumber"];
+            this.companyPartNumber = _data["companyPartNumber"];
+            this.cycleCount = _data["cycleCount"];
+            this.purchaseOrderNumber = _data["purchaseOrderNumber"];
+            this.qty = _data["qty"];
+            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : <any>undefined;
+            this.dueDate = _data["dueDate"] ? new Date(_data["dueDate"].toString()) : <any>undefined;
+            this.partName = _data["partName"];
+            this.partId = _data["partId"];
+            this.productName = _data["productName"];
+            this.procedureName = _data["procedureName"];
+            this.status = _data["status"];
+            this.hasPhotos = _data["hasPhotos"];
+            this.hasNCRs = _data["hasNCRs"];
+            this.hasFiles = _data["hasFiles"];
+            this.hasMonitors = _data["hasMonitors"];
+            this.disposition = _data["disposition"];
+            this.supplier = _data["supplier"];
+            this.price = _data["price"];
+            this.invoiceAmount = _data["invoiceAmount"];
+            this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
+            this.invoiceName = _data["invoiceName"];
+            if (Array.isArray(_data["notes"])) {
+                this.notes = [] as any;
+                for (let item of _data["notes"])
+                    this.notes!.push(NoteModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PortalWorkOrderView {
+        data = typeof data === 'object' ? data : {};
+        let result = new PortalWorkOrderView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["customerId"] = this.customerId;
+        data["workOrderItemNumber"] = this.workOrderItemNumber;
+        data["serialNumber"] = this.serialNumber;
+        data["companyPartNumber"] = this.companyPartNumber;
+        data["cycleCount"] = this.cycleCount;
+        data["purchaseOrderNumber"] = this.purchaseOrderNumber;
+        data["qty"] = this.qty;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        data["dueDate"] = this.dueDate ? this.dueDate.toISOString() : <any>undefined;
+        data["partName"] = this.partName;
+        data["partId"] = this.partId;
+        data["productName"] = this.productName;
+        data["procedureName"] = this.procedureName;
+        data["status"] = this.status;
+        data["hasPhotos"] = this.hasPhotos;
+        data["hasNCRs"] = this.hasNCRs;
+        data["hasFiles"] = this.hasFiles;
+        data["hasMonitors"] = this.hasMonitors;
+        data["disposition"] = this.disposition;
+        data["supplier"] = this.supplier;
+        data["price"] = this.price;
+        data["invoiceAmount"] = this.invoiceAmount;
+        data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
+        data["invoiceName"] = this.invoiceName;
+        if (Array.isArray(this.notes)) {
+            data["notes"] = [];
+            for (let item of this.notes)
+                data["notes"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IPortalWorkOrderView {
+    id?: number;
+    customerId?: number;
+    workOrderItemNumber?: number;
+    serialNumber?: string | undefined;
+    companyPartNumber?: string | undefined;
+    cycleCount?: number;
+    purchaseOrderNumber?: string | undefined;
+    qty?: number;
+    startDate?: Date;
+    dueDate?: Date | undefined;
+    partName?: string | undefined;
+    partId?: number | undefined;
+    productName?: string | undefined;
+    procedureName?: string | undefined;
+    status?: string | undefined;
+    hasPhotos?: boolean;
+    hasNCRs?: boolean;
+    hasFiles?: boolean;
+    hasMonitors?: boolean;
+    disposition?: string | undefined;
+    supplier?: string | undefined;
+    price?: number | undefined;
+    invoiceAmount?: number | undefined;
+    invoiceDate?: Date | undefined;
+    invoiceName?: string | undefined;
+    notes?: NoteModel[] | undefined;
+}
+
+export class NoteModel implements INoteModel {
+    name?: string | undefined;
+    note?: string | undefined;
+    date?: Date;
+
+    constructor(data?: INoteModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.note = _data["note"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NoteModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new NoteModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["note"] = this.note;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface INoteModel {
+    name?: string | undefined;
+    note?: string | undefined;
+    date?: Date;
+}
+
+export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageRequest {
+    message!: string;
+
+    constructor(data?: ICreateWorkOrderMessageRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): CreateWorkOrderMessageRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateWorkOrderMessageRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["message"] = this.message;
+        return data; 
+    }
+}
+
+export interface ICreateWorkOrderMessageRequest {
+    message: string;
 }
 
 /** Base class for an API call with a typed result */
