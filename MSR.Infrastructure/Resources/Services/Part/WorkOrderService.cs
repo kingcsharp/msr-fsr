@@ -216,7 +216,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 parentPart.SerialNumber = serialNumber.SerialNumber;
                 var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
-                    .Where(s => s.SerialNumber == parentPart.SerialNumber &&
+                    .Where(s => s.SerialNumber == parentPart.SerialNumber && s.Part != null &&
                                 s.Part.PartNumber == parentPart.Part.PartNumber).ToListAsync();
 
                 if (!workOrderParts.Any())
