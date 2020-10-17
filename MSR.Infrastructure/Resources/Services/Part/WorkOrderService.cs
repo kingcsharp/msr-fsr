@@ -192,16 +192,17 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             // link work order IDs for all parts
             Stack<WorkOrderPart> parts = new Stack<WorkOrderPart>();
-            foreach(var p in workorder.WorkOrderParts)
+            foreach (var p in workorder.WorkOrderParts)
             {
                 parts.Push(p);
             }
-            while(parts.Count > 0) {
+            while (parts.Count > 0)
+            {
                 var p = parts.Pop();
                 p.WorkOrder = workorder;
                 if (p.Children != null && p.Children.Count > 0)
                 {
-                    foreach(var sp in p.Children)
+                    foreach (var sp in p.Children)
                     {
                         parts.Push(sp);
                     }
@@ -354,7 +355,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                         for (int j = 0; j < spquantity; j++)
                         {
-                            subs.Add(new WorkOrderPartModel() {
+                            subs.Add(new WorkOrderPartModel()
+                            {
                                 PartId = p.PartId,
                                 ParentId = p.ParentPartId
                             });
@@ -436,7 +438,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.NotFound);
             }
 
-            if (!command.ProcedureStepTypeId.HasValue) {
+            if (!command.ProcedureStepTypeId.HasValue)
+            {
                 command.ProcedureStepTypeId = step.ProcedureStepTypeId;
             }
 
@@ -519,7 +522,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderTaskEntity.ReferenceFiles = new List<FileEntityMap>();
                 foreach (int id in command.ReferenceFilesIds)
                 {
-                    FileEntityMap fem = new FileEntityMap() {
+                    FileEntityMap fem = new FileEntityMap()
+                    {
                         EntityId = workOrderTaskEntity.Id,
                         EntityTableName = "WorkOrderTask",
                         FileId = id
@@ -626,120 +630,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
         public async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryAsync(GetWorkOrderMenu command)
         {
             return await GetWorkOrderGridSummaryImpl(false);
-        }
-
-        private async Task<ICollection<WorkOrderGridSummary>> GetWorkOrderGridSummaryImpl(bool isHistory)
-        {
-            var gwo = new GetWorkOrder()
-            {
-                completedOnly = isHistory
-            };
-
-            ICollection<WorkOrderModel> models = await GetWorkOrderAsync(gwo);
-            List<WorkOrderGridSummary> ret = new List<WorkOrderGridSummary>();
-            foreach (WorkOrderModel m in models)
-            {
-                var sum = _mapper.Map<WorkOrderGridSummary>(m);
-
-                //
-                // Map the work order database entity to the WIP grid view
-                //
-
-                // CurrentActiveTaskName
-                var curProc =
-                    m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
-                if (curProc.Any())
-                {
-                    var proc = curProc.First();
-                    sum.CurrentActiveTaskName = proc.ProcedureStep.Title;
-                }
-
-                // CustomerName
-                sum.CustomerName = m.Purchase?.PurchaseOrder?.Customer?.Name;
-                if (string.IsNullOrEmpty(sum.CustomerName))
-                {
-                    sum.CustomerName = "";
-                }
-
-                // WorkOrderItemNumber
-                sum.WorkOrderItemNumber = IWorkOrderService.GetWorkOrderItemNumber(m);
-
-                // ProcedureName
-                var firstProc =
-                    m.WorkOrderTasks.FirstOrDefault();
-                if (firstProc == null)
-                {
-                    sum.ProcedureName = "";
-                }
-                else
-                {
-                    sum.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
-                }
-
-                // Disposition
-                // This is a string join of the text values of
-                // all procedure steps with a type of "NC Disposition"
-                sum.Disposition = "";
-                if (m.HasNCR.GetValueOrDefault())
-                {
-                    var nc = m.WorkOrderTasks.Where(x =>
-                        x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC);
-                    if (nc.Any())
-                    {
-                        string disp = "";
-                        foreach (WorkOrderTaskModel task in nc)
-                        {
-                            disp +=
-                                String.Join(" ",
-                                    task.WorkOrderTaskMonitors.Select(x =>
-                                        x.TextVal
-                                    ).ToList()
-                                ) + " ";
-                        }
-                        sum.Disposition = disp;
-                    }
-                }
-
-                // PercentageOfTasksCompleted
-                int[] pctCompletedIds = { 3, 4, 6, 8 };
-                int denom = m.WorkOrderTasks.Count();
-                int numer = m.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
-                decimal pctComplete;
-                if (denom > 0)
-                {
-                    pctComplete = (decimal)(((double)numer * 100.00) / (double)denom);
-                }
-                else
-                {
-                    pctComplete = 0m;
-                }
-                sum.PercentageOfTasksCompletedNumerator = numer;
-                sum.PercentageOfTasksCompletedDenominator = denom;
-                sum.PercentageOfTasksCompleted = pctComplete;
-
-                // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = m.WorkOrderTasks.Select(x =>
-                        x.ProcedureStep.LaborTime.GetValueOrDefault(0) +
-                        x.ProcedureStep.EquipmentTime.GetValueOrDefault(0)
-                    ).Sum();
-                decimal numerTime = m.WorkOrderTasks.Select(x =>
-                        x.TotalTaskTime.GetValueOrDefault(0m)
-                    ).Sum();
-                if (denomTime > 0)
-                {
-                    sum.PercentageOfExpectedDurationTimeLogged = ((numerTime * 100.00m)/ denomTime);
-                }
-                else
-                {
-                    sum.PercentageOfExpectedDurationTimeLogged = 0m;
-                }
-                sum.PercentageOfExpectedDurationTimeLoggedNumerator = numerTime;
-                sum.PercentageOfExpectedDurationTimeLoggedDenominator = denomTime;
-
-                ret.Add(sum);
-            }
-
-            return ret;
         }
 
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
