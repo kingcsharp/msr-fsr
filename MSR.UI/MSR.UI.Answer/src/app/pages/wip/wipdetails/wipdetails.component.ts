@@ -279,9 +279,11 @@ export class WipdetailsComponent implements OnInit {
     } as IUpdateWorkOrderPartRequest);
 
     this.globals.showLoader(true);
-    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(responseHandler(() => {
+    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(response => {
 
-      this.originalSerialNumbers.find(s => s.id === partId).serialNumber = this.workOrderModel.workOrderParts.find(s => s.id === partId).serialNumber;
+      let workOrderPart = this.workOrderModel.workOrderParts.find(s => s.id === partId);
+      workOrderPart.cycleCount = response.object.cycleCount;
+      this.originalSerialNumbers.find(s => s.id === partId).serialNumber = workOrderPart.serialNumber;
 
       let changebuttonElement = <HTMLInputElement>document.getElementById('changebutton' + index);
       changebuttonElement.classList.remove('d-none');
@@ -291,7 +293,7 @@ export class WipdetailsComponent implements OnInit {
 
       let cancelbuttonElement = <HTMLInputElement>document.getElementById('cancelbutton' + index);
       cancelbuttonElement.classList.add('d-none');
-    }));
+    });
   }
 
   cancelSerialNumber(index, partId) {

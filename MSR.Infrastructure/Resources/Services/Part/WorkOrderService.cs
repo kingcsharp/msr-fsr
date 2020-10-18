@@ -209,42 +209,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            var serialNumber = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
+            var purchase = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
             var parentPart = workorder.WorkOrderParts.FirstOrDefault(s=> s.ParentId == null);
             
-            if (parentPart != null)
-            {
-                parentPart.SerialNumber = serialNumber.SerialNumber;
-                var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
-                    .Where(s => s.SerialNumber == parentPart.SerialNumber && s.Part != null &&
-                                s.Part.PartNumber == parentPart.Part.PartNumber).ToListAsync();
+            await GetCycleCount(parentPart, purchase.SerialNumber);
 
-                if (!workOrderParts.Any())
-                {
-                    var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
-                        s.SerialNumber == parentPart.SerialNumber &&
-                        s.PartNumber == parentPart.Part.PartNumber).ToListAsync();
-
-                    if (workOrderPartsFromHistoryTable.Any())
-                    {
-                        parentPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
-                            ?.CycleCount + 1;
-                    }
-                    else
-                    {
-                        parentPart.CycleCount = 1;
-                    }
-                }
-                else
-                {
-                    parentPart.CycleCount = workOrderParts.OrderByDescending(s => s.CycleCount).FirstOrDefault()
-                        ?.CycleCount + 1;
-                }
-
-
-            }
-
-            
 
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
@@ -419,37 +388,29 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
-            var current = _unitOfWork.WorkOrderParts.Query().Where(x => x.Id == command.WorkOrderPartId);
+            var current = _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).Where(x => x.Id == command.WorkOrderPartId);
 
             if (current == null || !current.Any())
             {
                 throw new DomainException($"{nameof(WorkOrderPart)} not found with ID: {command.WorkOrderPartId}", DomainError.NotFound);
             }
-            WorkOrderPart updatedWOPart = current.First();
 
-            if (!string.IsNullOrEmpty(command.SerialNumber))
-            {
-                int curid = updatedWOPart.Id;
-                int curpartid = updatedWOPart.PartId;
-                updatedWOPart.CycleCount = _unitOfWork.WorkOrderParts.Count(x =>
-                    x.SerialNumber.Equals(command.SerialNumber) &&
-                    x.PartId == curpartid &&
-                    x.Id != curid
-                ) + 1;
-            }
+            WorkOrderPart workOrderPartEntity = await current.FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
-            _ = _mapper.Map(command, updatedWOPart);
+            await GetCycleCount(workOrderPartEntity, command.SerialNumber);
 
-            _unitOfWork.WorkOrderParts.Update(updatedWOPart);
+            _ = _mapper.Map(command, workOrderPartEntity);
+
+            _unitOfWork.WorkOrderParts.Update(workOrderPartEntity);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(updatedWOPart, updatedWOPart.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderPartEntity, workOrderPartEntity.Id);
 
-            _unitOfWork.WorkOrderParts.LoadReference(updatedWOPart, x => x.WorkOrder);
-            _unitOfWork.WorkOrders.LoadReference(updatedWOPart.WorkOrder, x => x.Purchase);
+            _unitOfWork.WorkOrderParts.LoadReference(workOrderPartEntity, x => x.WorkOrder);
+            _unitOfWork.WorkOrders.LoadReference(workOrderPartEntity.WorkOrder, x => x.Purchase);
 
             // On update, we don't need a pointer back to the work order
-            var ret = _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            var ret = _mapper.Map<WorkOrderPartModel>(workOrderPartEntity);
             ret.WorkOrder = null;
 
             return ret;
@@ -1023,6 +984,53 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             return ret;
+        }
+
+        private async Task GetCycleCount(WorkOrderPart workOrderPart, string serialNumber)
+        {
+            if (workOrderPart != null)
+            {
+                workOrderPart.SerialNumber = serialNumber;
+                var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
+                    .Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part != null &&
+                                s.Part.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+                if (!workOrderParts.Any())
+                {
+                    var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
+                        s.SerialNumber == workOrderPart.SerialNumber &&
+                        s.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+                    if (workOrderPartsFromHistoryTable.Any())
+                    {
+                        workOrderPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
+                            ?.CycleCount + 1;
+                    }
+                    else
+                    {
+                        workOrderPart.CycleCount = 1;
+                    }
+                }
+                else
+                {
+
+                    var cycleCount = workOrderParts.OrderByDescending(s => s.CycleCount)
+                        .FirstOrDefault(m => m.Id != workOrderPart.Id)
+                        ?.CycleCount;
+
+                    if (cycleCount == null)
+                    {
+                        workOrderPart.CycleCount = 1;
+                    }
+                    else
+                    {
+                        workOrderPart.CycleCount = cycleCount + 1;
+                    }
+
+                }
+
+
+            }
         }
     }
 }
