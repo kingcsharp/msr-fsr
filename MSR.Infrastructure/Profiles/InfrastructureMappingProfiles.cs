@@ -460,6 +460,11 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<UpdateDocument, Document>();
             CreateMap<UpdateDocument, DocumentApproval>();
             CreateMap<DocumentRoleMap, RoleView>();
+            CreateMap<WorkOrder, PortalWorkOrderView>()
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId));
+            CreateMap<PortalWorkOrder, PortalWorkOrderView>();
+            CreateMap<WorkOrderMessage, WorkOrderMessageModel>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.CreatedOn));
         }
 
         private static bool ignoreNullOrZero(object srcMember)
