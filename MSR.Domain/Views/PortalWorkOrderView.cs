@@ -8,6 +8,7 @@ namespace MSR.Domain.Views
     public class PortalWorkOrderView
     {
         public int Id { get; set; }
+        public int WorkOrderId { get; set; }
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string SerialNumber { get; set; }

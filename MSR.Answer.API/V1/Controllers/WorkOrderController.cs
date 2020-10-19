@@ -110,12 +110,12 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpPatch("{id}/Message")]
-        [SwaggerResponse(typeof(AuditActionResult))]
+        [SwaggerResponse(typeof(AuditActionResult<WorkOrderMessageModel>))]
         public async Task<IActionResult> AddMessage([Required]int Id, [FromBody, Required]CreateWorkOrderMessageRequest request)
         {
             var command = request.ToCreateWorkOrderMessageCommand(Id);
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse();
+            return ret.ToOkObjectResponse<WorkOrderMessageModel>("Message added successfully");
 
         }
     }

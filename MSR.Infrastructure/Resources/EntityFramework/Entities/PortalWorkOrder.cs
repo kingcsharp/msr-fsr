@@ -6,6 +6,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
     [Table("PortalWorkOrderView")]
     public class PortalWorkOrder: Entity
     {
+        public int WorkOrderId { get; set; }
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string SerialNumber { get; set; }

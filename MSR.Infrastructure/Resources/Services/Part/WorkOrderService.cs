@@ -826,7 +826,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             return portalViews;
         }
-        public async Task CreateWorkOrderMessageAsync(CreateWorkOrderMessage command)
+        public async Task<WorkOrderMessageModel> CreateWorkOrderMessageAsync(CreateWorkOrderMessage command)
         {
             var message = new WorkOrderMessage()
             {
@@ -836,6 +836,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             await _unitOfWork.WorkOrderMessages.AddAsync(message);
             await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<WorkOrderMessageModel>(message);
         }
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)
         {
