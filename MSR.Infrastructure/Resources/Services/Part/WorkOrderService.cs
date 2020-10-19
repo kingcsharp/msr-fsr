@@ -908,10 +908,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             };
 
             ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(gwo);
-            List<WorkOrderGridSummary> ret = new List<WorkOrderGridSummary>();
-            foreach (WorkOrderModel workOrdermodel in workOrderModels)
+            List<WorkOrderGridSummary> workOrderGridSummaries = new List<WorkOrderGridSummary>();
+            foreach (WorkOrderModel workOrderModel in workOrderModels)
             {
-                var workOrderGridSummary = _mapper.Map<WorkOrderGridSummary>(workOrdermodel);
+                var workOrderGridSummary = _mapper.Map<WorkOrderGridSummary>(workOrderModel);
 
                 //
                 // Map the work order database entity to the WIP grid view
@@ -919,7 +919,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 // CurrentActiveTaskName
                 var curProc =
-                    workOrdermodel.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
+                    workOrderModel.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
                 if (curProc.Any())
                 {
                     var proc = curProc.First();
@@ -927,18 +927,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
 
                 // CustomerName
-                workOrderGridSummary.CustomerName = workOrdermodel.Purchase?.PurchaseOrder?.Customer?.Name;
+                workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name;
                 if (string.IsNullOrEmpty(workOrderGridSummary.CustomerName))
                 {
                     workOrderGridSummary.CustomerName = "";
                 }
 
                 // WorkOrderItemNumber
-                workOrderGridSummary.WorkOrderItemNumber = GetWorkOrderItemNumber(workOrdermodel);
+                workOrderGridSummary.WorkOrderItemNumber = GetWorkOrderItemNumber(workOrderModel);
 
+                workOrderGridSummary.ReferencePO = workOrderModel.Purchase?.PurchaseOrder?.ReferencePO;
                 // ProcedureName
                 var firstProc =
-                    workOrdermodel.WorkOrderTasks.FirstOrDefault();
+                    workOrderModel.WorkOrderTasks.FirstOrDefault();
                 if (firstProc == null)
                 {
                     workOrderGridSummary.ProcedureName = "";
@@ -952,9 +953,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // This is a string join of the text values of
                 // all procedure steps with a type of "NC Disposition"
                 workOrderGridSummary.Disposition = "";
-                if (workOrdermodel.HasNCR.GetValueOrDefault())
+                if (workOrderModel.HasNCR.GetValueOrDefault())
                 {
-                    var nc = workOrdermodel.WorkOrderTasks.Where(x =>
+                    var nc = workOrderModel.WorkOrderTasks.Where(x =>
                         x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC);
                     if (nc.Any())
                     {
@@ -974,8 +975,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 // PercentageOfTasksCompleted
                 int[] pctCompletedIds = { 3, 4, 6, 8 };
-                int denom = workOrdermodel.WorkOrderTasks.Count();
-                int numer = workOrdermodel.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
+                int denom = workOrderModel.WorkOrderTasks.Count();
+                int numer = workOrderModel.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
                 decimal pctComplete;
                 if (denom > 0)
                 {
@@ -990,8 +991,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderGridSummary.PercentageOfTasksCompletedNumerator = numer;
 
                 // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = workOrdermodel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
-                decimal numerTime = workOrdermodel.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
+                decimal denomTime = workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
+                decimal numerTime = workOrderModel.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
                 if (denomTime > 0)
                 {
                     workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = (decimal)numerTime/(decimal)denomTime;
@@ -1004,10 +1005,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = denomTime;
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = numerTime;
 
-                ret.Add(workOrderGridSummary);
+                workOrderGridSummaries.Add(workOrderGridSummary);
             }
 
-            return ret;
+            return workOrderGridSummaries;
         }
 
         private async Task GetCycleCount(WorkOrderPart workOrderPart, string serialNumber)
