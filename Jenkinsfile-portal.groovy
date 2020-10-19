@@ -28,7 +28,7 @@ pipeline {
                             sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
 
                             sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                            sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
