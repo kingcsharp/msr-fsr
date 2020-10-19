@@ -12,8 +12,8 @@ pipeline {
         PROFILE='--profile msrfsr'
         DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-qa/2732ea92378da008"
         STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-uat/551b7aafb24e8c90"
-        DEV_PROJECT_UI='dev-answer-ui'
-        STAGE_PROJECT_UI='stage-answer-ui'
+        DEV_PROJECT_UI='qa-portal-ui'
+        STAGE_PROJECT_UI='uat-portal-ui'
         UI_COMPOSE='docker-compose-ui-portal.yml'
     }
     stages {
@@ -40,12 +40,12 @@ pipeline {
                         sh "sh update_image_portal.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
                         sh "cat ${UI_COMPOSE}"
 
-//                            if(env.BRANCH_NAME == 'Develop') {
-//                                echo "Deploying Develop"
-//                                deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
-//                            }
-//
-//                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+                            if(env.BRANCH_NAME == 'Develop') {
+                                echo "Deploying Develop"
+                                deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
+                            }
+
+                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 
                     } catch (e) {
                         office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
@@ -89,10 +89,10 @@ pipeline {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
                         sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
-                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
 
                         sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                        sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
                     }
 
                     sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
