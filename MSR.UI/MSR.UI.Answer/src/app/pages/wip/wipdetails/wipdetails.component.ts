@@ -52,7 +52,7 @@ export class WipdetailsComponent implements OnInit {
   monitorTypes: Array<SelectItem>;
   itemsPerASlide: number = 6;
   rolesRequiredToViewTask: Array<string> = new Array<string>();
-  rolesRequiredMessage: string = '';
+  rolesRequiredMessage: string = undefined;
   nameOfTaskThatIsRestricted: string;
   hasAccessToTaskBeingViewed: boolean = false;
 
@@ -129,6 +129,7 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
+      this.rolesRequiredMessage = undefined;
     } else {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
@@ -219,6 +220,7 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
+      this.rolesRequiredMessage = undefined;
     } else {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));

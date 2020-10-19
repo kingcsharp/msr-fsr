@@ -107,9 +107,11 @@
           <div class="alert alert-dismissable alert-warning"
             *ngIf="workOrderTaskInProgress !== undefined && !hasAccessToTaskBeingViewed">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <i class="fas fa-exclamation-triangle"></i> You do not have the proper role to access <span
-              class="font-weight-bold">{{nameOfTaskThatIsRestricted}}</span>
-            <br>The <strong>{{rolesRequiredMessage}}</strong> role is Required</div>
+            <i class="fas fa-exclamation-triangle"></i> You do not have the proper role to access 
+            <span class="font-weight-bold">{{nameOfTaskThatIsRestricted}}</span><br>
+            <span *ngIf="rolesRequiredMessage !== undefined">The <strong>{{rolesRequiredMessage}}</strong> role is Required</span>
+            <span *ngIf="rolesRequiredMessage === undefined">No roles have been assigned to this Step</span>
+          </div>
         </div>
         <div class="d-flex col-4 justify-content-end pr-0"
           *ngIf="workOrderTaskInProgress?.id === workOrderTaskToView?.id && !workOrderIsComplete">
@@ -141,7 +143,7 @@
                 </div>
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Description:</div>
-                  <div class="col-10 p-2">{{ workOrderTaskToView?.procedureStep?.stepText }}</div>
+                  <div class="col-10 p-2" [innerHTML]=" workOrderTaskToView?.procedureStep?.stepText"></div>
                 </div>
                 <div class="row">
                   <div class="text-right col-2 p-2" colspan="1">Related Documents:</div>
