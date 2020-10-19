@@ -3,8 +3,7 @@
   <div class="d-flex flex-wrap">
     <div class="col-4" *ngFor="let workOrderTaskMonitor of  workOrderMonitorsToView; let i = index">
       <div class="card my-2 border shadow">
-        <div class="card-header">
-          {{ workOrderTaskMonitor.procedureStepMonitor.description }}
+        <div class="card-header" [innerHTML]="workOrderTaskMonitor.procedureStepMonitor.description">
         </div>
         <div class="card-body">
           <div class="form-group col-12 d-flex flex-row">
