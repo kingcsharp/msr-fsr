@@ -24,7 +24,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets ProcedureStepId
         /// </summary>
-        public int ProcedureStepId { get; set; }
+        public int? ProcedureStepId { get; set; }
 
         /// <summary>
         /// Gets or Sets LaborMinutes
