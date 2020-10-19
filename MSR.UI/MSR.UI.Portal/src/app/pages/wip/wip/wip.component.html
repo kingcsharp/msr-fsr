@@ -22,8 +22,6 @@
         (expandRowClick)="expandRow($event)" [data]="data">
     </app-grid>
 </widget>
-
-
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
     <span *ngIf="colsDataAndSettings.colData.hasNCRs" class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth"
         tooltip="Show NCR reports" (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
