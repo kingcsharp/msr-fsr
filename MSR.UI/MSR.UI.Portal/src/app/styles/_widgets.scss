@@ -2057,9 +2057,6 @@ td {
   }
 }
 
-
-
-
 p-dropdown {
   width: 100%;
   .ui-dropdown-label {
@@ -2116,4 +2113,19 @@ p-dialog {
 .innerGrid .ui-table-customers {
   background: #394554;
   padding: 0 10px;
+}
+
+.csr-form {
+  section.widget,
+  .ui-panel,
+  .ui-panel-titlebar,
+  .ui-panel-content-wrapper,
+  .ui-panel .ui-panel-content {
+    color: #fff!important;
+    background: transparent!important;
+  }
+  ul.valid-errors {
+    list-style: disc;
+    padding: 0 40px 0;
+  }
 }

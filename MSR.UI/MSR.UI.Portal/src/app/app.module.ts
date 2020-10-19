@@ -26,7 +26,7 @@ import {
   UserService, AccountService, API_BASE_URL, CustomerService,
   LocationService, RoleService, PartService,
   FileService, InvoiceService, WorkOrderService, TimezoneService, PurchaseOrderService, ProductService, ReportService,
-  SearchService, ProcedureService, DocumentService
+  SearchService, ProcedureService, DocumentService,QuoteService
 } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
@@ -37,7 +37,8 @@ const APP_PROVIDERS = [
   ResetpasswordService,
   Globals,
   CommonGrid,
-  CSVConverterService
+  CSVConverterService,
+  QuoteService
 ];
 
 @NgModule({
