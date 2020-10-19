@@ -66,7 +66,7 @@
         </div>
         <hr *ngIf="!isLast" style="border-bottom: 1px solid;" />
     </div>
-    <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
+    <span *ngIf="!globals.user.isAnswerUser" class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
         (click)="addInstructions(colsDataAndSettings.colData)">
         Add Insturctions </span>
 </ng-template>
