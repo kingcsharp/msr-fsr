@@ -60,21 +60,25 @@ export class WipComponent implements OnInit {
 
         elem.timeLoggedType = 'danger';
 
-        if (elem.percentageOfExpectedDurationTimeLogged < 25) {
+        if (elem.percentageOfExpectedDurationTimeLogged > .25) {
           elem.timeLoggedType = 'warning';
-        } else if (elem.percentageOfExpectedDurationTimeLogged < 50) {
+        }
+        if (elem.percentageOfExpectedDurationTimeLogged > .50) {
           elem.timeLoggedType = 'info';
-        } else if (elem.percentageOfExpectedDurationTimeLogged < 75) {
+        }
+        if (elem.percentageOfExpectedDurationTimeLogged > .75) {
           elem.timeLoggedType = 'success';
         }
 
         elem.tasksCompletedType = 'danger';
 
-        if (elem.percentageOfTasksCompleted < 25) {
+        if (elem.percentageOfTasksCompleted > .25) {
           elem.tasksCompletedType = 'warning';
-        } else if (elem.percentageOfTasksCompleted < 50) {
+        }
+        if (elem.percentageOfTasksCompleted > .50) {
           elem.tasksCompletedType = 'info';
-        } else if (elem.percentageOfTasksCompleted < 75) {
+        }
+        if (elem.percentageOfTasksCompleted > .75) {
           elem.tasksCompletedType = 'success';
         }
 
