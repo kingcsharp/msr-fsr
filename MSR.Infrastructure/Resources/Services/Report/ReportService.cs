@@ -28,15 +28,16 @@ namespace MSR.Infrastructure.Resources.Services.Report
         public async Task<ICollection<ReportModel>> GetReports(GetReport command, CancellationToken cancellationToken = default)
         {
             var reports = await _unitOfWork.Reports.Query().Include(i => i.ReportCategories).ThenInclude(j => j.Report)
-                                                           .Include(i => i.ReportCategories).ThenInclude(j => j.ReportCategory).ToListAsync();
+                                                           .Include(i => i.ReportCategories).ThenInclude(j => j.ReportCategory)
+                                                           .Where(x => x.ShowInPortal == command.IsPortal).ToListAsync();
 
             var domReports = new List<ReportModel>();
 
-            foreach(var report in reports)
+            foreach (var report in reports)
             {
                 var domReport = _mapper.Map<ReportModel>(report);
 
-                foreach(var category in report.ReportCategories.Select(i => i.ReportCategory))
+                foreach (var category in report.ReportCategories.Select(i => i.ReportCategory))
                 {
                     domReport.Categories.Add(_mapper.Map<ReportCategoryModel>(category));
                 }
@@ -53,7 +54,7 @@ namespace MSR.Infrastructure.Resources.Services.Report
 
             var domDashboard = _mapper.Map<ReportDashboardModel>(dashboard);
 
-            foreach(var report in dashboard.Reports.Select(i => i.Report))
+            foreach (var report in dashboard.Reports.Select(i => i.Report))
             {
                 domDashboard.Reports.Add(_mapper.Map<ReportModel>(report));
             }

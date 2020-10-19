@@ -5215,8 +5215,11 @@ export class ReportService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    report(version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
+    report(isPortal: boolean, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
         let url_ = this.baseUrl + "/v{version}/Report";
+        if (isPortal === undefined || isPortal === null)
+            throw new Error("The parameter 'isPortal' must be defined.");
+        url_ = url_.replace("{IsPortal}", encodeURIComponent("" + isPortal));
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -19015,19 +19018,20 @@ export interface IAuditActionResultOfICollectionOfPortalWorkOrderView extends IA
 export class PortalWorkOrderView implements IPortalWorkOrderView {
     id?: number;
     customerId?: number;
-    workOrderItemNumber?: number;
+    customerName?: string | undefined;
     serialNumber?: string | undefined;
     companyPartNumber?: string | undefined;
-    cycleCount?: number;
+    cycleCount?: number | undefined;
     purchaseOrderNumber?: string | undefined;
-    qty?: number;
-    startDate?: Date;
+    qty?: number | undefined;
+    startDate?: Date | undefined;
     dueDate?: Date | undefined;
     partName?: string | undefined;
     partId?: number | undefined;
     productName?: string | undefined;
     procedureName?: string | undefined;
     status?: string | undefined;
+    workOrderTaskId?: number | undefined;
     hasPhotos?: boolean;
     hasNCRs?: boolean;
     hasFiles?: boolean;
@@ -19038,7 +19042,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     invoiceAmount?: number | undefined;
     invoiceDate?: Date | undefined;
     invoiceName?: string | undefined;
-    notes?: NoteModel[] | undefined;
+    messages?: WorkOrderMessageModel[] | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
         if (data) {
@@ -19053,7 +19057,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         if (_data) {
             this.id = _data["id"];
             this.customerId = _data["customerId"];
-            this.workOrderItemNumber = _data["workOrderItemNumber"];
+            this.customerName = _data["customerName"];
             this.serialNumber = _data["serialNumber"];
             this.companyPartNumber = _data["companyPartNumber"];
             this.cycleCount = _data["cycleCount"];
@@ -19066,6 +19070,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             this.productName = _data["productName"];
             this.procedureName = _data["procedureName"];
             this.status = _data["status"];
+            this.workOrderTaskId = _data["workOrderTaskId"];
             this.hasPhotos = _data["hasPhotos"];
             this.hasNCRs = _data["hasNCRs"];
             this.hasFiles = _data["hasFiles"];
@@ -19076,10 +19081,10 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             this.invoiceAmount = _data["invoiceAmount"];
             this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
             this.invoiceName = _data["invoiceName"];
-            if (Array.isArray(_data["notes"])) {
-                this.notes = [] as any;
-                for (let item of _data["notes"])
-                    this.notes!.push(NoteModel.fromJS(item));
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(WorkOrderMessageModel.fromJS(item));
             }
         }
     }
@@ -19095,7 +19100,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["customerId"] = this.customerId;
-        data["workOrderItemNumber"] = this.workOrderItemNumber;
+        data["customerName"] = this.customerName;
         data["serialNumber"] = this.serialNumber;
         data["companyPartNumber"] = this.companyPartNumber;
         data["cycleCount"] = this.cycleCount;
@@ -19108,6 +19113,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         data["productName"] = this.productName;
         data["procedureName"] = this.procedureName;
         data["status"] = this.status;
+        data["workOrderTaskId"] = this.workOrderTaskId;
         data["hasPhotos"] = this.hasPhotos;
         data["hasNCRs"] = this.hasNCRs;
         data["hasFiles"] = this.hasFiles;
@@ -19118,10 +19124,10 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         data["invoiceAmount"] = this.invoiceAmount;
         data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
         data["invoiceName"] = this.invoiceName;
-        if (Array.isArray(this.notes)) {
-            data["notes"] = [];
-            for (let item of this.notes)
-                data["notes"].push(item.toJSON());
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item.toJSON());
         }
         return data; 
     }
@@ -19130,19 +19136,20 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
 export interface IPortalWorkOrderView {
     id?: number;
     customerId?: number;
-    workOrderItemNumber?: number;
+    customerName?: string | undefined;
     serialNumber?: string | undefined;
     companyPartNumber?: string | undefined;
-    cycleCount?: number;
+    cycleCount?: number | undefined;
     purchaseOrderNumber?: string | undefined;
-    qty?: number;
-    startDate?: Date;
+    qty?: number | undefined;
+    startDate?: Date | undefined;
     dueDate?: Date | undefined;
     partName?: string | undefined;
     partId?: number | undefined;
     productName?: string | undefined;
     procedureName?: string | undefined;
     status?: string | undefined;
+    workOrderTaskId?: number | undefined;
     hasPhotos?: boolean;
     hasNCRs?: boolean;
     hasFiles?: boolean;
@@ -19153,15 +19160,15 @@ export interface IPortalWorkOrderView {
     invoiceAmount?: number | undefined;
     invoiceDate?: Date | undefined;
     invoiceName?: string | undefined;
-    notes?: NoteModel[] | undefined;
+    messages?: WorkOrderMessageModel[] | undefined;
 }
 
-export class NoteModel implements INoteModel {
+export class WorkOrderMessageModel implements IWorkOrderMessageModel {
     name?: string | undefined;
     note?: string | undefined;
     date?: Date;
 
-    constructor(data?: INoteModel) {
+    constructor(data?: IWorkOrderMessageModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -19178,9 +19185,9 @@ export class NoteModel implements INoteModel {
         }
     }
 
-    static fromJS(data: any): NoteModel {
+    static fromJS(data: any): WorkOrderMessageModel {
         data = typeof data === 'object' ? data : {};
-        let result = new NoteModel();
+        let result = new WorkOrderMessageModel();
         result.init(data);
         return result;
     }
@@ -19194,7 +19201,7 @@ export class NoteModel implements INoteModel {
     }
 }
 
-export interface INoteModel {
+export interface IWorkOrderMessageModel {
     name?: string | undefined;
     note?: string | undefined;
     date?: Date;

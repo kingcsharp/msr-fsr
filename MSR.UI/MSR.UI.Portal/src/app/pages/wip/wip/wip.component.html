@@ -11,15 +11,16 @@
 
 
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-    <span class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth" tooltip="Show NCR reports"
+
+    <span *ngIf="colsDataAndSettings.colData.hasNCRs" class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth" tooltip="Show NCR reports"
         (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
         <i class="fas fa-print mx-1"></i> NCR </span>
-    <span class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
+    <span *ngIf="colsDataAndSettings.colData.hasMonitors" class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
         (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
         <i class="fas fa-chart-bar"></i> Monitors </span>
-    <span class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
+    <span *ngIf="colsDataAndSettings.colData.hasPhotos" class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
         <i class="fas fa-images"></i> Photos </span>
-    <span class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
+    <span *ngIf="colsDataAndSettings.colData.hasFiles" class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
         <i class="fal fa-file-alt"></i> Files </span>
 </ng-template>
 

@@ -150,7 +150,8 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   getEngineerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WO Item #', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
+      // new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WO Item #', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
@@ -169,7 +170,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   getBuyerColumns() {
     return [
       new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
+      // new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'supplier', label: 'Supplier', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),

@@ -804,6 +804,21 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static GetReport ToGetReportCommand(this GetReportRequest request)
+        {
+            var report = new GetReport()
+            {
+                IsPortal = request.IsPortal
+            };
+
+            return report;
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="request"></param>
@@ -846,7 +861,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProduct>(request);
         }
-      
+
         /// <summary>
         /// ToGetPurchasesCommand
         /// </summary>

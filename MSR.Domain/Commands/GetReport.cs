@@ -4,5 +4,6 @@ namespace MSR.Domain.Commands
 {
     public class GetReport: Command
     {
+        public bool IsPortal { get; set; }
     }
 }

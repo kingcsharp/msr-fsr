@@ -52,7 +52,7 @@ export class Sidebar {
   },
   {
     "menuGroup": {
-      "url": "#",
+      "url": "/#/app/reporting/report/adhocreports",
       "name": "Part Reporting",
       "info": "",
       "icon": "fas fa-line-chart",
