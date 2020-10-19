@@ -1002,7 +1002,6 @@ namespace MSR.Answer.API.V1.Extentions
         public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request)
         {
             var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
-            command.WorkOrderId = request.Id;
             return command;
         }
     }

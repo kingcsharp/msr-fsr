@@ -112,8 +112,8 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrderMessage command, CancellationToken cancellationToken = default)
         {
-            await _workOrderService.CreateWorkOrderMessageAsync(command);
-            return CommandResponse.SuccessCommand;
+            var ret = await _workOrderService.CreateWorkOrderMessageAsync(command);
+            return new CommandResponse<WorkOrderMessageModel>(ret);
         }
     }
 }

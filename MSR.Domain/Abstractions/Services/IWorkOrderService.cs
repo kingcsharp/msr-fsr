@@ -24,7 +24,7 @@ namespace MSR.Domain.Abstractions.Services
         Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command);
         string GetWorkOrderItemNumber(WorkOrderModel model);
         Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command);
-        Task CreateWorkOrderMessageAsync(CreateWorkOrderMessage command);
+        Task<WorkOrderMessageModel> CreateWorkOrderMessageAsync(CreateWorkOrderMessage command);
 
 
     }
