@@ -31,7 +31,7 @@ services:
       - api
   app:
     build:
-      context: ./MSR.UI/MSR.UI.Answer
+      context: ./MSR.UI/MSR.UI.Portal
       dockerfile: Dockerfile
       args:
         - 'ENV=builddevprodsetting'
