@@ -23,6 +23,7 @@ import { ToastrService } from 'ngx-toastr';
   providers: [WorkOrderService]
 })
 export class WipComponent implements OnInit, AfterViewInit {
+  menuItems = EnumMenuItem;
   enumReportTypes = EnumReport;
   // gridColumns: Array<ColumnsSaved> = new Array<ColumnsSaved>();
   loading: boolean = true;
@@ -31,6 +32,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   statusOptions: Array<SelectItem>;
   locationOptions: Array<SelectItem>;
   gridSaved: GridSaved;
+  gridFilesSaved: GridSaved;
+  reportFilesModel: ReportModel;
   selectedReport: EnumReport;
 
   gridPartsSaved: GridSaved;
@@ -48,6 +51,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   activeIndex: number = 0;
   displayCustom: boolean;
   images: any[];
+  files: any[];
+  showFilesDialog: boolean = false;
   responsiveOptions: any[] = [
     {
       breakpoint: '1024px',
@@ -62,6 +67,9 @@ export class WipComponent implements OnInit, AfterViewInit {
       numVisible: 1
     }
   ];
+
+
+  @ViewChild('fileItem') fileItem: ElementRef;
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
@@ -126,6 +134,58 @@ export class WipComponent implements OnInit, AfterViewInit {
                 }
                 else {
                   this.toastr.error("Sorry, there are no pictures for the selected Work Order");
+                }
+              }
+              count--;
+            }));
+        });
+      }));
+  }
+
+  showFiles(rowData) {
+    this.globals.showLoader(true);
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
+      env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.files = [];
+        let count = response.object[0].workOrderTasks.length - 1;
+        this.gridFilesSaved = new GridSaved({
+          columnsSaved: [
+            new ColumnsSaved({ id: 'fileId', label: 'Id', type: EnumColumnType.Number, visible: false }),
+            new ColumnsSaved({ id: 'fileURL', label: 'fileURL', type: EnumColumnType.Number, visible: false }),
+            new ColumnsSaved({ id: 'name', label: 'Name', type: EnumColumnType.String, visible: true }),
+            new ColumnsSaved({ id: 'supportingInfo', label: 'Actions', visible: true, type: EnumColumnType.Template, templateName: this.fileItem }),
+          ],
+          gridClass:'formTbl',
+          showMyViewsFeature:false,
+          storageId: 'wip_engineering_filesGr' + this.elementReference.nativeElement.tagName.toLowerCase(),
+          version: '1.0.0'
+        });
+
+        this.reportFilesModel = new ReportModel({
+          // name: 'Work Orders' + custNameAdd
+          name: ''
+        });
+
+        response.object[0].workOrderTasks.map(element => {
+          this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
+            element.id, null, env.apiVersion)
+            .pipe(take(1)).subscribe(responseHandler((resp) => {
+              if (resp.object.length > 0) {
+                resp.object.forEach((file: FileModel) => {
+                  if (!(file.contentType == 'image/gif' || file.contentType == 'image/tiff' ||
+                    file.contentType == 'image/webp' || file.contentType == 'image/jpeg'
+                    || file.contentType == 'image/png')) {
+                    this.files.push(file);
+                  }
+                });
+              }
+              if (count === 0) {
+                if (this.files.length > 0) {
+                  this.showFilesDialog = true;
+                }
+                else {
+                  this.toastr.error("Sorry, there are no files for the selected Work Order");
                 }
               }
               count--;

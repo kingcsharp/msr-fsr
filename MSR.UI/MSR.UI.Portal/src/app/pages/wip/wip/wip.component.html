@@ -33,9 +33,16 @@
     <span *ngIf="colsDataAndSettings.colData.hasPhotos" (click)="showPhotos(colsDataAndSettings.colData)"
         class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
         <i class="fas fa-images"></i> Photos </span>
-    <span *ngIf="colsDataAndSettings.colData.hasFiles"
+    <span *ngIf="colsDataAndSettings.colData.hasFiles" (click)="showFiles(colsDataAndSettings.colData)"
         class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
         <i class="fal fa-file-alt"></i> Files </span>
+</ng-template>
+
+<ng-template #fileItem let-colsDataAndSettings='colsDataAndSettings'>
+    <grid-file-viewer [menuItem]="menuItems.WorkOrderTasks" [files]="[colsDataAndSettings.colData]"></grid-file-viewer>
+    <a href="{{colsDataAndSettings.colData.fileUrl}}" style="color:#fff" download tooltip="Download File">
+        <i class="fas fa-download"></i>
+    </a>
 </ng-template>
 
 <p-galleria *ngIf="displayBasic2" [value]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions"
@@ -54,7 +61,8 @@
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
     <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
         <div>
-            <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> <span class="disp-instruction">{{item.message}}</span>
+            <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> <span
+                class="disp-instruction">{{item.message}}</span>
         </div>
         <hr *ngIf="!isLast" style="border-bottom: 1px solid;" />
     </div>
@@ -116,6 +124,29 @@
                 </div>
             </fieldset>
         </div>
+    </section>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="saveInstructions()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="wipcomponent-save-button">
+                Save
+            </button>
+            <button type="button" (click)="showInstructionDialog = false"
+                class="btn btn-outline-inverse width-100 mb-xs" role="button">
+                Close
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Files" *ngIf="showFilesDialog" [(visible)]="showFilesDialog" appendTo="body" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}">
+    <section>
+        <widget>
+            <app-grid [gridSaved]="gridFilesSaved" [showReport]="showFilesDialog" [reportInfo]="reportFilesModel"
+                [data]="files">
+            </app-grid>
+        </widget>
     </section>
     <p-footer>
         <div class="pull-right">
