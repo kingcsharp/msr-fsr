@@ -28,15 +28,16 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<ReportModel>>))]
         [HasPrivilegeApi("Reports", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromRoute, Required] GetReportRequest request)
         {
-            var ret = await _dispatcher.DispatchAsync(new GetReport());
+            var command = request.ToGetReportCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ICollection<ReportModel>>();
         }
 
         [HttpGet("Dashboard/{id}"), SwaggerResponse(typeof(AuditActionResult<ReportDashboardModel>))]
         [HasPrivilegeApi("Reports", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> GetDashboard([FromRoute, Required]GetDashboardRequest request)
+        public async Task<IActionResult> GetDashboard([FromRoute, Required] GetDashboardRequest request)
         {
             var command = request.ToGetDashboardCommand();
             var ret = await _dispatcher.DispatchAsync(command);

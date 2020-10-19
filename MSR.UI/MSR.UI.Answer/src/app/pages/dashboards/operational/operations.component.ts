@@ -53,7 +53,7 @@ export class OperationsComponent implements OnInit {
     getReportData() {
         this.globals.showLoader(true);
 
-        this.reportService.report(env.apiVersion).pipe(take(1))
+        this.reportService.report(false, env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo = response.object.filter(x => x.id === EnumReport.RevenuebyCustomerbyTimePeriod)[0];
                 this.gridSaved = new GridSaved({
@@ -65,7 +65,7 @@ export class OperationsComponent implements OnInit {
                 this.showReport = true;
             }));
 
-        this.reportService.report(env.apiVersion).pipe(take(1))
+        this.reportService.report(false, env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo2 = response.object.filter(x => x.id === EnumReport.RevenuebyKitbyPartKit)[0];
                 this.gridSaved2 = new GridSaved({
@@ -77,7 +77,7 @@ export class OperationsComponent implements OnInit {
                 this.showReport2 = true;
             }));
 
-        this.reportService.report(env.apiVersion).pipe(take(1))
+        this.reportService.report(false, env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo3 = response.object.filter(x => x.id === EnumReport.CountofKitsbyPartKit)[0];
                 this.gridSaved3 = new GridSaved({

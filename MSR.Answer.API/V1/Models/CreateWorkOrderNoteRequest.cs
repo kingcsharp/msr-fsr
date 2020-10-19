@@ -9,6 +9,8 @@ namespace MSR.Answer.API.V1.Models
     public class CreateWorkOrderMessageRequest
     {
         [Required]
+        public int Id { get; set; }
+        [Required]
         public string Message { get; set; }
     }
 }

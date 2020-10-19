@@ -9,6 +9,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Description { get; set; }
         public string APIEndPointURL { get; set; }
         public string ImageURL { get; set; }
+        public bool ShowInPortal { get; set; }
 
         public virtual ICollection<ReportCategoryMap> ReportCategories { get; set; }
     }

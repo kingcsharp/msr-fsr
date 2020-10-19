@@ -47,7 +47,7 @@ export class FinancialComponent implements OnInit {
     getReportData() {
         this.globals.showLoader(true);
 
-        this.reportService.report(env.apiVersion).pipe(take(1))
+        this.reportService.report(false, env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo = response.object.filter(x => x.id === EnumReport.CombinedFinancialDatabyWorkOrder)[0];
                 this.gridSaved = new GridSaved({
@@ -59,7 +59,7 @@ export class FinancialComponent implements OnInit {
                 this.showReport = true;
             }));
 
-        this.reportService.report(env.apiVersion).pipe(take(1))
+        this.reportService.report(false, env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo2 = response.object.filter(x => x.id === EnumReport.WorkOrdersNotInvoicedbyWorkOrder)[0];
                 this.gridSaved2 = new GridSaved({
