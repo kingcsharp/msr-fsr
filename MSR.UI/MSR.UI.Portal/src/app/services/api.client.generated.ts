@@ -6931,11 +6931,8 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfPortalWorkOrderView>(<any>null);
     }
 
-    message(id: number, version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/{id}/Message";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{Id}", encodeURIComponent("" + id));
+    message(version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Message";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -19208,6 +19205,7 @@ export interface IWorkOrderMessageModel {
 }
 
 export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageRequest {
+    id!: number;
     message!: string;
 
     constructor(data?: ICreateWorkOrderMessageRequest) {
@@ -19221,6 +19219,7 @@ export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageReq
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.message = _data["message"];
         }
     }
@@ -19234,12 +19233,14 @@ export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageReq
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["message"] = this.message;
         return data; 
     }
 }
 
 export interface ICreateWorkOrderMessageRequest {
+    id: number;
     message: string;
 }
 

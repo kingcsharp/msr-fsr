@@ -109,13 +109,13 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<PortalWorkOrderView>>();
         }
 
-        [HttpPatch("{id}/Message")]
+        [HttpPatch("Message")]
         [SwaggerResponse(typeof(AuditActionResult))]
-        public async Task<IActionResult> AddMessage([Required]int Id, [FromBody, Required]CreateWorkOrderMessageRequest request)
+        public async Task<IActionResult> AddMessage([FromBody, Required]CreateWorkOrderMessageRequest request)
         {
-            var command = request.ToCreateWorkOrderMessageCommand(Id);
+            var command = request.ToCreateWorkOrderMessageCommand();
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse();
+            return ret.ToOkObjectResponse("Instruction successfully added");
 
         }
     }

@@ -999,10 +999,10 @@ namespace MSR.Answer.API.V1.Extentions
 
         public static GetPortalWorkOrder ToGetPortalWorkOrderCommand(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrder>(request);
 
-        public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request, int id)
+        public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request)
         {
             var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
-            command.WorkOrderId = id;
+            command.WorkOrderId = request.Id;
             return command;
         }
     }

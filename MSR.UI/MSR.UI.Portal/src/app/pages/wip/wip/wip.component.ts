@@ -35,6 +35,9 @@ export class WipComponent implements OnInit, AfterViewInit {
   reportModel: ReportModel;
   showNcrModal: boolean = false;
   ncrWorkOrder: any;
+  instructions: string;
+  selectedColData: any;
+  showInstructionDialog:boolean;
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
@@ -84,7 +87,8 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   expandRow(data: PortalWorkOrderPartsView) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(data.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+    this.workOrderService.workOrder(data.id, this.globals.selectedCustomer.id, null, null, null,
+       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object[0].workOrderParts.forEach(element => {
           element.partNumber = element.part.partNumber;
@@ -94,10 +98,19 @@ export class WipComponent implements OnInit, AfterViewInit {
       }));
   }
 
-  addInstructions(gridSettings) {
-    const message = new CreateWorkOrderMessageRequest();
-    // this.workOrderService.message(gridSettings.id,env.apiVersion,)
-    console.log(gridSettings);
+  addInstructions(coldata) {
+    this.instructions = '';
+    this.selectedColData = coldata;
+    this.showInstructionDialog = true;
+  }
+
+  saveInstructions() {
+    const request = new CreateWorkOrderMessageRequest({id:this.selectedColData.id,message: this.instructions });
+    this.workOrderService.message(env.apiVersion, request).pipe(take(1))
+    .subscribe(responseHandler(response => {
+      this.selectedColData.messages.push(request);
+      this.showInstructionDialog = false;
+    }));
   }
 
 
