@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
-  Role, EnumMenuItem, ReportService, ReportModel
+  Role, EnumMenuItem, ReportService, ReportModel, CustomerService
 } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
@@ -30,16 +30,21 @@ export class ReportComponent implements OnInit {
   query: any = [];
   querySubject: any;
   repData: any;
-  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
+  constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService, private customerService: CustomerService,
     private elem: ElementRef, private reportService: ReportService, private cSVConverterService: CSVConverterService,
     private reportCubeService: ReportCubeService) {
 
   }
 
   ngOnInit(): void {
+    this.customerService.customerGet(this.globals.user.customerId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+      this.globals.changeCustomer(response.object[0]);
+    }));
     this.reportService.report(true, env.apiVersion).subscribe(responseHandler(response => {
       this.data = response.object;
     }));
+
+
 
   }
 

@@ -1,7 +1,6 @@
 import { Component, OnInit, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
 import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
@@ -40,7 +39,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) {
+  constructor(private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) {
 
   }
 
@@ -55,7 +54,7 @@ export class WipComponent implements OnInit, AfterViewInit {
         new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String }),
       ],
       showMyViewsFeature: false,
-      paginator:false,
+      paginator: false,
       storageId: 'wip_engineering_parts' + this.elementReference.nativeElement.tagName.toLowerCase(),
       version: '1.0.0'
     });
@@ -90,13 +89,9 @@ export class WipComponent implements OnInit, AfterViewInit {
         response.object[0].workOrderParts.forEach(element => {
           element.partNumber = element.part.partNumber;
           element.name = element.part.name;
-          pushIfNotExists(element, data.workOrderParts, 'id');
+          // pushIfNotExists(element, data.workOrderParts, 'id');
         });
-
       }));
-
-
-    // [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel" [data]="expandRowData.rowData.workOrderParts"
   }
 
   addInstructions(gridSettings) {
@@ -140,8 +135,13 @@ export class WipComponent implements OnInit, AfterViewInit {
           expandRowsTemplate: this.expandedRowTemplate
         });
 
+        let custNameAdd = '';
+        if (this.globals.selectedCustomer.name !== undefined) {
+          custNameAdd = ' - ' + this.globals.selectedCustomer.name;
+        }
+
         this.reportModel = new ReportModel({
-          name: 'Work Orders'
+          name: 'Work Orders' + custNameAdd
         });
 
         this.showReport = true;
