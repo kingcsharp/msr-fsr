@@ -390,7 +390,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.title = procedureStep.title;
     updateProcedureStepRequest.usefulLife = procedureStep.usefulLife;
     updateProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
-    updateProcedureStepRequest.procedureStepType = procedureStep.selectedProcedureStepTypeId;
+    updateProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
     updateProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1;
 
     this.globals.showLoader(true);
@@ -422,7 +422,7 @@ export class ProcedureEditComponent implements OnInit {
             updateAffectedProcedureStepRequest.title = procedureStepToUpdate.title;
             updateAffectedProcedureStepRequest.usefulLife = procedureStepToUpdate.usefulLife;
             updateAffectedProcedureStepRequest.utilizationTime = procedureStepToUpdate.utilizationTime;
-            updateAffectedProcedureStepRequest.procedureStepType = procedureStepToUpdate.selectedProcedureStepTypeId;
+            updateAffectedProcedureStepRequest.procedureStepTypeId = procedureStepToUpdate.selectedProcedureStepTypeId;
             updateAffectedProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStepToUpdate.id) + 1;
             updateAffectedProcedureStepRequests.push(updateAffectedProcedureStepRequest);
 
@@ -537,7 +537,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepRequest.title = procedureStep.title;
     createProcedureStepRequest.usefulLife = procedureStep.usefulLife;
     createProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
-    createProcedureStepRequest.procedureStepType = procedureStep.selectedProcedureStepTypeId;
+    createProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
     this.globals.showLoader(true);
     this.procedureService.stepPost(this.procedure.id, env.apiVersion, createProcedureStepRequest).subscribe(responseHandler((response) => {
       procedureStep.id = response.object.id;

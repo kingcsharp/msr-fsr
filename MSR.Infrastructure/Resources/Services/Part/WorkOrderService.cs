@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -429,6 +430,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
+
+            if (step != null && step.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC)
+            {
+                var workOrderEntity = await _unitOfWork.WorkOrders
+                    .FirstOrDefaultAsync(false, s => s.Id == command.WorkOrderId);
+
+                if (!workOrderEntity.HasNCR)
+                {
+                    workOrderEntity.HasNCR = true;
+                    _unitOfWork.WorkOrders.Update(workOrderEntity);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+
+            }
+
+
             if (step == null)
             {
                 throw new DomainException(
@@ -463,6 +480,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 wotm.WorkOrderTask = null;
             }
+
+            ret.WorkOrder = null;
 
             return ret;
         }
