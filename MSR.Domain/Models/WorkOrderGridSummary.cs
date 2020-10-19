@@ -64,6 +64,13 @@ namespace MSR.Domain.Models
         public int? PurchaseOrderNumber { get; set; }
 
         /// <summary>
+        /// This is the Purchase Order Database Id
+        /// </summary>
+        /// <value>This is the Purchase Order Id</value>
+        [DataMember(Name = "referencePo")]
+        public string ReferencePO { get; set; }
+
+        /// <summary>
         /// This is from the parent part and not the child part
         /// </summary>
         /// <value>This is from the parent part and not the child part</value>
