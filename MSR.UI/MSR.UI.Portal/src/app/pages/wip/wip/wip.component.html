@@ -32,13 +32,25 @@
         class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
         (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
         <i class="fas fa-chart-bar"></i> Monitors </span>
-    <span *ngIf="colsDataAndSettings.colData.hasPhotos"
+    <span *ngIf="colsDataAndSettings.colData.hasPhotos" (click)="showPhotos(colsDataAndSettings.colData)"
         class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
         <i class="fas fa-images"></i> Photos </span>
     <span *ngIf="colsDataAndSettings.colData.hasFiles"
         class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
         <i class="fal fa-file-alt"></i> Files </span>
 </ng-template>
+
+<p-galleria [(value)]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '850px'}" [numVisible]="7"
+    [circular]="true" [fullScreen]="true" [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000"> 
+    <ng-template pTemplate="item" let-item>
+        <img [src]="item.previewImageSrc" style="width: 100%; display: block;"/>
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="p-grid p-nogutter p-justify-center">
+            <img [src]="item.thumbnailImageSrc" style="display: block;"/>
+        </div>
+    </ng-template>
+</p-galleria>
 
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
     <div *ngFor="let item of colsDataAndSettings.colData.notes">

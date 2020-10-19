@@ -40,6 +40,24 @@ export class WipComponent implements OnInit, AfterViewInit {
   showInstructionDialog: boolean;
   subpartTextSearch: string;
   title: string;
+  displayBasic2: boolean;
+  activeIndex: number = 0;
+  displayCustom: boolean;
+  images: any[];
+  responsiveOptions:any[] = [
+    {
+        breakpoint: '1024px',
+        numVisible: 5
+    },
+    {
+        breakpoint: '768px',
+        numVisible: 3
+    },
+    {
+        breakpoint: '560px',
+        numVisible: 1
+    }
+];
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
@@ -68,6 +86,16 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.reportPartsModel = new ReportModel({
       name: ''
     });
+  }
+
+  showPhotos(rowData){
+    
+    this.displayBasic2 = true;
+  }
+
+  imageClick(index: number) {
+    this.activeIndex = index;
+    this.displayCustom = true;
   }
 
   ngAfterViewInit(): void {
