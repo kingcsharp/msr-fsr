@@ -44,20 +44,20 @@ export class WipComponent implements OnInit, AfterViewInit {
   activeIndex: number = 0;
   displayCustom: boolean;
   images: any[];
-  responsiveOptions:any[] = [
+  responsiveOptions: any[] = [
     {
-        breakpoint: '1024px',
-        numVisible: 5
+      breakpoint: '1024px',
+      numVisible: 5
     },
     {
-        breakpoint: '768px',
-        numVisible: 3
+      breakpoint: '768px',
+      numVisible: 3
     },
     {
-        breakpoint: '560px',
-        numVisible: 1
+      breakpoint: '560px',
+      numVisible: 1
     }
-];
+  ];
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
@@ -88,8 +88,19 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
   }
 
-  showPhotos(rowData){
-    
+  showPhotos(rowData) {
+    this.images = [{
+      "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+      "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+      "alt": "Description for Image 1",
+      "title": "Title 1"
+    },
+    {
+      "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+      "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+      "alt": "Description for Image 1",
+      "title": "Title 1"
+    }];
     this.displayBasic2 = true;
   }
 

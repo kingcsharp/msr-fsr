@@ -15,6 +15,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { WorkordertasktimerWrapperComponent } from '../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { Galleria } from 'primeng/galleria';
 import { FormsModule } from '@angular/forms';
 import { WorkordertaskmonitosWrapperComponent } from '../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component';
 import { EmPmButtonWrapperComponent } from '../../components/em-pm-button-wrapper/em-pm-button-wrapper.component';
@@ -62,7 +63,8 @@ export const routes = [
     DropdownModule,
     FormsModule,
     QRCodeModule,
-    NgxBarcodeModule
+    NgxBarcodeModule,
+    Galleria
   ]
 })
 export class WipModule { static routes = routes; }

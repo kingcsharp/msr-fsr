@@ -16,6 +16,7 @@ import { BlockUIModule } from 'primeng/blockui';
 import { DialogModule } from 'primeng/dialog';
 import { ApprovalCommentComponent } from '../components/approval-comment/approval-comment.component';
 import { PanelModule } from 'primeng/panel';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { PanelModule } from 'primeng/panel';
     UtilsModule,
     DialogModule,
     DropdownModule,
-    PanelModule
+    PanelModule,
+    InputSwitchModule
   ],
   declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent]
 })
