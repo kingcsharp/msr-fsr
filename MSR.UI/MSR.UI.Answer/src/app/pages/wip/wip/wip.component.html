@@ -60,8 +60,8 @@
                             [hidden]="!commonGrid.isVisibleCol('serialNumber',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="purchaseOrderNumber"
-                            [hidden]="!commonGrid.isVisibleCol('purchaseOrderNumber',gridSettings)"
+                        <th grid-input-filter [dt]="dt" searchField="referencePO"
+                            [hidden]="!commonGrid.isVisibleCol('referencePO',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
                         <th grid-input-filter [dt]="dt" searchField="quantity"
@@ -131,8 +131,8 @@
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
                             {{model.serialNumber}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('purchaseOrderNumber', gridSettings)">
-                            {{model.purchaseOrderNumber}}
+                        <td [hidden]="!commonGrid.isVisibleCol('referencePO', gridSettings)">
+                            {{model.referencePO}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('quantity', gridSettings)">
                             {{model.quantity}}
