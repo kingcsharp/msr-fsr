@@ -51,12 +51,20 @@
           <p-tabView class="mt-0">
             <p-tabPanel header="Parts" class="ui-tabview-top-panel">
               <div class="ui-tabview-top-right">
-                <ul>
-                  <li *ngFor="let part of workOrderParts">
-                    Part # {{part.part.partNumber}}, {{part.part.name}} (CycleCount: {{part.cycleCount}})
+              <ul>
+                <li *ngFor="let part of workOrderParts">
+                  <span *ngIf="part.serialNumber; else noSerial">
+                  Part # {{part.part.partNumber}}, {{part.part.name}}, S/N: ({{part.serialNumber}}), (CycleCount: {{part.cycleCount}})
+                  (Qty: {{part.qty}})
+                  </span>
+                  <ng-template #noSerial>
+                    <span>
+                      Part # {{part.part.partNumber}}, {{part.part.name}}, S/N: (N/A), (CycleCount: {{part.cycleCount}})
                     (Qty: {{part.qty}})
-                  </li>
-                </ul>
+                    </span>
+                  </ng-template>
+                </li>
+              </ul>
               </div>
             </p-tabPanel>
             <p-tabPanel header="Purchase" class="ui-tabview-top-panel">
