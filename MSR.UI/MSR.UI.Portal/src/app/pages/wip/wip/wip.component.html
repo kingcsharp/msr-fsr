@@ -1,6 +1,20 @@
 <h1 class="page-title" data-cy="page-title">
-    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
-    {{globals.activeMenu.name}}
+    <div class="form-group col-10 d-flex flex-row headerSearch" *ngIf="globals.selectedCustomer !== undefined">
+        <div>
+            <i class="fas fa-desktop"></i>
+            {{title}}
+        </div>
+        <div class="searchinput">
+            <input type="text" name="searchsubpart" placeholder="Search Sub Parts" [(ngModel)]="subpartTextSearch"
+                class="form-control input-transparent" tooltip="">
+        </div>
+        <div>
+            <button type="submit" (click)="getGridData()" class="btn btn-primary" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-search"></i>Search
+            </button>
+        </div>
+    </div>
 </h1>
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
@@ -11,7 +25,6 @@
 
 
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-
     <span *ngIf="colsDataAndSettings.colData.hasNCRs" class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth"
         tooltip="Show NCR reports" (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
         <i class="fas fa-print mx-1"></i> NCR </span>
@@ -92,8 +105,8 @@
     </section>
     <p-footer>
         <div class="pull-right">
-            <button type="submit" (click)="saveInstructions()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
-                data-cy="wipcomponent-save-button">
+            <button type="submit" (click)="saveInstructions()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="wipcomponent-save-button">
                 Save
             </button>
             <button type="button" (click)="showInstructionDialog = false"

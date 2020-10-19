@@ -2129,3 +2129,15 @@ p-dialog {
     padding: 0 40px 0;
   }
 }
+
+.headerSearch{
+  button{
+    top: -5px;
+    position: relative;
+    margin-left: 5px;
+  }
+  .searchinput{
+    width: 200px;
+    margin-left: 30px;
+  }
+}

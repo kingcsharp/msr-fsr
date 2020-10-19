@@ -37,7 +37,9 @@ export class WipComponent implements OnInit, AfterViewInit {
   ncrWorkOrder: any;
   instructions: string;
   selectedColData: any;
-  showInstructionDialog:boolean;
+  showInstructionDialog: boolean;
+  subpartTextSearch: string;
+  title: string;
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
@@ -47,6 +49,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.setCustomerName();
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
@@ -69,17 +72,20 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.globals.selectedCustomer !== undefined) {
+      this.setCustomerName();
       this.getGridData();
     }
 
     this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
+        this.setCustomerName();
         this.getGridData();
       }
     });
 
     this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null) {
+        this.setCustomerName();
         this.getGridData();
       }
     });
@@ -88,7 +94,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   expandRow(data: PortalWorkOrderPartsView) {
     this.globals.showLoader(true);
     this.workOrderService.workOrder(data.id, this.globals.selectedCustomer.id, null, null, null,
-       env.apiVersion).pipe(take(1))
+      env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object[0].workOrderParts.forEach(element => {
           element.partNumber = element.part.partNumber;
@@ -105,12 +111,12 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   saveInstructions() {
-    const request = new CreateWorkOrderMessageRequest({id:this.selectedColData.id,message: this.instructions });
+    const request = new CreateWorkOrderMessageRequest({ id: this.selectedColData.id, message: this.instructions });
     this.workOrderService.message(env.apiVersion, request).pipe(take(1))
-    .subscribe(responseHandler(response => {
-      this.selectedColData.messages.push(request);
-      this.showInstructionDialog = false;
-    }));
+      .subscribe(responseHandler(response => {
+        this.selectedColData.messages.push(request);
+        this.showInstructionDialog = false;
+      }));
   }
 
 
@@ -129,11 +135,16 @@ export class WipComponent implements OnInit, AfterViewInit {
     window.print();
   }
 
-
+  setCustomerName() {
+    this.title = 'Work Orders';
+    if (this.globals.selectedCustomer?.name !== undefined) {
+      this.title += ' - ' + this.globals.selectedCustomer.name;
+    }
+  }
 
   getGridData() {
     this.globals.showLoader(true);
-    this.workOrderService.portal(this.globals.selectedCustomer.id, '', null, env.apiVersion).pipe(take(1))
+    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object.map(x => {
           let ret = new PortalWorkOrderPartsView(x);
@@ -148,13 +159,9 @@ export class WipComponent implements OnInit, AfterViewInit {
           expandRowsTemplate: this.expandedRowTemplate
         });
 
-        let custNameAdd = '';
-        if (this.globals.selectedCustomer.name !== undefined) {
-          custNameAdd = ' - ' + this.globals.selectedCustomer.name;
-        }
-
         this.reportModel = new ReportModel({
-          name: 'Work Orders' + custNameAdd
+          // name: 'Work Orders' + custNameAdd
+          name: ''
         });
 
         this.showReport = true;
