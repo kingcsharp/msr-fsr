@@ -12810,7 +12810,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -12846,7 +12846,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
-            this.procedureStepType = _data["procedureStepType"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -12881,7 +12881,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
-        data["procedureStepType"] = this.procedureStepType;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -12916,7 +12916,7 @@ export interface ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13330,7 +13330,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: number | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13367,7 +13367,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
-            this.procedureStepType = _data["procedureStepType"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -13403,7 +13403,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
-        data["procedureStepType"] = this.procedureStepType;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -13440,7 +13440,7 @@ export interface IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: number | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
