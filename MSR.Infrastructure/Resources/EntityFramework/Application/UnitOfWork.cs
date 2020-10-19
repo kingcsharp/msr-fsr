@@ -89,6 +89,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<EquipmentMaintenance> _equipmentMaintenances;
         private IRepository<WorkOrderMessage> _workOrderMessage;
         private IRepository<CycleCountHistory> _cycleCountHistory;
+        private IRepository<PortalWorkOrder> _portalWorkOrderView;
 
         public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
