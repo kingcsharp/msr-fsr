@@ -57,12 +57,12 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="durationType")]
         public string DurationType { get; set; }
-
+        
         /// <summary>
         /// Procedure Step Type
         /// </summary>
-        [DataMember(Name="procedureStepType")]
-        public int? ProcedureStepType { get; set; }
+        [DataMember(Name = "procedureStepTypeId")]
+        public int ProcedureStepTypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets PrintOrder

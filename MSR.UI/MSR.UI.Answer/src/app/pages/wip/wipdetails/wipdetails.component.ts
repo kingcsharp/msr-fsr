@@ -52,7 +52,7 @@ export class WipdetailsComponent implements OnInit {
   monitorTypes: Array<SelectItem>;
   itemsPerASlide: number = 6;
   rolesRequiredToViewTask: Array<string> = new Array<string>();
-  rolesRequiredMessage: string = '';
+  rolesRequiredMessage: string = undefined;
   nameOfTaskThatIsRestricted: string;
   hasAccessToTaskBeingViewed: boolean = false;
 
@@ -129,6 +129,7 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
+      this.rolesRequiredMessage = undefined;
     } else {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
@@ -219,6 +220,7 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderTaskToView = workOrderTask;
       this.rolesRequiredToViewTask.length = 0;
       this.hasAccessToTaskBeingViewed = true;
+      this.rolesRequiredMessage = undefined;
     } else {
       this.nameOfTaskThatIsRestricted = workOrderTask.procedureStep.title;
       this.generateRolesRequiredMessage(workOrderTask.procedureStep.roles.map(s => s.name));
@@ -279,9 +281,11 @@ export class WipdetailsComponent implements OnInit {
     } as IUpdateWorkOrderPartRequest);
 
     this.globals.showLoader(true);
-    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(responseHandler(() => {
+    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(response => {
 
-      this.originalSerialNumbers.find(s => s.id === partId).serialNumber = this.workOrderModel.workOrderParts.find(s => s.id === partId).serialNumber;
+      let workOrderPart = this.workOrderModel.workOrderParts.find(s => s.id === partId);
+      workOrderPart.cycleCount = response.object.cycleCount;
+      this.originalSerialNumbers.find(s => s.id === partId).serialNumber = workOrderPart.serialNumber;
 
       let changebuttonElement = <HTMLInputElement>document.getElementById('changebutton' + index);
       changebuttonElement.classList.remove('d-none');
@@ -291,7 +295,7 @@ export class WipdetailsComponent implements OnInit {
 
       let cancelbuttonElement = <HTMLInputElement>document.getElementById('cancelbutton' + index);
       cancelbuttonElement.classList.add('d-none');
-    }));
+    });
   }
 
   cancelSerialNumber(index, partId) {

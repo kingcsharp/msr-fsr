@@ -1,0 +1,130 @@
+pipeline {
+    options {
+        disableConcurrentBuilds()
+    }
+    agent none
+    environment {
+        WEBHOOK_URL = 'https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/a8556c572acf47fdaa48888079cd22f5/73b18003-3808-48a4-bf4d-a0fc2650baa5'
+        GREEN = '#008000'
+        RED = '#FF0000'
+        ACCOUNT_URL='425480257575.dkr.ecr.us-west-2.amazonaws.com'
+        REGION='us-west-2'
+        PROFILE='--profile msrfsr'
+        DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-qa/2732ea92378da008"
+        STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-uat/551b7aafb24e8c90"
+        DEV_PROJECT_UI='qa-portal-ui'
+        STAGE_PROJECT_UI='uat-portal-ui'
+        UI_COMPOSE='docker-compose-ui-portal.yml'
+    }
+    stages {
+        stage('Build & Deploy UI to QA') {
+            agent { label 'master'}
+            steps {
+                script {
+                    try {
+                        dir('MSR.UI/MSR.UI.Portal') {
+                            //sh "sudo chmod 777 /var/run/docker.sock"
+                            sh "docker build --build-arg ENV=builddevprodsetting -t msr-ui-portal ."
+                            sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+
+                            sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                            sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+                        }
+                    } catch(e) {
+                        office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
+                        sh "exit 1"
+                    }
+
+                    try {
+                        sh "sh update_image_portal.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                        sh "cat ${UI_COMPOSE}"
+
+                            if(env.BRANCH_NAME == 'Develop') {
+                                echo "Deploying Develop"
+                                deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
+                            }
+
+                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
+                    } catch (e) {
+                        office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
+                        sh "exit 1"
+                    }
+                }
+            }
+        }
+
+        stage("Deploy Rollbar QA") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=\"${env.BRANCH_NAME}\" \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
+                }
+            }
+        }
+
+        stage("Promote API to UAT") {
+            agent { label 'master'}
+            steps {
+                script {
+                    timeout(activity: true, time: 5) {
+                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                    }
+                    sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                    sh "cat ${API_COMPOSE}"
+                    deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                }
+            }
+        }
+
+        stage("Promote UI to UAT") {
+            agent { label 'master'}
+            steps {
+                script {
+                    dir('MSR.UI/MSR.UI.Answer') {
+                        sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
+                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+
+                        sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                        sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+                    }
+
+                    sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                    sh "cat ${UI_COMPOSE}"
+
+                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+                }
+            }
+        }
+
+        stage("Deploy Rollbar UAT") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=UAT \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
+                }
+            }
+        }
+    }
+}
+
+void deploy(composeFile,name,target, app) {
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
+        //sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+        sh "ecs-cli configure profile --access-key AKIAWGEEZQATRVZEHMGB --secret-key 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 --profile-name answer-profile"
+
+        sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
+    }
+}
