@@ -23,7 +23,7 @@ import { ProductDefinitionComponent } from './product-definition/product-definit
 import { PurchaseOrdersComponent } from './purchase-orders/purchase-orders.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { QuotesProductsComponent } from './quotes-products/quotes-products.component';
-import {PanelModule} from 'primeng/panel';
+import { PanelModule } from 'primeng/panel';
 
 export const routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },

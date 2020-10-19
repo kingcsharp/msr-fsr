@@ -74,6 +74,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<ReportCategoryMap> ReportCategoryMap { get; set; }
         public DbSet<ReportDashboard> ReportDashboard { get; set; }
         public DbSet<ReportDashboardMap> ReportDashboardMap { get; set; }
+        public DbSet<PortalWorkOrder> PortalWorkOrderView { get; set; }
 
         public DbSet<EquipmentMaintenance> EquipmentMaintenance { get; set; }
         public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }

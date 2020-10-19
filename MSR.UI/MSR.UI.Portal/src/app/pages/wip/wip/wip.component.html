@@ -1,6 +1,20 @@
 <h1 class="page-title" data-cy="page-title">
-    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
-    {{globals.activeMenu.name}}
+    <div class="form-group col-10 d-flex flex-row headerSearch" *ngIf="globals.selectedCustomer !== undefined">
+        <div>
+            <i class="fas fa-desktop"></i>
+            {{title}}
+        </div>
+        <div class="searchinput">
+            <input type="text" name="searchsubpart" placeholder="Search Sub Parts" [(ngModel)]="subpartTextSearch"
+                class="form-control input-transparent" tooltip="">
+        </div>
+        <div>
+            <button type="submit" (click)="getGridData()" class="btn btn-primary" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-search"></i>Search
+            </button>
+        </div>
+    </div>
 </h1>
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
@@ -8,22 +22,42 @@
         (expandRowClick)="expandRow($event)" [data]="data">
     </app-grid>
 </widget>
-
-
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-    <span class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth" tooltip="Show NCR reports"
-        (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
+    <span *ngIf="colsDataAndSettings.colData.hasNCRs" class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth"
+        tooltip="Show NCR reports" (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
         <i class="fas fa-print mx-1"></i> NCR </span>
-    <span class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
+    <span *ngIf="colsDataAndSettings.colData.hasMonitors"
+        class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
         (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
         <i class="fas fa-chart-bar"></i> Monitors </span>
-    <span class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
+    <span *ngIf="colsDataAndSettings.colData.hasPhotos" (click)="showPhotos(colsDataAndSettings.colData)"
+        class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
         <i class="fas fa-images"></i> Photos </span>
-    <span class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
+    <span *ngIf="colsDataAndSettings.colData.hasFiles"
+        class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
         <i class="fal fa-file-alt"></i> Files </span>
 </ng-template>
 
+<p-galleria *ngIf="displayBasic2" [value]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{'max-width': '850px'}" [numVisible]="7" [circular]="true" [fullScreen]="true"
+    [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000">
+    <ng-template pTemplate="item" let-item>
+        <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="p-grid p-nogutter p-justify-center">
+            <img [src]="item.thumbnailImageSrc" style="display: block;" />
+        </div>
+    </ng-template>
+</p-galleria>
+
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
+    <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
+        <div>
+            <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> <span class="disp-instruction">{{item.message}}</span>
+        </div>
+        <hr *ngIf="!isLast" style="border-bottom: 1px solid;" />
+    </div>
     <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
         (click)="addInstructions(colsDataAndSettings.colData)">
         Add Insturctions </span>
@@ -59,6 +93,39 @@
             <button type="submit" (click)="showNcrModal = false" class="btn btn-warning mb-xs" role="button"
                 data-cy="confirmdelete-button">
                 <i class="fas fa-times-circle mx-1"></i>Close
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Add Instruction" [(visible)]="showInstructionDialog" appendTo="body" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}">
+    <section class="widget mrg-btm-sm" widget>
+        <header>
+        </header>
+        <div class="widget-body">
+            <fieldset>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <textarea rows="6" cols="150" type="text" id="instructions" name="instructions"
+                            [(ngModel)]="instructions" data-validate="parsley" data-parsley-trigger="change"
+                            data-parsley-minlength="3" data-parsley-required="true"
+                            class="form-control input-transparent" tooltip="Min length 3 characters"
+                            placeholder="Instructions" data-cy="instructions-input"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </section>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="saveInstructions()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="wipcomponent-save-button">
+                Save
+            </button>
+            <button type="button" (click)="showInstructionDialog = false"
+                class="btn btn-outline-inverse width-100 mb-xs" role="button">
+                Close
             </button>
         </div>
     </p-footer>

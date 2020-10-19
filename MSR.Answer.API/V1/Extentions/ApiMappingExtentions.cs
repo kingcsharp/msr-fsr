@@ -804,6 +804,21 @@ namespace MSR.Answer.API.V1.Extentions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static GetReport ToGetReportCommand(this GetReportRequest request)
+        {
+            var report = new GetReport()
+            {
+                IsPortal = request.IsPortal
+            };
+
+            return report;
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="request"></param>
@@ -846,7 +861,7 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return AutoMapperHelper.Mapper.Map<UpdateProduct>(request);
         }
-      
+
         /// <summary>
         /// ToGetPurchasesCommand
         /// </summary>
@@ -982,10 +997,11 @@ namespace MSR.Answer.API.V1.Extentions
         public static GetSearch ToGetSearchCommand(this GetSearchRequest request) => AutoMapperHelper.Mapper.Map<GetSearch>(request);
         public static GetDashboard ToGetDashboardCommand(this GetDashboardRequest request) => AutoMapperHelper.Mapper.Map<GetDashboard>(request);
 
-        public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request, int id)
+        public static GetPortalWorkOrder ToGetPortalWorkOrderCommand(this GetPortalWorkOrderRequest request) => AutoMapperHelper.Mapper.Map<GetPortalWorkOrder>(request);
+
+        public static CreateWorkOrderMessage ToCreateWorkOrderMessageCommand(this CreateWorkOrderMessageRequest request)
         {
             var command = AutoMapperHelper.Mapper.Map<CreateWorkOrderMessage>(request);
-            command.WorkOrderId = id;
             return command;
         }
     }

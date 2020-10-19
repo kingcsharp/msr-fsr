@@ -7,6 +7,7 @@ import { EnumColumnType } from '../../../app/models/enums/EnumColumnType';
 import * as moment from 'moment';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
+import { Globals } from '../../models/lib/globals';
 
 @Injectable({
     providedIn: 'root'
@@ -14,14 +15,23 @@ import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 export class ReportCubeService {
     cubeKey = '9nyEf9X3gjVQqryBAYKcMSefrkCZ7m8bCHJSXeXCYsfhCqcRJt';
     enumColumnType = EnumColumnType;
-    constructor(private http: HttpClient, private toastr: ToastrService) {
+    constructor(private http: HttpClient, private toastr: ToastrService, private globals: Globals) {
 
     }
 
     public getReport = async (reportInfo: ReportModel) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
         return this.http.get(reportInfo.apiEndPointURL, { headers: headers }).toPromise().then(response => {
-            return this.filterReportData(response, reportInfo);
+            return this.filterReportData(this.filterByCustomerName(response), reportInfo);
+        });
+    }
+
+    filterByCustomerName(response: any) {
+        return response.filter(x => {
+            if (x['CubeFinancial.customername'] !== undefined) {
+                return x['CubeFinancial.customername'] === this.globals.selectedCustomer.name;
+            }
+            return true;
         });
     }
 
@@ -99,7 +109,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'amount', label: 'Amount', visible: true, type: this.enumColumnType.Money }),
                     new ColumnsSaved({ id: 'subtotal', label: 'SubTotal', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'wtax', label: 'w/ Tax', visible: true, type: this.enumColumnType.String })
-                ]; 
+                ];
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'Customer Purchase', visible: true, type: this.enumColumnType.String }),

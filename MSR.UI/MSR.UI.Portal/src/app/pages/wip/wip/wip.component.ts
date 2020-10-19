@@ -1,9 +1,11 @@
 import { Component, OnInit, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
-import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { SelectItem } from 'primeng/api';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest } from '../../../services/api.client.generated';
+import {
+  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,
+  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel
+} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
@@ -12,6 +14,7 @@ import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
 import { pushIfNotExists } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-wip',
@@ -36,15 +39,41 @@ export class WipComponent implements OnInit, AfterViewInit {
   reportModel: ReportModel;
   showNcrModal: boolean = false;
   ncrWorkOrder: any;
+  instructions: string;
+  selectedColData: any;
+  showInstructionDialog: boolean;
+  subpartTextSearch: string;
+  title: string;
+  displayBasic2: boolean;
+  activeIndex: number = 0;
+  displayCustom: boolean;
+  images: any[];
+  responsiveOptions: any[] = [
+    {
+      breakpoint: '1024px',
+      numVisible: 5
+    },
+    {
+      breakpoint: '768px',
+      numVisible: 3
+    },
+    {
+      breakpoint: '560px',
+      numVisible: 1
+    }
+  ];
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) {
+  constructor(private elementReference: ElementRef, public globals: Globals,
+    private workOrderService: WorkOrderService, public fileService: FileService,
+    private toastr: ToastrService) {
 
   }
 
   ngOnInit(): void {
+    this.setCustomerName();
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
@@ -55,7 +84,7 @@ export class WipComponent implements OnInit, AfterViewInit {
         new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String }),
       ],
       showMyViewsFeature: false,
-      paginator:false,
+      paginator: false,
       storageId: 'wip_engineering_parts' + this.elementReference.nativeElement.tagName.toLowerCase(),
       version: '1.0.0'
     });
@@ -65,19 +94,67 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
   }
 
+  showPhotos(rowData) {
+    this.globals.showLoader(true);
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
+      env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.images = [];
+        let count = response.object[0].workOrderTasks.length - 1;
+        response.object[0].workOrderTasks.map(element => {
+          this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
+            element.id, null, env.apiVersion)
+            .pipe(take(1)).subscribe(responseHandler((resp) => {
+              if (resp.object.length > 0) {
+                resp.object.forEach((file: FileModel) => {
+                  if (file.contentType == 'image/gif' || file.contentType == 'image/tiff' ||
+                    file.contentType == 'image/webp' || file.contentType == 'image/jpeg'
+                    || file.contentType == 'image/png') {
+                    this.images.push({
+                      id: file.entityId,
+                      previewImageSrc: file.fileURL,
+                      thumbnailImageSrc: file.fileURL,
+                      alt: '',
+                      title: ''
+                    });
+                  }
+                });
+              }
+              if (count === 0) {
+                if (this.images.length > 0) {
+                  this.displayBasic2 = true;
+                }
+                else {
+                  this.toastr.error("Sorry, there are no pictures for the selected Work Order");
+                }
+              }
+              count--;
+            }));
+        });
+      }));
+  }
+
+  imageClick(index: number) {
+    this.activeIndex = index;
+    this.displayCustom = true;
+  }
+
   ngAfterViewInit(): void {
     if (this.globals.selectedCustomer !== undefined) {
+      this.setCustomerName();
       this.getGridData();
     }
 
     this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.selectedCustomer !== undefined) {
+        this.setCustomerName();
         this.getGridData();
       }
     });
 
     this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null) {
+        this.setCustomerName();
         this.getGridData();
       }
     });
@@ -85,32 +162,38 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   expandRow(data: PortalWorkOrderPartsView) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(data.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+    this.workOrderService.workOrder(data.workOrderId, this.globals.selectedCustomer.id, null, null, null,
+      env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object[0].workOrderParts.forEach(element => {
           element.partNumber = element.part.partNumber;
           element.name = element.part.name;
           pushIfNotExists(element, data.workOrderParts, 'id');
         });
-
       }));
-
-
-    // [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel" [data]="expandRowData.rowData.workOrderParts"
   }
 
-  addInstructions(gridSettings) {
-    const message = new CreateWorkOrderMessageRequest();
-    // this.workOrderService.message(gridSettings.id,env.apiVersion,)
-    console.log(gridSettings);
+  addInstructions(coldata) {
+    this.instructions = '';
+    this.selectedColData = coldata;
+    this.showInstructionDialog = true;
+  }
+
+  saveInstructions() {
+    const request = new CreateWorkOrderMessageRequest({ id: this.selectedColData.workOrderId, message: this.instructions });
+    this.workOrderService.message(env.apiVersion, request).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.selectedColData.messages.push(request);
+        this.showInstructionDialog = false;
+      }));
   }
 
 
   showReportInfo(reportType: EnumReport, row: any) {
     this.globals.showLoader(true);
     this.selectedReport = reportType;
-    if (this.ncrWorkOrder?.id !== row.colData.id)
-      this.workOrderService.workOrder(row.colData.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+    if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId)
+      this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.ncrWorkOrder = response.object[0];
           this.showNcrModal = true;
@@ -121,11 +204,16 @@ export class WipComponent implements OnInit, AfterViewInit {
     window.print();
   }
 
-
+  setCustomerName() {
+    this.title = 'Work Orders';
+    if (this.globals.selectedCustomer?.name !== undefined) {
+      this.title += ' - ' + this.globals.selectedCustomer.name;
+    }
+  }
 
   getGridData() {
     this.globals.showLoader(true);
-    this.workOrderService.portal(this.globals.selectedCustomer.id, '', null, env.apiVersion).pipe(take(1))
+    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object.map(x => {
           let ret = new PortalWorkOrderPartsView(x);
@@ -141,7 +229,8 @@ export class WipComponent implements OnInit, AfterViewInit {
         });
 
         this.reportModel = new ReportModel({
-          name: 'Work Orders'
+          // name: 'Work Orders' + custNameAdd
+          name: ''
         });
 
         this.showReport = true;
@@ -150,7 +239,8 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   getEngineerColumns() {
     return [
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WO Item #', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
@@ -169,7 +259,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   getBuyerColumns() {
     return [
       new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
-      new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
+      // new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'supplier', label: 'Supplier', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),

@@ -1,6 +1,18 @@
 import { Component, ElementRef, EventEmitter, Output, OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
+import {
+  QuoteService,
+  QuotesProductsView,
+  EnumMenuItem,
+  CustomerService,
+  Customer,
+  CreateQuoteRequest,
+} from '../../services/api.client.generated';
+import { CSRJsonModel, ProcessModel, PartModel } from '../../models/csr-json-model';
+import { responseHandler } from '../../utils/responseHandler';
+import { environment as env } from '../../../environments/environment';
+import { take } from 'rxjs/operators';
 declare let jQuery: any;
 
 @Component({
@@ -52,7 +64,7 @@ export class Sidebar {
   },
   {
     "menuGroup": {
-      "url": "#",
+      "url": "/#/app/reporting/report/adhocreports",
       "name": "Part Reporting",
       "info": "",
       "icon": "fas fa-line-chart",
@@ -122,8 +134,11 @@ export class Sidebar {
       "orderNumber": 4
     }
   }];
+  CSRFormValidErrors: string[] = [];
+  CSRToCreate: CSRJsonModel;
+  showCSRDialog: boolean = false;
 
-  constructor(private renderer: Renderer2, private el: ElementRef, public globals: Globals) {
+  constructor(private renderer: Renderer2, private el: ElementRef, public globals: Globals, private quoteService: QuoteService) {
     this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.isBuyer !== undefined) {
         this.setAndGenerateMenu();
@@ -131,6 +146,57 @@ export class Sidebar {
     });
     this.setAndGenerateMenu();
   }
+
+  openCSRDialog() {
+    this.CSRFormValidErrors = [];
+    this.CSRToCreate = new CSRJsonModel();
+    this.CSRToCreate.SubmittedBy = this.globals.user.fullName;
+    this.CSRToCreate.Process = [new ProcessModel()];
+    this.CSRToCreate.Parts = [new PartModel()];
+    this.showCSRDialog = true;
+  }
+
+  onCSRSubmit() {
+    this.CSRFormValidErrors = [];
+    jQuery('.parsleyjs').parsley().validate();
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      this.globals.showLoader(true);
+      const requestData = new CreateQuoteRequest();
+      requestData.customerId = this.globals.selectedCustomer;
+      requestData.customerRequirementJson = JSON.stringify(this.CSRToCreate);
+      this.quoteService.quotePost(env.apiVersion, requestData)
+        .pipe(take(1))
+        .subscribe(responseHandler((resp) => {
+          this.closeCSRDialog();
+        }));
+    }
+  }
+
+  closeCSRDialog() {
+    this.showCSRDialog = false;
+    jQuery('.parsleyjs').parsley().reset();
+  }
+
+  addCSRProcess() {
+    this.CSRToCreate.Process.push(new ProcessModel());
+  }
+
+  removeCSRProcess() {
+    if (this.CSRToCreate.Process.length > 1) {
+      this.CSRToCreate.Process.pop();
+    }
+  }
+
+  addCSRPart() {
+    this.CSRToCreate.Parts.push(new PartModel());
+  }
+
+  removeCSRPart() {
+    if (this.CSRToCreate.Parts.length > 1) {
+      this.CSRToCreate.Parts.pop();
+    }
+  }
+
 
   setAndGenerateMenu() {
     if (this.globals.isBuyer === undefined) {

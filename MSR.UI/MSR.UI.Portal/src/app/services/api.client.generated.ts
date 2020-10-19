@@ -5215,8 +5215,11 @@ export class ReportService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    report(version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
+    report(isPortal: boolean, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
         let url_ = this.baseUrl + "/v{version}/Report";
+        if (isPortal === undefined || isPortal === null)
+            throw new Error("The parameter 'isPortal' must be defined.");
+        url_ = url_.replace("{IsPortal}", encodeURIComponent("" + isPortal));
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -5677,6 +5680,112 @@ export class SensorService {
             }));
         }
         return _observableOf<AuditActionResultOfIEnumerableOfSensorModel>(<any>null);
+    }
+
+    name(version: string): Observable<AuditActionResultOfIEnumerableOfString> {
+        let url_ = this.baseUrl + "/v{version}/Sensor/Name";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processName(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfIEnumerableOfString>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfIEnumerableOfString>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processName(response: HttpResponseBase): Observable<AuditActionResultOfIEnumerableOfString> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfIEnumerableOfString.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfIEnumerableOfString>(<any>null);
+    }
+
+    value(sensorName: string | null | undefined, siteId: number | null | undefined, version: string): Observable<AuditActionResultOfSensorValueModel> {
+        let url_ = this.baseUrl + "/v{version}/Sensor/Value?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (sensorName !== undefined && sensorName !== null)
+            url_ += "SensorName=" + encodeURIComponent("" + sensorName) + "&";
+        if (siteId !== undefined && siteId !== null)
+            url_ += "SiteId=" + encodeURIComponent("" + siteId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processValue(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processValue(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfSensorValueModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfSensorValueModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processValue(response: HttpResponseBase): Observable<AuditActionResultOfSensorValueModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfSensorValueModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfSensorValueModel>(<any>null);
     }
 }
 
@@ -6822,11 +6931,8 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfPortalWorkOrderView>(<any>null);
     }
 
-    message(id: number, version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResult> {
-        let url_ = this.baseUrl + "/v{version}/WorkOrder/{id}/Message";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{Id}", encodeURIComponent("" + id));
+    message(version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResultOfWorkOrderMessageModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrder/Message";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
@@ -6851,14 +6957,14 @@ export class WorkOrderService {
                 try {
                     return this.processMessage(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfWorkOrderMessageModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfWorkOrderMessageModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processMessage(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processMessage(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderMessageModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6869,7 +6975,7 @@ export class WorkOrderService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfWorkOrderMessageModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6877,7 +6983,7 @@ export class WorkOrderService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfWorkOrderMessageModel>(<any>null);
     }
 }
 
@@ -12704,7 +12810,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -12740,7 +12846,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
-            this.procedureStepType = _data["procedureStepType"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -12775,7 +12881,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
-        data["procedureStepType"] = this.procedureStepType;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -12810,7 +12916,7 @@ export interface ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13224,7 +13330,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13261,7 +13367,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
-            this.procedureStepType = _data["procedureStepType"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -13297,7 +13403,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
-        data["procedureStepType"] = this.procedureStepType;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -13334,7 +13440,7 @@ export interface IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -14809,6 +14915,7 @@ export class ProductModel extends TrackableModel implements IProductModel {
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
     productImage?: FileModel | undefined;
+    productSteps?: ProductStepModel[] | undefined;
 
     constructor(data?: IProductModel) {
         super(data);
@@ -14842,6 +14949,11 @@ export class ProductModel extends TrackableModel implements IProductModel {
                     this.workOrders!.push(WorkOrderModel.fromJS(item));
             }
             this.productImage = _data["productImage"] ? FileModel.fromJS(_data["productImage"]) : <any>undefined;
+            if (Array.isArray(_data["productSteps"])) {
+                this.productSteps = [] as any;
+                for (let item of _data["productSteps"])
+                    this.productSteps!.push(ProductStepModel.fromJS(item));
+            }
         }
     }
 
@@ -14879,6 +14991,11 @@ export class ProductModel extends TrackableModel implements IProductModel {
                 data["workOrders"].push(item.toJSON());
         }
         data["productImage"] = this.productImage ? this.productImage.toJSON() : <any>undefined;
+        if (Array.isArray(this.productSteps)) {
+            data["productSteps"] = [];
+            for (let item of this.productSteps)
+                data["productSteps"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
@@ -14906,6 +15023,7 @@ export interface IProductModel extends ITrackableModel {
     divisionFab?: string | undefined;
     workOrders?: WorkOrderModel[] | undefined;
     productImage?: FileModel | undefined;
+    productSteps?: ProductStepModel[] | undefined;
 }
 
 export class QuoteModel implements IQuoteModel {
@@ -15561,12 +15679,15 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     assignedToUser?: UserModel | undefined;
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
+    taskStarted?: boolean;
     taskRunningSince?: Date | undefined;
+    startedOn?: Date | undefined;
     procedureStep?: ProcedureStepModel | undefined;
     procedureStepType?: ProcedureStepTypeModel | undefined;
     status?: StatusModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
+    lastUpdatedOn?: Date | undefined;
     referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
@@ -15590,7 +15711,9 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             this.assignedToUser = _data["assignedToUser"] ? UserModel.fromJS(_data["assignedToUser"]) : <any>undefined;
             this.totalTaskTime = _data["totalTaskTime"];
             this.taskIsRunning = _data["taskIsRunning"];
+            this.taskStarted = _data["taskStarted"];
             this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
+            this.startedOn = _data["startedOn"] ? new Date(_data["startedOn"].toString()) : <any>undefined;
             this.procedureStep = _data["procedureStep"] ? ProcedureStepModel.fromJS(_data["procedureStep"]) : <any>undefined;
             this.procedureStepType = _data["procedureStepType"] ? ProcedureStepTypeModel.fromJS(_data["procedureStepType"]) : <any>undefined;
             this.status = _data["status"] ? StatusModel.fromJS(_data["status"]) : <any>undefined;
@@ -15600,6 +15723,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
                 for (let item of _data["workOrderTaskMonitors"])
                     this.workOrderTaskMonitors!.push(WorkOrderTaskMonitorModel.fromJS(item));
             }
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
@@ -15627,7 +15751,9 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
         data["assignedToUser"] = this.assignedToUser ? this.assignedToUser.toJSON() : <any>undefined;
         data["totalTaskTime"] = this.totalTaskTime;
         data["taskIsRunning"] = this.taskIsRunning;
+        data["taskStarted"] = this.taskStarted;
         data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
+        data["startedOn"] = this.startedOn ? this.startedOn.toISOString() : <any>undefined;
         data["procedureStep"] = this.procedureStep ? this.procedureStep.toJSON() : <any>undefined;
         data["procedureStepType"] = this.procedureStepType ? this.procedureStepType.toJSON() : <any>undefined;
         data["status"] = this.status ? this.status.toJSON() : <any>undefined;
@@ -15637,6 +15763,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             for (let item of this.workOrderTaskMonitors)
                 data["workOrderTaskMonitors"].push(item.toJSON());
         }
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         if (Array.isArray(this.referenceFiles)) {
             data["referenceFiles"] = [];
             for (let item of this.referenceFiles)
@@ -15657,12 +15784,15 @@ export interface IWorkOrderTaskModel {
     assignedToUser?: UserModel | undefined;
     totalTaskTime?: number | undefined;
     taskIsRunning?: boolean | undefined;
+    taskStarted?: boolean;
     taskRunningSince?: Date | undefined;
+    startedOn?: Date | undefined;
     procedureStep?: ProcedureStepModel | undefined;
     procedureStepType?: ProcedureStepTypeModel | undefined;
     status?: StatusModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
+    lastUpdatedOn?: Date | undefined;
     referenceFiles?: FileModel[] | undefined;
 }
 
@@ -15743,6 +15873,98 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
     monitorNumber?: number;
 }
 
+export class ProductStepModel implements IProductStepModel {
+    id?: number;
+    productId?: number;
+    procedureStepId?: number;
+    laborMinutes?: number | undefined;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
+    product?: ProductModel | undefined;
+    procedureStep?: ProcedureStepModel | undefined;
+
+    constructor(data?: IProductStepModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.productId = _data["productId"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.laborMinutes = _data["laborMinutes"];
+            this.equipmentMinutes = _data["equipmentMinutes"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
+            this.equipmentExpensePerMinute = _data["equipmentExpensePerMinute"];
+            this.rmAnnualRate = _data["rmAnnualRate"];
+            this.rmPerMinuteRate = _data["rmPerMinuteRate"];
+            this.title = _data["title"];
+            this.printOrder = _data["printOrder"];
+            this.product = _data["product"] ? ProductModel.fromJS(_data["product"]) : <any>undefined;
+            this.procedureStep = _data["procedureStep"] ? ProcedureStepModel.fromJS(_data["procedureStep"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ProductStepModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductStepModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["productId"] = this.productId;
+        data["procedureStepId"] = this.procedureStepId;
+        data["laborMinutes"] = this.laborMinutes;
+        data["equipmentMinutes"] = this.equipmentMinutes;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
+        data["equipmentExpensePerMinute"] = this.equipmentExpensePerMinute;
+        data["rmAnnualRate"] = this.rmAnnualRate;
+        data["rmPerMinuteRate"] = this.rmPerMinuteRate;
+        data["title"] = this.title;
+        data["printOrder"] = this.printOrder;
+        data["product"] = this.product ? this.product.toJSON() : <any>undefined;
+        data["procedureStep"] = this.procedureStep ? this.procedureStep.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IProductStepModel {
+    id?: number;
+    productId?: number;
+    procedureStepId?: number;
+    laborMinutes?: number | undefined;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
+    product?: ProductModel | undefined;
+    procedureStep?: ProcedureStepModel | undefined;
+}
+
 export class CreateProductRequest implements ICreateProductRequest {
     name!: string;
     revision!: number;
@@ -15758,6 +15980,7 @@ export class CreateProductRequest implements ICreateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
 
     constructor(data?: ICreateProductRequest) {
         if (data) {
@@ -15784,6 +16007,11 @@ export class CreateProductRequest implements ICreateProductRequest {
             this.cycleTime = _data["cycleTime"];
             this.quoteId = _data["quoteId"];
             this.divisionFab = _data["divisionFab"];
+            if (Array.isArray(_data["productSteps"])) {
+                this.productSteps = [] as any;
+                for (let item of _data["productSteps"])
+                    this.productSteps!.push(ProductStep.fromJS(item));
+            }
         }
     }
 
@@ -15810,6 +16038,11 @@ export class CreateProductRequest implements ICreateProductRequest {
         data["cycleTime"] = this.cycleTime;
         data["quoteId"] = this.quoteId;
         data["divisionFab"] = this.divisionFab;
+        if (Array.isArray(this.productSteps)) {
+            data["productSteps"] = [];
+            for (let item of this.productSteps)
+                data["productSteps"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -15829,6 +16062,87 @@ export interface ICreateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
+}
+
+export class ProductStep implements IProductStep {
+    productId?: number | undefined;
+    procedureStepId!: number;
+    laborMinutes!: number;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
+
+    constructor(data?: IProductStep) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.procedureStepId = _data["procedureStepId"];
+            this.laborMinutes = _data["laborMinutes"];
+            this.equipmentMinutes = _data["equipmentMinutes"];
+            this.replacementCost = _data["replacementCost"];
+            this.utilization = _data["utilization"];
+            this.usefulLife = _data["usefulLife"];
+            this.equipmentExpensePerMinute = _data["equipmentExpensePerMinute"];
+            this.rmAnnualRate = _data["rmAnnualRate"];
+            this.rmPerMinuteRate = _data["rmPerMinuteRate"];
+            this.title = _data["title"];
+            this.printOrder = _data["printOrder"];
+        }
+    }
+
+    static fromJS(data: any): ProductStep {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductStep();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["procedureStepId"] = this.procedureStepId;
+        data["laborMinutes"] = this.laborMinutes;
+        data["equipmentMinutes"] = this.equipmentMinutes;
+        data["replacementCost"] = this.replacementCost;
+        data["utilization"] = this.utilization;
+        data["usefulLife"] = this.usefulLife;
+        data["equipmentExpensePerMinute"] = this.equipmentExpensePerMinute;
+        data["rmAnnualRate"] = this.rmAnnualRate;
+        data["rmPerMinuteRate"] = this.rmPerMinuteRate;
+        data["title"] = this.title;
+        data["printOrder"] = this.printOrder;
+        return data; 
+    }
+}
+
+export interface IProductStep {
+    productId?: number | undefined;
+    procedureStepId: number;
+    laborMinutes: number;
+    equipmentMinutes?: number | undefined;
+    replacementCost?: number | undefined;
+    utilization?: number | undefined;
+    usefulLife?: number | undefined;
+    equipmentExpensePerMinute?: number | undefined;
+    rmAnnualRate?: number | undefined;
+    rmPerMinuteRate?: number | undefined;
+    title?: string | undefined;
+    printOrder?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -15890,6 +16204,7 @@ export class UpdateProductRequest implements IUpdateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
 
     constructor(data?: IUpdateProductRequest) {
         if (data) {
@@ -15917,6 +16232,11 @@ export class UpdateProductRequest implements IUpdateProductRequest {
             this.cycleTime = _data["cycleTime"];
             this.quoteId = _data["quoteId"];
             this.divisionFab = _data["divisionFab"];
+            if (Array.isArray(_data["productSteps"])) {
+                this.productSteps = [] as any;
+                for (let item of _data["productSteps"])
+                    this.productSteps!.push(ProductStep.fromJS(item));
+            }
         }
     }
 
@@ -15944,6 +16264,11 @@ export class UpdateProductRequest implements IUpdateProductRequest {
         data["cycleTime"] = this.cycleTime;
         data["quoteId"] = this.quoteId;
         data["divisionFab"] = this.divisionFab;
+        if (Array.isArray(this.productSteps)) {
+            data["productSteps"] = [];
+            for (let item of this.productSteps)
+                data["productSteps"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -15964,6 +16289,7 @@ export interface IUpdateProductRequest {
     cycleTime?: number | undefined;
     quoteId?: number | undefined;
     divisionFab?: string | undefined;
+    productSteps?: ProductStep[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -16339,9 +16665,9 @@ export interface IAuditActionResultOfPurchaseOrderView extends IAuditActionResul
 
 export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
     customerId!: number;
-    name!: string;
+    name?: string | undefined;
     customerReferencePO!: string;
-    referenceName!: string;
+    referenceName?: string | undefined;
     products!: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
@@ -16409,9 +16735,9 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
 
 export interface ICreatePurchaseOrderRequest {
     customerId: number;
-    name: string;
+    name?: string | undefined;
     customerReferencePO: string;
-    referenceName: string;
+    referenceName?: string | undefined;
     products: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
@@ -16422,6 +16748,7 @@ export interface ICreatePurchaseOrderRequest {
 
 export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest implements IUpdatePurchaseOrderRequest {
     id!: number;
+    closePurchaseOrder?: boolean;
 
     constructor(data?: IUpdatePurchaseOrderRequest) {
         super(data);
@@ -16431,6 +16758,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
         super.init(_data);
         if (_data) {
             this.id = _data["id"];
+            this.closePurchaseOrder = _data["closePurchaseOrder"];
         }
     }
 
@@ -16444,6 +16772,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["closePurchaseOrder"] = this.closePurchaseOrder;
         super.toJSON(data);
         return data; 
     }
@@ -16451,6 +16780,7 @@ export class UpdatePurchaseOrderRequest extends CreatePurchaseOrderRequest imple
 
 export interface IUpdatePurchaseOrderRequest extends ICreatePurchaseOrderRequest {
     id: number;
+    closePurchaseOrder?: boolean;
 }
 
 /** Base class for an API call with a typed result */
@@ -17386,6 +17716,129 @@ export interface ISearchView {
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfIEnumerableOfString extends AuditActionResult implements IAuditActionResultOfIEnumerableOfString {
+    object?: string[] | undefined;
+
+    constructor(data?: IAuditActionResultOfIEnumerableOfString) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfIEnumerableOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfIEnumerableOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item);
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfIEnumerableOfString extends IAuditActionResult {
+    object?: string[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfSensorValueModel extends AuditActionResult implements IAuditActionResultOfSensorValueModel {
+    object?: SensorValueModel | undefined;
+
+    constructor(data?: IAuditActionResultOfSensorValueModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? SensorValueModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfSensorValueModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfSensorValueModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfSensorValueModel extends IAuditActionResult {
+    object?: SensorValueModel | undefined;
+}
+
+export class SensorValueModel extends CreatableModel implements ISensorValueModel {
+    sensor?: SensorModel | undefined;
+    itemCurrentValue?: string | undefined;
+    alarmDescription?: string | undefined;
+    isAlarm?: boolean | undefined;
+
+    constructor(data?: ISensorValueModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.sensor = _data["sensor"] ? SensorModel.fromJS(_data["sensor"]) : <any>undefined;
+            this.itemCurrentValue = _data["itemCurrentValue"];
+            this.alarmDescription = _data["alarmDescription"];
+            this.isAlarm = _data["isAlarm"];
+        }
+    }
+
+    static fromJS(data: any): SensorValueModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SensorValueModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sensor"] = this.sensor ? this.sensor.toJSON() : <any>undefined;
+        data["itemCurrentValue"] = this.itemCurrentValue;
+        data["alarmDescription"] = this.alarmDescription;
+        data["isAlarm"] = this.isAlarm;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ISensorValueModel extends ICreatableModel {
+    sensor?: SensorModel | undefined;
+    itemCurrentValue?: string | undefined;
+    alarmDescription?: string | undefined;
+    isAlarm?: boolean | undefined;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfICollectionOfTimeZoneModel extends AuditActionResult implements IAuditActionResultOfICollectionOfTimeZoneModel {
     object?: TimeZoneModel[] | undefined;
 
@@ -18205,7 +18658,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     disposition?: string | undefined;
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
 
     constructor(data?: IWorkOrderGridSummary) {
@@ -18237,7 +18694,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.disposition = _data["disposition"];
             this.currentActiveTaskName = _data["currentActiveTaskName"];
             this.percentageOfTasksCompleted = _data["percentageOfTasksCompleted"];
+            this.percentageOfTasksCompletedNumerator = _data["percentageOfTasksCompletedNumerator"];
+            this.percentageOfTasksCompletedDenominator = _data["percentageOfTasksCompletedDenominator"];
             this.percentageOfExpectedDurationTimeLogged = _data["percentageOfExpectedDurationTimeLogged"];
+            this.percentageOfExpectedDurationTimeLoggedNumerator = _data["percentageOfExpectedDurationTimeLoggedNumerator"];
+            this.percentageOfExpectedDurationTimeLoggedDenominator = _data["percentageOfExpectedDurationTimeLoggedDenominator"];
             this.hasNcr = _data["hasNcr"];
         }
     }
@@ -18269,7 +18730,11 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["disposition"] = this.disposition;
         data["currentActiveTaskName"] = this.currentActiveTaskName;
         data["percentageOfTasksCompleted"] = this.percentageOfTasksCompleted;
+        data["percentageOfTasksCompletedNumerator"] = this.percentageOfTasksCompletedNumerator;
+        data["percentageOfTasksCompletedDenominator"] = this.percentageOfTasksCompletedDenominator;
         data["percentageOfExpectedDurationTimeLogged"] = this.percentageOfExpectedDurationTimeLogged;
+        data["percentageOfExpectedDurationTimeLoggedNumerator"] = this.percentageOfExpectedDurationTimeLoggedNumerator;
+        data["percentageOfExpectedDurationTimeLoggedDenominator"] = this.percentageOfExpectedDurationTimeLoggedDenominator;
         data["hasNcr"] = this.hasNcr;
         return data; 
     }
@@ -18294,7 +18759,11 @@ export interface IWorkOrderGridSummary {
     disposition?: string | undefined;
     currentActiveTaskName?: string | undefined;
     percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
     percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     hasNcr?: boolean;
 }
 
@@ -18549,20 +19018,22 @@ export interface IAuditActionResultOfICollectionOfPortalWorkOrderView extends IA
 
 export class PortalWorkOrderView implements IPortalWorkOrderView {
     id?: number;
+    workOrderId?: number;
     customerId?: number;
-    workOrderItemNumber?: number;
+    customerName?: string | undefined;
     serialNumber?: string | undefined;
     companyPartNumber?: string | undefined;
-    cycleCount?: number;
+    cycleCount?: number | undefined;
     purchaseOrderNumber?: string | undefined;
-    qty?: number;
-    startDate?: Date;
+    qty?: number | undefined;
+    startDate?: Date | undefined;
     dueDate?: Date | undefined;
     partName?: string | undefined;
     partId?: number | undefined;
     productName?: string | undefined;
     procedureName?: string | undefined;
     status?: string | undefined;
+    workOrderTaskId?: number | undefined;
     hasPhotos?: boolean;
     hasNCRs?: boolean;
     hasFiles?: boolean;
@@ -18573,7 +19044,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     invoiceAmount?: number | undefined;
     invoiceDate?: Date | undefined;
     invoiceName?: string | undefined;
-    notes?: NoteModel[] | undefined;
+    messages?: WorkOrderMessageModel[] | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
         if (data) {
@@ -18587,8 +19058,9 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.workOrderId = _data["workOrderId"];
             this.customerId = _data["customerId"];
-            this.workOrderItemNumber = _data["workOrderItemNumber"];
+            this.customerName = _data["customerName"];
             this.serialNumber = _data["serialNumber"];
             this.companyPartNumber = _data["companyPartNumber"];
             this.cycleCount = _data["cycleCount"];
@@ -18601,6 +19073,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             this.productName = _data["productName"];
             this.procedureName = _data["procedureName"];
             this.status = _data["status"];
+            this.workOrderTaskId = _data["workOrderTaskId"];
             this.hasPhotos = _data["hasPhotos"];
             this.hasNCRs = _data["hasNCRs"];
             this.hasFiles = _data["hasFiles"];
@@ -18611,10 +19084,10 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             this.invoiceAmount = _data["invoiceAmount"];
             this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
             this.invoiceName = _data["invoiceName"];
-            if (Array.isArray(_data["notes"])) {
-                this.notes = [] as any;
-                for (let item of _data["notes"])
-                    this.notes!.push(NoteModel.fromJS(item));
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(WorkOrderMessageModel.fromJS(item));
             }
         }
     }
@@ -18629,8 +19102,9 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["workOrderId"] = this.workOrderId;
         data["customerId"] = this.customerId;
-        data["workOrderItemNumber"] = this.workOrderItemNumber;
+        data["customerName"] = this.customerName;
         data["serialNumber"] = this.serialNumber;
         data["companyPartNumber"] = this.companyPartNumber;
         data["cycleCount"] = this.cycleCount;
@@ -18643,6 +19117,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         data["productName"] = this.productName;
         data["procedureName"] = this.procedureName;
         data["status"] = this.status;
+        data["workOrderTaskId"] = this.workOrderTaskId;
         data["hasPhotos"] = this.hasPhotos;
         data["hasNCRs"] = this.hasNCRs;
         data["hasFiles"] = this.hasFiles;
@@ -18653,10 +19128,10 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         data["invoiceAmount"] = this.invoiceAmount;
         data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
         data["invoiceName"] = this.invoiceName;
-        if (Array.isArray(this.notes)) {
-            data["notes"] = [];
-            for (let item of this.notes)
-                data["notes"].push(item.toJSON());
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item.toJSON());
         }
         return data; 
     }
@@ -18664,20 +19139,22 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
 
 export interface IPortalWorkOrderView {
     id?: number;
+    workOrderId?: number;
     customerId?: number;
-    workOrderItemNumber?: number;
+    customerName?: string | undefined;
     serialNumber?: string | undefined;
     companyPartNumber?: string | undefined;
-    cycleCount?: number;
+    cycleCount?: number | undefined;
     purchaseOrderNumber?: string | undefined;
-    qty?: number;
-    startDate?: Date;
+    qty?: number | undefined;
+    startDate?: Date | undefined;
     dueDate?: Date | undefined;
     partName?: string | undefined;
     partId?: number | undefined;
     productName?: string | undefined;
     procedureName?: string | undefined;
     status?: string | undefined;
+    workOrderTaskId?: number | undefined;
     hasPhotos?: boolean;
     hasNCRs?: boolean;
     hasFiles?: boolean;
@@ -18688,15 +19165,15 @@ export interface IPortalWorkOrderView {
     invoiceAmount?: number | undefined;
     invoiceDate?: Date | undefined;
     invoiceName?: string | undefined;
-    notes?: NoteModel[] | undefined;
+    messages?: WorkOrderMessageModel[] | undefined;
 }
 
-export class NoteModel implements INoteModel {
+export class WorkOrderMessageModel implements IWorkOrderMessageModel {
     name?: string | undefined;
-    note?: string | undefined;
+    message?: string | undefined;
     date?: Date;
 
-    constructor(data?: INoteModel) {
+    constructor(data?: IWorkOrderMessageModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -18708,14 +19185,14 @@ export class NoteModel implements INoteModel {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.note = _data["note"];
+            this.message = _data["message"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): NoteModel {
+    static fromJS(data: any): WorkOrderMessageModel {
         data = typeof data === 'object' ? data : {};
-        let result = new NoteModel();
+        let result = new WorkOrderMessageModel();
         result.init(data);
         return result;
     }
@@ -18723,19 +19200,55 @@ export class NoteModel implements INoteModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["note"] = this.note;
+        data["message"] = this.message;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         return data; 
     }
 }
 
-export interface INoteModel {
+export interface IWorkOrderMessageModel {
     name?: string | undefined;
-    note?: string | undefined;
+    message?: string | undefined;
     date?: Date;
 }
 
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfWorkOrderMessageModel extends AuditActionResult implements IAuditActionResultOfWorkOrderMessageModel {
+    object?: WorkOrderMessageModel | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkOrderMessageModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkOrderMessageModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkOrderMessageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkOrderMessageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfWorkOrderMessageModel extends IAuditActionResult {
+    object?: WorkOrderMessageModel | undefined;
+}
+
 export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageRequest {
+    id!: number;
     message!: string;
 
     constructor(data?: ICreateWorkOrderMessageRequest) {
@@ -18749,6 +19262,7 @@ export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageReq
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.message = _data["message"];
         }
     }
@@ -18762,12 +19276,14 @@ export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageReq
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["message"] = this.message;
         return data; 
     }
 }
 
 export interface ICreateWorkOrderMessageRequest {
+    id: number;
     message: string;
 }
 
@@ -18957,10 +19473,16 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
     taskIsRunning?: boolean | undefined;
     /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
+    /** Gets or Sets StartedOn */
+    startedOn?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
+    /** List of file IDs to attach to this work order task */
+    referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateWorkOrderTaskRequest) {
         if (data) {
@@ -18978,8 +19500,19 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
             this.assignedUserId = _data["assignedUserId"];
             this.taskIsRunning = _data["taskIsRunning"];
             this.taskRunningSince = _data["taskRunningSince"] ? new Date(_data["taskRunningSince"].toString()) : <any>undefined;
+            this.startedOn = _data["startedOn"] ? new Date(_data["startedOn"].toString()) : <any>undefined;
             this.status = _data["status"];
             this.totalTaskTime = _data["totalTaskTime"];
+            if (Array.isArray(_data["referenceFilesIds"])) {
+                this.referenceFilesIds = [] as any;
+                for (let item of _data["referenceFilesIds"])
+                    this.referenceFilesIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
+            }
         }
     }
 
@@ -18997,8 +19530,19 @@ export class UpdateWorkOrderTaskRequest implements IUpdateWorkOrderTaskRequest {
         data["assignedUserId"] = this.assignedUserId;
         data["taskIsRunning"] = this.taskIsRunning;
         data["taskRunningSince"] = this.taskRunningSince ? this.taskRunningSince.toISOString() : <any>undefined;
+        data["startedOn"] = this.startedOn ? this.startedOn.toISOString() : <any>undefined;
         data["status"] = this.status;
         data["totalTaskTime"] = this.totalTaskTime;
+        if (Array.isArray(this.referenceFilesIds)) {
+            data["referenceFilesIds"] = [];
+            for (let item of this.referenceFilesIds)
+                data["referenceFilesIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -19015,10 +19559,16 @@ export interface IUpdateWorkOrderTaskRequest {
     taskIsRunning?: boolean | undefined;
     /** Gets or Sets TaskRunningSince */
     taskRunningSince?: Date;
+    /** Gets or Sets StartedOn */
+    startedOn?: Date;
     /** Gets or Sets Status */
     status?: string | undefined;
     /** Get or set TotalTaskTime */
     totalTaskTime?: number | undefined;
+    /** List of file IDs to attach to this work order task */
+    referenceFilesIds?: number[] | undefined;
+    /** List of files to UPLOAD and attach to this work order task */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

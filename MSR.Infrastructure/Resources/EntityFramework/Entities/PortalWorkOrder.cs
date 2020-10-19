@@ -1,13 +1,11 @@
-﻿using MSR.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MSR.Domain.Views
+namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public class PortalWorkOrderView
+    [Table("PortalWorkOrderView")]
+    public class PortalWorkOrder: Entity
     {
-        public int Id { get; set; }
         public int WorkOrderId { get; set; }
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
@@ -23,17 +21,10 @@ namespace MSR.Domain.Views
         public string ProductName { get; set; }
         public string ProcedureName { get; set; }
         public string Status { get; set; }
-        public int? WorkOrderTaskId { get; set; }
-        public bool HasPhotos { get; set; }
-        public bool HasNCRs { get; set; }
-        public bool HasFiles { get; set; }
-        public bool HasMonitors { get; set; }
-        public string Disposition { get; set; }
-        public string Supplier { get; set; }
         public decimal? Price { get; set; }
         public decimal? InvoiceAmount { get; set; }
         public DateTime? InvoiceDate { get; set; }
         public string InvoiceName { get; set; }
-        public ICollection<WorkOrderMessageModel> Messages { get; set; }
+        public int? WorkOrderTaskId { get; set; }
     }
 }

@@ -811,22 +811,39 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command)
         {
-            var workOrders = _unitOfWork.WorkOrders.Query().Include(i => i.Purchase).ThenInclude(j => j.PurchaseOrder).Where(k => k.Purchase.PurchaseOrder.CustomerId == command.CustomerId);
+            var workOrderViews = _unitOfWork.PortalWorkOrderViews.Query().Where(i => i.CustomerId == command.CustomerId);
 
             if (command.PartId.HasValue)
             {
-                workOrders = workOrders.Include(i => i.WorkOrderParts).Where(j => j.WorkOrderParts.Any(k => k.PartId == command.PartId.Value));
+                workOrderViews = workOrderViews.Where(i => i.PartId == command.PartId.Value);
             }
-            else if (!string.IsNullOrWhiteSpace(command.PartName))
+
+            if (!string.IsNullOrWhiteSpace(command.PartName))
             {
-                workOrders = workOrders.Include(i => i.WorkOrderParts).ThenInclude(i => i.Part).Where(j => j.WorkOrderParts.Any(k => k.Part.Name == command.PartName));
+                workOrderViews = workOrderViews.Where(i => i.PartName == command.PartName);
             }
 
-            var totWorkOrders = await workOrders.ToListAsync();
+            var portalViews = await workOrderViews.Select(i => _mapper.Map<PortalWorkOrderView>(i)).ToListAsync();
 
-            return totWorkOrders.Select(i => _mapper.Map<PortalWorkOrderView>(i)).ToList();
+            var woIds = portalViews.Select(i => i.Id).ToList();
+            var woTaskIds = portalViews.Select(i => i.WorkOrderTaskId).ToList();
+
+            var notes = await _unitOfWork.WorkOrderMessages.Query().Where(i => woIds.Contains(i.WorkOrderId)).ToListAsync();
+            var files = await _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).Where(i => woTaskIds.Contains(i.EntityId) && i.EntityTableName.Equals("WorkOrderTask") && i.FileObject != null).Select(i => i).ToListAsync();
+            var monitors = await _unitOfWork.WorkOrderTaskMonitors.Query().Where(i => woTaskIds.Contains(i.WorkOrderTaskId)).Select(i => i).ToListAsync();
+            var imageContentTypes = new List<string>() { "image/jpg", "image/jpeg", "image/gif", "image/png" };
+
+            foreach(var portalView in portalViews)
+            {
+                portalView.Messages = notes.Where(i => i.WorkOrderId == portalView.Id).Select(j => _mapper.Map<WorkOrderMessageModel>(j)).ToList();
+                portalView.HasMonitors = monitors.Any(i => i.WorkOrderTaskId == portalView.WorkOrderTaskId);
+                portalView.HasFiles = files.Any(i => i.EntityId == portalView.WorkOrderTaskId && !imageContentTypes.Contains(i.FileObject.ContentType));
+                portalView.HasPhotos = files.Any(i => i.EntityId == portalView.WorkOrderTaskId && imageContentTypes.Contains(i.FileObject.ContentType));
+            }
+
+            return portalViews;
         }
-        public async Task CreateWorkOrderMessageAsync(CreateWorkOrderMessage command)
+        public async Task<WorkOrderMessageModel> CreateWorkOrderMessageAsync(CreateWorkOrderMessage command)
         {
             var message = new WorkOrderMessage()
             {
@@ -836,6 +853,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             await _unitOfWork.WorkOrderMessages.AddAsync(message);
             await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<WorkOrderMessageModel>(message);
         }
         private WorkOrderModel DetachBackPointers(WorkOrderModel wom)
         {

@@ -11,6 +11,7 @@ using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.Services.Part;
 
 namespace MSR.Application.ApplicationServices
@@ -105,13 +106,14 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetPortalWorkOrder command, CancellationToken cancellationToken = default)
         {
-            return CommandResponse.SuccessCommand;
+            var ret = await _workOrderService.GetPortalWorkOrders(command);
+            return new CommandResponse<ICollection<PortalWorkOrderView>>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(CreateWorkOrderMessage command, CancellationToken cancellationToken = default)
         {
-            await _workOrderService.CreateWorkOrderMessageAsync(command);
-            return CommandResponse.SuccessCommand;
+            var ret = await _workOrderService.CreateWorkOrderMessageAsync(command);
+            return new CommandResponse<WorkOrderMessageModel>(ret);
         }
     }
 }
