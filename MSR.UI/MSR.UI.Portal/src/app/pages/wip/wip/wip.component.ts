@@ -2,7 +2,10 @@ import { Component, OnInit, ElementRef, AfterViewInit, ViewChild } from '@angula
 import { Globals } from '../../../models/lib/globals';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { SelectItem } from 'primeng/api';
-import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary, ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest } from '../../../services/api.client.generated';
+import {
+  EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,
+  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel
+} from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { take } from 'rxjs/operators';
@@ -11,6 +14,7 @@ import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPartsView';
 import { pushIfNotExists } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-wip',
@@ -62,7 +66,9 @@ export class WipComponent implements OnInit, AfterViewInit {
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
 
-  constructor(private elementReference: ElementRef, public globals: Globals, private workOrderService: WorkOrderService) {
+  constructor(private elementReference: ElementRef, public globals: Globals,
+    private workOrderService: WorkOrderService, public fileService: FileService,
+    private toastr: ToastrService) {
 
   }
 
@@ -89,19 +95,59 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   showPhotos(rowData) {
-    this.images = [{
-      "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-      "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-      "alt": "Description for Image 1",
-      "title": "Title 1"
-    },
-    {
-      "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-      "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-      "alt": "Description for Image 1",
-      "title": "Title 1"
-    }];
-    this.displayBasic2 = true;
+    this.globals.showLoader(true);
+    this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
+      env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.images = [];
+        let count = response.object[0].workOrderTasks.length - 1;
+        response.object[0].workOrderTasks.map(element => {
+          this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
+            element.id, null, env.apiVersion)
+            .pipe(take(1)).subscribe(responseHandler((resp) => {
+              if (resp.object.length > 0) {
+                resp.object.forEach((file: FileModel) => {
+                  if (file.contentType == 'image/gif' || file.contentType == 'image/tiff' ||
+                    file.contentType == 'image/webp' || file.contentType == 'image/jpeg'
+                    || file.contentType == 'image/png') {
+                    this.images.push({
+                      id: file.entityId,
+                      previewImageSrc: file.fileURL,
+                      thumbnailImageSrc: file.fileURL,
+                      alt: '',
+                      title: ''
+                    });
+                  }
+                });
+              }
+              if (count === 0) {
+                if(this.images.length>0){
+                  this.displayBasic2 = true;
+                }
+                else{
+                  this.toastr.error("Sorry, there are no pictures for the selected Work Order");
+                }
+              }
+              count--;
+            }));
+        });
+      }));
+
+    // this.images = [{
+    //   "id": 1,
+    //   "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+    //   "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+    //   "alt": "Description for Image 1",
+    //   "title": "Title 1"
+    // },
+    // {
+    //   "id": 2,
+    //   "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+    //   "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
+    //   "alt": "Description for Image 1",
+    //   "title": "Title 1"
+    // }];
+    // this.displayBasic2 = true;
   }
 
   imageClick(index: number) {
@@ -132,13 +178,13 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   expandRow(data: PortalWorkOrderPartsView) {
     this.globals.showLoader(true);
-    this.workOrderService.workOrder(data.id, this.globals.selectedCustomer.id, null, null, null,
+    this.workOrderService.workOrder(data.workOrderId, this.globals.selectedCustomer.id, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object[0].workOrderParts.forEach(element => {
           element.partNumber = element.part.partNumber;
           element.name = element.part.name;
-          // pushIfNotExists(element, data.workOrderParts, 'id');
+          pushIfNotExists(element, data.workOrderParts, 'id');
         });
       }));
   }
@@ -150,7 +196,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   saveInstructions() {
-    const request = new CreateWorkOrderMessageRequest({ id: this.selectedColData.id, message: this.instructions });
+    const request = new CreateWorkOrderMessageRequest({ id: this.selectedColData.workOrderId, message: this.instructions });
     this.workOrderService.message(env.apiVersion, request).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.selectedColData.messages.push(request);
@@ -162,8 +208,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   showReportInfo(reportType: EnumReport, row: any) {
     this.globals.showLoader(true);
     this.selectedReport = reportType;
-    if (this.ncrWorkOrder?.id !== row.colData.id)
-      this.workOrderService.workOrder(row.colData.id, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+    if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId)
+      this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.ncrWorkOrder = response.object[0];
           this.showNcrModal = true;
@@ -210,7 +256,7 @@ export class WipComponent implements OnInit, AfterViewInit {
   getEngineerColumns() {
     return [
       new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
-      // new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WO Item #', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),

@@ -35,22 +35,20 @@
     <span *ngIf="colsDataAndSettings.colData.hasPhotos" (click)="showPhotos(colsDataAndSettings.colData)"
         class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
         <i class="fas fa-images"></i> Photos </span>
-        <!-- <span (click)="showPhotos(colsDataAndSettings.colData)"
-        class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
-        <i class="fas fa-images"></i> Photos </span> -->
     <span *ngIf="colsDataAndSettings.colData.hasFiles"
         class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
         <i class="fal fa-file-alt"></i> Files </span>
 </ng-template>
 
-<p-galleria *ngIf="displayBasic2" [(value)]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '850px'}" [numVisible]="7"
-    [circular]="true" [fullScreen]="true" [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000"> 
+<p-galleria *ngIf="displayBasic2" [value]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{'max-width': '850px'}" [numVisible]="7" [circular]="true" [fullScreen]="true"
+    [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000">
     <ng-template pTemplate="item" let-item>
-        <img [src]="item.previewImageSrc" style="width: 100%; display: block;"/>
+        <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
     </ng-template>
     <ng-template pTemplate="thumbnail" let-item>
         <div class="p-grid p-nogutter p-justify-center">
-            <img [src]="item.thumbnailImageSrc" style="display: block;"/>
+            <img [src]="item.thumbnailImageSrc" style="display: block;" />
         </div>
     </ng-template>
 </p-galleria>

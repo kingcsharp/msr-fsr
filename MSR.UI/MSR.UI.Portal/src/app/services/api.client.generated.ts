@@ -6931,7 +6931,7 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfPortalWorkOrderView>(<any>null);
     }
 
-    message(version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResult> {
+    message(version: string, request: CreateWorkOrderMessageRequest): Observable<AuditActionResultOfWorkOrderMessageModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Message";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6957,14 +6957,14 @@ export class WorkOrderService {
                 try {
                     return this.processMessage(<any>response_);
                 } catch (e) {
-                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfWorkOrderMessageModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfWorkOrderMessageModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processMessage(response: HttpResponseBase): Observable<AuditActionResult> {
+    protected processMessage(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderMessageModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6975,7 +6975,7 @@ export class WorkOrderService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AuditActionResult.fromJS(resultData200);
+            result200 = AuditActionResultOfWorkOrderMessageModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6983,7 +6983,7 @@ export class WorkOrderService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AuditActionResult>(<any>null);
+        return _observableOf<AuditActionResultOfWorkOrderMessageModel>(<any>null);
     }
 }
 
@@ -19014,6 +19014,7 @@ export interface IAuditActionResultOfICollectionOfPortalWorkOrderView extends IA
 
 export class PortalWorkOrderView implements IPortalWorkOrderView {
     id?: number;
+    workOrderId?: number;
     customerId?: number;
     customerName?: string | undefined;
     serialNumber?: string | undefined;
@@ -19053,6 +19054,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.workOrderId = _data["workOrderId"];
             this.customerId = _data["customerId"];
             this.customerName = _data["customerName"];
             this.serialNumber = _data["serialNumber"];
@@ -19096,6 +19098,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["workOrderId"] = this.workOrderId;
         data["customerId"] = this.customerId;
         data["customerName"] = this.customerName;
         data["serialNumber"] = this.serialNumber;
@@ -19132,6 +19135,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
 
 export interface IPortalWorkOrderView {
     id?: number;
+    workOrderId?: number;
     customerId?: number;
     customerName?: string | undefined;
     serialNumber?: string | undefined;
@@ -19162,7 +19166,7 @@ export interface IPortalWorkOrderView {
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
     name?: string | undefined;
-    note?: string | undefined;
+    message?: string | undefined;
     date?: Date;
 
     constructor(data?: IWorkOrderMessageModel) {
@@ -19177,7 +19181,7 @@ export class WorkOrderMessageModel implements IWorkOrderMessageModel {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.note = _data["note"];
+            this.message = _data["message"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
         }
     }
@@ -19192,7 +19196,7 @@ export class WorkOrderMessageModel implements IWorkOrderMessageModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["note"] = this.note;
+        data["message"] = this.message;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         return data; 
     }
@@ -19200,8 +19204,43 @@ export class WorkOrderMessageModel implements IWorkOrderMessageModel {
 
 export interface IWorkOrderMessageModel {
     name?: string | undefined;
-    note?: string | undefined;
+    message?: string | undefined;
     date?: Date;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfWorkOrderMessageModel extends AuditActionResult implements IAuditActionResultOfWorkOrderMessageModel {
+    object?: WorkOrderMessageModel | undefined;
+
+    constructor(data?: IAuditActionResultOfWorkOrderMessageModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? WorkOrderMessageModel.fromJS(_data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfWorkOrderMessageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfWorkOrderMessageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfWorkOrderMessageModel extends IAuditActionResult {
+    object?: WorkOrderMessageModel | undefined;
 }
 
 export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageRequest {
