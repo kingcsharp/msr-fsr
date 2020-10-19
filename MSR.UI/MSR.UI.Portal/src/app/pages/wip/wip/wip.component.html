@@ -52,8 +52,11 @@
 </p-galleria>
 
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
-    <div *ngFor="let item of colsDataAndSettings.colData.notes">
-        <div>{{item}}</div>
+    <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
+        <div>
+            <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> <span class="disp-instruction">{{item.message}}</span>
+        </div>
+        <hr *ngIf="!isLast" style="border-bottom: 1px solid;" />
     </div>
     <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
         (click)="addInstructions(colsDataAndSettings.colData)">

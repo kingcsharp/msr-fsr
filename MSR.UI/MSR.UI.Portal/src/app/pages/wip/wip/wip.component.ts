@@ -4,7 +4,7 @@ import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { SelectItem } from 'primeng/api';
 import {
   EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary,
-  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel
+  ReportModel, PortalWorkOrderView, CreateWorkOrderMessageRequest, FileService, FileModel, WorkOrderMessageModel
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -121,10 +121,10 @@ export class WipComponent implements OnInit, AfterViewInit {
                 });
               }
               if (count === 0) {
-                if(this.images.length>0){
+                if (this.images.length > 0) {
                   this.displayBasic2 = true;
                 }
-                else{
+                else {
                   this.toastr.error("Sorry, there are no pictures for the selected Work Order");
                 }
               }
@@ -132,22 +132,6 @@ export class WipComponent implements OnInit, AfterViewInit {
             }));
         });
       }));
-
-    // this.images = [{
-    //   "id": 1,
-    //   "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-    //   "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-    //   "alt": "Description for Image 1",
-    //   "title": "Title 1"
-    // },
-    // {
-    //   "id": 2,
-    //   "previewImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-    //   "thumbnailImageSrc": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=1200:*",
-    //   "alt": "Description for Image 1",
-    //   "title": "Title 1"
-    // }];
-    // this.displayBasic2 = true;
   }
 
   imageClick(index: number) {
