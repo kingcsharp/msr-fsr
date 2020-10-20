@@ -12,7 +12,7 @@ export interface IColumnsSaved {
     formattingMoment?: string | undefined;
     formattingAngular?: string | undefined;
     templateName?: ElementRef | undefined;
-    width?: string | undefined;
+    styles?: any | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
@@ -26,7 +26,7 @@ export class ColumnsSaved implements IColumnsSaved {
     formattingAngular: string = 'MM-yyyy';
     templateName?: ElementRef | undefined;
     isRanged?: boolean | undefined;
-    width?: string | undefined;
+    styles?: any = {};
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -57,7 +57,7 @@ export class ColumnsSaved implements IColumnsSaved {
             this.formattingAngular = _data['formattingAngular'];
             this.isRanged = _data['isRanged'];
             this.templateName = _data['templateName'];
-            this.width = _data['width'];
+            this.styles = _data['styles'];
         }
     }
 
@@ -73,7 +73,7 @@ export class ColumnsSaved implements IColumnsSaved {
         data['formattingAngular'] = this.formattingAngular;
         data['isRanged'] = this.isRanged;
         data['templateName'] = this.templateName;
-        data['width'] = this.width;
+        data['styles'] = this.styles;
 
         return data;
     }
