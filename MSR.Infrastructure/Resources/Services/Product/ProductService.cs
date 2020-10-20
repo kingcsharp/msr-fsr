@@ -216,18 +216,20 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
 
             product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
 
-            foreach (var ps in product.ProductSteps)
-            {
-                ps.Product = null;
-                ps.ProductId = product.Id;
-            }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
                 // Save product changes
                 await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
+
+                RemoveReferences(product);
+
                 return _mapper.Map<ProductModel>(product);
+            }
+            else
+            {
+                RemoveReferences(product);
             }
 
             var approval = _mapper.Map<ProductApproval>(product);
@@ -239,5 +241,18 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             return _mapper.Map<ProductModel>(approval);
         }
 
+        private void RemoveReferences(Product product)
+        {
+            product.Quote = null;
+            product.Procedure = null;
+            product.Part = null;
+            product.Customer = null;
+
+            foreach (var ps in product.ProductSteps)
+            {
+                ps.Product = null;
+                ps.ProductId = product.Id;
+            }
+        }
     }
 }
