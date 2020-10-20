@@ -19,10 +19,13 @@ namespace MSR.Domain.Models
         public int ProductId { get; set; }
 
         /// <summary>
-        /// Gets or Sets ProcedureStepId
+        /// Associated Procedure Step ID, if any
         /// </summary>
-        [Required]
-        public int ProcedureStepId { get; set; }
+        /// <description>
+        /// Associated Procedure Step ID, if any.  This field can
+        /// be null.  A product step does not necessarily have a procedure step.
+        /// </description>
+        public int? ProcedureStepId { get; set; }
 
         /// <summary>
         /// Gets or Sets LaborMinutes

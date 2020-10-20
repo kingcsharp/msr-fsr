@@ -11,8 +11,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int ProductId { get; set; }
 
-        [Required]
-        public int ProcedureStepId { get; set; }
+        /// <summary>
+        /// Associated Procedure Step ID, if any
+        /// </summary>
+        /// <description>
+        /// Associated Procedure Step ID, if any.  This field can
+        /// be null.  A product step does not necessarily have a procedure step.
+        /// </description>
+        public int? ProcedureStepId { get; set; }
 
         public int? LaborMinutes { get; set; }
 

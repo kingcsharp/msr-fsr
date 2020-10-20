@@ -15,9 +15,8 @@ namespace MSR.Answer.API.V1.Models
         public int? ProductId { get; set; }
 
         /// <summary>
-        /// Gets or Sets ProcedureStepId
+        /// Gets or Sets ProcedureStepId, if any.
         /// </summary>
-        [Required]
         public int? ProcedureStepId { get; set; }
 
         /// <summary>
