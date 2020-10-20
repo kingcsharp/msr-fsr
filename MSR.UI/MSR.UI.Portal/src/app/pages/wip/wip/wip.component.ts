@@ -15,6 +15,7 @@ import { PortalWorkOrderPartsView } from '../../../models/lib/PortalWorkOrderPar
 import { pushIfNotExists } from '../../../models/lib/Utils';
 import { EnumReport } from '../../../../app/models/enums/ReportType';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-wip',
@@ -53,6 +54,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   images: any[];
   files: any[];
   showFilesDialog: boolean = false;
+  startDate: string;
+  endDate: string;
   responsiveOptions: any[] = [
     {
       breakpoint: '1024px',
@@ -81,6 +84,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // this.startDate = moment().subtract(6, 'month').toISOString();
+    // this.endDate = moment().subtract(6, 'month').toISOString();
     this.setCustomerName();
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [

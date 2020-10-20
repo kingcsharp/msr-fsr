@@ -4,6 +4,14 @@
             <i class="fas fa-desktop"></i>
             {{title}}
         </div>
+        <div>
+            <!-- (onSelect)="filterGrid()" -->
+            <!-- <p-calendar [(ngModel)]="startDate" [maxDate]="endDate"
+                 appendTo="body" [locale]="en"></p-calendar>
+
+            <p-calendar [(ngModel)]="endDate" (onSelect)="filterGrid()" [minDate]="startDate"
+                appendTo="body" [locale]="en"></p-calendar> -->
+        </div>
         <div class="searchinput">
             <input type="text" name="searchsubpart" placeholder="Search Sub Parts" [(ngModel)]="subpartTextSearch"
                 class="form-control input-transparent" tooltip="">
@@ -150,8 +158,8 @@
     </section>
     <p-footer>
         <div class="pull-right">
-            <button type="button" (click)="showFilesDialog = false"
-                class="btn btn-outline-inverse width-100 mb-xs" role="button">
+            <button type="button" (click)="showFilesDialog = false" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button">
                 Close
             </button>
         </div>
