@@ -22,13 +22,17 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
   @Output() procedureStepChange: EventEmitter<ProcedureStepModel> = new EventEmitter<ProcedureStepModel>();
 
   procedureStepMonitors: Array<ProcedureStepMonitor> = new Array<ProcedureStepMonitor>();
+
   monitorToAdd: ProcedureStepMonitor;
-  monitorToEdit: ProcedureStepMonitor;
   showAddMonitorDialog: boolean = false;
+
+
+  monitorToEdit: ProcedureStepMonitor;
   showEditMonitorDialog: boolean = false;
+
   showConfirmDeleteMonitorDialog: boolean = false;
   monitorToDelete: any;
-  procedureStepToAddMonitorTo: any;
+
   faultHandlingOptions: Array<SelectItem>;
   shouldBeOptions: Array<SelectItem>;
   listSource: Array<SelectItem>;
@@ -170,8 +174,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     }));
   }
 
-  openAddMonitorDialog(procedureStep) {
-    this.procedureStepToAddMonitorTo = procedureStep;
+  openAddMonitorDialog() {
     this.monitorToAdd = new ProcedureStepMonitor();
     this.monitorToAdd.description = '';
     this.monitorToAdd.monitorType = this.monitorTypeOptions.find(s => s.label === 'Number').value;
@@ -191,7 +194,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     createProcedureStepMonitorRequest.faultHandling = this.monitorToAdd.faultHandling;
     createProcedureStepMonitorRequest.description = this.monitorToAdd.description;
     createProcedureStepMonitorRequest.sendEmailNotification = this.monitorToAdd.sendEmailNotification;
-    createProcedureStepMonitorRequest.procedureStepId = this.procedureStepToAddMonitorTo.id;
+    createProcedureStepMonitorRequest.procedureStepId = this.procedureStep.id;
     createProcedureStepMonitorRequest.lowTarget = this.monitorToAdd.lowTarget;
     createProcedureStepMonitorRequest.highTarget = this.monitorToAdd.highTarget;
     createProcedureStepMonitorRequest.sensorName = this.monitorToAdd.sensorName;
