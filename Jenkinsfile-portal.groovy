@@ -68,7 +68,7 @@ pipeline {
             }
         }
 
-        stage("Promote API to UAT") {
+        stage("Promote Portal to UAT") {
             agent { label 'master'}
             steps {
                 script {
