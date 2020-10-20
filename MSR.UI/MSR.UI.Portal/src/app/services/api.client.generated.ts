@@ -15881,7 +15881,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
 export class ProductStepModel implements IProductStepModel {
     id?: number;
     productId?: number;
-    procedureStepId?: number;
+    procedureStepId?: number | undefined;
     laborMinutes?: number | undefined;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
@@ -15955,7 +15955,7 @@ export class ProductStepModel implements IProductStepModel {
 export interface IProductStepModel {
     id?: number;
     productId?: number;
-    procedureStepId?: number;
+    procedureStepId?: number | undefined;
     laborMinutes?: number | undefined;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
@@ -16072,7 +16072,7 @@ export interface ICreateProductRequest {
 
 export class ProductStep implements IProductStep {
     productId?: number | undefined;
-    procedureStepId!: number;
+    procedureStepId?: number | undefined;
     laborMinutes!: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
@@ -16137,7 +16137,7 @@ export class ProductStep implements IProductStep {
 
 export interface IProductStep {
     productId?: number | undefined;
-    procedureStepId: number;
+    procedureStepId?: number | undefined;
     laborMinutes: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
