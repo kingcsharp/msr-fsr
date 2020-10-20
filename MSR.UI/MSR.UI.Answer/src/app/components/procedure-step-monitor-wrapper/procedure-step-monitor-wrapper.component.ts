@@ -81,7 +81,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     ];
 
     this.listSource = [
-      { label: 'NCR Category', value: 'NCR Category' }
+      { label: 'NCR Category', value: 1 }
     ];
 
     this.getMonitors();
@@ -139,6 +139,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     this.procedureStepMonitor.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType)?.value;
     this.procedureStepMonitor.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType)?.value;
     this.procedureStepMonitor.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
+    this.procedureStepMonitor.monitorListId = this.listSource.find(s => s.value === monitor.shouldBe)?.value;
     this.procedureStepMonitor.sendEmailNotification = monitor.sendEmailNotification;
     this.procedureStepMonitor.highTarget = monitor.highTarget;
     this.procedureStepMonitor.lowTarget = monitor.lowTarget;

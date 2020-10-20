@@ -13514,6 +13514,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
     sendEmailNotification?: boolean | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
+    monitorListId?: number | undefined;
 
     constructor(data?: IProcedureStepMonitor) {
         if (data) {
@@ -13539,6 +13540,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
             this.sendEmailNotification = _data["sendEmailNotification"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
+            this.monitorListId = _data["monitorListId"];
         }
     }
 
@@ -13564,6 +13566,7 @@ export class ProcedureStepMonitor implements IProcedureStepMonitor {
         data["sendEmailNotification"] = this.sendEmailNotification;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
+        data["monitorListId"] = this.monitorListId;
         return data; 
     }
 }
@@ -13582,6 +13585,7 @@ export interface IProcedureStepMonitor {
     sendEmailNotification?: boolean | undefined;
     highTarget?: number | undefined;
     lowTarget?: number | undefined;
+    monitorListId?: number | undefined;
 }
 
 /**  */
@@ -13608,6 +13612,8 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
     highTarget?: number | undefined;
     /** LowTarget */
     lowTarget?: number | undefined;
+    /** MonitorListId */
+    monitorListId?: number | undefined;
 
     constructor(data?: ICreateProcedureStepMonitorRequest) {
         if (data) {
@@ -13631,6 +13637,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
             this.sendEmailNotification = _data["sendEmailNotification"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
+            this.monitorListId = _data["monitorListId"];
         }
     }
 
@@ -13654,6 +13661,7 @@ export class CreateProcedureStepMonitorRequest implements ICreateProcedureStepMo
         data["sendEmailNotification"] = this.sendEmailNotification;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
+        data["monitorListId"] = this.monitorListId;
         return data; 
     }
 }
@@ -13682,6 +13690,8 @@ export interface ICreateProcedureStepMonitorRequest {
     highTarget?: number | undefined;
     /** LowTarget */
     lowTarget?: number | undefined;
+    /** MonitorListId */
+    monitorListId?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -13751,6 +13761,8 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     highTarget?: number | undefined;
     /** LowTarget */
     lowTarget?: number | undefined;
+    /** MonitorListId */
+    monitorListId?: number | undefined;
 
     constructor(data?: IUpdateProcedureStepMonitorRequest) {
         if (data) {
@@ -13774,6 +13786,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
             this.sendEmailNotification = _data["sendEmailNotification"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
+            this.monitorListId = _data["monitorListId"];
         }
     }
 
@@ -13797,6 +13810,7 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data["sendEmailNotification"] = this.sendEmailNotification;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
+        data["monitorListId"] = this.monitorListId;
         return data; 
     }
 }
@@ -13825,6 +13839,8 @@ export interface IUpdateProcedureStepMonitorRequest {
     highTarget?: number | undefined;
     /** LowTarget */
     lowTarget?: number | undefined;
+    /** MonitorListId */
+    monitorListId?: number | undefined;
 }
 
 /** Base class for an API call with a typed result */
