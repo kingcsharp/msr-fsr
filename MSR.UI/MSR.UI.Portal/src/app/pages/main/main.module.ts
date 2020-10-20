@@ -27,7 +27,7 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    ProfileComponent 
+    ProfileComponent
   ],
   imports: [
     CommonModule,

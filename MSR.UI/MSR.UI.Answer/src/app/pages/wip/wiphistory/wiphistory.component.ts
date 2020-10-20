@@ -40,7 +40,7 @@ export class WiphistoryComponent implements OnInit {
       new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true }),
       new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true }),
-      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'Purchase Order Number', visible: true }),
+      new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
       new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true }),
       new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true }),
       new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true }),

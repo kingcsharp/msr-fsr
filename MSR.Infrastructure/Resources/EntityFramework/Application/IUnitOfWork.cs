@@ -56,6 +56,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<MonitorInputType> MonitorInputTypes { get; }
         IRepository<MonitorType> MonitorTypes { get; }
         IRepository<MonitorListItem> MonitorListItems { get; }
+        IRepository<CycleCountHistory> CycleCountHistory { get; }
         IRepository<Document> Documents { get; }
         IRepository<DocumentRoleMap> DocumentRoles { get; }
         IRepository<DocumentEntityMap> DocumentEntityMap { get; }

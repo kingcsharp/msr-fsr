@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -172,7 +173,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-            WorkOrderModel ret = null;
+            
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
@@ -209,6 +210,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
+            var purchase = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
+            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s=> s.ParentId == null);
+            
+            await GetCycleCount(parentPart, purchase.SerialNumber);
+
+
             await _unitOfWork.LogApprovalTransaction(workorder, workorder.Id);
 
             // load required navigation fields
@@ -223,11 +230,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
             created.Context.Entry(workorder.Purchase.PurchaseOrder)
                 .Reference(x => x.Customer).Load();
 
-            ret = DetachBackPointers(
+            WorkOrderModel workOrderModel = DetachBackPointers(
                 _mapper.Map<WorkOrderModel>(workorder)
             );
 
-            return ret;
+            return workOrderModel;
         }
         public async Task<WorkOrderModel> UpdateWorkOrderAsync(UpdateWorkOrder command)
         {
@@ -382,37 +389,29 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.BadRequest);
             }
 
-            var current = _unitOfWork.WorkOrderParts.Query().Where(x => x.Id == command.WorkOrderPartId);
+            var current = _unitOfWork.WorkOrderParts.Query().Include(s => s.Part).Where(x => x.Id == command.WorkOrderPartId);
 
             if (current == null || !current.Any())
             {
                 throw new DomainException($"{nameof(WorkOrderPart)} not found with ID: {command.WorkOrderPartId}", DomainError.NotFound);
             }
-            WorkOrderPart updatedWOPart = current.First();
 
-            if (!string.IsNullOrEmpty(command.SerialNumber))
-            {
-                int curid = updatedWOPart.Id;
-                int curpartid = updatedWOPart.PartId;
-                updatedWOPart.CycleCount = _unitOfWork.WorkOrderParts.Count(x =>
-                    x.SerialNumber.Equals(command.SerialNumber) &&
-                    x.PartId == curpartid &&
-                    x.Id != curid
-                ) + 1;
-            }
+            WorkOrderPart workOrderPartEntity = await current.FirstOrDefaultAsync(s => s.Id == command.WorkOrderPartId);
 
-            _ = _mapper.Map(command, updatedWOPart);
+            await GetCycleCount(workOrderPartEntity, command.SerialNumber);
 
-            _unitOfWork.WorkOrderParts.Update(updatedWOPart);
+            _ = _mapper.Map(command, workOrderPartEntity);
+
+            _unitOfWork.WorkOrderParts.Update(workOrderPartEntity);
 
             // This will call SaveChangesAsync
-            await _unitOfWork.LogApprovalTransaction(updatedWOPart, updatedWOPart.Id);
+            await _unitOfWork.LogApprovalTransaction(workOrderPartEntity, workOrderPartEntity.Id);
 
-            _unitOfWork.WorkOrderParts.LoadReference(updatedWOPart, x => x.WorkOrder);
-            _unitOfWork.WorkOrders.LoadReference(updatedWOPart.WorkOrder, x => x.Purchase);
+            _unitOfWork.WorkOrderParts.LoadReference(workOrderPartEntity, x => x.WorkOrder);
+            _unitOfWork.WorkOrders.LoadReference(workOrderPartEntity.WorkOrder, x => x.Purchase);
 
             // On update, we don't need a pointer back to the work order
-            var ret = _mapper.Map<WorkOrderPartModel>(updatedWOPart);
+            var ret = _mapper.Map<WorkOrderPartModel>(workOrderPartEntity);
             ret.WorkOrder = null;
 
             return ret;
@@ -430,6 +429,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Query()
                 .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
+
+
+            if (step != null && step.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC)
+            {
+                var workOrderEntity = await _unitOfWork.WorkOrders
+                    .FirstOrDefaultAsync(false, s => s.Id == command.WorkOrderId);
+
+                if (!workOrderEntity.HasNCR)
+                {
+                    workOrderEntity.HasNCR = true;
+                    _unitOfWork.WorkOrders.Update(workOrderEntity);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+
+            }
+
 
             if (step == null)
             {
@@ -465,6 +480,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 wotm.WorkOrderTask = null;
             }
+
+            ret.WorkOrder = null;
 
             return ret;
         }
@@ -913,11 +930,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 completedOnly = isHistory
             };
 
-            ICollection<WorkOrderModel> models = await GetWorkOrderAsync(gwo);
-            List<WorkOrderGridSummary> ret = new List<WorkOrderGridSummary>();
-            foreach (WorkOrderModel m in models)
+            ICollection<WorkOrderModel> workOrderModels = await GetWorkOrderAsync(gwo);
+            List<WorkOrderGridSummary> workOrderGridSummaries = new List<WorkOrderGridSummary>();
+            foreach (WorkOrderModel workOrderModel in workOrderModels)
             {
-                var sum = _mapper.Map<WorkOrderGridSummary>(m);
+                var workOrderGridSummary = _mapper.Map<WorkOrderGridSummary>(workOrderModel);
 
                 //
                 // Map the work order database entity to the WIP grid view
@@ -925,42 +942,43 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 // CurrentActiveTaskName
                 var curProc =
-                    m.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
+                    workOrderModel.WorkOrderTasks.Where(x => x.Status.Name.ToUpper().Equals("IN PROGRESS"));
                 if (curProc.Any())
                 {
                     var proc = curProc.First();
-                    sum.CurrentActiveTaskName = proc.ProcedureStep.Title;
+                    workOrderGridSummary.CurrentActiveTaskName = proc.ProcedureStep.Title;
                 }
 
                 // CustomerName
-                sum.CustomerName = m.Purchase?.PurchaseOrder?.Customer?.Name;
-                if (string.IsNullOrEmpty(sum.CustomerName))
+                workOrderGridSummary.CustomerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name;
+                if (string.IsNullOrEmpty(workOrderGridSummary.CustomerName))
                 {
-                    sum.CustomerName = "";
+                    workOrderGridSummary.CustomerName = "";
                 }
 
                 // WorkOrderItemNumber
-                sum.WorkOrderItemNumber = GetWorkOrderItemNumber(m);
+                workOrderGridSummary.WorkOrderItemNumber = GetWorkOrderItemNumber(workOrderModel);
 
+                workOrderGridSummary.ReferencePO = workOrderModel.Purchase?.PurchaseOrder?.ReferencePO;
                 // ProcedureName
                 var firstProc =
-                    m.WorkOrderTasks.FirstOrDefault();
+                    workOrderModel.WorkOrderTasks.FirstOrDefault();
                 if (firstProc == null)
                 {
-                    sum.ProcedureName = "";
+                    workOrderGridSummary.ProcedureName = "";
                 }
                 else
                 {
-                    sum.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
+                    workOrderGridSummary.ProcedureName = firstProc.ProcedureStep?.Procedure?.Name;
                 }
 
                 // Disposition
                 // This is a string join of the text values of
                 // all procedure steps with a type of "NC Disposition"
-                sum.Disposition = "";
-                if (m.HasNCR.GetValueOrDefault())
+                workOrderGridSummary.Disposition = "";
+                if (workOrderModel.HasNCR.GetValueOrDefault())
                 {
-                    var nc = m.WorkOrderTasks.Where(x =>
+                    var nc = workOrderModel.WorkOrderTasks.Where(x =>
                         x.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC);
                     if (nc.Any())
                     {
@@ -974,41 +992,93 @@ namespace MSR.Infrastructure.Resources.Services.Part
                                     ).ToList()
                                 ) + " ";
                         }
-                        sum.Disposition = disp;
+                        workOrderGridSummary.Disposition = disp;
                     }
                 }
 
                 // PercentageOfTasksCompleted
                 int[] pctCompletedIds = { 3, 4, 6, 8 };
-                int denom = m.WorkOrderTasks.Count();
-                int numer = m.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
+                int denom = workOrderModel.WorkOrderTasks.Count();
+                int numer = workOrderModel.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
                 decimal pctComplete;
                 if (denom > 0)
                 {
-                    pctComplete = numer / denom;
+                    pctComplete = (decimal)numer/(decimal)denom;
                 }
                 else
                 {
                     pctComplete = 0m;
                 }
-                sum.PercentageOfTasksCompleted = pctComplete;
+                workOrderGridSummary.PercentageOfTasksCompleted = pctComplete;
+                workOrderGridSummary.PercentageOfTasksCompletedDenominator = denom;
+                workOrderGridSummary.PercentageOfTasksCompletedNumerator = numer;
 
                 // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = m.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
-                decimal numerTime = m.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
+                decimal denomTime = workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
+                decimal numerTime = workOrderModel.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
                 if (denomTime > 0)
                 {
-                    sum.PercentageOfExpectedDurationTimeLogged = numerTime / denomTime;
+                    workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = (decimal)numerTime/(decimal)denomTime;
                 }
                 else
                 {
-                    sum.PercentageOfExpectedDurationTimeLogged = 0;
+                    workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = 0;
                 }
 
-                ret.Add(sum);
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = denomTime;
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = numerTime;
+
+                workOrderGridSummaries.Add(workOrderGridSummary);
             }
 
-            return ret;
+            return workOrderGridSummaries;
+        }
+
+        private async Task GetCycleCount(WorkOrderPart workOrderPart, string serialNumber)
+        {
+            if (workOrderPart != null)
+            {
+                workOrderPart.SerialNumber = serialNumber;
+                var workOrderParts = await _unitOfWork.WorkOrderParts.Query().Include(s => s.Part)
+                    .Where(s => s.SerialNumber == workOrderPart.SerialNumber && s.Part != null &&
+                                s.Part.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+                if (!workOrderParts.Any())
+                {
+                    var workOrderPartsFromHistoryTable = await _unitOfWork.CycleCountHistory.Query().Where(s =>
+                        s.SerialNumber == workOrderPart.SerialNumber &&
+                        s.PartNumber == workOrderPart.Part.PartNumber).ToListAsync();
+
+                    if (workOrderPartsFromHistoryTable.Any())
+                    {
+                        workOrderPart.CycleCount = workOrderPartsFromHistoryTable.OrderByDescending(s => s.CycleCount).FirstOrDefault()
+                            ?.CycleCount + 1;
+                    }
+                    else
+                    {
+                        workOrderPart.CycleCount = 1;
+                    }
+                }
+                else
+                {
+
+                    var cycleCount = workOrderParts.OrderByDescending(s => s.CycleCount)
+                        .FirstOrDefault(m => m.Id != workOrderPart.Id)
+                        ?.CycleCount;
+
+                    if (cycleCount == null)
+                    {
+                        workOrderPart.CycleCount = 1;
+                    }
+                    else
+                    {
+                        workOrderPart.CycleCount = cycleCount + 1;
+                    }
+
+                }
+
+
+            }
         }
     }
 }

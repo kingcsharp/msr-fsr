@@ -236,7 +236,6 @@ export class PurchaseOrdersComponent implements OnInit {
         this.globals.showLoader(true);
         this.purchaseOrderService.purchaseOrderPatch(env.apiVersion, purchaseUpdateOrderRequest).pipe(take(1))
           .subscribe(responseHandler(response => {
-            console.log(response);
             const index = this.data.findIndex(x => x.id === this.currentPO.id);
             this.data.splice(index, 1);
             this.data.splice(index, 0, response.object);

@@ -1,6 +1,20 @@
 <h1 class="page-title" data-cy="page-title">
-    <i [ngClass]="'fas '+globals.activeMenu.icon"></i>
-    {{globals.activeMenu.name}}
+    <div class="form-group col-10 d-flex flex-row headerSearch" *ngIf="globals.selectedCustomer !== undefined">
+        <div>
+            <i class="fas fa-desktop"></i>
+            {{title}}
+        </div>
+        <div class="searchinput">
+            <input type="text" name="searchsubpart" placeholder="Search Sub Parts" [(ngModel)]="subpartTextSearch"
+                class="form-control input-transparent" tooltip="">
+        </div>
+        <div>
+            <button type="submit" (click)="getGridData()" class="btn btn-primary" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-search"></i>Search
+            </button>
+        </div>
+    </div>
 </h1>
 
 <widget *ngIf="globals.selectedCustomer !== undefined">
@@ -8,10 +22,7 @@
         (expandRowClick)="expandRow($event)" [data]="data">
     </app-grid>
 </widget>
-
-
 <ng-template #ncrItem let-colsDataAndSettings='colsDataAndSettings'>
-
     <span *ngIf="colsDataAndSettings.colData.hasNCRs" class="pointer badge mr-xs badge-info ng-star-inserted badgeWidth"
         tooltip="Show NCR reports" (click)="showReportInfo(enumReportTypes.NCRReport,colsDataAndSettings)">
         <i class="fas fa-print mx-1"></i> NCR </span>
@@ -19,19 +30,43 @@
         class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
         (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
         <i class="fas fa-chart-bar"></i> Monitors </span>
-    <span *ngIf="colsDataAndSettings.colData.hasPhotos"
+    <span *ngIf="colsDataAndSettings.colData.hasPhotos" (click)="showPhotos(colsDataAndSettings.colData)"
         class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
         <i class="fas fa-images"></i> Photos </span>
-    <span *ngIf="colsDataAndSettings.colData.hasFiles"
+    <span *ngIf="colsDataAndSettings.colData.hasFiles" (click)="showFiles(colsDataAndSettings.colData)"
         class="pointer badge mr-xs badge-secondary ng-star-inserted badgeWidth" tooltip="Show files">
         <i class="fal fa-file-alt"></i> Files </span>
 </ng-template>
 
+<ng-template #fileItem let-colsDataAndSettings='colsDataAndSettings'>
+    <grid-file-viewer [menuItem]="menuItems.WorkOrderTasks" [files]="[colsDataAndSettings.colData]"></grid-file-viewer>
+    <a href="{{colsDataAndSettings.colData.fileUrl}}" style="color:#fff" download tooltip="Download File">
+        <i class="fas fa-download"></i>
+    </a>
+</ng-template>
+
+<p-galleria *ngIf="displayBasic2" [value]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{'max-width': '850px'}" [numVisible]="7" [circular]="true" [fullScreen]="true"
+    [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000">
+    <ng-template pTemplate="item" let-item>
+        <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="p-grid p-nogutter p-justify-center">
+            <img [src]="item.thumbnailImageSrc" style="display: block;" />
+        </div>
+    </ng-template>
+</p-galleria>
+
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
-    <div *ngFor="let item of colsDataAndSettings.colData.notes">
-        <div>{{item}}</div>
+    <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">
+        <div>
+            <span class="disp-label">{{item.name}} {{item.date | userTimezone}} </span> <span
+                class="disp-instruction">{{item.message}}</span>
+        </div>
+        <hr *ngIf="!isLast" style="border-bottom: 1px solid;" />
     </div>
-    <span class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
+    <span *ngIf="!globals.user.isAnswerUser" class="pointer badge mr-xs badge-danger ng-star-inserted" tooltip=""
         (click)="addInstructions(colsDataAndSettings.colData)">
         Add Insturctions </span>
 </ng-template>
@@ -92,11 +127,30 @@
     </section>
     <p-footer>
         <div class="pull-right">
-            <button type="submit" (click)="saveInstructions()" class="btn btn-outline-inverse width-100 mb-xs" role="button"
-                data-cy="wipcomponent-save-button">
+            <button type="submit" (click)="saveInstructions()" class="btn btn-outline-inverse width-100 mb-xs"
+                role="button" data-cy="wipcomponent-save-button">
                 Save
             </button>
             <button type="button" (click)="showInstructionDialog = false"
+                class="btn btn-outline-inverse width-100 mb-xs" role="button">
+                Close
+            </button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Files" *ngIf="showFilesDialog" [(visible)]="showFilesDialog" appendTo="body" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}">
+    <section>
+        <widget>
+            <app-grid [gridSaved]="gridFilesSaved" [showReport]="showFilesDialog" [reportInfo]="reportFilesModel"
+                [data]="files">
+            </app-grid>
+        </widget>
+    </section>
+    <p-footer>
+        <div class="pull-right">
+            <button type="button" (click)="showFilesDialog = false"
                 class="btn btn-outline-inverse width-100 mb-xs" role="button">
                 Close
             </button>

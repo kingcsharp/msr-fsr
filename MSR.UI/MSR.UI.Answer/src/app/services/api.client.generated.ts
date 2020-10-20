@@ -12810,7 +12810,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -12846,7 +12846,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
-            this.procedureStepType = _data["procedureStepType"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -12881,7 +12881,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
-        data["procedureStepType"] = this.procedureStepType;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -12916,7 +12916,7 @@ export interface ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: string | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13330,7 +13330,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: number | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -13367,7 +13367,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             this.text = _data["text"];
             this.duration = _data["duration"];
             this.durationType = _data["durationType"];
-            this.procedureStepType = _data["procedureStepType"];
+            this.procedureStepTypeId = _data["procedureStepTypeId"];
             this.printOrder = _data["printOrder"];
             this.predecessorStepId = _data["predecessorStepId"];
             this.laborTime = _data["laborTime"];
@@ -13403,7 +13403,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
         data["text"] = this.text;
         data["duration"] = this.duration;
         data["durationType"] = this.durationType;
-        data["procedureStepType"] = this.procedureStepType;
+        data["procedureStepTypeId"] = this.procedureStepTypeId;
         data["printOrder"] = this.printOrder;
         data["predecessorStepId"] = this.predecessorStepId;
         data["laborTime"] = this.laborTime;
@@ -13440,7 +13440,7 @@ export interface IUpdateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepType?: number | undefined;
+    procedureStepTypeId?: number;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -15687,6 +15687,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
     status?: StatusModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
+    lastUpdatedOn?: Date | undefined;
     referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IWorkOrderTaskModel) {
@@ -15722,6 +15723,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
                 for (let item of _data["workOrderTaskMonitors"])
                     this.workOrderTaskMonitors!.push(WorkOrderTaskMonitorModel.fromJS(item));
             }
+            this.lastUpdatedOn = _data["lastUpdatedOn"] ? new Date(_data["lastUpdatedOn"].toString()) : <any>undefined;
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
@@ -15761,6 +15763,7 @@ export class WorkOrderTaskModel implements IWorkOrderTaskModel {
             for (let item of this.workOrderTaskMonitors)
                 data["workOrderTaskMonitors"].push(item.toJSON());
         }
+        data["lastUpdatedOn"] = this.lastUpdatedOn ? this.lastUpdatedOn.toISOString() : <any>undefined;
         if (Array.isArray(this.referenceFiles)) {
             data["referenceFiles"] = [];
             for (let item of this.referenceFiles)
@@ -15789,6 +15792,7 @@ export interface IWorkOrderTaskModel {
     status?: StatusModel | undefined;
     workOrder?: WorkOrderModel | undefined;
     workOrderTaskMonitors?: WorkOrderTaskMonitorModel[] | undefined;
+    lastUpdatedOn?: Date | undefined;
     referenceFiles?: FileModel[] | undefined;
 }
 
@@ -16661,9 +16665,9 @@ export interface IAuditActionResultOfPurchaseOrderView extends IAuditActionResul
 
 export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
     customerId!: number;
-    name!: string;
+    name?: string | undefined;
     customerReferencePO!: string;
-    referenceName!: string;
+    referenceName?: string | undefined;
     products!: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
@@ -16731,9 +16735,9 @@ export class CreatePurchaseOrderRequest implements ICreatePurchaseOrderRequest {
 
 export interface ICreatePurchaseOrderRequest {
     customerId: number;
-    name: string;
+    name?: string | undefined;
     customerReferencePO: string;
-    referenceName: string;
+    referenceName?: string | undefined;
     products: number[];
     openDate?: Date;
     closeDate?: Date | undefined;
@@ -18643,6 +18647,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     locationName?: string | undefined;
     serialNumber?: string | undefined;
     purchaseOrderNumber?: number | undefined;
+    referencePO?: string | undefined;
     quantity?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;
@@ -18679,6 +18684,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.locationName = _data["locationName"];
             this.serialNumber = _data["serialNumber"];
             this.purchaseOrderNumber = _data["purchaseOrderNumber"];
+            this.referencePO = _data["referencePO"];
             this.quantity = _data["quantity"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
@@ -18715,6 +18721,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["locationName"] = this.locationName;
         data["serialNumber"] = this.serialNumber;
         data["purchaseOrderNumber"] = this.purchaseOrderNumber;
+        data["referencePO"] = this.referencePO;
         data["quantity"] = this.quantity;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
@@ -18744,6 +18751,7 @@ export interface IWorkOrderGridSummary {
     locationName?: string | undefined;
     serialNumber?: string | undefined;
     purchaseOrderNumber?: number | undefined;
+    referencePO?: string | undefined;
     quantity?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;

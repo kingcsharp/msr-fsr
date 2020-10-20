@@ -213,7 +213,7 @@
                                     <label for="replacementcost{{i}}" class="col-form-label text-left col-2">
                                         Replacement Cost
                                     </label>
-                                    <input type="text" name="replacementcost{{i}}"
+                                    <input type="number" name="replacementcost{{i}}"
                                         [(ngModel)]="procedureStep.value.replacementCost" data-validate="parsley"
                                         data-parsley-trigger="change" data-parsley-minlength="2"
                                         data-parsley-required="true" class="form-control input-transparent col-2"
@@ -221,7 +221,7 @@
                                     <label for="utilizationtime{{i}}" class="col-form-label text-right col-2">
                                         Utilization Time
                                     </label>
-                                    <input type="text" name="utilizationtime{{i}}"
+                                    <input type="number" name="utilizationtime{{i}}"
                                         [(ngModel)]="procedureStep.value.utilizationTime" data-validate="parsley"
                                         data-parsley-trigger="change" data-parsley-minlength="2"
                                         data-parsley-required="true" class="form-control input-transparent col-2"
@@ -229,7 +229,7 @@
                                     <label for="usefullife{{i}}" class="col-form-label text-right col-2">
                                         Useful Life
                                     </label>
-                                    <input type="text" name="usefullife{{i}}"
+                                    <input type="number" name="usefullife{{i}}"
                                         [(ngModel)]="procedureStep.value.usefulLife" data-validate="parsley"
                                         data-parsley-trigger="change" data-parsley-minlength="3"
                                         data-parsley-required="true" class="form-control input-transparent col-2"

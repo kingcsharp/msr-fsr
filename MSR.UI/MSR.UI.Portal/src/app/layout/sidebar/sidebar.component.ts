@@ -27,111 +27,111 @@ export class Sidebar {
   sidebarItems: any;
   supportTicketModalDisplay: boolean = false;
   buyerMenus = [{
-    "url": "wip/engineering",
-    "name": "Purchasing",
-    "info": "",
-    "icon": "far fa-dollar-sign",
-    "orderNumber": 1,
-    "menuGroup": {
-      "url": "#",
-      "name": "WIP Views",
-      "info": "",
-      "icon": "fas fa-desktop",
-      "orderNumber": 1
+    'url': 'wip/engineering',
+    'name': 'Purchasing',
+    'info': '',
+    'icon': 'far fa-dollar-sign',
+    'orderNumber': 1,
+    'menuGroup': {
+      'url': '#',
+      'name': 'WIP Views',
+      'info': '',
+      'icon': 'fas fa-desktop',
+      'orderNumber': 1
     },
-    "permissions": null,
-    "inheritedPermissions": null,
-    "roles": [],
-    "enumMenuItem": 11
+    'permissions': null,
+    'inheritedPermissions': null,
+    'roles': [],
+    'enumMenuItem': 11
   },
   {
-    "url": "Specifications",
-    "name": "New Requirements",
-    "info": "",
-    "icon": "far fa-plus-circle",
-    "orderNumber": 1,
-    "menuGroup": {
-      "url": "#",
-      "name": "Specifications",
-      "info": "",
-      "icon": "far fa-thermometer-half",
-      "orderNumber": 2
+    'url': 'Specifications',
+    'name': 'New Requirements',
+    'info': '',
+    'icon': 'far fa-plus-circle',
+    'orderNumber': 1,
+    'menuGroup': {
+      'url': '#',
+      'name': 'Specifications',
+      'info': '',
+      'icon': 'far fa-thermometer-half',
+      'orderNumber': 2
     },
-    "permissions": null,
-    "inheritedPermissions": null,
-    "roles": [],
-    "enumMenuItem": 31
+    'permissions': null,
+    'inheritedPermissions': null,
+    'roles': [],
+    'enumMenuItem': 31
   },
   {
-    "menuGroup": {
-      "url": "/#/app/reporting/report/adhocreports",
-      "name": "Part Reporting",
-      "info": "",
-      "icon": "fas fa-line-chart",
-      "orderNumber": 3
+    'menuGroup': {
+      'url': '/#/app/reporting/report/adhocreports',
+      'name': 'Part Reporting',
+      'info': '',
+      'icon': 'fas fa-line-chart',
+      'orderNumber': 3
     }
   },
   {
-    "menuGroup": {
-      "url": "/#/app/people/profile",
-      "name": "Profile",
-      "info": "",
-      "icon": "fal fa-user-edit",
-      "orderNumber": 4
+    'menuGroup': {
+      'url': '/#/app/people/profile',
+      'name': 'Profile',
+      'info': '',
+      'icon': 'fal fa-user-edit',
+      'orderNumber': 4
     }
   }];
   engineerMenus = [{
-    "url": "wip/engineering",
-    "name": "Engineering",
-    "info": "",
-    "icon": "fas fa-cogs",
-    "orderNumber": 1,
-    "menuGroup": {
-      "url": "#",
-      "name": "WIP Views",
-      "info": "",
-      "icon": "fas fa-desktop",
-      "orderNumber": 1
+    'url': 'wip/engineering',
+    'name': 'Engineering',
+    'info': '',
+    'icon': 'fas fa-cogs',
+    'orderNumber': 1,
+    'menuGroup': {
+      'url': '#',
+      'name': 'WIP Views',
+      'info': '',
+      'icon': 'fas fa-desktop',
+      'orderNumber': 1
     },
-    "permissions": null,
-    "inheritedPermissions": null,
-    "roles": [],
-    "enumMenuItem": 11
+    'permissions': null,
+    'inheritedPermissions': null,
+    'roles': [],
+    'enumMenuItem': 11
   },
   {
-    "url": "Specifications",
-    "name": "New Requirements",
-    "info": "",
-    "icon": "far fa-plus-circle",
-    "orderNumber": 1,
-    "menuGroup": {
-      "url": "#",
-      "name": "Specifications",
-      "info": "",
-      "icon": "far fa-thermometer-half",
-      "orderNumber": 2
+    'url': 'Specifications',
+    'name': 'New Requirements',
+    'info': '',
+    'icon': 'far fa-plus-circle',
+    'orderNumber': 1,
+    'menuGroup': {
+      'url': '#',
+      'name': 'Specifications',
+      'info': '',
+      'icon': 'far fa-thermometer-half',
+      'orderNumber': 2
     },
-    "permissions": null,
-    "inheritedPermissions": null,
-    "roles": [],
-    "enumMenuItem": 31
+    'permissions': null,
+    'inheritedPermissions': null,
+    'roles': [],
+    'enumMenuItem': 31
   },
   {
-    "menuGroup": {
-      "url": "#",
-      "name": "Part Reporting",
-      "info": "",
-      "icon": "fas fa-line-chart",
-      "orderNumber": 3
+    'menuGroup': {
+      'url': '#',
+      'name': 'Part Reporting',
+      'info': '',
+      'icon': 'fas fa-line-chart',
+      'orderNumber': 3
     }
   },
   {
-    "menuGroup": {
-      "url": "/#/app/people/profile",
-      "name": "Profile",
-      "info": "",
-      "icon": "fal fa-user-edit",
-      "orderNumber": 4
+    'menuGroup': {
+      'url': '/#/app/people/profile',
+      'name': 'Profile',
+      'info': '',
+      'icon': 'fal fa-user-edit',
+      'orderNumber': 4
     }
   }];
   CSRFormValidErrors: string[] = [];
@@ -206,7 +206,7 @@ export class Sidebar {
       {
         id: 0,
         menus: this.globals.isBuyer ? this.buyerMenus : this.engineerMenus,
-        name: "Administrator",
+        name: 'Administrator',
       }
     ];
 
@@ -242,7 +242,7 @@ export class Sidebar {
               icon: item.icon,
               orderNr: item.orderNumber,
               info: item.info
-            }]
+            }];
         }
 
         Object.assign(menuItem, item.menuGroup);

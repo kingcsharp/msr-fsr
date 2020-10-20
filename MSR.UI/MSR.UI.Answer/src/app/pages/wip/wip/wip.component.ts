@@ -36,7 +36,7 @@ export class WipComponent implements OnInit {
       new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true }),
       new ColumnsSaved({ id: 'locationName', label: 'Location', visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial Number', visible: true }),
-      new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'Purchase Order Number', visible: true }),
+      new ColumnsSaved({ id: 'referencePO', label: 'PO #', visible: true }),
       new ColumnsSaved({ id: 'quantity', label: 'Quantity', visible: true }),
       new ColumnsSaved({ id: 'scheduledStartDate', label: 'Scheduled Start Date', visible: true }),
       new ColumnsSaved({ id: 'scheduledEndDate', label: 'Scheduled End Date', visible: true }),
@@ -60,21 +60,25 @@ export class WipComponent implements OnInit {
 
         elem.timeLoggedType = 'danger';
 
-        if (elem.percentageOfExpectedDurationTimeLogged < 25) {
+        if (elem.percentageOfExpectedDurationTimeLogged > .25) {
           elem.timeLoggedType = 'warning';
-        } else if (elem.percentageOfExpectedDurationTimeLogged < 50) {
+        }
+        if (elem.percentageOfExpectedDurationTimeLogged > .50) {
           elem.timeLoggedType = 'info';
-        } else if (elem.percentageOfExpectedDurationTimeLogged < 75) {
+        }
+        if (elem.percentageOfExpectedDurationTimeLogged > .75) {
           elem.timeLoggedType = 'success';
         }
 
         elem.tasksCompletedType = 'danger';
 
-        if (elem.percentageOfTasksCompleted < 25) {
+        if (elem.percentageOfTasksCompleted > .25) {
           elem.tasksCompletedType = 'warning';
-        } else if (elem.percentageOfTasksCompleted < 50) {
+        }
+        if (elem.percentageOfTasksCompleted > .50) {
           elem.tasksCompletedType = 'info';
-        } else if (elem.percentageOfTasksCompleted < 75) {
+        }
+        if (elem.percentageOfTasksCompleted > .75) {
           elem.tasksCompletedType = 'success';
         }
 
