@@ -6874,7 +6874,7 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderModel>(<any>null);
     }
 
-    portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+    portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | null | undefined, toDate: Date | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6885,6 +6885,10 @@ export class WorkOrderService {
             url_ += "PartName=" + encodeURIComponent("" + partName) + "&";
         if (partId !== undefined && partId !== null)
             url_ += "PartId=" + encodeURIComponent("" + partId) + "&";
+        if (fromDate !== undefined && fromDate !== null)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toJSON() : "") + "&";
+        if (toDate !== undefined && toDate !== null)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toJSON() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -18647,6 +18651,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
     locationName?: string | undefined;
     serialNumber?: string | undefined;
     purchaseOrderNumber?: number | undefined;
+    referencePO?: string | undefined;
     quantity?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;
@@ -18683,6 +18688,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
             this.locationName = _data["locationName"];
             this.serialNumber = _data["serialNumber"];
             this.purchaseOrderNumber = _data["purchaseOrderNumber"];
+            this.referencePO = _data["referencePO"];
             this.quantity = _data["quantity"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
             this.scheduledEndDate = _data["scheduledEndDate"] ? new Date(_data["scheduledEndDate"].toString()) : <any>undefined;
@@ -18719,6 +18725,7 @@ export class WorkOrderGridSummary implements IWorkOrderGridSummary {
         data["locationName"] = this.locationName;
         data["serialNumber"] = this.serialNumber;
         data["purchaseOrderNumber"] = this.purchaseOrderNumber;
+        data["referencePO"] = this.referencePO;
         data["quantity"] = this.quantity;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
         data["scheduledEndDate"] = this.scheduledEndDate ? this.scheduledEndDate.toISOString() : <any>undefined;
@@ -18748,6 +18755,7 @@ export interface IWorkOrderGridSummary {
     locationName?: string | undefined;
     serialNumber?: string | undefined;
     purchaseOrderNumber?: number | undefined;
+    referencePO?: string | undefined;
     quantity?: number | undefined;
     scheduledStartDate?: Date | undefined;
     scheduledEndDate?: Date | undefined;

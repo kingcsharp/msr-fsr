@@ -1,7 +1,7 @@
-import { IPortalWorkOrderView, PortalWorkOrderView, WorkOrderPartModel } from "../../services/api.client.generated";
+import { IPortalWorkOrderView, PortalWorkOrderView, WorkOrderPartModel } from '../../services/api.client.generated';
 
 
-export interface IPortalWorkOrderPartsView extends IPortalWorkOrderView{
+export interface IPortalWorkOrderPartsView extends IPortalWorkOrderView {
     workOrderParts: WorkOrderPartModel[];
 }
 
@@ -19,18 +19,6 @@ export class PortalWorkOrderPartsView extends PortalWorkOrderView {
         }
     }
 
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.workOrderParts = _data['workOrderParts'];
-            if (Array.isArray(_data["workOrderParts"])) {
-                this.workOrderParts = [] as WorkOrderPartModel[];
-                for (let item of _data["workOrderParts"])
-                    this.workOrderParts!.push(WorkOrderPartModel.fromJS(item));
-            }
-        }
-    }
-
     static fromJS(data: any): PortalWorkOrderPartsView {
         data = typeof data === 'object' ? data : {};
         let result = new PortalWorkOrderPartsView();
@@ -38,15 +26,31 @@ export class PortalWorkOrderPartsView extends PortalWorkOrderView {
         return result;
     }
 
-    
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.workOrderParts = _data['workOrderParts'];
+            if (Array.isArray(_data['workOrderParts'])) {
+                this.workOrderParts = [] as WorkOrderPartModel[];
+                for (let item of _data['workOrderParts']) {
+                    /* tslint:disable */
+                    /* eslint-disable */
+                    this.workOrderParts!.push(WorkOrderPartModel.fromJS(item));
+                    /* tslint:enable */
+                    /* eslint-enable */
+                }
+            }
+        }
+    }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
 
         if (Array.isArray(this.workOrderParts)) {
-            data["workOrderParts"] = [];
-            for (let item of this.workOrderParts)
-                data["workOrderParts"].push(item.toJSON());
+            data['workOrderParts'] = [];
+            for (let item of this.workOrderParts) {
+                data['workOrderParts'].push(item.toJSON());
+            }
         }
 
         super.toJSON(data);

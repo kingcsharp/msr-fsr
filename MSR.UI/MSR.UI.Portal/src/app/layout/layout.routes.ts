@@ -17,6 +17,6 @@ const routes: Routes = [
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
     ]
   }
-]; 
+];
 
 export const ROUTES = RouterModule.forChild(routes);
