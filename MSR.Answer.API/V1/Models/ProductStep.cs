@@ -6,7 +6,6 @@ namespace MSR.Answer.API.V1.Models
     {
         public int? ProductId { get; set; }
 
-        [Required]
         public int? ProcedureStepId { get; set; }
 
         [Required]
