@@ -277,7 +277,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   getGridData() {
     this.globals.showLoader(true);
-    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, env.apiVersion).pipe(take(1))
+    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, moment().subtract(6, 'months').toDate(), moment().toDate(), env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object.map(x => {
           let ret = new PortalWorkOrderPartsView(x);
