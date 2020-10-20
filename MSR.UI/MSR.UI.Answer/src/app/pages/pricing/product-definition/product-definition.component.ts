@@ -361,7 +361,7 @@ export class ProductDefinitionComponent implements OnInit {
     if (isRefresh) {
       this.productData.laborCost = parseFloat(totalLaborCharge.toFixed(2));
       this.productData.equipmentCost = parseFloat(totalEquipmentCharge.toFixed(2));
-      this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + (this.productData.materialCost ? this.productData.materialCost : 0);
+      this.productData.totalSalePrice = parseFloat((this.productData.laborCost + this.productData.equipmentCost + (this.productData.materialCost ? this.productData.materialCost : 0)).toFixed(2));
     }
   }
 
@@ -405,7 +405,7 @@ export class ProductDefinitionComponent implements OnInit {
       } else {
         this.productData.materialCost = null;
       }
-      this.productData.totalSalePrice = this.productData.laborCost + this.productData.equipmentCost + materialCost;
+      this.productData.totalSalePrice = parseFloat((this.productData.laborCost + this.productData.equipmentCost + materialCost).toFixed(2));
     }
   }
 
@@ -436,7 +436,7 @@ export class ProductDefinitionComponent implements OnInit {
   onChangePrintOrder($event, index: number) {
     jQuery(`#printOrder_${index}`).parsley().validate();
     if (jQuery(`#printOrder_${index}`).parsley().isValid()) {
-      let printOrder = index+1;
+      let printOrder = index + 1;
       if ($event.target.value) {
         printOrder = parseInt($event.target.value, 10);
       }
@@ -474,7 +474,11 @@ export class ProductDefinitionComponent implements OnInit {
 
     const rmPerMinuteRate = step.rmPerMinuteRate ? step.rmPerMinuteRate : (step.utilization ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization)) : 0);
 
-    const equipmentExpensePerMinute = step.equipmentExpensePerMinute ? step.equipmentExpensePerMinute : ((step.replacementCost && step.utilization && step.usefulLife) ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization) : 0);
+    const equipmentExpensePerMinute = step.equipmentExpensePerMinute
+      ? step.equipmentExpensePerMinute
+      : ((step.replacementCost && step.utilization && step.usefulLife)
+        ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization)
+        : 0);
 
     const laborCharge = step.laborMinutes ? step.laborMinutes * this.adminCostSettings.laborRateMinute : 0;
 
@@ -489,7 +493,7 @@ export class ProductDefinitionComponent implements OnInit {
       equipmentExpensePerMinute,
       laborCharge,
       equipmentCharge,
-    }
+    };
   }
 
   onToggle($event: boolean) {

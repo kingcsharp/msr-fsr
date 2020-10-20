@@ -68,7 +68,7 @@ export class TakeOverTaskButtonWrapperComponent implements OnInit {
     }));
   }
 
-  takeOverRemainingSteps(workOrderTaskId: number){
+  takeOverRemainingSteps(workOrderTaskId: number) {
 
     let indexOfFirstRemainingStep = this.workOrderModel.workOrderTasks.findIndex(s => s.id === workOrderTaskId) + 1;
 
