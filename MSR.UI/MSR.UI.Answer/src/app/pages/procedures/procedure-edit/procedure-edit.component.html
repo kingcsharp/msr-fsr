@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="row col-12 custom-panel">
+        <div class="row col-12 procedure-panel">
             <div class="col-6">
                 <div class="form-group form-row">
                     <div class="col-3">
@@ -129,7 +129,7 @@
             </div>
             <div class="col-12">
                 <ng-template #itemTemplate let-procedureStep="item" let-i="index">
-                    <div class="row my-4 custom-panel">
+                    <div class="row my-4 procedure-step-panel">
                         <div class="col-5">
                             <div class="row form-row">
                                 <div class="col-3">
@@ -171,8 +171,8 @@
                                     <label for="text{{i}}" class="col-form-label text-left col-3">
                                         Text
                                     </label>
-                                    <ckeditor-wrapper [editorcontent]="procedureStep.value.text"
-                                        (editorContentChange)="procedureStep.value.text = $event" style="width:75%">
+                                    <ckeditor-wrapper [editorcontent]="procedureStep.value.stepText"
+                                        (editorContentChange)="procedureStep.value.stepText = $event" style="width:75%">
                                     </ckeditor-wrapper>
                                 </div>
                             </div>

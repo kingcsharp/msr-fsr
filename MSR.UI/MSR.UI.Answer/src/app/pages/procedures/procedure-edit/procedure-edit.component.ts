@@ -386,7 +386,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
     updateProcedureStepRequest.replacementCost = procedureStep.replacementCost;
     updateProcedureStepRequest.roles = procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id}));
-    updateProcedureStepRequest.text = procedureStep.text;
+    updateProcedureStepRequest.stepText = procedureStep.stepText;
     updateProcedureStepRequest.title = procedureStep.title;
     updateProcedureStepRequest.usefulLife = procedureStep.usefulLife;
     updateProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
@@ -418,7 +418,7 @@ export class ProcedureEditComponent implements OnInit {
             updateAffectedProcedureStepRequest.referenceFiles = procedureStepToUpdate.referenceFiles;
             updateAffectedProcedureStepRequest.replacementCost = procedureStepToUpdate.replacementCost;
             updateAffectedProcedureStepRequest.roles = procedureStepToUpdate.selectedRoles.map(s => new RoleRequest({ id: s.id}));
-            updateAffectedProcedureStepRequest.text = procedureStepToUpdate.text;
+            updateAffectedProcedureStepRequest.stepText = procedureStepToUpdate.stepText;
             updateAffectedProcedureStepRequest.title = procedureStepToUpdate.title;
             updateAffectedProcedureStepRequest.usefulLife = procedureStepToUpdate.usefulLife;
             updateAffectedProcedureStepRequest.utilizationTime = procedureStepToUpdate.utilizationTime;
@@ -475,7 +475,7 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepToAdd.replacementCost = 0;
       procedureStepToAdd.roles = [];
       procedureStepToAdd.selectedRoles = new Array<Role>();
-      procedureStepToAdd.text = '';
+      procedureStepToAdd.stepText = '';
       procedureStepToAdd.title = '';
       procedureStepToAdd.usefulLife = 0;
       procedureStepToAdd.utilizationTime = 0;
@@ -497,7 +497,7 @@ export class ProcedureEditComponent implements OnInit {
         procedureStepToAdd.procedureId = this.procedure.id;
         procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles === undefined ? [] : procedureStepTemplateToAdd.referenceFiles;
         procedureStepToAdd.replacementCost = 0;
-        procedureStepToAdd.text = '';
+        procedureStepToAdd.stepText = '';
         procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
         procedureStepToAdd.selectedRoles = new Array<Role>();
         procedureStepTemplateToAdd.roles?.forEach(role => {
@@ -533,7 +533,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
     createProcedureStepRequest.replacementCost = procedureStep.replacementCost;
     createProcedureStepRequest.roles = procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id}));
-    createProcedureStepRequest.text = procedureStep.text;
+    createProcedureStepRequest.stepText = procedureStep.stepText;
     createProcedureStepRequest.title = procedureStep.title;
     createProcedureStepRequest.usefulLife = procedureStep.usefulLife;
     createProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;

@@ -43,8 +43,8 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets Text
         /// </summary>
-        [DataMember(Name="text")]
-        public string Text { get; set; }
+        [DataMember(Name="stepText")]
+        public string StepText { get; set; }
 
         /// <summary>
         /// Gets or Sets Duration
@@ -129,7 +129,7 @@ namespace MSR.Answer.API.V1.Models
             sb.Append("  ProcedureStepId: ").Append(ProcedureStepId).Append("\n");
             sb.Append("  ProcedureId: ").Append(ProcedureId).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
-            sb.Append("  Text: ").Append(Text).Append("\n");
+            sb.Append("  StepText: ").Append(StepText).Append("\n");
             sb.Append("  Duration: ").Append(Duration).Append("\n");
             sb.Append("  DurationType: ").Append(DurationType).Append("\n");
             sb.Append("  PrintOrder: ").Append(PrintOrder).Append("\n");
@@ -192,9 +192,9 @@ namespace MSR.Answer.API.V1.Models
                     Title.Equals(other.Title)
                 ) &&
                 (
-                    Text == other.Text ||
-                    Text != null &&
-                    Text.Equals(other.Text)
+                    StepText == other.StepText ||
+                    StepText != null &&
+                    StepText.Equals(other.StepText)
                 ) &&
                 (
                     Duration == other.Duration ||
@@ -268,8 +268,8 @@ namespace MSR.Answer.API.V1.Models
                     hashCode = hashCode * 59 + ProcedureStepId.GetHashCode();
                     if (Title != null)
                     hashCode = hashCode * 59 + Title.GetHashCode();
-                    if (Text != null)
-                    hashCode = hashCode * 59 + Text.GetHashCode();
+                    if (StepText != null)
+                    hashCode = hashCode * 59 + StepText.GetHashCode();
                     if (Duration != null)
                     hashCode = hashCode * 59 + Duration.GetHashCode();
                     if (DurationType != null)
