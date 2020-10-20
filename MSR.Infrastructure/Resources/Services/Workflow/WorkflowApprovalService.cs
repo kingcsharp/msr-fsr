@@ -508,7 +508,11 @@ namespace MSR.Infrastructure.Resources.Services
             }
             else
             {
-                var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+                var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
+                if (product == null)
+                {
+                    throw new DomainException($"Product ID not found: {productApproval.ProductId}", DomainError.NotFound);
+                }
                 _mapper.Map(productApproval, product);
                 _unitOfWork.ProductApprovals.Update(productApproval);
                 product.Revision++;
@@ -518,6 +522,8 @@ namespace MSR.Infrastructure.Resources.Services
             }
 
             _unitOfWork.ProductApprovals.Delete(false, productApproval);
+            await _unitOfWork.SaveChangesAsync();
+
             return productApproval;
         }
 
