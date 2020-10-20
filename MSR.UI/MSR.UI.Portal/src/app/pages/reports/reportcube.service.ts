@@ -35,7 +35,7 @@ export class ReportCubeService {
                 return x['CubePartsmonitors.customerid'] === this.globals.selectedCustomer.id;
             }
             if (x['CubeWorkorderparts.customername'] !== undefined) {
-                return x['CubeFinancial.customername'] === this.globals.selectedCustomer.name;
+                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
             }
             return true;
         });

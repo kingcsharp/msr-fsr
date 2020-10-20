@@ -232,9 +232,9 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
 
     this.globals.selectCustomerObservable.subscribe(response => {
-      if (response !== null) {
+      if (response !== null && response !== undefined) {
         this.setCustomerName();
-        this.getGridData();
+        this.getGridData(); 
       }
     });
   }

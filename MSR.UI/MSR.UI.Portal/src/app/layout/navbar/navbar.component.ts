@@ -52,6 +52,7 @@ export class Navbar implements OnInit {
 
   roleChange(ev) {
     this.globals.changeBuyer(ev.value.id === 1);
+    this.customerChange();
   }
 
   customerChange() {
