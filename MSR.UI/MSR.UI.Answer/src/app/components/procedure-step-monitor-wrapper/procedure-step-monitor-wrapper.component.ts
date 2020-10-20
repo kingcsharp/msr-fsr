@@ -1,7 +1,9 @@
 import { EventEmitter } from '@angular/core';
 import { Component, Input, OnInit, Output } from '@angular/core';
-import { CreateProcedureStepMonitorRequest, ProcedureStepModel, ProcedureStepMonitor, ProcedureStepMonitorService, 
-  UpdateProcedureStepMonitorRequest, SensorService } from '../../services/api.client.generated';
+import {
+  CreateProcedureStepMonitorRequest, ProcedureStepModel, ProcedureStepMonitor, ProcedureStepMonitorService,
+  UpdateProcedureStepMonitorRequest, SensorService
+} from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { LookUpItems } from '../../utils/lookup-items';
@@ -23,12 +25,8 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
 
   procedureStepMonitors: Array<ProcedureStepMonitor> = new Array<ProcedureStepMonitor>();
 
-  monitorToAdd: ProcedureStepMonitor;
-  showAddMonitorDialog: boolean = false;
-
-
-  monitorToEdit: ProcedureStepMonitor;
-  showEditMonitorDialog: boolean = false;
+  procedureStepMonitor: ProcedureStepMonitor = new ProcedureStepMonitor();
+  showAddOrEditMonitorDialog: boolean = false;
 
   showConfirmDeleteMonitorDialog: boolean = false;
   monitorToDelete: any;
@@ -115,7 +113,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
 
   }
 
-  openConfirmDeleteMonitorDialog(monitor) {
+  openConfirmDeleteMonitorDialog(monitor: ProcedureStepMonitor) {
 
     this.monitorToDelete = monitor;
     this.showConfirmDeleteMonitorDialog = !this.showConfirmDeleteMonitorDialog;
@@ -135,76 +133,65 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
 
   }
 
-  openEditMonitorDialog(monitor: ProcedureStepMonitor) {
-    this.monitorToEdit = monitor;
-    this.monitorToEdit.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling)?.value;
-    this.monitorToEdit.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType)?.value;
-    this.monitorToEdit.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType)?.value;
-    this.monitorToEdit.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
-    this.monitorToEdit.id = monitor.id;
-    this.monitorToEdit.sendEmailNotification = monitor.sendEmailNotification;
-    this.monitorToEdit.highTarget = monitor.highTarget;
-    this.monitorToEdit.lowTarget = monitor.lowTarget;
-    this.showEditMonitorDialog = !this.showEditMonitorDialog;
+  openAddOrEditMonitorDialog(monitor: ProcedureStepMonitor = new ProcedureStepMonitor()) {
+    this.procedureStepMonitor = monitor;
+    this.procedureStepMonitor.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling)?.value;
+    this.procedureStepMonitor.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType)?.value;
+    this.procedureStepMonitor.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType)?.value;
+    this.procedureStepMonitor.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
+    this.procedureStepMonitor.sendEmailNotification = monitor.sendEmailNotification;
+    this.procedureStepMonitor.highTarget = monitor.highTarget;
+    this.procedureStepMonitor.lowTarget = monitor.lowTarget;
+    this.procedureStepMonitor.description = monitor.description === undefined ? '' : monitor.description;
+    this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
   }
 
-  closeEditMonitorDialog() {
-    this.showEditMonitorDialog = !this.showEditMonitorDialog;
-  }
+  saveOrUpdateProcedureStepMonitor() {
 
-  updateMonitor() {
+    if (this.procedureStepMonitor.id === undefined) {
 
-    let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest();
-    updateProcedureStepMonitorRequest.monitorType = this.monitorToEdit.monitorType;
-    updateProcedureStepMonitorRequest.inputType = this.monitorToEdit.inputType;
-    updateProcedureStepMonitorRequest.shouldBe = this.monitorToEdit.shouldBe;
-    updateProcedureStepMonitorRequest.targetValue = this.monitorToEdit.targetValue?.toString();
-    updateProcedureStepMonitorRequest.faultHandling = this.monitorToEdit.faultHandling;
-    updateProcedureStepMonitorRequest.description = this.monitorToEdit.description;
-    updateProcedureStepMonitorRequest.sendEmailNotification = this.monitorToEdit.sendEmailNotification;
-    updateProcedureStepMonitorRequest.id = this.monitorToEdit.id;
-    updateProcedureStepMonitorRequest.lowTarget = this.monitorToEdit.lowTarget;
-    updateProcedureStepMonitorRequest.highTarget = this.monitorToEdit.highTarget;
-    updateProcedureStepMonitorRequest.sensorName = this.monitorToEdit.sensorName;
-    this.globals.showLoader(true);
-    this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion, updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
+      let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest();
+      createProcedureStepMonitorRequest.monitorType = this.procedureStepMonitor.monitorType;
+      createProcedureStepMonitorRequest.inputType = this.procedureStepMonitor.inputType;
+      createProcedureStepMonitorRequest.shouldBe = this.procedureStepMonitor.shouldBe;
+      createProcedureStepMonitorRequest.targetValue = this.procedureStepMonitor.targetValue?.toString();
+      createProcedureStepMonitorRequest.faultHandling = this.procedureStepMonitor.faultHandling;
+      createProcedureStepMonitorRequest.description = this.procedureStepMonitor.description;
+      createProcedureStepMonitorRequest.sendEmailNotification = this.procedureStepMonitor.sendEmailNotification;
+      createProcedureStepMonitorRequest.procedureStepId = this.procedureStep.id;
+      createProcedureStepMonitorRequest.lowTarget = this.procedureStepMonitor.lowTarget;
+      createProcedureStepMonitorRequest.highTarget = this.procedureStepMonitor.highTarget;
+      createProcedureStepMonitorRequest.sensorName = this.procedureStepMonitor.sensorName;
+      this.globals.showLoader(true);
+      this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
-      this.showEditMonitorDialog = !this.showEditMonitorDialog;
+        this.procedureStepMonitors.push(this.procedureStepMonitor);
+        this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
 
-    }));
-  }
+      }));
 
-  openAddMonitorDialog() {
-    this.monitorToAdd = new ProcedureStepMonitor();
-    this.monitorToAdd.description = '';
-    this.monitorToAdd.monitorType = this.monitorTypeOptions.find(s => s.label === 'Number').value;
-    this.showAddMonitorDialog = !this.showAddMonitorDialog;
-  }
+    } else {
 
-  closeAddMonitorDialog() {
-    this.showAddMonitorDialog = !this.showAddMonitorDialog;
-  }
+      let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest();
+      updateProcedureStepMonitorRequest.monitorType = this.procedureStepMonitor.monitorType;
+      updateProcedureStepMonitorRequest.inputType = this.procedureStepMonitor.inputType;
+      updateProcedureStepMonitorRequest.shouldBe = this.procedureStepMonitor.shouldBe;
+      updateProcedureStepMonitorRequest.targetValue = this.procedureStepMonitor.targetValue?.toString();
+      updateProcedureStepMonitorRequest.faultHandling = this.procedureStepMonitor.faultHandling;
+      updateProcedureStepMonitorRequest.description = this.procedureStepMonitor.description;
+      updateProcedureStepMonitorRequest.sendEmailNotification = this.procedureStepMonitor.sendEmailNotification;
+      updateProcedureStepMonitorRequest.id = this.procedureStepMonitor.id;
+      updateProcedureStepMonitorRequest.lowTarget = this.procedureStepMonitor.lowTarget;
+      updateProcedureStepMonitorRequest.highTarget = this.procedureStepMonitor.highTarget;
+      updateProcedureStepMonitorRequest.sensorName = this.procedureStepMonitor.sensorName;
+      this.globals.showLoader(true);
+      this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion, updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
-  addMonitorToStep() {
-    let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest();
-    createProcedureStepMonitorRequest.monitorType = this.monitorToAdd.monitorType;
-    createProcedureStepMonitorRequest.inputType = this.monitorToAdd.inputType;
-    createProcedureStepMonitorRequest.shouldBe = this.monitorToAdd.shouldBe;
-    createProcedureStepMonitorRequest.targetValue = this.monitorToAdd.targetValue?.toString();
-    createProcedureStepMonitorRequest.faultHandling = this.monitorToAdd.faultHandling;
-    createProcedureStepMonitorRequest.description = this.monitorToAdd.description;
-    createProcedureStepMonitorRequest.sendEmailNotification = this.monitorToAdd.sendEmailNotification;
-    createProcedureStepMonitorRequest.procedureStepId = this.procedureStep.id;
-    createProcedureStepMonitorRequest.lowTarget = this.monitorToAdd.lowTarget;
-    createProcedureStepMonitorRequest.highTarget = this.monitorToAdd.highTarget;
-    createProcedureStepMonitorRequest.sensorName = this.monitorToAdd.sensorName;
-    this.globals.showLoader(true);
-    this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
+        this.showAddOrEditMonitorDialog = !this.showAddOrEditMonitorDialog;
 
-      this.procedureStepMonitors.push(this.monitorToAdd);
-      this.showAddMonitorDialog = !this.showAddMonitorDialog;
+      }));
 
-    }));
+    }
 
   }
 

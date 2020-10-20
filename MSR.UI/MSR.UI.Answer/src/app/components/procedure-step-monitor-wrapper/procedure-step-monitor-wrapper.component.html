@@ -6,7 +6,7 @@
     </div>
     <div class="col-3 text-right">
         <button *ngIf="canEdit" class="btn btn-success width-100 mb-xs sm-mrg" role="button"
-            (click)="openAddMonitorDialog()" data-cy="add-button">
+            (click)="openAddOrEditMonitorDialog()" data-cy="add-button">
             Add Monitor
         </button>
     </div>
@@ -32,7 +32,7 @@
                     <td>
                         <i *ngIf="canEdit" class="far fa-edit pointer"
                             tooltip="Edit Monitor" data-cy="edit-button"
-                            (click)="openEditMonitorDialog(procedureStepMonitor)"></i>
+                            (click)="openAddOrEditMonitorDialog(procedureStepMonitor)"></i>
                         <i *ngIf="canDelete" class="fa fa-trash pointer"
                             tooltip="Delete Monitore" data-cy="delete-button"
                             (click)="openConfirmDeleteMonitorDialog(procedureStepMonitor)"></i>
@@ -62,17 +62,17 @@
         </div>
     </p-footer>
 </p-dialog>
-<p-dialog header="Edit Monitor" [(visible)]="showEditMonitorDialog" appendTo="body" [baseZIndex]="100001"
+<p-dialog header="{{ procedureStepMonitor.id === undefined ?'Create Monitor':'Edit Monitor'}}" [(visible)]="showAddOrEditMonitorDialog" appendTo="body" [baseZIndex]="100001"
     [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <div class="container">
-        <div class="row" *ngIf="monitorToEdit !== undefined">
+        <div class="row" *ngIf="procedureStepMonitor !== undefined">
             <div class="form-group col-12 d-flex flex-row">
                 <label for="monitortype" class="col-form-label text-left col-3">
                     Monitor Type
                 </label>
                 <div class="col-12 px-0">
                     <p-dropdown placeholder="Select Monitor Type" name="monitortype" [options]="monitorTypeOptions"
-                        [(ngModel)]="monitorToEdit.monitorType">
+                        [(ngModel)]="procedureStepMonitor.monitorType">
                     </p-dropdown>
                 </div>
             </div>
@@ -82,71 +82,71 @@
                 </label>
                 <div class="col-9 px-0">
                     <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptions"
-                        showClear="true" [(ngModel)]="monitorToEdit.inputType">
+                        showClear="true" [(ngModel)]="procedureStepMonitor.inputType">
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.inputType === 'Sensor'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.inputType === 'Sensor'">
                 <label for="sensorname" class="col-form-label text-left col-3">
                     Available Sensors
                 </label>
                 <div class="col-9 px-0">
                     <p-dropdown placeholder="Select Sensor" name="sensorname" [options]="sensorNamesAvailable"
-                        showClear="true" [(ngModel)]="monitorToEdit.sensorName">
+                        showClear="true" [(ngModel)]="procedureStepMonitor.sensorName">
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.monitorType === 'Select'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.monitorType === 'Select'">
                 <label for="listsource" class="col-form-label text-left col-3">
                     List Source
                 </label>
                 <div class="col-9 px-0">
                     <p-dropdown placeholder="Select List Source" name="listsource" [options]="listSource"
-                        showClear="true" [(ngModel)]="monitorToEdit.listSource">
+                        showClear="true" [(ngModel)]="procedureStepMonitor.listSource">
                     </p-dropdown>
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToEdit.monitorType === 'Number' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.inputType !== 'Sensor'">
+                *ngIf="procedureStepMonitor.monitorType === 'Number' && procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.inputType !== 'Sensor'">
                 <label for="shouldbe" class="col-form-label text-left col-3">
                     Should Be
                 </label>
                 <div class="col-9 px-0">
                     <p-dropdown placeholder="Select Should Be" name="shouldbe" [options]="shouldBeOptions"
-                        showClear="true" [(ngModel)]="monitorToEdit.shouldBe">
+                        showClear="true" [(ngModel)]="procedureStepMonitor.shouldBe">
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.shouldBe === 'BETWEEN' && procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'">
                 <label for="lowvalue" class="col-form-label text-left col-3">
                     Low Value
                 </label>
                 <div class="col-9 px-0">
-                    <input type="number" name="lowvalue" [(ngModel)]="monitorToEdit.lowTarget" data-validate="parsley"
+                    <input type="number" name="lowvalue" [(ngModel)]="procedureStepMonitor.lowTarget" data-validate="parsley"
                         data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                         class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToEdit.shouldBe === 'BETWEEN' && monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.shouldBe === 'BETWEEN' && procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'">
                 <label for="highValue" class="col-form-label text-left col-3">
                     High Value
                 </label>
                 <div class="col-9 px-0">
-                    <input type="number" name="highValue" [(ngModel)]="monitorToEdit.highTarget" data-validate="parsley"
+                    <input type="number" name="highValue" [(ngModel)]="procedureStepMonitor.highTarget" data-validate="parsley"
                         data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                         class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
                 </div>
             </div>
             <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToEdit.monitorType !== 'Select' && monitorToEdit.inputType !== 'Sensor'">
+                *ngIf="procedureStepMonitor.monitorType !== 'Select' && procedureStepMonitor.inputType !== 'Sensor'">
                 <label for="targetvalue" class="col-form-label text-left col-3">
                     Target Value
                 </label>
-                <p-dropdown *ngIf="monitorToEdit.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="monitorToEdit.targetValue">
+                <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="procedureStepMonitor.targetValue">
                 </p-dropdown>
-                <p-dropdown *ngIf="monitorToEdit.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="monitorToEdit.targetValue">
+                <p-dropdown *ngIf="procedureStepMonitor.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="procedureStepMonitor.targetValue">
                 </p-dropdown>
-                <input type="number" name="targetvalue" [(ngModel)]="monitorToEdit.targetValue" data-validate="parsley" *ngIf="monitorToEdit.monitorType !== 'Pass or Fail' && monitorToEdit.monitorType !== 'Yes or No'"
+                <input type="number" name="targetvalue" [(ngModel)]="procedureStepMonitor.targetValue" data-validate="parsley" *ngIf="procedureStepMonitor.monitorType !== 'Pass or Fail' && procedureStepMonitor.monitorType !== 'Yes or No'"
                     data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                     class="form-control input-transparent" tooltip="Target Value" data-cy="targetvalue-input">
             </div>
@@ -156,7 +156,7 @@
                 </label>
                 <div class="col-9 px-0">
                     <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
-                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="monitorToEdit.faultHandling">
+                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="procedureStepMonitor.faultHandling">
                     </p-dropdown>
                 </div>
             </div>
@@ -164,8 +164,8 @@
                 <label for="description" class="col-form-label text-left col-3">
                     Description
                 </label>
-                <ckeditor-wrapper [editorcontent]="monitorToEdit.description" class="col-9 px-0"
-                    (editorContentChange)="monitorToEdit.description = $event"></ckeditor-wrapper>
+                <ckeditor-wrapper [editorcontent]="procedureStepMonitor.description" class="col-9 px-0"
+                    (editorContentChange)="procedureStepMonitor.description = $event"></ckeditor-wrapper>
             </div>
             <div class="form-group col-12 d-flex flex-row">
                 <label class="col-3 col-form-label text-md-right">
@@ -174,7 +174,7 @@
                 <div class="col-9 px-0 ">
                     <div class="display-inline-block isActive">
                         <label class="form-check-label" for="sendemailnotification" class="switch">
-                            <input class="form-check-input" [(ngModel)]="monitorToEdit.sendEmailNotification"
+                            <input class="form-check-input" [(ngModel)]="procedureStepMonitor.sendEmailNotification"
                                 name="sendemailnotification" type="checkbox" class="ios" checked
                                 id="sendemailnotification" /><i data-cy="sendemailnotification-checkbox"></i>
                         </label>
@@ -185,142 +185,14 @@
     </div>
     <p-footer>
         <div class="pull-right">
-            <button type="button" (click)="updateMonitor()" class="btn btn-outline-inverse width-100 mb-xs"
-                role="button">
+            <button type="button" *ngIf="procedureStepMonitor.id !== undefined" (click)="saveOrUpdateProcedureStepMonitor()"
+             class="btn btn-primary m-2" role="button">
                 Update</button>
-            <button type="button" (click)="closeEditMonitorDialog()" class="btn btn-outline-inverse width-100 mb-xs"
-                role="button">
-                Cancel
-            </button>
-        </div>
-    </p-footer>
-</p-dialog>
-<p-dialog header="Add Monitor" [(visible)]="showAddMonitorDialog" appendTo="body" [baseZIndex]="100001" [modal]='true'
-    [style]="{width: '60vw'}" data-cy="user-header">
-    <div class="container-fluid">
-        <div class="row" *ngIf="monitorToAdd !== undefined">
-            <div class="form-group col-12 d-flex flex-row">
-                <label for="monitortype" class="col-form-label text-left col-3">
-                    Monitor Type
-                </label>
-                <div class="col-9 px-0">
-                    <p-dropdown name="monitortype" [options]="monitorTypeOptions"
-                        *ngIf="monitorToAdd.monitorType !== undefined" [(ngModel)]="monitorToAdd.monitorType">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row">
-                <label for="inputtype" class="col-form-label text-left col-3">
-                    Input Type
-                </label>
-                <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptions"
-                        showClear="true" [(ngModel)]="monitorToAdd.inputType">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.inputType === 'Sensor'">
-                <label for="sensorname" class="col-form-label text-left col-3">
-                    Available Sensors
-                </label>
-                <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select Sensor" name="sensorname" [options]="sensorNamesAvailable"
-                        showClear="true" [(ngModel)]="monitorToAdd.sensorName">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.monitorType === 'Select'">
-                <label for="listsource" class="col-form-label text-left col-3">
-                    List Source
-                </label>
-                <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select List Source" name="listsource" [options]="listSource"
-                        showClear="true" [(ngModel)]="monitorToAdd.listSource">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToAdd.monitorType === 'Number' && monitorToAdd.monitorType !== 'Pass or Fail' && monitorToAdd.inputType !== 'Sensor'">
-                <label for="shouldbe" class="col-form-label text-left col-3">
-                    Should Be
-                </label>
-                <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select Should Be" name="shouldbe" [options]="shouldBeOptions"
-                        showClear="true" [(ngModel)]="monitorToAdd.shouldBe">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN' && monitorToAdd.monitorType !== 'Pass or Fail'">
-                <label for="lowvalue" class="col-form-label text-left col-3">
-                    Low Value
-                </label>
-                <div class="col-9 px-0">
-                    <input type="number" name="lowvalue" [(ngModel)]="monitorToAdd.lowTarget" data-validate="parsley"
-                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                        class="form-control input-transparent" tooltip="low Value" data-cy="targetvalue-input">
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row" *ngIf="monitorToAdd.shouldBe === 'BETWEEN' && monitorToAdd.monitorType !== 'Pass or Fail'">
-                <label for="highValue" class="col-form-label text-left col-3">
-                    High Value
-                </label>
-                <div class="col-9 px-0">
-                    <input type="number" name="highValue" [(ngModel)]="monitorToAdd.highTarget" data-validate="parsley"
-                        data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                        class="form-control input-transparent" tooltip="High Value" data-cy="targetvalue-input">
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row"
-                *ngIf="monitorToAdd.monitorType !== 'Select' && monitorToAdd.inputType !== 'Sensor'">
-                <label for="targetvalue" class="col-form-label text-left col-3">
-                    Target Value
-                </label>
-                <p-dropdown *ngIf="monitorToAdd.monitorType === 'Pass or Fail'" placeholder="Select Pass or Fail" name="salectpassfail" [options]="passFailOptions" [(ngModel)]="monitorToAdd.targetValue">
-                </p-dropdown>
-                <p-dropdown *ngIf="monitorToAdd.monitorType === 'Yes or No'" placeholder="Select Yes or No" name="selectyesno" [options]="yesNoOptions" [(ngModel)]="monitorToAdd.targetValue">
-                </p-dropdown>
-                <input *ngIf="monitorToAdd.monitorType !== 'Pass or Fail' && monitorToAdd.monitorType !== 'Yes or No'" type="number" name="targetvalue" [(ngModel)]="monitorToAdd.targetValue" data-validate="parsley"
-                    data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
-                    class="form-control input-transparent col-9" tooltip="Target Value" data-cy="targetvalue-input">
-            </div>
-            <div class="form-group col-12 d-flex flex-row">
-                <label for="faulthandling" class="col-form-label text-left col-3">
-                    Fault Handling
-                </label>
-                <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select Fault Handling" name="faulthandling"
-                        [options]="faultHandlingOptions" showClear="true" [(ngModel)]="monitorToAdd.faultHandling">
-                    </p-dropdown>
-                </div>
-            </div>
-            <div class="form-group col-12 d-flex flex-row">
-                <label for="description" class="col-form-label text-left col-3">
-                    Description
-                </label>
-                <ckeditor-wrapper [editorcontent]="monitorToAdd.description" class="col-9 px-0"
-                    (editorContentChange)="monitorToAdd.description = $event"></ckeditor-wrapper>
-            </div>
-            <div class="form-group col-12 d-flex flex-row">
-                <label class="col-3 col-form-label text-md-right">
-                    Send Email Notification
-                </label>
-                <div class="col-9 px-0 ">
-                    <div class="display-inline-block isActive">
-                        <label class="form-check-label" for="sendemailnotification" class="switch">
-                            <input class="form-check-input" [(ngModel)]="monitorToAdd.sendEmailNotification"
-                                name="sendemailnotification" type="checkbox" class="ios" checked
-                                id="sendemailnotification" /><i data-cy="sendemailnotification-checkbox"></i>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <p-footer>
-        <div class="pull-right">
-            <button type="button" class="btn btn-primary m-2" (click)="addMonitorToStep()">Save</button>
-            <button type="button" (click)="closeAddMonitorDialog()" class="btn btn-outline-inverse width-100 mb-xs"
-                role="button">
+            <button type="button" *ngIf="procedureStepMonitor.id === undefined" (click)="saveOrUpdateProcedureStepMonitor()"
+             class="btn btn-primary m-2" role="button">
+                Save</button>
+            <button type="button" (click)="showAddOrEditMonitorDialog  = !showAddOrEditMonitorDialog"
+             class="btn btn-warning m-2" role="button">
                 Cancel
             </button>
         </div>
