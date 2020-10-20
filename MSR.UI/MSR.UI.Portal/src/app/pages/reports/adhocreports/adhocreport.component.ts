@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
     ReportService, ReportModel
@@ -20,7 +20,7 @@ declare let jQuery: any;
     styleUrls: ['./adhocreport.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AdhocComponent implements OnInit {
+export class AdhocComponent implements OnInit, AfterViewInit {
     gridSaved: GridSaved;
     reportId: string;
     reportInfo: ReportModel;
@@ -36,12 +36,32 @@ export class AdhocComponent implements OnInit {
         this.route.params.subscribe(routeParams => {
             this.reportId = routeParams.id;
         });
+        if (this.globals.selectedCustomer !== undefined) {
+            this.getReportData();
+        }
+    }
 
-        this.getReportData();
+    ngAfterViewInit(): void {
+        if (this.globals.selectedCustomer !== undefined) {
+            this.getReportData();
+        }
+
+        this.globals.isBuyerObservable.subscribe(response => {
+            if (this.globals.selectedCustomer !== undefined) {
+                this.getReportData();
+            }
+        });
+
+        this.globals.selectCustomerObservable.subscribe(response => {
+            if (response !== null && response !== undefined) {
+                this.getReportData();
+            }
+        });
     }
 
     getReportData() {
         this.globals.showLoader(true);
+        this.showReport = false;
         this.reportService.report(true, env.apiVersion).pipe(take(1))
             .subscribe(responseHandler(response => {
                 this.reportInfo = response.object.filter(x => x.id === parseInt(this.reportId, 10))[0];

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
   Role, EnumMenuItem, ReportService, ReportModel, CustomerService
@@ -37,9 +37,12 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.customerService.customerGet(this.globals.user.customerId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
-      this.globals.changeCustomer(response.object[0]);
-    }));
+    if (!this.globals.user.isAnswerUser) {
+      this.customerService.customerGet(this.globals.user.customerId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+        this.globals.changeCustomer(response.object[0]);
+      }));
+    }
+
     this.reportService.report(true, env.apiVersion).subscribe(responseHandler(response => {
       this.data = response.object;
     }));
