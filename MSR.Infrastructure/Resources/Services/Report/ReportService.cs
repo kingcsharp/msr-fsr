@@ -27,14 +27,15 @@ namespace MSR.Infrastructure.Resources.Services.Report
 
         public async Task<ICollection<ReportModel>> GetReports(GetReport command, CancellationToken cancellationToken = default)
         {
-            var reportQuery = _unitOfWork.Reports.Query().Include(i => i.ReportCategories).ThenInclude(j => j.Report)
-                                                           .Include(i => i.ReportCategories).ThenInclude(j => j.ReportCategory);
+            var reportQuery = _unitOfWork.Reports.Query();
+
             if (command.IsPortal)
             {
-                reportQuery.Where(x => x.ShowInPortal == command.IsPortal);
+                reportQuery = reportQuery.Where(x => x.ShowInPortal == command.IsPortal);
             }
 
-            var reports = await reportQuery.ToListAsync();
+            var reports = await reportQuery.Include(i => i.ReportCategories).ThenInclude(j => j.Report)
+                                .Include(i => i.ReportCategories).ThenInclude(j => j.ReportCategory).ToListAsync();
 
             var domReports = new List<ReportModel>();
 

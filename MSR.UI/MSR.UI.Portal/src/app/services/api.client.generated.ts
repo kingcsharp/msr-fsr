@@ -5215,14 +5215,15 @@ export class ReportService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    report(isPortal: boolean, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
-        let url_ = this.baseUrl + "/v{version}/Report";
-        if (isPortal === undefined || isPortal === null)
-            throw new Error("The parameter 'isPortal' must be defined.");
-        url_ = url_.replace("{IsPortal}", encodeURIComponent("" + isPortal));
+    report(isPortal: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
+        let url_ = this.baseUrl + "/v{version}/Report?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (isPortal === null)
+            throw new Error("The parameter 'isPortal' cannot be null.");
+        else if (isPortal !== undefined)
+            url_ += "IsPortal=" + encodeURIComponent("" + isPortal) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
