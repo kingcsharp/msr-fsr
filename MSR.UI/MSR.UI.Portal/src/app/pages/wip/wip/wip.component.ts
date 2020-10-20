@@ -54,8 +54,20 @@ export class WipComponent implements OnInit, AfterViewInit {
   images: any[];
   files: any[];
   showFilesDialog: boolean = false;
-  startDate: string;
-  endDate: string;
+  fromDate: Date = moment().subtract(6, 'weeks').toDate();
+  toDate: Date = moment().toDate();
+  en = {
+    firstDayOfWeek: 0,
+    dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    today: 'Today',
+    clear: 'Clear',
+    dateFormat: 'yyy-mm-dd'
+  };
+
   responsiveOptions: any[] = [
     {
       breakpoint: '1024px',
@@ -84,17 +96,15 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // this.startDate = moment().subtract(6, 'month').toISOString();
-    // this.endDate = moment().subtract(6, 'month').toISOString();
     this.setCustomerName();
     this.gridPartsSaved = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
         new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
         new ColumnsSaved({ id: 'partNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
-        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
-        new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
-        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String }),
+        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '10rem' } }),
+        new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
+        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String, styles: { 'width': '40rem' } }),
       ],
       showMyViewsFeature: false,
       paginator: false,
@@ -277,7 +287,8 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   getGridData() {
     this.globals.showLoader(true);
-    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, moment().subtract(6, 'months').toDate(), moment().toDate(), env.apiVersion).pipe(take(1))
+    this.showReport = false;
+    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object.map(x => {
           let ret = new PortalWorkOrderPartsView(x);
@@ -307,9 +318,9 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
       new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
@@ -323,12 +334,12 @@ export class WipComponent implements OnInit, AfterViewInit {
   getBuyerColumns() {
     return [
       new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
-      // new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'supplier', label: 'Supplier', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
-      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
       new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),

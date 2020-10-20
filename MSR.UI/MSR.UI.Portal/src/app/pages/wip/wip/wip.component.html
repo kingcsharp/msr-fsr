@@ -4,17 +4,14 @@
             <i class="fas fa-desktop"></i>
             {{title}}
         </div>
-        <div>
-            <!-- (onSelect)="filterGrid()" -->
-            <!-- <p-calendar [(ngModel)]="startDate" [maxDate]="endDate"
-                 appendTo="body" [locale]="en"></p-calendar>
-
-            <p-calendar [(ngModel)]="endDate" (onSelect)="filterGrid()" [minDate]="startDate"
-                appendTo="body" [locale]="en"></p-calendar> -->
+        <div  class="calendarSearch">
+            From Date: <p-calendar [(ngModel)]="fromDate" [maxDate]="toDate" appendTo="body" [locale]="en"></p-calendar>
+            To Date: <p-calendar [(ngModel)]="toDate" [minDate]="fromDate" appendTo="body" [locale]="en"></p-calendar>
         </div>
         <div class="searchinput">
+            <!-- tooltip="By company part #, By part name, By serial #"  -->
             <input type="text" name="searchsubpart" placeholder="Search Sub Parts" [(ngModel)]="subpartTextSearch"
-                class="form-control input-transparent" tooltip="">
+                class="form-control">
         </div>
         <div>
             <button type="submit" (click)="getGridData()" class="btn btn-primary" role="button"
