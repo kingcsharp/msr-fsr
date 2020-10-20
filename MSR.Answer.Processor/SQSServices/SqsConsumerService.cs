@@ -101,9 +101,6 @@ namespace MSR.Answer.Processor.SQSServices
 
                 while (!_tokenSource.Token.IsCancellationRequested)
                 {
-                    _messageHub.SendNotification("ping", new MSR.Domain.Hub.Toaster() {
-                        Message = "ping"
-                    });
                     try
                     {
                         var response = await _sqsClient.ReceiveMessageAsync(new ReceiveMessageRequest
