@@ -5215,14 +5215,15 @@ export class ReportService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    report(isPortal: boolean, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
-        let url_ = this.baseUrl + "/v{version}/Report";
-        if (isPortal === undefined || isPortal === null)
-            throw new Error("The parameter 'isPortal' must be defined.");
-        url_ = url_.replace("{IsPortal}", encodeURIComponent("" + isPortal));
+    report(isPortal: boolean | undefined, version: string): Observable<AuditActionResultOfICollectionOfReportModel> {
+        let url_ = this.baseUrl + "/v{version}/Report?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (isPortal === null)
+            throw new Error("The parameter 'isPortal' cannot be null.");
+        else if (isPortal !== undefined)
+            url_ += "IsPortal=" + encodeURIComponent("" + isPortal) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -6874,7 +6875,7 @@ export class WorkOrderService {
         return _observableOf<AuditActionResultOfICollectionOfWorkOrderModel>(<any>null);
     }
 
-    portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
+    portal(customerId: number | null | undefined, partName: string | null | undefined, partId: number | null | undefined, fromDate: Date | null | undefined, toDate: Date | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfPortalWorkOrderView> {
         let url_ = this.baseUrl + "/v{version}/WorkOrder/Portal?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -6885,6 +6886,10 @@ export class WorkOrderService {
             url_ += "PartName=" + encodeURIComponent("" + partName) + "&";
         if (partId !== undefined && partId !== null)
             url_ += "PartId=" + encodeURIComponent("" + partId) + "&";
+        if (fromDate !== undefined && fromDate !== null)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toJSON() : "") + "&";
+        if (toDate !== undefined && toDate !== null)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toJSON() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -15876,7 +15881,7 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
 export class ProductStepModel implements IProductStepModel {
     id?: number;
     productId?: number;
-    procedureStepId!: number;
+    procedureStepId?: number | undefined;
     laborMinutes!: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
@@ -15950,7 +15955,7 @@ export class ProductStepModel implements IProductStepModel {
 export interface IProductStepModel {
     id?: number;
     productId?: number;
-    procedureStepId: number;
+    procedureStepId?: number | undefined;
     laborMinutes: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
@@ -16070,8 +16075,8 @@ export class ProductStep implements IProductStep {
     id?: number;
     /** Gets or Sets ProductId */
     productId?: number | undefined;
-    /** Gets or Sets ProcedureStepId */
-    procedureStepId!: number;
+    /** Gets or Sets ProcedureStepId, if any. */
+    procedureStepId?: number | undefined;
     /** Gets or Sets LaborMinutes */
     laborMinutes!: number;
     /** Gets or Sets EquipmentMinutes */
@@ -16151,8 +16156,8 @@ export interface IProductStep {
     id?: number;
     /** Gets or Sets ProductId */
     productId?: number | undefined;
-    /** Gets or Sets ProcedureStepId */
-    procedureStepId: number;
+    /** Gets or Sets ProcedureStepId, if any. */
+    procedureStepId?: number | undefined;
     /** Gets or Sets LaborMinutes */
     laborMinutes: number;
     /** Gets or Sets EquipmentMinutes */
