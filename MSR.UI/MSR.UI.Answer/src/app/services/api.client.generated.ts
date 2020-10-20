@@ -15876,8 +15876,8 @@ export interface IWorkOrderTaskMonitorModel extends ITrackableModel {
 export class ProductStepModel implements IProductStepModel {
     id?: number;
     productId?: number;
-    procedureStepId?: number;
-    laborMinutes?: number | undefined;
+    procedureStepId!: number;
+    laborMinutes!: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -15950,8 +15950,8 @@ export class ProductStepModel implements IProductStepModel {
 export interface IProductStepModel {
     id?: number;
     productId?: number;
-    procedureStepId?: number;
-    laborMinutes?: number | undefined;
+    procedureStepId: number;
+    laborMinutes: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -16066,17 +16066,31 @@ export interface ICreateProductRequest {
 }
 
 export class ProductStep implements IProductStep {
+    /** Gets or Sets Id */
+    id?: number;
+    /** Gets or Sets ProductId */
     productId?: number | undefined;
+    /** Gets or Sets ProcedureStepId */
     procedureStepId!: number;
+    /** Gets or Sets LaborMinutes */
     laborMinutes!: number;
+    /** Gets or Sets EquipmentMinutes */
     equipmentMinutes?: number | undefined;
+    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
+    /** Gets or Sets Utilization */
     utilization?: number | undefined;
+    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
+    /** Gets or Sets EquipmentExpensePerMinute */
     equipmentExpensePerMinute?: number | undefined;
+    /** Gets or Sets RMAnnualRate */
     rmAnnualRate?: number | undefined;
+    /** Gets or Sets RMPerMinuteRate */
     rmPerMinuteRate?: number | undefined;
+    /** Title */
     title?: string | undefined;
+    /** PrintOrder */
     printOrder?: number | undefined;
 
     constructor(data?: IProductStep) {
@@ -16090,6 +16104,7 @@ export class ProductStep implements IProductStep {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.productId = _data["productId"];
             this.procedureStepId = _data["procedureStepId"];
             this.laborMinutes = _data["laborMinutes"];
@@ -16114,6 +16129,7 @@ export class ProductStep implements IProductStep {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["productId"] = this.productId;
         data["procedureStepId"] = this.procedureStepId;
         data["laborMinutes"] = this.laborMinutes;
@@ -16131,17 +16147,31 @@ export class ProductStep implements IProductStep {
 }
 
 export interface IProductStep {
+    /** Gets or Sets Id */
+    id?: number;
+    /** Gets or Sets ProductId */
     productId?: number | undefined;
+    /** Gets or Sets ProcedureStepId */
     procedureStepId: number;
+    /** Gets or Sets LaborMinutes */
     laborMinutes: number;
+    /** Gets or Sets EquipmentMinutes */
     equipmentMinutes?: number | undefined;
+    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
+    /** Gets or Sets Utilization */
     utilization?: number | undefined;
+    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
+    /** Gets or Sets EquipmentExpensePerMinute */
     equipmentExpensePerMinute?: number | undefined;
+    /** Gets or Sets RMAnnualRate */
     rmAnnualRate?: number | undefined;
+    /** Gets or Sets RMPerMinuteRate */
     rmPerMinuteRate?: number | undefined;
+    /** Title */
     title?: string | undefined;
+    /** PrintOrder */
     printOrder?: number | undefined;
 }
 
