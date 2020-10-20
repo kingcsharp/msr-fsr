@@ -241,7 +241,7 @@ export class InvoiceComponent implements OnInit {
       if (this.currentInvoice.id !== undefined) {
         basicReqData.id = this.currentInvoice.id;
         basicReqData.invoiceItems = this.currentInvoice.invoiceItems.map((item) => {
-          return new UpdateInvoiceItemRequest({id:item.workOrderId});
+          return new UpdateInvoiceItemRequest({id: item.workOrderId});
         });
         method = this.invoiceService.invoicePatch(env.apiVersion, new UpdateInvoiceRequest(basicReqData));
       } else {

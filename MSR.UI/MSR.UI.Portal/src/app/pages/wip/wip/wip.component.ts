@@ -122,9 +122,11 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(true);
         this.images = [];
         let count = response.object[0].workOrderTasks.length - 1;
         response.object[0].workOrderTasks.map(element => {
+          this.globals.showLoader(true);
           this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
             element.id, null, env.apiVersion)
             .pipe(take(1)).subscribe(responseHandler((resp) => {
@@ -144,6 +146,7 @@ export class WipComponent implements OnInit, AfterViewInit {
                 });
               }
               if (count === 0) {
+                this.globals.showLoader(false);
                 if (this.images.length > 0) {
                   this.displayBasic2 = true;
                 } else {
@@ -161,6 +164,7 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(true);
         this.files = [];
         let count = response.object[0].workOrderTasks.length - 1;
         this.gridFilesSaved = new GridSaved({
@@ -182,6 +186,7 @@ export class WipComponent implements OnInit, AfterViewInit {
         });
 
         response.object[0].workOrderTasks.map(element => {
+          this.globals.showLoader(true);
           this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
             element.id, null, env.apiVersion)
             .pipe(take(1)).subscribe(responseHandler((resp) => {
@@ -195,6 +200,7 @@ export class WipComponent implements OnInit, AfterViewInit {
                 });
               }
               if (count === 0) {
+                this.globals.showLoader(false);
                 if (this.files.length > 0) {
                   this.showFilesDialog = true;
                 } else {
@@ -226,9 +232,9 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
 
     this.globals.selectCustomerObservable.subscribe(response => {
-      if (response !== null) {
+      if (response !== null && response !== undefined) {
         this.setCustomerName();
-        this.getGridData();
+        this.getGridData(); 
       }
     });
   }

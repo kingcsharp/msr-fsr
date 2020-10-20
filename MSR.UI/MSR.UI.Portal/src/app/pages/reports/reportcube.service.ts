@@ -22,14 +22,20 @@ export class ReportCubeService {
     public getReport = async (reportInfo: ReportModel) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
         return this.http.get(reportInfo.apiEndPointURL, { headers: headers }).toPromise().then(response => {
-            return this.filterReportData(this.filterByCustomerName(response), reportInfo);
+            return this.filterReportData(this.filterByCustomer(response), reportInfo);
         });
     }
 
-    filterByCustomerName(response: any) {
+    filterByCustomer(response: any) {
         return response.filter(x => {
             if (x['CubeFinancial.customername'] !== undefined) {
                 return x['CubeFinancial.customername'] === this.globals.selectedCustomer.name;
+            }
+            if (x['CubePartsmonitors.customerid'] !== undefined) {
+                return x['CubePartsmonitors.customerid'] === this.globals.selectedCustomer.id;
+            }
+            if (x['CubeWorkorderparts.customername'] !== undefined) {
+                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
             }
             return true;
         });
