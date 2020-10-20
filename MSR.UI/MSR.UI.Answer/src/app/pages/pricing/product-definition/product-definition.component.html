@@ -18,21 +18,45 @@
   </div>
 
   <widget class="py-4">
-    <form data-parsley-validate data-cy="quote-create-form" class="parsleyjs product-form" data-parsley-priority-enabled="false"
-      (ngSubmit)="onSubmit()" novalidate="novalidate">
+    <form
+      data-cy="quote-create-form"
+      class="parsleyjs product-form"
+      (ngSubmit)="onSubmit()"
+      data-parsley-validate="false"
+      data-parsley-priority-enabled="false"
+      novalidate="novalidate"
+    >
       <div class="row mx-0 mb-lg">
         <div class="col-md-5">
           <div class="form-group">
             <label for="customerId">Customer :</label>
-            <p-dropdown *ngIf="getCustomersFlag" [class.hide]="mode === productPageModes.View" placeholder="Select Customer" name="customerId"
-              [options]="customersData" appendTo="body" [baseZIndex]="100001" [(ngModel)]="productData.customerId"
-              data-cy="product-select-customerid" [virtualScroll]="true" itemSize="30" [filter]="true" filterBy="label">
+            <p-dropdown
+              *ngIf="getCustomersFlag"
+              [class.hide]="mode === productPageModes.View"
+              placeholder="Select Customer"
+              name="customerId"
+              [options]="customersData"
+              appendTo="body"
+              [baseZIndex]="100001"
+              [(ngModel)]="productData.customerId"
+              [virtualScroll]="true"
+              itemSize="30"
+              [filter]="true"
+              filterBy="label"
+              data-cy="product-select-customerid"
+            >
             </p-dropdown>
-            <input [class.hide]="mode !== productPageModes.View" class="form-control input-transparent"
+            <input
+              [hidden]="mode !== productPageModes.View"
+              class="form-control input-transparent"
               name="customerName"
               [value]="mode === productPageModes.View ? getCustomerLabel(productData.customer) : productData.customerId"
-              data-cy="product-customer" readonly data-validate="parsley" data-parsley-trigger="change"
-              data-parsley-required="true" parsley-type="number">
+              data-cy="product-customer"
+              readonly
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+            >
           </div>
         </div>
 
@@ -85,9 +109,18 @@
           <div class="form-group">
             <label for="partId">Part :</label>
             <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent" *ngIf="getPartsFlag">
-              <p-dropdown placeholder="Select Part" name="partId" [options]="partsData" [baseZIndex]="100003"
-                [(ngModel)]="productData.partId" data-cy="product-select-partid" [virtualScroll]="true" itemSize="30"
-                [filter]="true" filterBy="label">
+              <p-dropdown
+                placeholder="Select Part"
+                name="partId"
+                [options]="partsData"
+                [baseZIndex]="100003"
+                [(ngModel)]="productData.partId"
+                data-cy="product-select-partid"
+                [virtualScroll]="true"
+                itemSize="30"
+                [filter]="true"
+                filterBy="label"
+              >
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
                 <button type="button" class="btn btn-primary" (click)="openUrlWithNewTab('app/parts/parts')"
@@ -101,10 +134,19 @@
                 </button>
               </div>
             </div>
-            <input [class.hide]="mode !== productPageModes.View" pInputText type="text"
-              class="form-control input-transparent" name="partName"
+            <input
+              [hidden]="mode !== productPageModes.View"
+              pInputText
+              type="text"
+              class="form-control input-transparent"
+              name="partName"
               [value]="mode === productPageModes.View ? getPartLabel(productData.part) : productData.partId"
-              data-cy="product-part" readonly>
+              data-cy="product-part"
+              readonly
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+            >
           </div>
         </div>
 
@@ -112,10 +154,19 @@
           <div class="form-group">
             <label for="procedureId">Procedure :</label>
             <div [class.hide]="mode === productPageModes.View" class="input-group input-group-transparent" *ngIf="getProceduresFlag">
-              <p-dropdown placeholder="Select Procedure" name="procedureId" [options]="proceduresData"
-                [baseZIndex]="100004" [(ngModel)]="productData.procedureId" (onChange)="onSelectProcedureId($event)"
-                data-cy="product-select-procedureid" [virtualScroll]="true" itemSize="30" [filter]="true"
-                filterBy="label">
+              <p-dropdown
+                placeholder="Select Procedure"
+                name="procedureId"
+                [options]="proceduresData"
+                [baseZIndex]="100004"
+                [(ngModel)]="productData.procedureId"
+                (onChange)="onSelectProcedureId($event)"
+                data-cy="product-select-procedureid"
+                [virtualScroll]="true"
+                itemSize="30"
+                [filter]="true"
+                filterBy="label"
+              >
               </p-dropdown>
               <div *ngIf="mode !== productPageModes.View" class="input-group-btn">
                 <!-- TODO: Add routing to procedure creation page -->
@@ -129,10 +180,18 @@
                 </button>
               </div>
             </div>
-            <input [class.hide]="mode !== productPageModes.View" pInputText type="text"
+            <input
+              [hidden]="mode !== productPageModes.View"
+              pInputText
+              type="text"
               class="form-control input-transparent" name="procedureName"
               [value]="mode === productPageModes.View ? getProcedureLabel(productData.procedure) : productData.procedureId"
-              data-cy="product-procedure" readonly>
+              data-cy="product-procedure"
+              readonly
+              data-validate="parsley"
+              data-parsley-trigger="change"
+              data-parsley-required="true"
+            >
           </div>
         </div>
       </div>

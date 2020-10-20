@@ -163,6 +163,9 @@ export class ProductDefinitionComponent implements OnInit {
         if (isCreateMode) {
           this.productData = new CreateProductRequest();
           this.productData.quoteId = this.quoteData.id;
+          this.productData.customerId = null;
+          this.productData.partId = null;
+          this.productData.procedureId = null;
           this.productData.revision = 0;
           this.productData.laborCost = 0;
           this.productData.equipmentCost = 0;
