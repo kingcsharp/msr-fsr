@@ -43,9 +43,6 @@ export class ReportComponent implements OnInit {
     this.reportService.report(true, env.apiVersion).subscribe(responseHandler(response => {
       this.data = response.object;
     }));
-
-
-
   }
 
   printCsvReport(reportId) {
