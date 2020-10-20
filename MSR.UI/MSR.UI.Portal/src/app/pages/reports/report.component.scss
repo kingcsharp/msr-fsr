@@ -110,29 +110,24 @@
         border-radius: 0 !important;
     }
 
-    // @media (max-width: 575.98px) {
-    //     .card {
-    //         max-width: 90vw;
-    //     }
-    // }
-    // @media (min-width: 576px) and (max-width: 767.98px) {
-    //     .card {
-    //         max-width: 45vw;
-    //     }
-    // }
-    // @media (min-width: 768px) and (max-width: 991.98px) {
-    //     .card {
-    //         max-width: 30vw;
-    //     }
-    // }
-    // @media (min-width: 992px) and (max-width: 1199.98px) {
-    //     .card {
-    //         max-width: 22.5vw;
-    //     }
-    // }
-    // @media (min-width: 1200px) {
-    //     .card {
-    //         max-width: 16vw;
-    //     }
-    // }
+    @media (max-width: 575.98px) {
+        .card {
+            max-width: 90vw;
+        }
+    }
+    @media (min-width: 576px) and (max-width: 767.98px) {
+        .card {
+            max-width: 45vw;
+        }
+    }
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .card {
+            max-width: 30vw;
+        }
+    }
+    @media (min-width: 992px) {
+        .card {
+            max-width: 22.5vw;
+        }
+    }
 }
