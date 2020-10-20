@@ -794,7 +794,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command)
         {
-            var workOrderViews = _unitOfWork.PortalWorkOrderViews.Query().Where(i => i.CustomerId == command.CustomerId);
+            var workOrderViews = _unitOfWork.PortalWorkOrderViews.Query()
+                                                                 .Where(i => i.CustomerId == command.CustomerId 
+                                                                        && ((i.StartDate >= command.FromDate && i.StartDate <= command.ToDate)
+                                                                             || (i.DueDate.HasValue && i.DueDate >= command.FromDate && i.DueDate <= command.ToDate)
+                                                                             || (i.InvoiceDate.HasValue && i.InvoiceDate >= command.FromDate && i.InvoiceDate <= command.ToDate)));
 
             if (command.PartId.HasValue)
             {
