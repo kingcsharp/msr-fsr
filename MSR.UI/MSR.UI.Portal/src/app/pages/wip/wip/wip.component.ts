@@ -115,9 +115,9 @@ export class WipComponent implements OnInit, AfterViewInit {
             .pipe(take(1)).subscribe(responseHandler((resp) => {
               if (resp.object.length > 0) {
                 resp.object.forEach((file: FileModel) => {
-                  if (file.contentType == 'image/gif' || file.contentType == 'image/tiff' ||
-                    file.contentType == 'image/webp' || file.contentType == 'image/jpeg'
-                    || file.contentType == 'image/png') {
+                  if (file.contentType === 'image/gif' || file.contentType === 'image/tiff' ||
+                    file.contentType === 'image/webp' || file.contentType === 'image/jpeg'
+                    || file.contentType === 'image/png') {
                     this.images.push({
                       id: file.entityId,
                       previewImageSrc: file.fileURL,
@@ -131,9 +131,8 @@ export class WipComponent implements OnInit, AfterViewInit {
               if (count === 0) {
                 if (this.images.length > 0) {
                   this.displayBasic2 = true;
-                }
-                else {
-                  this.toastr.error("Sorry, there are no pictures for the selected Work Order");
+                } else {
+                  this.toastr.error('Sorry, there are no pictures for the selected Work Order');
                 }
               }
               count--;
@@ -156,8 +155,8 @@ export class WipComponent implements OnInit, AfterViewInit {
             new ColumnsSaved({ id: 'name', label: 'Name', type: EnumColumnType.String, visible: true }),
             new ColumnsSaved({ id: 'supportingInfo', label: 'Actions', visible: true, type: EnumColumnType.Template, templateName: this.fileItem }),
           ],
-          gridClass:'formTbl',
-          showMyViewsFeature:false,
+          gridClass: 'formTbl',
+          showMyViewsFeature: false,
           storageId: 'wip_engineering_filesGr' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0'
         });
@@ -173,9 +172,9 @@ export class WipComponent implements OnInit, AfterViewInit {
             .pipe(take(1)).subscribe(responseHandler((resp) => {
               if (resp.object.length > 0) {
                 resp.object.forEach((file: FileModel) => {
-                  if (!(file.contentType == 'image/gif' || file.contentType == 'image/tiff' ||
-                    file.contentType == 'image/webp' || file.contentType == 'image/jpeg'
-                    || file.contentType == 'image/png')) {
+                  if (!(file.contentType === 'image/gif' || file.contentType === 'image/tiff' ||
+                    file.contentType === 'image/webp' || file.contentType === 'image/jpeg'
+                    || file.contentType === 'image/png')) {
                     this.files.push(file);
                   }
                 });
@@ -183,9 +182,8 @@ export class WipComponent implements OnInit, AfterViewInit {
               if (count === 0) {
                 if (this.files.length > 0) {
                   this.showFilesDialog = true;
-                }
-                else {
-                  this.toastr.error("Sorry, there are no files for the selected Work Order");
+                } else {
+                  this.toastr.error('Sorry, there are no files for the selected Work Order');
                 }
               }
               count--;
@@ -252,12 +250,13 @@ export class WipComponent implements OnInit, AfterViewInit {
   showReportInfo(reportType: EnumReport, row: any) {
     this.globals.showLoader(true);
     this.selectedReport = reportType;
-    if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId)
+    if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
       this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
           this.ncrWorkOrder = response.object[0];
           this.showNcrModal = true;
         }));
+    }
   }
 
   print() {
@@ -328,7 +327,6 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
-      //Current Step/Status
       new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem }),
       new ColumnsSaved({ id: 'invoiceName', label: 'Invoice #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Money }),

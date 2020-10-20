@@ -50,7 +50,7 @@ export class GridSaved implements IGridSaved {
             this.showMyViewsFeature = _data['showMyViewsFeature'];
             this.paginator = _data['paginator'];
             this.gridClass = _data['gridClass'];
-            
+
 
             if (Array.isArray(_data['columnsSaved'])) {
                 this.columnsSaved = [] as any;

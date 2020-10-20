@@ -51,7 +51,7 @@ export class Navbar implements OnInit {
   }
 
   roleChange(ev) {
-    this.globals.changeBuyer(ev.value.id === 1)
+    this.globals.changeBuyer(ev.value.id === 1);
   }
 
   customerChange() {
@@ -67,7 +67,7 @@ export class Navbar implements OnInit {
       this.showDropdown = true;
     }));
   }
-  // value: { name: x.name, id: x.id } 
+  // value: { name: x.name, id: x.id }
 
   updateUrl(ev) {
     this.hideImg = true;
