@@ -10,5 +10,7 @@ namespace MSR.Domain.Commands
         public int CustomerId { get; set; }
         public string PartName { get; set; }
         public int? PartId { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
     }
 }
