@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
 import * as moment from 'moment';
@@ -8,7 +8,7 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
   selector: 'pcalendar-wrapper',
   templateUrl: './pcalendar-wrapper.component.html'
 })
-export class PcalendarWrapperComponent implements OnInit {
+export class PcalendarWrapperComponent implements OnInit, OnDestroy {
   selectedDate: any;
   subscriptions: Subscription[] = [];
   selectionMode: string;
