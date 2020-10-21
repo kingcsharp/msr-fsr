@@ -4046,8 +4046,7 @@
         "parameters": [
           {
             "name": "IsPortal",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "boolean"
             },
@@ -5301,13 +5300,33 @@
             "x-position": 3
           },
           {
+            "name": "FromDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "ToDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
             "name": "version",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "x-position": 4
+            "x-position": 6
           }
         ],
         "responses": {
@@ -11358,7 +11377,6 @@
         "type": "object",
         "additionalProperties": true,
         "required": [
-          "procedureStepId",
           "laborMinutes"
         ],
         "properties": {
@@ -11372,7 +11390,8 @@
           },
           "procedureStepId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "laborMinutes": {
             "type": "integer",
@@ -11529,7 +11548,6 @@
         "type": "object",
         "additionalProperties": true,
         "required": [
-          "procedureStepId",
           "laborMinutes"
         ],
         "properties": {
@@ -11546,8 +11564,9 @@
           },
           "procedureStepId": {
             "type": "integer",
-            "description": "Gets or Sets ProcedureStepId",
-            "format": "int32"
+            "description": "Gets or Sets ProcedureStepId, if any.",
+            "format": "int32",
+            "nullable": true
           },
           "laborMinutes": {
             "type": "integer",
