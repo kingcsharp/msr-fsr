@@ -272,10 +272,12 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.Part = null;
             product.Customer = null;
 
-            foreach (var ps in product.ProductSteps)
-            {
-                ps.Product = null;
-                ps.ProductId = product.Id;
+            if (product.ProductSteps != null) {
+                foreach (var ps in product.ProductSteps)
+                {
+                    ps.Product = null;
+                    ps.ProductId = product.Id;
+                }
             }
         }
     }

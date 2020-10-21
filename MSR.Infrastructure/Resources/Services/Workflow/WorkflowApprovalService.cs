@@ -262,10 +262,19 @@ namespace MSR.Infrastructure.Resources.Services
                     var productApprovalChanges = new PendingApprovalPopoverModel();
                     int origStepCount = 0;
                     int newStepCount = productApproval.ProductStepApprovals.Count();
+                    int origLaborTotal = 0;
+                    int newLaborTotal = productApproval.ProductStepApprovals
+                        .Select(x => x.EquipmentMinutes.GetValueOrDefault() +
+                                     x.LaborMinutes.GetValueOrDefault())
+                        .Sum();
 
                     if (product != null && product.ProductSteps != null)
                     {
                         origStepCount = product.ProductSteps.Count();
+                        origLaborTotal = product.ProductSteps
+                            .Select(x => x.EquipmentMinutes.GetValueOrDefault() +
+                                         x.LaborMinutes.GetValueOrDefault())
+                            .Sum();
                     }
                     productApprovalChanges.AddRow("Name", product?.Name, productApproval.Name);
                     productApprovalChanges.AddRow("Revision", product?.Revision, productApproval.Revision);
@@ -277,6 +286,7 @@ namespace MSR.Infrastructure.Resources.Services
                     productApprovalChanges.AddRow("Total Sale Price", product?.TotalSalePrice, productApproval.TotalSalePrice);
                     productApprovalChanges.AddRow("Cycle Time", product?.CycleTime, productApproval.CycleTime);
                     productApprovalChanges.AddRow("Steps", origStepCount, newStepCount);
+                    productApprovalChanges.AddRow("Labor", origLaborTotal, newLaborTotal);
                     return productApprovalChanges;
                 case EnumApprovalTables.PurchaseOrderApproval:
                     var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -530,17 +540,9 @@ namespace MSR.Infrastructure.Resources.Services
             }
             else
             {
-                var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
-                if (product == null)
-                {
-                    throw new DomainException($"Product ID not found: {productApproval.ProductId}", DomainError.NotFound);
-                }
-                _mapper.Map(productApproval, product);
-                _unitOfWork.ProductApprovals.Update(productApproval);
-                product.Revision++;
-                _unitOfWork.Products.Update(product);
-                _unitOfWork.SaveChanges();
-                await _unitOfWork.LogApprovalTransaction(productApproval, productApproval.Id, status.Name, command.Comments);
+                var productCommand = _mapper.Map<UpdateProduct>(productApproval);
+                productCommand.Revision += 1;
+                await _productService.UpdateProductAsync(productCommand);
             }
 
             _unitOfWork.ProductApprovals.Delete(false, productApproval);
