@@ -154,6 +154,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                             }
                         }
                     }
+                    p.ProductSteps = p.ProductSteps.OrderBy(x => x.PrintOrder).ToList();
                 }
             }
 
