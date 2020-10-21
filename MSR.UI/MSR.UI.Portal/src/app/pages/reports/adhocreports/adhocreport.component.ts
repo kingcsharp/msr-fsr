@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-    ReportService, ReportModel
+    ReportService, ReportModel, CustomerService
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
 import { GridSaved } from '../../../models/lib/GridSaved';
 import { ReportCubeService } from '../reportcube.service';
+import { Subscription } from 'rxjs';
 
 declare let jQuery: any;
 
@@ -20,12 +21,13 @@ declare let jQuery: any;
     styleUrls: ['./adhocreport.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AdhocComponent implements OnInit, AfterViewInit {
+export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
     gridSaved: GridSaved;
     reportId: string;
     reportInfo: ReportModel;
     showReport: boolean;
     hasChart: boolean = false;
+    subscriptions: Subscription[] = [];
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
@@ -33,12 +35,20 @@ export class AdhocComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.route.params.subscribe(routeParams => {
+        const sub1 = this.route.params.subscribe(routeParams => {
             this.reportId = routeParams.id;
         });
+
+        this.subscriptions.push(sub1);
+
+
         if (this.globals.selectedCustomer !== undefined) {
             this.getReportData();
         }
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
     ngAfterViewInit(): void {

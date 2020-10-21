@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
@@ -13,14 +13,15 @@ import { CSRJsonModel, ProcessModel, PartModel } from '../../models/csr-json-mod
 import { responseHandler } from '../../utils/responseHandler';
 import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 declare let jQuery: any;
-
+//export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
 @Component({
   selector: '[sidebar]',
   templateUrl: './sidebar.template.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class Sidebar {
+export class Sidebar implements OnDestroy {
   @Output() displaySupportTicketModalDisplay = new EventEmitter();
   sidebarHeight: number = 0;
   sidebarMenu: any = 0;
@@ -137,14 +138,20 @@ export class Sidebar {
   CSRFormValidErrors: string[] = [];
   CSRToCreate: CSRJsonModel;
   showCSRDialog: boolean = false;
+  subscriptions: Subscription[] = [];
 
   constructor(private renderer: Renderer2, private el: ElementRef, public globals: Globals, private quoteService: QuoteService) {
-    this.globals.isBuyerObservable.subscribe(response => {
+    const subscription1 = this.globals.isBuyerObservable.subscribe(response => {
       if (this.globals.isBuyer !== undefined) {
         this.setAndGenerateMenu();
       }
     });
+    this.subscriptions.push(subscription1);
     this.setAndGenerateMenu();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   openCSRDialog() {
@@ -162,7 +169,7 @@ export class Sidebar {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
-      requestData.customerId = this.globals.selectedCustomer;
+      requestData.customerId = this.globals.selectedCustomer.id;
       requestData.customerRequirementJson = JSON.stringify(this.CSRToCreate);
       this.quoteService.quotePost(env.apiVersion, requestData)
         .pipe(take(1))

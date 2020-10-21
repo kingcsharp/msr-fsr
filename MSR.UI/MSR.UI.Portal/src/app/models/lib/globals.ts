@@ -42,7 +42,10 @@ export class Globals {
     }
 
     changeCustomer(customer) {
-        this.selectCustomerSource.next(this.selectedCustomer = customer);
+        this.user.customer = customer;
+        this.updateUser(this.user);
+        this.selectedCustomer = customer;
+        this.selectCustomerSource.next(this.selectedCustomer);
     }
 
     constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
@@ -106,9 +109,11 @@ export class Globals {
         if (localStorage.user !== undefined) {
             this.user = JSON.parse(localStorage.user);
             this.user.timezonePipe = this.getOffset();
+            if (!this.user.isAnswerUser && this.user.customer !== undefined) {
+                this.changeCustomer(this.user.customer);
+            }
         }
         this.setSelectedCustomerAndBuyerStatus();
-
     }
 
     showLoader(isOn) {
@@ -201,7 +206,6 @@ export class Globals {
     setSelectedCustomerAndBuyerStatus() {
         if (this.user && !this.user.isAnswerUser) {
             this.isBuyer = this.user.roles[0].name === 'Client Buyer';
-            this.selectedCustomer = new Customer({ id: this.user.customerId });
         }
     }
 

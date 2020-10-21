@@ -11,7 +11,7 @@ import { ViewSaved } from '../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../models/lib/Utils';
 import { Subject } from 'rxjs';
 import { CSVConverterService } from '../../services/csvconverter.service';
@@ -30,6 +30,7 @@ export class ReportComponent implements OnInit {
   query: any = [];
   querySubject: any;
   repData: any;
+  subscriptions: Subscription[] = [];
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService, private customerService: CustomerService,
     private elem: ElementRef, private reportService: ReportService, private cSVConverterService: CSVConverterService,
     private reportCubeService: ReportCubeService) {
@@ -37,15 +38,14 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.globals.user.isAnswerUser) {
-      this.customerService.customerGet(this.globals.user.customerId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
-        this.globals.changeCustomer(response.object[0]);
-      }));
-    }
-
-    this.reportService.report(true, env.apiVersion).subscribe(responseHandler(response => {
+    const sub1 = this.reportService.report(true, env.apiVersion).subscribe(responseHandler(response => {
       this.data = response.object;
     }));
+    this.subscriptions.push(sub1);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   printCsvReport(reportId) {
@@ -56,7 +56,5 @@ export class ReportComponent implements OnInit {
       this.globals.showLoader(false);
       this.cSVConverterService.downloadFile(resp, reportColumns, reportInfo.name);
     });
-
   }
-
 }
