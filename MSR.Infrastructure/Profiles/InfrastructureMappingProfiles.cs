@@ -263,7 +263,10 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.LaborMinutes, opts => opts.MapFrom(src => src.LaborTime))
                 .ForMember(dest => dest.EquipmentMinutes, opts => opts.MapFrom(src => src.EquipmentTime));
 
-            CreateMap<Domain.Models.ProductStepModel, Resources.EntityFramework.Entities.ProductStep>();
+            CreateMap<ProductStepModel, ProductStep>();
+            CreateMap<ProductStepModel, ProductStepApproval>()
+                .ForMember(dest => dest.ProductStepId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
             #endregion
 
             // Monitor

@@ -58,6 +58,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<WorkflowGroupStageMap> _workflowGroupStageMaps;
         private IRepository<DocumentApproval> _documentApprovals;
         private IRepository<ProductApproval> _productApprovals;
+        private IRepository<ProductStepApproval> _productStepApprovals;
         private IRepository<Document> _documents;
         private IRepository<DocumentRoleMap> _documentRoleMaps;
         private IRepository<DocumentEntityMap> _documentEntityMap;
@@ -117,6 +118,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<PartApproval> PartApprovals { get { return _partApproval ??= new EFRepository<PartApproval>(Context); } }
         public IRepository<DocumentApproval> DocumentApprovals { get { return _documentApprovals ?? (_documentApprovals = new EFRepository<DocumentApproval>(Context)); } }
         public IRepository<ProductApproval> ProductApprovals { get { return _productApprovals ?? (_productApprovals = new EFRepository<ProductApproval>(Context)); } }
+        public IRepository<ProductStepApproval> ProductStepApprovals { get { return _productStepApprovals ?? (_productStepApprovals = new EFRepository<ProductStepApproval>(Context)); } }
         public IRepository<ProcedureApproval> ProcedureApprovals { get { return _procedureApproval ?? (_procedureApproval = new EFRepository<ProcedureApproval>(Context)); } }
         public IRepository<ProcedureStepApproval> ProcedureStepApprovals { get { return _procedureStepApproval ?? (_procedureStepApproval = new EFRepository<ProcedureStepApproval>(Context)); } }
         public IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get { return _procedureStepDocumentApproval ?? (_procedureStepDocumentApproval = new EFRepository<ProcedureStepDocumentApproval>(Context)); } }

@@ -36,6 +36,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get; }
         IRepository<DocumentApproval> DocumentApprovals { get; }
         IRepository<ProductApproval> ProductApprovals { get; }
+        IRepository<ProductStepApproval> ProductStepApprovals { get; }
         IRepository<ProcedureStepMonitorApproval> ProcedureStepMonitorApprovals { get; }
         IRepository<PurchaseOrderApproval> PurchaseOrderApprovals { get; }
         IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get; }

@@ -214,34 +214,43 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             product.QuoteId = command.QuoteId ?? product.QuoteId;
             product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
 
-            product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
-
-
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
+                product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
+
                 // Save product changes
                 await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
-                RemoveReferences(product);
-
-                return _mapper.Map<ProductModel>(product);
-            }
-            else
-            {
-                RemoveReferences(product);
+                var model = _mapper.Map<ProductModel>(product);
+                RemoveReferences(model);
+                return model;
             }
 
             var approval = _mapper.Map<ProductApproval>(product);
+
+            // Ignore changes made thus far to product, since we can't approve them.
+            _unitOfWork.Products.Detach(product);
+
+            var steps = _mapper.Map<ICollection<ProductStepApproval>>(command.ProductSteps);
+
             approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
             approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
             approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
             _unitOfWork.ProductApprovals.Add(approval);
             await _unitOfWork.SaveChangesAsync();
+
+            foreach (ProductStepApproval step in steps)
+            {
+                step.ProductApprovalId = approval.Id;
+                _unitOfWork.ProductStepApprovals.Add(step);
+            }
+            await _unitOfWork.SaveChangesAsync();
+
             return _mapper.Map<ProductModel>(approval);
         }
 
-        private void RemoveReferences(Product product)
+        private void RemoveReferences(ProductModel product)
         {
             product.Quote = null;
             product.Procedure = null;
