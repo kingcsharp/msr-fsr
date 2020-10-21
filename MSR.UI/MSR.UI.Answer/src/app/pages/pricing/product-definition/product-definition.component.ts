@@ -283,14 +283,11 @@ export class ProductDefinitionComponent implements OnInit {
         usefulLife: $event.value.usefulLife,
         utilizationTime: $event.value.utilization,
         printOrder: index + 1,
-        stepText: $event.value.stepText,
         title: $event.value.title
       });
-      const stepTemplateIndex = this.procedureStepTemplatesData.findIndex((v) => v.id === $event.value.id);
-      const stepTemplate = stepTemplateIndex > -1 ? this.procedureStepTemplatesData[stepTemplateIndex] : null;
-
       const productStepValue = this.calculateProcedureStepValues(step);
-      this.productSteps[index] = {...productStepValue, stepTemplate};
+      const stepTemplate = this.productSteps[index].stepTemplate;
+      this.productSteps[index] = {stepTemplate, ...productStepValue};
       this.getStepsValues(true);
     }
   }
