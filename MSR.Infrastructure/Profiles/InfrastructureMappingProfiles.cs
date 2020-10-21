@@ -264,6 +264,8 @@ namespace MSR.Infrastructure.Profiles
                     srcMember != null && !srcMember.Equals(0)));
 
             CreateMap<ProcedureStep, ProductStepModel>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProcedureStepId, opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.LaborMinutes, opts => opts.MapFrom(src => src.LaborTime))
                 .ForMember(dest => dest.EquipmentMinutes, opts => opts.MapFrom(src => src.EquipmentTime));
 
