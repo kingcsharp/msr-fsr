@@ -69,7 +69,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 ps.Product = product;
             }
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
+            if (false && CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
 
                 // Save the new Product
@@ -91,10 +91,14 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             _unitOfWork.ProductApprovals.Add(approval);
             await _unitOfWork.SaveChangesAsync();
 
-            foreach (var ps in product.ProductSteps)
+            var steps = _mapper.Map<ICollection<ProductStepApproval>>(command.ProductSteps);
+
+            foreach (ProductStepApproval step in steps)
             {
-                ps.Product = null;
+                step.ProductApprovalId = approval.Id;
+                _unitOfWork.ProductStepApprovals.Add(step);
             }
+            await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<ProductModel>(approval);
         }
