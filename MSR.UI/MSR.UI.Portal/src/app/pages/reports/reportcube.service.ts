@@ -45,6 +45,10 @@ export class ReportCubeService {
             if (x['CubeWorkorderpartscyclecount.customername'] !== undefined) {
                 return x['CubeWorkorderpartscyclecount.customername'] === this.globals.selectedCustomer.name;
             }
+            if (x['MonitorsHistorybyWorkOrder.customerid'] !== undefined) {
+                return x['MonitorsHistorybyWorkOrder.customerid'] === this.globals.selectedCustomer.id;
+            }
+
             return true;
         });
     }
@@ -110,13 +114,15 @@ export class ReportCubeService {
             case 'MonitorsHistorybyWorkOrder':
                 return [
                     new ColumnsSaved({ id: 'value', label: 'Monitor Value', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'customerid', label: 'Customer Id', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'customerid', label: 'Customer Id', visible: false, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
                     new ColumnsSaved({ id: 'locationname', label: 'Location', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'partname', label: 'Part Names', visible: true, type: this.enumColumnType.StringArray, dropdownHeader: true, multipleValues: true }),
                     new ColumnsSaved({ id: 'workordername', label: 'WO Name', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'lastupdatedon', label: 'Updated On', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '6rem' } }),
+                    new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String })
                 ];
             case 'CombinedFinancialDatabyWorkOrder':
                 return [
@@ -184,14 +190,33 @@ export class ReportCubeService {
         return fromToValues;
     }
 
+    private setName(row, prop1, prop2, separator) {
+        var name = '';
+        if (row[prop1] !== undefined && row[prop1] !== null) {
+            name += row[prop1].replace(/\s/g, '');
+        }
+        if (row[prop2] !== undefined && row[prop2] !== null) {
+            name += separator + row[prop2].replace(/\s/g, '');
+        }
+        return name;
+    }
+
+    getCycleCountNr(row, prop) {
+        const cycleCount = row[prop];
+        if (isNaN(cycleCount)) {
+            return 0;
+        }
+        return cycleCount;
+    }
+
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'PartsCycleCountsbyWorkOrderDate':
                 //Reports Cycle Counts by PArtNumber and SerialNumber
                 let dataDicPartsCycleCounts = {};
-                // const resultData = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeWorkorderpartscyclecount.duedate']).format('MM-YYYY') + this.splitChars + elem['CubeWorkorderpartscyclecount.partnumber'].replace(/\s/g, '') + '-' + elem['CubeWorkorderpartscyclecount.serialnumber'].replace(/\s/g, '');
+                    const elemKey = moment(elem['CubeWorkorderpartscyclecount.duedate']).format('MM-YYYY') + this.splitChars + + this.setName(elem, 'CubeWorkorderpartscyclecount.partnumber', 'CubeWorkorderpartscyclecount.serialnumber', '-');
+                    const cycleCount = this.getCycleCountNr(elem, 'CubeWorkorderpartscyclecount.cyclecount');
                     if (dataDicPartsCycleCounts[elemKey] === undefined) {
                         dataDicPartsCycleCounts[elemKey] = {
                             elemKey: elemKey,
@@ -206,10 +231,10 @@ export class ReportCubeService {
                             kitname: elem['CubeWorkorderpartscyclecount.kitname'],
                             ponumber: elem['CubeWorkorderpartscyclecount.ponumber'],
                             mttn: elem['CubeWorkorderpartscyclecount.mttn'],
-                            cyclecount: elem['CubeWorkorderpartscyclecount.cyclecount']
+                            cyclecount: cycleCount
                         };
                     } else {
-                        dataDicPartsCycleCounts[elemKey].cyclecount += elem['CubeWorkorderpartscyclecount.cyclecount'];
+                        dataDicPartsCycleCounts[elemKey].cyclecount += cycleCount;
                     }
                 });
                 const chartInfoPartsCycleCounts = new ChartInfo({
@@ -230,23 +255,45 @@ export class ReportCubeService {
 
                 return this.getResultDataAndChart(chartInfoPartsCycleCounts);
             case 'MonitorsHistorybyWorkOrder':
-                const workInProcessbyWorkOrder = data.map(elem => {
-                    // we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
-                    const partName = elem['CubePartsmonitors.partname'];
-                    if (partName === null) {
-                        elem['partname'] = [];
+                let dataDicworkInProcessbyWorkOrder = {};
+                data.map(elem => {
+                    const elemKey = moment(elem['CubePartsmonitors.lastupdatedon']).format('MM-YYYY') + this.splitChars + this.setName(elem, 'CubePartsmonitors.partnumber', 'CubePartsmonitors.serialnumber', '-');
+                    const cycleCount = this.getCycleCountNr(elem, 'CubePartsmonitors.cyclecount');
+                    if (dataDicworkInProcessbyWorkOrder[elemKey] === undefined) {
+                        dataDicworkInProcessbyWorkOrder[elemKey] = {
+                            elemKey: elemKey,
+                            lastupdatedon: moment(elem['CubePartsmonitors.lastupdatedon']),
+                            customerid: elem['CubePartsmonitors.customerid'],
+                            partnumber: elem['CubePartsmonitors.partnumber'],
+                            serialnumber: elem['CubePartsmonitors.serialnumber'],
+                            locationname: elem['CubePartsmonitors.locationname'],
+                            partname: [{ name: elem['CubePartsmonitors.partname'], id: elem['CubePartsmonitors.partname'] }],
+                            //partname
+                            workordername: elem['CubePartsmonitors.workordername'],
+                            value: elem['CubePartsmonitors.value'],
+                            lastupdatedby: elem['CubePartsmonitors.lastupdatedby'],
+                            cyclecount: cycleCount
+                        };
                     } else {
-                        elem['partname'] = elem['CubePartsmonitors.partname'].map((x) => {
-                            return {
-                                name: x,
-                                id: x
-                            };
-                        });
+                        dataDicworkInProcessbyWorkOrder[elemKey].cyclecount += cycleCount;
                     }
-
-                    return elem;
                 });
-                return workInProcessbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
+                const chartInfoDicworkInProcessbyWorkOrder = new ChartInfo({
+                    chartData: dataDicworkInProcessbyWorkOrder,
+                    chartType: EnumChartType.Bar,
+                    stackBy: 'cyclecount',
+                    chartTitle: 'Parts Cycle Counts',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Cycle Count',
+                    tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
+                    chartTOptions: {
+                        tooltip: {
+                            headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: '<b>Month:</b> {point.x}  <b>Cycle Count:</b> {point.y}'
+                        }
+                    }
+                });
+                return this.getResultDataAndChart(chartInfoDicworkInProcessbyWorkOrder);
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
