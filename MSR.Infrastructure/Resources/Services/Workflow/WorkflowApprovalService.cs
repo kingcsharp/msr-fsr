@@ -251,9 +251,22 @@ namespace MSR.Infrastructure.Resources.Services
                     this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
                     return procedureApprovalChanges;
                 case EnumApprovalTables.ProductApproval:
-                    var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var product = await _unitOfWork.Products.Query().FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
+                    var productApproval = await _unitOfWork.ProductApprovals
+                        .Query()
+                        .Include(x => x.ProductStepApprovals)
+                        .FirstOrDefaultAsync(x => x.Id == command.Id);
+                    var product = await _unitOfWork.Products
+                        .Query()
+                        .Include(x => x.ProductSteps)
+                        .FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
                     var productApprovalChanges = new PendingApprovalPopoverModel();
+                    int origStepCount = 0;
+                    int newStepCount = productApproval.ProductStepApprovals.Count();
+
+                    if (product != null && product.ProductSteps != null)
+                    {
+                        origStepCount = product.ProductSteps.Count();
+                    }
                     productApprovalChanges.AddRow("Name", product?.Name, productApproval.Name);
                     productApprovalChanges.AddRow("Revision", product?.Revision, productApproval.Revision);
                     // TODO: there is no such field
@@ -263,6 +276,7 @@ namespace MSR.Infrastructure.Resources.Services
                     productApprovalChanges.AddRow("Sales Tax", product?.SalesTax, productApproval.SalesTax);
                     productApprovalChanges.AddRow("Total Sale Price", product?.TotalSalePrice, productApproval.TotalSalePrice);
                     productApprovalChanges.AddRow("Cycle Time", product?.CycleTime, productApproval.CycleTime);
+                    productApprovalChanges.AddRow("Steps", origStepCount, newStepCount);
                     return productApprovalChanges;
                 case EnumApprovalTables.PurchaseOrderApproval:
                     var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -511,6 +525,7 @@ namespace MSR.Infrastructure.Resources.Services
             if (productApproval.ProductId == null)
             {
                 var productCommand = _mapper.Map<CreateProduct>(productApproval);
+                productCommand.Revision = 1;
                 await _productService.CreateProductAsync(productCommand);
             }
             else
