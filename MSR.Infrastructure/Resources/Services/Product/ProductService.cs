@@ -62,26 +62,31 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.PartId}", DomainError.NotFound);
             }
 
-            var product = _mapper.Map<Product>(command);
-
-            foreach (var ps in product.ProductSteps?.ToList())
-            {
-                ps.Product = product;
-            }
-
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
+                var product = _mapper.Map<Product>(command);
+
+                if (product.ProductSteps != null)
+                {
+                    foreach (ProductStep ps in product.ProductSteps)
+                    {
+                        ps.Product = product;
+                        // The ID copied from the command is the procedure step ID.  We're
+                        // creating a new copy of that step, so blank the ID.
+                        ps.Id = 0;
+                    }
+                }
 
                 // Save the new Product
                 await _unitOfWork.Products.AddAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
-                foreach (var ps in product.ProductSteps)
+                var ret = _mapper.Map<ProductModel>(product);
+                foreach (var ps in ret.ProductSteps)
                 {
                     ps.Product = null;
                 }
-
-                return _mapper.Map<ProductModel>(product);
+                return ret;
             }
 
             var approval = _mapper.Map<ProductApproval>(command);
@@ -96,6 +101,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             foreach (ProductStepApproval step in steps)
             {
                 step.ProductApprovalId = approval.Id;
+                step.ProductStepId = null;
                 _unitOfWork.ProductStepApprovals.Add(step);
             }
             await _unitOfWork.SaveChangesAsync();
@@ -168,13 +174,17 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException($"{nameof(Product)} not found with ID: {command.Id}");
             }
 
-            var quote = await _unitOfWork.Quotes
-                                .Query()
-                                .FirstOrDefaultAsync(i => i.Id == command.QuoteId);
-
-            if (quote is null)
+            if (command.QuoteId.HasValue)
             {
-                throw new DomainException($"{nameof(Quote)} not found with ID: {command.QuoteId}");
+                // TODO: this isn't used in this function.
+                var quote = await _unitOfWork.Quotes
+                                    .Query()
+                                    .FirstOrDefaultAsync(i => i.Id == command.QuoteId);
+
+                if (quote is null)
+                {
+                    throw new DomainException($"{nameof(Quote)} not found with ID: {command.QuoteId}");
+                }
             }
 
             var customer = await _unitOfWork.Customers

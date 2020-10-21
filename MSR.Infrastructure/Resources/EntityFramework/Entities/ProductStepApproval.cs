@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
@@ -20,6 +21,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public decimal? RMPerMinuteRate { get; set; }
         public int? ProductStepId { get; set; }
 
+        [MaxLength(100)]
+        public string Title { get; set; }
 
+        public int? PrintOrder { get; set; }
     }
 }
