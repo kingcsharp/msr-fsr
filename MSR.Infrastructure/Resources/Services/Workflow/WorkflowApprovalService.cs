@@ -24,14 +24,21 @@ namespace MSR.Infrastructure.Resources.Services
         private readonly IMapper _mapper;
         private readonly IPartService _partService;
         private readonly IFileService _fileService;
+        private readonly IProductService _productService;
 
-        public WorkflowApprovalService(IUnitOfWork unitOfWork, IMapper mapper, IPartService partService, IFileService fileService)
+        public WorkflowApprovalService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IPartService partService,
+            IFileService fileService,
+            IProductService productService
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _partService = partService;
             _fileService = fileService;
-
+            _productService = productService;
         }
 
         public async Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command)
@@ -496,15 +503,15 @@ namespace MSR.Infrastructure.Resources.Services
 
         private async Task<ApprovalEntity> ApproveProduct(PostApprovalModel command, Status status)
         {
-            var productApproval = await _unitOfWork.ProductApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
+            var productApproval = await _unitOfWork.ProductApprovals
+                .Query()
+                .Include(x => x.ProductStepApprovals)
+                .FirstOrDefaultAsync(x => x.Id == command.Id);
 
             if (productApproval.ProductId == null)
             {
-                var product = _mapper.Map<EntityFramework.Entities.Product>(productApproval);
-                product.Revision = 1;
-                await _unitOfWork.Products.AddAsync(product);
-                await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.LogApprovalTransaction(product, product.Id, status.Name, command.Comments);
+                var productCommand = _mapper.Map<CreateProduct>(productApproval);
+                await _productService.CreateProductAsync(productCommand);
             }
             else
             {

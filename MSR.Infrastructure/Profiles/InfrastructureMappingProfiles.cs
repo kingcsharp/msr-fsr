@@ -66,7 +66,11 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<Product, ProductModel>().ReverseMap();
             CreateMap<UpdateProduct, ProductApproval>().ReverseMap();
-            CreateMap<CreateProduct, ProductApproval>().ReverseMap();
+            CreateMap<ProductApproval, CreateProduct>()
+                .ForMember(dest => dest.ProductSteps, opts => opts.MapFrom(src => src.ProductStepApprovals));
+            CreateMap<ProductStepApproval, ProductStepModel>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductStepId));
+
             CreateMap<Resources.EntityFramework.Entities.ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
             CreateMap<CreatePurchase, Purchase>().ReverseMap();

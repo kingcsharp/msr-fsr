@@ -69,7 +69,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 ps.Product = product;
             }
 
-            if (false && CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
+            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
 
                 // Save the new Product
