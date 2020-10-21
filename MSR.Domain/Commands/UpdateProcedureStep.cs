@@ -20,5 +20,6 @@ namespace MSR.Domain.Commands
         public List<Role> Roles { get; set; }
         public int procedureStepTypeId { get; set; }
         public int? LaborTime { get; set; }
+        public int? UsefulLife { get; set; }
     }
 }

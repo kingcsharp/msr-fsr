@@ -186,7 +186,6 @@ export class ProcedureEditComponent implements OnInit {
     return this.globals.hasPrivilege(EnumMenuItem.Locations, privName);
   }
 
-
   openConfirmDeleteStepDialog(procedureStep) {
     this.procedureStepToDelete = procedureStep;
     this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
@@ -221,7 +220,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureStepRequest.stepText = procedureStep.stepText;
     updateProcedureStepRequest.title = procedureStep.title;
     updateProcedureStepRequest.usefulLife = procedureStep.usefulLife;
-    updateProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
+    updateProcedureStepRequest.utilization = procedureStep.utilization;
     updateProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
     updateProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1;
 
@@ -253,7 +252,7 @@ export class ProcedureEditComponent implements OnInit {
           updateAffectedProcedureStepRequest.stepText = procedureStepToUpdate.stepText;
           updateAffectedProcedureStepRequest.title = procedureStepToUpdate.title;
           updateAffectedProcedureStepRequest.usefulLife = procedureStepToUpdate.usefulLife;
-          updateAffectedProcedureStepRequest.utilizationTime = procedureStepToUpdate.utilizationTime;
+          updateAffectedProcedureStepRequest.utilization = procedureStepToUpdate.utilization;
           updateAffectedProcedureStepRequest.procedureStepTypeId = procedureStepToUpdate.selectedProcedureStepTypeId;
           updateAffectedProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStepToUpdate.id) + 1;
           updateAffectedProcedureStepRequests.push(updateAffectedProcedureStepRequest);
@@ -310,7 +309,7 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepToAdd.stepText = '';
       procedureStepToAdd.title = '';
       procedureStepToAdd.usefulLife = 0;
-      procedureStepToAdd.utilizationTime = 0;
+      procedureStepToAdd.utilization = 0;
       procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1]?.title;
       this.procedureSteps.push(procedureStepToAdd);
       this.procedureSteps = [...this.procedureSteps];
@@ -341,7 +340,7 @@ export class ProcedureEditComponent implements OnInit {
         procedureStepToAdd.title = procedureStepTemplateToAdd.title;
         procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
         procedureStepToAdd.equipmentTime = 0;
-        procedureStepToAdd.utilizationTime = procedureStepTemplateToAdd.utilization;
+        procedureStepToAdd.utilization = procedureStepTemplateToAdd.utilization;
         procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1]?.title;
         this.procedureSteps.push(procedureStepToAdd);
         this.selectedProcedureStepTemplate = undefined;
@@ -368,7 +367,7 @@ export class ProcedureEditComponent implements OnInit {
     createProcedureStepRequest.stepText = procedureStep.stepText;
     createProcedureStepRequest.title = procedureStep.title;
     createProcedureStepRequest.usefulLife = procedureStep.usefulLife;
-    createProcedureStepRequest.utilizationTime = procedureStep.utilizationTime;
+    createProcedureStepRequest.utilization = procedureStep.utilization;
     createProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
     this.globals.showLoader(true);
     this.procedureService.stepPost(this.procedure.id, env.apiVersion, createProcedureStepRequest).subscribe(responseHandler((response) => {

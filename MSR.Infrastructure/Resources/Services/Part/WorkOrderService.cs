@@ -1014,7 +1014,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderGridSummary.PercentageOfTasksCompletedNumerator = numer;
 
                 // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
+                double denomTime = workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
                 decimal numerTime = workOrderModel.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
                 if (denomTime > 0)
                 {

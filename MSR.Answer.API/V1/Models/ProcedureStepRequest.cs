@@ -65,7 +65,7 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets LaborTime
         /// </summary>
         [DataMember(Name="laborTime")]
-        public int? LaborTime { get; set; }
+        public double? LaborTime { get; set; }
 
         /// <summary>
         /// Gets or Sets ReplacementCost
@@ -76,8 +76,8 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets UtilizationTime
         /// </summary>
-        [DataMember(Name="utilizationTime")]
-        public float? UtilizationTime { get; set; }
+        [DataMember(Name="utilization")]
+        public float? Utilization { get; set; }
 
         /// <summary>
         /// Gets or Sets EquipmentTime
@@ -122,7 +122,7 @@ namespace MSR.Answer.API.V1.Models
             sb.Append("  LaborTime: ").Append(LaborTime).Append("\n");
             sb.Append("  EquipmentTime: ").Append(EquipmentTime).Append("\n");
             sb.Append("  ReplacementCost: ").Append(ReplacementCost).Append("\n");
-            sb.Append("  UtilizationTime: ").Append(UtilizationTime).Append("\n");
+            sb.Append("  UtilizationTime: ").Append(Utilization).Append("\n");
             sb.Append("  UsefulLife: ").Append(UsefulLife).Append("\n");
             sb.Append("  ReferenceFiles: ").Append(ReferenceFiles).Append("\n");
             sb.Append("  Roles: ").Append(Roles).Append("\n");
@@ -218,9 +218,9 @@ namespace MSR.Answer.API.V1.Models
                     ReplacementCost.Equals(other.ReplacementCost)
                 ) &&
                 (
-                    UtilizationTime == other.UtilizationTime ||
-                    UtilizationTime != null &&
-                    UtilizationTime.Equals(other.UtilizationTime)
+                    Utilization == other.Utilization ||
+                    Utilization != null &&
+                    Utilization.Equals(other.Utilization)
                 ) &&
                 (
                     UsefulLife == other.UsefulLife ||
@@ -271,8 +271,8 @@ namespace MSR.Answer.API.V1.Models
                     hashCode = hashCode * 59 + EquipmentTime.GetHashCode();
                     if (ReplacementCost != null)
                     hashCode = hashCode * 59 + ReplacementCost.GetHashCode();
-                    if (UtilizationTime != null)
-                    hashCode = hashCode * 59 + UtilizationTime.GetHashCode();
+                    if (Utilization != null)
+                    hashCode = hashCode * 59 + Utilization.GetHashCode();
                     if (UsefulLife != null)
                     hashCode = hashCode * 59 + UsefulLife.GetHashCode();
                     if (ReferenceFiles != null)

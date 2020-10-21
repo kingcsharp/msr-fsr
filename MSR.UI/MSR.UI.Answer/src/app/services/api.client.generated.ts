@@ -12696,7 +12696,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     laborTime?: number | undefined;
     equipmentTime?: number | undefined;
     replacementCost?: number | undefined;
-    utilizationTime?: number | undefined;
+    utilization?: number | undefined;
     usefulLife?: number | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
@@ -12726,7 +12726,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
             this.laborTime = _data["laborTime"];
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
-            this.utilizationTime = _data["utilizationTime"];
+            this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
@@ -12764,7 +12764,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
         data["laborTime"] = this.laborTime;
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
-        data["utilizationTime"] = this.utilizationTime;
+        data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
         if (Array.isArray(this.referenceFiles)) {
             data["referenceFiles"] = [];
@@ -12795,7 +12795,7 @@ export interface IProcedureStepModel {
     laborTime?: number | undefined;
     equipmentTime?: number | undefined;
     replacementCost?: number | undefined;
-    utilizationTime?: number | undefined;
+    utilization?: number | undefined;
     usefulLife?: number | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
@@ -12826,7 +12826,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
     /** Gets or Sets UtilizationTime */
-    utilizationTime?: number | undefined;
+    utilization?: number | undefined;
     /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */
@@ -12856,7 +12856,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             this.laborTime = _data["laborTime"];
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
-            this.utilizationTime = _data["utilizationTime"];
+            this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
@@ -12891,7 +12891,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
         data["laborTime"] = this.laborTime;
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
-        data["utilizationTime"] = this.utilizationTime;
+        data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
         if (Array.isArray(this.referenceFiles)) {
             data["referenceFiles"] = [];
@@ -12932,7 +12932,7 @@ export interface ICreateProcedureStepRequest {
     /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
     /** Gets or Sets UtilizationTime */
-    utilizationTime?: number | undefined;
+    utilization?: number | undefined;
     /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */
@@ -13346,7 +13346,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
     /** Gets or Sets UtilizationTime */
-    utilizationTime?: number | undefined;
+    utilization?: number | undefined;
     /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */
@@ -13377,7 +13377,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             this.laborTime = _data["laborTime"];
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
-            this.utilizationTime = _data["utilizationTime"];
+            this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
             if (Array.isArray(_data["referenceFiles"])) {
                 this.referenceFiles = [] as any;
@@ -13413,7 +13413,7 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
         data["laborTime"] = this.laborTime;
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
-        data["utilizationTime"] = this.utilizationTime;
+        data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
         if (Array.isArray(this.referenceFiles)) {
             data["referenceFiles"] = [];
@@ -13456,7 +13456,7 @@ export interface IUpdateProcedureStepRequest {
     /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
     /** Gets or Sets UtilizationTime */
-    utilizationTime?: number | undefined;
+    utilization?: number | undefined;
     /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */

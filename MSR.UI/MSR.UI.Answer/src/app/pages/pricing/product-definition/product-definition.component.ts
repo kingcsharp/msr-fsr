@@ -264,7 +264,7 @@ export class ProductDefinitionComponent implements OnInit {
         laborTime: $event.value.laborTime,
         replacementCost: $event.value.replacementCost,
         usefulLife: $event.value.usefulLife,
-        utilizationTime: $event.value.utilization,
+        utilization: $event.value.utilization,
         printOrder: index + 1,
         stepText: $event.value.stepText,
         title: $event.value.title
@@ -368,8 +368,8 @@ export class ProductDefinitionComponent implements OnInit {
   calculateStepValues(step: ProcedureStepModel) {
     const laboar_chage = step.laborTime * this.adminCostSettings.laborRateMinute;
     const annual_rm = step.replacementCost * this.adminCostSettings.rmAnnualRate;
-    const rm_per_min = annual_rm / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
-    const ex_per_min = (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime);
+    const rm_per_min = annual_rm / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization);
+    const ex_per_min = (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization);
     const equipment_charge = step.equipmentTime * ex_per_min + step.equipmentTime * rm_per_min;
 
     return {
