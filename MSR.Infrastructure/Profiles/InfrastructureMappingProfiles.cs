@@ -269,7 +269,7 @@ namespace MSR.Infrastructure.Profiles
 
             CreateMap<ProductStepModel, ProductStep>();
             CreateMap<ProductStepModel, ProductStepApproval>()
-                .ForMember(dest => dest.ProductStepId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ProductStepId, opts => opts.MapFrom(src => src.Id > 0 ? src.Id : (int?)null))
                 .ForMember(dest => dest.ProductId, opts => opts.MapFrom(src => src.ProductId > 0 ? src.ProductId : (int?)null))
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             #endregion
