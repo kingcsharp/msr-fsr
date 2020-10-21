@@ -162,7 +162,7 @@ export class Sidebar {
     if (jQuery('.parsleyjs').parsley().isValid()) {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
-      requestData.customerId = this.globals.selectedCustomer;
+      requestData.customerId = this.globals.selectedCustomer.id;
       requestData.customerRequirementJson = JSON.stringify(this.CSRToCreate);
       this.quoteService.quotePost(env.apiVersion, requestData)
         .pipe(take(1))

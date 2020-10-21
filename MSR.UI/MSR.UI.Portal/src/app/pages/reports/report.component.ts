@@ -37,12 +37,6 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.globals.user.isAnswerUser) {
-      this.customerService.customerGet(this.globals.user.customerId, null, null, null, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
-        this.globals.changeCustomer(response.object[0]);
-      }));
-    }
-
     this.reportService.report(true, env.apiVersion).subscribe(responseHandler(response => {
       this.data = response.object;
     }));
@@ -56,7 +50,5 @@ export class ReportComponent implements OnInit {
       this.globals.showLoader(false);
       this.cSVConverterService.downloadFile(resp, reportColumns, reportInfo.name);
     });
-
   }
-
 }

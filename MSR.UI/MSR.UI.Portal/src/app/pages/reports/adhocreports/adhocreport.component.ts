@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
 import { Globals } from '../../../models/lib/globals';
 import {
-    ReportService, ReportModel
+    ReportService, ReportModel, CustomerService
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -36,6 +36,7 @@ export class AdhocComponent implements OnInit, AfterViewInit {
         this.route.params.subscribe(routeParams => {
             this.reportId = routeParams.id;
         });
+        
         if (this.globals.selectedCustomer !== undefined) {
             this.getReportData();
         }

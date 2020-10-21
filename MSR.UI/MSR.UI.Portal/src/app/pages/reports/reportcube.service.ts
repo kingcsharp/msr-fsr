@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { Globals } from '../../models/lib/globals';
+import { EnumChartType } from '../../../app/models/enums/ChartType';
 
 @Injectable({
     providedIn: 'root'
@@ -37,12 +38,34 @@ export class ReportCubeService {
             if (x['CubeWorkorderparts.customername'] !== undefined) {
                 return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
             }
+            if (x['CubeWorkorderparts.customername'] !== undefined) {
+                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
+            }
+            if (x['CubeWorkorderpartscyclecount.customername'] !== undefined) {
+                return x['CubeWorkorderpartscyclecount.customername'] === this.globals.selectedCustomer.name;
+            }
             return true;
         });
     }
 
     public getReportColumns(reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
+            case 'PartsCycleCountsbyWorkOrderDate':
+                return [
+                    new ColumnsSaved({ id: 'id', label: 'Id', visible: true, type: this.enumColumnType.Number, styles: { 'width': '6rem' } }),
+                    new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'woitem', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'msrfsrfacility', label: 'MSRFSRfacility', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'specno', label: 'Spec No', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
+                    new ColumnsSaved({ id: 'startdate', label: 'Start Date', visible: true, type: this.enumColumnType.Date, styles: { 'width': '7rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' })
+                ];
+                break;
             case 'WorkOrderPartsHistorybyPartNumber':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
@@ -160,8 +183,96 @@ export class ReportCubeService {
         return fromToValues;
     }
 
+    public getLineChartDataAndSeries(chartInfo: ChartInfo, rowNameFunction, chartData, xAxisProperty, yAxisProperty) {
+        const months = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
+
+        let dic = {};
+        const chartDataArr = [];
+        chartData.map(dataRow => {
+            let elem = this.removeObjectsPropertyPrefix(dataRow);
+            chartDataArr.push(elem);
+            var generatedName = rowNameFunction(elem);
+
+            // const elemKey = moment(elem[xAxisProperty]).format('MM-YYYY') + '_' + generatedName.replace(/\s/g, '');
+                    
+
+            if (dic[generatedName] === undefined) {
+                dic[generatedName] = {
+                    name: generatedName,
+                    data: [[elem[xAxisProperty], elem[yAxisProperty]]]
+                }
+            } else {
+                dic[generatedName].data.push([elem[xAxisProperty], elem[yAxisProperty]]);
+            }
+        });
+
+        let chartSeriesArray = [];
+        Object.keys(dic).forEach(key => {
+            chartSeriesArray.push(dic[key]);
+        });
+
+        chartInfo.chartTOptions.series = chartSeriesArray;
+
+        return { series: chartSeriesArray, data: chartDataArr };
+    }
+
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
+            case 'PartsCycleCountsbyWorkOrderDate':
+                //Reports Cycle Counts by PArtNumber and SerialNumber
+                Highcharts.setOptions({
+                    lang: {
+                        decimalPoint: '.',
+                        thousandsSep: ','
+                    },
+                });
+
+                const partsCycleCountDicChartInfo = new ChartInfo({
+                    chartTOptions: {
+                        chart: {
+                            type: 'spline'
+                        },
+                        title: {
+                            text: 'Parts Cycle Counts'
+                        },
+                        xAxis: {
+                            type: 'datetime',
+                            dateTimeLabelFormats: {
+
+                                month: "%b-%y"
+                            },
+                            title: {
+                                text: 'WorkOrder Date'
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Cycle Count'
+                            },
+                            min: 0
+                        },
+                        tooltip: {
+                            headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: '{point.x:%b-%y}: Cycle Count {point.y}'
+                        },
+                        plotOptions: {
+                            series: {
+                                marker: {
+                                    enabled: true
+                                },
+                            }
+                        },
+                        series: []
+                    },
+                    chartType: EnumChartType.Line
+                });
+
+                const chartDataAndSeries = this.getLineChartDataAndSeries(partsCycleCountDicChartInfo, x => x['partnumber'] + '-' + x['serialnumber'], data, 'startdate', 'cyclecount');
+
+
+                return { chartOptions: partsCycleCountDicChartInfo.chartTOptions, chartInfo: partsCycleCountDicChartInfo, resultData: chartDataAndSeries.data }
+            // return this.getResultDataAndChart(partsCycleCountDicChartInfo);
+
             case 'MonitorsHistorybyWorkOrder':
                 const workInProcessbyWorkOrder = data.map(elem => {
                     // we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
@@ -307,7 +418,6 @@ export class ReportCubeService {
             const index = months.indexOf(x.split('_')[0]);
             const name = x.split('_')[1];
             if (index !== -1) {
-
                 const nameIndex = dataSeries.findIndex(z => z.name === name);
                 if (nameIndex !== -1) {
                     dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
