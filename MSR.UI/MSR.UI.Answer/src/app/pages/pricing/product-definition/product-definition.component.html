@@ -250,7 +250,7 @@
                   <p-dropdown
                     *ngIf="getProcedureStepTemplatesFlag && i >= productSteps.length - newStepsCounts"
                     placeholder="Select Step"
-                    name="procedureStepId" [options]="procedureStepTemplatesData"
+                    name="stepTemplate_{{i}}" [options]="procedureStepTemplatesData"
                     optionLabel="title"
                     [(ngModel)]="productSteps[i].stepTemplate"
                     [baseZIndex]="100005"
