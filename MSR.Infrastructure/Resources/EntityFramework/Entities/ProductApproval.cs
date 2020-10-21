@@ -34,5 +34,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public int? CycleTime { get; set; }
 
         public virtual ICollection<ProductStepApproval> ProductStepApprovals { get; set; }
+
+        public int? QuoteId { get; set; }
+
+        public string DivisionFab { get; set; }
     }
 }

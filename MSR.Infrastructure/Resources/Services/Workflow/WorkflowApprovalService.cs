@@ -285,6 +285,7 @@ namespace MSR.Infrastructure.Resources.Services
                     productApprovalChanges.AddRow("Sales Tax", product?.SalesTax, productApproval.SalesTax);
                     productApprovalChanges.AddRow("Total Sale Price", product?.TotalSalePrice, productApproval.TotalSalePrice);
                     productApprovalChanges.AddRow("Cycle Time", product?.CycleTime, productApproval.CycleTime);
+                    productApprovalChanges.AddRow("FAB", product?.DivisionFab, productApproval.DivisionFab);
                     productApprovalChanges.AddRow("Steps", origStepCount, newStepCount);
                     productApprovalChanges.AddRow("Labor", origLaborTotal, newLaborTotal);
                     return productApprovalChanges;
