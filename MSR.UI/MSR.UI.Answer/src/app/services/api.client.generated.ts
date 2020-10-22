@@ -12831,6 +12831,8 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    /** Gets or Sets ReferenceFileIds    */
+    referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
 
@@ -12862,6 +12864,11 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
@@ -12897,6 +12904,11 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             data["referenceFiles"] = [];
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
+        }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
         }
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
@@ -12937,6 +12949,8 @@ export interface ICreateProcedureStepRequest {
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    /** Gets or Sets ReferenceFileIds    */
+    referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
 }
@@ -13351,6 +13365,8 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    /** Gets or Sets ReferenceFileIds    */
+    referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
 
@@ -13383,6 +13399,11 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
                 this.referenceFiles = [] as any;
                 for (let item of _data["referenceFiles"])
                     this.referenceFiles!.push(FileRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
             }
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
@@ -13419,6 +13440,11 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             data["referenceFiles"] = [];
             for (let item of this.referenceFiles)
                 data["referenceFiles"].push(item.toJSON());
+        }
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
         }
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
@@ -13461,6 +13487,8 @@ export interface IUpdateProcedureStepRequest {
     usefulLife?: number | undefined;
     /** Gets or Sets ReferenceFiles */
     referenceFiles?: FileRequest[] | undefined;
+    /** Gets or Sets ReferenceFileIds    */
+    referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
 }

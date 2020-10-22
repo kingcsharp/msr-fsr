@@ -6,7 +6,7 @@ import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
   RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService, SensorService,
   ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, CreateProcedureStepMonitorRequest, UpdateProcedureStepRequest,
-  RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest, Role
+  RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, FileRequest, IUpdateProcedureStepRequest
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -63,7 +63,7 @@ export class ProcedureEditComponent implements OnInit {
       this.globals.showLoader(true);
       this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((roleResponse) => {
 
-        this.availableRoles = roleResponse.object;
+        this.availableRoles = roleResponse.object.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
         this.globals.showLoader(true);
         this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe((procedureTypeGetResponse) => {
@@ -207,22 +207,33 @@ export class ProcedureEditComponent implements OnInit {
 
   updateProcedureStep(procedureStep: any) {
 
-    let updateProcedureStepRequest = new UpdateProcedureStepRequest();
-    updateProcedureStepRequest.procedureStepId = procedureStep.id;
-    updateProcedureStepRequest.equipmentTime = procedureStep.equipmentTime;
-    updateProcedureStepRequest.laborTime = procedureStep.laborTime;
-    updateProcedureStepRequest.predecessorStepId = procedureStep.predecessorStepId;
-    updateProcedureStepRequest.printOrder = procedureStep.printOrder;
-    updateProcedureStepRequest.procedureId = procedureStep.procedureId;
-    updateProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
-    updateProcedureStepRequest.replacementCost = procedureStep.replacementCost;
-    updateProcedureStepRequest.roles = procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id }));
-    updateProcedureStepRequest.stepText = procedureStep.stepText;
-    updateProcedureStepRequest.title = procedureStep.title;
-    updateProcedureStepRequest.usefulLife = procedureStep.usefulLife;
-    updateProcedureStepRequest.utilization = procedureStep.utilization;
-    updateProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
-    updateProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1;
+    let updateProcedureStepRequest = new UpdateProcedureStepRequest({
+      procedureStepId: procedureStep.id,
+      equipmentTime: procedureStep.equipmentTime,
+      laborTime: procedureStep.laborTime,
+      predecessorStepId: procedureStep.predecessorStepId,
+      procedureId: procedureStep.procedureId,
+      replacementCost: procedureStep.replacementCost,
+      roles: procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id })),
+      stepText: procedureStep.stepText,
+      title: procedureStep.title,
+      usefulLife: procedureStep.usefulLife,
+      utilization: procedureStep.utilization,
+      procedureStepTypeId: procedureStep.selectedProcedureStepTypeId,
+      printOrder: this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1,
+      referenceFiles: new Array<FileModel>(),
+      referenceFileIds: new Array<number>()
+    } as IUpdateProcedureStepRequest);
+
+    procedureStep.referenceFiles.map((referenceFile: FileModel) => {
+
+      if (referenceFile.fileId === undefined) {
+        updateProcedureStepRequest.referenceFiles.push(referenceFile);
+      } else {
+        updateProcedureStepRequest.referenceFileIds.push(referenceFile.fileId);
+      }
+
+    });
 
     this.globals.showLoader(true);
     this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((response) => {
@@ -353,22 +364,35 @@ export class ProcedureEditComponent implements OnInit {
 
   saveProcedureStep(procedureStep: any) {
 
-    let createProcedureStepRequest = new CreateProcedureStepRequest();
-    createProcedureStepRequest.duration = procedureStep.duration;
-    createProcedureStepRequest.durationType = procedureStep.durationType;
-    createProcedureStepRequest.equipmentTime = procedureStep.equipmentTime;
-    createProcedureStepRequest.laborTime = procedureStep.laborTime;
-    createProcedureStepRequest.predecessorStepId = procedureStep.predecessorStepId;
-    createProcedureStepRequest.printOrder = procedureStep.printOrder;
-    createProcedureStepRequest.procedureId = procedureStep.procedureId;
-    createProcedureStepRequest.referenceFiles = procedureStep.referenceFiles;
-    createProcedureStepRequest.replacementCost = procedureStep.replacementCost;
-    createProcedureStepRequest.roles = procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id }));
-    createProcedureStepRequest.stepText = procedureStep.stepText;
-    createProcedureStepRequest.title = procedureStep.title;
-    createProcedureStepRequest.usefulLife = procedureStep.usefulLife;
-    createProcedureStepRequest.utilization = procedureStep.utilization;
-    createProcedureStepRequest.procedureStepTypeId = procedureStep.selectedProcedureStepTypeId;
+    let createProcedureStepRequest = new CreateProcedureStepRequest({
+      duration: procedureStep.duration,
+      durationType: procedureStep.durationType,
+      equipmentTime: procedureStep.equipmentTime,
+      laborTime: procedureStep.laborTime,
+      predecessorStepId: procedureStep.predecessorStepId,
+      printOrder: procedureStep.printOrder,
+      procedureId: procedureStep.procedureId,
+      replacementCost: procedureStep.replacementCost,
+      roles: procedureStep.selectedRoles.map(s => new RoleRequest({ id: s.id })),
+      stepText: procedureStep.stepText,
+      title: procedureStep.title,
+      usefulLife: procedureStep.usefulLife,
+      utilization: procedureStep.utilization,
+      procedureStepTypeId: procedureStep.selectedProcedureStepTypeId,
+      referenceFiles: new Array<FileModel>(),
+      referenceFileIds: new Array<number>()
+    } as ICreateProcedureStepRequest);
+
+    procedureStep.referenceFiles.map((referenceFile: FileModel) => {
+
+      if (referenceFile.fileId === undefined) {
+        createProcedureStepRequest.referenceFiles.push(referenceFile);
+      } else {
+        createProcedureStepRequest.referenceFileIds.push(referenceFile.fileId);
+      }
+
+    });
+
     this.globals.showLoader(true);
     this.procedureService.stepPost(this.procedure.id, env.apiVersion, createProcedureStepRequest).subscribe(responseHandler((response) => {
       procedureStep.id = response.object.id;

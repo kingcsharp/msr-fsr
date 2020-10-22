@@ -21,5 +21,7 @@ namespace MSR.Domain.Commands
         public int procedureStepTypeId { get; set; }
         public int? LaborTime { get; set; }
         public int? UsefulLife { get; set; }
+        public ICollection<int> ReferenceFileIds { get; set; }
+        public ICollection<FileModel> ReferenceFiles { get; set; }
     }
 }

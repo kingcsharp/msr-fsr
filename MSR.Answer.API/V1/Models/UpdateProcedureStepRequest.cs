@@ -109,8 +109,14 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets ReferenceFiles
         /// </summary>
-        [DataMember(Name="referenceFiles")]
+        [DataMember(Name = "referenceFiles")]
         public List<FileRequest> ReferenceFiles { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceFileIds   
+        /// </summary>
+        [DataMember(Name = "referenceFileIds")]
+        public ICollection<int> ReferenceFileIds { get; set; }
 
         /// <summary>
         /// Gets or Sets Roles

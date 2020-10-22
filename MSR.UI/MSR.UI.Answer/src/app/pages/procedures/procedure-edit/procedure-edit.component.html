@@ -278,7 +278,7 @@
                                         </label>
                                     </div>
                                     <div class="col-10">
-                                        <cmh-file-uploader name="referencefiles"
+                                        <cmh-file-uploader name="referencefiles" [showSelectButton]="true"
                                             *ngIf="procedureStep.value.referenceFiles !== undefined"
                                             [menuItem]="menuItems.Templates" multiple="multiple"
                                             [(files)]="procedureStep.value.referenceFiles">
