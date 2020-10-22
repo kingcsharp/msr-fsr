@@ -17,6 +17,7 @@ import { TemplateComponent } from './template/template.component';
 import { ProcedureViewComponent } from './procedure-view/procedure-view.component';
 import { ProcedureEditComponent } from './procedure-edit/procedure-edit.component';
 import { SortableModule } from 'ngx-bootstrap/sortable';
+import { ProcedureStepMonitorWrapperComponent } from '../../components/procedure-step-monitor-wrapper/procedure-step-monitor-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -35,7 +36,7 @@ export const routes = [
 
 @NgModule({
   declarations: [ProceduresComponent, TemplatesComponent, ProceduretypesComponent, ProcedureCreateComponent,
-    ProceduretypeComponent, TemplateComponent, ProcedureViewComponent, ProcedureEditComponent],
+    ProceduretypeComponent, TemplateComponent, ProcedureViewComponent, ProcedureEditComponent, ProcedureStepMonitorWrapperComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

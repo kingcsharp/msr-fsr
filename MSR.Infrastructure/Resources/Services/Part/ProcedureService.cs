@@ -19,11 +19,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public ProcedureService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProcedureService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
@@ -164,6 +166,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ToListAsync();
             }
             var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
+            
+            result.ForEach(procedureStep =>
+            {
+                procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
+            });
+            
+            
             return result;
         }
 

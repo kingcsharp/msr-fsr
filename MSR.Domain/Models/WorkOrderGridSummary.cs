@@ -168,7 +168,7 @@ namespace MSR.Domain.Models
         /// Sum of the expected time
         /// </summary>
         [DataMember(Name="percentageOfExpectedDurationTimeLoggedDenominator")]
-        public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
+        public double? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
 
         /// <summary>
         /// Has NCR

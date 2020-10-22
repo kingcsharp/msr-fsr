@@ -190,7 +190,6 @@ namespace MSR.Infrastructure.Profiles
             #region Procedure
             CreateMap<Procedure, Domain.Models.Procedure>();
             CreateMap<ProcedureStep, ProcedureStepModel>()
-                .ForMember(dest => dest.UtilizationTime, opts => opts.MapFrom(src => src.Utilization))
                 .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.ProcedureStepRoles))
                 .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.ProcedureStepTypeId.ToString()));

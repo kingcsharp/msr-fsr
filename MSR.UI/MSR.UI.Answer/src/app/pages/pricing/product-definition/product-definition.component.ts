@@ -281,7 +281,7 @@ export class ProductDefinitionComponent implements OnInit {
         laborTime: $event.value.laborTime,
         replacementCost: $event.value.replacementCost,
         usefulLife: $event.value.usefulLife,
-        utilizationTime: $event.value.utilization,
+        utilization: $event.value.utilization,
         printOrder: index + 1,
         title: $event.value.title
       });
