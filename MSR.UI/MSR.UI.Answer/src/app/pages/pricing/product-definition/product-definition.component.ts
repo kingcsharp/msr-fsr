@@ -469,6 +469,7 @@ export class ProductDefinitionComponent implements OnInit {
       equipmentExpensePerMinute,
       laborCharge,
       equipmentCharge,
+      id: 0,
     };
   }
 
