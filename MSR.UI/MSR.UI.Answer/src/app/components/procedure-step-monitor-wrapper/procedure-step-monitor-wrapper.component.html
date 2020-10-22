@@ -76,12 +76,22 @@
                     </p-dropdown>
                 </div>
             </div>
-            <div class="form-group col-12 d-flex flex-row">
+            <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.monitorType === 'Number'">
                 <label for="inputtype" class="col-form-label text-left col-3">
                     Input Type
                 </label>
                 <div class="col-9 px-0">
-                    <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptions"
+                    <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptionsWithSensor"
+                        showClear="true" [(ngModel)]="procedureStepMonitor.inputType">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="form-group col-12 d-flex flex-row" *ngIf="procedureStepMonitor.monitorType !== 'Number'">
+                <label for="inputtype" class="col-form-label text-left col-3">
+                    Input Type
+                </label>
+                <div class="col-9 px-0">
+                    <p-dropdown placeholder="Select Input Type" name="inputtype" [options]="inputTypeOptionsWithoutSensor"
                         showClear="true" [(ngModel)]="procedureStepMonitor.inputType">
                     </p-dropdown>
                 </div>

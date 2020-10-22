@@ -35,7 +35,8 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
   shouldBeOptions: Array<SelectItem>;
   listSource: Array<SelectItem>;
   monitorTypeOptions: Array<SelectItem>;
-  inputTypeOptions: Array<SelectItem>;
+  inputTypeOptionsWithoutSensor: Array<SelectItem>;
+  inputTypeOptionsWithSensor: Array<SelectItem>;
   yesNoOptions: Array<SelectItem>;
   passFailOptions: Array<SelectItem>;
   sensorNamesAvailable: Array<SelectItem>;
@@ -63,9 +64,13 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
       { label: 'Select', value: 'Select' },
     ];
 
-    this.inputTypeOptions = [
+    this.inputTypeOptionsWithSensor = [
       { label: 'Manual', value: 'Manual' },
       { label: 'Sensor', value: 'Sensor' }
+    ];
+
+    this.inputTypeOptionsWithoutSensor = [
+      { label: 'Manual', value: 'Manual' }
     ];
 
     this.faultHandlingOptions = [
@@ -137,7 +142,7 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
     this.procedureStepMonitor = monitor;
     this.procedureStepMonitor.faultHandling = this.faultHandlingOptions.find(s => s.value === monitor.faultHandling)?.value;
     this.procedureStepMonitor.monitorType = this.monitorTypeOptions.find(s => s.value === monitor.monitorType)?.value;
-    this.procedureStepMonitor.inputType = this.inputTypeOptions.find(s => s.value === monitor.inputType)?.value;
+    this.procedureStepMonitor.inputType = this.inputTypeOptionsWithSensor.find(s => s.value === monitor.inputType)?.value;
     this.procedureStepMonitor.shouldBe = this.shouldBeOptions.find(s => s.value === monitor.shouldBe)?.value;
     this.procedureStepMonitor.monitorListId = this.listSource.find(s => s.value === monitor.shouldBe)?.value;
     this.procedureStepMonitor.sendEmailNotification = monitor.sendEmailNotification;
