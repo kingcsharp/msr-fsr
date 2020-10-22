@@ -447,9 +447,9 @@ export class ProductDefinitionComponent implements OnInit {
   calculateProcedureStepValues(step: ProcedureStepModel) {
     const rmAnnualRate = step.replacementCost ? step.replacementCost * this.adminCostSettings.rmAnnualRate : 0;
 
-    const rmPerMinuteRate = step.utilizationTime ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime)) : 0;
+    const rmPerMinuteRate = step.utilization ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization)) : 0;
 
-    const equipmentExpensePerMinute = (step.replacementCost && step.utilizationTime && step.usefulLife) ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime) : 0;
+    const equipmentExpensePerMinute = (step.replacementCost && step.utilization && step.usefulLife) ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilization) : 0;
 
     const laborCharge = step.laborTime ? step.laborTime * this.adminCostSettings.laborRateMinute : 0;
 
@@ -458,7 +458,7 @@ export class ProductDefinitionComponent implements OnInit {
     return {
       ...step,
       procedureStepId: step.id,
-      utilization: step.utilizationTime,
+      utilization: step.utilization,
       laborMinutes: step.laborTime || 0,
       equipmentMinutes: step.equipmentTime || 0,
       rmAnnualRate,
