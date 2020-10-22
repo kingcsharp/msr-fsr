@@ -11,8 +11,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int ProductId { get; set; }
 
-        [Required]
-        public int ProcedureStepId { get; set; }
+        public int? ProcedureStepId { get; set; }
 
         public int? LaborMinutes { get; set; }
 

@@ -24,7 +24,7 @@
         <tr>
             <th *ngIf="gridSaved.expandRows" style="width: 2rem"></th>
             <th *ngFor="let col of gridSaved.columnsSaved" [hidden]="!col.visible" [pSortableColumn]="col.id"
-                data-cy="usertable-header">
+                data-cy="usertable-header" [ngStyle]="col.styles">
                 {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
             </th>
         </tr>

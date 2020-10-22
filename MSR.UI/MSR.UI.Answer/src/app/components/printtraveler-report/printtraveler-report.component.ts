@@ -18,7 +18,7 @@ export class PrinttravelerReportComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if(this.WorkOrder.workOrderParts?.length > 0 && this.WorkOrder.workOrderParts[0].part?.files?.length > 0){
+    if (this.WorkOrder.workOrderParts?.length > 0 && this.WorkOrder.workOrderParts[0].part?.files?.length > 0) {
       this.parentPartImageUrl = this.WorkOrder.workOrderParts[0].part.files[0].fileURL;
     }
 

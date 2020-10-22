@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
-import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';
+import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest, ForgotUserNameRequest, CustomerService } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
@@ -21,7 +21,8 @@ export class LoginService {
     appConfig: AppConfig,
     private globals: Globals,
     private http: HttpClient,
-    private router: Router, private accountService: AccountService, private userService: UserService
+    private router: Router, private accountService: AccountService, private userService: UserService,
+    private customerService: CustomerService
   ) {
     this.config = appConfig.getConfig();
   }
@@ -73,8 +74,10 @@ export class LoginService {
       email: this.config.auth.email
     };
     localStorage.setItem('token', token);
+    this.isFetching = true;
     this.userService.loggedInUser(env.apiVersion).pipe(take(1))
       .subscribe((result) => {
+        this.isFetching = false;
         Object.assign(user, result.object);
         const decodedToken = jwt.decodeToken(token);
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
@@ -88,7 +91,19 @@ export class LoginService {
           return;
         }
 
-        this.receiveLogin();
+        if (!this.globals.user.isAnswerUser) {
+          this.isFetching = true;
+          this.customerService.customerGet(this.globals.selectedCustomer.id, null, null, null,
+            null, null, null, true, env.apiVersion).pipe(take(1))
+            .subscribe((customer) => {
+              this.isFetching = false;
+              this.globals.changeCustomer(customer.object[0]);
+              this.receiveLogin();
+            });
+        }
+        else {
+          this.receiveLogin();
+        }
       });
   }
 

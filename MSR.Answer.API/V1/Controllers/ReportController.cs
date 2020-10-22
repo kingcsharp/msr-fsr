@@ -28,7 +28,7 @@ namespace MSR.Answer.API.V1.Controllers
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<ReportModel>>))]
         [HasPrivilegeApi("Reports", EnumPrivilege.CanRead)]
-        public async Task<IActionResult> Get([FromRoute, Required] GetReportRequest request)
+        public async Task<IActionResult> Get([FromQuery, Required] GetReportRequest request)
         {
             var command = request.ToGetReportCommand();
             var ret = await _dispatcher.DispatchAsync(command);

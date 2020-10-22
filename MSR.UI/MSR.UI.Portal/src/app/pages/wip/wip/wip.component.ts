@@ -102,9 +102,9 @@ export class WipComponent implements OnInit, AfterViewInit {
         new ColumnsSaved({ id: 'id', label: 'Id', visible: false, type: EnumColumnType.Number }),
         new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
         new ColumnsSaved({ id: 'partNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
-        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
-        new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
-        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String }),
+        new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '10rem' } }),
+        new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
+        new ColumnsSaved({ id: 'name', label: 'Part Name', visible: true, type: EnumColumnType.String, styles: { 'width': '40rem' } }),
       ],
       showMyViewsFeature: false,
       paginator: false,
@@ -122,9 +122,11 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(true);
         this.images = [];
         let count = response.object[0].workOrderTasks.length - 1;
         response.object[0].workOrderTasks.map(element => {
+          this.globals.showLoader(true);
           this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
             element.id, null, env.apiVersion)
             .pipe(take(1)).subscribe(responseHandler((resp) => {
@@ -144,6 +146,7 @@ export class WipComponent implements OnInit, AfterViewInit {
                 });
               }
               if (count === 0) {
+                this.globals.showLoader(false);
                 if (this.images.length > 0) {
                   this.displayBasic2 = true;
                 } else {
@@ -161,6 +164,7 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.workOrderService.workOrder(rowData.workOrderId, this.globals.selectedCustomer.id, null, null, null,
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
+        this.globals.showLoader(true);
         this.files = [];
         let count = response.object[0].workOrderTasks.length - 1;
         this.gridFilesSaved = new GridSaved({
@@ -182,6 +186,7 @@ export class WipComponent implements OnInit, AfterViewInit {
         });
 
         response.object[0].workOrderTasks.map(element => {
+          this.globals.showLoader(true);
           this.fileService.fileGet(this.globals.getSingularMenuName(EnumMenuItem.WorkOrderTasks),
             element.id, null, env.apiVersion)
             .pipe(take(1)).subscribe(responseHandler((resp) => {
@@ -195,6 +200,7 @@ export class WipComponent implements OnInit, AfterViewInit {
                 });
               }
               if (count === 0) {
+                this.globals.showLoader(false);
                 if (this.files.length > 0) {
                   this.showFilesDialog = true;
                 } else {
@@ -226,9 +232,9 @@ export class WipComponent implements OnInit, AfterViewInit {
     });
 
     this.globals.selectCustomerObservable.subscribe(response => {
-      if (response !== null) {
+      if (response !== null && response !== undefined) {
         this.setCustomerName();
-        this.getGridData();
+        this.getGridData(); 
       }
     });
   }
@@ -318,9 +324,9 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'qty', label: 'Quantity', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
       new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
@@ -334,12 +340,12 @@ export class WipComponent implements OnInit, AfterViewInit {
   getBuyerColumns() {
     return [
       new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
-      // new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', type: EnumColumnType.String, visible: true }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
       new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'supplier', label: 'Supplier', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
-      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number }),
+      new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
       new ColumnsSaved({ id: 'startDate', label: 'Start Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'dueDate', label: 'Due Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),

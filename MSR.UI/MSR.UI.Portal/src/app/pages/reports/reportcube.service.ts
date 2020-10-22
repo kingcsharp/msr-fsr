@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { Globals } from '../../models/lib/globals';
+import { EnumChartType } from '../../../app/models/enums/ChartType';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ import { Globals } from '../../models/lib/globals';
 export class ReportCubeService {
     cubeKey = '9nyEf9X3gjVQqryBAYKcMSefrkCZ7m8bCHJSXeXCYsfhCqcRJt';
     enumColumnType = EnumColumnType;
+    splitChars = "_axy_";
     constructor(private http: HttpClient, private toastr: ToastrService, private globals: Globals) {
 
     }
@@ -22,21 +24,53 @@ export class ReportCubeService {
     public getReport = async (reportInfo: ReportModel) => {
         const headers = new HttpHeaders().set('key', this.cubeKey);
         return this.http.get(reportInfo.apiEndPointURL, { headers: headers }).toPromise().then(response => {
-            return this.filterReportData(this.filterByCustomerName(response), reportInfo);
+            return this.filterReportData(this.filterByCustomer(response), reportInfo);
         });
     }
 
-    filterByCustomerName(response: any) {
+    filterByCustomer(response: any) {
         return response.filter(x => {
             if (x['CubeFinancial.customername'] !== undefined) {
                 return x['CubeFinancial.customername'] === this.globals.selectedCustomer.name;
             }
+            if (x['CubePartsmonitors.customerid'] !== undefined) {
+                return x['CubePartsmonitors.customerid'] === this.globals.selectedCustomer.id;
+            }
+            if (x['CubeWorkorderparts.customername'] !== undefined) {
+                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
+            }
+            if (x['CubeWorkorderparts.customername'] !== undefined) {
+                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
+            }
+            if (x['CubeWorkorderpartscyclecount.customername'] !== undefined) {
+                return x['CubeWorkorderpartscyclecount.customername'] === this.globals.selectedCustomer.name;
+            }
+            if (x['MonitorsHistorybyWorkOrder.customerid'] !== undefined) {
+                return x['MonitorsHistorybyWorkOrder.customerid'] === this.globals.selectedCustomer.id;
+            }
+
             return true;
         });
     }
 
     public getReportColumns(reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
+            case 'PartsCycleCountsbyWorkOrderDate':
+                return [
+                    new ColumnsSaved({ id: 'id', label: 'Id', visible: true, type: this.enumColumnType.Number, styles: { 'width': '6rem' } }),
+                    new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'woitem', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'msrfsrfacility', label: 'MSRFSRfacility', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'specno', label: 'Spec No', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
+                    new ColumnsSaved({ id: 'startdate', label: 'Start Date', visible: true, type: this.enumColumnType.Date, styles: { 'width': '6rem' }, formattingAngular: 'MM-yyyy', formattingMoment: 'MM-YYYY' })
+                ];
+                break;
             case 'WorkOrderPartsHistorybyPartNumber':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
@@ -80,13 +114,15 @@ export class ReportCubeService {
             case 'MonitorsHistorybyWorkOrder':
                 return [
                     new ColumnsSaved({ id: 'value', label: 'Monitor Value', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'customerid', label: 'Customer Id', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'customerid', label: 'Customer Id', visible: false, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
                     new ColumnsSaved({ id: 'locationname', label: 'Location', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'partname', label: 'Part Names', visible: true, type: this.enumColumnType.StringArray, dropdownHeader: true, multipleValues: true }),
                     new ColumnsSaved({ id: 'workordername', label: 'WO Name', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'lastupdatedon', label: 'Updated On', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '6rem' } }),
+                    new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String })
                 ];
             case 'CombinedFinancialDatabyWorkOrder':
                 return [
@@ -154,26 +190,110 @@ export class ReportCubeService {
         return fromToValues;
     }
 
+    private setName(row, prop1, prop2, separator) {
+        var name = '';
+        if (row[prop1] !== undefined && row[prop1] !== null) {
+            name += row[prop1].replace(/\s/g, '');
+        }
+        if (row[prop2] !== undefined && row[prop2] !== null) {
+            name += separator + row[prop2].replace(/\s/g, '');
+        }
+        return name;
+    }
+
+    getCycleCountNr(row, prop) {
+        const cycleCount = row[prop];
+        if (isNaN(cycleCount)) {
+            return 0;
+        }
+        return cycleCount;
+    }
+
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
-            case 'MonitorsHistorybyWorkOrder':
-                const workInProcessbyWorkOrder = data.map(elem => {
-                    // we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
-                    const partName = elem['CubePartsmonitors.partname'];
-                    if (partName === null) {
-                        elem['partname'] = [];
+            case 'PartsCycleCountsbyWorkOrderDate':
+                //Reports Cycle Counts by PArtNumber and SerialNumber
+                let dataDicPartsCycleCounts = {};
+                data.map(elem => {
+                    const elemKey = moment(elem['CubeWorkorderpartscyclecount.duedate']).format('MM-YYYY') + this.splitChars + + this.setName(elem, 'CubeWorkorderpartscyclecount.partnumber', 'CubeWorkorderpartscyclecount.serialnumber', '-');
+                    const cycleCount = this.getCycleCountNr(elem, 'CubeWorkorderpartscyclecount.cyclecount');
+                    if (dataDicPartsCycleCounts[elemKey] === undefined) {
+                        dataDicPartsCycleCounts[elemKey] = {
+                            elemKey: elemKey,
+                            startdate: moment(elem['CubeWorkorderpartscyclecount.startdate']),
+                            id: elem['CubeWorkorderpartscyclecount.id'],
+                            partnumber: elem['CubeWorkorderpartscyclecount.partnumber'],
+                            serialnumber: elem['CubeWorkorderpartscyclecount.serialnumber'],
+                            woitem: elem['CubeWorkorderpartscyclecount.woitem'],
+                            msrfsrfacility: elem['CubeWorkorderpartscyclecount.msrfsrfacility'],
+                            customername: elem['CubeWorkorderpartscyclecount.customername'],
+                            specno: elem['CubeWorkorderpartscyclecount.specno'],
+                            kitname: elem['CubeWorkorderpartscyclecount.kitname'],
+                            ponumber: elem['CubeWorkorderpartscyclecount.ponumber'],
+                            mttn: elem['CubeWorkorderpartscyclecount.mttn'],
+                            cyclecount: cycleCount
+                        };
                     } else {
-                        elem['partname'] = elem['CubePartsmonitors.partname'].map((x) => {
-                            return {
-                                name: x,
-                                id: x
-                            };
-                        });
+                        dataDicPartsCycleCounts[elemKey].cyclecount += cycleCount;
                     }
-
-                    return elem;
                 });
-                return workInProcessbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
+                const chartInfoPartsCycleCounts = new ChartInfo({
+                    chartData: dataDicPartsCycleCounts,
+                    chartType: EnumChartType.Line,
+                    stackBy: 'cyclecount',
+                    chartTitle: 'Parts Cycle Counts',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Cycle Count',
+                    tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
+                    chartTOptions: {
+                        tooltip: {
+                            headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: '<b>Month:</b> {point.x}  <b>Cycle Count:</b> {point.y}'
+                        }
+                    }
+                });
+
+                return this.getResultDataAndChart(chartInfoPartsCycleCounts);
+            case 'MonitorsHistorybyWorkOrder':
+                let dataDicworkInProcessbyWorkOrder = {};
+                data.map(elem => {
+                    const elemKey = moment(elem['CubePartsmonitors.lastupdatedon']).format('MM-YYYY') + this.splitChars + this.setName(elem, 'CubePartsmonitors.partnumber', 'CubePartsmonitors.serialnumber', '-');
+                    const cycleCount = this.getCycleCountNr(elem, 'CubePartsmonitors.cyclecount');
+                    if (dataDicworkInProcessbyWorkOrder[elemKey] === undefined) {
+                        dataDicworkInProcessbyWorkOrder[elemKey] = {
+                            elemKey: elemKey,
+                            lastupdatedon: moment(elem['CubePartsmonitors.lastupdatedon']),
+                            customerid: elem['CubePartsmonitors.customerid'],
+                            partnumber: elem['CubePartsmonitors.partnumber'],
+                            serialnumber: elem['CubePartsmonitors.serialnumber'],
+                            locationname: elem['CubePartsmonitors.locationname'],
+                            partname: [{ name: elem['CubePartsmonitors.partname'], id: elem['CubePartsmonitors.partname'] }],
+                            //partname
+                            workordername: elem['CubePartsmonitors.workordername'],
+                            value: elem['CubePartsmonitors.value'],
+                            lastupdatedby: elem['CubePartsmonitors.lastupdatedby'],
+                            cyclecount: cycleCount
+                        };
+                    } else {
+                        dataDicworkInProcessbyWorkOrder[elemKey].cyclecount += cycleCount;
+                    }
+                });
+                const chartInfoDicworkInProcessbyWorkOrder = new ChartInfo({
+                    chartData: dataDicworkInProcessbyWorkOrder,
+                    chartType: EnumChartType.Bar,
+                    stackBy: 'cyclecount',
+                    chartTitle: 'Parts Cycle Counts',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Cycle Count',
+                    tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
+                    chartTOptions: {
+                        tooltip: {
+                            headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: '<b>Month:</b> {point.x}  <b>Cycle Count:</b> {point.y}'
+                        }
+                    }
+                });
+                return this.getResultDataAndChart(chartInfoDicworkInProcessbyWorkOrder);
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
@@ -183,7 +303,7 @@ export class ReportCubeService {
                 let dataDic = {};
                 // const resultData = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.customername'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + this.splitChars + elem['CubeFinancial.customername'].replace(/\s/g, '') + this.splitChars + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
                     if (dataDic[elemKey] === undefined) {
                         dataDic[elemKey] = {
                             elemKey: elemKey,
@@ -211,7 +331,7 @@ export class ReportCubeService {
                 let dataDic3 = {};
                 const resultData2 = [];
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + this.splitChars + elem['CubeFinancial.kitname'].replace(/\s/g, '') + this.splitChars + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
                     if (dataDic3[elemKey] === undefined) {
                         dataDic3[elemKey] = {
                             elemKey: elemKey,
@@ -240,7 +360,7 @@ export class ReportCubeService {
             case 'CountofKitsbyPart/Kit':
                 let dataDic2 = {};
                 data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
+                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + this.splitChars + elem['CubeFinancial.kitname'].replace(/\s/g, '') + this.splitChars + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
                     if (dataDic2[elemKey] === undefined) {
                         dataDic2[elemKey] = {
                             elemKey: elemKey,
@@ -298,10 +418,9 @@ export class ReportCubeService {
         const resultData = [];
 
         Object.keys(chartInfo.chartData).forEach(x => {
-            const index = months.indexOf(x.split('_')[0]);
-            const name = x.split('_')[1];
+            const index = months.indexOf(x.split(this.splitChars)[0]);
+            const name = x.split(this.splitChars)[1];
             if (index !== -1) {
-
                 const nameIndex = dataSeries.findIndex(z => z.name === name);
                 if (nameIndex !== -1) {
                     dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
@@ -326,12 +445,11 @@ export class ReportCubeService {
                 thousandsSep: ','
             },
         });
-
         let chartOptions: Highcharts.Options = {
             chart: {
                 backgroundColor: '#222d3c',
                 borderColor: 'none',
-                type: 'column'
+                type: chartInfo.chartType === EnumChartType.Line ? 'spline' : 'column'
             },
             title: {
                 text: chartInfo.chartTitle,
@@ -404,10 +522,10 @@ export class ReportCubeService {
             //         opacity:1
             //     }
             // },
-            tooltip: {
+            tooltip: chartInfo.chartTOptions.tooltip === undefined ? {
                 headerFormat: '<b>Month:</b> {point.x}<br/>',
                 pointFormat: '<b>{series.name}</b>: {point.y:,.2f}<br/> <b>Total</b>: {point.stackTotal:,.2f}'
-            },
+            } : chartInfo.chartTOptions.tooltip,
             plotOptions: {
                 column: {
                     stacking: 'normal',

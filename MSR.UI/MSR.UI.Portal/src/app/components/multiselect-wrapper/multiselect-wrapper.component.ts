@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
 
@@ -6,7 +6,7 @@ import { FilterUtils } from 'primeng/utils';
   selector: 'multiselect-wrapper',
   templateUrl: './multiselect-wrapper.component.html'
 })
-export class MultiselectWrapperComponent implements OnInit {
+export class MultiselectWrapperComponent implements OnInit, OnDestroy {
   selectedColumns: Array<any>;
   subscriptions: Subscription[] = [];
   multiselectName: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
