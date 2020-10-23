@@ -191,8 +191,7 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<Procedure, Domain.Models.Procedure>();
             CreateMap<ProcedureStep, ProcedureStepModel>()
                 .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.ProcedureStepRoles))
-                .ForMember(dest => dest.ProcedureStepTypeId, opts => opts.MapFrom(src => src.ProcedureStepTypeId.ToString()));
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.ProcedureStepRoles));
             CreateMap<Domain.Models.Role, ProcedureStepRoleMap>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.RoleId, opts => opts.MapFrom(src => src.Id));

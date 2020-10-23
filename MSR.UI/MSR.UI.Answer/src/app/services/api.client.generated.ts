@@ -12691,7 +12691,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     duration?: number | undefined;
     durationType?: string | undefined;
     procedureStepType?: string | undefined;
-    procedureStepTypeId?: string | undefined;
+    procedureStepTypeId?: number | undefined;
     printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
@@ -12790,7 +12790,7 @@ export interface IProcedureStepModel {
     duration?: number | undefined;
     durationType?: string | undefined;
     procedureStepType?: string | undefined;
-    procedureStepTypeId?: string | undefined;
+    procedureStepTypeId?: number | undefined;
     printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
@@ -12815,7 +12815,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepTypeId?: number;
+    procedureStepTypeId?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -12933,7 +12933,7 @@ export interface ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepTypeId?: number;
+    procedureStepTypeId?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
