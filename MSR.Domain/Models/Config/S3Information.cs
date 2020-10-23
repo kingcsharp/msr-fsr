@@ -8,5 +8,6 @@
         public string AWSURL { get; set; }
         public string HelpbucketName { get; set; }
         public string HelpAWSURL { get; set; }
+        public string UnSecureAWSURL { get; set; }
     }
 }

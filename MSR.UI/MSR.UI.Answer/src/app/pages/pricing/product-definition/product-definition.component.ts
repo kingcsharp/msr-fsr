@@ -275,22 +275,18 @@ export class ProductDefinitionComponent implements OnInit {
 
   onSelectStepTemplate($event, index: number) {
     if ($event.value) {
-      const step = new ProcedureStepModel({
-        id: null,
-        equipmentTime: $event.value.equipmentTime,
-        laborTime: $event.value.laborTime,
+      const step = new ProductStepModel({
+        laborMinutes: $event.value.laborTime,
+        equipmentMinutes: $event.value.equipmentTime,
         replacementCost: $event.value.replacementCost,
+        utilization:  $event.value.utilization,
         usefulLife: $event.value.usefulLife,
-        utilizationTime: $event.value.utilization,
         printOrder: index + 1,
-        stepText: $event.value.stepText,
-        title: $event.value.title
+        title: $event.value.title,
       });
-      const stepTemplateIndex = this.procedureStepTemplatesData.findIndex((v) => v.id === $event.value.id);
-      const stepTemplate = stepTemplateIndex > -1 ? this.procedureStepTemplatesData[stepTemplateIndex] : null;
-
-      const productStepValue = this.calculateProcedureStepValues(step);
-      this.productSteps[index] = {...productStepValue, stepTemplate};
+      const productStepValue = this.calculateProductStepValues(step);
+      const stepTemplate = this.productSteps[index].stepTemplate;
+      this.productSteps[index] = {stepTemplate, ...productStepValue};
       this.getStepsValues(true);
     }
   }
@@ -318,7 +314,17 @@ export class ProductDefinitionComponent implements OnInit {
       .subscribe(responseHandler(response => {
         response.object.forEach((value) => {
           // Calculate each step values
-          const productStepValue = this.calculateProcedureStepValues(value);
+          const step = new ProductStepModel({
+            procedureStepId: value.id,
+            laborMinutes: value.laborTime,
+            equipmentMinutes: value.equipmentTime,
+            replacementCost: value.replacementCost,
+            utilization:  value.utilization,
+            usefulLife: value.usefulLife,
+            printOrder: value.printOrder,
+            title: value.title,
+          });
+          const productStepValue = this.calculateProductStepValues(step);
           this.productSteps.push(productStepValue);
         });
         this.getProcedureStepsFlag = true;
@@ -445,31 +451,6 @@ export class ProductDefinitionComponent implements OnInit {
       }
       this.productSteps[index].printOrder = printOrder;
     }
-  }
-
-  calculateProcedureStepValues(step: ProcedureStepModel) {
-    const rmAnnualRate = step.replacementCost ? step.replacementCost * this.adminCostSettings.rmAnnualRate : 0;
-
-    const rmPerMinuteRate = step.utilizationTime ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime)) : 0;
-
-    const equipmentExpensePerMinute = (step.replacementCost && step.utilizationTime && step.usefulLife) ? (step.replacementCost / step.usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * step.utilizationTime) : 0;
-
-    const laborCharge = step.laborTime ? step.laborTime * this.adminCostSettings.laborRateMinute : 0;
-
-    const equipmentCharge = step.equipmentTime ? step.equipmentTime * equipmentExpensePerMinute + step.equipmentTime * rmPerMinuteRate : 0;
-
-    return {
-      ...step,
-      procedureStepId: step.id,
-      utilization: step.utilizationTime,
-      laborMinutes: step.laborTime || 0,
-      equipmentMinutes: step.equipmentTime || 0,
-      rmAnnualRate,
-      rmPerMinuteRate,
-      equipmentExpensePerMinute,
-      laborCharge,
-      equipmentCharge,
-    };
   }
 
   calculateProductStepValues(step: ProductStepModel) {

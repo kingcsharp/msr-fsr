@@ -8,6 +8,7 @@ import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummar
 import { Router } from '@angular/router';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-wiphistory',
@@ -59,7 +60,7 @@ export class WiphistoryComponent implements OnInit {
       this.router.navigate(['app/wip/wipstatus']);
     }
 
-    this.workOrderService.history(env.apiVersion).subscribe(responseHandler(response => {
+    this.workOrderService.history(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
       this.data = response.object;
       this.statusOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i

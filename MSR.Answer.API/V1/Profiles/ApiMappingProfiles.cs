@@ -38,10 +38,8 @@ namespace MSR.Answer.API.V1.Profiles
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();
-            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>()
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
-            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>()
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
+            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
             CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>()
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
                 .ForMember(dest => dest.Target, opts => opts.MapFrom(src => Convert.ToSingle(src.TargetValue)))

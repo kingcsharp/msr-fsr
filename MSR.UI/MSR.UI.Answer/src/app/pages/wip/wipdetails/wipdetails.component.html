@@ -215,7 +215,7 @@
                     <button id="workordertaskfiles" class="btn btn-primary mb-2"
                       (click)="uploadFilesAndDocumentsForTask()">Submit</button>
                     <cmh-file-uploader name="referencefiles" class="col-12" [showSelectButton]="true"
-                      [showUploadButton]="true"
+                      [showUploadButton]="false"
                       *ngIf="workOrderTaskToView !== undefined && workOrderTaskToView?.referenceFiles !== undefined"
                       [menuItem]="menuItems.Templates" multiple="multiple"
                       [(files)]="workOrderTaskToView.referenceFiles">

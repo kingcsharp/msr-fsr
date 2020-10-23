@@ -60,6 +60,12 @@ namespace MSR.Answer.API.V1.Models
         public bool? SendEmailNotification { get; set; }
 
         /// <summary>
+        /// MonitorListId
+        /// </summary>
+        [DataMember(Name = "monitorListId")]
+        public int? MonitorListId { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>

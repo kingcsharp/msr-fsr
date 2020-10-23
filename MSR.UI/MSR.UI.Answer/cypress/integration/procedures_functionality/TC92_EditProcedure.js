@@ -61,7 +61,7 @@ describe('Procedure Functionality', () => {
                         "laborTime": null,
                         "equipmentTime": 15,
                         "replacementCost": 200000,
-                        "utilizationTime": 1,
+                        "utilization": 1,
                         "usefulLife": 1,
                         "referenceFiles": null,
                         "roles": null
@@ -80,7 +80,7 @@ describe('Procedure Functionality', () => {
                         "laborTime": null,
                         "equipmentTime": 15,
                         "replacementCost": 200000,
-                        "utilizationTime": 2,
+                        "utilization": 2,
                         "usefulLife": 1,
                         "referenceFiles": null,
                         "roles": null
