@@ -117,7 +117,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.Purchase)
                 .ThenInclude(y => y.PurchaseOrder)
                 .ThenInclude(y => y.Customer)
-                .Include(x => x.Location)
+                .Include(x => x.Location).Where(x => x.Id == 18458)
                 .ToListAsync();
 
             if (workorders.Count == 0 && command.Id.HasValue)

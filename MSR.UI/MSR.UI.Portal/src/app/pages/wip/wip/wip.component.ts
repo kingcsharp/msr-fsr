@@ -85,6 +85,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
 
   @ViewChild('fileItem') fileItem: ElementRef;
+  @ViewChild('statusCol') statusCol: ElementRef;
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
@@ -332,7 +333,7 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.Template, templateName: this.statusCol }),
       new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem }),
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.Template, templateName: this.disposition }),
     ];
