@@ -8,9 +8,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'wip', pathMatch: 'full' },
       { path: 'ui', loadChildren: () => import('../pages/ui-elements/ui-elements.module').then(m => m.UiElementsModule) },
       { path: 'package', loadChildren: () => import('../pages/package/package.module').then(m => m.PackageModule) },
-      { path: 'monitors', loadChildren: () =>  import('../pages/monitors/monitors.module').then(m => m.MonitorsModule) },
       { path: 'reporting', loadChildren: () => import('../pages/reports/report.module').then(m => m.ReportModule) },
-      { path: 'dashboards', loadChildren: () => import('../pages/dashboards/dashboard.module').then(m => m.DashboardModule) },
       { path: 'wip', loadChildren: () =>  import('../pages/wip/wip.module').then(m => m.WipModule) },
       { path: 'people', loadChildren: () => import('../pages/main/main.module').then(m => m.MainModule) },
     ]

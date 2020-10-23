@@ -117,7 +117,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.Purchase)
                 .ThenInclude(y => y.PurchaseOrder)
                 .ThenInclude(y => y.Customer)
-                .Include(x => x.Location).Take(3)
+                .Include(x => x.Location)
                 .ToListAsync();
 
             if (workorders.Count == 0 && command.Id.HasValue)
@@ -178,7 +178,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-            
+
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
@@ -216,8 +216,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             var purchase = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
-            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s=> s.ParentId == null);
-            
+            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s => s.ParentId == null);
+
             await GetCycleCount(parentPart, purchase.SerialNumber);
 
 
@@ -838,10 +838,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => i.WorkOrderId != null && workOrderIds.Contains(i.WorkOrderId.Value)).Select(i => i).ToListAsync();
             var imageContentTypes = new List<string>() { "image/jpg", "image/jpeg", "image/gif", "image/png" };
 
-            foreach(var portalView in portalViews)
+            foreach (var portalView in portalViews)
             {
                 var associatedWorkOrder = workOrders.FirstOrDefault(i => i.Id == portalView.Id);
-                if(associatedWorkOrder != null)
+                if (associatedWorkOrder != null)
                 {
                     var (completedDenominator, completedNumerator, percentComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration) = GetStatusValues(associatedWorkOrder);
                     var parentPart = associatedWorkOrder.WorkOrderParts.Any() ? associatedWorkOrder.WorkOrderParts.FirstOrDefault(i => i.Part != null && i.ParentId == null) : (new WorkOrderPartModel());
@@ -882,7 +882,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId.Value == portalView.WorkOrderId);
 
-                if(invoiceItem != null)
+                if (invoiceItem != null)
                 {
                     portalView.InvoiceAmount = invoiceItem.Invoice.Total;
                     portalView.InvoiceDate = invoiceItem.Invoice.InvoiceDate;
