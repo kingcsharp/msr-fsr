@@ -9,7 +9,7 @@ namespace MSR.Domain.Views
     {
         public int Id { get; set; }
         public int WorkOrderId { get; set; }
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string SerialNumber { get; set; }
         public string CompanyPartNumber { get; set; }
@@ -34,6 +34,13 @@ namespace MSR.Domain.Views
         public decimal? InvoiceAmount { get; set; }
         public DateTime? InvoiceDate { get; set; }
         public string InvoiceName { get; set; }
+        public decimal? PercentageOfTasksCompleted { get; set; }
+        public int? PercentageOfTasksCompletedNumerator { get; set; }
+        public int? PercentageOfTasksCompletedDenominator { get; set; }
+        public decimal? PercentageOfExpectedDurationTimeLogged { get; set; }
+        public decimal? PercentageOfExpectedDurationTimeLoggedNumerator { get; set; }
+        public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
         public ICollection<WorkOrderMessageModel> Messages { get; set; }
+        public ICollection<WorkOrderPartModel> SubParts { get; set; }
     }
 }
