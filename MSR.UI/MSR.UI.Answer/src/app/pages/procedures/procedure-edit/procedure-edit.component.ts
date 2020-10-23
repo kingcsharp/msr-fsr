@@ -162,7 +162,7 @@ export class ProcedureEditComponent implements OnInit {
 
 
 
-        procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === Number(procedureStep.procedureStepTypeId))?.value;
+        procedureStep.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === procedureStep.procedureStepTypeId)?.value;
 
         procedureStep.selectedRoles = new Array<Role>();
         procedureStep.roles?.forEach(role => {
