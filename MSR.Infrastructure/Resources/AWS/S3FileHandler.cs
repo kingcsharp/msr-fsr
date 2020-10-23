@@ -70,10 +70,12 @@ namespace MSR.Infrastructure.Resources.AWS
         public string GetURL(string key, int expiresInSeconds = 6000)
         {
             var s3Key = key;
-            if (key.Contains(_s3Information.AWSURL))
+            if (key.Contains(_s3Information.AWSURL) 
+                || key.Contains(_s3Information.UnSecureAWSURL)
+                || key.Contains(_s3Information.HelpAWSURL))
             {
                 //Get the Last part
-                s3Key = key.Replace(_s3Information.AWSURL, "");
+                s3Key = key.Replace(_s3Information.AWSURL, "").Replace(_s3Information.UnSecureAWSURL, "").Replace(_s3Information.HelpAWSURL, "");
             }
 
             return _s3Handler.GetPreSignedURL(new GetPreSignedUrlRequest()
