@@ -5,6 +5,7 @@ import { responseHandler } from '../../utils/responseHandler';
 import { Router } from '@angular/router';
 import { Globals } from '../../models/lib/globals';
 import { WorkOrderItem } from '../../models/work-order-item';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'selectworkorderdropdown-wrapper',
@@ -23,8 +24,9 @@ export class SelectWorkOrderDropDownWrapperComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.globals.showLoader(true);
      this.workOrderService.workOrder(null, null, null, null,
-      this.globals.getCurrentUser().id, env.apiVersion).subscribe(responseHandler(response => {
+      this.globals.getCurrentUser().id, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       let workOrders = <Array<WorkOrderModel>>response.object;
       this.workOrdersAvailable = new Array<WorkOrderItem>();

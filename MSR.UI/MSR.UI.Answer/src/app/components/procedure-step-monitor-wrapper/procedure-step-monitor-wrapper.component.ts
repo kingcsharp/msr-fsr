@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { Component, Input, OnInit, Output } from '@angular/core';
 import {
   CreateProcedureStepMonitorRequest, ProcedureStepModel, ProcedureStepMonitor, ProcedureStepMonitorService,
-  UpdateProcedureStepMonitorRequest, SensorService
+  UpdateProcedureStepMonitorRequest, SensorService, ICreateProcedureStepMonitorRequest, IUpdateProcedureStepMonitorRequest
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
@@ -156,18 +156,20 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
 
     if (this.procedureStepMonitor.id === undefined) {
 
-      let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest();
-      createProcedureStepMonitorRequest.monitorType = this.procedureStepMonitor.monitorType;
-      createProcedureStepMonitorRequest.inputType = this.procedureStepMonitor.inputType;
-      createProcedureStepMonitorRequest.shouldBe = this.procedureStepMonitor.shouldBe;
-      createProcedureStepMonitorRequest.targetValue = this.procedureStepMonitor.targetValue?.toString();
-      createProcedureStepMonitorRequest.faultHandling = this.procedureStepMonitor.faultHandling;
-      createProcedureStepMonitorRequest.description = this.procedureStepMonitor.description;
-      createProcedureStepMonitorRequest.sendEmailNotification = this.procedureStepMonitor.sendEmailNotification;
-      createProcedureStepMonitorRequest.procedureStepId = this.procedureStep.id;
-      createProcedureStepMonitorRequest.lowTarget = this.procedureStepMonitor.lowTarget;
-      createProcedureStepMonitorRequest.highTarget = this.procedureStepMonitor.highTarget;
-      createProcedureStepMonitorRequest.sensorName = this.procedureStepMonitor.sensorName;
+      let createProcedureStepMonitorRequest = new CreateProcedureStepMonitorRequest({
+        monitorType: this.procedureStepMonitor.monitorType,
+        inputType: this.procedureStepMonitor.inputType,
+        shouldBe: this.procedureStepMonitor.shouldBe,
+        targetValue: this.procedureStepMonitor.targetValue?.toString(),
+        faultHandling: this.procedureStepMonitor.faultHandling,
+        description: this.procedureStepMonitor.description,
+        sendEmailNotification: this.procedureStepMonitor.sendEmailNotification,
+        procedureStepId: this.procedureStep.id,
+        lowTarget: this.procedureStepMonitor.lowTarget,
+        highTarget: this.procedureStepMonitor.highTarget,
+        sensorName: this.procedureStepMonitor.sensorName
+      } as ICreateProcedureStepMonitorRequest);
+
       this.globals.showLoader(true);
       this.procedureStepMonitorService.procedureStepMonitorPost(env.apiVersion, createProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
@@ -178,18 +180,20 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
 
     } else {
 
-      let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest();
-      updateProcedureStepMonitorRequest.monitorType = this.procedureStepMonitor.monitorType;
-      updateProcedureStepMonitorRequest.inputType = this.procedureStepMonitor.inputType;
-      updateProcedureStepMonitorRequest.shouldBe = this.procedureStepMonitor.shouldBe;
-      updateProcedureStepMonitorRequest.targetValue = this.procedureStepMonitor.targetValue?.toString();
-      updateProcedureStepMonitorRequest.faultHandling = this.procedureStepMonitor.faultHandling;
-      updateProcedureStepMonitorRequest.description = this.procedureStepMonitor.description;
-      updateProcedureStepMonitorRequest.sendEmailNotification = this.procedureStepMonitor.sendEmailNotification;
-      updateProcedureStepMonitorRequest.id = this.procedureStepMonitor.id;
-      updateProcedureStepMonitorRequest.lowTarget = this.procedureStepMonitor.lowTarget;
-      updateProcedureStepMonitorRequest.highTarget = this.procedureStepMonitor.highTarget;
-      updateProcedureStepMonitorRequest.sensorName = this.procedureStepMonitor.sensorName;
+      let updateProcedureStepMonitorRequest = new UpdateProcedureStepMonitorRequest({
+        monitorType: this.procedureStepMonitor.monitorType,
+        inputType: this.procedureStepMonitor.inputType,
+        shouldBe: this.procedureStepMonitor.shouldBe,
+        targetValue: this.procedureStepMonitor.targetValue?.toString(),
+        faultHandling: this.procedureStepMonitor.faultHandling,
+        description: this.procedureStepMonitor.description,
+        sendEmailNotification: this.procedureStepMonitor.sendEmailNotification,
+        id: this.procedureStepMonitor.id,
+        lowTarget: this.procedureStepMonitor.lowTarget,
+        highTarget: this.procedureStepMonitor.highTarget,
+        sensorName: this.procedureStepMonitor.sensorName
+      } as IUpdateProcedureStepMonitorRequest);
+
       this.globals.showLoader(true);
       this.procedureStepMonitorService.procedureStepMonitorPatch(env.apiVersion, updateProcedureStepMonitorRequest).subscribe(responseHandler((response) => {
 
