@@ -41,7 +41,6 @@ export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.subscriptions.push(sub1);
 
-
         if (this.globals.selectedCustomer !== undefined) {
             this.getReportData();
         }
@@ -56,17 +55,19 @@ export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getReportData();
         }
 
-        this.globals.isBuyerObservable.subscribe(response => {
+        const sub2 = this.globals.isBuyerObservable.subscribe(response => {
             if (this.globals.selectedCustomer !== undefined) {
                 this.getReportData();
             }
         });
 
-        this.globals.selectCustomerObservable.subscribe(response => {
+        const sub3 = this.globals.selectCustomerObservable.subscribe(response => {
             if (response !== null && response !== undefined) {
                 this.getReportData();
             }
         });
+        this.subscriptions.push(sub2);
+        this.subscriptions.push(sub3);
     }
 
     getReportData() {

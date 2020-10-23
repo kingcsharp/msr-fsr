@@ -26,15 +26,6 @@ import { ChartInfo } from '../../../app/models/lib/ChartInfo';
   styleUrls: ['./grid.component.scss']
 })
 export class GridComponent implements OnInit {
-
-  /**
-    for template type templates will have as avaiable this data
-    col: col,
-    colData:itemData,
-    colsSaved:gridSaved.columnsSaved,
-    gridData:gridData
-  */
-
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
   @Input() saveToLocalStorage: boolean;
@@ -75,17 +66,7 @@ export class GridComponent implements OnInit {
     }
 
     this.globals.showLoader(true);
-    let objFiltered = {};
-    if (Object.keys(filteredData.filters).length > 0) {
-      filteredData.filteredValue.forEach(element => {
-        objFiltered[element.elemKey] = element;
-      });
-    } else {
-      filteredData.value.forEach(element => {
-        objFiltered[element.elemKey] = element;
-      });
-    }
-    this.chartInfo.chartData = objFiltered;
+    this.chartInfo.gridData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
 
     this.showCharts = false;
     setTimeout(() => {

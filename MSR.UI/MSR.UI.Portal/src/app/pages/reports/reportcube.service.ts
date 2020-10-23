@@ -196,9 +196,17 @@ export class ReportCubeService {
             name += row[prop1].replace(/\s/g, '');
         }
         if (row[prop2] !== undefined && row[prop2] !== null) {
-            name += separator + row[prop2].replace(/\s/g, '');
+            if (name.length > 0) {
+                name += separator;
+            }
+            name += row[prop2].replace(/\s/g, '');
         }
+
         return name;
+    }
+
+    private isValidRowForChart(row, prop1, prop2) {
+        return row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0 && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
     }
 
     getCycleCountNr(row, prop) {
@@ -209,36 +217,20 @@ export class ReportCubeService {
         return cycleCount;
     }
 
+
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
             case 'PartsCycleCountsbyWorkOrderDate':
-                //Reports Cycle Counts by PArtNumber and SerialNumber
-                let dataDicPartsCycleCounts = {};
-                data.map(elem => {
-                    const elemKey = moment(elem['CubeWorkorderpartscyclecount.duedate']).format('MM-YYYY') + this.splitChars + + this.setName(elem, 'CubeWorkorderpartscyclecount.partnumber', 'CubeWorkorderpartscyclecount.serialnumber', '-');
-                    const cycleCount = this.getCycleCountNr(elem, 'CubeWorkorderpartscyclecount.cyclecount');
-                    if (dataDicPartsCycleCounts[elemKey] === undefined) {
-                        dataDicPartsCycleCounts[elemKey] = {
-                            elemKey: elemKey,
-                            startdate: moment(elem['CubeWorkorderpartscyclecount.startdate']),
-                            id: elem['CubeWorkorderpartscyclecount.id'],
-                            partnumber: elem['CubeWorkorderpartscyclecount.partnumber'],
-                            serialnumber: elem['CubeWorkorderpartscyclecount.serialnumber'],
-                            woitem: elem['CubeWorkorderpartscyclecount.woitem'],
-                            msrfsrfacility: elem['CubeWorkorderpartscyclecount.msrfsrfacility'],
-                            customername: elem['CubeWorkorderpartscyclecount.customername'],
-                            specno: elem['CubeWorkorderpartscyclecount.specno'],
-                            kitname: elem['CubeWorkorderpartscyclecount.kitname'],
-                            ponumber: elem['CubeWorkorderpartscyclecount.ponumber'],
-                            mttn: elem['CubeWorkorderpartscyclecount.mttn'],
-                            cyclecount: cycleCount
-                        };
-                    } else {
-                        dataDicPartsCycleCounts[elemKey].cyclecount += cycleCount;
-                    }
+                const gridData = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.elemKey = elem['startdate'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
+                    elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
+                    elem.cyclecount = this.getCycleCountNr(elem, 'cyclecount');
+                    elem.startdate = moment(elem['startdate']);
+                    return elem;
                 });
                 const chartInfoPartsCycleCounts = new ChartInfo({
-                    chartData: dataDicPartsCycleCounts,
+                    gridData: gridData,
                     chartType: EnumChartType.Line,
                     stackBy: 'cyclecount',
                     chartTitle: 'Parts Cycle Counts',
@@ -246,40 +238,30 @@ export class ReportCubeService {
                     yAxisTitle: 'Cycle Count',
                     tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
                     chartTOptions: {
+                        // tooltip: {
+                        //     headerFormat: '<b>{series.name}</b><br>',
+                        //     pointFormat: '<b>Month:</b> {point.x}  <b>Cycle Count:</b> {point.y}'
+                        // }
                         tooltip: {
                             headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '<b>Month:</b> {point.x}  <b>Cycle Count:</b> {point.y}'
+                            pointFormat: '{point.x:%b-%y}: Cycle Count {point.y}'
                         }
                     }
                 });
 
                 return this.getResultDataAndChart(chartInfoPartsCycleCounts);
             case 'MonitorsHistorybyWorkOrder':
-                let dataDicworkInProcessbyWorkOrder = {};
-                data.map(elem => {
-                    const elemKey = moment(elem['CubePartsmonitors.lastupdatedon']).format('MM-YYYY') + this.splitChars + this.setName(elem, 'CubePartsmonitors.partnumber', 'CubePartsmonitors.serialnumber', '-');
-                    const cycleCount = this.getCycleCountNr(elem, 'CubePartsmonitors.cyclecount');
-                    if (dataDicworkInProcessbyWorkOrder[elemKey] === undefined) {
-                        dataDicworkInProcessbyWorkOrder[elemKey] = {
-                            elemKey: elemKey,
-                            lastupdatedon: moment(elem['CubePartsmonitors.lastupdatedon']),
-                            customerid: elem['CubePartsmonitors.customerid'],
-                            partnumber: elem['CubePartsmonitors.partnumber'],
-                            serialnumber: elem['CubePartsmonitors.serialnumber'],
-                            locationname: elem['CubePartsmonitors.locationname'],
-                            partname: [{ name: elem['CubePartsmonitors.partname'], id: elem['CubePartsmonitors.partname'] }],
-                            //partname
-                            workordername: elem['CubePartsmonitors.workordername'],
-                            value: elem['CubePartsmonitors.value'],
-                            lastupdatedby: elem['CubePartsmonitors.lastupdatedby'],
-                            cyclecount: cycleCount
-                        };
-                    } else {
-                        dataDicworkInProcessbyWorkOrder[elemKey].cyclecount += cycleCount;
-                    }
+                const gridDataRet = data.map(elem => {
+                    var itemData2: any = this.removeObjectsPropertyPrefix(elem);
+                    itemData2.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
+                    elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
+                    itemData2.cyclecount = this.getCycleCountNr(elem, 'CubePartsmonitors.cyclecount');
+                    itemData2.lastupdatedon = moment(elem['lastupdatedon']);
+                    itemData2.partname = [{ name: elem['partname'], id: elem['partname'] }];
+                    return itemData2;
                 });
                 const chartInfoDicworkInProcessbyWorkOrder = new ChartInfo({
-                    chartData: dataDicworkInProcessbyWorkOrder,
+                    gridData: gridDataRet,
                     chartType: EnumChartType.Bar,
                     stackBy: 'cyclecount',
                     chartTitle: 'Parts Cycle Counts',
@@ -411,32 +393,52 @@ export class ReportCubeService {
         return this.getResultDataAndChart(chartInfo3);
     }
 
-    public getResultDataAndChart(chartInfo: ChartInfo) {
-
-        const months = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
-        const dataSeries = [];
-        const resultData = [];
-
-        Object.keys(chartInfo.chartData).forEach(x => {
-            const index = months.indexOf(x.split(this.splitChars)[0]);
-            const name = x.split(this.splitChars)[1];
-            if (index !== -1) {
-                const nameIndex = dataSeries.findIndex(z => z.name === name);
-                if (nameIndex !== -1) {
-                    dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
+    private groupChartDataFromGridRows(chartInfo: ChartInfo) {
+        let chartData = {};
+        const gridData = chartInfo.gridData;
+        let length = chartInfo.gridData.length;
+        while (length--) {
+            const gridDataRow = gridData[length];
+            if(gridDataRow.isValidForChart !== false){
+                if (chartData[gridDataRow.elemKey] === undefined) {
+                    chartData[gridDataRow.elemKey] = gridDataRow;
                 } else {
-                    const dataArr = [];
-                    months.forEach(element => {
-                        dataArr.push(0);
+                    chartData[gridDataRow.elemKey][chartInfo.stackBy] += gridDataRow[chartInfo.stackBy];
+                }
+            }
+        }
+        return chartData;
+    }
+
+    public getResultDataAndChart(chartInfo: ChartInfo) {
+        chartInfo.chartData = this.groupChartDataFromGridRows(chartInfo);
+        const monthsFromTo = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
+        const dataSeries = [];
+
+        Object.keys(chartInfo.chartData).forEach(chartDataKey => {
+            const rowData = chartInfo.chartData[chartDataKey];
+            const xMonth = chartDataKey.split(this.splitChars)[0];
+            const monthIndex = monthsFromTo.indexOf(moment(xMonth).format('MM-YYYY'));
+            const keyName = chartDataKey.split(this.splitChars)[1];
+            if (monthIndex !== -1) {
+                const nameIndex = dataSeries.findIndex(z => z.name === keyName);
+                if (nameIndex !== -1) {
+                    dataSeries[nameIndex].data[monthIndex] += rowData[chartInfo.stackBy];
+                } else {
+                    const seriesDataArray = [];
+                    // just to initialize an array with a 0 in all it's positions.
+                    monthsFromTo.forEach(element => {
+                        seriesDataArray.push(0);
                     });
-                    dataArr[index] += chartInfo.chartData[x][chartInfo.stackBy];
+
+                    seriesDataArray[monthIndex] += rowData[chartInfo.stackBy];
+
                     dataSeries.push({
-                        name: name,
-                        data: dataArr
+                        name: keyName,
+                        data: seriesDataArray
                     });
                 }
             }
-            resultData.push(chartInfo.chartData[x]);
         });
 
         Highcharts.setOptions({
@@ -470,7 +472,7 @@ export class ReportCubeService {
                         fontFamily: 'Open Sans'
                     }
                 },
-                categories: months,
+                categories: monthsFromTo,
                 title: {
                     text: chartInfo.xAxisTitle,
                     style: {
@@ -538,6 +540,6 @@ export class ReportCubeService {
         };
 
 
-        return { resultData: resultData, chartOptions: chartOptions, chartInfo: chartInfo };
+        return { resultData: chartInfo.gridData, chartOptions: chartOptions, chartInfo: chartInfo };
     }
 }
