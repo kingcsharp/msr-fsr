@@ -54,21 +54,21 @@ export class ProcedureEditComponent implements OnInit {
     this.globals.showLoader(true);
     this.durationTypeOptions = new LookUpItems().DurationType();
 
-    this.procedureTemplateService.procedureTemplateGet(null, env.apiVersion).subscribe(responseHandler((procedureTemplateGetResponse) => {
+    this.procedureTemplateService.procedureTemplateGet(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedureTemplateGetResponse) => {
       this.availableProcedureStepTemplates = procedureTemplateGetResponse.object.map(s => ({ label: s.title, value: s.id }));
 
       this.globals.showLoader(true);
-      this.roleService.roleGet(env.apiVersion).subscribe(responseHandler((roleResponse) => {
+      this.roleService.roleGet(env.apiVersion).pipe(take(1)).subscribe(responseHandler((roleResponse) => {
 
         this.availableRoles = roleResponse.object.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
         this.globals.showLoader(true);
-        this.procedureTypeService.procedureTypeGet(null, env.apiVersion).subscribe((procedureTypeGetResponse) => {
+        this.procedureTypeService.procedureTypeGet(null, env.apiVersion).pipe(take(1)).subscribe((procedureTypeGetResponse) => {
 
           this.availableProcedureTypes = procedureTypeGetResponse.object.map(s => ({ label: s.name, value: s.id }));
 
           this.globals.showLoader(true);
-          this.procedureStepTypeService.procedureStepType(null, env.apiVersion).subscribe(responseHandler((procedureStepTypeResponse) => {
+          this.procedureStepTypeService.procedureStepType(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedureStepTypeResponse) => {
 
             this.procedureStepTypeOptions = procedureStepTypeResponse.object.map(s => ({ label: s.name, value: s.id }));
 
@@ -95,7 +95,7 @@ export class ProcedureEditComponent implements OnInit {
       if (this.procedure.id !== 0) {
 
         this.globals.showLoader(true);
-        this.procedureService.procedureGet(this.procedure.id, env.apiVersion).subscribe(responseHandler((procedrueGetResponse) => {
+        this.procedureService.procedureGet(this.procedure.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler((procedrueGetResponse) => {
 
           this.procedure = procedrueGetResponse.object[0];
           this.selectedRoles = new Array<Role>();
@@ -127,7 +127,7 @@ export class ProcedureEditComponent implements OnInit {
   getProcedureSteps() {
 
     this.globals.showLoader(true);
-    this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).subscribe(responseHandler((getGetResponse) => {
+    this.procedureService.stepGet(this.procedure.id, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler((getGetResponse) => {
 
       this.lastSavedProcedureStepOrder = getGetResponse.object?.map(s => s.id);
       getGetResponse.object.forEach(procedureStep => {
@@ -196,7 +196,7 @@ export class ProcedureEditComponent implements OnInit {
   deleteStep() {
     this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
     this.globals.showLoader(true);
-    this.procedureService.stepDelete(this.procedure.id, this.procedureStepToDelete.id, env.apiVersion).subscribe(responseHandler(() => {
+    this.procedureService.stepDelete(this.procedure.id, this.procedureStepToDelete.id, env.apiVersion).pipe(take(1)).subscribe(responseHandler(() => {
       this.procedureSteps = this.procedureSteps.filter(s => s.id !== this.procedureStepToDelete.id);
     }));
 
@@ -233,7 +233,7 @@ export class ProcedureEditComponent implements OnInit {
     });
 
     this.globals.showLoader(true);
-    this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler(() => {
+    this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).pipe(take(1)).subscribe(responseHandler(() => {
 
       let procedureStepsToUpdate = this.lastSavedProcedureStepOrder.filter(s => s !== procedureStep.id);
 
@@ -268,7 +268,7 @@ export class ProcedureEditComponent implements OnInit {
         }
 
         updateAffectedProcedureStepRequests.forEach(updateAffectedProcedureStepRequestNow => {
-          this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateAffectedProcedureStepRequestNow).subscribe(responseHandler(() => {
+          this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateAffectedProcedureStepRequestNow).pipe(take(1)).subscribe(responseHandler(() => {
 
           }));
         });
@@ -293,7 +293,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.referenceFiles = procedure.referenceFiles;
     updateProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
     this.globals.showLoader(true);
-    this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).subscribe(() => {
+    this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).pipe(take(1)).subscribe(() => {
 
     });
   }
@@ -351,7 +351,7 @@ export class ProcedureEditComponent implements OnInit {
 
     } else {
       this.globals.showLoader(true);
-      this.procedureTemplateService.procedureTemplateGet(this.selectedProcedureStepTemplate, env.apiVersion).subscribe(responseHandler((response) => {
+      this.procedureTemplateService.procedureTemplateGet(this.selectedProcedureStepTemplate, env.apiVersion).pipe(take(1)).subscribe(responseHandler((response) => {
 
         let procedureStepTemplateToAdd = response.object[0];
         let procedureStepToAdd: any = {};
@@ -418,7 +418,7 @@ export class ProcedureEditComponent implements OnInit {
     });
 
     this.globals.showLoader(true);
-    this.procedureService.stepPost(this.procedure.id, env.apiVersion, createProcedureStepRequest).subscribe(responseHandler((response) => {
+    this.procedureService.stepPost(this.procedure.id, env.apiVersion, createProcedureStepRequest).pipe(take(1)).subscribe(responseHandler((response) => {
       procedureStep.id = response.object.id;
     }));
 
