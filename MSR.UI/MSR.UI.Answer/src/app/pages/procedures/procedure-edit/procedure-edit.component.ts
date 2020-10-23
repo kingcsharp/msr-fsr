@@ -4,9 +4,9 @@ import { DraggableItemService } from 'ngx-bootstrap/sortable';
 import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
-  RoleService, Procedure, ProcedureStepModel, ProcedureStepMonitor, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService, SensorService,
-  ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, ProcedureType, CreateProcedureStepMonitorRequest, UpdateProcedureStepRequest,
-  RoleRequest, UpdateProcedureStepMonitorRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, FileRequest, IUpdateProcedureStepRequest
+  RoleService, Procedure, ProcedureStepModel, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService, SensorService,
+  ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, UpdateProcedureStepRequest,
+  RoleRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, IUpdateProcedureStepRequest
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -33,9 +33,6 @@ export class ProcedureEditComponent implements OnInit {
   procedureStepTypeOptions: Array<SelectItem>;
   canEdit: boolean = false;
   canDelete: boolean = false;
-
-
-
   showConfirmDeleteStepDialog: boolean = false;
   procedureStepToDelete: ProcedureStepModel;
   availableProcedureStepTemplates: Array<SelectItem>;
@@ -46,8 +43,7 @@ export class ProcedureEditComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
     private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
-    private procedureService: ProcedureService, private procedureStepMonitorService: ProcedureStepMonitorService, private sensorService: SensorService,
-    private procedureStepTypeService: ProcedureStepTypeService, private procedureTypeService: ProcedureTypeService) { }
+    private procedureService: ProcedureService, private procedureStepTypeService: ProcedureStepTypeService, private procedureTypeService: ProcedureTypeService) { }
 
   ngOnInit(): void {
 
@@ -198,7 +194,7 @@ export class ProcedureEditComponent implements OnInit {
 
   deleteStep() {
     this.globals.showLoader(true);
-    this.procedureService.stepDelete(this.procedure.id, this.procedureStepToDelete.id, env.apiVersion).subscribe(responseHandler((response) => {
+    this.procedureService.stepDelete(this.procedure.id, this.procedureStepToDelete.id, env.apiVersion).subscribe(responseHandler(() => {
       this.procedureSteps = this.procedureSteps.filter(s => s.id === this.procedureStepToDelete.id);
       this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
     }));
@@ -236,7 +232,7 @@ export class ProcedureEditComponent implements OnInit {
     });
 
     this.globals.showLoader(true);
-    this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler((response) => {
+    this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateProcedureStepRequest).subscribe(responseHandler(() => {
 
       let procedureStepsToUpdate = this.lastSavedProcedureStepOrder.filter(s => s !== procedureStep.id);
 
@@ -271,7 +267,7 @@ export class ProcedureEditComponent implements OnInit {
         }
 
         updateAffectedProcedureStepRequests.forEach(updateAffectedProcedureStepRequestNow => {
-          this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateAffectedProcedureStepRequestNow).subscribe(responseHandler((stepPatchResponse) => {
+          this.procedureService.stepPatch(this.procedure.id, env.apiVersion, updateAffectedProcedureStepRequestNow).subscribe(responseHandler(() => {
 
           }));
         });
@@ -296,7 +292,7 @@ export class ProcedureEditComponent implements OnInit {
     updateProcedureRequest.referenceFiles = procedure.referenceFiles;
     updateProcedureRequest.roleIds = this.selectedRoles.map(s => s.id);
     this.globals.showLoader(true);
-    this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).subscribe((response) => {
+    this.procedureService.procedurePatch(env.apiVersion, updateProcedureRequest).subscribe(() => {
 
     });
   }
@@ -401,7 +397,7 @@ export class ProcedureEditComponent implements OnInit {
 
   }
 
-  updateProcedurePredecessorAndOrder($event) {
+  updateProcedurePredecessorAndOrder() {
 
     this.procedureSteps.forEach(procedureStep => {
 

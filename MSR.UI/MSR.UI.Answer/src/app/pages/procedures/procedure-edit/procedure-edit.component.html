@@ -123,8 +123,8 @@
                                     </label>
                                 </div>
                                 <div class="col-8 mt-3  d-flex flex-row ">
-                                    <p-dropdown placeholder="Select Procedure Step Template" name="addprocedurestep" class="my-auto"
-                                        [options]="availableProcedureStepTemplates" showClear="true"
+                                    <p-dropdown placeholder="Select Procedure Step Template" name="addprocedurestep" class="procedurestep-selector my-auto"
+                                        [options]="availableProcedureStepTemplates" [filter]="true" [showClear]="true"
                                         [(ngModel)]="selectedProcedureStepTemplate" data-cy="addprocedurestep-dropdown">
                                     </p-dropdown>
                                     <button type="button" class="btn btn-primary m-2" (click)="addProcedureStep()"
