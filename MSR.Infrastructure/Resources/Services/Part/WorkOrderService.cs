@@ -117,7 +117,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.Purchase)
                 .ThenInclude(y => y.PurchaseOrder)
                 .ThenInclude(y => y.Customer)
-                .Include(x => x.Location)
+                .Include(x => x.Location).Take(3)
                 .ToListAsync();
 
             if (workorders.Count == 0 && command.Id.HasValue)
@@ -1046,7 +1046,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 workOrderGridSummary.PercentageOfTasksCompletedDenominator = statusValues.completedDenominator;
                 workOrderGridSummary.PercentageOfTasksCompletedNumerator = statusValues.completedNumerator;
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = statusValues.percentExpectedDuration;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = statusValues.expectedDurationDenominator;
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = (double)statusValues.expectedDurationDenominator;
                 workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = statusValues.expectedDurationNumerator;
 
                 workOrderGridSummaries.Add(workOrderGridSummary);
@@ -1061,7 +1061,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             int completedDenominator = workOrderModel.WorkOrderTasks.Count();
             int completedNumerator = workOrderModel.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
             decimal pctComplete = completedDenominator == 0 ? 0 : completedNumerator / (decimal)completedDenominator;
-            decimal expectedDurationDenominator = workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
+            decimal expectedDurationDenominator = (decimal)workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
             decimal expectedDurationNumerator = workOrderModel.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
             decimal percentExpectedDuration = expectedDurationDenominator == 0 ? 0 : expectedDurationNumerator / expectedDurationDenominator;
             return (completedDenominator, completedNumerator, pctComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration);
