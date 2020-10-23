@@ -207,7 +207,7 @@ export class ReportCubeService {
 
     private isValidRowForChart(row, prop1, prop2) {
         const isValid = row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0 && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
-        if(isValid){
+        if (isValid) {
             var a = 1;
         }
         return isValid;
@@ -291,25 +291,16 @@ export class ReportCubeService {
 
                 return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
             case 'RevenuebyCustomerbyTimePeriod':
-                let dataDic = {};
-                // const resultData = [];
-                data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + this.splitChars + elem['CubeFinancial.customername'].replace(/\s/g, '') + this.splitChars + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
-                    if (dataDic[elemKey] === undefined) {
-                        dataDic[elemKey] = {
-                            elemKey: elemKey,
-                            yearMonth: moment(elem['CubeFinancial.duedate']),
-                            site: elem['CubeFinancial.msrfsrfacility'],
-                            customername: elem['CubeFinancial.customername'],
-                            total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
-                        };
-                    } else {
-                        dataDic[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
-                    }
+                const resultData = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.key = elem['duedate'] + this.splitChars + elem['customername'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
+                    elem.yearMonth = moment(elem['duedate']);
+                    elem.isValidForChart = true;
+                    elem.total = parseFloat(elem['wtax'].substring(1))
                 });
 
                 const chartInfo = new ChartInfo({
-                    chartData: dataDic,
+                    gridData: resultData,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Customer',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -319,27 +310,17 @@ export class ReportCubeService {
 
                 return this.getResultDataAndChart(chartInfo);
             case 'RevenuebyKitbyPart/Kit':
-                let dataDic3 = {};
-                const resultData2 = [];
-                data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + this.splitChars + elem['CubeFinancial.kitname'].replace(/\s/g, '') + this.splitChars + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
-                    if (dataDic3[elemKey] === undefined) {
-                        dataDic3[elemKey] = {
-                            elemKey: elemKey,
-                            duedate: elem['CubeFinancial.duedate'],
-                            yearMonth: moment(elem['CubeFinancial.duedate']),
-                            kitname: elem['CubeFinancial.kitname'],
-                            site: elem['CubeFinancial.msrfsrfacility'],
-                            total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
-                        };
-                    } else {
-                        dataDic3[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
-                    }
+                const resultData2 = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.key = elem['duedate'] + this.splitChars + elem['kitname'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
+                    elem.yearMonth = moment(elem['duedate']);
+                    elem.isValidForChart = true;
+                    elem.total = parseFloat(elem['wtax'].substring(1));
+                    elem.site = elem['msrfsrfacility'];
                 });
-                Object.keys(dataDic3).forEach(x => resultData2.push(dataDic3[x]));
 
                 const chartInfo2 = new ChartInfo({
-                    chartData: dataDic3,
+                    gridData: resultData2,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Kit',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -349,25 +330,18 @@ export class ReportCubeService {
 
                 return this.getResultDataAndChart(chartInfo2);
             case 'CountofKitsbyPart/Kit':
-                let dataDic2 = {};
-                data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + this.splitChars + elem['CubeFinancial.kitname'].replace(/\s/g, '') + this.splitChars + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
-                    if (dataDic2[elemKey] === undefined) {
-                        dataDic2[elemKey] = {
-                            elemKey: elemKey,
-                            duedate: elem['CubeFinancial.duedate'],
-                            yearMonth: moment(elem['CubeFinancial.duedate']),
-                            kitname: elem['CubeFinancial.kitname'],
-                            site: elem['CubeFinancial.msrfsrfacility'],
-                            count: 1
-                        };
-                    } else {
-                        dataDic2[elemKey].count += 1;
-                    }
+                const gridData5 = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.elemKey = elem['duedate'] + this.splitChars + this.setName(elem, 'kitname', 'msrfsrfacility', '-');
+                    elem.isValidForChart = this.isValidRowForChart(elem, 'kitname', 'msrfsrfacility');
+                    elem.yearMonth = moment(elem['CubeFinancial.duedate']);
+                    elem.site = elem['msrfsrfacility'];
+                    elem.count = 1;
+                    return elem;
                 });
 
                 const chartInfo3 = new ChartInfo({
-                    chartData: dataDic2,
+                    gridData: gridData5,
                     stackBy: 'count',
                     chartTitle: 'Count of Kits',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
