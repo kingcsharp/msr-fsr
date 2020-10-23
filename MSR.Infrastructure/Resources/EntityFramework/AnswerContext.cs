@@ -18,6 +18,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerApproval> CustomerApproval { get; set; }
+        public DbSet<CycleCountHistory> CycleCountHistory { get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<LocationApproval> LocationApproval { get; set; }
         public DbSet<MenuGroup> MenuGroup { get; set; }
@@ -73,8 +74,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<ReportCategoryMap> ReportCategoryMap { get; set; }
         public DbSet<ReportDashboard> ReportDashboard { get; set; }
         public DbSet<ReportDashboardMap> ReportDashboardMap { get; set; }
+        public DbSet<PortalWorkOrder> PortalWorkOrderView { get; set; }
 
         public DbSet<EquipmentMaintenance> EquipmentMaintenance { get; set; }
+        public DbSet<WorkOrderMessage> WorkOrderMessage { get; set; }
 
         public AnswerContext() : base()
         {

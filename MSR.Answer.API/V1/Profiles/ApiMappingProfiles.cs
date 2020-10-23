@@ -38,10 +38,8 @@ namespace MSR.Answer.API.V1.Profiles
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();
-            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>()
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
-            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>()
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
+            CreateMap<CreateProcedureStepRequest, CreateProcedureStep>();
+            CreateMap<UpdateProcedureStepRequest, UpdateProcedureStep>();
             CreateMap<CreateProcedureStepMonitorRequest, CreateProcedureStepMonitor>()
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
                 .ForMember(dest => dest.Target, opts => opts.MapFrom(src => Convert.ToSingle(src.TargetValue)))
@@ -94,6 +92,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreateProductRequest, CreateProduct>();
             CreateMap<GetProductRequest, GetProduct>();
             CreateMap<UpdateProductRequest, UpdateProduct>();
+            CreateMap<Models.ProductStep, MSR.Domain.Models.ProductStep>();
             CreateMap<CreateRoleRequest, CreateRole>();
             CreateMap<UpdateRoleRequest, UpdateRole>();
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
@@ -132,6 +131,9 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<GetDocumentRequest, GetDocument>();
             CreateMap<CreateDocumentRequest, CreateDocument>();
             CreateMap<UpdateDocumentRequest, UpdateDocument>();
+            CreateMap<CreateWorkOrderMessageRequest, CreateWorkOrderMessage>()
+                .ForMember(dest => dest.WorkOrderId, opts => opts.MapFrom(src => src.Id));
+            CreateMap<GetPortalWorkOrderRequest, GetPortalWorkOrder>();
         }
     }
 }

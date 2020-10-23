@@ -1,0 +1,15 @@
+.table.quote-header, .table.quote-footer {
+  td, th {
+    border-top: none;
+    font-weight: 400;
+  }
+}
+
+.table.items-table > thead > tr > th {
+  font-weight: 400;
+}
+
+ol {
+  list-style: decimal;
+  margin-left: 40px;
+}

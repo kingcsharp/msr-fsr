@@ -8,6 +8,8 @@
       *ngIf="getPurchaseOrderFlag && purchaseOrderData"
       class="py-4 form-horizontal form-label-left parsleyjs"
       data-parsley-priority-enabled="false"
+      data-parsley-validate="false"
+      data-parsley-excluded="input[type=button], input[type=submit], input[type=reset], [disabled]"
       novalidate="novalidate"
     >
       <div class="row mx-0">
@@ -147,6 +149,7 @@
               <p-calendar
                 [(ngModel)]="globalDueDate"
                 name="globalDueDate"
+                [defaultDate]="globalDueDate"
                 showIcon="true"
                 styleClass="input-group input-group-transparent"
                 inputStyleClass="form-control input-transparent"
@@ -263,28 +266,32 @@
                 <input
                   pInputText
                   type="text"
-                  class="form-control input-transparent"
+                  class="form-control input-transparent custLineNumber"
                   [(ngModel)]="purchaseItems[i].customerLineNumber"
                   name="purchaseItem[{{i}}].CUST_LINE_ITEM"
                   data-validate="parsley"
-                  data-parsley-trigger="change"
-                  data-parsley-type="number"
                   data-parsley-required="true"
+                  data-parsley-trigger="change"
+                  data-parsley-type="integer"
                 >
               </td>
               <td>
                 <input
                   [(ngModel)]="purchaseItems[i].mttn"
                   class="form-control input-transparent disable"
-                  name="purchaseItem[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER" type="text"
-                  data-parsley-trigger="change" data-parsley-maxlength="10" data-parsley-maxlength-message="MTTN must be 10 characters or less."
+                  name="purchaseItem[{{i}}].MATERIAL_TRANSFER_TICKET_NUMBER"
+                  type="text"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-maxlength="10" data-parsley-maxlength-message="MTTN must be 10 characters or less."
                   data-parsley-required="false"
                 >
               </td>
               <td>
                 <div class="form-group row mx-0">
                   <p-calendar
-                    [(ngModel)]="purchaseItems[i].dueDate"
+
+                  [(ngModel)]="purchaseItems[i].dueDate"
                     name="purchaseItem[{{i}}].DUE_DATE"
                     showIcon="true"
                     styleClass="input-group input-group-transparent"
@@ -382,9 +389,22 @@
                   [options]="locationsData"
                   appendTo="body"
                   [baseZIndex]="100001"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
                   data-parsley-required="true"
                 >
                 </p-dropdown>
+                <input
+                  pInputText
+                  hidden
+                  [(ngModel)]="purchaseSerializeItems[i].locationId"
+                  class="form-control input-transparent"
+                  name="purchaseSerializeItem_SITE"
+                  type="text"
+                  data-validate="parsley"
+                  data-parsley-trigger="change"
+                  data-parsley-required="true"
+                >
               </td>
               <td>
                 <input

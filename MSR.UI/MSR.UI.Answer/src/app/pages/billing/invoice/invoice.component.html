@@ -110,8 +110,8 @@
                     {{invoiceModel.lastUpdatedByName }}
                 </td>
                 <td>
-                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Invoice" data-cy="editRow"
-                        (click)="showDialog(invoiceModel)"></i>
+                    <i *ngIf="userPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Invoice"
+                        data-cy="editRow" (click)="showDialog(invoiceModel)"></i>
                     <i *ngIf="userPrivileges.canRead" (click)="downloadAllInvoices(invoiceModel.id)"
                         tooltip="Download Invoice" class="far fa-download pointer"></i>
                 </td>
@@ -155,10 +155,9 @@
                             Tax Percentage
                         </label>
                         <div class="col-md-4 ">
-                            <input type="number" id="taxPercentage" name="taxPercentage"
-                                [(ngModel)]="currentInvoice.taxPercentage" 
-                                class="form-control input-transparent" placeholder="Tax Percentage"
-                                data-cy="taxPercentage-input">
+                            <input type="number" id="taxPercentage" name="taxPercentage" data-parsley-min="0" data-parsley-max="100"
+                                [(ngModel)]="currentInvoice.taxPercentage" class="form-control input-transparent"
+                                placeholder="Tax Percentage" data-cy="taxPercentage-input">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -166,12 +165,15 @@
                             Location
                         </label>
                         <div class="col-md-4 col-12">
-                            <p-dropdown [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
+                            <p-dropdown required [disabled]="currentInvoice.id !== undefined" p-dropdown-label="name"
                                 (onChange)="locationChanged()" optionLabel="name" placeholder="Select Location"
                                 name="locations" [options]="locations" dataKey="id" [virtualScroll]="true" itemSize="30"
                                 appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.location"
-                                [ngModelOptions]="{standalone: true}" data-cy="invoice-location">
+                                data-cy="invoice-location">
                             </p-dropdown>
+                            <input pInputText type="text" hidden class="form-control input-transparent" name="locationshdn"
+                                [value]="currentInvoice?.location?.id" data-validate="parsley" data-parsley-trigger="change"
+                                data-parsley-required="true">
                         </div>
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="supervisor">
                             Customer
@@ -181,8 +183,11 @@
                                 (onChange)="customerChanged()" optionLabel="name" placeholder="Select Customer"
                                 name="customers" [options]="customers" dataKey="id" [virtualScroll]="true" itemSize="30"
                                 appendTo="body" [baseZIndex]="100001" [(ngModel)]="currentInvoice.customer"
-                                [ngModelOptions]="{standalone: true}"  data-cy="invoice-customer">
+                                data-cy="invoice-customer">
                             </p-dropdown>
+                            <input pInputText type="text" hidden class="form-control input-transparent" name="customerhdn"
+                                [value]="currentInvoice?.customer?.id" data-validate="parsley" data-parsley-trigger="change"
+                                data-parsley-required="true">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -190,7 +195,7 @@
                             Invoice Date
                         </label>
                         <div class="col-md-4 ">
-                            <div  data-cy="actual-endDate" class="display-inline-block isActive">
+                            <div data-cy="actual-endDate" class="display-inline-block isActive">
                                 <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="currentInvoice.dueDate"
                                     dataType="string" [locale]="calendarEn">
                                 </p-calendar>
@@ -291,7 +296,8 @@
                                 [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">
                                 {{workOrderModel.purchase.customerPurchaseNumber}}
                             </td>
-                            <td class="text-capitalize" [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)">
+                            <td class="text-capitalize"
+                                [hidden]="!cg.isVisibleCol('purchase.customerLineNumber',gridWoSettings)">
                                 {{workOrderModel.purchase.customerLineNumber}}
                             </td>
                             <td class="text-capitalize" [hidden]="!cg.isVisibleCol('serialNumber',gridWoSettings)">

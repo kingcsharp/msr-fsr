@@ -64,7 +64,7 @@
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-8 border font-weight-bold">Desciption</div><div class="col-4 border font-weight-bold">Result</div>
-                                <div class="col-12">
+                                <div class="col-12" *ngIf="workOrderTask.workOrderTaskMonitors?.length > 0">
                                     <div class="row" *ngFor="let workOrderTaskMonitor of workOrderTask.workOrderTaskMonitors">
                                         <div class="col-8 border">{{workOrderTaskMonitor.procedureStepMonitor?.description }}</div>
                                         <div class="col-4 border">{{workOrderTaskMonitor.textVal}}</div>

@@ -11,17 +11,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [Required]
         public int CustomerId { get; set; }
 
-        [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         [StringLength(50)]
         public string ReferencePO { get; set; }
 
-        [Required]
         [StringLength(100)]
-        public string ReferenceName { get; set; }
+        public string? ReferenceName { get; set; }
 
         [Required]
         public DateTime OpenDate { get; set; }
@@ -41,6 +39,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         [ForeignKey("StatusId")]
         public virtual Status Status { get; set; }
 
+        public virtual int StatusId { get; set; }
         public virtual ICollection<PurchaseOrderProduct> PurchaseOrderProducts { get; set; }
     }
 }

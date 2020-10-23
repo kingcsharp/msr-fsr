@@ -23,6 +23,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Part> Parts { get; }
         IRepository<Procedure> Procedures { get; }
         IRepository<ProcedureStep> ProcedureSteps { get; }
+        IRepository<ProcedureStepRoleMap> ProcedureStepRoleMaps { get; }
         IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get; }
         IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get; }
         IRepository<ProcedureStepType> ProcedureStepTypes { get; }
@@ -55,6 +56,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<MonitorInputType> MonitorInputTypes { get; }
         IRepository<MonitorType> MonitorTypes { get; }
         IRepository<MonitorListItem> MonitorListItems { get; }
+        IRepository<CycleCountHistory> CycleCountHistory { get; }
         IRepository<Document> Documents { get; }
         IRepository<DocumentRoleMap> DocumentRoles { get; }
         IRepository<DocumentEntityMap> DocumentEntityMap { get; }
@@ -83,6 +85,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<ReportDashboard> ReportDashboards { get; }
         IRepository<ReportDashboardMap> ReportDashboardMaps { get; }
         IRepository<EquipmentMaintenance> EquipmentMaintenances { get; }
+        IRepository<WorkOrderMessage> WorkOrderMessages { get; }
+        IRepository<PortalWorkOrder> PortalWorkOrderViews { get; }
         
         void SaveChanges();
         Task SaveChangesAsync();

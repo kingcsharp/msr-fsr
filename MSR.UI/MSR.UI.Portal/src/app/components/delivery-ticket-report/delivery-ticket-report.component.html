@@ -1,0 +1,72 @@
+<div class="row border">
+    <div class="col-12 mb-2 border-bottom">
+        <div class="row">
+            <div class="col-6">
+                <h1>MSR-FSR</h1>
+            </div>
+            <div class="col-6 text-right">
+                <h2>DELIVERY TICKET</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mb-2">
+        <div class="row mx-2">
+            <div class="col-3">
+                <u>Ship From</u><br />
+                MSR-FSR
+            </div>
+            <div class="col-3">
+                <u>Ship To</u><br />
+                {{ WorkOrder.product?.customer?.name }}
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6 text-right">Ship Date:</div><div class="col-6"></div>
+                    <div class="col-6 text-right">Material Transfer #:</div><div class="col-6">{{ WorkOrder.purchase?.mttn }}</div>
+                    <div class="col-6 text-right">Customer PO #:</div><div class="col-6">{{ WorkOrder.purchase?.purchaseOrder?.referencePO }}</div>
+                    <div class="col-6 text-right">Order QTY:</div><div class="col-6">{{ WorkOrder.purchase?.purchaseOrder?.qty }}</div>
+                    <div class="col-6 text-right">Purcahse #:</div><div class="col-6">{{ WorkOrder.purchase?.id }}</div>
+                    <div class="col-6 text-right">Customer WO Item #:</div><div class="col-6">{{ WorkOrder.purchase?.customerPurchaseNumber }}</div>
+                    <div class="col-6 text-right">Blanket PO #:</div><div class="col-6"></div>
+                    <div class="col-6 text-right">Barcode:</div>
+                    <div class="col-6">
+                        <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO"
+                         [bc-display-value]="false" [bc-height]="40" ></ngx-barcode>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mb-2">
+        <div class="row mx-2">
+            <div class="col-2 border">Material Transfer #</div>
+            <div class="col-2 border">Customer P/N</div>
+            <div class="col-2 border">Description</div>
+            <div class="col-2 border">Serial #***</div>
+            <div class="col-1 border">Notes</div>
+            <div class="col-3 border">Barcode</div>
+            <div class="col-2 border">{{ WorkOrder.purchase?.mttn }}</div>
+            <div class="col-2 border">{{ WorkOrder.product?.part?.partNumber }}</div>
+            <div class="col-2 border">
+                {{ WorkOrder.product?.part?.partNumber }}
+                {{ WorkOrder.product?.name }}
+                {{ WorkOrder.product?.procedure?.name }}
+            </div>
+            <div class="col-2 border">{{WorkOrder.workOrderParts[0]?.serialNumber}}</div>
+            <div class="col-1 border"></div>
+            <div class="col-3 border">
+                PO /Line #: {{ WorkOrder.purchase?.purchaseOrder?.referencePO }}/{{ WorkOrder.purchase?.customerLineNumber }}<br />
+                <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="WorkOrder.purchase?.purchaseOrder?.referencePO + '/' + WorkOrder.purchase?.customerLineNumber"
+                         [bc-display-value]="false" [bc-height]="40" ></ngx-barcode>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mb-2 border-top">
+        <div class="row">
+            <div class="col-3">Recipient Signature***:</div>
+            <div class="col-6 write-line"></div>
+            <div class="col-1">Date:</div>
+            <div class="col-2 write-line"></div>
+        </div>
+    </div>
+</div>

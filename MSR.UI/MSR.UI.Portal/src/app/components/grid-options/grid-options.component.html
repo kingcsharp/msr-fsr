@@ -1,0 +1,92 @@
+<div class="dropdown" style="display: inline-block!important;">
+    <button type="button" class="btn btn-primary width-100 mb-xs ng-star-inserted dropdown-toggle"
+        (click)="this.columnDropdown = false;" data-toggle="dropdown" data-cy="myviews-button">
+        My Views
+    </button>
+    <div id="myViews" class="dropdown-menu dropdown-menu-right" (click)="stopEvent($event)">
+        <h5 class="dropdown-header">My Saved Views</h5>
+        <div class="dropdown-divider"></div>
+        <div class="container" *ngIf="viewsSaved.length===0">
+            No Views Saved
+        </div>
+        <div class="dropdown-item" *ngFor="let view of viewsSaved">
+            <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''" (click)="restoreState(view)"
+                tooltip="{{view.isDefault?'Your Default View':''}}">
+                <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
+                {{view.viewName | titlecase}}
+            </a>
+            <div class="view-options text-right">
+                <i class="fas fa-sync pointer text-secondary" (click)="updateTemplateWithCurrentView(view)"
+                    tooltip="Update Using Current View"></i>&nbsp;
+                <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
+                    [ngClass]="view.isDefault?'text-success':'text-secondary'"
+                    tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>&nbsp;
+                <i class="fal fa-trash-alt pointer text-danger" (click)="deleteView(view)" tooltip="Delete View"></i>
+            </div>
+        </div>
+
+        <div class="dropdown-divider"></div>
+        <div class="text-center">
+            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
+                (click)="showSaveViewDiv()">
+                Save Current View
+            </button> &nbsp;
+            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" data-cy="clearview-button"
+                (click)="resetgr()">
+                Clear View
+            </button>
+        </div>
+        <div class="save-view-form" *ngIf="showSaveView">
+            <div>
+                <div class="form-row"> 
+                    <input type="text" class="form-control col-5" placeholder="View Name"
+                        [(ngModel)]="viewToSave.viewName" />
+                    <div class="form-check col-3">
+                        <div class="ui-g-12">
+                            <p-checkbox name="isDefault" label="Default" [(ngModel)]="viewToSave.isDefault"
+                                binary="true">
+                            </p-checkbox>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning width-100 float-right"
+                        (click)="saveView()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+&nbsp;
+<div class="gridDropdown">
+    <p-multiSelect [options]="columnPicker" [(ngModel)]="selectedColumns" (onChange)="changeColVisibility($event.value)"
+        dataKey="id" [itemSize]="15">
+        <ng-template pTemplate="selectedItems">
+            <i class="fas fa-list" tooltip="Choose Columns"></i> &nbsp;
+        </ng-template>
+    </p-multiSelect>
+</div>
+
+<p-dialog class="text-left" header="Remove Template" [(visible)]="showRemove" [modal]='true' [style]="{width: '21vw'}">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    Are you sure you want to delete this view?
+                </h5>
+            </header>
+            <div class="widget-body"></div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="button" (click)="removeView()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Yes
+                </button>&nbsp;
+                <button type="button" (click)="showRemove=false" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    No
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

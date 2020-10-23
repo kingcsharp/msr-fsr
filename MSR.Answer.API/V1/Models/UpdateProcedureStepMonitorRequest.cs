@@ -88,5 +88,12 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="lowTarget")]
         public float? LowTarget { get; set; }
+
+        /// <summary>
+        /// MonitorListId
+        /// </summary>
+        [DataMember(Name = "monitorListId")]
+        public int? MonitorListId { get; set; }
+        
     }
 }

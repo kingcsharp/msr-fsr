@@ -25,6 +25,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<Part> _parts;
         private IRepository<Procedure> _procedures;
         private IRepository<ProcedureStep> _procedureSteps;
+        private IRepository<ProcedureStepRoleMap> _procedureStepRoleMaps;
         private IRepository<ProcedureStepMonitor> _monitors;
         private IRepository<ProcedureStepTemplate> _procedureStepTemplates;
         private IRepository<ProcedureStepType> _procedureStepTypes;
@@ -86,7 +87,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         private IRepository<ReportDashboard> _reportDashboard;
         private IRepository<ReportDashboardMap> _reportDashboardMap;
         private IRepository<EquipmentMaintenance> _equipmentMaintenances;
+        private IRepository<WorkOrderMessage> _workOrderMessage;
+        private IRepository<CycleCountHistory> _cycleCountHistory;
+        private IRepository<PortalWorkOrder> _portalWorkOrderView;
 
+        public IRepository<CycleCountHistory> CycleCountHistory { get { return _cycleCountHistory ?? (_cycleCountHistory = new EFRepository<CycleCountHistory>(Context)); } }
         public IRepository<Document> Documents { get { return _documents ?? (_documents = new EFRepository<Document>(Context)); } }
         public IRepository<DocumentRoleMap> DocumentRoles { get { return _documentRoleMaps ?? (_documentRoleMaps = new EFRepository<DocumentRoleMap>(Context)); } }
         public IRepository<DocumentEntityMap> DocumentEntityMap { get { return _documentEntityMap ?? (_documentEntityMap = new EFRepository<DocumentEntityMap>(Context)); } }
@@ -130,6 +135,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<WorkflowGroupUserMap> WorkflowGroupUserMaps { get { return _workflowGroupUserMap ?? (_workflowGroupUserMap = new EFRepository<WorkflowGroupUserMap>(Context)); } }
         public IRepository<WorkflowGroupStageMap> WorkflowGroupStageMaps { get { return _workflowGroupStageMaps ?? (_workflowGroupStageMaps = new EFRepository<WorkflowGroupStageMap>(Context)); } }
         public IRepository<ProcedureStep> ProcedureSteps { get { return _procedureSteps ??= new EFRepository<ProcedureStep>(Context); } }
+        public IRepository<ProcedureStepRoleMap> ProcedureStepRoleMaps { get { return _procedureStepRoleMaps ??= new EFRepository<ProcedureStepRoleMap>(Context); } }
         public IRepository<ProcedureStepMonitor> ProcedureStepMonitors { get { return _monitors ??= new EFRepository<ProcedureStepMonitor>(Context); } }
         public IRepository<ProcedureStepTemplate> ProcedureStepTemplates { get { return _procedureStepTemplates ??= new EFRepository<ProcedureStepTemplate>(Context); } }
         public IRepository<ProcedureStepType> ProcedureStepTypes { get { return _procedureStepTypes ??= new EFRepository<ProcedureStepType>(Context); } }
@@ -161,6 +167,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         public IRepository<ReportCategoryMap> ReportCategoryMaps { get { return _reportCategoryMap ??= new EFRepository<ReportCategoryMap>(Context); } }
         public IRepository<ReportDashboard> ReportDashboards { get { return _reportDashboard ??= new EFRepository<ReportDashboard>(Context); } }
         public IRepository<ReportDashboardMap> ReportDashboardMaps { get { return _reportDashboardMap ??= new EFRepository<ReportDashboardMap>(Context); } }
+        public IRepository<WorkOrderMessage> WorkOrderMessages { get { return _workOrderMessage ??= new EFRepository<WorkOrderMessage>(Context); } }
+        public IRepository<PortalWorkOrder> PortalWorkOrderViews { get { return _portalWorkOrderView ??= new EFRepository<PortalWorkOrder>(Context); } }
 
         #endregion Repositories
 

@@ -271,11 +271,81 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.UserModel> GetLoggedInUserData(int Id)
         {
-            var user = await _unitOfWork.Users.Query().Include(x => x.TimeZone)
-                .Include(x => x.Roles).ThenInclude(x => x.Role).ThenInclude(x => x.Menus)
-                .ThenInclude(x => x.MenuItem).ThenInclude(x => x.MenuGroup)
-                .Where(x => x.Id == Id)
-                .FirstOrDefaultAsync();
+            var user = await _unitOfWork.Users.Query().Include(x=>x.Location).Include(x => x.Roles).ThenInclude(x => x.Role)
+                .Where(x => x.Id == CurrentUser.GetId()).Select(x => new User()
+                {
+                    CustomerId=x.CustomerId,
+                    IsAnswerUser=x.IsAnswerUser,
+                    FirstName=x.FirstName,
+                    LastName=x.LastName,
+                    Email=x.Email,
+                    LocationId=x.LocationId,
+                    Location=x.Location,
+                    Phone=x.Phone,
+                    UserName=x.UserName,
+                    TimeZoneId=x.TimeZoneId,
+                    Roles = x.Roles.Select(x => new UserRole()
+                    {
+                        Id = x.Id,
+                        Role = new EntityFramework.Entities.Role()
+                        {
+                            Id = x.RoleId,
+                            IsCertificationRole = x.Role.IsCertificationRole,
+                            Name = x.Role.Name
+                        },
+                        RoleId = x.RoleId
+                    }).ToList(),
+                    Id = x.Id,
+                    PasswordHash = x.PasswordHash,
+                    PasswordSalt = x.PasswordSalt
+                }).FirstOrDefaultAsync();
+
+            var loadRefs = await _unitOfWork.MenuRoles.Query()
+                .Include(x => x.MenuRolePermission)
+                .Include(x => x.MenuItem)
+                .ThenInclude(i => i.MenuGroup)
+                .Where(x => user.Roles.Select(x => x.RoleId).Contains(x.RoleId))
+                .Select(x => new MenuRole()
+                {
+                    MenuRolePermission = new MenuRolePermission()
+                    {
+                        Id = x.MenuRolePermission.Id,
+                        CanRead = x.MenuRolePermission.CanRead,
+                        CanActivate = x.MenuRolePermission.CanActivate,
+                        CanApprove = x.MenuRolePermission.CanApprove,
+                        CanCreate = x.MenuRolePermission.CanCreate,
+                        CanDelete = x.MenuRolePermission.CanDelete,
+                        CanEdit = x.MenuRolePermission.CanEdit
+                    },
+                    MenuItem = new MenuItem()
+                    {
+                        Id = x.MenuItem.Id,
+                        Name = x.MenuItem.Name,
+                        MenuGroupId = x.MenuItem.MenuGroupId,
+                        Icon = x.MenuItem.Icon,
+                        Info = x.MenuItem.Info,
+                        OrderNumber = x.MenuItem.OrderNumber,
+                        URL = x.MenuItem.URL,
+                        MenuGroup = new MenuGroup()
+                        {
+                            Id = x.MenuItem.MenuGroup.Id,
+                            Icon = x.MenuItem.MenuGroup.Icon,
+                            Info = x.MenuItem.MenuGroup.Info,
+                            Name = x.MenuItem.MenuGroup.Name,
+                            OrderNumber = x.MenuItem.MenuGroup.OrderNumber,
+                            URL = x.MenuItem.MenuGroup.URL
+                        }
+                    },
+                    RoleId = x.RoleId,
+                    MenuItemId = x.MenuItemId,
+                    Id = x.Id
+                })
+                .ToListAsync();
+
+            foreach (var userRole in user.Roles)
+            {
+                userRole.Role.Menus = loadRefs.Where(x => x.RoleId == userRole.RoleId).Distinct().ToList();
+            }
 
             if (user == null)
                 throw new DomainException($"{nameof(Domain.Models.UserModel)} not found", DomainError.NotFound);

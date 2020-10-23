@@ -117,7 +117,7 @@ namespace MSR.Application.EventServices
                 command.WorkOrderParts = parts;
 
                 WorkOrderModel model = await _workOrderService.CreateWorkOrderAsync(command);
-                string wonum = IWorkOrderService.GetWorkOrderItemNumber(model);
+                string wonum = _workOrderService.GetWorkOrderItemNumber(model);
 
                 _logger.LogInformation($"Finished creating WorkOrder: {wonum}");
 

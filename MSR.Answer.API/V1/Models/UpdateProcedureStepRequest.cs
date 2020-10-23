@@ -43,8 +43,8 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets Text
         /// </summary>
-        [DataMember(Name="text")]
-        public string Text { get; set; }
+        [DataMember(Name="stepText")]
+        public string StepText { get; set; }
 
         /// <summary>
         /// Gets or Sets Duration
@@ -57,12 +57,12 @@ namespace MSR.Answer.API.V1.Models
         /// </summary>
         [DataMember(Name="durationType")]
         public string DurationType { get; set; }
-
+        
         /// <summary>
         /// Procedure Step Type
         /// </summary>
-        [DataMember(Name="procedureStepType")]
-        public int? ProcedureStepType { get; set; }
+        [DataMember(Name = "procedureStepTypeId")]
+        public int ProcedureStepTypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets PrintOrder
@@ -80,7 +80,7 @@ namespace MSR.Answer.API.V1.Models
         /// Gets or Sets LaborTime
         /// </summary>
         [DataMember(Name="laborTime")]
-        public int? LaborTime { get; set; }
+        public double? LaborTime { get; set; }
 
         /// <summary>
         /// Gets or Sets EquipmentTime
@@ -97,8 +97,8 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets UtilizationTime
         /// </summary>
-        [DataMember(Name="utilizationTime")]
-        public float? UtilizationTime { get; set; }
+        [DataMember(Name="utilization")]
+        public float? Utilization { get; set; }
 
         /// <summary>
         /// Gets or Sets UsefulLife
@@ -109,8 +109,14 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets ReferenceFiles
         /// </summary>
-        [DataMember(Name="referenceFiles")]
+        [DataMember(Name = "referenceFiles")]
         public List<FileRequest> ReferenceFiles { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ReferenceFileIds   
+        /// </summary>
+        [DataMember(Name = "referenceFileIds")]
+        public ICollection<int> ReferenceFileIds { get; set; }
 
         /// <summary>
         /// Gets or Sets Roles
@@ -129,7 +135,7 @@ namespace MSR.Answer.API.V1.Models
             sb.Append("  ProcedureStepId: ").Append(ProcedureStepId).Append("\n");
             sb.Append("  ProcedureId: ").Append(ProcedureId).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
-            sb.Append("  Text: ").Append(Text).Append("\n");
+            sb.Append("  StepText: ").Append(StepText).Append("\n");
             sb.Append("  Duration: ").Append(Duration).Append("\n");
             sb.Append("  DurationType: ").Append(DurationType).Append("\n");
             sb.Append("  PrintOrder: ").Append(PrintOrder).Append("\n");
@@ -137,7 +143,7 @@ namespace MSR.Answer.API.V1.Models
             sb.Append("  LaborTime: ").Append(LaborTime).Append("\n");
             sb.Append("  EquipmentTime: ").Append(EquipmentTime).Append("\n");
             sb.Append("  ReplacementCost: ").Append(ReplacementCost).Append("\n");
-            sb.Append("  UtilizationTime: ").Append(UtilizationTime).Append("\n");
+            sb.Append("  Utilization: ").Append(Utilization).Append("\n");
             sb.Append("  UsefulLife: ").Append(UsefulLife).Append("\n");
             sb.Append("  ReferenceFiles: ").Append(ReferenceFiles).Append("\n");
             sb.Append("  Roles: ").Append(Roles).Append("\n");
@@ -192,9 +198,9 @@ namespace MSR.Answer.API.V1.Models
                     Title.Equals(other.Title)
                 ) &&
                 (
-                    Text == other.Text ||
-                    Text != null &&
-                    Text.Equals(other.Text)
+                    StepText == other.StepText ||
+                    StepText != null &&
+                    StepText.Equals(other.StepText)
                 ) &&
                 (
                     Duration == other.Duration ||
@@ -232,9 +238,9 @@ namespace MSR.Answer.API.V1.Models
                     ReplacementCost.Equals(other.ReplacementCost)
                 ) &&
                 (
-                    UtilizationTime == other.UtilizationTime ||
-                    UtilizationTime != null &&
-                    UtilizationTime.Equals(other.UtilizationTime)
+                    Utilization == other.Utilization ||
+                    Utilization != null &&
+                    Utilization.Equals(other.Utilization)
                 ) &&
                 (
                     UsefulLife == other.UsefulLife ||
@@ -268,8 +274,8 @@ namespace MSR.Answer.API.V1.Models
                     hashCode = hashCode * 59 + ProcedureStepId.GetHashCode();
                     if (Title != null)
                     hashCode = hashCode * 59 + Title.GetHashCode();
-                    if (Text != null)
-                    hashCode = hashCode * 59 + Text.GetHashCode();
+                    if (StepText != null)
+                    hashCode = hashCode * 59 + StepText.GetHashCode();
                     if (Duration != null)
                     hashCode = hashCode * 59 + Duration.GetHashCode();
                     if (DurationType != null)
@@ -284,8 +290,8 @@ namespace MSR.Answer.API.V1.Models
                     hashCode = hashCode * 59 + EquipmentTime.GetHashCode();
                     if (ReplacementCost != null)
                     hashCode = hashCode * 59 + ReplacementCost.GetHashCode();
-                    if (UtilizationTime != null)
-                    hashCode = hashCode * 59 + UtilizationTime.GetHashCode();
+                    if (Utilization != null)
+                    hashCode = hashCode * 59 + Utilization.GetHashCode();
                     if (UsefulLife != null)
                     hashCode = hashCode * 59 + UsefulLife.GetHashCode();
                     if (ReferenceFiles != null)

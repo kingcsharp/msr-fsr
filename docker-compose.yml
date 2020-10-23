@@ -34,7 +34,7 @@ services:
       context: ./MSR.UI/MSR.UI.Answer
       dockerfile: Dockerfile
       args:
-        - 'ENV=builddev'
+        - 'ENV=builddevprodsetting'
     ports:
       - "3000:80"
 

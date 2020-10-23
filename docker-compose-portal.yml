@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: MSR.Answer.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=QA
+    expose:
+      - "5000"
+    restart: always
+  processor:
+    build:
+      context: .
+      dockerfile: MSR.Answer.Processor/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=QA
+    restart: always
+    links:
+      - api
+  reverseproxy:
+    build:
+      context: ./reverseproxy
+      dockerfile: Dockerfile
+      args:
+        - 'NGINX_CONF=local'
+    ports:
+      - "17777:80"
+    links:
+      - api
+  app:
+    build:
+      context: ./MSR.UI/MSR.UI.Portal
+      dockerfile: Dockerfile
+      args:
+        - 'ENV=builddevprodsetting'
+    ports:
+      - "3000:80"
+

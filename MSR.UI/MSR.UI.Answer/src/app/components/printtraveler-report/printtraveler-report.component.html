@@ -35,7 +35,10 @@
                     </div>
                     <div class="col-6">
                         <div class="image-placeholder d-flex justify-content-center">
-                            <div class="my-auto"><h2>NO IMAGE AVAILABLE</h2></div>
+                            <div class="my-auto" *ngIf="parentPartImageUrl === undefined"><h2>NO IMAGE AVAILABLE</h2></div>
+                            <div class="my-auto" *ngIf="parentPartImageUrl !== undefined">
+                                <img src="{{parentPartImageUrl}}" alt="{{parentPartName}}">
+                            </div>
                         </div>
                     </div>
                 </div>

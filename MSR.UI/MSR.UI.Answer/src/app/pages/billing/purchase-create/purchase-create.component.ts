@@ -15,6 +15,7 @@ import {
   CreatePurchaseRequest
 } from '../../../services/api.client.generated';
 import { Router, ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 declare let jQuery: any;
 
@@ -43,6 +44,7 @@ export class PurchaseCreateComponent implements OnInit {
   serialNumberModal: boolean = false;
   globalDueDate: Date;
   step: number;
+  custLineElem: any;
   selectButtonOptions = [
     {
       label: 'ON',
@@ -95,6 +97,7 @@ export class PurchaseCreateComponent implements OnInit {
         });
         this.getPurchaseOrderFlag = true;
         this.getCustomerData(this.purchaseOrderData.customerId);
+        this.globalDueDate = moment().add(7, 'days').toDate();
       }));
   }
 
@@ -104,7 +107,6 @@ export class PurchaseCreateComponent implements OnInit {
       .subscribe(responseHandler(response => {
         this.customerData = response.object[0];
         this.getCustomerFlag = true;
-        this.globals.showLoader(false);
       }));
   }
 
@@ -116,7 +118,9 @@ export class PurchaseCreateComponent implements OnInit {
     this.locationService.locationGet(null, null, null, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         response.object.map((x) => {
-          this.locationsData.push({ label: x.name, value: x.id });
+          if (x.parentId === null) {
+            this.locationsData.push({ label: x.name, value: x.id });
+          }
         });
         this.getLocationsFlag = true;
       }));
@@ -147,7 +151,7 @@ export class PurchaseCreateComponent implements OnInit {
                 productName: product.name,
                 customerLineNumber: null,
                 mttn: null,
-                dueDate: null,
+                dueDate: this.globalDueDate,
                 qty: product.qty,
                 unitPrice: product.price,
                 extPrice: product.qty * product.price,
@@ -164,7 +168,7 @@ export class PurchaseCreateComponent implements OnInit {
                   productName: product.name,
                   customerLineNumber: null,
                   mttn: null,
-                  dueDate: null,
+                  dueDate: this.globalDueDate,
                   qty: 1,
                   unitPrice: product.price,
                   extPrice: product.price,
@@ -185,14 +189,14 @@ export class PurchaseCreateComponent implements OnInit {
           if (item.serializeIndividually) {
             this.purchaseSerializeItems.push({
               serialKitNo: null,
-              locationId: this.locationsData[0].value,
+              locationId: null,
               ...item,
             });
           } else {
             for (let i = 0; i < item.qty; i++) {
               this.purchaseSerializeItems.push({
                 serialKitNo: null,
-                locationId:  this.locationsData[0].value,
+                locationId:  null,
                 ...item,
                 qty: 1,
               });

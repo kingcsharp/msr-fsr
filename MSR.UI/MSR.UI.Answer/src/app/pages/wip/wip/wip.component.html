@@ -60,8 +60,8 @@
                             [hidden]="!commonGrid.isVisibleCol('serialNumber',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
-                        <th grid-input-filter [dt]="dt" searchField="purchaseOrderNumber"
-                            [hidden]="!commonGrid.isVisibleCol('purchaseOrderNumber',gridSettings)"
+                        <th grid-input-filter [dt]="dt" searchField="referencePO"
+                            [hidden]="!commonGrid.isVisibleCol('referencePO',gridSettings)"
                             [gridSettings]="gridSettings">
                         </th>
                         <th grid-input-filter [dt]="dt" searchField="quantity"
@@ -131,8 +131,8 @@
                         <td [hidden]="!commonGrid.isVisibleCol('serialNumber', gridSettings)">
                             {{model.serialNumber}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('purchaseOrderNumber', gridSettings)">
-                            {{model.purchaseOrderNumber}}
+                        <td [hidden]="!commonGrid.isVisibleCol('referencePO', gridSettings)">
+                            {{model.referencePO}}
                         </td>
                         <td [hidden]="!commonGrid.isVisibleCol('quantity', gridSettings)">
                             {{model.quantity}}
@@ -159,19 +159,23 @@
                             <div *ngIf=" model.status === 'In Progress'">
                                 <div class="activetask-container">{{model.currentActiveTaskName}}</div>
                                 <div class="progressbar-container">
-                                    <progressbar [value]="model.percentageOfTasksCompleted"
+                                    <progressbar [value]="model.percentageOfTasksCompleted * 100"
                                         [type]="model.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
-                                    <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">{{model.percentageOfTasksCompleted | number : '1.2-2'}}%
+                                    <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">{{model.percentageOfTasksCompleted | percent : '2.2-2'}}
                                     </div>
-                                    <ng-template #percentOfTaskCompletedTemplate>Percentage of Tasks Completed
+                                    <ng-template #percentOfTaskCompletedTemplate>
+                                        {{model.percentageOfTasksCompleted | percent : '2.2-2'}}
+                                        {{model.percentageOfTasksCompletedNumerator}}/{{model.percentageOfTasksCompletedDenominator}} steps completed
                                     </ng-template>
                                 </div>
                                 <div class="progressbar-container">
-                                    <progressbar [value]="model.percentageOfExpectedDurationTimeLogged"
+                                    <progressbar [value]="model.percentageOfExpectedDurationTimeLogged * 100"
                                         [type]="model.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
                                     <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
-                                        {{model.percentageOfExpectedDurationTimeLogged | number : '1.2-2'}}%</div>
-                                    <ng-template #percentageOfExpectedDurationTimeLogged>Percentage of Expected Duration Time Logged
+                                        {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>
+                                    <ng-template #percentageOfExpectedDurationTimeLogged>
+                                        {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}} 
+                                        {{model.percentageOfExpectedDurationTimeLoggedNumerator}}/{{model.percentageOfExpectedDurationTimeLoggedDenominator}} hours completed
                                     </ng-template>
                                 </div>
                             </div>

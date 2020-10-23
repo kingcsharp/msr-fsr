@@ -17,18 +17,18 @@
             <th scope="col">Latest Requestee Name</th>
             <th scope="col">Actual Start Date</th>
             <th scope="col">Actual Stop Date</th>
-            <th scope="col">Location</th>
+            <th scope="col">Total Task Time</th>
             <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let workOrderTask of WorkOrder.workOrderTasks">
+          <tr *ngFor="let workOrderTask of workOrderTasks">
             <th scope="row">{{workOrderTask.taskStepOrder}}</th>
             <td>{{workOrderTask.procedureStep?.title}}</td>
             <td>{{workOrderTask.assignedToUser?.fullName}}</td>
             <td>{{workOrderTask.startedOn | userTimezone}}</td>
-            <td></td>
-            <td><!-- TODO: Remove this column since there is no location for a task --></td>
+            <td>{{workOrderTask.completedOn | userTimezone}}</td>
+            <td>{{workOrderTask.taskTime }}</td>
             <td>{{workOrderTask.status?.name}}</td>
           </tr>
         </tbody>

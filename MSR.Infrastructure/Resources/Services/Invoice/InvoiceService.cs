@@ -75,6 +75,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var invoice = await _unitOfWork.Invoices
                                 .Query()
                                 .Include(i => i.InvoiceItems)
+                                .Include(i=>i.Customer)
                                 .FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if (invoice is null)
@@ -178,34 +179,18 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         /// <returns></returns>
         private async Task<Invoice> SaveInvoiceAsync(Invoice invoice, IEnumerable<CreateUpdateInvoiceItem> invoiceItems)
         {
-            // Load InvoiceItems properties
-            invoice.InvoiceItems = invoice.InvoiceItems.Select(curItem =>
-                 _unitOfWork.InvoiceItems.Query()
-                                         .Include(ii => ii.WorkOrder)
-                                         .ThenInclude(wo => wo.Purchase)
-                                         .ThenInclude(p => p.Location)
-                                         .Include(ii => ii.PurchaseOrder)
-                                         .Where(ii => (ii.WorkOrderId == curItem.WorkOrderId &&
-                                                                ii.PurchaseOrderId == curItem.PurchaseOrderId) ||
-                                                                ii.InvoiceId == curItem.InvoiceId)
-                                         .SingleOrDefault())
-                .ToList()
-                .Select(ii => ii ?? new InvoiceItem())
-                .ToList();
 
-            invoiceItems.ToList().ForEach(cii =>
+            var WoPurchaseIds = _unitOfWork.WorkOrders.Query()
+                .Include(x => x.Purchase)
+                .Select(x => new { x.Id, x.Purchase.PurchaseOrderId })
+                .Where(x => invoiceItems.Select(x => x.WorkOrderId).ToList()
+                .Contains(x.Id)).ToList();
+
+            invoice.InvoiceItems = WoPurchaseIds.Select(x => new InvoiceItem()
             {
-                invoice.InvoiceItems.ToList().ForEach(iii =>
-                {
-                    if (!invoice.InvoiceItems.Any(i => iii.WorkOrderId == cii.WorkOrderId &&
-                                                        iii.PurchaseOrderId == cii.PurchaseOrderId))
-                    {
-                        iii.WorkOrderId = cii.WorkOrderId;
-                        iii.PurchaseOrderId = cii.PurchaseOrderId;
-                    }
-
-                });
-            });
+                WorkOrderId = x.Id,
+                PurchaseOrderId = x.PurchaseOrderId
+            }).ToList();
 
             // Create temporary InvoiceNumber based on Invoice Id
             invoice.InvoiceNumber = $"{DateTime.Now:yy}";
@@ -307,12 +292,20 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         {
             invoice.Description = command.Description ?? invoice.Description;
             invoice.InvoiceDate = command.InvoiceDate > DateTime.MinValue ? command.InvoiceDate : invoice.InvoiceDate;
-            invoice.InvoiceItems = command.InvoiceItems.Select(x =>
-                    _unitOfWork.InvoiceItems.Query()
-                                            .Include(ii => ii.WorkOrder)
-                                            .Include(ii => ii.PurchaseOrder)
-                                            .First(ii => ii.Id == x.Id)
-            ).ToList();
+
+
+            var WoPurchaseIds = _unitOfWork.WorkOrders.Query()
+                .Include(x => x.Purchase)
+                .Where(x => command.InvoiceItems.Select(x => x.Id).ToList()
+                .Contains(x.Id)).ToList();
+
+            invoice.InvoiceItems = WoPurchaseIds.Select(x => new InvoiceItem()
+            {
+                WorkOrderId = x.Id,
+                WorkOrder = x,
+                PurchaseOrderId = x.Purchase.PurchaseOrderId
+            }).ToList();
+
             invoice.TaxPercentage = command.TaxPercentage ?? invoice.TaxPercentage;
         }
     }
