@@ -195,7 +195,7 @@ export class ProcedureEditComponent implements OnInit {
   deleteStep() {
     this.globals.showLoader(true);
     this.procedureService.stepDelete(this.procedure.id, this.procedureStepToDelete.id, env.apiVersion).subscribe(responseHandler(() => {
-      this.procedureSteps = this.procedureSteps.filter(s => s.id === this.procedureStepToDelete.id);
+      this.procedureSteps = this.procedureSteps.filter(s => s.id !== this.procedureStepToDelete.id);
       this.showConfirmDeleteStepDialog = !this.showConfirmDeleteStepDialog;
     }));
 
