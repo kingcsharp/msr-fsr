@@ -19072,7 +19072,7 @@ export interface IAuditActionResultOfICollectionOfPortalWorkOrderView extends IA
 export class PortalWorkOrderView implements IPortalWorkOrderView {
     id?: number;
     workOrderId?: number;
-    customerId?: number;
+    customerId?: number | undefined;
     customerName?: string | undefined;
     serialNumber?: string | undefined;
     companyPartNumber?: string | undefined;
@@ -19097,7 +19097,14 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     invoiceAmount?: number | undefined;
     invoiceDate?: Date | undefined;
     invoiceName?: string | undefined;
+    percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
+    percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
+    subParts?: WorkOrderPartModel[] | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
         if (data) {
@@ -19137,10 +19144,21 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             this.invoiceAmount = _data["invoiceAmount"];
             this.invoiceDate = _data["invoiceDate"] ? new Date(_data["invoiceDate"].toString()) : <any>undefined;
             this.invoiceName = _data["invoiceName"];
+            this.percentageOfTasksCompleted = _data["percentageOfTasksCompleted"];
+            this.percentageOfTasksCompletedNumerator = _data["percentageOfTasksCompletedNumerator"];
+            this.percentageOfTasksCompletedDenominator = _data["percentageOfTasksCompletedDenominator"];
+            this.percentageOfExpectedDurationTimeLogged = _data["percentageOfExpectedDurationTimeLogged"];
+            this.percentageOfExpectedDurationTimeLoggedNumerator = _data["percentageOfExpectedDurationTimeLoggedNumerator"];
+            this.percentageOfExpectedDurationTimeLoggedDenominator = _data["percentageOfExpectedDurationTimeLoggedDenominator"];
             if (Array.isArray(_data["messages"])) {
                 this.messages = [] as any;
                 for (let item of _data["messages"])
                     this.messages!.push(WorkOrderMessageModel.fromJS(item));
+            }
+            if (Array.isArray(_data["subParts"])) {
+                this.subParts = [] as any;
+                for (let item of _data["subParts"])
+                    this.subParts!.push(WorkOrderPartModel.fromJS(item));
             }
         }
     }
@@ -19181,10 +19199,21 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
         data["invoiceAmount"] = this.invoiceAmount;
         data["invoiceDate"] = this.invoiceDate ? this.invoiceDate.toISOString() : <any>undefined;
         data["invoiceName"] = this.invoiceName;
+        data["percentageOfTasksCompleted"] = this.percentageOfTasksCompleted;
+        data["percentageOfTasksCompletedNumerator"] = this.percentageOfTasksCompletedNumerator;
+        data["percentageOfTasksCompletedDenominator"] = this.percentageOfTasksCompletedDenominator;
+        data["percentageOfExpectedDurationTimeLogged"] = this.percentageOfExpectedDurationTimeLogged;
+        data["percentageOfExpectedDurationTimeLoggedNumerator"] = this.percentageOfExpectedDurationTimeLoggedNumerator;
+        data["percentageOfExpectedDurationTimeLoggedDenominator"] = this.percentageOfExpectedDurationTimeLoggedDenominator;
         if (Array.isArray(this.messages)) {
             data["messages"] = [];
             for (let item of this.messages)
                 data["messages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.subParts)) {
+            data["subParts"] = [];
+            for (let item of this.subParts)
+                data["subParts"].push(item.toJSON());
         }
         return data; 
     }
@@ -19193,7 +19222,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
 export interface IPortalWorkOrderView {
     id?: number;
     workOrderId?: number;
-    customerId?: number;
+    customerId?: number | undefined;
     customerName?: string | undefined;
     serialNumber?: string | undefined;
     companyPartNumber?: string | undefined;
@@ -19218,7 +19247,14 @@ export interface IPortalWorkOrderView {
     invoiceAmount?: number | undefined;
     invoiceDate?: Date | undefined;
     invoiceName?: string | undefined;
+    percentageOfTasksCompleted?: number | undefined;
+    percentageOfTasksCompletedNumerator?: number | undefined;
+    percentageOfTasksCompletedDenominator?: number | undefined;
+    percentageOfExpectedDurationTimeLogged?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedNumerator?: number | undefined;
+    percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
+    subParts?: WorkOrderPartModel[] | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {

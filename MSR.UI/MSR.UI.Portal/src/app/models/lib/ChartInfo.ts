@@ -5,6 +5,7 @@ export interface IChartInfo {
     unit?: moment.DurationInputArg2;
     format?: string;
     chartData?: any | undefined;
+    gridData?: any | undefined;
     stackBy?: string | undefined;
     chartTitle?: string | undefined;
     xAxisTitle?: string | undefined;
@@ -19,6 +20,7 @@ export class ChartInfo implements IChartInfo {
     unit: moment.DurationInputArg2 = 'month';
     format: string = 'MM-YYYY';
     chartData?: any | undefined;
+    gridData?: any | undefined;
     stackBy?: string | undefined;
     chartTitle?: string | undefined;
     xAxisTitle?: string | undefined;
@@ -57,6 +59,7 @@ export class ChartInfo implements IChartInfo {
             this.tooltipFormat = _data['tooltipFormat'];
             this.chartType = _data['chartType'];
             this.chartTOptions = _data['chartTOptions'];
+            this.gridData = _data['gridData'];
         }
     }
 
@@ -73,6 +76,7 @@ export class ChartInfo implements IChartInfo {
         data['tooltipFormat'] = this.tooltipFormat;
         data['chartType'] = this.chartType;
         data['chartTOptions'] = this.chartTOptions;
+        data['gridData'] = this.gridData;
 
         return data;
     }

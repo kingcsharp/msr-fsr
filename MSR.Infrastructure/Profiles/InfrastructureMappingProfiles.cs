@@ -466,6 +466,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.CreatedOn))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Created.GetFullName()))
                 .ForMember(dest => dest.Message, opts => opts.MapFrom(src => src.Message));
+            CreateMap<WorkOrderModel, PortalWorkOrderView>()
+                .ForMember(dest => dest.WorkOrderId, opts => opts.MapFrom(src => src.Id));
         }
 
         private static bool ignoreNullOrZero(object srcMember)
