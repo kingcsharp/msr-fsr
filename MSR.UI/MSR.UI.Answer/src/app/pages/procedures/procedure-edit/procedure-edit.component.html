@@ -48,23 +48,23 @@
                         </div>
                     </div>
                     <div class="form-group form-row">
-                        <div class="col-3">
+                        <div class="col-6 col-xl-3">
                             <label for="duration" class="col-form-label text-left">
                                 Estimated Procedure Time
                             </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-xl-3">
                             <input type="number" name="duration" [(ngModel)]="procedure.duration" data-validate="parsley"
                                 data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
                                 class="form-control input-transparent" tooltip="Duration of Procedure"
                                 data-cy="duration-input">
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-xl-3">
                             <label for="durationType" class="col-form-label text-left">
                                 Duration Type
                             </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-xl-3">
                             <p-dropdown placeholder="Select Duration Type" name="durationType"
                                 [options]="durationTypeOptions" showClear="true" [(ngModel)]="procedure.durationType"
                                 data-cy="durationtype-dropdown">
@@ -80,12 +80,12 @@
                 </div>
                 <div class="col-6">
                     <div class="form-group form-row">
-                        <div class="col-2">
+                        <div class="col-12 col-xl-2">
                             <label for="referencefiles" class="col-form-label text-left">
                                 Reference Files
                             </label>
                         </div>
-                        <div class="col-10">
+                        <div class="col-12 col-xl-10">
                             <cmh-file-uploader name="referencefiles" class="col-12"
                                 *ngIf="procedure.referenceFiles !== undefined" [menuItem]="menuItems.Templates"
                                 multiple="multiple" [(files)]="procedure.referenceFiles">
@@ -93,12 +93,12 @@
                         </div>
                     </div>
                     <div class="form-group form-row">
-                        <div class="col-2">
+                        <div class="col-12 col-xl-2">
                             <label for="comment" class="col-form-label text-left">
                                 Comments
                             </label>
                         </div>
-                        <div class="col-10">
+                        <div class="col-12 col-xl-10">
                             <ckeditor-wrapper [editorcontent]="procedure.comment"
                                 (editorContentChange)="procedure.comment = $event"></ckeditor-wrapper>
                         </div>
@@ -137,7 +137,7 @@
                 <div class="col-12">
                     <ng-template #itemTemplate let-procedureStep="item" let-i="index">
                         <div class="row my-4 procedure-step-panel">
-                            <div class="col-5">
+                            <div class="col-12 col-xl-5">
                                 <div class="row form-row">
                                     <div class="col-3">
                                         <div class="form-group ml-0">
@@ -256,7 +256,7 @@
                                         data-cy="delete-button">Delete</button>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-xl-3">
                                 <div class="form-group form-row">
                                     <div class="col-3">
                                         <label for="proceduresteptype{{i}}" class="col-form-label text-left">
@@ -305,7 +305,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-12 col-xl-4">
                                 <procedurestepmonitor-wrapper [(procedureStep)]="procedureStep.value"
                                 [canEdit]="canEdit" [canDelete]="canDelete"></procedurestepmonitor-wrapper>
                                 <div class="row ml-0 my-2">
