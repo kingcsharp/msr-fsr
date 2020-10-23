@@ -251,44 +251,7 @@ namespace MSR.Infrastructure.Resources.Services
                     this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
                     return procedureApprovalChanges;
                 case EnumApprovalTables.ProductApproval:
-                    var productApproval = await _unitOfWork.ProductApprovals
-                        .Query()
-                        .Include(x => x.ProductStepApprovals)
-                        .FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var product = await _unitOfWork.Products
-                        .Query()
-                        .Include(x => x.ProductSteps)
-                        .FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
-                    var productApprovalChanges = new PendingApprovalPopoverModel();
-                    int origStepCount = 0;
-                    int newStepCount = productApproval.ProductStepApprovals.Count();
-                    int origLaborTotal = 0;
-                    int newLaborTotal = productApproval.ProductStepApprovals
-                        .Select(x => x.EquipmentMinutes.GetValueOrDefault() +
-                                     x.LaborMinutes.GetValueOrDefault())
-                        .Sum();
-
-                    if (product != null && product.ProductSteps != null)
-                    {
-                        origStepCount = product.ProductSteps.Count();
-                        origLaborTotal = product.ProductSteps
-                            .Select(x => x.EquipmentMinutes.GetValueOrDefault() +
-                                         x.LaborMinutes.GetValueOrDefault())
-                            .Sum();
-                    }
-                    productApprovalChanges.AddRow("Name", product?.Name, productApproval.Name);
-                    productApprovalChanges.AddRow("Revision", product?.Revision, productApproval.Revision);
-                    // TODO: there is no such field
-                    //productApprovalChanges.AddRow("Customer Requirement Id", product.CustomerRequirementId, productApproval.CustomerRequirementId);
-                    productApprovalChanges.AddRow("Equipment Cost", product?.EquipmentCost, productApproval.EquipmentCost);
-                    productApprovalChanges.AddRow("Material Cost", product?.MaterialCost, productApproval.MaterialCost);
-                    productApprovalChanges.AddRow("Sales Tax", product?.SalesTax, productApproval.SalesTax);
-                    productApprovalChanges.AddRow("Total Sale Price", product?.TotalSalePrice, productApproval.TotalSalePrice);
-                    productApprovalChanges.AddRow("Cycle Time", product?.CycleTime, productApproval.CycleTime);
-                    productApprovalChanges.AddRow("FAB", product?.DivisionFab, productApproval.DivisionFab);
-                    productApprovalChanges.AddRow("Steps", origStepCount, newStepCount);
-                    productApprovalChanges.AddRow("Labor", origLaborTotal, newLaborTotal);
-                    return productApprovalChanges;
+                    return await getProductApprovalChanges(command);
                 case EnumApprovalTables.PurchaseOrderApproval:
                     var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == purchaseOrderApproval.PurchaseOrderId);
@@ -533,6 +496,11 @@ namespace MSR.Infrastructure.Resources.Services
                 .Include(x => x.ProductStepApprovals)
                 .FirstOrDefaultAsync(x => x.Id == command.Id);
 
+            if (productApproval == null)
+            {
+                throw new DomainException($"Product Approval id {command.Id} not found", DomainError.NotFound);
+            }
+
             if (productApproval.ProductId == null)
             {
                 var productCommand = _mapper.Map<CreateProduct>(productApproval);
@@ -713,6 +681,47 @@ namespace MSR.Infrastructure.Resources.Services
             {
                 await _fileService.EditPdfFile(_mapper.Map<FileModel>(file), document);
             }
+        }
+
+        private async Task<PendingApprovalPopoverModel> getProductApprovalChanges(GetPendingApprovalDetailsModel command)
+        {
+            var productApproval = await _unitOfWork.ProductApprovals
+                .Query()
+                .Include(x => x.ProductStepApprovals)
+                .FirstOrDefaultAsync(x => x.Id == command.Id);
+            var product = await _unitOfWork.Products
+                .Query()
+                .Include(x => x.ProductSteps)
+                .FirstOrDefaultAsync(x => x.Id == productApproval.ProductId);
+            var productApprovalChanges = new PendingApprovalPopoverModel();
+            int origStepCount = 0;
+            int newStepCount = productApproval.ProductStepApprovals.Count();
+            int origLaborTotal = 0;
+            int newLaborTotal = productApproval.ProductStepApprovals
+                .Select(x => x.EquipmentMinutes.GetValueOrDefault() +
+                             x.LaborMinutes.GetValueOrDefault())
+                .Sum();
+
+            if (product != null && product.ProductSteps != null)
+            {
+                origStepCount = product.ProductSteps.Count();
+                origLaborTotal = product.ProductSteps
+                    .Select(x => x.EquipmentMinutes.GetValueOrDefault() +
+                                 x.LaborMinutes.GetValueOrDefault())
+                    .Sum();
+            }
+            productApprovalChanges.AddRow("Name", product?.Name, productApproval.Name);
+            productApprovalChanges.AddRow("Revision", product?.Revision, productApproval.Revision);
+            productApprovalChanges.AddRow("Customer Requirement Id", product?.CustomerRequirementId, productApproval.CustomerRequirementId);
+            productApprovalChanges.AddRow("Equipment Cost", product?.EquipmentCost, productApproval.EquipmentCost);
+            productApprovalChanges.AddRow("Material Cost", product?.MaterialCost, productApproval.MaterialCost);
+            productApprovalChanges.AddRow("Sales Tax", product?.SalesTax, productApproval.SalesTax);
+            productApprovalChanges.AddRow("Total Sale Price", product?.TotalSalePrice, productApproval.TotalSalePrice);
+            productApprovalChanges.AddRow("Cycle Time", product?.CycleTime, productApproval.CycleTime);
+            productApprovalChanges.AddRow("FAB", product?.DivisionFab, productApproval.DivisionFab);
+            productApprovalChanges.AddRow("Steps", origStepCount, newStepCount);
+            productApprovalChanges.AddRow("Labor", origLaborTotal, newLaborTotal);
+            return productApprovalChanges;
         }
     }
 }

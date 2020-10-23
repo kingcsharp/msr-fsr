@@ -255,7 +255,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             foreach (ProductStepApproval step in steps)
             {
                 step.ProductApprovalId = approval.Id;
-                _unitOfWork.ProductStepApprovals.Add(step);
+                await _unitOfWork.ProductStepApprovals.AddAsync(step);
             }
             await _unitOfWork.SaveChangesAsync();
 
