@@ -68,7 +68,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
-                    new ColumnsSaved({ id: 'startdate', label: 'Start Date', visible: true, type: this.enumColumnType.Date, styles: { 'width': '6rem' }, formattingAngular: 'MM-yyyy', formattingMoment: 'MM-YYYY' })
+                    new ColumnsSaved({ id: 'startdate', label: 'Start Date', visible: true, type: this.enumColumnType.Date, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'DD-MM-YYYY' })
                 ];
                 break;
             case 'WorkOrderPartsHistorybyPartNumber':
@@ -121,7 +121,7 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'partname', label: 'Part Names', visible: true, type: this.enumColumnType.StringArray, dropdownHeader: true, multipleValues: true }),
                     new ColumnsSaved({ id: 'workordername', label: 'WO Name', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'lastupdatedon', label: 'Updated On', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '6rem' } }),
+                    new ColumnsSaved({ id: 'lastupdatedon', label: 'Updated On', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'DD-MM-YYYY' }),
                     new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String })
                 ];
             case 'CombinedFinancialDatabyWorkOrder':
@@ -206,7 +206,11 @@ export class ReportCubeService {
     }
 
     private isValidRowForChart(row, prop1, prop2) {
-        return row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0 && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
+        const isValid = row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0 && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
+        if(isValid){
+            var a = 1;
+        }
+        return isValid;
     }
 
     getCycleCountNr(row, prop) {
@@ -216,7 +220,6 @@ export class ReportCubeService {
         }
         return cycleCount;
     }
-
 
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
@@ -238,13 +241,14 @@ export class ReportCubeService {
                     yAxisTitle: 'Cycle Count',
                     tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
                     chartTOptions: {
-                        // tooltip: {
-                        //     headerFormat: '<b>{series.name}</b><br>',
-                        //     pointFormat: '<b>Month:</b> {point.x}  <b>Cycle Count:</b> {point.y}'
-                        // }
                         tooltip: {
-                            headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '{point.x:%b-%y}: Cycle Count {point.y}'
+                            formatter: function () {
+                                const date = moment(this.point.category, "MM-YYYY").format("MMM-YY");
+                                return `<div>
+                                <b>${this.series.name}</b><br>
+                                ${date}: Cycle Count ${this.point.y}
+                                <div>`
+                            }
                         }
                     }
                 });
@@ -252,13 +256,13 @@ export class ReportCubeService {
                 return this.getResultDataAndChart(chartInfoPartsCycleCounts);
             case 'MonitorsHistorybyWorkOrder':
                 const gridDataRet = data.map(elem => {
-                    var itemData2: any = this.removeObjectsPropertyPrefix(elem);
-                    itemData2.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
                     elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
-                    itemData2.cyclecount = this.getCycleCountNr(elem, 'CubePartsmonitors.cyclecount');
-                    itemData2.lastupdatedon = moment(elem['lastupdatedon']);
-                    itemData2.partname = [{ name: elem['partname'], id: elem['partname'] }];
-                    return itemData2;
+                    elem.cyclecount = this.getCycleCountNr(elem, 'cyclecount');
+                    elem.lastupdatedon = moment(elem['lastupdatedon']);
+                    elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
+                    return elem;
                 });
                 const chartInfoDicworkInProcessbyWorkOrder = new ChartInfo({
                     gridData: gridDataRet,
@@ -270,8 +274,13 @@ export class ReportCubeService {
                     tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
                     chartTOptions: {
                         tooltip: {
-                            headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '<b>Month:</b> {point.x}  <b>Cycle Count:</b> {point.y}'
+                            formatter: function () {
+                                const date = moment(this.point.category, "MM-YYYY").format("MMM-YY");
+                                return `<div>
+                                <b>${this.series.name}</b><br>
+                                ${date}: Cycle Count ${this.point.y}
+                                <div>`
+                            }
                         }
                     }
                 });
@@ -399,7 +408,7 @@ export class ReportCubeService {
         let length = chartInfo.gridData.length;
         while (length--) {
             const gridDataRow = gridData[length];
-            if(gridDataRow.isValidForChart !== false){
+            if (gridDataRow.isValidForChart !== false) {
                 if (chartData[gridDataRow.elemKey] === undefined) {
                     chartData[gridDataRow.elemKey] = gridDataRow;
                 } else {
