@@ -241,6 +241,20 @@ export class ReportCubeService {
                     yAxisTitle: 'Cycle Count',
                     tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
                     chartTOptions: {
+                        legend: {
+                            align: "center",
+                            verticalAlign: "bottom",
+                            itemHoverStyle:{
+                                color:'#bdbdbd'
+                            },
+                            itemStyle:{
+                                color: '#fff',
+                                fontFamily: 'Open Sans'
+                            },
+                            x: 0,
+                            y: 0
+                        },
+
                         tooltip: {
                             formatter: function () {
                                 const date = moment(this.point.category, "MM-YYYY").format("MMM-YY");
@@ -248,6 +262,14 @@ export class ReportCubeService {
                                 <b>${this.series.name}</b><br>
                                 ${date}: Cycle Count ${this.point.y}
                                 <div>`
+                            }
+                        },
+                        plotOptions: {
+                            series: {
+                                marker: {
+                                    enabled: true
+                                },
+                                showInLegend: true
                             }
                         }
                     }
@@ -434,7 +456,7 @@ export class ReportCubeService {
             chart: {
                 backgroundColor: '#222d3c',
                 borderColor: 'none',
-                type: chartInfo.chartType === EnumChartType.Line ? 'spline' : 'column'
+                type: chartInfo.chartType === EnumChartType.Line ? 'spline' : 'column',
             },
             title: {
                 text: chartInfo.chartTitle,
@@ -444,7 +466,6 @@ export class ReportCubeService {
                     fontFamily: 'Open Sans'
                 }
             },
-            // colors: ['#56616f'],
             xAxis: {
                 type: 'category',
 
@@ -488,9 +509,9 @@ export class ReportCubeService {
                     }
                 }
             },
-            legend: {
+            legend: chartInfo.chartTOptions.legend === undefined ? {
                 enabled: false
-            },
+            } : chartInfo.chartTOptions.legend,
             // legend: {
             //     align: 'right',
             //     x: -5,
@@ -511,14 +532,14 @@ export class ReportCubeService {
                 headerFormat: '<b>Month:</b> {point.x}<br/>',
                 pointFormat: '<b>{series.name}</b>: {point.y:,.2f}<br/> <b>Total</b>: {point.stackTotal:,.2f}'
             } : chartInfo.chartTOptions.tooltip,
-            plotOptions: {
+            plotOptions: chartInfo.chartTOptions.plotOptions === undefined ? {
                 column: {
                     stacking: 'normal',
                     // dataLabels: {
                     //     enabled: true
                     // }
                 }
-            },
+            } : chartInfo.chartTOptions.plotOptions,
             series: dataSeries
         };
 
