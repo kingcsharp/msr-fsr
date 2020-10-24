@@ -169,38 +169,42 @@ pipeline {
             }
         }
 
-        stage("Promote API to UAT") {
-            agent { label 'master'}
-            steps {
-                script {
-                    timeout(activity: true, time: 5) {
-                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+        stage('Promoting to UAT') {
+            parallel {
+                stage("Promote API to UAT") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
+                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "cat ${API_COMPOSE}"
+                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
+                        }
                     }
-                    sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
-                    sh "cat ${API_COMPOSE}"
-                    deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
                 }
-            }
-        }
 
-        stage("Promote UI to UAT") {
-            agent { label 'master'}
-            steps {
-                script {
-                    dir('MSR.UI/MSR.UI.Answer') {
-                        //sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
-                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                stage("Promote UI to UAT") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            dir('MSR.UI/MSR.UI.Answer') {
+                                //sh "sudo chmod 777 /var/run/docker.sock"
+                                sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
+                                sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                        sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            }
+
+                            sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                            sh "cat ${UI_COMPOSE}"
+
+                            deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
+                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                        }
                     }
-
-                    sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                    sh "cat ${UI_COMPOSE}"
-
-                    deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
-                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
                 }
             }
         }
@@ -218,38 +222,42 @@ pipeline {
             }
         }
 
-        stage("Promote API to PROD") {
-            agent { label 'master'}
-            steps {
-                script {
-                    timeout(activity: true, time: 5) {
-                        input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+        stage('Promoting to Production') {
+            parallel {
+                stage("Promote API to PROD") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
+                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "cat ${API_COMPOSE}"
+                            deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
+                        }
                     }
-                    sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
-                    sh "cat ${API_COMPOSE}"
-                    deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
                 }
-            }
-        }
 
-        stage("Promote UI to PROD") {
-            agent { label 'master'}
-            steps {
-                script {
-                    dir('MSR.UI/MSR.UI.Answer') {
-                        //sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build --build-arg ENV=buildprod -t msr-ui ."
-                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                stage("Promote UI to PROD") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            dir('MSR.UI/MSR.UI.Answer') {
+                                //sh "sudo chmod 777 /var/run/docker.sock"
+                                sh "docker build --build-arg ENV=buildprod -t msr-ui ."
+                                sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                        sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            }
+
+                            sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                            sh "cat ${UI_COMPOSE}"
+
+                            deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
+                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                        }
                     }
-
-                    sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                    sh "cat ${UI_COMPOSE}"
-
-                    deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
-                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
                 }
             }
         }
