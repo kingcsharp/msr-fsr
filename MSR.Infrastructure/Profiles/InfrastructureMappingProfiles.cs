@@ -65,8 +65,16 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             CreateMap<Product, ProductModel>().ReverseMap();
-            CreateMap<UpdateProduct, ProductApproval>().ReverseMap();
-            CreateMap<CreateProduct, ProductApproval>().ReverseMap();
+            CreateMap<UpdateProduct, Product>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProductApproval, UpdateProduct>()
+                .ForMember(dest => dest.ProductSteps, opts => opts.MapFrom(src => src.ProductStepApprovals))
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductId));
+            CreateMap<ProductApproval, CreateProduct>()
+                .ForMember(dest => dest.ProductSteps, opts => opts.MapFrom(src => src.ProductStepApprovals));
+            CreateMap<ProductStepApproval, ProductStepModel>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductStepId));
+
             CreateMap<Resources.EntityFramework.Entities.ProductStep, ProductStepModel>().ReverseMap();
             CreateMap<Purchase, PurchaseModel>();
             CreateMap<CreatePurchase, Purchase>().ReverseMap();
@@ -258,10 +266,16 @@ namespace MSR.Infrastructure.Profiles
                     srcMember != null && !srcMember.Equals(0)));
 
             CreateMap<ProcedureStep, ProductStepModel>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProcedureStepId, opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.LaborMinutes, opts => opts.MapFrom(src => src.LaborTime))
                 .ForMember(dest => dest.EquipmentMinutes, opts => opts.MapFrom(src => src.EquipmentTime));
 
-            CreateMap<Domain.Models.ProductStep, Resources.EntityFramework.Entities.ProductStep>();
+            CreateMap<ProductStepModel, ProductStep>();
+            CreateMap<ProductStepModel, ProductStepApproval>()
+                .ForMember(dest => dest.ProductStepId, opts => opts.MapFrom(src => src.Id > 0 ? src.Id : (int?)null))
+                .ForMember(dest => dest.ProductId, opts => opts.MapFrom(src => src.ProductId > 0 ? src.ProductId : (int?)null))
+                .ForMember(dest => dest.Id, opts => opts.Ignore());
             #endregion
 
             // Monitor
@@ -327,8 +341,6 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<ProductModel, Product>();
             CreateMap<CreateProduct, ProductApproval>()
-                .ForMember(dest => dest.Id, opts => opts.Ignore());
-            CreateMap<Domain.Models.ProductStep, Resources.EntityFramework.Entities.ProductStep>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
             CreateMap<UpdateProduct, ProductApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());

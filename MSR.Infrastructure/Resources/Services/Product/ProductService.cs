@@ -62,26 +62,31 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.PartId}", DomainError.NotFound);
             }
 
-            var product = _mapper.Map<Product>(command);
-
-            foreach (var ps in product.ProductSteps?.ToList())
-            {
-                ps.Product = product;
-            }
-
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
+                var product = _mapper.Map<Product>(command);
+
+                if (product.ProductSteps != null)
+                {
+                    foreach (ProductStep productStep in product.ProductSteps)
+                    {
+                        productStep.Product = product;
+                        // The ID copied from the command is the procedure step ID.  We're
+                        // creating a new copy of that step, so blank the ID.
+                        productStep.Id = 0;
+                    }
+                }
 
                 // Save the new Product
                 await _unitOfWork.Products.AddAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
-                foreach (var ps in product.ProductSteps)
+                var productModel = _mapper.Map<ProductModel>(product);
+                foreach (var productStep in productModel.ProductSteps)
                 {
-                    ps.Product = null;
+                    productStep.Product = null;
                 }
-
-                return _mapper.Map<ProductModel>(product);
+                return productModel;
             }
 
             var approval = _mapper.Map<ProductApproval>(command);
@@ -91,10 +96,18 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             _unitOfWork.ProductApprovals.Add(approval);
             await _unitOfWork.SaveChangesAsync();
 
-            foreach (var ps in product.ProductSteps)
+            var productStepApprovals =
+                _mapper.Map<ICollection<ProductStepApproval>>(
+                    command.ProductSteps);
+
+            foreach (ProductStepApproval productStepApproval
+                     in productStepApprovals)
             {
-                ps.Product = null;
+                productStepApproval.ProductApprovalId = approval.Id;
+                productStepApproval.ProductStepId = null;
+                _unitOfWork.ProductStepApprovals.Add(productStepApproval);
             }
+            await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<ProductModel>(approval);
         }
@@ -128,22 +141,30 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             // if ID is specified and ProductStep missing, we fall back to ProcedureStep
             if (command.Id.HasValue)
             {
-                foreach (var p in products)
+                foreach (var product in products)
                 {
-                    if (!p.ProductSteps.Any())
+                    if (!product.ProductSteps.Any())
                     {
-                        var procedure = await _unitOfWork.Procedures.Query().Include(p => p.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == p.ProcedureId);
+                        var procedure =
+                            await _unitOfWork.Procedures
+                                .Query()
+                                .Include(product => product.ProcedureSteps)
+                                .FirstOrDefaultAsync(x =>
+                                    x.Id == product.ProcedureId);
 
                         if (procedure != null)
                         {
-                            p.ProductSteps = _mapper.Map<ICollection<ProductStepModel>>(procedure.ProcedureSteps);
+                            product.ProductSteps =
+                                _mapper.Map<ICollection<ProductStepModel>>(procedure.ProcedureSteps);
 
-                            foreach (var ps in p.ProductSteps)
+                            foreach (var ps in product.ProductSteps)
                             {
-                                ps.ProductId = p.Id;
+                                ps.ProductId = product.Id;
                             }
                         }
                     }
+                    product.ProductSteps = product.ProductSteps
+                        .OrderBy(x => x.PrintOrder).ToList();
                 }
             }
 
@@ -162,15 +183,6 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             if (product is null)
             {
                 throw new DomainException($"{nameof(Product)} not found with ID: {command.Id}");
-            }
-
-            var quote = await _unitOfWork.Quotes
-                                .Query()
-                                .FirstOrDefaultAsync(i => i.Id == command.QuoteId);
-
-            if (quote is null)
-            {
-                throw new DomainException($"{nameof(Quote)} not found with ID: {command.QuoteId}");
             }
 
             var customer = await _unitOfWork.Customers
@@ -200,58 +212,54 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.PartId}");
             }
 
-            // Update product details and items
-            product.CustomerId = command.CustomerId ?? product.CustomerId;
-            product.CycleTime = command.CycleTime ?? product.CycleTime;
-            product.LaborCost = command.LaborCost ?? product.LaborCost;
-            product.EquipmentCost = command.EquipmentCost ?? product.EquipmentCost;
-            product.MaterialCost = command.MaterialCost ?? product.MaterialCost;
-            product.Name = command.Name ?? product.Name;
-            product.PartId = command.PartId ?? product.PartId;
-            product.ProcedureId = command.ProcedureId ?? product.ProcedureId;
-            product.Revision = command.Revision ?? product.Revision;
-            product.SalesTax = command.SalesTax ?? product.SalesTax;
-            product.QuoteId = command.QuoteId ?? product.QuoteId;
-            product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
-
-            product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
-
-
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
+                _ = _mapper.Map(command, product);
+                product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
+
                 // Save product changes
                 await _unitOfWork.Products.UpdateAndSaveChangesAsync(product);
                 await _unitOfWork.LogApprovalTransaction(product, product.Id, "Approved", command.Comment);
 
-                RemoveReferences(product);
-
-                return _mapper.Map<ProductModel>(product);
-            }
-            else
-            {
-                RemoveReferences(product);
+                var productModel = _mapper.Map<ProductModel>(product);
+                RemoveReferences(productModel);
+                return productModel;
             }
 
             var approval = _mapper.Map<ProductApproval>(product);
+            _ = _mapper.Map(command, approval);
+
+            var steps = _mapper.Map<ICollection<ProductStepApproval>>(command.ProductSteps);
+
             approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
             approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
             approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
             _unitOfWork.ProductApprovals.Add(approval);
             await _unitOfWork.SaveChangesAsync();
+
+            foreach (ProductStepApproval step in steps)
+            {
+                step.ProductApprovalId = approval.Id;
+                await _unitOfWork.ProductStepApprovals.AddAsync(step);
+            }
+            await _unitOfWork.SaveChangesAsync();
+
             return _mapper.Map<ProductModel>(approval);
         }
 
-        private void RemoveReferences(Product product)
+        private void RemoveReferences(ProductModel product)
         {
             product.Quote = null;
             product.Procedure = null;
             product.Part = null;
             product.Customer = null;
 
-            foreach (var ps in product.ProductSteps)
-            {
-                ps.Product = null;
-                ps.ProductId = product.Id;
+            if (product.ProductSteps != null) {
+                foreach (var ps in product.ProductSteps)
+                {
+                    ps.Product = null;
+                    ps.ProductId = product.Id;
+                }
             }
         }
     }

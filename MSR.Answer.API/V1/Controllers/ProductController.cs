@@ -13,6 +13,7 @@ using MSR.Domain.Models;
 using System.Net;
 using Microsoft.AspNetCore.SignalR;
 using MSR.Application.Hubs;
+using MSR.Domain.Commands;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -79,7 +80,7 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ProductModel>))]
         public async Task<IActionResult> UpdateProduct([FromBody, Required] UpdateProductRequest request)
         {
-            var updateProduct = request.ToUpdateProductCommand();
+            UpdateProduct updateProduct = request.ToUpdateProductCommand();
             var ret = await _dispatcher.DispatchAsync(updateProduct);
             await SendApprovalNotificationHubMessage(EnumApprovalTables.ProductApproval, _messageHub);
             return ret.ToOkObjectResponse<ProductModel>(await DetermineResponseMessage(ret, "Update"));

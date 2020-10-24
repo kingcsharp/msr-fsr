@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSR.Domain.Models
 {
@@ -22,13 +19,18 @@ namespace MSR.Domain.Models
         public int ProductId { get; set; }
 
         /// <summary>
-        /// Gets or Sets ProcedureStepId
+        /// Associated Procedure Step ID, if any
         /// </summary>
+        /// <description>
+        /// Associated Procedure Step ID, if any.  This field can
+        /// be null.  A product step does not necessarily have a procedure step.
+        /// </description>
         public int? ProcedureStepId { get; set; }
 
         /// <summary>
         /// Gets or Sets LaborMinutes
         /// </summary>
+        [Required]
         public int? LaborMinutes { get; set; }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace MSR.Domain.Models
         /// Gets or Sets Utilization 
         /// </summary>
         public float? Utilization { get; set; }
-        
+
         /// <summary>
         /// Gets or Sets UsefulLife
         /// </summary>
@@ -66,8 +68,14 @@ namespace MSR.Domain.Models
         /// </summary>
         public decimal? RMPerMinuteRate { get; set; }
 
+        /// <summary>
+        /// Title
+        /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// PrintOrder
+        /// </summary>
         public int? PrintOrder { get; set; }
 
         /// <summary>
