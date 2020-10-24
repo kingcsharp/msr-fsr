@@ -212,22 +212,9 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
                 throw new DomainException($"{nameof(EntityFramework.Entities.Part)} not found with ID: {command.PartId}");
             }
 
-            // Update product details and items
-            product.CustomerId = command.CustomerId ?? product.CustomerId;
-            product.CycleTime = command.CycleTime ?? product.CycleTime;
-            product.LaborCost = command.LaborCost ?? product.LaborCost;
-            product.EquipmentCost = command.EquipmentCost ?? product.EquipmentCost;
-            product.MaterialCost = command.MaterialCost ?? product.MaterialCost;
-            product.Name = command.Name ?? product.Name;
-            product.PartId = command.PartId ?? product.PartId;
-            product.ProcedureId = command.ProcedureId ?? product.ProcedureId;
-            product.Revision = command.Revision ?? product.Revision;
-            product.SalesTax = command.SalesTax ?? product.SalesTax;
-            product.QuoteId = command.QuoteId ?? product.QuoteId;
-            product.DivisionFab = command.DivisionFab ?? product.DivisionFab;
-
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProductApproval))
             {
+                _ = _mapper.Map(command, product);
                 product.ProductSteps = _mapper.Map<ICollection<EntityFramework.Entities.ProductStep>>(command.ProductSteps);
 
                 // Save product changes
@@ -240,9 +227,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             }
 
             var approval = _mapper.Map<ProductApproval>(product);
-
-            // Ignore changes made thus far to product, since we can't approve them.
-            _unitOfWork.Products.Detach(product);
+            _ = _mapper.Map(command, approval);
 
             var steps = _mapper.Map<ICollection<ProductStepApproval>>(command.ProductSteps);
 

@@ -65,6 +65,8 @@ namespace MSR.Infrastructure.Profiles
             #endregion
 
             CreateMap<Product, ProductModel>().ReverseMap();
+            CreateMap<UpdateProduct, Product>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<ProductApproval, UpdateProduct>()
                 .ForMember(dest => dest.ProductSteps, opts => opts.MapFrom(src => src.ProductStepApprovals))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProductId));
