@@ -223,7 +223,7 @@ pipeline {
             steps {
                 script {
                     timeout(activity: true, time: 5) {
-                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                        input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
                     sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
                     sh "cat ${API_COMPOSE}"
