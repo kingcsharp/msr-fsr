@@ -40,6 +40,7 @@ namespace MSR.Application.ApplicationServices
                 qpModel.IsProduct = true;
                 qpModel.IsDeletable = false;
                 qpModel.Representative = product.Quote?.Representative;
+                qpModel.SubmittedDate = product.QuoteId == null ? product.CreatedOn : product.Quote.SubmittedDate;
                 retQuotesProductsViewsList.Add(qpModel);
             }
 
