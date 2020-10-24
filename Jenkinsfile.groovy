@@ -225,9 +225,9 @@ pipeline {
                     timeout(activity: true, time: 5) {
                         input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
-                    sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                    sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
                     sh "cat ${API_COMPOSE}"
-                    deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
+                    deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
                 }
             }
         }
