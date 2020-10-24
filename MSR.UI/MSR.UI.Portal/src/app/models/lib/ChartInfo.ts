@@ -1,13 +1,18 @@
+import { EnumChartType } from '../enums/ChartType';
+
 export interface IChartInfo {
     amount?: number;
     unit?: moment.DurationInputArg2;
     format?: string;
     chartData?: any | undefined;
+    gridData?: any | undefined;
     stackBy?: string | undefined;
     chartTitle?: string | undefined;
     xAxisTitle?: string | undefined;
     yAxisTitle?: string | undefined;
     tooltipFormat?: string | undefined;
+    chartType?: EnumChartType | undefined;
+    chartTOptions?: Highcharts.Options | undefined;
 }
 
 export class ChartInfo implements IChartInfo {
@@ -15,11 +20,14 @@ export class ChartInfo implements IChartInfo {
     unit: moment.DurationInputArg2 = 'month';
     format: string = 'MM-YYYY';
     chartData?: any | undefined;
+    gridData?: any | undefined;
     stackBy?: string | undefined;
     chartTitle?: string | undefined;
     xAxisTitle?: string | undefined;
     yAxisTitle?: string | undefined;
     tooltipFormat?: string | undefined;
+    chartType?: EnumChartType | undefined;
+    chartTOptions?: Highcharts.Options | undefined;
 
     constructor(data?: IChartInfo) {
         if (data) {
@@ -49,6 +57,9 @@ export class ChartInfo implements IChartInfo {
             this.xAxisTitle = _data['xAxisTitle'];
             this.yAxisTitle = _data['yAxisTitle'];
             this.tooltipFormat = _data['tooltipFormat'];
+            this.chartType = _data['chartType'];
+            this.chartTOptions = _data['chartTOptions'];
+            this.gridData = _data['gridData'];
         }
     }
 
@@ -63,6 +74,9 @@ export class ChartInfo implements IChartInfo {
         data['xAxisTitle'] = this.xAxisTitle;
         data['yAxisTitle'] = this.yAxisTitle;
         data['tooltipFormat'] = this.tooltipFormat;
+        data['chartType'] = this.chartType;
+        data['chartTOptions'] = this.chartTOptions;
+        data['gridData'] = this.gridData;
 
         return data;
     }

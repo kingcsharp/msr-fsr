@@ -55,7 +55,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Procedure Step Type
         /// </summary>
-        public string ProcedureStepTypeId { get; set; }
+        public int? ProcedureStepTypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets PrintOrder
@@ -70,7 +70,7 @@ namespace MSR.Domain.Models
         /// <summary>
         /// Gets or Sets LaborTime
         /// </summary>
-        public int? LaborTime { get; set; }
+        public double? LaborTime { get; set; }
 
         /// <summary>
         /// Gets or Sets EquipmentTime
@@ -83,9 +83,9 @@ namespace MSR.Domain.Models
         public double? ReplacementCost { get; set; }
 
         /// <summary>
-        /// Gets or Sets UtilizationTime
+        /// Gets or Sets Utilization
         /// </summary>
-        public float? UtilizationTime { get; set; }
+        public float? Utilization { get; set; }
 
         /// <summary>
         /// Gets or Sets UsefulLife

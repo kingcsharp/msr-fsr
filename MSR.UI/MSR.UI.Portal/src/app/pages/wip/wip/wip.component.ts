@@ -85,6 +85,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
 
   @ViewChild('fileItem') fileItem: ElementRef;
+  @ViewChild('statusCol') statusCol: ElementRef;
   @ViewChild('ncrItem') ncrItem: ElementRef;
   @ViewChild('disposition') disposition: ElementRef;
   @ViewChild('expandedRowTemplate') expandedRowTemplate: ElementRef;
@@ -234,22 +235,13 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.globals.selectCustomerObservable.subscribe(response => {
       if (response !== null && response !== undefined) {
         this.setCustomerName();
-        this.getGridData(); 
+        this.getGridData();
       }
     });
   }
 
   expandRow(data: PortalWorkOrderPartsView) {
-    this.globals.showLoader(true);
-    this.workOrderService.workOrder(data.workOrderId, this.globals.selectedCustomer.id, null, null, null,
-      env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        response.object[0].workOrderParts.forEach(element => {
-          element.partNumber = element.part.partNumber;
-          element.name = element.part.name;
-          pushIfNotExists(element, data.workOrderParts, 'id');
-        });
-      }));
+    // as example in case we need to fetch data to be shown in the grid.
   }
 
   addInstructions(coldata) {
@@ -291,6 +283,15 @@ export class WipComponent implements OnInit, AfterViewInit {
     }
   }
 
+  setSubPartsProperties(subpart: any) {
+    subpart.partNumber = subpart.part.partNumber;
+    subpart.name = subpart.part.name;
+  }
+
+  setSubpartspropertiesToWoSubparts(workOrder:PortalWorkOrderPartsView){
+    workOrder.subParts.map(x=>this.setSubPartsProperties(x));
+  }
+
   getGridData() {
     this.globals.showLoader(true);
     this.showReport = false;
@@ -298,7 +299,7 @@ export class WipComponent implements OnInit, AfterViewInit {
       .subscribe(responseHandler(response => {
         this.data = response.object.map(x => {
           let ret = new PortalWorkOrderPartsView(x);
-          ret.workOrderParts = [];
+          this.setSubpartspropertiesToWoSubparts(ret);
           return ret;
         });
         this.gridSaved = new GridSaved({
@@ -332,7 +333,7 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'partName', label: 'Part Name', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'productName', label: 'Product Name', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'procedureName', label: 'Procedure Name', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.Template, templateName: this.statusCol }),
       new ColumnsSaved({ id: 'supportingInfo', label: 'Supporting Info', visible: true, type: EnumColumnType.Template, templateName: this.ncrItem }),
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.Template, templateName: this.disposition }),
     ];

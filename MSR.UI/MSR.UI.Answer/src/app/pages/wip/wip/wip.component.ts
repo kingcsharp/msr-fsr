@@ -6,6 +6,7 @@ import { SelectItem } from 'primeng/api';
 import { EnumMenuItem, EnumApprovalTables, WorkOrderService, WorkOrderGridSummary } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-wip',
@@ -49,7 +50,7 @@ export class WipComponent implements OnInit {
 
 
 
-    this.workOrderService.menu(env.apiVersion).subscribe(responseHandler(response => {
+    this.workOrderService.menu(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       this.data = response.object;
 

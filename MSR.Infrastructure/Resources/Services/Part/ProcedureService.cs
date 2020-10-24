@@ -19,11 +19,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public ProcedureService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProcedureService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<ICollection<Domain.Models.Procedure>> GetProcedureAsync(GetProcedure command)
@@ -164,34 +166,33 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ToListAsync();
             }
             var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
+            
+            result.ForEach(procedureStep =>
+            {
+                procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
+            });
+            
+            
             return result;
         }
 
         public async Task<Domain.Models.ProcedureStepModel> CreateProcedureStepAsync(CreateProcedureStep command)
         {
-            var user = await _unitOfWork.GetLoggedInUserAsync();
-            Domain.Models.ProcedureStepModel ret;
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
-                var procstep = _mapper.Map<ProcedureStep>(command);
-                _unitOfWork.ProcedureSteps.Add(procstep);
+                var procedureStepEntity = _mapper.Map<ProcedureStep>(command);
+                await _unitOfWork.ProcedureSteps.AddAsync(procedureStepEntity);
+                await _unitOfWork.LogApprovalTransaction(procedureStepEntity, procedureStepEntity.Id);
 
-                // This will call SaveChangesAsync
-                await _unitOfWork.LogApprovalTransaction(procstep, procstep.Id);
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(procstep);
-            }
-            else
-            {
-                var approval = _mapper.Map<ProcedureStepApproval>(command);
-                _unitOfWork.ProcedureStepApprovals.Add(approval);
-                await _unitOfWork.SaveChangesAsync();
-
-                ret = _mapper.Map<Domain.Models.ProcedureStepModel>(approval);
+                return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepEntity);
             }
 
-            return ret;
+            var procedureStepApprovalEntity = _mapper.Map<ProcedureStepApproval>(command);
+            await _unitOfWork.ProcedureStepApprovals.AddAsync(procedureStepApprovalEntity);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepApprovalEntity);
         }
 
         public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command)

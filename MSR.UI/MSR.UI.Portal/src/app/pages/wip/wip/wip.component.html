@@ -22,6 +22,35 @@
     </div>
 </h1>
 
+<ng-template #statusCol let-colsDataAndSettings='colsDataAndSettings'>
+    <span *ngIf="colsDataAndSettings.colData.status !== 'In Progress'">
+        {{colsDataAndSettings.colData.status}}
+    </span>
+    <div *ngIf=" colsDataAndSettings.colData.status === 'In Progress'">
+        <div class="activetask-container">In Progress</div>
+        <div class="progressbar-container">
+            <progressbar [value]="colsDataAndSettings.colData.percentageOfTasksCompleted * 100"
+                [type]="colsDataAndSettings.colData.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
+            <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">{{colsDataAndSettings.colData.percentageOfTasksCompleted | percent : '2.2-2'}}
+            </div>
+            <ng-template #percentOfTaskCompletedTemplate>
+                {{colsDataAndSettings.colData.percentageOfTasksCompleted | percent : '2.2-2'}}
+                {{colsDataAndSettings.colData.percentageOfTasksCompletedNumerator}}/{{colsDataAndSettings.colData.percentageOfTasksCompletedDenominator}} steps completed
+            </ng-template>
+        </div>
+        <div class="progressbar-container">
+            <progressbar [value]="colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged * 100"
+                [type]="colsDataAndSettings.colData.timeLoggedType" [striped]="true" [animate]="true"></progressbar>
+            <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
+                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>
+            <ng-template #percentageOfExpectedDurationTimeLogged>
+                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}} 
+                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedNumerator}}/{{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedDenominator}} hours completed
+            </ng-template>
+        </div>
+    </div>
+</ng-template>
+
 <widget *ngIf="globals.selectedCustomer !== undefined">
     <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportModel"
         (expandRowClick)="expandRow($event)" [data]="data">
@@ -78,7 +107,7 @@
 
 <ng-template #expandedRowTemplate let-expandRowData='expandRowData'>
     <app-grid class="innerGrid" [showReport]="true" [gridSaved]="gridPartsSaved" [reportInfo]="reportPartsModel"
-        [data]="expandRowData.rowData.workOrderParts">
+        [data]="expandRowData.rowData.subParts">
     </app-grid>
 </ng-template>
 

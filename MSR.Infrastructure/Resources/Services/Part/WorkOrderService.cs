@@ -125,6 +125,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"Work Order ID {command.Id.GetValueOrDefault()} not found", DomainError.NotFound);
             }
 
+            if (command.CustomerId.HasValue)
+            {
+                workorders = workorders.Where(i => i.Purchase.PurchaseOrder.CustomerId == command.CustomerId.Value).ToList();
+            }
+
             var result = new List<WorkOrderModel>();
 
             foreach (var wo in workorders)
@@ -163,7 +168,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         i += 1;
                     }
                     wot.WorkOrderTaskMonitors = wotmList;
-                    wot.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.WorkOrderTask), wot.Id).ToList();
+                    wot.ReferenceFiles = _fileService.ListFiles(nameof(WorkOrderTask), wot.Id).ToList();
 
                 }
                 result.Add(DetachBackPointers(wom));
@@ -173,7 +178,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<WorkOrderModel> CreateWorkOrderAsync(CreateWorkOrder command)
         {
-            
+
 
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WIPMenu, EnumPrivilege.CanCreate))
             {
@@ -211,8 +216,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             var purchase = await _unitOfWork.Purchases.Query().FirstOrDefaultAsync(s => s.Id == command.PurchaseId);
-            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s=> s.ParentId == null);
-            
+            var parentPart = workorder.WorkOrderParts.FirstOrDefault(s => s.ParentId == null);
+
             await GetCycleCount(parentPart, purchase.SerialNumber);
 
 
@@ -648,7 +653,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             return await GetWorkOrderGridSummaryImpl(false);
         }
-
         public async Task<ICollection<WorkOrderStatus>> GetWorkOrderStatusAsync(GetWorkOrderStatus command)
         {
             var gwo = _mapper.Map<GetWorkOrder>(command);
@@ -811,38 +815,79 @@ namespace MSR.Infrastructure.Resources.Services.Part
         }
         public async Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command)
         {
-            var workOrderViews = _unitOfWork.PortalWorkOrderViews.Query()
-                                                                 .Where(i => i.CustomerId == command.CustomerId 
-                                                                        && ((i.StartDate >= command.FromDate && i.StartDate <= command.ToDate)
-                                                                             || (i.DueDate.HasValue && i.DueDate >= command.FromDate && i.DueDate <= command.ToDate)
-                                                                             || (i.InvoiceDate.HasValue && i.InvoiceDate >= command.FromDate && i.InvoiceDate <= command.ToDate)));
+            var workOrders = await GetWorkOrderAsync(new GetWorkOrder() { CustomerId = command.CustomerId });
 
             if (command.PartId.HasValue)
             {
-                workOrderViews = workOrderViews.Where(i => i.PartId == command.PartId.Value);
+                workOrders = workOrders.Where(i => i.WorkOrderParts.Any(j => j.PartId == command.PartId.Value)).ToList();
             }
 
             if (!string.IsNullOrWhiteSpace(command.PartName))
             {
-                workOrderViews = workOrderViews.Where(i => i.PartName == command.PartName);
+                workOrders = workOrders.Where(i => i.WorkOrderParts.Any(j => j.Part != null && j.Part.Name == command.PartName)).ToList();
             }
 
-            var portalViews = await workOrderViews.Select(i => _mapper.Map<PortalWorkOrderView>(i)).ToListAsync();
+            var portalViews = workOrders.Select(i => _mapper.Map<PortalWorkOrderView>(i)).ToList();
 
-            var woIds = portalViews.Select(i => i.Id).ToList();
-            var woTaskIds = portalViews.Select(i => i.WorkOrderTaskId).ToList();
+            var workOrderIds = portalViews.Select(i => i.Id).ToList();
+            var workOrderTaskIds = (await _unitOfWork.WorkOrderTasks.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync()).GroupBy(j => j.WorkOrderId).ToDictionary(k => k.Key, l => l.Select(m => m.Id).ToList());
 
-            var notes = await _unitOfWork.WorkOrderMessages.Query().Where(i => woIds.Contains(i.WorkOrderId)).ToListAsync();
-            var files = await _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).Where(i => woTaskIds.Contains(i.EntityId) && i.EntityTableName.Equals("WorkOrderTask") && i.FileObject != null).Select(i => i).ToListAsync();
-            var monitors = await _unitOfWork.WorkOrderTaskMonitors.Query().Where(i => woTaskIds.Contains(i.WorkOrderTaskId)).Select(i => i).ToListAsync();
+            var notes = await _unitOfWork.WorkOrderMessages.Query().Where(i => workOrderIds.Contains(i.WorkOrderId)).ToListAsync();
+            var files = _unitOfWork.FileEntityMap.Query().Include(i => i.FileObject).ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.EntityId)) && i.EntityTableName.Equals("WorkOrderTask") && i.FileObject != null).Select(i => i).ToList();
+            var monitors = _unitOfWork.WorkOrderTaskMonitors.Query().ToList().Where(i => workOrderTaskIds.Values.Any(j => j.Contains(i.WorkOrderTaskId))).Select(i => i).ToList();
+            var invoiceItems = await _unitOfWork.InvoiceItems.Query().Include(i => i.Invoice).Where(i => i.WorkOrderId != null && workOrderIds.Contains(i.WorkOrderId.Value)).Select(i => i).ToListAsync();
             var imageContentTypes = new List<string>() { "image/jpg", "image/jpeg", "image/gif", "image/png" };
 
-            foreach(var portalView in portalViews)
+            foreach (var portalView in portalViews)
             {
-                portalView.Messages = notes.Where(i => i.WorkOrderId == portalView.Id).Select(j => _mapper.Map<WorkOrderMessageModel>(j)).ToList();
-                portalView.HasMonitors = monitors.Any(i => i.WorkOrderTaskId == portalView.WorkOrderTaskId);
-                portalView.HasFiles = files.Any(i => i.EntityId == portalView.WorkOrderTaskId && !imageContentTypes.Contains(i.FileObject.ContentType));
-                portalView.HasPhotos = files.Any(i => i.EntityId == portalView.WorkOrderTaskId && imageContentTypes.Contains(i.FileObject.ContentType));
+                var associatedWorkOrder = workOrders.FirstOrDefault(i => i.Id == portalView.Id);
+                if (associatedWorkOrder != null)
+                {
+                    var (completedDenominator, completedNumerator, percentComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration) = GetStatusValues(associatedWorkOrder);
+                    var parentPart = associatedWorkOrder.WorkOrderParts.Any() ? associatedWorkOrder.WorkOrderParts.FirstOrDefault(i => i.Part != null && i.ParentId == null) : (new WorkOrderPartModel());
+                    portalView.Messages = notes.Where(i => i.WorkOrderId == portalView.Id).Select(j => _mapper.Map<WorkOrderMessageModel>(j)).ToList();
+                    portalView.WorkOrderId = portalView.Id;
+                    portalView.PercentageOfTasksCompleted = percentComplete;
+                    portalView.PercentageOfTasksCompletedDenominator = completedDenominator;
+                    portalView.PercentageOfTasksCompletedNumerator = completedNumerator;
+                    portalView.PercentageOfExpectedDurationTimeLogged = percentExpectedDuration;
+                    portalView.PercentageOfExpectedDurationTimeLoggedDenominator = expectedDurationDenominator;
+                    portalView.PercentageOfExpectedDurationTimeLoggedNumerator = expectedDurationNumerator;
+                    portalView.SubParts = associatedWorkOrder.WorkOrderParts.Where(i => i.ParentId != null).ToList();
+                    portalView.PartId = parentPart.PartId;
+                    portalView.PartName = parentPart.Part != null ? parentPart.Part.Name : string.Empty;
+                    portalView.CustomerId = associatedWorkOrder.Purchase?.PurchaseOrder?.CustomerId;
+                    portalView.CustomerName = associatedWorkOrder.Purchase?.PurchaseOrder?.Customer?.Name;
+                    portalView.SerialNumber = parentPart.SerialNumber;
+                    portalView.CompanyPartNumber = parentPart.Part?.PartNumber;
+                    portalView.CycleCount = parentPart.CycleCount;
+                    portalView.PurchaseOrderNumber = associatedWorkOrder.Purchase?.PurchaseOrder?.ReferencePO;
+                    portalView.Qty = associatedWorkOrder.Purchase?.Qty;
+                    portalView.StartDate = associatedWorkOrder.ActualStartDate;
+                    portalView.DueDate = associatedWorkOrder.ScheduledEndDate;
+                    portalView.Price = associatedWorkOrder.Price;
+                }
+
+                var workOrderTasks = workOrderTaskIds.ContainsKey(portalView.Id) ? workOrderTaskIds[portalView.Id] : new List<int>();
+                if (workOrderTasks.Any())
+                {
+                    var firstTask = workOrderTasks.First();
+                    var workOrderTask = _unitOfWork.WorkOrderTasks.Query().Include(i => i.ProcedureStep).ThenInclude(i => i.Procedure).FirstOrDefault(i => i.Id == firstTask);
+                    portalView.HasMonitors = monitors.Any(i => workOrderTasks.Contains(i.WorkOrderTaskId));
+                    portalView.HasFiles = files.Any(i => workOrderTasks.Contains(i.EntityId) && !imageContentTypes.Contains(i.FileObject.ContentType));
+                    portalView.HasPhotos = files.Any(i => workOrderTasks.Contains(i.EntityId) && imageContentTypes.Contains(i.FileObject.ContentType));
+                    portalView.WorkOrderTaskId = firstTask;
+                    portalView.ProcedureName = workOrderTask.ProcedureStep?.Procedure?.Name;
+                }
+
+                var invoiceItem = invoiceItems.FirstOrDefault(i => i.WorkOrderId.Value == portalView.WorkOrderId);
+
+                if (invoiceItem != null)
+                {
+                    portalView.InvoiceAmount = invoiceItem.Invoice.Total;
+                    portalView.InvoiceDate = invoiceItem.Invoice.InvoiceDate;
+                    portalView.InvoiceName = invoiceItem.Invoice.Description;
+                }
             }
 
             return portalViews;
@@ -996,42 +1041,30 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                 }
 
-                // PercentageOfTasksCompleted
-                int[] pctCompletedIds = { 3, 4, 6, 8 };
-                int denom = workOrderModel.WorkOrderTasks.Count();
-                int numer = workOrderModel.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
-                decimal pctComplete;
-                if (denom > 0)
-                {
-                    pctComplete = (decimal)numer/(decimal)denom;
-                }
-                else
-                {
-                    pctComplete = 0m;
-                }
-                workOrderGridSummary.PercentageOfTasksCompleted = pctComplete;
-                workOrderGridSummary.PercentageOfTasksCompletedDenominator = denom;
-                workOrderGridSummary.PercentageOfTasksCompletedNumerator = numer;
-
-                // PercentageOfExpectedDurationTimeLogged
-                decimal denomTime = workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
-                decimal numerTime = workOrderModel.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
-                if (denomTime > 0)
-                {
-                    workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = (decimal)numerTime/(decimal)denomTime;
-                }
-                else
-                {
-                    workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = 0;
-                }
-
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = denomTime;
-                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = numerTime;
+                var statusValues = GetStatusValues(workOrderModel);
+                workOrderGridSummary.PercentageOfTasksCompleted = statusValues.percentComplete;
+                workOrderGridSummary.PercentageOfTasksCompletedDenominator = statusValues.completedDenominator;
+                workOrderGridSummary.PercentageOfTasksCompletedNumerator = statusValues.completedNumerator;
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLogged = statusValues.percentExpectedDuration;
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedDenominator = (double)statusValues.expectedDurationDenominator;
+                workOrderGridSummary.PercentageOfExpectedDurationTimeLoggedNumerator = statusValues.expectedDurationNumerator;
 
                 workOrderGridSummaries.Add(workOrderGridSummary);
             }
 
             return workOrderGridSummaries;
+        }
+
+        private (int completedDenominator, int completedNumerator, decimal percentComplete, decimal expectedDurationNumerator, decimal expectedDurationDenominator, decimal percentExpectedDuration) GetStatusValues(WorkOrderModel workOrderModel)
+        {
+            int[] pctCompletedIds = { 3, 4, 6, 8 };
+            int completedDenominator = workOrderModel.WorkOrderTasks.Count();
+            int completedNumerator = workOrderModel.WorkOrderTasks.Where(x => pctCompletedIds.Contains(x.StatusId)).Count();
+            decimal pctComplete = completedDenominator == 0 ? 0 : completedNumerator / (decimal)completedDenominator;
+            decimal expectedDurationDenominator = (decimal)workOrderModel.WorkOrderTasks.Select(x => x.ProcedureStep.LaborTime).Sum().GetValueOrDefault();
+            decimal expectedDurationNumerator = workOrderModel.WorkOrderTasks.Select(x => x.TotalTaskTime).Sum().GetValueOrDefault();
+            decimal percentExpectedDuration = expectedDurationDenominator == 0 ? 0 : expectedDurationNumerator / expectedDurationDenominator;
+            return (completedDenominator, completedNumerator, pctComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration);
         }
 
         private async Task GetCycleCount(WorkOrderPart workOrderPart, string serialNumber)

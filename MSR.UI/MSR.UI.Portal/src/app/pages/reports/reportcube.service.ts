@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { Globals } from '../../models/lib/globals';
+import { EnumChartType } from '../../../app/models/enums/ChartType';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,7 @@ import { Globals } from '../../models/lib/globals';
 export class ReportCubeService {
     cubeKey = '9nyEf9X3gjVQqryBAYKcMSefrkCZ7m8bCHJSXeXCYsfhCqcRJt';
     enumColumnType = EnumColumnType;
+    splitChars = "_axy_";
     constructor(private http: HttpClient, private toastr: ToastrService, private globals: Globals) {
 
     }
@@ -37,12 +39,38 @@ export class ReportCubeService {
             if (x['CubeWorkorderparts.customername'] !== undefined) {
                 return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
             }
+            if (x['CubeWorkorderparts.customername'] !== undefined) {
+                return x['CubeWorkorderparts.customername'] === this.globals.selectedCustomer.name;
+            }
+            if (x['CubeWorkorderpartscyclecount.customername'] !== undefined) {
+                return x['CubeWorkorderpartscyclecount.customername'] === this.globals.selectedCustomer.name;
+            }
+            if (x['MonitorsHistorybyWorkOrder.customerid'] !== undefined) {
+                return x['MonitorsHistorybyWorkOrder.customerid'] === this.globals.selectedCustomer.id;
+            }
+
             return true;
         });
     }
 
     public getReportColumns(reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
+            case 'PartsCycleCountsbyWorkOrderDate':
+                return [
+                    new ColumnsSaved({ id: 'id', label: 'Id', visible: true, type: this.enumColumnType.Number, styles: { 'width': '6rem' } }),
+                    new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'serialnumber', label: 'SN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'woitem', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'msrfsrfacility', label: 'MSRFSRfacility', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'customername', label: 'Customer Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'specno', label: 'Spec No', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'kitname', label: 'Kit Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'ponumber', label: 'PO #', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'mttn', label: 'MTTN', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
+                    new ColumnsSaved({ id: 'startdate', label: 'Start Date', visible: true, type: this.enumColumnType.Date, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'DD-MM-YYYY' })
+                ];
+                break;
             case 'WorkOrderPartsHistorybyPartNumber':
                 return [
                     new ColumnsSaved({ id: 'ponumber', label: 'PN', visible: true, type: this.enumColumnType.String }),
@@ -86,13 +114,15 @@ export class ReportCubeService {
             case 'MonitorsHistorybyWorkOrder':
                 return [
                     new ColumnsSaved({ id: 'value', label: 'Monitor Value', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'customerid', label: 'Customer Id', visible: true, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'customerid', label: 'Customer Id', visible: false, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: true, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
                     new ColumnsSaved({ id: 'locationname', label: 'Location', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: true, type: this.enumColumnType.String }),
                     new ColumnsSaved({ id: 'partname', label: 'Part Names', visible: true, type: this.enumColumnType.StringArray, dropdownHeader: true, multipleValues: true }),
                     new ColumnsSaved({ id: 'workordername', label: 'WO Name', visible: true, type: this.enumColumnType.String }),
-                    new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'lastupdatedon', label: 'Updated On', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'DD-MM-YYYY' }),
+                    new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String })
                 ];
             case 'CombinedFinancialDatabyWorkOrder':
                 return [
@@ -160,51 +190,139 @@ export class ReportCubeService {
         return fromToValues;
     }
 
+    private setName(row, prop1, prop2, separator) {
+        var name = '';
+        if (row[prop1] !== undefined && row[prop1] !== null) {
+            name += row[prop1].replace(/\s/g, '');
+        }
+        if (row[prop2] !== undefined && row[prop2] !== null) {
+            if (name.length > 0) {
+                name += separator;
+            }
+            name += row[prop2].replace(/\s/g, '');
+        }
+
+        return name;
+    }
+
+    private isValidRowForChart(row, prop1, prop2) {
+        const isValid = row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0 && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
+        if (isValid) {
+            var a = 1;
+        }
+        return isValid;
+    }
+
+    getCycleCountNr(row, prop) {
+        const cycleCount = row[prop];
+        if (isNaN(cycleCount)) {
+            return 0;
+        }
+        return cycleCount;
+    }
+
     public filterReportData(data: any, reportInfo: ReportModel) {
         switch (reportInfo.name.replace(/\s/g, '') + reportInfo.subtitle.replace(/\s/g, '')) {
-            case 'MonitorsHistorybyWorkOrder':
-                const workInProcessbyWorkOrder = data.map(elem => {
-                    // we need to set this property as for multiple filters if the property name has a "." grid wont be filtered.
-                    const partName = elem['CubePartsmonitors.partname'];
-                    if (partName === null) {
-                        elem['partname'] = [];
-                    } else {
-                        elem['partname'] = elem['CubePartsmonitors.partname'].map((x) => {
-                            return {
-                                name: x,
-                                id: x
-                            };
-                        });
-                    }
-
+            case 'PartsCycleCountsbyWorkOrderDate':
+                const gridData = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.elemKey = elem['startdate'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
+                    elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
+                    elem.cyclecount = this.getCycleCountNr(elem, 'cyclecount');
+                    elem.startdate = moment(elem['startdate']);
                     return elem;
                 });
-                return workInProcessbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
+                const chartInfoPartsCycleCounts = new ChartInfo({
+                    gridData: gridData,
+                    chartType: EnumChartType.Line,
+                    stackBy: 'cyclecount',
+                    chartTitle: 'Parts Cycle Counts',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Cycle Count',
+                    tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
+                    chartTOptions: {
+                        legend: {
+                            align: "center",
+                            verticalAlign: "bottom",
+                            itemHoverStyle:{
+                                color:'#bdbdbd'
+                            },
+                            itemStyle:{
+                                color: '#fff',
+                                fontFamily: 'Open Sans'
+                            },
+                            x: 0,
+                            y: 0
+                        },
+
+                        tooltip: {
+                            formatter: function () {
+                                const date = moment(this.point.category, "MM-YYYY").format("MMM-YY");
+                                return `<div>
+                                <b>${this.series.name}</b><br>
+                                ${date}: Cycle Count ${this.point.y}
+                                <div>`
+                            }
+                        },
+                        plotOptions: {
+                            series: {
+                                marker: {
+                                    enabled: true
+                                },
+                                showInLegend: true
+                            }
+                        }
+                    }
+                });
+
+                return this.getResultDataAndChart(chartInfoPartsCycleCounts);
+            case 'MonitorsHistorybyWorkOrder':
+                const gridDataRet = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
+                    elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
+                    elem.cyclecount = this.getCycleCountNr(elem, 'cyclecount');
+                    elem.lastupdatedon = moment(elem['lastupdatedon']);
+                    elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
+                    return elem;
+                });
+                const chartInfoDicworkInProcessbyWorkOrder = new ChartInfo({
+                    gridData: gridDataRet,
+                    chartType: EnumChartType.Bar,
+                    stackBy: 'cyclecount',
+                    chartTitle: 'Parts Cycle Counts',
+                    xAxisTitle: 'Month (Previous 12 Months Rolling)',
+                    yAxisTitle: 'Cycle Count',
+                    tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
+                    chartTOptions: {
+                        tooltip: {
+                            formatter: function () {
+                                const date = moment(this.point.category, "MM-YYYY").format("MMM-YY");
+                                return `<div>
+                                <b>${this.series.name}</b><br>
+                                ${date}: Cycle Count ${this.point.y}
+                                <div>`
+                            }
+                        }
+                    }
+                });
+                return this.getResultDataAndChart(chartInfoDicworkInProcessbyWorkOrder);
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
 
                 return workOrdersNotInvoicedbyWorkOrder.map((elem) => this.removeObjectsPropertyPrefix(elem));
             case 'RevenuebyCustomerbyTimePeriod':
-                let dataDic = {};
-                // const resultData = [];
-                data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.customername'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
-                    if (dataDic[elemKey] === undefined) {
-                        dataDic[elemKey] = {
-                            elemKey: elemKey,
-                            yearMonth: moment(elem['CubeFinancial.duedate']),
-                            site: elem['CubeFinancial.msrfsrfacility'],
-                            customername: elem['CubeFinancial.customername'],
-                            total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
-                        };
-                    } else {
-                        dataDic[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
-                    }
+                const resultData = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.key = elem['duedate'] + this.splitChars + elem['customername'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
+                    elem.yearMonth = moment(elem['duedate']);
+                    elem.isValidForChart = true;
+                    elem.total = parseFloat(elem['wtax'].substring(1))
                 });
 
                 const chartInfo = new ChartInfo({
-                    chartData: dataDic,
+                    gridData: resultData,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Customer',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -214,27 +332,17 @@ export class ReportCubeService {
 
                 return this.getResultDataAndChart(chartInfo);
             case 'RevenuebyKitbyPart/Kit':
-                let dataDic3 = {};
-                const resultData2 = [];
-                data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
-                    if (dataDic3[elemKey] === undefined) {
-                        dataDic3[elemKey] = {
-                            elemKey: elemKey,
-                            duedate: elem['CubeFinancial.duedate'],
-                            yearMonth: moment(elem['CubeFinancial.duedate']),
-                            kitname: elem['CubeFinancial.kitname'],
-                            site: elem['CubeFinancial.msrfsrfacility'],
-                            total: parseFloat(elem['CubeFinancial.wtax'].substring(1))
-                        };
-                    } else {
-                        dataDic3[elemKey].total += parseFloat(elem['CubeFinancial.wtax'].substring(1));
-                    }
+                const resultData2 = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.key = elem['duedate'] + this.splitChars + elem['kitname'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
+                    elem.yearMonth = moment(elem['duedate']);
+                    elem.isValidForChart = true;
+                    elem.total = parseFloat(elem['wtax'].substring(1));
+                    elem.site = elem['msrfsrfacility'];
                 });
-                Object.keys(dataDic3).forEach(x => resultData2.push(dataDic3[x]));
 
                 const chartInfo2 = new ChartInfo({
-                    chartData: dataDic3,
+                    gridData: resultData2,
                     stackBy: 'total',
                     chartTitle: 'Revenue by Kit',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -244,25 +352,18 @@ export class ReportCubeService {
 
                 return this.getResultDataAndChart(chartInfo2);
             case 'CountofKitsbyPart/Kit':
-                let dataDic2 = {};
-                data.map(elem => {
-                    const elemKey = moment(elem['CubeFinancial.duedate']).format('MM-YYYY') + '_' + elem['CubeFinancial.kitname'].replace(/\s/g, '') + '_' + elem['CubeFinancial.msrfsrfacility'].replace(/\s/g, '');
-                    if (dataDic2[elemKey] === undefined) {
-                        dataDic2[elemKey] = {
-                            elemKey: elemKey,
-                            duedate: elem['CubeFinancial.duedate'],
-                            yearMonth: moment(elem['CubeFinancial.duedate']),
-                            kitname: elem['CubeFinancial.kitname'],
-                            site: elem['CubeFinancial.msrfsrfacility'],
-                            count: 1
-                        };
-                    } else {
-                        dataDic2[elemKey].count += 1;
-                    }
+                const gridData5 = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.elemKey = elem['duedate'] + this.splitChars + this.setName(elem, 'kitname', 'msrfsrfacility', '-');
+                    elem.isValidForChart = this.isValidRowForChart(elem, 'kitname', 'msrfsrfacility');
+                    elem.yearMonth = moment(elem['CubeFinancial.duedate']);
+                    elem.site = elem['msrfsrfacility'];
+                    elem.count = 1;
+                    return elem;
                 });
 
                 const chartInfo3 = new ChartInfo({
-                    chartData: dataDic2,
+                    gridData: gridData5,
                     stackBy: 'count',
                     chartTitle: 'Count of Kits',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -297,33 +398,52 @@ export class ReportCubeService {
         return this.getResultDataAndChart(chartInfo3);
     }
 
-    public getResultDataAndChart(chartInfo: ChartInfo) {
-
-        const months = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
-        const dataSeries = [];
-        const resultData = [];
-
-        Object.keys(chartInfo.chartData).forEach(x => {
-            const index = months.indexOf(x.split('_')[0]);
-            const name = x.split('_')[1];
-            if (index !== -1) {
-
-                const nameIndex = dataSeries.findIndex(z => z.name === name);
-                if (nameIndex !== -1) {
-                    dataSeries[nameIndex].data[index] += chartInfo.chartData[x][chartInfo.stackBy];
+    private groupChartDataFromGridRows(chartInfo: ChartInfo) {
+        let chartData = {};
+        const gridData = chartInfo.gridData;
+        let length = chartInfo.gridData.length;
+        while (length--) {
+            const gridDataRow = gridData[length];
+            if (gridDataRow.isValidForChart !== false) {
+                if (chartData[gridDataRow.elemKey] === undefined) {
+                    chartData[gridDataRow.elemKey] = gridDataRow;
                 } else {
-                    const dataArr = [];
-                    months.forEach(element => {
-                        dataArr.push(0);
+                    chartData[gridDataRow.elemKey][chartInfo.stackBy] += gridDataRow[chartInfo.stackBy];
+                }
+            }
+        }
+        return chartData;
+    }
+
+    public getResultDataAndChart(chartInfo: ChartInfo) {
+        chartInfo.chartData = this.groupChartDataFromGridRows(chartInfo);
+        const monthsFromTo = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
+        const dataSeries = [];
+
+        Object.keys(chartInfo.chartData).forEach(chartDataKey => {
+            const rowData = chartInfo.chartData[chartDataKey];
+            const xMonth = chartDataKey.split(this.splitChars)[0];
+            const monthIndex = monthsFromTo.indexOf(moment(xMonth).format('MM-YYYY'));
+            const keyName = chartDataKey.split(this.splitChars)[1];
+            if (monthIndex !== -1) {
+                const nameIndex = dataSeries.findIndex(z => z.name === keyName);
+                if (nameIndex !== -1) {
+                    dataSeries[nameIndex].data[monthIndex] += rowData[chartInfo.stackBy];
+                } else {
+                    const seriesDataArray = [];
+                    // just to initialize an array with a 0 in all it's positions.
+                    monthsFromTo.forEach(element => {
+                        seriesDataArray.push(0);
                     });
-                    dataArr[index] += chartInfo.chartData[x][chartInfo.stackBy];
+
+                    seriesDataArray[monthIndex] += rowData[chartInfo.stackBy];
+
                     dataSeries.push({
-                        name: name,
-                        data: dataArr
+                        name: keyName,
+                        data: seriesDataArray
                     });
                 }
             }
-            resultData.push(chartInfo.chartData[x]);
         });
 
         Highcharts.setOptions({
@@ -332,12 +452,11 @@ export class ReportCubeService {
                 thousandsSep: ','
             },
         });
-
         let chartOptions: Highcharts.Options = {
             chart: {
                 backgroundColor: '#222d3c',
                 borderColor: 'none',
-                type: 'column'
+                type: chartInfo.chartType === EnumChartType.Line ? 'spline' : 'column',
             },
             title: {
                 text: chartInfo.chartTitle,
@@ -347,7 +466,6 @@ export class ReportCubeService {
                     fontFamily: 'Open Sans'
                 }
             },
-            // colors: ['#56616f'],
             xAxis: {
                 type: 'category',
 
@@ -358,7 +476,7 @@ export class ReportCubeService {
                         fontFamily: 'Open Sans'
                     }
                 },
-                categories: months,
+                categories: monthsFromTo,
                 title: {
                     text: chartInfo.xAxisTitle,
                     style: {
@@ -391,9 +509,9 @@ export class ReportCubeService {
                     }
                 }
             },
-            legend: {
+            legend: chartInfo.chartTOptions.legend === undefined ? {
                 enabled: false
-            },
+            } : chartInfo.chartTOptions.legend,
             // legend: {
             //     align: 'right',
             //     x: -5,
@@ -410,22 +528,22 @@ export class ReportCubeService {
             //         opacity:1
             //     }
             // },
-            tooltip: {
+            tooltip: chartInfo.chartTOptions.tooltip === undefined ? {
                 headerFormat: '<b>Month:</b> {point.x}<br/>',
                 pointFormat: '<b>{series.name}</b>: {point.y:,.2f}<br/> <b>Total</b>: {point.stackTotal:,.2f}'
-            },
-            plotOptions: {
+            } : chartInfo.chartTOptions.tooltip,
+            plotOptions: chartInfo.chartTOptions.plotOptions === undefined ? {
                 column: {
                     stacking: 'normal',
                     // dataLabels: {
                     //     enabled: true
                     // }
                 }
-            },
+            } : chartInfo.chartTOptions.plotOptions,
             series: dataSeries
         };
 
 
-        return { resultData: resultData, chartOptions: chartOptions, chartInfo: chartInfo };
+        return { resultData: chartInfo.gridData, chartOptions: chartOptions, chartInfo: chartInfo };
     }
 }

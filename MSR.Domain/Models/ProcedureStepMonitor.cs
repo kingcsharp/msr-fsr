@@ -77,5 +77,10 @@
         /// LowTarget
         /// </summary>
         public float? LowTarget { get; set; }
+
+        /// <summary>
+        /// MonitorListId
+        /// </summary>
+        public int? MonitorListId { get; set; }
     }
 }

@@ -186,6 +186,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (CurrentUser.HasPrivilege(EnumMenuItem.Monitors, EnumPrivilege.CanDelete)) {
                 _unitOfWork.ProcedureStepMonitors.Delete(false, current);
+                await _unitOfWork.SaveChangesAsync();
             } else {
                 throw new DomainException($"Permission denied for user {CurrentUser.GetId()}", DomainError.BadRequest);
             }

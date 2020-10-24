@@ -1,4 +1,6 @@
-﻿using MSR.Domain.Commanding;
+﻿using System.Collections.Generic;
+using MSR.Domain.Commanding;
+using MSR.Domain.Models;
 
 namespace MSR.Domain.Commands
 {
@@ -16,5 +18,10 @@ namespace MSR.Domain.Commands
         public double? EquipmentTime { get; set; }
         public string Roles { get; set; }
         public string procedureStepType { get; set; }
+        public int? ProcedureStepTypeId { get; set; }
+        public int? LaborTime { get; set; }
+        public int? UsefulLife { get; set; }
+        public ICollection<int> ReferenceFileIds { get; set; }
+        public ICollection<FileModel> ReferenceFiles { get; set; }
     }
 }

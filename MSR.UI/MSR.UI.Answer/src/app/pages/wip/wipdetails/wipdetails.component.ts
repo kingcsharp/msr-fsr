@@ -14,6 +14,7 @@ import { WorkordertasktimerWrapperComponent } from '../../../components/workorde
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
+import { take } from 'rxjs/operators';
 
 const moment = require('moment');
 
@@ -88,7 +89,7 @@ export class WipdetailsComponent implements OnInit {
     this.route.params.subscribe(params => {
 
       let workOrderId = params['id'] == null ? 0 : Number(params['id']);
-      this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).subscribe(responseHandler(response => {
+      this.workOrdersService.workOrder(workOrderId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
 
         this.workOrderModel = this.cleanData(response.object[0]);
@@ -115,7 +116,7 @@ export class WipdetailsComponent implements OnInit {
           this.checkRoleAccessAndSetTaskAsViewable(this.workOrderModel.workOrderTasks[0]);
         }
 
-
+        this.globals.showLoader(false);
       }));
 
     });
@@ -281,7 +282,7 @@ export class WipdetailsComponent implements OnInit {
     } as IUpdateWorkOrderPartRequest);
 
     this.globals.showLoader(true);
-    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).subscribe(response => {
+    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).pipe(take(1)).subscribe(response => {
 
       let workOrderPart = this.workOrderModel.workOrderParts.find(s => s.id === partId);
       workOrderPart.cycleCount = response.object.cycleCount;
@@ -369,7 +370,7 @@ export class WipdetailsComponent implements OnInit {
       } as IUpdateWorkOrderTaskRequest);
 
       this.globals.showLoader(true);
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
 
         this.router.navigate(['/app/wip/wipstatus']);
 
@@ -400,7 +401,7 @@ export class WipdetailsComponent implements OnInit {
       } as IUpdateWorkOrderTaskRequest);
 
       this.globals.showLoader(true);
-      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+      this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
 
         this.router.navigate(['/app/wip/wipstatus']);
 
@@ -421,7 +422,7 @@ export class WipdetailsComponent implements OnInit {
     } as IUpdateWorkOrderTaskRequest);
 
     this.globals.showLoader(true);
-    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).subscribe(responseHandler(() => {
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updateWorkOrderTaskRequest).pipe(take(1)).subscribe(responseHandler(() => {
       this.workOrderTaskInProgress.assignedTo = this.globals.getCurrentUser().id;
       this.workOrderTaskInProgress.assignedToUser = this.globals.getCurrentUser();
     }));
@@ -486,7 +487,7 @@ export class WipdetailsComponent implements OnInit {
 
     });
 
-    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).subscribe(response => {
+    this.workOrderTaskService.workOrderTaskPatch(env.apiVersion, updatedWorkOrderTaskRequest).pipe(take(1)).subscribe(response => {
 
       this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskInProgress.id).referenceFiles = response.object.referenceFiles;
 

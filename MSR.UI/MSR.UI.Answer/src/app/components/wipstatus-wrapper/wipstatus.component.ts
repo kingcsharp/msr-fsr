@@ -7,6 +7,7 @@ import { responseHandler } from '../../utils/responseHandler';
 import { Globals } from '../../models/lib/globals';
 import { forkJoin } from 'rxjs';
 import { AxisDateTimeLabelFormatsOptions } from 'highcharts';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'wipstatus',
@@ -38,7 +39,7 @@ export class WipstatusWrapperComponent implements OnInit {
       this.globals.showLoader(true);
     }
 
-    this.workOrderService.status(env.apiVersion).subscribe(responseHandler(response => {
+    this.workOrderService.status(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
       let workOrderStatuses = new Array<any>();
 
@@ -132,12 +133,12 @@ export class WipstatusWrapperComponent implements OnInit {
 
       this.closeTakeOverAsUserConfirmationDialog();
       this.globals.showLoader(true);
-      this.userService.loggedInUser(env.apiVersion).subscribe(responseHandler(response => {
+      this.userService.loggedInUser(env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
         let loggedInUser = <UserModel>response.object;
 
         this.globals.showLoader(true);
-        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null, env.apiVersion).subscribe(responseHandler(workOrderGetResponse => {
+        this.workOrderService.workOrder(this.workOrderToTakeOverId, null, null, null, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(workOrderGetResponse => {
 
           let tasks = <Array<WorkOrderTaskModel>>workOrderGetResponse.object[0].workOrderTasks;
 
