@@ -106,7 +106,6 @@ export class AppInterceptor implements HttpInterceptor {
   }
 
   validateToken(token) {
-    console.log(token);
 
   }
 }

@@ -35,7 +35,6 @@ export class PcalendarWrapperComponent implements OnInit, OnDestroy {
     };
     const ctrl = this;
     FilterUtils['dateRangeFilter'] = (value, filter): boolean => {
-      // debugger;
       if (Array.isArray(filter)) {
         if (filter[1] === null) {
           return moment(filter[0]).startOf('day').isBefore(value);

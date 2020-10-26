@@ -28,6 +28,7 @@ export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
     showReport: boolean;
     hasChart: boolean = false;
     subscriptions: Subscription[] = [];
+    isGettingPortal: boolean = false;
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
@@ -73,16 +74,20 @@ export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
     getReportData() {
         this.globals.showLoader(true);
         this.showReport = false;
-        this.reportService.report(true, env.apiVersion).pipe(take(1))
-            .subscribe(responseHandler(response => {
-                this.reportInfo = response.object.filter(x => x.id === parseInt(this.reportId, 10))[0];
-                this.gridSaved = new GridSaved({
-                    columnsSaved: this.reportCubeService.getReportColumns(this.reportInfo),
-                    storageId: this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') + this.elem.nativeElement.tagName.toLowerCase(),
-                    version: '1.0.0'
-                });
+        if (!this.isGettingPortal) {
+            this.isGettingPortal = true;
+            this.reportService.report(true, env.apiVersion).pipe(take(1))
+                .subscribe(responseHandler(response => {
+                    this.isGettingPortal = false;
+                    this.reportInfo = response.object.filter(x => x.id === parseInt(this.reportId, 10))[0];
+                    this.gridSaved = new GridSaved({
+                        columnsSaved: this.reportCubeService.getReportColumns(this.reportInfo),
+                        storageId: this.reportInfo.name.replace(/\s/g, '') + this.reportInfo.subtitle.replace(/\s/g, '') + this.elem.nativeElement.tagName.toLowerCase(),
+                        version: '1.0.0'
+                    });
 
-                this.showReport = true;
-            }));
+                    this.showReport = true;
+                }));
+        }
     }
 }

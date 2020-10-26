@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
   Role, EnumMenuItem, ReportService, ReportModel, CustomerService
@@ -25,7 +25,7 @@ declare let jQuery: any;
   styleUrls: ['./report.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReportComponent implements OnInit {
+export class ReportComponent implements OnInit, OnDestroy {
   data: any;
   query: any = [];
   querySubject: any;
