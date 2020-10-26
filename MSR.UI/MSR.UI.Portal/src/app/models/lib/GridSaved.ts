@@ -7,6 +7,7 @@ export interface IGridSaved {
     version?: string | undefined;
     visibleColumns?: number | undefined;
     expandRows?: boolean | undefined;
+    expandRowProperty?: string | undefined;
     expandRowsTemplate?: ElementRef | undefined;
     showMyViewsFeature?: boolean | undefined;
     paginator?: boolean | undefined;
@@ -18,6 +19,7 @@ export class GridSaved implements IGridSaved {
     storageId?: string | undefined;
     visibleColumns?: number | undefined;
     expandRows?: boolean | undefined;
+    expandRowProperty?: string | undefined;
     expandRowsTemplate?: ElementRef | undefined;
     showMyViewsFeature?: boolean = true;
     paginator?: boolean = true;
@@ -50,7 +52,8 @@ export class GridSaved implements IGridSaved {
             this.showMyViewsFeature = _data['showMyViewsFeature'];
             this.paginator = _data['paginator'];
             this.gridClass = _data['gridClass'];
-
+            this.expandRowProperty = _data['expandRowProperty'];
+            
 
             if (Array.isArray(_data['columnsSaved'])) {
                 this.columnsSaved = [] as any;
@@ -74,6 +77,8 @@ export class GridSaved implements IGridSaved {
         data['showMyViewsFeature'] = this.showMyViewsFeature;
         data['paginator'] = this.paginator;
         data['gridClass'] = this.gridClass;
+        data['expandRowProperty'] = this.expandRowProperty;
+        
 
         if (Array.isArray(this.columnsSaved)) {
             data['columnsSaved'] = [];

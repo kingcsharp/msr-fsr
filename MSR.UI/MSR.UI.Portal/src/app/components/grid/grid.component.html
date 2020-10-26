@@ -3,10 +3,10 @@
         style="width: 100%; height: 100%; display: block;"></highcharts-chart>
 </div>
 
-<p-table #dt *ngIf="showReport" [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}" [rowHover]="true"
-    [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [paginator]="gridSaved.paginator"
-    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
-    stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
+<p-table #dt *ngIf="showReport" [value]="gridData" dataKey="id" styleClass="ui-table-customers {{gridSaved.gridClass}}"
+    [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
+    [paginator]="gridSaved.paginator" currentPageReportTemplate="Showing {first}-{last} of {totalRecords}"
+    [filterDelay]="0" stateStorage="local" stateKey="{{gridSaved.storageId}}" (onFilter)="handleFilter($event,dt)">
     <ng-template pTemplate="caption">
         <div class="pull-left">
             <h3 *ngIf="reportInfo.name.length > 0">
@@ -37,7 +37,8 @@
     </ng-template>
     <ng-template pTemplate="body" let-itemData let-expanded="expanded">
         <tr class="ui-selectable-row">
-            <td *ngIf="gridSaved.expandRows">
+
+            <td *ngIf="gridSaved.expandRows && itemData[gridSaved.expandRowProperty].length>0">
                 <i class="fad pointer" [pRowToggler]="itemData" (click)="expandRow(expanded,itemData)"
                     [ngClass]="{'fa-plus': expanded !== true, 'fa-minus':expanded===true}"></i>
             </td>

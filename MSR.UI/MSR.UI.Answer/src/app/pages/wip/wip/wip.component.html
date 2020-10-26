@@ -175,7 +175,7 @@
                                         {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>
                                     <ng-template #percentageOfExpectedDurationTimeLogged>
                                         {{model.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}} 
-                                        {{model.percentageOfExpectedDurationTimeLoggedNumerator}}/{{model.percentageOfExpectedDurationTimeLoggedDenominator}} hours completed
+                                        {{model.percentageOfExpectedDurationTimeLoggedNumerator/60 | number:'1.1-1'}}/{{model.percentageOfExpectedDurationTimeLoggedDenominator/60 | number:'1.1-1'}} hours completed
                                     </ng-template>
                                 </div>
                             </div>
