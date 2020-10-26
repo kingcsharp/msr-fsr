@@ -19105,6 +19105,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: WorkOrderPartModel[] | undefined;
+    stepText?: string | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
         if (data) {
@@ -19160,6 +19161,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
                 for (let item of _data["subParts"])
                     this.subParts!.push(WorkOrderPartModel.fromJS(item));
             }
+            this.stepText = _data["stepText"];
         }
     }
 
@@ -19215,6 +19217,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             for (let item of this.subParts)
                 data["subParts"].push(item.toJSON());
         }
+        data["stepText"] = this.stepText;
         return data; 
     }
 }
@@ -19255,6 +19258,7 @@ export interface IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: WorkOrderPartModel[] | undefined;
+    stepText?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {

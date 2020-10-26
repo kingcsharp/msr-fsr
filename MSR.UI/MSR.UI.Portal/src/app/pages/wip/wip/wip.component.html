@@ -4,7 +4,7 @@
             <i class="fas fa-desktop"></i>
             {{title}}
         </div>
-        <div  class="calendarSearch">
+        <div class="calendarSearch">
             From Date: <p-calendar [(ngModel)]="fromDate" [maxDate]="toDate" appendTo="body" [locale]="en"></p-calendar>
             To Date: <p-calendar [(ngModel)]="toDate" [minDate]="fromDate" appendTo="body" [locale]="en"></p-calendar>
         </div>
@@ -26,16 +26,18 @@
     <span *ngIf="colsDataAndSettings.colData.status !== 'In Progress'">
         {{colsDataAndSettings.colData.status}}
     </span>
-    <div *ngIf=" colsDataAndSettings.colData.status === 'In Progress'">
-        <div class="activetask-container">In Progress</div>
+    <div *ngIf="colsDataAndSettings.colData.status === 'In Progress'">
+        <div class="activetask-container">{{colsDataAndSettings.colData.stepText}}</div>
         <div class="progressbar-container">
             <progressbar [value]="colsDataAndSettings.colData.percentageOfTasksCompleted * 100"
                 [type]="colsDataAndSettings.colData.tasksCompletedType" [striped]="true" [animate]="true"></progressbar>
-            <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">{{colsDataAndSettings.colData.percentageOfTasksCompleted | percent : '2.2-2'}}
+            <div class="percentage" [tooltip]="percentOfTaskCompletedTemplate">
+                {{colsDataAndSettings.colData.percentageOfTasksCompleted | percent : '2.2-2'}}
             </div>
             <ng-template #percentOfTaskCompletedTemplate>
                 {{colsDataAndSettings.colData.percentageOfTasksCompleted | percent : '2.2-2'}}
-                {{colsDataAndSettings.colData.percentageOfTasksCompletedNumerator}}/{{colsDataAndSettings.colData.percentageOfTasksCompletedDenominator}} steps completed
+                {{colsDataAndSettings.colData.percentageOfTasksCompletedNumerator}}/{{colsDataAndSettings.colData.percentageOfTasksCompletedDenominator}}
+                steps completed
             </ng-template>
         </div>
         <div class="progressbar-container">
@@ -44,8 +46,9 @@
             <div class="percentage" [tooltip]="percentageOfExpectedDurationTimeLogged">
                 {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}</div>
             <ng-template #percentageOfExpectedDurationTimeLogged>
-                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}} 
-                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedNumerator/60 | number:'1.1-1'}}/{{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedDenominator/60 | number:'1.1-1'}} hours completed
+                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLogged | percent : '2.2-2'}}
+                {{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedNumerator/60 | number:'1.1-1'}}/{{colsDataAndSettings.colData.percentageOfExpectedDurationTimeLoggedDenominator/60 | number:'1.1-1'}}
+                hours completed
             </ng-template>
         </div>
     </div>
@@ -116,11 +119,6 @@
     <p-header>
         {{selectedReport === enumReportTypes.NCRReport?'NCR Report':'WIP History Report'}}
     </p-header>
-    <!-- <div class="row printotherreport-dropdown">
-        <div class="col-2 d-flex justify-content-end">
-            <div class="my-auto">NCR Report</div>
-        </div>
-    </div> -->
     <div class="report-viewport m-4 d-print-flex">
         <ncr-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.NCRReport"></ncr-report>
         <wip-history-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.WIPHistoryReport">
