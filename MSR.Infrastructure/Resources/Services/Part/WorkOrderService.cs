@@ -848,7 +848,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     var inProgressTask = associatedWorkOrder.WorkOrderTasks.FirstOrDefault(i => i.StatusId == (int)WorkOrderStatusEnum.InProgress);
                     if(inProgressTask != null)
                     {
-                        portalView.StepText = inProgressTask.ProcedureStep?.StepText;
+                        portalView.StepText = inProgressTask.ProcedureStep?.Title;
                     }
                     portalView.Messages = notes.Where(i => i.WorkOrderId == portalView.Id).Select(j => _mapper.Map<WorkOrderMessageModel>(j)).ToList();
                     portalView.WorkOrderId = portalView.Id;
