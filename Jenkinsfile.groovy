@@ -44,7 +44,6 @@ pipeline {
         //}
         stage('Build & Deploy') {
             parallel {
-                when { changeset "MSR.UI/MSR.UI.Answer"}
                 stage('Build & Deploy UI to QA') {
                     agent { label 'master'}
                     steps {
@@ -90,7 +89,6 @@ pipeline {
                 }
                 stage('Build and Deploy API to QA') {
                     agent { label 'master'}
-                    when { not { changeset "MSR.UI/MSR.UI.Answer"} }
                     steps {
                         script {
                             try {
@@ -159,8 +157,6 @@ pipeline {
         }
 
         stage("Deploy Rollbar QA") {
-            when { changeset "MSR.UI/MSR.UI.Answer"}
-            when { not { changeset "MSR.UI/MSR.UI.Answer"} }
             agent { label 'master' }
             steps {
                 script {
@@ -177,7 +173,6 @@ pipeline {
             parallel {
                 stage("Promote API to UAT") {
                     agent { label 'master' }
-                    when { not { changeset "MSR.UI/MSR.UI.Answer"} }
                     steps {
                         script {
                             timeout(activity: true, time: 5) {
@@ -192,7 +187,6 @@ pipeline {
 
                 stage("Promote UI to UAT") {
                     agent { label 'master' }
-                    when { changeset "MSR.UI/MSR.UI.Answer"}
                     steps {
                         script {
                             dir('MSR.UI/MSR.UI.Answer') {
@@ -217,8 +211,6 @@ pipeline {
 
         stage("Deploy Rollbar UAT") {
             agent { label 'master' }
-            when { changeset "MSR.UI/MSR.UI.Answer"}
-            when { not { changeset "MSR.UI/MSR.UI.Answer"} }
             steps {
                 script {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
@@ -234,7 +226,6 @@ pipeline {
             parallel {
                 stage("Promote API to PROD") {
                     agent { label 'master' }
-                    when { not { changeset "MSR.UI/MSR.UI.Answer"} }
                     steps {
                         script {
                             timeout(activity: true, time: 5) {
@@ -249,7 +240,6 @@ pipeline {
 
                 stage("Promote UI to PROD") {
                     agent { label 'master' }
-                    when { changeset "MSR.UI/MSR.UI.Answer"}
                     steps {
                         script {
                             dir('MSR.UI/MSR.UI.Answer') {
@@ -274,8 +264,6 @@ pipeline {
 
         stage("Deploy Rollbar PROD") {
             agent { label 'master' }
-            when { changeset "MSR.UI/MSR.UI.Answer"}
-            when { not { changeset "MSR.UI/MSR.UI.Answer"} }
             steps {
                 script {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
