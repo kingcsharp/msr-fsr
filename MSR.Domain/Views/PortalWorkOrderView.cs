@@ -42,5 +42,6 @@ namespace MSR.Domain.Views
         public decimal? PercentageOfExpectedDurationTimeLoggedDenominator { get; set; }
         public ICollection<WorkOrderMessageModel> Messages { get; set; }
         public ICollection<WorkOrderPartModel> SubParts { get; set; }
+        public string StepText { get; set; }
     }
 }

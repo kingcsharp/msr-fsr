@@ -845,6 +845,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 {
                     var (completedDenominator, completedNumerator, percentComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration) = GetStatusValues(associatedWorkOrder);
                     var parentPart = associatedWorkOrder.WorkOrderParts.Any() ? associatedWorkOrder.WorkOrderParts.FirstOrDefault(i => i.Part != null && i.ParentId == null) : (new WorkOrderPartModel());
+                    var inProgressTask = associatedWorkOrder.WorkOrderTasks.FirstOrDefault(i => i.StatusId == (int)WorkOrderStatusEnum.InProgress);
+                    if(inProgressTask != null)
+                    {
+                        portalView.StepText = inProgressTask.ProcedureStep?.Title;
+                    }
                     portalView.Messages = notes.Where(i => i.WorkOrderId == portalView.Id).Select(j => _mapper.Map<WorkOrderMessageModel>(j)).ToList();
                     portalView.WorkOrderId = portalView.Id;
                     portalView.PercentageOfTasksCompleted = percentComplete;
@@ -866,6 +871,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     portalView.StartDate = associatedWorkOrder.ActualStartDate;
                     portalView.DueDate = associatedWorkOrder.ScheduledEndDate;
                     portalView.Price = associatedWorkOrder.Price;
+
                 }
 
                 var workOrderTasks = workOrderTaskIds.ContainsKey(portalView.Id) ? workOrderTaskIds[portalView.Id] : new List<int>();
