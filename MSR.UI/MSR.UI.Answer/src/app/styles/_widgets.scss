@@ -2120,4 +2120,8 @@ p-dialog {
       color: #ffffff;
     }
   }
+
+  ::-webkit-scrollbar-thumb {
+    background: #e4e4e4;
+  }
 }
