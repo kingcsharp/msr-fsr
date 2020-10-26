@@ -30,7 +30,6 @@ export class CommonGrid {
         try {
             return gridSettings.filter(x => x.id === id)[0].visible;
         } catch (error) {
-            console.log(id);
             console.error(error);
         }
     }
