@@ -121,7 +121,7 @@ pipeline {
                         input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                     }
                     dir('MSR.UI/MSR.UI.Portal') {
-                        sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui-portal ."
+                        sh "docker build --build-arg ENV=buildprod -t msr-ui-portal ."
                         sh "docker tag msr-ui-portal ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
 
                         sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
