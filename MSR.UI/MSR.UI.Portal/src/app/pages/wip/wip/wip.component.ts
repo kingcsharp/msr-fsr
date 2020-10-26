@@ -307,6 +307,7 @@ export class WipComponent implements OnInit, AfterViewInit {
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0',
           expandRows: true,
+          expandRowProperty:'subParts',
           expandRowsTemplate: this.expandedRowTemplate
         });
 
