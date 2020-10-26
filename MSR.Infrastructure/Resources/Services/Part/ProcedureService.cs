@@ -280,6 +280,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
                 i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
             );
+
+            current.ProcedureStepRoles = await _unitOfWork.ProcedureStepRoleMaps.Query()
+                .Where(s => s.ProcedureStepId == command.procedureStepID).ToListAsync();
+
+            current.ProcedureStepMonitors = await _unitOfWork.ProcedureStepMonitors.Query()
+                .Where(s => s.ProcedureStepId == command.procedureStepID).ToListAsync();
+
             if (current is null)
             {
                 throw new DomainException($"{nameof(ProcedureStep)} not found with ID: {command.procedureID}/{command.procedureStepID}", DomainError.NotFound);
