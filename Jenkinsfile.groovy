@@ -176,7 +176,7 @@ pipeline {
                     steps {
                         script {
                             timeout(activity: true, time: 5) {
-                                input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                                input message: 'Are you ready to deploy the API to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
                             }
                             sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
                             sh "cat ${API_COMPOSE}"
@@ -189,6 +189,9 @@ pipeline {
                     agent { label 'master' }
                     steps {
                         script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy the UI to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
                             dir('MSR.UI/MSR.UI.Answer') {
                                 //sh "sudo chmod 777 /var/run/docker.sock"
                                 sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
@@ -242,6 +245,9 @@ pipeline {
                     agent { label 'master' }
                     steps {
                         script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
                             dir('MSR.UI/MSR.UI.Answer') {
                                 //sh "sudo chmod 777 /var/run/docker.sock"
                                 sh "docker build --build-arg ENV=buildprod -t msr-ui ."
