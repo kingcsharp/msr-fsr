@@ -19,6 +19,7 @@ pipeline {
     stages {
         stage('Build & Deploy UI to QA') {
             agent { label 'master'}
+            when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     try {
