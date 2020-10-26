@@ -9,6 +9,7 @@ import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
 import { Globals } from '../../models/lib/globals';
 import { EnumChartType } from '../../../app/models/enums/ChartType';
+import { EnumChartStackType } from '../../../app/models/enums/EnumChartStackType';
 
 @Injectable({
     providedIn: 'root'
@@ -235,6 +236,7 @@ export class ReportCubeService {
                 const chartInfoPartsCycleCounts = new ChartInfo({
                     gridData: gridData,
                     chartType: EnumChartType.Line,
+                    stackByType: EnumChartStackType.MaxStackDateValue,
                     stackBy: 'cyclecount',
                     chartTitle: 'Parts Cycle Counts',
                     xAxisTitle: 'Month (Previous 12 Months Rolling)',
@@ -244,10 +246,10 @@ export class ReportCubeService {
                         legend: {
                             align: "center",
                             verticalAlign: "bottom",
-                            itemHoverStyle:{
-                                color:'#bdbdbd'
+                            itemHoverStyle: {
+                                color: '#bdbdbd'
                             },
-                            itemStyle:{
+                            itemStyle: {
                                 color: '#fff',
                                 fontFamily: 'Open Sans'
                             },
@@ -415,10 +417,25 @@ export class ReportCubeService {
         return chartData;
     }
 
+    updateMaxDateValueSelected(dataSeriesMaxDateStackValueFromTo, stackBy, row, date) {
+        const index = dataSeriesMaxDateStackValueFromTo.findIndex(x => x.monthYear == moment(date).format('MM-YYYY'));
+        const savedElement = dataSeriesMaxDateStackValueFromTo[index];
+        if (savedElement.row[stackBy] === undefined) {
+            savedElement.row = row;
+            savedElement.maxDate = date;
+        } else if (moment(savedElement.maxDate).isBefore(moment(date))) {
+            savedElement.row = row;
+            savedElement.maxDate = date;
+        }
+
+        return savedElement;
+    }
+
     public getResultDataAndChart(chartInfo: ChartInfo) {
         chartInfo.chartData = this.groupChartDataFromGridRows(chartInfo);
         const monthsFromTo = this.fromToDate(chartInfo.amount, chartInfo.unit, chartInfo.format);
         const dataSeries = [];
+        const dataSeriesMaxDateStackValueFromTo = {};
 
         Object.keys(chartInfo.chartData).forEach(chartDataKey => {
             const rowData = chartInfo.chartData[chartDataKey];
@@ -428,15 +445,27 @@ export class ReportCubeService {
             if (monthIndex !== -1) {
                 const nameIndex = dataSeries.findIndex(z => z.name === keyName);
                 if (nameIndex !== -1) {
-                    dataSeries[nameIndex].data[monthIndex] += rowData[chartInfo.stackBy];
+                    if (chartInfo.stackByType === EnumChartStackType.MaxStackDateValue) {
+                        const savedElem = this.updateMaxDateValueSelected(dataSeriesMaxDateStackValueFromTo[keyName], chartInfo.stackBy, rowData, xMonth);
+                        dataSeries[nameIndex].data[monthIndex] = savedElem.row[chartInfo.stackBy];
+                    } else {
+                        dataSeries[nameIndex].data[monthIndex] += rowData[chartInfo.stackBy];
+                    }
                 } else {
                     const seriesDataArray = [];
+                    dataSeriesMaxDateStackValueFromTo[keyName] = [];
                     // just to initialize an array with a 0 in all it's positions.
                     monthsFromTo.forEach(element => {
                         seriesDataArray.push(0);
+                        dataSeriesMaxDateStackValueFromTo[keyName].push({ monthYear: element, maxDate: undefined, row: {} });
                     });
 
-                    seriesDataArray[monthIndex] += rowData[chartInfo.stackBy];
+                    if (chartInfo.stackByType === EnumChartStackType.MaxStackDateValue) {
+                        const savedElem = this.updateMaxDateValueSelected(dataSeriesMaxDateStackValueFromTo[keyName], chartInfo.stackBy, rowData, xMonth);
+                        seriesDataArray[monthIndex] = savedElem.row[chartInfo.stackBy];
+                    } else {
+                        seriesDataArray[monthIndex] += rowData[chartInfo.stackBy];
+                    }
 
                     dataSeries.push({
                         name: keyName,

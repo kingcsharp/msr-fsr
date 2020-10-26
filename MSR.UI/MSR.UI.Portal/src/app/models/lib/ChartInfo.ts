@@ -1,4 +1,5 @@
 import { EnumChartType } from '../enums/ChartType';
+import { EnumChartStackType } from '../enums/EnumChartStackType';
 
 export interface IChartInfo {
     amount?: number;
@@ -7,6 +8,7 @@ export interface IChartInfo {
     chartData?: any | undefined;
     gridData?: any | undefined;
     stackBy?: string | undefined;
+    stackByType?: EnumChartStackType | undefined;
     chartTitle?: string | undefined;
     xAxisTitle?: string | undefined;
     yAxisTitle?: string | undefined;
@@ -22,6 +24,7 @@ export class ChartInfo implements IChartInfo {
     chartData?: any | undefined;
     gridData?: any | undefined;
     stackBy?: string | undefined;
+    stackByType?: EnumChartStackType = EnumChartStackType.Sum;
     chartTitle?: string | undefined;
     xAxisTitle?: string | undefined;
     yAxisTitle?: string | undefined;
@@ -60,6 +63,7 @@ export class ChartInfo implements IChartInfo {
             this.chartType = _data['chartType'];
             this.chartTOptions = _data['chartTOptions'];
             this.gridData = _data['gridData'];
+            this.stackByType = _data['stackByType'];
         }
     }
 
@@ -77,6 +81,7 @@ export class ChartInfo implements IChartInfo {
         data['chartType'] = this.chartType;
         data['chartTOptions'] = this.chartTOptions;
         data['gridData'] = this.gridData;
+        data['stackByType'] = this.stackByType;
 
         return data;
     }
