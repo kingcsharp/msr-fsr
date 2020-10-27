@@ -214,6 +214,18 @@ export class PurchaseOrdersComponent implements OnInit {
     to.products = from.selectedProducts.map((elem) => elem.id);
   }
 
+  onChangeTotalPurchaseLimit($event) {
+    jQuery('#totalPurchaseLimit').parsley().validate();
+    if (jQuery('#totalPurchaseLimit').parsley().isValid()) {
+      if ($event.target.value) {
+        const totalPurchaseLimit = parseInt($event.target.value, 10);
+        this.currentPO.totalPurchaseLimit = totalPurchaseLimit;
+      } else {
+        this.currentPO.totalPurchaseLimit = null;
+      }
+    }
+  }
+
   onPurchaseSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
