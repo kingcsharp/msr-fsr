@@ -16,7 +16,7 @@ import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 declare let jQuery: any;
 declare let Parsley: any;
-//export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
+// export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
 @Component({
   selector: '[sidebar]',
   templateUrl: './sidebar.template.html',

@@ -27,7 +27,7 @@ function responseHandler(nextFn, errorFn?) {
             }
         },
         complete() {
-           
+
         }
     };
     return subscriberA;
