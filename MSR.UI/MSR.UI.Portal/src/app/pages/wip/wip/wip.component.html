@@ -65,8 +65,9 @@
         <i class="fas fa-print mx-1"></i> NCR </span>
     <span *ngIf="colsDataAndSettings.colData.hasMonitors"
         class="pointer badge mr-xs badge-warning ng-star-inserted badgeWidth" tooltip="Show Monitors reports"
-        (click)="showReportInfo(enumReportTypes.WIPHistoryReport,colsDataAndSettings)">
+        (click)="showReportInfo(enumReportTypes.PortalMonitorReport,colsDataAndSettings)">
         <i class="fas fa-chart-bar"></i> Monitors </span>
+
     <span *ngIf="colsDataAndSettings.colData.hasPhotos" (click)="showPhotos(colsDataAndSettings.colData)"
         class="pointer badge mr-xs badge-danger ng-star-inserted badgeWidth" tooltip="Show photos">
         <i class="fas fa-images"></i> Photos </span>
@@ -117,12 +118,13 @@
 <p-dialog [(visible)]="showNcrModal" *ngIf="showNcrModal" appendTo="body" styleClass="report" [baseZIndex]="100001"
     [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
     <p-header>
-        {{selectedReport === enumReportTypes.NCRReport?'NCR Report':'WIP History Report'}}
+        {{selectedReport === enumReportTypes.NCRReport?'NCR Report':'Monitor History'}}
     </p-header>
     <div class="report-viewport m-4 d-print-flex">
         <ncr-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.NCRReport"></ncr-report>
-        <wip-history-report [WorkOrder]="ncrWorkOrder" *ngIf="selectedReport === enumReportTypes.WIPHistoryReport">
-        </wip-history-report>
+        <portal-monitor-report [workOrder]="ncrWorkOrder"
+            *ngIf="selectedReport === enumReportTypes.PortalMonitorReport">
+        </portal-monitor-report>
     </div>
     <p-footer>
         <div class="pull-right">

@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h5><b>Monitors - Work Order #{{workOrder.id}}</b></h5>
+    </div>
+</div>
+<div class="row mb-4 border">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-4 borderRight">{{workOrder.product?.procedure?.name}}</div>
+            <div class="col-8">Customer Part # {{workOrderPart?.part?.partNumber}}, (Serial #:
+                {{workOrderPart?.serialNumber}}),
+                {{workOrderPart?.part?.name}}</div>
+        </div>
+    </div>
+</div>
+<div class="row border">
+    <div style="width: 100%" *ngFor="let woTask of workOrder.workOrderTasks">
+        <div style="width: 100%" *ngIf="woTask.workOrderTaskMonitors.length > 0">
+            <table class="table" *ngFor="let woTaskMonitor of woTask.workOrderTaskMonitors">
+                <thead>
+                    <tr>
+                        <th width="50%" scope="col">Monitor {{woTaskMonitor.id}}</th>
+                        <th width="20%" scope="col">Result</th>
+                        <th width="10%" scope="col">Pass/Fail</th>
+                        <th width="20%" scope="col">Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{woTaskMonitor.procedureStepMonitor?.description}}</td>
+                        <td>
+                            {{woTaskMonitor?.textVal || woTaskMonitor?.multiVal || woTaskMonitor?.numVal}}
+                        </td>
+                        <td class="text-center" [ngClass]="{'alert-success':woTaskMonitor.pass,'alert-danger':!woTaskMonitor.pass}">
+                            {{woTaskMonitor.pass?'Pass':'Fail'}}
+                        </td>
+                        <td>{{woTaskMonitor?.comment}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
