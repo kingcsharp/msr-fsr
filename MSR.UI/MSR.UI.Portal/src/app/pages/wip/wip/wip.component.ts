@@ -288,8 +288,8 @@ export class WipComponent implements OnInit, AfterViewInit {
     subpart.name = subpart.part.name;
   }
 
-  setSubpartspropertiesToWoSubparts(workOrder:PortalWorkOrderPartsView){
-    workOrder.subParts.map(x=>this.setSubPartsProperties(x));
+  setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
+    workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
   getGridData() {
@@ -307,7 +307,7 @@ export class WipComponent implements OnInit, AfterViewInit {
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0',
           expandRows: true,
-          expandRowProperty:'subParts',
+          expandRowProperty: 'subParts',
           expandRowsTemplate: this.expandedRowTemplate
         });
 

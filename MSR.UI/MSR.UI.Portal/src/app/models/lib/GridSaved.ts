@@ -53,7 +53,7 @@ export class GridSaved implements IGridSaved {
             this.paginator = _data['paginator'];
             this.gridClass = _data['gridClass'];
             this.expandRowProperty = _data['expandRowProperty'];
-            
+
 
             if (Array.isArray(_data['columnsSaved'])) {
                 this.columnsSaved = [] as any;
@@ -78,7 +78,7 @@ export class GridSaved implements IGridSaved {
         data['paginator'] = this.paginator;
         data['gridClass'] = this.gridClass;
         data['expandRowProperty'] = this.expandRowProperty;
-        
+
 
         if (Array.isArray(this.columnsSaved)) {
             data['columnsSaved'] = [];
