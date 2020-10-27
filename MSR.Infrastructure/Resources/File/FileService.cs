@@ -110,9 +110,15 @@ namespace MSR.Infrastructure.Resources.Services
             return files;
         }
 
-        public async Task<FileModel> CreateFileAsync(string entityName, int entityId, FileModel file)
+        public async Task<FileModel> CreateFileAsync(string entityName, int? pEntityId, FileModel file)
         {
             var tableName = mapEntityToTable(entityName);
+            int entityId = 0;
+
+            if (pEntityId.HasValue)
+            {
+                entityId = pEntityId.Value;
+            }
 
             var url = await _fileUploader.UploadFile(file, tableName, entityId);
 
@@ -126,15 +132,21 @@ namespace MSR.Infrastructure.Resources.Services
             _unitOfWork.Files.Add(efFile);
             await _unitOfWork.SaveChangesAsync();
 
-            var fileEntityMap = new FileEntityMap()
+            // Only add link if we have an entity to link it to.  This
+            // allows us to upload a file while the actual attachment
+            // is pending approval.
+            if (pEntityId.HasValue)
             {
-                EntityId = entityId,
-                EntityTableName = tableName,
-                FileId = efFile.Id
-            };
+                var fileEntityMap = new FileEntityMap()
+                {
+                    EntityId = entityId,
+                    EntityTableName = tableName,
+                    FileId = efFile.Id
+                };
 
-            _unitOfWork.FileEntityMap.Add(fileEntityMap);
-            await _unitOfWork.SaveChangesAsync();
+                _unitOfWork.FileEntityMap.Add(fileEntityMap);
+                await _unitOfWork.SaveChangesAsync();
+            }
 
             return new FileModel()
             {

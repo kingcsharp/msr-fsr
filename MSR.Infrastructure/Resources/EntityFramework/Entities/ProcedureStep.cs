@@ -47,5 +47,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
 
         public virtual ICollection<ProcedureStepRoleMap> ProcedureStepRoles { get; set; }
+
+        public virtual ICollection<FileEntityMap> ReferenceFiles { get; set; }
     }
 }

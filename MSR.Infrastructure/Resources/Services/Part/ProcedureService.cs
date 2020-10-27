@@ -5,6 +5,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -80,7 +81,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
-                Procedure procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
+                var procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
                 var created = _unitOfWork.Procedures.Add(procedure);
@@ -166,13 +167,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ToListAsync();
             }
             var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
-            
+
             result.ForEach(procedureStep =>
             {
                 procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
             });
-            
-            
+
+
             return result;
         }
 
@@ -197,8 +198,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command)
         {
-            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i =>
-                i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
+            ProcedureStep current = await _unitOfWork.ProcedureSteps
+                .Query()
+                .Include(x => x.StepType)
+                .Include(x => x.ReferenceFiles)
+                .FirstOrDefaultAsync(i =>
+                    i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
             _unitOfWork.ProcedureSteps.LoadCollection(current, "ProcedureStepRoles");
 
             if (current is null)
@@ -210,6 +215,27 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepModel ret;
+
+            // Upload any new files, but do not attach yet.
+            if (command.ReferenceFiles != null &&
+                command.ReferenceFiles.Count > 0)
+            {
+                if (command.ReferenceFileIds == null) {
+                    command.ReferenceFileIds = new List<int>();
+                }
+                if (command.ReferenceFiles != null && command.ReferenceFiles.Count > 0)
+                {
+                    foreach (FileModel file in command.ReferenceFiles)
+                    {
+                        FileModel newFile = await _fileService.CreateFileAsync(
+                            nameof(EntityFramework.Entities.ProcedureStep),
+                            null, // will be attached after checking perms
+                            file
+                        );
+                        command.ReferenceFileIds.Add(newFile.FileId.Value);
+                    }
+                }
+            }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
@@ -225,6 +251,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 // update EF object with update command data
                 var step = _mapper.Map(command, current);
+
+                // If we're updating the file list, detach and re-attach
+                if (command.ReferenceFileIds.Count > 0)
+                {
+                    await _fileService.DetachFilesAsync(
+                        nameof(EntityFramework.Entities.ProcedureStep),
+                        current.Id);
+
+                    foreach(int fileId in command.ReferenceFileIds)
+                    {
+                        await _fileService.MapUploadedFileAsync(
+                            nameof(EntityFramework.Entities.ProcedureStep),
+                            current.Id, fileId
+                        );
+                    }
+                }
 
                 if (step.ProcedureStepRoles != null)
                 {
@@ -260,7 +302,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.procedureID);
             if (current is null)
             {
-                throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
+                throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {

@@ -13,6 +13,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
                 .WithMany(y => y.ReferenceFiles)
                 .HasForeignKey(z => z.EntityId);
 
+            builder.HasOne(x => x.ProcedureStep)
+                .WithMany(y => y.ReferenceFiles)
+                .HasForeignKey(z => z.EntityId);
+
             builder.HasOne(x => x.Procedure)
                 .WithMany(y => y.ReferenceFiles)
                 .HasForeignKey(z => z.EntityId);
