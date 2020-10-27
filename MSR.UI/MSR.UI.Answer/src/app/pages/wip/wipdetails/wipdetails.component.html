@@ -42,7 +42,7 @@
             <button type="button" class="btn btn-sm btn-danger mr-2" *ngIf="!workOrderIsComplete"
               (click)="toggleCancelRemainingStepsDialog()">
               <i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
-            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined">
+            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel?.workOrderParts?.length > 0">
             </printtraveler-report>
             <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
           </div>

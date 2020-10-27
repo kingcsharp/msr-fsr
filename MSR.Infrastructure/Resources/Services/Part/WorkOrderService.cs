@@ -385,6 +385,24 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             return parts;
         }
+
+        public async Task<ICollection<WorkOrderPartModel>> GetWorkOrderPartsAsync(GetWorkOrderPart command)
+        {
+            var query = _unitOfWork.WorkOrderParts.Query();
+
+            if (command.Id.HasValue)
+            {
+                query = query.Where(s => s.Id == command.Id);
+                
+            }
+
+            var workOrderParts = await query.ToListAsync();
+            _ = await _unitOfWork.Parts.Query().Where(s => workOrderParts.Select(m => m.PartId).ToList().Contains(s.Id)).ToListAsync();
+            var workOrderPartModels = _mapper.Map<ICollection<WorkOrderPartModel>>(workOrderParts);
+            return workOrderPartModels;
+
+        }
+
         public async Task<WorkOrderPartModel> UpdateWorkOrderPartAsync(UpdateWorkOrderPart command)
         {
             if (!CurrentUser.HasPrivilege(EnumMenuItem.WipStatus, EnumPrivilege.CanEdit))

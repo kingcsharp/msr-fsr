@@ -282,7 +282,7 @@ export class WipdetailsComponent implements OnInit {
     } as IUpdateWorkOrderPartRequest);
 
     this.globals.showLoader(true);
-    this.workOrderPartService.workOrderPart(env.apiVersion, updateWorkOrderRequest).pipe(take(1)).subscribe(response => {
+    this.workOrderPartService.workOrderPartPatch(env.apiVersion, updateWorkOrderRequest).pipe(take(1)).subscribe(response => {
 
       let workOrderPart = this.workOrderModel.workOrderParts.find(s => s.id === partId);
       workOrderPart.cycleCount = response.object.cycleCount;
