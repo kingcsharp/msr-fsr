@@ -8,7 +8,7 @@
     </p-header>
     <div class="report-viewport m-4 d-print-flex">
         <div class="row justify-content-center m-4">
-            <qrcode [qrdata]="'https://google.com'" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+            <qrcode [qrdata]="urlToWipDetailsPage" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
         </div>
         <div class="row mb-4">
             <div class="col-12 justify-content-start ml-4">
@@ -37,7 +37,7 @@
                         <div class="image-placeholder d-flex justify-content-center">
                             <div class="my-auto" *ngIf="parentPartImageUrl === undefined"><h2>NO IMAGE AVAILABLE</h2></div>
                             <div class="my-auto" *ngIf="parentPartImageUrl !== undefined">
-                                <img src="{{parentPartImageUrl}}" alt="{{parentPartName}}">
+                                <img src="{{parentPartImageUrl}}" alt="Part Image">
                             </div>
                         </div>
                     </div>
