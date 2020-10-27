@@ -13,7 +13,7 @@
     [routerLinkActive]="['active']">
     <a *ngIf="item.submenu.length > 0" (click)="sidebarBehavior($event)" class="accordion-toggle collapsed"
       data-toggle="collapse" data-parent="#side-nav" href="#{{item.name.replace(' ','')}}" tooltip="{{item.info}}" [delay]="600"
-      [container]="body">
+      container="body">
       <i [ngClass]="'fas '+item.icon"></i> &nbsp;
       <span class="name">{{item.name}}</span>
     </a>
@@ -21,17 +21,17 @@
       <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']">
 
         <a *ngIf="subItem.url !=='Specifications' && subItem.name != 'Support Ticket'" routerLink="{{subItem.url}}" tooltip="{{subItem.info}}" [delay]="600"
-          [container]="body">
+          container="body">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
         </a>
         <a *ngIf="subItem.url === 'Specifications' && subItem.name != 'Support Ticket'" (click)="openCSRDialog()" tooltip="{{subItem.info}}" [delay]="600"
-          [container]="body">
+          container="body">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
         </a>
 
-        <a (click)="toggleSupportTicketModal()" tooltip="{{subItem.info}}" [delay]="600" [container]="body"
+        <a (click)="toggleSupportTicketModal()" tooltip="{{subItem.info}}" [delay]="600" container="body"
           *ngIf="subItem.name =='Support Ticket'">
           <i [ngClass]="'fas '+subItem.icon"></i>
           &nbsp; <span>{{subItem.name}}</span>
