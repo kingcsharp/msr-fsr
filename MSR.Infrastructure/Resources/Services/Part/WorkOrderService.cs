@@ -396,9 +396,22 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 
             }
 
+            if (command.WorkOrderId.HasValue)
+            {
+                query = query.Where(s => s.WorkOrderId == command.WorkOrderId);
+            }
+
             var workOrderParts = await query.ToListAsync();
             _ = await _unitOfWork.Parts.Query().Where(s => workOrderParts.Select(m => m.PartId).ToList().Contains(s.Id)).ToListAsync();
             var workOrderPartModels = _mapper.Map<ICollection<WorkOrderPartModel>>(workOrderParts);
+
+            // We have to null out the array of children for WorkOrderParts or else the depth of the data structure is too deep for the return object
+            // TODO: Since we track if WorkOrderPart is child based on parentId and parent property, the child property is not needed and should be removed
+            foreach (var workOrderPartModel in workOrderPartModels) 
+            {
+                workOrderPartModel.Children = null;
+            }
+
             return workOrderPartModels;
 
         }
@@ -1133,5 +1146,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             }
         }
+
     }
 }

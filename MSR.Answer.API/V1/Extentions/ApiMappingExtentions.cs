@@ -645,7 +645,8 @@ namespace MSR.Answer.API.V1.Extentions
         {
             return new GetWorkOrderPart()
             {
-                Id = request.Id
+                Id = request.Id,
+                WorkOrderId = request.WorkOrderId
             };
         }
 

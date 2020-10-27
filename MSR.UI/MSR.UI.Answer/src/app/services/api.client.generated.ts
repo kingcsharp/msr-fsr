@@ -7003,13 +7003,15 @@ export class WorkOrderPartService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    workOrderPartGet(id: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderPartModel> {
+    workOrderPartGet(id: number | null | undefined, workOrderId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderPartModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrderPart?";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         if (id !== undefined && id !== null)
             url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (workOrderId !== undefined && workOrderId !== null)
+            url_ += "WorkOrderId=" + encodeURIComponent("" + workOrderId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

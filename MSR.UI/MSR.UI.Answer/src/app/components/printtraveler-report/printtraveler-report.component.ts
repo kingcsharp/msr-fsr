@@ -25,8 +25,7 @@ export class PrinttravelerReportComponent implements OnInit {
 
     this.urlToWipDetailsPage = window.location.href;
 
-    this.workOrderPartService.workOrderPartGet(this.WorkOrder.workOrderParts[0].id, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
-      console.log(response);
+    this.workOrderPartService.workOrderPartGet(this.WorkOrder.workOrderParts[0].id, null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
       this.parentPart = response.object[0];
       this.parentPartImageUrl = this.parentPart?.part?.files[0]?.fileURL;
     }));
