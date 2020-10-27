@@ -35,7 +35,6 @@ export class WiphistoryComponent implements OnInit {
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
 
     this.gridSettings = [
-      new ColumnsSaved({ id: 'id', label: 'Id', visible: false }),
       new ColumnsSaved({ id: 'purchaseId', label: 'Purchase Id', visible: false }),
       new ColumnsSaved({ id: 'workOrderItemNumber', label: 'WorkOrder Item Number', visible: true }),
       new ColumnsSaved({ id: 'customerName', label: 'Customer', visible: true }),

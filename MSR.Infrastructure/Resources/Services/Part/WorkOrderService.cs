@@ -799,19 +799,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             return status;
         }
-        public string GetWorkOrderItemNumber(WorkOrderModel model)
+        public string GetWorkOrderItemNumber(WorkOrderModel workOrderModel)
         {
-            string customerName = model.Purchase?.PurchaseOrder?.Customer?.Name;
+            string customerName = workOrderModel.Purchase?.PurchaseOrder?.Customer?.Name;
             if (string.IsNullOrEmpty(customerName))
             {
                 customerName = "";
             }
-            string customerPNum = model.Purchase?.CustomerPurchaseNumber;
-            if (string.IsNullOrEmpty(customerPNum))
-            {
-                customerPNum = "";
-            }
-            return $"{customerName}-{customerPNum}";
+
+            return $"{customerName}-{workOrderModel.Id}";
         }
         public async Task<ICollection<PortalWorkOrderView>> GetPortalWorkOrders(GetPortalWorkOrder command)
         {
