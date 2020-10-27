@@ -14,5 +14,6 @@ export enum EnumReport {
     NCRReport = 21,
     TechnicalDataLabel = 22,
     PartLabelRoll4in = 23,
-    WIPHistoryReport = 24
+    WIPHistoryReport = 24,
+    PortalMonitorReport = 25
 }
