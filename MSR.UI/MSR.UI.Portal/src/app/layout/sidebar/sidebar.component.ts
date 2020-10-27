@@ -170,6 +170,13 @@ export class Sidebar implements OnDestroy {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
       requestData.customerId = this.globals.selectedCustomer.id;
+      const process = [];
+      this.CSRToCreate.Process.forEach(v => {
+        if (v.Contaminents) {
+          process.push(v);
+        }
+      });
+      this.CSRToCreate.Process = process;
       requestData.customerRequirementJson = JSON.stringify(this.CSRToCreate);
       this.quoteService.quotePost(env.apiVersion, requestData)
         .pipe(take(1))
