@@ -641,6 +641,20 @@ namespace MSR.Answer.API.V1.Extentions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        public static GetWorkOrderPart ToGetWorkOrderPartCommand(this GetWorkOrderPartRequest request)
+        {
+            return new GetWorkOrderPart()
+            {
+                Id = request.Id,
+                WorkOrderId = request.WorkOrderId
+            };
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public static UpdateWorkOrder ToUpdateWorkOrderCommand(this UpdateWorkOrderRequest request)
         {
             return AutoMapperHelper.Mapper.Map<UpdateWorkOrder>(request);

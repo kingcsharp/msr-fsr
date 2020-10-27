@@ -1,4 +1,4 @@
-<div class="roll-label" *ngFor="let workOrderPart of WorkOrder.workOrderParts">
+<div class="roll-label" *ngFor="let workOrderPart of workOrderParts">
   <table class="tight">
     <tbody>
       <tr>
@@ -18,9 +18,8 @@
           </div>
         </td>
         <td width="40%">
-          <!-- TODO: products do not have images. Parts do. The image needed here is the first file associated with the part-->
           <div class="image-container img-fluid part-image" *ngIf="workOrderPart.part.files[0] !== undefined">
-            <img src="{{workOrderPart.part.files[0]}}" alt="Product Image">
+            <img src="{{workOrderPart.part.files[0].fileURL}}" alt="Product Image">
           </div>
           <div class="col-12  justify-content-center d-flex" *ngIf="workOrderPart.part.files[0] === undefined">
             No Image Available
@@ -59,13 +58,11 @@
       <tr>
         <td width="40%">
           <div class="coded">
-            <!-- TODO: Change to Part CycleCount (including bc-value-->
             Serial #: <strong>{{workOrderPart.serialNumber}}</strong><br />
             <ngx-barcode [bc-format]="'CODE128'" [bc-background]="'none'" [bc-value]="workOrderPart.serialNumber"
               [bc-display-value]="false" [bc-height]="20">
             </ngx-barcode>
-            <!-- TODO: Change to Part CycleCount-->
-            This part processed <strong>{{workOrderPart.serialNumber}}</strong> time(s)
+            This part processed <strong>{{workOrderPart.cycleCount}}</strong> time(s)
           </div>
         </td>
         <td style="text-align:center">ONLY OPEN IN <br />CLASS 100 CLEANROOM <br />OR BETTER</td>
