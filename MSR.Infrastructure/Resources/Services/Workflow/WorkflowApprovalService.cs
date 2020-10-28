@@ -238,18 +238,7 @@ namespace MSR.Infrastructure.Resources.Services
                     partApprovalChanges.AddRow("Maximum Cycles", part?.MaximumCycles, partApproval.MaximumCycles);
                     return partApprovalChanges;
                 case EnumApprovalTables.ProcedureApproval:
-                    var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var procedure = await _unitOfWork.Procedures.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == procedureApproval.ProcedureId);
-                    var procedureApprovalChanges = new PendingApprovalPopoverModel();
-                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
-                    procedureApprovalChanges.AddRow("Duration Type", procedure?.DurationType, procedureApproval.DurationType);
-                    procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
-                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
-                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
-                    this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
-                    return procedureApprovalChanges;
+                    return await getProcedureApprovalChanges(command);
                 case EnumApprovalTables.ProductApproval:
                     return await getProductApprovalChanges(command);
                 case EnumApprovalTables.PurchaseOrderApproval:
@@ -723,7 +712,24 @@ namespace MSR.Infrastructure.Resources.Services
             productApprovalChanges.AddRow("Labor", origLaborTotal, newLaborTotal);
             return productApprovalChanges;
         }
+
+        private async Task<PendingApprovalPopoverModel> getProcedureApprovalChanges(GetPendingApprovalDetailsModel command)
+        {
+            var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
+                .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
+            var procedure = await _unitOfWork.Procedures.Query()
+                .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == procedureApproval.ProcedureId);
+            var procedureApprovalChanges = new PendingApprovalPopoverModel();
+            procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
+            procedureApprovalChanges.AddRow("Duration Type", procedure?.DurationType, procedureApproval.DurationType);
+            procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
+            procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
+            procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
+            this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
+            return procedureApprovalChanges;
+        }
     }
+
 }
 
 

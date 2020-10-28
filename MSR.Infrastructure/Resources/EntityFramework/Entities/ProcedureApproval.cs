@@ -12,8 +12,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             ProcedureStepApprovals = new HashSet<ProcedureStepApproval>();
         }
 
-        
-
         public int ProcedureTypeId { get; set; }
 
         public int Revision { get; set; }
