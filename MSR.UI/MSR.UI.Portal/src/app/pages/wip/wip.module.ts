@@ -34,19 +34,19 @@ import { PartLabelRollComponent } from '../../components/part-label-roll/part-la
 import { TechnicalDataLabelComponent } from '../../components/technical-data-label/technical-data-label.component';
 import { WorkReportComponent } from '../../components/work-report/work-report.component';
 import { AppGuard } from '../../../app/app.guard';
+import { PortalMonitorReportComponent } from '../../../app/components/portal-monitor-report/portal-monitor-report.component';
 
 export const routes = [
   { path: '', canActivate: [AppGuard], redirectTo: 'engineering', pathMatch: 'full' },
   { path: 'engineering', canActivate: [AppGuard], component: WipComponent, pathMatch: 'full' }
 ];
 
-
 @NgModule({
   declarations: [WipComponent, WipstatusWrapperComponent,
     WorkordertasktimerWrapperComponent, WorkordertaskmonitosWrapperComponent, EmPmButtonWrapperComponent, AddNcrButtonWrapperComponent,
     WipListButtonWrapperComponent, SelectWorkOrderDropDownWrapperComponent, PrinttravelerReportComponent, PrintotherReportComponent,
     DeliveryTicketReportComponent, WipHistoryReportComponent, NcrReportComponent, PartLabelRollComponent, TechnicalDataLabelComponent,
-    WorkReportComponent, TakeOverTaskButtonWrapperComponent],
+    WorkReportComponent, TakeOverTaskButtonWrapperComponent, PortalMonitorReportComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

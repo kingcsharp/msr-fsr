@@ -36,7 +36,6 @@ export class WipComponent implements OnInit, AfterViewInit {
   gridFilesSaved: GridSaved;
   reportFilesModel: ReportModel;
   selectedReport: EnumReport;
-
   gridPartsSaved: GridSaved;
   reportPartsModel: ReportModel;
   showReport: boolean = false;
@@ -264,8 +263,36 @@ export class WipComponent implements OnInit, AfterViewInit {
     this.globals.showLoader(true);
     this.selectedReport = reportType;
     if (this.ncrWorkOrder?.workOrderId !== row.colData.workOrderId) {
-      this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id, null, null, null, env.apiVersion).pipe(take(1))
+      this.workOrderService.workOrder(row.colData.workOrderId, this.globals.selectedCustomer.id,
+        null, null, null, env.apiVersion).pipe(take(1))
         .subscribe(responseHandler(response => {
+          response.object[0].workOrderTasks.forEach(workOrderTask => {
+            workOrderTask.workOrderTaskMonitors.forEach((workOrderTaskMonitor: any) => {
+              const valSelected = workOrderTaskMonitor?.textVal || workOrderTaskMonitor?.multiVal || workOrderTaskMonitor?.numVal;
+              switch (workOrderTaskMonitor.procedureStepMonitor.shouldBe) {
+                case 'EQUAL':
+                  if (workOrderTaskMonitor.procedureStepMonitor.monitorType === 'Number') {
+                    workOrderTaskMonitor.pass = parseInt(valSelected) === parseInt(workOrderTaskMonitor.procedureStepMonitor.targetValue);
+                  } else {
+                    workOrderTaskMonitor.pass = valSelected === workOrderTaskMonitor.procedureStepMonitor.targetValue;
+                  }
+                  break;
+                case 'ABOVE':
+                  workOrderTaskMonitor.pass = valSelected > workOrderTaskMonitor.procedureStepMonitor.targetValue;
+                  break;
+                case 'BELOW':
+                  workOrderTaskMonitor.pass = valSelected < workOrderTaskMonitor.procedureStepMonitor.targetValue;
+                  break;
+                case 'BETWEEN':
+                  workOrderTaskMonitor.pass = parseFloat(valSelected) >= parseFloat(workOrderTaskMonitor.procedureStepMonitor.lowTarget) && parseFloat(valSelected) <= parseFloat(workOrderTaskMonitor.procedureStepMonitor.highTarget);
+                  break;
+                default:
+                  workOrderTaskMonitor.pass = false;
+                  break;
+              }
+            });
+          });
+
           this.ncrWorkOrder = response.object[0];
           this.showNcrModal = true;
         }));
@@ -288,16 +315,17 @@ export class WipComponent implements OnInit, AfterViewInit {
     subpart.name = subpart.part.name;
   }
 
-  setSubpartspropertiesToWoSubparts(workOrder:PortalWorkOrderPartsView){
-    workOrder.subParts.map(x=>this.setSubPartsProperties(x));
+  setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
+    workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
   getGridData() {
     this.globals.showLoader(true);
     this.showReport = false;
-    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate, env.apiVersion).pipe(take(1))
+    this.workOrderService.portal(this.globals.selectedCustomer.id, this.subpartTextSearch, null, this.fromDate, this.toDate,
+      env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.data = response.object.map(x => {
+        this.data = response.object.map((x: any) => {
           let ret = new PortalWorkOrderPartsView(x);
           this.setSubpartspropertiesToWoSubparts(ret);
           return ret;
@@ -307,6 +335,7 @@ export class WipComponent implements OnInit, AfterViewInit {
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0',
           expandRows: true,
+          expandRowProperty: 'subParts',
           expandRowsTemplate: this.expandedRowTemplate
         });
 
@@ -337,6 +366,7 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'disposition', label: 'Disposition', visible: true, type: EnumColumnType.Template, templateName: this.disposition }),
     ];
   }
+
   getBuyerColumns() {
     return [
       new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
