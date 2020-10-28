@@ -766,6 +766,7 @@ namespace MSR.Infrastructure.Resources.Services
                     update.procedureStepId = dataObj.procedureStepId;
                     update.ReferenceFileIds = dataObj.fileIds;
                     update.ReferenceDocumentIds = dataObj.documentIds;
+                    update.Roles = _mapper.Map<List<Domain.Models.Role>>(dataObj.roleIds);
 
                     await _procedureService.UpdateProcedureStepAsync(update);
                 }

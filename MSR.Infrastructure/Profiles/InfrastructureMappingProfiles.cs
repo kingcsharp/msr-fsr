@@ -130,7 +130,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Menus, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentRoles, opt => opt.Ignore())
                 .ForMember(dest => dest.IsCertificationRole, opts => opts.MapFrom(src => src.IsCertificationRole == null ? false : src.IsCertificationRole));
-
+            CreateMap<int, Domain.Models.Role>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src));
 
             #region Workflow
             CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
