@@ -21,6 +21,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string PartNumber { get; set; }
         [StringLength(100)]
         public string OEMPartNumber { get; set; }
+        public bool IsActive { get; set; }
         public bool IsKit { get; set; }
         [StringLength(100)]
         public string NickName { get; set; }
