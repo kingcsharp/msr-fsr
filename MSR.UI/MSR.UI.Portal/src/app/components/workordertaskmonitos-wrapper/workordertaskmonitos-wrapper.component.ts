@@ -129,7 +129,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
       });
 
       forkJoin(updateMonitorsRequests).subscribe(responses => {
-        
+
         if (closeTask) {
           this.closeCurrentTaskInProgress.emit();
         }

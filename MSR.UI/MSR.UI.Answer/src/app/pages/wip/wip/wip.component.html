@@ -35,9 +35,6 @@
                         </th>
                     </tr>
                     <tr>
-                        <th grid-input-filter [dt]="dt" searchField="id"
-                            [hidden]="!commonGrid.isVisibleCol('id',gridSettings)" [gridSettings]="gridSettings">
-                        </th>
                         <th grid-input-filter [dt]="dt" searchField="purchaseId"
                             [hidden]="!commonGrid.isVisibleCol('purchaseId',gridSettings)"
                             [gridSettings]="gridSettings">
@@ -108,9 +105,6 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-model>
                     <tr class="ui-selectable-row" data-cy='wipgrid-body'>
-                        <td [hidden]="!commonGrid.isVisibleCol('id', gridSettings)">
-                            {{model.id}}
-                        </td>
                         <td [hidden]="!commonGrid.isVisibleCol('purchaseId', gridSettings)">
                             {{model.purchaseId}}
                         </td>

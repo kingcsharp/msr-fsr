@@ -56,7 +56,7 @@ namespace MSR.Answer.API.V1.Models
         /// Procedure Step Type
         /// </summary>
         [DataMember(Name="procedureStepTypeId")]
-        public int ProcedureStepTypeId { get; set; }
+        public int? ProcedureStepTypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets PrintOrder

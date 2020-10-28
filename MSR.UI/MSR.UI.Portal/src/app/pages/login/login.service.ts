@@ -100,8 +100,7 @@ export class LoginService {
               this.globals.changeCustomer(customer.object[0]);
               this.receiveLogin();
             });
-        }
-        else {
+        } else {
           this.receiveLogin();
         }
       });

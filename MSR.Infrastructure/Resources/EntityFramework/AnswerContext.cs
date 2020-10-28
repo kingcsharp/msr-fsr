@@ -29,6 +29,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Status> Status { get; set; }
         public DbSet<PartApproval> PartApproval { get; set; }
         public DbSet<ProductApproval> ProductApproval { get; set; }
+        public DbSet<ProductStepApproval> ProductStepApproval { get; set; }
         public DbSet<ProcedureApproval> ProcedureApproval { get; set; }
         public DbSet<ProcedureStepApproval> ProcedureStepApproval { get; set; }
         public DbSet<ProcedureStepDocumentApproval> ProcedureStepDocumentApproval { get; set; }

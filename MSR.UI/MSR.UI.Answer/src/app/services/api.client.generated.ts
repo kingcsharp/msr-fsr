@@ -7003,10 +7003,65 @@ export class WorkOrderPartService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
+    workOrderPartGet(id: number | null | undefined, workOrderId: number | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfWorkOrderPartModel> {
+        let url_ = this.baseUrl + "/v{version}/WorkOrderPart?";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        if (id !== undefined && id !== null)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (workOrderId !== undefined && workOrderId !== null)
+            url_ += "WorkOrderId=" + encodeURIComponent("" + workOrderId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processWorkOrderPartGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processWorkOrderPartGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfWorkOrderPartModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfWorkOrderPartModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processWorkOrderPartGet(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfWorkOrderPartModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfWorkOrderPartModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfWorkOrderPartModel>(<any>null);
+    }
+
     /**
      * WorkOrderPartUpdateWorkOrderPart
      */
-    workOrderPart(version: string | null, body: UpdateWorkOrderPartRequest): Observable<AuditActionResultOfWorkOrderPartModel> {
+    workOrderPartPatch(version: string | null, body: UpdateWorkOrderPartRequest): Observable<AuditActionResultOfWorkOrderPartModel> {
         let url_ = this.baseUrl + "/v{version}/WorkOrderPart";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -7026,11 +7081,11 @@ export class WorkOrderPartService {
         };
 
         return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processWorkOrderPart(response_);
+            return this.processWorkOrderPartPatch(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processWorkOrderPart(<any>response_);
+                    return this.processWorkOrderPartPatch(<any>response_);
                 } catch (e) {
                     return <Observable<AuditActionResultOfWorkOrderPartModel>><any>_observableThrow(e);
                 }
@@ -7039,7 +7094,7 @@ export class WorkOrderPartService {
         }));
     }
 
-    protected processWorkOrderPart(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderPartModel> {
+    protected processWorkOrderPartPatch(response: HttpResponseBase): Observable<AuditActionResultOfWorkOrderPartModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -12691,7 +12746,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     duration?: number | undefined;
     durationType?: string | undefined;
     procedureStepType?: string | undefined;
-    procedureStepTypeId?: string | undefined;
+    procedureStepTypeId?: number | undefined;
     printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
@@ -12790,7 +12845,7 @@ export interface IProcedureStepModel {
     duration?: number | undefined;
     durationType?: string | undefined;
     procedureStepType?: string | undefined;
-    procedureStepTypeId?: string | undefined;
+    procedureStepTypeId?: number | undefined;
     printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
@@ -12815,7 +12870,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepTypeId?: number;
+    procedureStepTypeId?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -12933,7 +12988,7 @@ export interface ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepTypeId?: number;
+    procedureStepTypeId?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -15926,7 +15981,7 @@ export class ProductStepModel implements IProductStepModel {
     id?: number;
     productId?: number;
     procedureStepId?: number | undefined;
-    laborMinutes?: number | undefined;
+    laborMinutes!: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -16000,7 +16055,7 @@ export interface IProductStepModel {
     id?: number;
     productId?: number;
     procedureStepId?: number | undefined;
-    laborMinutes?: number | undefined;
+    laborMinutes: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -16115,17 +16170,31 @@ export interface ICreateProductRequest {
 }
 
 export class ProductStep implements IProductStep {
+    /** Gets or Sets Id */
+    id?: number;
+    /** Gets or Sets ProductId */
     productId?: number | undefined;
+    /** Gets or Sets ProcedureStepId, if any. */
     procedureStepId?: number | undefined;
+    /** Gets or Sets LaborMinutes */
     laborMinutes!: number;
+    /** Gets or Sets EquipmentMinutes */
     equipmentMinutes?: number | undefined;
+    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
+    /** Gets or Sets Utilization */
     utilization?: number | undefined;
+    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
+    /** Gets or Sets EquipmentExpensePerMinute */
     equipmentExpensePerMinute?: number | undefined;
+    /** Gets or Sets RMAnnualRate */
     rmAnnualRate?: number | undefined;
+    /** Gets or Sets RMPerMinuteRate */
     rmPerMinuteRate?: number | undefined;
+    /** Title */
     title?: string | undefined;
+    /** PrintOrder */
     printOrder?: number | undefined;
 
     constructor(data?: IProductStep) {
@@ -16139,6 +16208,7 @@ export class ProductStep implements IProductStep {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.productId = _data["productId"];
             this.procedureStepId = _data["procedureStepId"];
             this.laborMinutes = _data["laborMinutes"];
@@ -16163,6 +16233,7 @@ export class ProductStep implements IProductStep {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["productId"] = this.productId;
         data["procedureStepId"] = this.procedureStepId;
         data["laborMinutes"] = this.laborMinutes;
@@ -16180,17 +16251,31 @@ export class ProductStep implements IProductStep {
 }
 
 export interface IProductStep {
+    /** Gets or Sets Id */
+    id?: number;
+    /** Gets or Sets ProductId */
     productId?: number | undefined;
+    /** Gets or Sets ProcedureStepId, if any. */
     procedureStepId?: number | undefined;
+    /** Gets or Sets LaborMinutes */
     laborMinutes: number;
+    /** Gets or Sets EquipmentMinutes */
     equipmentMinutes?: number | undefined;
+    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
+    /** Gets or Sets Utilization */
     utilization?: number | undefined;
+    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
+    /** Gets or Sets EquipmentExpensePerMinute */
     equipmentExpensePerMinute?: number | undefined;
+    /** Gets or Sets RMAnnualRate */
     rmAnnualRate?: number | undefined;
+    /** Gets or Sets RMPerMinuteRate */
     rmPerMinuteRate?: number | undefined;
+    /** Title */
     title?: string | undefined;
+    /** PrintOrder */
     printOrder?: number | undefined;
 }
 
@@ -19105,6 +19190,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: WorkOrderPartModel[] | undefined;
+    stepText?: string | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
         if (data) {
@@ -19160,6 +19246,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
                 for (let item of _data["subParts"])
                     this.subParts!.push(WorkOrderPartModel.fromJS(item));
             }
+            this.stepText = _data["stepText"];
         }
     }
 
@@ -19215,6 +19302,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             for (let item of this.subParts)
                 data["subParts"].push(item.toJSON());
         }
+        data["stepText"] = this.stepText;
         return data; 
     }
 }
@@ -19255,6 +19343,7 @@ export interface IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: WorkOrderPartModel[] | undefined;
+    stepText?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
@@ -19374,6 +19463,49 @@ export class CreateWorkOrderMessageRequest implements ICreateWorkOrderMessageReq
 export interface ICreateWorkOrderMessageRequest {
     id: number;
     message: string;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfWorkOrderPartModel extends AuditActionResult implements IAuditActionResultOfICollectionOfWorkOrderPartModel {
+    object?: WorkOrderPartModel[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfWorkOrderPartModel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(WorkOrderPartModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfWorkOrderPartModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfWorkOrderPartModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfWorkOrderPartModel extends IAuditActionResult {
+    object?: WorkOrderPartModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */

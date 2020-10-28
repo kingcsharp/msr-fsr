@@ -10,14 +10,18 @@ pipeline {
         ACCOUNT_URL='425480257575.dkr.ecr.us-west-2.amazonaws.com'
         REGION='us-west-2'
         PROFILE='--profile msrfsr'
-        DEV_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api/397c455c0c042c71"
-        DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f"
-        STAGE_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
-        STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
-        DEV_PROJECT_API='dev-answer-api'
-        DEV_PROJECT_UI='dev-answer-ui'
-        STAGE_PROJECT_API='stage-answer-api'
-        STAGE_PROJECT_UI='stage-answer-ui'
+        QA_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api/397c455c0c042c71"
+        QA_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f"
+        UAT_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
+        UAT_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
+        PROD_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-prod/0d264f923b3ca5c5"
+        PROD_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-prod/a05ebf3f959d039b"
+        QA_PROJECT_API='qa-answer-api'
+        QA_PROJECT_UI='qa-answer-ui'
+        UAT_PROJECT_API='uat-answer-api'
+        UAT_PROJECT_UI='uat-answer-ui'
+        PROD_PROJECT_API='prod-answer-api'
+        PROD_PROJECT_UI='prod-answer-ui'
         API_COMPOSE='docker-compose-api.yml'
         UI_COMPOSE='docker-compose-ui.yml'
     }
@@ -69,7 +73,7 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
+                                        deploy("${UI_COMPOSE}", "${QA_PROJECT_UI}", "${QA_UI_TARGET_ARN}", "app")
                                     }
                                 //}
 
@@ -135,7 +139,7 @@ pipeline {
 
                                     if(env.BRANCH_NAME == 'Develop') {
                                         echo "Deploying Develop"
-                                        deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}", "reverseproxy")
+                                        deploy("${API_COMPOSE}", "${QA_PROJECT_API}", "${QA_API_TARGET_ARN}", "reverseproxy")
                                     }
                                 //}
 
@@ -158,45 +162,52 @@ pipeline {
                 script {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
                             "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
-                            "  -F environment=\"${env.BRANCH_NAME}\" \\\n" +
+                            "  -F environment=QA \\\n" +
                             "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
                             "  -F local_username=system"
                 }
             }
         }
 
-        stage("Promote API to UAT") {
-            agent { label 'master'}
-            steps {
-                script {
-                    timeout(activity: true, time: 5) {
-                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+        stage('Promoting to UAT') {
+            parallel {
+                stage("Promote API to UAT") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy the API to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
+                            sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "cat ${API_COMPOSE}"
+                            deploy("${API_COMPOSE}", "${UAT_PROJECT_API}", "${UAT_API_TARGET_ARN}", "reverseproxy")
+                        }
                     }
-                    sh "sh update_image_api.sh Stage ${env.GIT_COMMIT} ${API_COMPOSE}"
-                    sh "cat ${API_COMPOSE}"
-                    deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
                 }
-            }
-        }
 
-        stage("Promote UI to UAT") {
-            agent { label 'master'}
-            steps {
-                script {
-                    dir('MSR.UI/MSR.UI.Answer') {
-                        //sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
-                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                stage("Promote UI to UAT") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy the UI to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
+                            dir('MSR.UI/MSR.UI.Answer') {
+                                //sh "sudo chmod 777 /var/run/docker.sock"
+                                sh "docker build --build-arg ENV=buildstageprodsetting -t msr-ui ."
+                                sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
 
-                        sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            }
+
+                            sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                            sh "cat ${UI_COMPOSE}"
+
+                            deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
+                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                        }
                     }
-
-                    sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
-                    sh "cat ${UI_COMPOSE}"
-
-                    deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
-                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
                 }
             }
         }
@@ -208,6 +219,62 @@ pipeline {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
                             "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
                             "  -F environment=UAT \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
+                }
+            }
+        }
+
+        stage('Promoting to Production') {
+            parallel {
+                stage("Promote API to PROD") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
+                            sh "sh update_image_api.sh Production ${env.GIT_COMMIT} ${API_COMPOSE}"
+                            sh "cat ${API_COMPOSE}"
+                            deploy("${API_COMPOSE}", "${PROD_PROJECT_API}", "${PROD_API_TARGET_ARN}", "reverseproxy")
+                        }
+                    }
+                }
+
+                stage("Promote UI to PROD") {
+                    agent { label 'master' }
+                    steps {
+                        script {
+                            timeout(activity: true, time: 5) {
+                                input message: 'Are you ready to deploy to PROD?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                            }
+                            dir('MSR.UI/MSR.UI.Answer') {
+                                //sh "sudo chmod 777 /var/run/docker.sock"
+                                sh "docker build --build-arg ENV=buildprod -t msr-ui ."
+                                sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+
+                                sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
+                            }
+
+                            sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                            sh "cat ${UI_COMPOSE}"
+
+                            deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
+                            office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed', webhookUrl: "${WEBHOOK_URL}"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Deploy Rollbar PROD") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=production \\\n" +
                             "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
                             "  -F local_username=system"
                 }

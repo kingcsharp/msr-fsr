@@ -12,13 +12,16 @@ pipeline {
         PROFILE='--profile msrfsr'
         DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-qa/2732ea92378da008"
         STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-uat/551b7aafb24e8c90"
+        PROD_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/portal3-prod/6c1b83ad4a20227f"
         DEV_PROJECT_UI='qa-portal-ui'
         STAGE_PROJECT_UI='uat-portal-ui'
+        PROD_PROJECT_UI='prod-portal-ui'
         UI_COMPOSE='docker-compose-ui-portal.yml'
     }
     stages {
         stage('Build & Deploy UI to QA') {
             agent { label 'master'}
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     try {
@@ -57,6 +60,7 @@ pipeline {
 
         stage("Deploy Rollbar QA") {
             agent { label 'master' }
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
@@ -70,6 +74,7 @@ pipeline {
 
         stage("Promote Portal to UAT") {
             agent { label 'master'}
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     timeout(activity: true, time: 5) {
@@ -95,11 +100,52 @@ pipeline {
 
         stage("Deploy Rollbar UAT") {
             agent { label 'master' }
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
             steps {
                 script {
                     sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
                             "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
                             "  -F environment=UAT \\\n" +
+                            "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
+                            "  -F local_username=system"
+                }
+            }
+        }
+
+        stage("Promote Portal to Prod") {
+            agent { label 'master'}
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
+            steps {
+                script {
+                    timeout(activity: true, time: 5) {
+                        input message: 'Are you ready to deploy to UAT?', parameters: [booleanParam(defaultValue: true, description: '', name: '')]
+                    }
+                    dir('MSR.UI/MSR.UI.Portal') {
+                        sh "docker build --build-arg ENV=buildprod -t msr-ui-portal ."
+                        sh "docker tag msr-ui-portal ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+
+                        sh "eval \$(/snap/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                        sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
+                    }
+
+                    sh "sh update_image_portal.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                    sh "cat ${UI_COMPOSE}"
+
+                    deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")
+                    office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI was promoted successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
+                }
+            }
+        }
+
+        stage("Deploy Rollbar Prod") {
+            agent { label 'master' }
+            //when { changeset "MSR.UI/MSR.UI.Portal"}
+            steps {
+                script {
+                    sh "curl https://api.rollbar.com/api/1/deploy/ \\\n" +
+                            "  -F access_token=145adf4dbb224fd6b94382baf8c00ec3 \\\n" +
+                            "  -F environment=Production \\\n" +
                             "  -F revision=\"${env.GIT_COMMIT}\" \\\n" +
                             "  -F local_username=system"
                 }

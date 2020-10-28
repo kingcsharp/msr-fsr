@@ -17,7 +17,7 @@ import { EnumChartStackType } from '../../../app/models/enums/EnumChartStackType
 export class ReportCubeService {
     cubeKey = '9nyEf9X3gjVQqryBAYKcMSefrkCZ7m8bCHJSXeXCYsfhCqcRJt';
     enumColumnType = EnumColumnType;
-    splitChars = "_axy_";
+    splitChars = '_axy_';
     constructor(private http: HttpClient, private toastr: ToastrService, private globals: Globals) {
 
     }
@@ -192,7 +192,7 @@ export class ReportCubeService {
     }
 
     private setName(row, prop1, prop2, separator) {
-        var name = '';
+        let name = '';
         if (row[prop1] !== undefined && row[prop1] !== null) {
             name += row[prop1].replace(/\s/g, '');
         }
@@ -209,7 +209,7 @@ export class ReportCubeService {
     private isValidRowForChart(row, prop1, prop2) {
         const isValid = row[prop2] !== undefined && row[prop2] !== null && row[prop2].length > 0 && row[prop1] !== undefined && row[prop1] !== null && row[prop1].length > 0;
         if (isValid) {
-            var a = 1;
+            let a = 1;
         }
         return isValid;
     }
@@ -244,8 +244,8 @@ export class ReportCubeService {
                     tooltipFormat: 'Cycle Count: <b>{point.y:.1f}</b>',
                     chartTOptions: {
                         legend: {
-                            align: "center",
-                            verticalAlign: "bottom",
+                            align: 'center',
+                            verticalAlign: 'bottom',
                             itemHoverStyle: {
                                 color: '#bdbdbd'
                             },
@@ -259,11 +259,11 @@ export class ReportCubeService {
 
                         tooltip: {
                             formatter: function () {
-                                const date = moment(this.point.category, "MM-YYYY").format("MMM-YY");
+                                const date = moment(this.point.category, 'MM-YYYY').format('MMM-YY');
                                 return `<div>
                                 <b>${this.series.name}</b><br>
                                 ${date}: Cycle Count ${this.point.y}
-                                <div>`
+                                <div>`;
                             }
                         },
                         plotOptions: {
@@ -299,11 +299,11 @@ export class ReportCubeService {
                     chartTOptions: {
                         tooltip: {
                             formatter: function () {
-                                const date = moment(this.point.category, "MM-YYYY").format("MMM-YY");
+                                const date = moment(this.point.category, 'MM-YYYY').format('MMM-YY');
                                 return `<div>
                                 <b>${this.series.name}</b><br>
                                 ${date}: Cycle Count ${this.point.y}
-                                <div>`
+                                <div>`;
                             }
                         }
                     }
@@ -320,7 +320,7 @@ export class ReportCubeService {
                     elem.key = elem['duedate'] + this.splitChars + elem['customername'].replace(/\s/g, '') + this.splitChars + elem['msrfsrfacility'].replace(/\s/g, '');
                     elem.yearMonth = moment(elem['duedate']);
                     elem.isValidForChart = true;
-                    elem.total = parseFloat(elem['wtax'].substring(1))
+                    elem.total = parseFloat(elem['wtax'].substring(1));
                 });
 
                 const chartInfo = new ChartInfo({
@@ -418,7 +418,7 @@ export class ReportCubeService {
     }
 
     updateMaxDateValueSelected(dataSeriesMaxDateStackValueFromTo, stackBy, row, date) {
-        const index = dataSeriesMaxDateStackValueFromTo.findIndex(x => x.monthYear == moment(date).format('MM-YYYY'));
+        const index = dataSeriesMaxDateStackValueFromTo.findIndex(x => x.monthYear === moment(date).format('MM-YYYY'));
         const savedElement = dataSeriesMaxDateStackValueFromTo[index];
         if (savedElement.row[stackBy] === undefined) {
             savedElement.row = row;

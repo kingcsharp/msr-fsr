@@ -152,3 +152,7 @@ selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown {
 selectworkorderdropdown-wrapper > p-dropdown > .ui-dropdown .ui-dropdown-label-container{
   width:100% !important;
 }
+
+.procedurestep-selector > .ui-dropdown > .ui-widget, .procedurestep-selector > .ui-dropdown > .ui-widget >.ui-dropdown-filter-container{
+  background-color: #323c48 !important;
+}

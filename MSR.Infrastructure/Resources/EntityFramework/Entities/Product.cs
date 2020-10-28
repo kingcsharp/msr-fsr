@@ -60,8 +60,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? CycleTime { get; set; }
 
-        // TODO: there is no such field
-        //public int? CustomerRequirementId { get; set; }
+        public int? CustomerRequirementId { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
 
@@ -69,6 +68,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string DivisionFab { get; set; }
 
         public virtual ICollection<ProductStep> ProductSteps { get; set; }
-
     }
 }

@@ -12,6 +12,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Domain.Views;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.Services.Part;
 
 namespace MSR.Application.ApplicationServices
@@ -29,15 +30,18 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdateWorkOrderTaskMonitor>,
         ICommandHandler<UpdateWorkOrder>,
         ICommandHandler<GetPortalWorkOrder>,
-        ICommandHandler<CreateWorkOrderMessage>
+        ICommandHandler<CreateWorkOrderMessage>,
+        ICommandHandler<GetWorkOrderPart>
     {
         private readonly IWorkOrderService _workOrderService;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper)
+        public WorkOrderAppService(IWorkOrderService procedureService, IMapper mapper, IFileService fileService)
         {
             _workOrderService = procedureService;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetWorkOrder command, CancellationToken cancellationToken = default)
@@ -114,6 +118,21 @@ namespace MSR.Application.ApplicationServices
         {
             var ret = await _workOrderService.CreateWorkOrderMessageAsync(command);
             return new CommandResponse<WorkOrderMessageModel>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetWorkOrderPart command, CancellationToken cancellationToken = default)
+        {
+            var workOrderPartModels = await _workOrderService.GetWorkOrderPartsAsync(command);
+
+            var files = _fileService.ListFilesForEntitySet(new Part().GetType().Name, workOrderPartModels.Select(x => x.Part.Id).ToList());
+
+            foreach (var workOrderPartModel in workOrderPartModels)
+            {
+                workOrderPartModel.Part.Files = files.Where(x => x.EntityId == workOrderPartModel.Part.Id).ToList();
+            }
+
+
+            return new CommandResponse<ICollection<WorkOrderPartModel>>(workOrderPartModels);
         }
     }
 }

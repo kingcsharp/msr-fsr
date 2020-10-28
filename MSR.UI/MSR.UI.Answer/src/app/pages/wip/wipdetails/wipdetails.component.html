@@ -42,7 +42,7 @@
             <button type="button" class="btn btn-sm btn-danger mr-2" *ngIf="!workOrderIsComplete"
               (click)="toggleCancelRemainingStepsDialog()">
               <i class="fas fa-times mx-1"></i>Cancel Remaining Steps</button>
-            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined">
+            <printtraveler-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel?.workOrderParts?.length > 0">
             </printtraveler-report>
             <printother-report [WorkOrder]="workOrderModel" *ngIf="workOrderModel !== undefined"></printother-report>
           </div>
@@ -54,12 +54,12 @@
               <ul>
                 <li *ngFor="let part of workOrderParts">
                   <span *ngIf="part.serialNumber; else noSerial">
-                  Part # {{part.part.partNumber}}, {{part.part.name}}, S/N: ({{part.serialNumber}}), (CycleCount: {{part.cycleCount}})
+                  Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: ({{part.serialNumber}}), (CycleCount: {{part.cycleCount}})
                   (Qty: {{part.qty}})
                   </span>
                   <ng-template #noSerial>
                     <span>
-                      Part # {{part.part.partNumber}}, {{part.part.name}}, S/N: (N/A), (CycleCount: {{part.cycleCount}})
+                      Part # {{part.part?.partNumber}}, {{part.part?.name}}, S/N: (N/A), (CycleCount: {{part.cycleCount}})
                     (Qty: {{part.qty}})
                     </span>
                   </ng-template>

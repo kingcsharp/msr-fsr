@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
@@ -30,5 +32,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public decimal TotalSalePrice { get; set; }
 
         public int? CycleTime { get; set; }
+
+        public virtual ICollection<ProductStepApproval> ProductStepApprovals { get; set; }
+
+        public int? QuoteId { get; set; }
+
+        public string DivisionFab { get; set; }
     }
 }

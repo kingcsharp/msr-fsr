@@ -349,33 +349,23 @@
             <div class="col-md-8 col-12 input-group input-group-transparent">
               <span class="input-group-addon bg-secondary">$</span>
               <input
+                id="totalPurchaseLimit"
                 pInputText
                 [(ngModel)]="currentPO.totalPurchaseLimit"
+                (change)="onChangeTotalPurchaseLimit($event)"
                 placeholder="Enter total amount"
-                type="number"
+                type="text"
                 class="form-control input-transparent"
                 name="TotalPurchaseLimit"
+                data-validate="parsley"
+                data-parsley-trigger="change"
+                data-parsley-type="integer"
                 data-cy="totalamount-input"
               >
               <span class="input-group-addon bg-secondary">.00</span>
             </div>
           </div>
 
-          <div class="form-group row">
-            <label for="Tax" class="form-control-label col-md-4 col-12 text-md-right">
-              Tax %:
-            </label>
-            <div class="col-md-8 col-12 input-group input-group-transparent">
-              <input
-                pInputText
-                placeholder="Enter Tax %"
-                type="number"
-                class="form-control input-transparent"
-                name="Tax"
-              >
-              <span class="input-group-addon bg-secondary">%</span>
-            </div>
-          </div>
           <div class="form-group row">
             <label for="ProductId" class="col-md-2 text-right">
               Products:
