@@ -34,10 +34,6 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public double? EquipmentTime { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string Roles { get; set; }
-
         public virtual ProcedureApproval ProcedureApproval { get; set; }
 
         public virtual ICollection<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get; set; }

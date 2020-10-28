@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using AutoMapper.Mappers;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -237,7 +239,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 }
             }
 
-            if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
+            if (false && CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
                 if (command.Roles != null &&
                     command.Roles.Count > 0 &&
@@ -268,6 +270,31 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }
                 }
 
+                if (command.ReferenceDocumentIds != null &&
+                    command.ReferenceDocumentIds.Count > 0)
+                {
+                    List<int> currentIds = await _unitOfWork.DocumentEntityMap
+                        .Query()
+                        .Where(x => x.EntityId == current.Id &&
+                            x.EntityTableName.Equals(nameof(EntityFramework.Entities.ProcedureStep)))
+                        .Select(x => x.Id)
+                        .ToListAsync();
+                    foreach (int id in currentIds)
+                    {
+                        _unitOfWork.DocumentEntityMap.Delete(false, id);
+                    }
+                    foreach(int newDocId in command.ReferenceDocumentIds)
+                    {
+                        var ndem = new DocumentEntityMap() {
+                            EntityId = current.Id,
+                            EntityTableName = nameof(EntityFramework.Entities.ProcedureStep),
+                            DocumentId = newDocId
+                        };
+                        await _unitOfWork.DocumentEntityMap.AddAsync(ndem);
+                    }
+                    await _unitOfWork.SaveChangesAsync();
+                }
+
                 if (step.ProcedureStepRoles != null)
                 {
                     foreach (ProcedureStepRoleMap m in step.ProcedureStepRoles)
@@ -286,7 +313,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
 
-                // TODO: how to store changes in roles pending approval?
+                // FIXME: there should be a new ApprovalJSON field
+                // added to ProcedureStepApproval.
+                string json = JsonConvert.SerializeObject(new {
+                    roleIds = command.Roles.Select(x => x.Id).ToList(),
+                    fileIds = command.ReferenceFileIds,
+                    documentIds = command.ReferenceDocumentIds,
+                    stepText = command.StepText
+                });
+                approval.StepText = json;
 
                 _unitOfWork.ProcedureStepApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();

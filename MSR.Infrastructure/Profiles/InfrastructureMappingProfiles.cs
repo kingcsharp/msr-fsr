@@ -197,6 +197,9 @@ namespace MSR.Infrastructure.Profiles
 
             #region Procedure
             CreateMap<Procedure, Domain.Models.Procedure>();
+            CreateMap<ProcedureStepApproval, ProcedureStepModel>()
+                // if the approval exists, the step is pending approval
+                .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => "Pending"));
             CreateMap<ProcedureStep, ProcedureStepModel>()
                 .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
