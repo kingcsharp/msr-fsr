@@ -58,6 +58,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task<string> LoginAsync(SystemLogin command)
         {
+            var childRoles = await _unitOfWork.RoleChildRoleMaps.Query().ToListAsync();
             var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role)
                 .Where(x => x.UserName == command.UserName)
                 .Select(x => new User()
@@ -76,6 +77,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
                     PasswordSalt = x.PasswordSalt
                 })
                 .FirstOrDefaultAsync();
+
+            user.Roles = LoadChildRoles(user.Roles, childRoles);
 
             var loadRefs = await _unitOfWork.MenuRoles.Query()
                 .Include(x => x.MenuRolePermission)
@@ -247,8 +250,57 @@ namespace MSR.Infrastructure.Resources.Services.Account
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public ICollection<UserRole> LoadChildRoles(ICollection<UserRole> userRoles, List<RoleChildRoleMap> childRoles)
+        {
+            var userRolesAndChildRoles = new List<UserRole>();
+            foreach (var userRole in userRoles)
+            {
+                userRolesAndChildRoles.Add(new UserRole()
+                {
+                    Id = userRole.Id,
+                    Role = new EntityFramework.Entities.Role()
+                    {
+                        Id = userRole.RoleId
+                    },
+                    RoleId = userRole.RoleId
+                });
+                GetAllChildrenOfRoleId(userRole.RoleId, userRolesAndChildRoles, userRoles, childRoles);
+            }
+            return userRolesAndChildRoles;
+        }
+
+        public void GetAllChildrenOfRoleId(int roleId, ICollection<UserRole> userRolesAndChildRoles, ICollection<UserRole> userRoles, List<RoleChildRoleMap> childRoles)
+        {
+            var foundChildRoles = childRoles.Where(x => x.ParentRoleId == roleId).ToList();
+            if (!foundChildRoles.Any())
+            {
+                return;
+            }
+            else
+            {
+                foreach (var childRole in foundChildRoles)
+                {
+                    if (childRole.ChildRoleId.HasValue)
+                    {
+                        var childRoleId = childRole.ChildRoleId.Value;
+                        userRolesAndChildRoles.Add(new UserRole()
+                        {
+                            Id = childRole.Id,
+                            Role = new EntityFramework.Entities.Role()
+                            {
+                                Id = childRoleId
+                            },
+                            RoleId = childRoleId
+                        });
+                        GetAllChildrenOfRoleId(childRoleId, userRolesAndChildRoles, userRoles, childRoles);
+                    }
+                }
+            }
+        }
+
         public async Task<string> GetJWTTokenAsync()
         {
+            var childRoles = await _unitOfWork.RoleChildRoleMaps.Query().ToListAsync();
             var user = await _unitOfWork.Users.Query().Include(x => x.Roles).ThenInclude(x => x.Role)
                 .Where(x => x.Id == CurrentUser.GetId())
                 .Select(x => new User()
@@ -267,6 +319,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
                     PasswordSalt = x.PasswordSalt
                 })
                 .FirstOrDefaultAsync();
+
+            user.Roles = LoadChildRoles(user.Roles, childRoles);
 
             var loadRefs = await _unitOfWork.MenuRoles.Query()
                 .Include(x => x.MenuRolePermission)
@@ -340,9 +394,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private async Task<Dictionary<int, int[]>> GetTokenUserActivityRoles(User user)
         {
             var allMyActivitiesPrivileges = await _workflowService.GetAllMyActivitiesPrivileges(user.Id, user.Roles.Select(x => x.RoleId).ToList());
-            //var canApproveMenuItemRoles = await _unitOfWork.MenuRoles.Query()
-            //    .Select(x => new { x.MenuItemId, x.RoleId, x.MenuRolePermission }).Distinct().ToListAsync();
-            //var canApproveMenuItemRoles = user.Roles.Max
+
             var canApproveMenuItemRoles = (from userRole in user.Roles
                                            from menu in userRole.Role.Menus
                                            select new { menu.MenuItemId, menu.RoleId, menu.MenuRolePermission }).ToList();
@@ -377,33 +429,31 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private static int[][] GetTokenUserRoles(User user)
         {
             var totalMenuItems = Enum.GetNames(typeof(EnumMenuItem)).Length;
-            var jaggedArray = new int[totalMenuItems][];
+            var menuItemPermissions = new int[totalMenuItems][];
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
-                var efRole = role.Role;
-                if (efRole != null)
+                if (role.Role != null)
                 {
-                    foreach (var menuItem in efRole.Menus)
+                    foreach (var menuItem in role.Role.Menus)
                     {
                         if (menuItem.MenuItem == null) continue;
-                        var efMenuItem = menuItem.MenuItem;
 
-                        var menuItemNum = (int)EnumUtils.ParseMenuType(efMenuItem.Name);
+                        var menuItemNum = (int)EnumUtils.ParseMenuType(menuItem.MenuItem.Name);
                         var permissions = GetListEnumPrivileges(menuItem.MenuRolePermission);
-                        if (jaggedArray[menuItemNum] == null)
+                        if (menuItemPermissions[menuItemNum] == null)
                         {
-                            jaggedArray[menuItemNum] = permissions;
+                            menuItemPermissions[menuItemNum] = permissions;
                         }
                         else
                         {
-                            jaggedArray[menuItemNum] = jaggedArray[menuItemNum].Union(permissions).ToArray();
+                            menuItemPermissions[menuItemNum] = menuItemPermissions[menuItemNum].Union(permissions).ToArray();
                         }
 
                     }
                 }
             }
 
-            return jaggedArray;
+            return menuItemPermissions;
         }
 
         private static int[] GetListEnumPrivileges(MenuRolePermission menuRolePermission)
