@@ -84,9 +84,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         y.AssignedTo == command.assignedToId));
             }
 
-            List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ThenInclude(m => m.Part).ToListAsync();
+            List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
             List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
-            _ = await _unitOfWork.WorkOrderParts.Query().Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
+            _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
             List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Include(u => u.ReferenceFiles).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
             List<ProcedureStep> procedureStepEntities = await _unitOfWork.ProcedureSteps.Query()
                 .Include(y => y.ProcedureStepRoles)
