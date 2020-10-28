@@ -219,7 +219,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.ReferenceFiles)
                 .FirstOrDefaultAsync(i =>
                     i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
-            _unitOfWork.ProcedureSteps.LoadCollection(current, "ProcedureStepRoles");
 
             if (current is null)
             {
@@ -227,6 +226,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     $"found with ID: {command.procedureId} / {command.procedureStepId}",
                     DomainError.NotFound);
             }
+
+            _unitOfWork.ProcedureSteps.LoadCollection(current, "ProcedureStepRoles");
 
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepModel ret;
@@ -334,6 +335,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 // FIXME: there should be a new ApprovalJSON field
                 // added to ProcedureStepApproval.
                 string json = JsonConvert.SerializeObject(new {
+                    procedureStepId = current.Id,
                     roleIds = command.Roles.Select(x => x.Id).ToList(),
                     fileIds = command.ReferenceFileIds,
                     documentIds = command.ReferenceDocumentIds,

@@ -25,13 +25,15 @@ namespace MSR.Infrastructure.Resources.Services
         private readonly IPartService _partService;
         private readonly IFileService _fileService;
         private readonly IProductService _productService;
+        private readonly IProcedureService _procedureService;
 
         public WorkflowApprovalService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IPartService partService,
             IFileService fileService,
-            IProductService productService
+            IProductService productService,
+            IProcedureService procedureService
             )
         {
             _unitOfWork = unitOfWork;
@@ -39,6 +41,7 @@ namespace MSR.Infrastructure.Resources.Services
             _partService = partService;
             _fileService = fileService;
             _productService = productService;
+            _procedureService = procedureService;
         }
 
         public async Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command)
@@ -85,18 +88,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = partApproval;
                     break;
                 case EnumApprovalTables.ProcedureApproval:
-                    var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var procedure = await _unitOfWork.Procedures.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == command.Id);
-                    procedureApproval.Status = status;
-                    _mapper.Map(procedureApproval, procedure);
-                    _unitOfWork.ProcedureApprovals.Update(procedureApproval);
-                    procedure.Revision++;
-                    _unitOfWork.Procedures.Update(procedure);
-                    _unitOfWork.SaveChanges();
-                    await _unitOfWork.LogApprovalTransaction(procedureApproval, procedureApproval.Id, status.Name, command.Comments);
-                    result = procedureApproval;
+                    result = await ApproveProcedure(command, status);
                     break;
                 case EnumApprovalTables.ProductApproval:
                     result = await ApproveProduct(command, status);
@@ -312,6 +304,9 @@ namespace MSR.Infrastructure.Resources.Services
 
         private void GetProcedureStepApprovals(PendingApprovalPopoverModel pendingApprovalModel, ICollection<ProcedureStep> procSteps, ICollection<ProcedureStepApproval> procStepApprovals)
         {
+            // FIXME: without a ProcedureStepApproval.ProcedureStepId field,
+            // we cannot make a direct comparison to the existing step.
+
             var from = "";
             foreach (var procedure in procSteps)
             {
@@ -725,6 +720,62 @@ namespace MSR.Infrastructure.Resources.Services
             procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
             this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
             return procedureApprovalChanges;
+        }
+
+        private async Task<ApprovalEntity> ApproveProcedure(PostApprovalModel command, Status status)
+        {
+            var procedureApproval = await _unitOfWork.ProcedureApprovals
+                .Query()
+                .Include(x => x.ProcedureType)
+                .Include(x => x.ProcedureStepApprovals)
+                .ThenInclude(y => y.ProcedureApproval)
+                .FirstOrDefaultAsync(x => x.Id == command.Id);
+
+            if (procedureApproval == null)
+            {
+                throw new DomainException($"Procedure Approval id {command.Id} not found", DomainError.NotFound);
+            }
+
+            if (procedureApproval.ProcedureId == 0)
+            {
+                var procedureCommand = _mapper.Map<CreateProcedure>(procedureApproval);
+                procedureCommand.Revision = 1;
+                await _procedureService.CreateProcedureAsync(procedureCommand);
+            }
+            else
+            {
+                var procedureCommand = _mapper.Map<UpdateProcedure>(procedureApproval);
+                procedureCommand.Revision += 1;
+                await _procedureService.UpdateProcedureAsync(procedureCommand);
+
+                foreach (ProcedureStepApproval step in procedureApproval.ProcedureStepApprovals)
+                {
+                    // FIXME: this is a workaround for no ProcedureStepApproval.ApprovalJSON field
+                    string approvalJSON = step.StepText;
+                    var dataFormat = new {
+                        procedureStepId = 0,
+                        roleIds = new List<int>(),
+                        fileIds = new List<int>(),
+                        documentIds = new List<int>(),
+                        stepText = ""
+                    };
+                    var dataObj = JsonConvert.DeserializeAnonymousType(approvalJSON, dataFormat);
+                    var update = _mapper.Map<UpdateProcedureStep>(step);
+                    update.StepText = dataObj.stepText;
+                    update.procedureId = step.ProcedureApproval.ProcedureId;
+                    update.procedureStepId = dataObj.procedureStepId;
+                    update.ReferenceFileIds = dataObj.fileIds;
+                    update.ReferenceDocumentIds = dataObj.documentIds;
+
+                    await _procedureService.UpdateProcedureStepAsync(update);
+                }
+
+            }
+
+            _unitOfWork.ProcedureApprovals.Delete(false, procedureApproval);
+            await _unitOfWork.SaveChangesAsync();
+
+            return procedureApproval;
         }
     }
 

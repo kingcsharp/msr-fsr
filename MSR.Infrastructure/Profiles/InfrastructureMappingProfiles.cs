@@ -247,11 +247,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateProcedureStep, ProcedureStep>();
             CreateMap<UpdateProcedure, ProcedureApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProcedureApproval, UpdateProcedure>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProcedureId));
             CreateMap<UpdateProcedure, Procedure>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<UpdateProcedureStep, ProcedureStepApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProcedureStepApproval, UpdateProcedureStep>();
             CreateMap<UpdateProcedureStep, ProcedureStep>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureStepRoles, opts => opts.MapFrom(src => src.Roles))
