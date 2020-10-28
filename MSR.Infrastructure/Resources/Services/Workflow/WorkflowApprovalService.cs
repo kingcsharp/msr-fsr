@@ -750,20 +750,15 @@ namespace MSR.Infrastructure.Resources.Services
 
                 foreach (ProcedureStepApproval step in procedureApproval.ProcedureStepApprovals)
                 {
-                    // FIXME: this is a workaround for no ProcedureStepApproval.ApprovalJSON field
-                    string approvalJSON = step.StepText;
+                    string approvalJSON = step.ApprovalJSON;
                     var dataFormat = new {
-                        procedureStepId = 0,
                         roleIds = new List<int>(),
                         fileIds = new List<int>(),
                         documentIds = new List<int>(),
-                        stepText = ""
                     };
                     var dataObj = JsonConvert.DeserializeAnonymousType(approvalJSON, dataFormat);
                     var update = _mapper.Map<UpdateProcedureStep>(step);
-                    update.StepText = dataObj.stepText;
                     update.procedureId = step.ProcedureApproval.ProcedureId;
-                    update.procedureStepId = dataObj.procedureStepId;
                     update.ReferenceFileIds = dataObj.fileIds;
                     update.ReferenceDocumentIds = dataObj.documentIds;
                     update.Roles = _mapper.Map<List<Domain.Models.Role>>(dataObj.roleIds);

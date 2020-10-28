@@ -332,16 +332,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
                 approval.ProcedureApprovalId = procApprovalId;
 
-                // FIXME: there should be a new ApprovalJSON field
-                // added to ProcedureStepApproval.
                 string json = JsonConvert.SerializeObject(new {
-                    procedureStepId = current.Id,
                     roleIds = command.Roles.Select(x => x.Id).ToList(),
                     fileIds = command.ReferenceFileIds,
                     documentIds = command.ReferenceDocumentIds,
-                    stepText = command.StepText
                 });
-                approval.StepText = json;
+                approval.ApprovalJSON = json;
 
                 _unitOfWork.ProcedureStepApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();

@@ -13,9 +13,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             ProcedureStepMonitorApprovals = new HashSet<ProcedureStepMonitorApproval>();
         }
 
-        // FIXME: PROCEDURE STEP ID IS NOT IN THE DATABASE!
-        // This means we cannot update an existing procedure.
-        // The workaround is to store it in the JSON field.
+        public int? ProcedureStepId { get; set; }
 
         public int ProcedureApprovalId { get; set; }
 
@@ -29,6 +27,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? GoToStepId { get; set; }
 
+        public int? ProcedureStepTypeId { get; set; }
+
         public int PrintOrder { get; set; }
 
         [Column(TypeName = "money")]
@@ -37,6 +37,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public float? Utilization { get; set; }
 
         public double? EquipmentTime { get; set; }
+
+        public string ApprovalJSON { get; set; }
 
         public virtual ProcedureApproval ProcedureApproval { get; set; }
 
