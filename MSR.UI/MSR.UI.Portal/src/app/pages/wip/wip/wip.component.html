@@ -83,18 +83,37 @@
     </a>
 </ng-template>
 
-<p-galleria *ngIf="displayBasic2" [value]="images" [(visible)]="displayBasic2" [responsiveOptions]="responsiveOptions"
-    [containerStyle]="{'max-width': '850px'}" [numVisible]="7" [circular]="true" [fullScreen]="true"
-    [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000">
-    <ng-template pTemplate="item" let-item>
-        <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
-    </ng-template>
-    <ng-template pTemplate="thumbnail" let-item>
-        <div class="p-grid p-nogutter p-justify-center">
-            <img [src]="item.thumbnailImageSrc" style="display: block;" />
+
+
+<p-dialog [(visible)]="displayBasic2" *ngIf="displayBasic2" appendTo="body" styleClass="report" [baseZIndex]="100001"
+    [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+    <p-header>
+        Images
+    </p-header>
+    <div class="report-viewport m-4 d-print-flex">
+        <p-galleria [value]="images" [(visible)]="displayBasic2"
+            [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '850px'}" [numVisible]="7"
+            [circular]="true" [fullScreen]="false" [showItemNavigators]="true" [showThumbnails]="false"
+            [baseZIndex]="100000">
+            <ng-template pTemplate="item" let-item>
+                <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
+            </ng-template>
+            <ng-template pTemplate="thumbnail" let-item>
+                <div class="p-grid p-nogutter p-justify-center">
+                    <img [src]="item.thumbnailImageSrc" style="display: block;" />
+                </div>
+            </ng-template>
+        </p-galleria>
+    </div>
+    <p-footer>
+        <div class="pull-right">
+            <button type="submit" (click)="showNcrModal = false" class="btn btn-warning mb-xs" role="button"
+                data-cy="confirmdelete-button">
+                <i class="fas fa-times-circle mx-1"></i>Close
+            </button>
         </div>
-    </ng-template>
-</p-galleria>
+    </p-footer>
+</p-dialog>
 
 <ng-template #disposition let-colsDataAndSettings='colsDataAndSettings'>
     <div *ngFor="let item of colsDataAndSettings.colData.messages; last as isLast">

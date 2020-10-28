@@ -311,8 +311,8 @@ export class WipComponent implements OnInit, AfterViewInit {
   }
 
   setSubPartsProperties(subpart: any) {
-    subpart.partNumber = subpart.part.partNumber;
-    subpart.name = subpart.part.name;
+    subpart.partNumber = subpart.part?.partNumber || 'N/A';
+    subpart.name = subpart.part?.name || 'N/A';
   }
 
   setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
@@ -326,6 +326,7 @@ export class WipComponent implements OnInit, AfterViewInit {
       env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.data = response.object.map((x: any) => {
+          x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
           let ret = new PortalWorkOrderPartsView(x);
           this.setSubpartspropertiesToWoSubparts(ret);
           return ret;
@@ -369,10 +370,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   getBuyerColumns() {
     return [
-      new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
-      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.String }),
-      new ColumnsSaved({ id: 'supplier', label: 'Supplier', visible: true, type: EnumColumnType.String }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'purchaseOrderNumber', label: 'PO #', type: EnumColumnType.Number, visible: true }),
       new ColumnsSaved({ id: 'qty', label: 'Qty', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),
@@ -383,7 +381,8 @@ export class WipComponent implements OnInit, AfterViewInit {
       new ColumnsSaved({ id: 'invoiceName', label: 'Invoice #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'price', label: 'Price', visible: true, type: EnumColumnType.Money }),
       new ColumnsSaved({ id: 'invoiceAmount', label: 'Amount', visible: true, type: EnumColumnType.Money }),
-      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, isRanged: true })
+      new ColumnsSaved({ id: 'invoiceDate', label: 'Invoice Date', visible: true, type: EnumColumnType.Date, isRanged: true }),
+      new ColumnsSaved({ id: 'status', label: 'Status', visible: true, type: EnumColumnType.Template, templateName: this.statusCol }),
     ];
   }
 }
