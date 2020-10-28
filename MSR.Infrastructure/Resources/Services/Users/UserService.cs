@@ -283,7 +283,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     },
                     RoleId = userRole.RoleId
                 });
-                this.GetAllChildrenOfRoleId(userRole.RoleId, userRolesAndChildRoles, userRoles, childRoles);
+                GetAllChildrenOfRoleId(userRole.RoleId, userRolesAndChildRoles, userRoles, childRoles);
             }
             return userRolesAndChildRoles;
         }
@@ -350,7 +350,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     PasswordSalt = x.PasswordSalt
                 }).FirstOrDefaultAsync();
 
-            user.Roles = this.LoadChildRoles(user.Roles, childRoles);
+            user.Roles = LoadChildRoles(user.Roles, childRoles);
 
             var loadRefs = await _unitOfWork.MenuRoles.Query()
                 .Include(x => x.MenuRolePermission)

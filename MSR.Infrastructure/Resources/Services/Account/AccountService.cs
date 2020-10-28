@@ -78,7 +78,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 })
                 .FirstOrDefaultAsync();
 
-            user.Roles = this.LoadChildRoles(user.Roles, childRoles);
+            user.Roles = LoadChildRoles(user.Roles, childRoles);
 
             var loadRefs = await _unitOfWork.MenuRoles.Query()
                 .Include(x => x.MenuRolePermission)
@@ -264,7 +264,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                     },
                     RoleId = userRole.RoleId
                 });
-                this.GetAllChildrenOfRoleId(userRole.RoleId, userRolesAndChildRoles, userRoles, childRoles);
+                GetAllChildrenOfRoleId(userRole.RoleId, userRolesAndChildRoles, userRoles, childRoles);
             }
             return userRolesAndChildRoles;
         }
@@ -292,7 +292,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                             },
                             RoleId = childRoleId
                         });
-                        this.GetAllChildrenOfRoleId(childRoleId, userRolesAndChildRoles, userRoles, childRoles);
+                        GetAllChildrenOfRoleId(childRoleId, userRolesAndChildRoles, userRoles, childRoles);
                     }
                 }
             }
@@ -320,7 +320,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 })
                 .FirstOrDefaultAsync();
 
-            user.Roles = this.LoadChildRoles(user.Roles, childRoles);
+            user.Roles = LoadChildRoles(user.Roles, childRoles);
 
             var loadRefs = await _unitOfWork.MenuRoles.Query()
                 .Include(x => x.MenuRolePermission)
