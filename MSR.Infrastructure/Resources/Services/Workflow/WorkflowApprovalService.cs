@@ -723,8 +723,6 @@ namespace MSR.Infrastructure.Resources.Services
             procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
             procedureApprovalChanges.AddRow("Duration Type", procedure?.DurationType, procedureApproval.DurationType);
             procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
-            procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
-            procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
             this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
             return procedureApprovalChanges;
         }

@@ -197,7 +197,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepEntity);
             }
 
-            int procApprovalId = await flagProcedureForApproval(command.procedureId);
+            var currentProcedure = await _unitOfWork.Procedures
+                .Query()
+                .FirstAsync(x => x.Id == command.procedureId);
+
+            int procApprovalId = await flagProcedureForApproval(currentProcedure, command.procedureId);
 
             var procedureStepApprovalEntity = _mapper.Map<ProcedureStepApproval>(command);
             procedureStepApprovalEntity.ProcedureApprovalId = procApprovalId;
@@ -320,7 +324,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             else
             {
-                int procApprovalId = await flagProcedureForApproval(current.ProcedureId);
+                _unitOfWork.ProcedureSteps.LoadReference(current, x => x.Procedure);
+                int procApprovalId = await flagProcedureForApproval(
+                    current.Procedure, current.ProcedureId
+                );
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
                 approval.ProcedureApprovalId = procApprovalId;
 
@@ -408,7 +415,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         // Add the procedure approval record if it doesn't already exist.  Used
         // to wrap up all changes to steps in a single approval on the workflow screen.
-        private async Task<int> flagProcedureForApproval(int procedureId)
+        private async Task<int> flagProcedureForApproval(EntityFramework.Entities.Procedure currentProcedure, int procedureId)
         {
             var existing = _unitOfWork.ProcedureApprovals
                 .Query()
@@ -417,18 +424,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (!existing.Any())
             {
-                Status statusPending = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
-                var approval = new ProcedureApproval() {
-                    ProcedureId = procedureId,
-                    StatusId = statusPending.Id,
-                    Name = "", // FIXME: this should be nullable
-                    ProcedureTypeId = 1, // FIXME: this should be nullable
-                    Revision = 0, // FIXME: this should be nullable
-                    Duration = 0.0, // FIXME: this should be nullable
-                    DurationType = "", // FIXME: this should be nullable
-                };
+                var approval = _mapper.Map<ProcedureApproval>(currentProcedure);
                 approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
                 approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
 
                 await _unitOfWork.ProcedureApprovals.AddAsync(approval);
                 await _unitOfWork.SaveChangesAsync();

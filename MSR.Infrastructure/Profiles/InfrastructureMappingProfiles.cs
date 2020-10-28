@@ -239,6 +239,9 @@ namespace MSR.Infrastructure.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedure, ProcedureApproval>();
+            CreateMap<Procedure, ProcedureApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id));
             CreateMap<CreateProcedure, Procedure>();
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();
             CreateMap<CreateProcedureStep, ProcedureStep>();
