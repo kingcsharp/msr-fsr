@@ -186,9 +186,9 @@ export class RoleassignmentsComponent implements OnInit {
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
 
-    let pendingRoleChange = this.pendingPermissions.find(s => s.menuModule.id === menuModule.id && s.roleModule.id === roleModule.id);
+    const pendingRoleChangeIndex = this.pendingPermissions.findIndex(s => s.menuModule.id === menuModule.id && s.roleModule.id === roleModule.id && s.permissionModule === null);
 
-    if (pendingRoleChange === undefined) {
+    if (pendingRoleChangeIndex === -1) {
 
       if (roleModule.value) {
         this.pendingPermissions.push({
@@ -212,8 +212,7 @@ export class RoleassignmentsComponent implements OnInit {
 
     } else {
 
-      this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
-
+      this.pendingPermissions.splice(pendingRoleChangeIndex, 1);
     }
 
   }
@@ -222,22 +221,37 @@ export class RoleassignmentsComponent implements OnInit {
     permissionModule.value = !permissionModule.value;
     this.pendingPermissionsUpdate = true;
 
-    if (permissionModule.value) {
-      this.pendingPermissions.push({
-        menuModule: menuModule,
-        roleModule: roleModule,
-        permissionModule: permissionModule,
-        event: 'add'
-      } as UpdatePermissionsEventModel);
+    let pendingPermissionChangeIndex = this.pendingPermissions.findIndex(s => s.menuModule.id === menuModule.id
+      && s.roleModule.id === roleModule.id
+      && s.permissionModule !== null
+      && s.permissionModule?.name === permissionModule.name);
+
+    if (pendingPermissionChangeIndex === -1) {
+
+      if (permissionModule.value) {
+        this.pendingPermissions.push({
+          menuModule: menuModule,
+          roleModule: roleModule,
+          permissionModule: permissionModule,
+          event: 'add'
+        } as UpdatePermissionsEventModel);
+
+      } else {
+        this.pendingPermissions.push({
+          menuModule: menuModule,
+          roleModule: roleModule,
+          permissionModule: permissionModule,
+          event: 'remove'
+        } as UpdatePermissionsEventModel);
+      }
+
 
     } else {
-      this.pendingPermissions.push({
-        menuModule: menuModule,
-        roleModule: roleModule,
-        permissionModule: permissionModule,
-        event: 'remove'
-      } as UpdatePermissionsEventModel);
+
+      this.pendingPermissions.splice(pendingPermissionChangeIndex, 1);
+
     }
+
   }
 
   clearPendingChanges() {
