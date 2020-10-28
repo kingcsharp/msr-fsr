@@ -9,7 +9,7 @@
         <div class="alert alert-danger col-12" role="alert" *ngIf="errorUpdatingPermissions == true">
             There was an error saving permissions, please try again later
         </div>
-        <div class="alert alert-warning col-12 pendingupdates-alert" role="alert" *ngIf="pendingPermissionsUpdate == true">
+        <div class="alert alert-warning col-12 pendingupdates-alert" role="alert" *ngIf="pendingPermissions.length > 0">
             You have permissions pending to be saved
             <ol>
                 <li *ngFor="let pendingPermission of pendingPermissions">

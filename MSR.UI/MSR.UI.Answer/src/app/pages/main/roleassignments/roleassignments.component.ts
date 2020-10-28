@@ -186,25 +186,36 @@ export class RoleassignmentsComponent implements OnInit {
     roleModule.value = !roleModule.value;
     this.pendingPermissionsUpdate = true;
 
-    if (roleModule.value) {
-      this.pendingPermissions.push({
-        menuModule: menuModule,
-        roleModule: roleModule,
-        permissionModule: null,
-        event: 'add'
-      } as UpdatePermissionsEventModel);
+    let pendingRoleChange = this.pendingPermissions.find(s => s.menuModule.id === menuModule.id && s.roleModule.id === roleModule.id);
 
-      this.selectedRoleModule = roleModule;
+    if (pendingRoleChange === undefined) {
+
+      if (roleModule.value) {
+        this.pendingPermissions.push({
+          menuModule: menuModule,
+          roleModule: roleModule,
+          permissionModule: null,
+          event: 'add'
+        } as UpdatePermissionsEventModel);
+
+        this.selectedRoleModule = roleModule;
+      } else {
+        this.pendingPermissions.push({
+          menuModule: menuModule,
+          roleModule: roleModule,
+          permissionModule: null,
+          event: 'remove'
+        } as UpdatePermissionsEventModel);
+
+        this.selectedRoleModule = null;
+      }
+
     } else {
-      this.pendingPermissions.push({
-        menuModule: menuModule,
-        roleModule: roleModule,
-        permissionModule: null,
-        event: 'remove'
-      } as UpdatePermissionsEventModel);
 
-      this.selectedRoleModule = null;
+      this.pendingPermissions = this.pendingPermissions.filter(s => s.menuModule.id !== menuModule.id && s.roleModule.id !== roleModule.id);
+
     }
+
   }
 
   permissionChanged(event: Event, menuModule: MenuModel, roleModule: RoleModel, permissionModule: PermissionModel) {
