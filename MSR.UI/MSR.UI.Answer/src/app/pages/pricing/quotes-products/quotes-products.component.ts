@@ -197,6 +197,13 @@ export class QuotesProductsComponent implements OnInit {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
       requestData.customerId = this.CSRToCreate.customerId;
+      const process = [];
+      this.CSRToCreate.Process.forEach(v => {
+        if (v.Contaminents) {
+          process.push(v);
+        }
+      });
+      this.CSRToCreate.Process = process;
       requestData.customerRequirementJson = JSON.stringify(this.CSRToCreate);
       this.quoteService.quotePost(env.apiVersion, requestData)
         .pipe(take(1))

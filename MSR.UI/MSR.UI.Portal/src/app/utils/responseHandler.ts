@@ -27,7 +27,7 @@ function responseHandler(nextFn, errorFn?) {
             }
         },
         complete() {
-            // console.log('Subscriber A - complete');
+
         }
     };
     return subscriberA;

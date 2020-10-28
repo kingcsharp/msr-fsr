@@ -288,8 +288,8 @@ export class WipComponent implements OnInit, AfterViewInit {
     subpart.name = subpart.part.name;
   }
 
-  setSubpartspropertiesToWoSubparts(workOrder:PortalWorkOrderPartsView){
-    workOrder.subParts.map(x=>this.setSubPartsProperties(x));
+  setSubpartspropertiesToWoSubparts(workOrder: PortalWorkOrderPartsView) {
+    workOrder.subParts.map(x => this.setSubPartsProperties(x));
   }
 
   getGridData() {
@@ -307,6 +307,7 @@ export class WipComponent implements OnInit, AfterViewInit {
           storageId: 'wip_engineering' + this.elementReference.nativeElement.tagName.toLowerCase(),
           version: '1.0.0',
           expandRows: true,
+          expandRowProperty: 'subParts',
           expandRowsTemplate: this.expandedRowTemplate
         });
 
@@ -321,8 +322,7 @@ export class WipComponent implements OnInit, AfterViewInit {
 
   getEngineerColumns() {
     return [
-      new ColumnsSaved({ id: 'id', label: 'Id', type: EnumColumnType.Number, visible: false }),
-      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: false }),
+      new ColumnsSaved({ id: 'workOrderId', label: 'Work Order Id', type: EnumColumnType.String, visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Serial #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'companyPartNumber', label: 'Company Part #', visible: true, type: EnumColumnType.String }),
       new ColumnsSaved({ id: 'cycleCount', label: 'Cycle Count', visible: true, type: EnumColumnType.Number, styles: { 'width': '6rem' } }),

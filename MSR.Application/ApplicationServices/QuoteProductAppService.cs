@@ -40,6 +40,7 @@ namespace MSR.Application.ApplicationServices
                 qpModel.IsProduct = true;
                 qpModel.IsDeletable = false;
                 qpModel.Representative = product.Quote?.Representative;
+                qpModel.SubmittedDate = product.QuoteId == null ? product.CreatedOn : product.Quote.SubmittedDate;
                 retQuotesProductsViewsList.Add(qpModel);
             }
 
@@ -47,10 +48,12 @@ namespace MSR.Application.ApplicationServices
 
             foreach (var quote in quotes)
             {
-                var qpModel = _mapper.Map<QuotesProductsView>(quote);
-                qpModel.IsProduct = false;
-                qpModel.IsDeletable = !productList.Any(p => p.QuoteId == quote.Id);
-                retQuotesProductsViewsList.Add(qpModel);
+                if (!productList.Any(p => p.QuoteId == quote.Id)) {
+                    var qpModel = _mapper.Map<QuotesProductsView>(quote);
+                    qpModel.IsProduct = false;
+                    qpModel.IsDeletable = true;
+                    retQuotesProductsViewsList.Add(qpModel);
+                }               
             }
 
             return new CommandResponse<IEnumerable<QuotesProductsView>>(retQuotesProductsViewsList);

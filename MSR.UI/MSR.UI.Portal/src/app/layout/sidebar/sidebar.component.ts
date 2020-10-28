@@ -15,7 +15,8 @@ import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 declare let jQuery: any;
-//export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
+declare let Parsley: any;
+// export class AdhocComponent implements OnInit, AfterViewInit, OnDestroy {
 @Component({
   selector: '[sidebar]',
   templateUrl: './sidebar.template.html',
@@ -139,6 +140,24 @@ export class Sidebar implements OnDestroy {
   CSRToCreate: CSRJsonModel;
   showCSRDialog: boolean = false;
   subscriptions: Subscription[] = [];
+  CSRShippingMethods: any[] = [
+    {
+      value: 'UPS',
+      label: 'UPS',
+    },
+    {
+      value: 'FEDEX',
+      label: 'FEDEX',
+    },
+    {
+      value: 'USPS',
+      label: 'USPS',
+    },
+    {
+      value: 'Freight',
+      label: 'Freight',
+    }
+  ];
 
   constructor(private renderer: Renderer2, private el: ElementRef, public globals: Globals, private quoteService: QuoteService) {
     const subscription1 = this.globals.isBuyerObservable.subscribe(response => {
@@ -148,6 +167,15 @@ export class Sidebar implements OnDestroy {
     });
     this.subscriptions.push(subscription1);
     this.setAndGenerateMenu();
+  }
+
+  ngOnInit(): void {
+    let ctrl = this;
+    Parsley.on('field:error', function() {
+      if (ctrl.CSRFormValidErrors.findIndex(val => val === this.element.name) < 0) {
+        ctrl.CSRFormValidErrors.push(this.element.name);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -170,6 +198,13 @@ export class Sidebar implements OnDestroy {
       this.globals.showLoader(true);
       const requestData = new CreateQuoteRequest();
       requestData.customerId = this.globals.selectedCustomer.id;
+      const process = [];
+      this.CSRToCreate.Process.forEach(v => {
+        if (v.Contaminents) {
+          process.push(v);
+        }
+      });
+      this.CSRToCreate.Process = process;
       requestData.customerRequirementJson = JSON.stringify(this.CSRToCreate);
       this.quoteService.quotePost(env.apiVersion, requestData)
         .pipe(take(1))

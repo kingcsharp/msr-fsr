@@ -12691,7 +12691,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     duration?: number | undefined;
     durationType?: string | undefined;
     procedureStepType?: string | undefined;
-    procedureStepTypeId?: string | undefined;
+    procedureStepTypeId?: number | undefined;
     printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
@@ -12790,7 +12790,7 @@ export interface IProcedureStepModel {
     duration?: number | undefined;
     durationType?: string | undefined;
     procedureStepType?: string | undefined;
-    procedureStepTypeId?: string | undefined;
+    procedureStepTypeId?: number | undefined;
     printOrder?: number | undefined;
     predecessorStepId?: number | undefined;
     laborTime?: number | undefined;
@@ -12815,7 +12815,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepTypeId?: number;
+    procedureStepTypeId?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -12933,7 +12933,7 @@ export interface ICreateProcedureStepRequest {
     /** Gets or Sets DurationType */
     durationType?: string | undefined;
     /** Procedure Step Type */
-    procedureStepTypeId?: number;
+    procedureStepTypeId?: number | undefined;
     /** Gets or Sets PrintOrder */
     printOrder?: number | undefined;
     /** Gets or Sets PredecessorStepId */
@@ -15926,7 +15926,7 @@ export class ProductStepModel implements IProductStepModel {
     id?: number;
     productId?: number;
     procedureStepId?: number | undefined;
-    laborMinutes?: number | undefined;
+    laborMinutes!: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -16000,7 +16000,7 @@ export interface IProductStepModel {
     id?: number;
     productId?: number;
     procedureStepId?: number | undefined;
-    laborMinutes?: number | undefined;
+    laborMinutes: number;
     equipmentMinutes?: number | undefined;
     replacementCost?: number | undefined;
     utilization?: number | undefined;
@@ -16115,17 +16115,31 @@ export interface ICreateProductRequest {
 }
 
 export class ProductStep implements IProductStep {
+    /** Gets or Sets Id */
+    id?: number;
+    /** Gets or Sets ProductId */
     productId?: number | undefined;
+    /** Gets or Sets ProcedureStepId, if any. */
     procedureStepId?: number | undefined;
+    /** Gets or Sets LaborMinutes */
     laborMinutes!: number;
+    /** Gets or Sets EquipmentMinutes */
     equipmentMinutes?: number | undefined;
+    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
+    /** Gets or Sets Utilization */
     utilization?: number | undefined;
+    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
+    /** Gets or Sets EquipmentExpensePerMinute */
     equipmentExpensePerMinute?: number | undefined;
+    /** Gets or Sets RMAnnualRate */
     rmAnnualRate?: number | undefined;
+    /** Gets or Sets RMPerMinuteRate */
     rmPerMinuteRate?: number | undefined;
+    /** Title */
     title?: string | undefined;
+    /** PrintOrder */
     printOrder?: number | undefined;
 
     constructor(data?: IProductStep) {
@@ -16139,6 +16153,7 @@ export class ProductStep implements IProductStep {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.productId = _data["productId"];
             this.procedureStepId = _data["procedureStepId"];
             this.laborMinutes = _data["laborMinutes"];
@@ -16163,6 +16178,7 @@ export class ProductStep implements IProductStep {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["productId"] = this.productId;
         data["procedureStepId"] = this.procedureStepId;
         data["laborMinutes"] = this.laborMinutes;
@@ -16180,17 +16196,31 @@ export class ProductStep implements IProductStep {
 }
 
 export interface IProductStep {
+    /** Gets or Sets Id */
+    id?: number;
+    /** Gets or Sets ProductId */
     productId?: number | undefined;
+    /** Gets or Sets ProcedureStepId, if any. */
     procedureStepId?: number | undefined;
+    /** Gets or Sets LaborMinutes */
     laborMinutes: number;
+    /** Gets or Sets EquipmentMinutes */
     equipmentMinutes?: number | undefined;
+    /** Gets or Sets ReplacementCost */
     replacementCost?: number | undefined;
+    /** Gets or Sets Utilization */
     utilization?: number | undefined;
+    /** Gets or Sets UsefulLife */
     usefulLife?: number | undefined;
+    /** Gets or Sets EquipmentExpensePerMinute */
     equipmentExpensePerMinute?: number | undefined;
+    /** Gets or Sets RMAnnualRate */
     rmAnnualRate?: number | undefined;
+    /** Gets or Sets RMPerMinuteRate */
     rmPerMinuteRate?: number | undefined;
+    /** Title */
     title?: string | undefined;
+    /** PrintOrder */
     printOrder?: number | undefined;
 }
 
@@ -19105,6 +19135,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: WorkOrderPartModel[] | undefined;
+    stepText?: string | undefined;
 
     constructor(data?: IPortalWorkOrderView) {
         if (data) {
@@ -19160,6 +19191,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
                 for (let item of _data["subParts"])
                     this.subParts!.push(WorkOrderPartModel.fromJS(item));
             }
+            this.stepText = _data["stepText"];
         }
     }
 
@@ -19215,6 +19247,7 @@ export class PortalWorkOrderView implements IPortalWorkOrderView {
             for (let item of this.subParts)
                 data["subParts"].push(item.toJSON());
         }
+        data["stepText"] = this.stepText;
         return data; 
     }
 }
@@ -19255,6 +19288,7 @@ export interface IPortalWorkOrderView {
     percentageOfExpectedDurationTimeLoggedDenominator?: number | undefined;
     messages?: WorkOrderMessageModel[] | undefined;
     subParts?: WorkOrderPartModel[] | undefined;
+    stepText?: string | undefined;
 }
 
 export class WorkOrderMessageModel implements IWorkOrderMessageModel {
