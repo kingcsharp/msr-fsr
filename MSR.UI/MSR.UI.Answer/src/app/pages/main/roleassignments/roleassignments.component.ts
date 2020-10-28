@@ -3,7 +3,7 @@ import { MenuModel } from '../../../models/menu-model';
 import { RoleModel } from '../../../models/role-model';
 import { UpdatePermissionsEventModel } from '../../../models/update-permission-event-model';
 import { PermissionModel } from '../../../models/permission-model';
-import { MenuService, MenuItem, RoleService, Role, Permission, CreateMenuRoleMapRequest, UpdateMenuRoleMapRequest } from '../../../services/api.client.generated';
+import { MenuService, MenuItem, RoleService, Role, Permission, CreateMenuRoleMapRequest, UpdateMenuRoleMapRequest, ICreateMenuRoleMapRequest, IUpdateProcedureStepRequest, IUpdateMenuRoleMapRequest } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
@@ -267,46 +267,62 @@ export class RoleassignmentsComponent implements OnInit {
 
   savePendingChanges() {
 
-    this.pendingPermissions.forEach(pendingPermission => {
+    let roleChanges = this.pendingPermissions.filter(s => s.permissionModule === null);
+    let permissionChanges = this.pendingPermissions.filter(s => s.permissionModule !== null);
 
-      this.globals.showLoader(true);
-      if (pendingPermission.permissionModule == null) {
+    roleChanges.map(roleChange => {
 
-        if (pendingPermission.event === 'add') {
+      if (roleChange.event === 'add') {
 
-          let createMenuRoleMapRequest = new CreateMenuRoleMapRequest();
-          createMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
-          createMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
+        let createMenuRoleMapRequest = new CreateMenuRoleMapRequest({
+          menuId: roleChange.menuModule.id,
+          roleId: roleChange.roleModule.id
+        } as ICreateMenuRoleMapRequest);
 
-          this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
+        this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
 
-          }));
-
-        } else {
-
-          this.menuService.roleDelete(pendingPermission.menuModule.id, pendingPermission.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
-
-          }));
-
-        }
+        }));
 
       } else {
 
-        let updateMenuRoleMapRequest = new UpdateMenuRoleMapRequest();
-        updateMenuRoleMapRequest.menuId = pendingPermission.menuModule.id;
-        updateMenuRoleMapRequest.roleId = pendingPermission.roleModule.id;
-        updateMenuRoleMapRequest.canActivate = pendingPermission.roleModule.permissions.find(s => s.name === 'Activate').value;
-        updateMenuRoleMapRequest.canApprove = pendingPermission.roleModule.permissions.find(s => s.name === 'Approve').value;
-        updateMenuRoleMapRequest.canCreate = pendingPermission.roleModule.permissions.find(s => s.name === 'Create').value;
-        updateMenuRoleMapRequest.canDelete = pendingPermission.roleModule.permissions.find(s => s.name === 'Delete').value;
-        updateMenuRoleMapRequest.canEdit = pendingPermission.roleModule.permissions.find(s => s.name === 'Edit').value;
-        updateMenuRoleMapRequest.canRead = pendingPermission.roleModule.permissions.find(s => s.name === 'Read').value;
-        this.menuService.rolePatch(env.apiVersion, updateMenuRoleMapRequest).subscribe(responseHandler((response) => {
+        this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
 
         }));
 
       }
 
+    });
+
+    let uniquePermissionChanges = new Array<UpdateMenuRoleMapRequest>();
+
+    permissionChanges.map(permissionChange => {
+
+      let uniquePermissionChangeIndex = uniquePermissionChanges.findIndex(s => s.menuId === permissionChange.menuModule.id && s.roleId === permissionChange.roleModule.id);
+
+      if (uniquePermissionChangeIndex === -1) {
+
+        let updateMenuRoleMapRequest = new UpdateMenuRoleMapRequest({
+          menuId: permissionChange.menuModule.id,
+          roleId: permissionChange.roleModule.id,
+          canActivate: permissionChange.roleModule.permissions.find(s => s.name === 'Activate').value,
+          canApprove: permissionChange.roleModule.permissions.find(s => s.name === 'Approve').value,
+          canCreate: permissionChange.roleModule.permissions.find(s => s.name === 'Create').value,
+          canDelete: permissionChange.roleModule.permissions.find(s => s.name === 'Delete').value,
+          canEdit: permissionChange.roleModule.permissions.find(s => s.name === 'Edit').value,
+          canRead: permissionChange.roleModule.permissions.find(s => s.name === 'Read').value
+        } as IUpdateMenuRoleMapRequest);
+
+        uniquePermissionChanges.push(updateMenuRoleMapRequest);
+
+      }
+
+    });
+
+
+    uniquePermissionChanges.map(uniquePermissionChange => {
+      this.menuService.rolePatch(env.apiVersion, uniquePermissionChange).subscribe(responseHandler(() => {
+
+      }));
     });
 
     this.clearPendingChanges();
