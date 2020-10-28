@@ -269,21 +269,71 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return _mapper.Map<Domain.Models.UserModel>(user);
         }
 
+        public ICollection<UserRole> LoadChildRoles(ICollection<UserRole> userRoles, List<RoleChildRoleMap> childRoles)
+        {
+            var userRolesAndChildRoles = new List<UserRole>();
+            foreach (var userRole in userRoles)
+            {
+                userRolesAndChildRoles.Add(new UserRole()
+                {
+                    Id = userRole.Id,
+                    Role = new EntityFramework.Entities.Role()
+                    {
+                        Id = userRole.RoleId
+                    },
+                    RoleId = userRole.RoleId
+                });
+                this.GetAllChildrenOfRoleId(userRole.RoleId, userRolesAndChildRoles, userRoles, childRoles);
+            }
+            return userRolesAndChildRoles;
+        }
+
+        public void GetAllChildrenOfRoleId(int roleId, ICollection<UserRole> userRolesAndChildRoles, ICollection<UserRole> userRoles, List<RoleChildRoleMap> childRoles)
+        {
+            var foundChildRoles = childRoles.Where(x => x.ParentRoleId == roleId).ToList();
+            if (!foundChildRoles.Any())
+            {
+                return;
+            }
+            else
+            {
+                foreach (var childRole in foundChildRoles)
+                {
+                    if (childRole.ChildRoleId.HasValue)
+                    {
+                        var childRoleId = childRole.ChildRoleId.Value;
+                        userRolesAndChildRoles.Add(new UserRole()
+                        {
+                            Id = childRole.Id,
+                            Role = new EntityFramework.Entities.Role()
+                            {
+                                Id = childRoleId
+                            },
+                            RoleId = childRoleId
+                        });
+                        this.GetAllChildrenOfRoleId(childRoleId, userRolesAndChildRoles, userRoles, childRoles);
+                    }
+                }
+            }
+        }
+
+
         public async Task<Domain.Models.UserModel> GetLoggedInUserData(int Id)
         {
-            var user = await _unitOfWork.Users.Query().Include(x=>x.Location).Include(x => x.Roles).ThenInclude(x => x.Role)
+            var childRoles = await _unitOfWork.RoleChildRoleMaps.Query().ToListAsync();
+            var user = await _unitOfWork.Users.Query().Include(x => x.Location).Include(x => x.Roles).ThenInclude(x => x.Role)
                 .Where(x => x.Id == CurrentUser.GetId()).Select(x => new User()
                 {
-                    CustomerId=x.CustomerId,
-                    IsAnswerUser=x.IsAnswerUser,
-                    FirstName=x.FirstName,
-                    LastName=x.LastName,
-                    Email=x.Email,
-                    LocationId=x.LocationId,
-                    Location=x.Location,
-                    Phone=x.Phone,
-                    UserName=x.UserName,
-                    TimeZoneId=x.TimeZoneId,
+                    CustomerId = x.CustomerId,
+                    IsAnswerUser = x.IsAnswerUser,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Email = x.Email,
+                    LocationId = x.LocationId,
+                    Location = x.Location,
+                    Phone = x.Phone,
+                    UserName = x.UserName,
+                    TimeZoneId = x.TimeZoneId,
                     Roles = x.Roles.Select(x => new UserRole()
                     {
                         Id = x.Id,
@@ -299,6 +349,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     PasswordHash = x.PasswordHash,
                     PasswordSalt = x.PasswordSalt
                 }).FirstOrDefaultAsync();
+
+            user.Roles = this.LoadChildRoles(user.Roles, childRoles);
 
             var loadRefs = await _unitOfWork.MenuRoles.Query()
                 .Include(x => x.MenuRolePermission)
