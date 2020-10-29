@@ -265,33 +265,7 @@ export class RoleassignmentsComponent implements OnInit {
 
   }
 
-  savePendingChanges() {
-
-    let roleChanges = this.pendingPermissions.filter(s => s.permissionModule === null);
-    let permissionChanges = this.pendingPermissions.filter(s => s.permissionModule !== null);
-
-    roleChanges.map(roleChange => {
-
-      if (roleChange.event === 'add') {
-
-        let createMenuRoleMapRequest = new CreateMenuRoleMapRequest({
-          menuId: roleChange.menuModule.id,
-          roleId: roleChange.roleModule.id
-        } as ICreateMenuRoleMapRequest);
-
-        this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
-
-        }));
-
-      } else {
-
-        this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
-
-        }));
-
-      }
-
-    });
+  generateUniqueUpdateRoleModelRequests(permissionChanges): Array<UpdateMenuRoleMapRequest>{
 
     let uniquePermissionChanges = new Array<UpdateMenuRoleMapRequest>();
 
@@ -318,8 +292,43 @@ export class RoleassignmentsComponent implements OnInit {
 
     });
 
+    return uniquePermissionChanges;
 
-    uniquePermissionChanges.map(uniquePermissionChange => {
+  }
+
+  savePendingChanges() {
+
+    let roleChanges = this.pendingPermissions.filter(s => s.permissionModule === null);
+    let permissionChanges = this.pendingPermissions.filter(s => s.permissionModule !== null);
+
+    let uniqueUpdateRoleModelRequests = this.generateUniqueUpdateRoleModelRequests(permissionChanges);
+
+
+    roleChanges.map(roleChange => {
+
+      if (roleChange.event === 'add') {
+
+        let createMenuRoleMapRequest = new CreateMenuRoleMapRequest({
+          menuId: roleChange.menuModule.id,
+          roleId: roleChange.roleModule.id
+        } as ICreateMenuRoleMapRequest);
+
+        this.menuService.rolePost(env.apiVersion, createMenuRoleMapRequest).subscribe(responseHandler((response) => {
+
+        }));
+
+      } else {
+ 
+        this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
+
+        }));
+
+      }
+
+    });
+
+
+    uniqueUpdateRoleModelRequests.map(uniquePermissionChange => {
       this.menuService.rolePatch(env.apiVersion, uniquePermissionChange).subscribe(responseHandler(() => {
 
       }));
