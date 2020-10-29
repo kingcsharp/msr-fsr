@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
 import {
   ReportService, ReportModel
@@ -26,11 +26,12 @@ import { ChartInfo } from '../../../app/models/lib/ChartInfo';
   styleUrls: ['./grid.component.scss']
 })
 export class GridComponent implements OnInit {
-
   @Input() gridSaved: GridSaved;
   @Input() showReport: boolean;
+  @Input() saveToLocalStorage: boolean;
   @Input() data;
   @Input() reportInfo: ReportModel;
+  @Output() expandRowClick = new EventEmitter<any>();
   showCharts: boolean = false;
   hasChart: boolean = false;
   Highcharts: typeof Highcharts = Highcharts;
@@ -39,6 +40,7 @@ export class GridComponent implements OnInit {
   gridData: any = [];
   privileges = EnumPrivilege;
   enumColumnType = EnumColumnType;
+  // expanded: boolean = false;
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
     private reportCubeService: ReportCubeService) {
@@ -46,7 +48,16 @@ export class GridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCubeReport(this.data, this.reportInfo);
+    if (this.saveToLocalStorage === undefined) {
+      this.saveToLocalStorage = true;
+    }
+    this.getReport(this.data, this.reportInfo);
+  }
+
+  expandRow(expanded, row) {
+    if (!expanded) {
+      this.expandRowClick.emit(row);
+    }
   }
 
   handleFilter(ev, filteredData) {
@@ -55,17 +66,7 @@ export class GridComponent implements OnInit {
     }
 
     this.globals.showLoader(true);
-    let objFiltered = {};
-    if (Object.keys(filteredData.filters).length > 0) {
-      filteredData.filteredValue.forEach(element => {
-        objFiltered[element.elemKey] = element;
-      });
-    } else {
-      filteredData.value.forEach(element => {
-        objFiltered[element.elemKey] = element;
-      });
-    }
-    this.chartInfo.chartData = objFiltered;
+    this.chartInfo.gridData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
 
     this.showCharts = false;
     setTimeout(() => {
@@ -77,8 +78,8 @@ export class GridComponent implements OnInit {
     }, 300);
   }
 
-  getCubeReport(data: any, reportInfo?: ReportModel) {
-    if (reportInfo === undefined) {
+  getReport(data: any, reportInfo?: ReportModel) {
+    if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
       this.gridData = data;
     } else {
       this.globals.showLoader(true);

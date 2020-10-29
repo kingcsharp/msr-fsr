@@ -1,9 +1,17 @@
-<h1 class="page-title" data-cy="page-title">
-    <i class="fas fa-clock-o"></i>
-    Adhoc-Reports
-</h1>
+<div class="row">
+    <div class="col-10">
+        <h1 class="page-title" data-cy="page-title">
+            <i class="fas fa-clock-o"></i>
+            Adhoc-Reports
+        </h1>
+    </div>
+    <div class="col-2">
+        <a [routerLink]="['../']" class="btn btn-warning float-right mt-3 rounded-0"><i
+                class="fas fa-step-backward"></i>
+            Back to Reports List</a>
+    </div>
+</div>
 <widget>
-    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport"
-        [reportInfo]="reportInfo">
+    <app-grid *ngIf="showReport" [gridSaved]="gridSaved" [showReport]="showReport" [reportInfo]="reportInfo">
     </app-grid>
 </widget>

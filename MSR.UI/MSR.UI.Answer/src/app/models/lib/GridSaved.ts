@@ -1,3 +1,4 @@
+import { ElementRef } from '@angular/core';
 import { ColumnsSaved } from './ColumnsSaved';
 
 export interface IGridSaved {
@@ -5,12 +6,24 @@ export interface IGridSaved {
     storageId?: string | undefined;
     version?: string | undefined;
     visibleColumns?: number | undefined;
+    expandRows?: boolean | undefined;
+    expandRowProperty?: string | undefined;
+    expandRowsTemplate?: ElementRef | undefined;
+    showMyViewsFeature?: boolean | undefined;
+    paginator?: boolean | undefined;
+    gridClass?: string | undefined;
 }
 export class GridSaved implements IGridSaved {
     columnsSaved?: ColumnsSaved[] | undefined;
     version?: string | undefined;
     storageId?: string | undefined;
     visibleColumns?: number | undefined;
+    expandRows?: boolean | undefined;
+    expandRowProperty?: string | undefined;
+    expandRowsTemplate?: ElementRef | undefined;
+    showMyViewsFeature?: boolean = true;
+    paginator?: boolean = true;
+    gridClass?: string | undefined;
 
     constructor(data?: IGridSaved) {
         if (data) {
@@ -34,6 +47,13 @@ export class GridSaved implements IGridSaved {
         if (_data) {
             this.storageId = _data['storageId'];
             this.version = _data['version'];
+            this.expandRows = _data['expandRows'];
+            this.expandRowsTemplate = _data['expandRowsTemplate'];
+            this.showMyViewsFeature = _data['showMyViewsFeature'];
+            this.paginator = _data['paginator'];
+            this.gridClass = _data['gridClass'];
+            this.expandRowProperty = _data['expandRowProperty'];
+
 
             if (Array.isArray(_data['columnsSaved'])) {
                 this.columnsSaved = [] as any;
@@ -52,6 +72,13 @@ export class GridSaved implements IGridSaved {
         data['storageId'] = this.storageId;
         data['version'] = this.version;
         data['visibleColumns'] = this.visibleColumns;
+        data['expandRows'] = this.expandRows;
+        data['expandRowsTemplate'] = this.expandRowsTemplate;
+        data['showMyViewsFeature'] = this.showMyViewsFeature;
+        data['paginator'] = this.paginator;
+        data['gridClass'] = this.gridClass;
+        data['expandRowProperty'] = this.expandRowProperty;
+
 
         if (Array.isArray(this.columnsSaved)) {
             data['columnsSaved'] = [];
