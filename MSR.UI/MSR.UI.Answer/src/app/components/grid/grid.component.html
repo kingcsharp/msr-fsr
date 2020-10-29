@@ -11,7 +11,7 @@
         <div class="pull-left">
             <h3 *ngIf="reportInfo.name.length > 0">
                 <span class="fw-semi-bold">{{reportInfo.name}}</span>
-                <span *ngIf="reportInfo.subtitle !== undefiend">-</span> {{reportInfo.subtitle}}</h3>
+                <span *ngIf="reportInfo.subtitle !== undefiend"> -</span> {{reportInfo.subtitle}}</h3>
         </div>
         <div *ngIf="gridSaved.showMyViewsFeature" class="pull-right">
             <grid-options [(defaultColumns)]="gridSaved.columnsSaved" [gridStorageId]="gridSaved.storageId"

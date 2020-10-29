@@ -100,6 +100,22 @@ export class ReportCubeService {
                     new ColumnsSaved({ id: 'lastupdatedon', label: 'Updated On', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'DD-MM-YYYY' }),
                     new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: true, type: this.enumColumnType.String })
                 ];
+            case 'MonitorsbyWorkOrder':
+                return [
+                    new ColumnsSaved({ id: 'description', label: 'Description', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'monitortype', label: 'Monitor Type', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'customerid', label: 'Customer Id', visible: false, type: this.enumColumnType.Number }),
+                    new ColumnsSaved({ id: 'cyclecount', label: 'Cycle Count', visible: false, type: this.enumColumnType.Number, styles: { 'width': '4rem' } }),
+                    new ColumnsSaved({ id: 'locationname', label: 'Location', visible: false, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'partnumber', label: 'Part #', visible: false, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'partname', label: 'Part Names', visible: false, type: this.enumColumnType.StringArray, dropdownHeader: true, multipleValues: true }),
+                    new ColumnsSaved({ id: 'lastupdatedby', label: 'Updated By', visible: false, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'value', label: 'Result', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'result', label: 'Passing', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'workordername', label: 'WO Name', visible: true, type: this.enumColumnType.String }),
+                    new ColumnsSaved({ id: 'lastupdatedon', label: 'Task Completed', visible: true, type: this.enumColumnType.Date, isRanged: true, styles: { 'width': '8rem' }, formattingAngular: 'dd-MM-yyyy', formattingMoment: 'DD-MM-YYYY' }),
+                    new ColumnsSaved({ id: 'serialnumber', label: 'Serial #', visible: true, type: this.enumColumnType.String })
+                ];
             case 'CombinedFinancialDatabyWorkOrder':
                 return [
                     new ColumnsSaved({ id: 'wonumber', label: 'WO Item', visible: true, type: this.enumColumnType.String }),
@@ -284,6 +300,18 @@ export class ReportCubeService {
                     }
                 });
                 return this.getResultDataAndChart(chartInfoDicworkInProcessbyWorkOrder);
+                break;
+            case 'MonitorsbyWorkOrder':
+                const gridDataMonitorsbyWorkOrder = data.map(elem => {
+                    elem = this.removeObjectsPropertyPrefix(elem);
+                    elem.elemKey = elem['lastupdatedon'] + this.splitChars + this.setName(elem, 'partnumber', 'serialnumber', '-');
+                    elem.isValidForChart = this.isValidRowForChart(elem, 'partnumber', 'serialnumber');
+                    elem.cyclecount = this.getCycleCountNr(elem, 'cyclecount');
+                    elem.lastupdatedon = moment(elem['lastupdatedon']);
+                    elem.partname = [{ name: elem['partname'], id: elem['partname'] }];
+                    return elem;
+                });
+                return gridDataMonitorsbyWorkOrder;
                 break;
             case 'WorkOrdersNotInvoicedbyWorkOrder':
                 const workOrdersNotInvoicedbyWorkOrder = data.filter(x => x['CubeFinancial.invoicedate'] === undefined || x['CubeFinancial.invoicedate'] === null);
