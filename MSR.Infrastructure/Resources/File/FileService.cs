@@ -110,15 +110,16 @@ namespace MSR.Infrastructure.Resources.Services
             return files;
         }
 
-        public async Task<FileModel> CreateFileAsync(string entityName, int? pEntityId, FileModel file)
+        /// <summary>
+        /// Upload a file and create the File entity
+        /// </summary>
+        /// <param name="entityName">Entity name (usually a table name)</param>
+        /// <param name="entityId">Primary key of the entity, this can be 0 for upload-only</param>
+        /// <param name="file">File object containing base64 url-encoded data</param>
+        /// <returns></returns>
+        public async Task<FileModel> CreateFileAsync(string entityName, int entityId, FileModel file)
         {
             var tableName = mapEntityToTable(entityName);
-            int entityId = 0;
-
-            if (pEntityId.HasValue)
-            {
-                entityId = pEntityId.Value;
-            }
 
             var url = await _fileUploader.UploadFile(file, tableName, entityId);
 
@@ -135,7 +136,7 @@ namespace MSR.Infrastructure.Resources.Services
             // Only add link if we have an entity to link it to.  This
             // allows us to upload a file while the actual attachment
             // is pending approval.
-            if (pEntityId.HasValue)
+            if (entityId > 0)
             {
                 var fileEntityMap = new FileEntityMap()
                 {

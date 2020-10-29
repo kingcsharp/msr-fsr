@@ -245,7 +245,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     {
                         FileModel newFile = await _fileService.CreateFileAsync(
                             nameof(EntityFramework.Entities.ProcedureStep),
-                            null, // will be attached after checking perms
+                            0, // will be attached after checking perms
                             file
                         );
                         command.ReferenceFileIds.Add(newFile.FileId.Value);
