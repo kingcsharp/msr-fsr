@@ -280,7 +280,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     Role = new EntityFramework.Entities.Role()
                     {
                         Id = userRole.RoleId,
-                        Name = userRole.Role.Name
+                        Name = userRole.Role?.Name
                     },
                     RoleId = userRole.RoleId
                 });
