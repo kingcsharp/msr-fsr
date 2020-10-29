@@ -37,16 +37,16 @@ export class LoginService {
 
   isAuthenticated() {
     const token = localStorage.getItem('token');
-    // We check if app runs with backend mode
-    if (!this.config.isBackend && token) {
-      return true;
-    }
     if (!token) {
       return;
     }
-    const date = new Date().getTime() / 1000;
-    const data = jwt.decodeToken(token);
-    return date < data.exp;
+    const tokenExpired = jwt.isTokenExpired(token);
+    if (tokenExpired) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+    return !tokenExpired;
   }
 
   async loginUser(creds) {
@@ -74,8 +74,10 @@ export class LoginService {
       email: this.config.auth.email
     };
     localStorage.setItem('token', token);
+    this.isFetching = true;
     this.userService.loggedInUser(env.apiVersion).pipe(take(1))
       .subscribe((result) => {
+        this.isFetching = false;
         Object.assign(user, result.object);
         const decodedToken = jwt.decodeToken(token);
         user.approvalPrivileges = JSON.parse(decodedToken.ApprovalPrivileges);
