@@ -5,6 +5,7 @@ using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
+using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
@@ -12,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using AutoMapper.Mappers;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -80,7 +83,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
-                Procedure procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
+                var procedure = _mapper.Map<EntityFramework.Entities.Procedure>(command);
                 await _unitOfWork.LogApprovalTransaction(procedure, procedure.Id);
 
                 var created = _unitOfWork.Procedures.Add(procedure);
@@ -94,6 +97,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
             else
             {
                 var approval = _mapper.Map<ProcedureApproval>(command);
+                approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
+                approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -131,6 +137,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
             else
             {
                 var approval = _mapper.Map<ProcedureApproval>(command);
+                approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
+                approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -166,13 +175,13 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     .ToListAsync();
             }
             var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
-            
+
             result.ForEach(procedureStep =>
             {
                 procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
             });
-            
-            
+
+
             return result;
         }
 
@@ -188,7 +197,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 return _mapper.Map<Domain.Models.ProcedureStepModel>(procedureStepEntity);
             }
 
+            var currentProcedure = await _unitOfWork.Procedures
+                .Query()
+                .FirstAsync(x => x.Id == command.procedureId);
+
+            int procApprovalId = await FlagProcedureForApproval(currentProcedure, command.procedureId);
+
             var procedureStepApprovalEntity = _mapper.Map<ProcedureStepApproval>(command);
+            procedureStepApprovalEntity.ProcedureApprovalId = procApprovalId;
             await _unitOfWork.ProcedureStepApprovals.AddAsync(procedureStepApprovalEntity);
             await _unitOfWork.SaveChangesAsync();
 
@@ -197,9 +213,12 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<Domain.Models.ProcedureStepModel> UpdateProcedureStepAsync(UpdateProcedureStep command)
         {
-            var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false, i =>
-                i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
-            _unitOfWork.ProcedureSteps.LoadCollection(current, "ProcedureStepRoles");
+            ProcedureStep current = await _unitOfWork.ProcedureSteps
+                .Query()
+                .Include(x => x.StepType)
+                .Include(x => x.ReferenceFiles)
+                .FirstOrDefaultAsync(i =>
+                    i.Id == command.procedureStepId && i.ProcedureId == command.procedureId);
 
             if (current is null)
             {
@@ -208,8 +227,28 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     DomainError.NotFound);
             }
 
+            _unitOfWork.ProcedureSteps.LoadCollection(current, "ProcedureStepRoles");
+
             var user = await _unitOfWork.GetLoggedInUserAsync();
             Domain.Models.ProcedureStepModel ret;
+
+            // Upload any new files, but do not attach yet.
+            if (command.ReferenceFiles != null &&
+                command.ReferenceFiles.Count > 0)
+            {
+                if (command.ReferenceFileIds == null) {
+                    command.ReferenceFileIds = new List<int>();
+                }
+                foreach (FileModel file in command.ReferenceFiles)
+                {
+                    FileModel newFile = await _fileService.CreateFileAsync(
+                        nameof(EntityFramework.Entities.ProcedureStep),
+                        0, // will be attached after checking perms
+                        file
+                    );
+                    command.ReferenceFileIds.Add(newFile.FileId.Value);
+                }
+            }
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.ProcedureApproval))
             {
@@ -225,6 +264,47 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
                 // update EF object with update command data
                 var step = _mapper.Map(command, current);
+
+                // If we're updating the file list, detach and re-attach
+                if (command.ReferenceFileIds.Count > 0)
+                {
+                    await _fileService.DetachFilesAsync(
+                        nameof(EntityFramework.Entities.ProcedureStep),
+                        current.Id);
+
+                    foreach(int fileId in command.ReferenceFileIds)
+                    {
+                        await _fileService.MapUploadedFileAsync(
+                            nameof(EntityFramework.Entities.ProcedureStep),
+                            current.Id, fileId
+                        );
+                    }
+                }
+
+                if (command.ReferenceDocumentIds != null &&
+                    command.ReferenceDocumentIds.Count > 0)
+                {
+                    List<int> currentIds = await _unitOfWork.DocumentEntityMap
+                        .Query()
+                        .Where(x => x.EntityId == current.Id &&
+                            x.EntityTableName.Equals(nameof(EntityFramework.Entities.ProcedureStep)))
+                        .Select(x => x.Id)
+                        .ToListAsync();
+                    foreach (int id in currentIds)
+                    {
+                        _unitOfWork.DocumentEntityMap.Delete(false, id);
+                    }
+                    foreach(int newDocId in command.ReferenceDocumentIds)
+                    {
+                        var ndem = new DocumentEntityMap() {
+                            EntityId = current.Id,
+                            EntityTableName = nameof(EntityFramework.Entities.ProcedureStep),
+                            DocumentId = newDocId
+                        };
+                        await _unitOfWork.DocumentEntityMap.AddAsync(ndem);
+                    }
+                    await _unitOfWork.SaveChangesAsync();
+                }
 
                 if (step.ProcedureStepRoles != null)
                 {
@@ -242,9 +322,19 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             else
             {
+                _unitOfWork.ProcedureSteps.LoadReference(current, x => x.Procedure);
+                int procApprovalId = await FlagProcedureForApproval(
+                    current.Procedure, current.ProcedureId
+                );
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
+                approval.ProcedureApprovalId = procApprovalId;
 
-                // TODO: how to store changes in roles pending approval?
+                string json = JsonConvert.SerializeObject(new {
+                    roleIds = command.Roles.Select(x => x.Id).ToList(),
+                    fileIds = command.ReferenceFileIds,
+                    documentIds = command.ReferenceDocumentIds,
+                });
+                approval.ApprovalJSON = json;
 
                 _unitOfWork.ProcedureStepApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
@@ -260,7 +350,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             var current = await _unitOfWork.Procedures.FirstOrDefaultAsync(false, i => i.Id == command.procedureID);
             if (current is null)
             {
-                throw new DomainException($"{nameof(Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
+                throw new DomainException($"{nameof(EntityFramework.Entities.Procedure)} not found with ID: {command.procedureID}", DomainError.NotFound);
             }
             if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete))
             {
@@ -323,6 +413,36 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"{nameof(ProcedureStepType)} not found with ID: {command.Id}", DomainError.NotFound);
             }
             return current.Select(x => _mapper.Map<Domain.Models.ProcedureStepTypeModel>(x)).ToList();
+        }
+
+        // Add the procedure approval record if it doesn't already exist.  Used
+        // to wrap up all changes to steps in a single approval on the workflow screen.
+        private async Task<int> FlagProcedureForApproval(EntityFramework.Entities.Procedure currentProcedure, int procedureId)
+        {
+            var existing = _unitOfWork.ProcedureApprovals
+                .Query()
+                .Where(x => x.ProcedureId == procedureId);
+            int procedureApprovalId;
+
+            if (!existing.Any())
+            {
+                var approval = _mapper.Map<ProcedureApproval>(currentProcedure);
+                approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
+                approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+
+                await _unitOfWork.ProcedureApprovals.AddAsync(approval);
+                await _unitOfWork.SaveChangesAsync();
+
+                procedureApprovalId = approval.Id;
+            }
+            else
+            {
+                procedureApprovalId = existing.FirstOrDefault().Id;
+
+            }
+
+            return procedureApprovalId;
         }
     }
 }

@@ -68,7 +68,7 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToCreateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>("Procedure step successfully added");
+            return ret.ToOkObjectResponse<ProcedureStepModel>(await DetermineStepResponseMessage(ret, "add"));
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureStep() { procedureID = id, procedureStepID = stepid };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse("Procedure step successfully deleted");
+            return ret.ToOkObjectResponse(await DetermineStepResponseMessage(ret, "delete"));
         }
 
         /// <summary>
@@ -165,9 +165,22 @@ namespace MSR.Answer.API.V1.Controllers
             var command = body.ToUpdateProcedureStepCommand();
             command.procedureId = id;
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse<ProcedureStepModel>("Procedure step successfully updated");
+            return ret.ToOkObjectResponse<ProcedureStepModel>(await DetermineStepResponseMessage(ret, "update"));
         }
 
+        private async Task<string> DetermineStepResponseMessage(ICommandResponse commandResponse, string action)
+        {
+            var procStep = commandResponse.ToEntity<ProcedureStepModel>();
+            var response = $"Procedure step {action} Successful";
+
+            if (!string.IsNullOrWhiteSpace(procStep.ApprovalStatus))
+            {
+                await SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
+                response = $"Procedure step {action} Pending Approval";
+            }
+
+            return response;
+        }
 
     }
 }

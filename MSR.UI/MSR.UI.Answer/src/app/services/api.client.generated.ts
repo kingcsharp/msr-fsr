@@ -12738,6 +12738,7 @@ export interface IAuditActionResultOfProcedureStepModel extends IAuditActionResu
 }
 
 export class ProcedureStepModel implements IProcedureStepModel {
+    approvalStatus?: string | undefined;
     id?: number;
     procedure?: Procedure | undefined;
     procedureId?: number | undefined;
@@ -12768,6 +12769,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
 
     init(_data?: any) {
         if (_data) {
+            this.approvalStatus = _data["approvalStatus"];
             this.id = _data["id"];
             this.procedure = _data["procedure"] ? Procedure.fromJS(_data["procedure"]) : <any>undefined;
             this.procedureId = _data["procedureId"];
@@ -12806,6 +12808,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["approvalStatus"] = this.approvalStatus;
         data["id"] = this.id;
         data["procedure"] = this.procedure ? this.procedure.toJSON() : <any>undefined;
         data["procedureId"] = this.procedureId;
@@ -12837,6 +12840,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
 }
 
 export interface IProcedureStepModel {
+    approvalStatus?: string | undefined;
     id?: number;
     procedure?: Procedure | undefined;
     procedureId?: number | undefined;

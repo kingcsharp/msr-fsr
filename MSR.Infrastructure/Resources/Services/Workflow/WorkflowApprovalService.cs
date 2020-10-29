@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Views;
+using System.Reflection;
 
 namespace MSR.Infrastructure.Resources.Services
 {
@@ -25,13 +26,15 @@ namespace MSR.Infrastructure.Resources.Services
         private readonly IPartService _partService;
         private readonly IFileService _fileService;
         private readonly IProductService _productService;
+        private readonly IProcedureService _procedureService;
 
         public WorkflowApprovalService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IPartService partService,
             IFileService fileService,
-            IProductService productService
+            IProductService productService,
+            IProcedureService procedureService
             )
         {
             _unitOfWork = unitOfWork;
@@ -39,6 +42,7 @@ namespace MSR.Infrastructure.Resources.Services
             _partService = partService;
             _fileService = fileService;
             _productService = productService;
+            _procedureService = procedureService;
         }
 
         public async Task<PendingApprovalModel> CreateApprovalAsync(PostApprovalModel command)
@@ -85,18 +89,7 @@ namespace MSR.Infrastructure.Resources.Services
                     result = partApproval;
                     break;
                 case EnumApprovalTables.ProcedureApproval:
-                    var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var procedure = await _unitOfWork.Procedures.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == command.Id);
-                    procedureApproval.Status = status;
-                    _mapper.Map(procedureApproval, procedure);
-                    _unitOfWork.ProcedureApprovals.Update(procedureApproval);
-                    procedure.Revision++;
-                    _unitOfWork.Procedures.Update(procedure);
-                    _unitOfWork.SaveChanges();
-                    await _unitOfWork.LogApprovalTransaction(procedureApproval, procedureApproval.Id, status.Name, command.Comments);
-                    result = procedureApproval;
+                    result = await ApproveProcedure(command, status);
                     break;
                 case EnumApprovalTables.ProductApproval:
                     result = await ApproveProduct(command, status);
@@ -238,20 +231,9 @@ namespace MSR.Infrastructure.Resources.Services
                     partApprovalChanges.AddRow("Maximum Cycles", part?.MaximumCycles, partApproval.MaximumCycles);
                     return partApprovalChanges;
                 case EnumApprovalTables.ProcedureApproval:
-                    var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
-                    var procedure = await _unitOfWork.Procedures.Query()
-                        .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == procedureApproval.ProcedureId);
-                    var procedureApprovalChanges = new PendingApprovalPopoverModel();
-                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
-                    procedureApprovalChanges.AddRow("Duration Type", procedure?.DurationType, procedureApproval.DurationType);
-                    procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
-                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
-                    procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
-                    this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
-                    return procedureApprovalChanges;
+                    return await GetProcedureApprovalChanges(command);
                 case EnumApprovalTables.ProductApproval:
-                    return await getProductApprovalChanges(command);
+                    return await GetProductApprovalChanges(command);
                 case EnumApprovalTables.PurchaseOrderApproval:
                     var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == purchaseOrderApproval.PurchaseOrderId);
@@ -321,31 +303,103 @@ namespace MSR.Infrastructure.Resources.Services
             }
         }
 
+        private List<string> Compare(object a, object b)
+        {
+            List<string> changes = new List<string>();
+            Type aType = a.GetType();
+            MethodInfo[] aMethods = aType.GetMethods();
+
+            Type bType = b.GetType();
+            MethodInfo[] bMethods = bType.GetMethods();
+            Dictionary<string, MethodInfo> bMethodMap =
+                new Dictionary<string, MethodInfo>();
+
+            foreach (MethodInfo m in bMethods)
+            {
+                if (m.Name.Contains("CreatedBy") ||
+                    m.Name.Contains("UpdatedBy") ||
+                    m.Name.Equals("get_Id") ||
+                    !m.Name.StartsWith("get"))
+                {
+                    continue;
+                }
+
+                int intType = 0;
+                string stringType = "";
+                Type returnType = Nullable.GetUnderlyingType(m.ReturnType);
+
+                if (returnType == null)
+                {
+                    returnType = m.ReturnType;
+                }
+
+                if (returnType.Equals(intType.GetType()) ||
+                    returnType.Equals(stringType.GetType()))
+                {
+                    bMethodMap.Add(m.Name, m);
+                }
+            }
+
+            foreach (MethodInfo aMethod in aMethods)
+            {
+                if (bMethodMap.ContainsKey(aMethod.Name))
+                {
+                    MethodInfo bMethod = bMethodMap[aMethod.Name];
+                    object bValue = bMethod.Invoke(b, null);
+                    object aValue = aMethod.Invoke(a, null);
+                    if (aValue == null && bValue == null)
+                    {
+                        continue;
+                    }
+                    if (aValue == null)
+                    {
+                        aValue = new {};
+                    }
+                    if (!aValue.Equals(bValue))
+                    {
+                        string paramName = aMethod.Name.Replace("get_","");
+                        changes.Add($"{paramName} '{aValue}' to '{bValue}'");
+                    }
+                }
+            }
+            return changes;
+        }
+
+
         private void GetProcedureStepApprovals(PendingApprovalPopoverModel pendingApprovalModel, ICollection<ProcedureStep> procSteps, ICollection<ProcedureStepApproval> procStepApprovals)
         {
-            var from = "";
-            foreach (var procedure in procSteps)
+            foreach (ProcedureStepApproval newStep in procStepApprovals)
             {
-                from += procedure.Title + ",";
-            }
-            if (from.Length > 1)
-            {
-                from = from.Substring(0, from.Length - 1);
-            }
+                if (newStep.ProcedureStepId.HasValue && newStep.ProcedureStepId.Value > 0) {
+                    ProcedureStep oldStep = procSteps
+                        .Where(x => x.Id == newStep.ProcedureStepId)
+                        .FirstOrDefault();
+                    if (oldStep != null)
+                    {
+                        try {
+                            List<string> diff = Compare(oldStep, newStep);
+                            foreach(string s in diff)
+                            {
+                                pendingApprovalModel.Rows
+                                    .Add($"Procedure Step {oldStep.Id}: {s}");
+                            }
+                        } catch (Exception e) {
+                            // there was an error comparing
+                            // the objects, use generic message
+                            pendingApprovalModel.Rows
+                                .Add("Procedure Step "+
+                                     $"{oldStep.Id}: unknown update");
+                        }
+                    }
 
-            var to = "";
-            foreach (var procedureApproval in procStepApprovals)
-            {
-                to += procedureApproval.Title + ",";
-            }
-
-            if (to.Length > 1)
-            {
-                to = to.Substring(0, to.Length - 1);
-            }
-            if (from.Length > 0 || to.Length > 0)
-            {
-                pendingApprovalModel.AddRow("Procedure Steps", from, to);
+                    pendingApprovalModel.Rows
+                        .Add($"Procedure Step {oldStep.Id}: " +
+                             $"{newStep.ApprovalJSON}");
+                }
+                else
+                {
+                    pendingApprovalModel.AddRow("New Procedure Step", "", newStep.Title);
+                }
             }
         }
 
@@ -683,7 +737,7 @@ namespace MSR.Infrastructure.Resources.Services
             }
         }
 
-        private async Task<PendingApprovalPopoverModel> getProductApprovalChanges(GetPendingApprovalDetailsModel command)
+        private async Task<PendingApprovalPopoverModel> GetProductApprovalChanges(GetPendingApprovalDetailsModel command)
         {
             var productApproval = await _unitOfWork.ProductApprovals
                 .Query()
@@ -723,7 +777,74 @@ namespace MSR.Infrastructure.Resources.Services
             productApprovalChanges.AddRow("Labor", origLaborTotal, newLaborTotal);
             return productApprovalChanges;
         }
+
+        private async Task<PendingApprovalPopoverModel> GetProcedureApprovalChanges(GetPendingApprovalDetailsModel command)
+        {
+            var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
+                .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
+            var procedure = await _unitOfWork.Procedures.Query()
+                .Include(x => x.ProcedureType).Include(x => x.ProcedureSteps).FirstOrDefaultAsync(x => x.Id == procedureApproval.ProcedureId);
+            var procedureApprovalChanges = new PendingApprovalPopoverModel();
+            procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
+            procedureApprovalChanges.AddRow("Duration Type", procedure?.DurationType, procedureApproval.DurationType);
+            procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
+            GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
+            return procedureApprovalChanges;
+        }
+
+        private async Task<ApprovalEntity> ApproveProcedure(PostApprovalModel command, Status status)
+        {
+            var procedureApproval = await _unitOfWork.ProcedureApprovals
+                .Query()
+                .Include(x => x.ProcedureType)
+                .Include(x => x.ProcedureStepApprovals)
+                .ThenInclude(y => y.ProcedureApproval)
+                .FirstOrDefaultAsync(x => x.Id == command.Id);
+
+            if (procedureApproval == null)
+            {
+                throw new DomainException($"Procedure Approval id {command.Id} not found", DomainError.NotFound);
+            }
+
+            if (procedureApproval.ProcedureId == 0)
+            {
+                var procedureCommand = _mapper.Map<CreateProcedure>(procedureApproval);
+                procedureCommand.Revision = 1;
+                await _procedureService.CreateProcedureAsync(procedureCommand);
+            }
+            else
+            {
+                var procedureCommand = _mapper.Map<UpdateProcedure>(procedureApproval);
+                procedureCommand.Revision += 1;
+                await _procedureService.UpdateProcedureAsync(procedureCommand);
+
+                foreach (ProcedureStepApproval step in procedureApproval.ProcedureStepApprovals)
+                {
+                    string approvalJSON = step.ApprovalJSON;
+                    var dataFormat = new {
+                        roleIds = new List<int>(),
+                        fileIds = new List<int>(),
+                        documentIds = new List<int>(),
+                    };
+                    var dataObj = JsonConvert.DeserializeAnonymousType(approvalJSON, dataFormat);
+                    var update = _mapper.Map<UpdateProcedureStep>(step);
+                    update.procedureId = step.ProcedureApproval.ProcedureId;
+                    update.ReferenceFileIds = dataObj.fileIds;
+                    update.ReferenceDocumentIds = dataObj.documentIds;
+                    update.Roles = _mapper.Map<List<Domain.Models.Role>>(dataObj.roleIds);
+
+                    await _procedureService.UpdateProcedureStepAsync(update);
+                }
+
+            }
+
+            _unitOfWork.ProcedureApprovals.Delete(false, procedureApproval);
+            await _unitOfWork.SaveChangesAsync();
+
+            return procedureApproval;
+        }
     }
+
 }
 
 

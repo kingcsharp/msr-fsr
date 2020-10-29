@@ -130,7 +130,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Menus, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentRoles, opt => opt.Ignore())
                 .ForMember(dest => dest.IsCertificationRole, opts => opts.MapFrom(src => src.IsCertificationRole == null ? false : src.IsCertificationRole));
-
+            CreateMap<int, Domain.Models.Role>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src));
 
             #region Workflow
             CreateMap<CreateWorkflowGroupModel, WorkflowGroup>();
@@ -197,8 +198,12 @@ namespace MSR.Infrastructure.Profiles
 
             #region Procedure
             CreateMap<Procedure, Domain.Models.Procedure>();
+            CreateMap<ProcedureStepApproval, ProcedureStepModel>()
+                // if the approval exists, the step is pending approval
+                .ForMember(i => i.ApprovalStatus, opts => opts.MapFrom(src => "Pending"));
             CreateMap<ProcedureStep, ProcedureStepModel>()
                 .ForMember(dest => dest.ProcedureStepType, opts => opts.MapFrom(src => src.StepType.Name))
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.ProcedureStepRoles));
             CreateMap<Domain.Models.Role, ProcedureStepRoleMap>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
@@ -235,17 +240,24 @@ namespace MSR.Infrastructure.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedure, ProcedureApproval>();
+            CreateMap<Procedure, ProcedureApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.ProcedureId, opts => opts.MapFrom(src => src.Id));
             CreateMap<CreateProcedure, Procedure>();
             CreateMap<CreateProcedureStep, ProcedureStepApproval>();
             CreateMap<CreateProcedureStep, ProcedureStep>();
             CreateMap<UpdateProcedure, ProcedureApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProcedureApproval, UpdateProcedure>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ProcedureId));
             CreateMap<UpdateProcedure, Procedure>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<UpdateProcedureStep, ProcedureStepApproval>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProcedureStepApproval, UpdateProcedureStep>();
             CreateMap<UpdateProcedureStep, ProcedureStep>()
+                .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
                 .ForMember(dest => dest.ProcedureStepRoles, opts => opts.MapFrom(src => src.Roles))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
                     srcMember != null && !srcMember.Equals(0)));

@@ -9055,6 +9055,10 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
+          "approvalStatus": {
+            "type": "string",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "format": "int32"
@@ -9094,7 +9098,8 @@
             "nullable": true
           },
           "procedureStepTypeId": {
-            "type": "string",
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "printOrder": {
@@ -9108,8 +9113,8 @@
             "nullable": true
           },
           "laborTime": {
-            "type": "integer",
-            "format": "int32",
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "equipmentTime": {
@@ -9122,7 +9127,7 @@
             "format": "double",
             "nullable": true
           },
-          "utilizationTime": {
+          "utilization": {
             "type": "number",
             "format": "float",
             "nullable": true
@@ -9164,7 +9169,7 @@
             "description": "Gets or Sets Title",
             "nullable": true
           },
-          "text": {
+          "stepText": {
             "type": "string",
             "description": "Gets or Sets Text",
             "nullable": true
@@ -9183,7 +9188,8 @@
           "procedureStepTypeId": {
             "type": "integer",
             "description": "Procedure Step Type",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "printOrder": {
             "type": "integer",
@@ -9198,9 +9204,9 @@
             "nullable": true
           },
           "laborTime": {
-            "type": "integer",
+            "type": "number",
             "description": "Gets or Sets LaborTime",
-            "format": "int32",
+            "format": "double",
             "nullable": true
           },
           "equipmentTime": {
@@ -9215,7 +9221,7 @@
             "format": "double",
             "nullable": true
           },
-          "utilizationTime": {
+          "utilization": {
             "type": "number",
             "description": "Gets or Sets UtilizationTime",
             "format": "float",
@@ -9233,6 +9239,15 @@
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/FileRequest"
+            }
+          },
+          "referenceFileIds": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceFileIds   ",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
             }
           },
           "roles": {
@@ -9497,7 +9512,7 @@
             "description": "Gets or Sets Title",
             "nullable": true
           },
-          "text": {
+          "stepText": {
             "type": "string",
             "description": "Gets or Sets Text",
             "nullable": true
@@ -9531,9 +9546,9 @@
             "nullable": true
           },
           "laborTime": {
-            "type": "integer",
+            "type": "number",
             "description": "Gets or Sets LaborTime",
-            "format": "int32",
+            "format": "double",
             "nullable": true
           },
           "equipmentTime": {
@@ -9548,7 +9563,7 @@
             "format": "double",
             "nullable": true
           },
-          "utilizationTime": {
+          "utilization": {
             "type": "number",
             "description": "Gets or Sets UtilizationTime",
             "format": "float",
@@ -9566,6 +9581,15 @@
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/FileRequest"
+            }
+          },
+          "referenceFileIds": {
+            "type": "array",
+            "description": "Gets or Sets ReferenceFileIds   ",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
             }
           },
           "roles": {
@@ -9663,6 +9687,11 @@
             "type": "number",
             "format": "float",
             "nullable": true
+          },
+          "monitorListId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -9729,6 +9758,12 @@
             "type": "number",
             "description": "LowTarget",
             "format": "float",
+            "nullable": true
+          },
+          "monitorListId": {
+            "type": "integer",
+            "description": "MonitorListId",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -9824,6 +9859,12 @@
             "type": "number",
             "description": "LowTarget",
             "format": "float",
+            "nullable": true
+          },
+          "monitorListId": {
+            "type": "integer",
+            "description": "MonitorListId",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -13316,7 +13357,7 @@
           },
           "percentageOfExpectedDurationTimeLoggedDenominator": {
             "type": "number",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "hasNcr": {
@@ -13490,7 +13531,8 @@
           },
           "customerId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "customerName": {
             "type": "string",
@@ -13593,12 +13635,53 @@
             "type": "string",
             "nullable": true
           },
+          "percentageOfTasksCompleted": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfTasksCompletedNumerator": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "percentageOfTasksCompletedDenominator": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLogged": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLoggedNumerator": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "percentageOfExpectedDurationTimeLoggedDenominator": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
           "messages": {
             "type": "array",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/WorkOrderMessageModel"
             }
+          },
+          "subParts": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkOrderPartModel"
+            }
+          },
+          "stepText": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

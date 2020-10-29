@@ -101,5 +101,10 @@ namespace MSR.Domain.Models
         /// Gets or Sets Roles
         /// </summary>
         public List<Role> Roles { get; set; }
+
+        /// <summary>
+        /// Copy of the status field of the ProductApproval row
+        /// </summary>
+        public string ApprovalStatus;
     }
 }

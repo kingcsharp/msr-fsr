@@ -13,6 +13,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
             ProcedureStepMonitorApprovals = new HashSet<ProcedureStepMonitorApproval>();
         }
 
+        public int? ProcedureStepId { get; set; }
+
         public int ProcedureApprovalId { get; set; }
 
         [Required]
@@ -25,6 +27,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? GoToStepId { get; set; }
 
+        public int? ProcedureStepTypeId { get; set; }
+
         public int PrintOrder { get; set; }
 
         [Column(TypeName = "money")]
@@ -34,9 +38,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public double? EquipmentTime { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string Roles { get; set; }
+        public string ApprovalJSON { get; set; }
 
         public virtual ProcedureApproval ProcedureApproval { get; set; }
 
