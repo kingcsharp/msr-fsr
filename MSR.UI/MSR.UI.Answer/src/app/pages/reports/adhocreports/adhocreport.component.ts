@@ -35,10 +35,9 @@ export class AdhocComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const sub1 = this.route.params.subscribe(routeParams => {
+        this.subscriptions.push(this.route.params.subscribe(routeParams => {
             this.reportId = routeParams.id;
-        });
-        this.subscriptions.push(sub1);
+        }));
 
         this.getReportData();
     }
