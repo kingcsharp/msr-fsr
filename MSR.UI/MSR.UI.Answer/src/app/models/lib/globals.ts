@@ -99,7 +99,7 @@ export class Globals {
 
     hasPrivilege(controllerEnum, privilege) {
         const privileges = this.user.privileges[controllerEnum];
-        if (privileges === undefined) {
+        if (privileges === undefined || privileges === null) {
             return false;
         }
         const ret = privileges.indexOf(privilege) > -1;
