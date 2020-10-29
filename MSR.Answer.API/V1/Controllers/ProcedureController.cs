@@ -175,7 +175,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             if (!string.IsNullOrWhiteSpace(procStep.ApprovalStatus))
             {
-                await SendApprovalNotificationHubMessage(EnumApprovalTables.LocationApproval, _messageHub);
+                await SendApprovalNotificationHubMessage(EnumApprovalTables.ProcedureApproval, _messageHub);
                 response = $"Procedure step {action} Pending Approval";
             }
 

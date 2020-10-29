@@ -231,9 +231,9 @@ namespace MSR.Infrastructure.Resources.Services
                     partApprovalChanges.AddRow("Maximum Cycles", part?.MaximumCycles, partApproval.MaximumCycles);
                     return partApprovalChanges;
                 case EnumApprovalTables.ProcedureApproval:
-                    return await getProcedureApprovalChanges(command);
+                    return await GetProcedureApprovalChanges(command);
                 case EnumApprovalTables.ProductApproval:
-                    return await getProductApprovalChanges(command);
+                    return await GetProductApprovalChanges(command);
                 case EnumApprovalTables.PurchaseOrderApproval:
                     var purchaseOrderApproval = await _unitOfWork.PurchaseOrderApprovals.Query().FirstOrDefaultAsync(x => x.Id == command.Id);
                     var purchaseOrder = await _unitOfWork.PurchaseOrders.Query().FirstOrDefaultAsync(x => x.Id == purchaseOrderApproval.PurchaseOrderId);
@@ -737,7 +737,7 @@ namespace MSR.Infrastructure.Resources.Services
             }
         }
 
-        private async Task<PendingApprovalPopoverModel> getProductApprovalChanges(GetPendingApprovalDetailsModel command)
+        private async Task<PendingApprovalPopoverModel> GetProductApprovalChanges(GetPendingApprovalDetailsModel command)
         {
             var productApproval = await _unitOfWork.ProductApprovals
                 .Query()
@@ -778,7 +778,7 @@ namespace MSR.Infrastructure.Resources.Services
             return productApprovalChanges;
         }
 
-        private async Task<PendingApprovalPopoverModel> getProcedureApprovalChanges(GetPendingApprovalDetailsModel command)
+        private async Task<PendingApprovalPopoverModel> GetProcedureApprovalChanges(GetPendingApprovalDetailsModel command)
         {
             var procedureApproval = await _unitOfWork.ProcedureApprovals.Query()
                 .Include(x => x.ProcedureType).Include(x => x.ProcedureStepApprovals).FirstOrDefaultAsync(x => x.Id == command.Id);
@@ -788,7 +788,7 @@ namespace MSR.Infrastructure.Resources.Services
             procedureApprovalChanges.AddRow("Name", procedure?.Name, procedureApproval.Name);
             procedureApprovalChanges.AddRow("Duration Type", procedure?.DurationType, procedureApproval.DurationType);
             procedureApprovalChanges.AddRow("Procedure Type", procedure?.ProcedureType?.Name, procedureApproval.ProcedureType?.Name);
-            this.GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
+            GetProcedureStepApprovals(procedureApprovalChanges, procedure?.ProcedureSteps, procedureApproval.ProcedureStepApprovals);
             return procedureApprovalChanges;
         }
 

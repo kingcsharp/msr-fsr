@@ -201,7 +201,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Query()
                 .FirstAsync(x => x.Id == command.procedureId);
 
-            int procApprovalId = await flagProcedureForApproval(currentProcedure, command.procedureId);
+            int procApprovalId = await FlagProcedureForApproval(currentProcedure, command.procedureId);
 
             var procedureStepApprovalEntity = _mapper.Map<ProcedureStepApproval>(command);
             procedureStepApprovalEntity.ProcedureApprovalId = procApprovalId;
@@ -239,17 +239,14 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 if (command.ReferenceFileIds == null) {
                     command.ReferenceFileIds = new List<int>();
                 }
-                if (command.ReferenceFiles != null && command.ReferenceFiles.Count > 0)
+                foreach (FileModel file in command.ReferenceFiles)
                 {
-                    foreach (FileModel file in command.ReferenceFiles)
-                    {
-                        FileModel newFile = await _fileService.CreateFileAsync(
-                            nameof(EntityFramework.Entities.ProcedureStep),
-                            0, // will be attached after checking perms
-                            file
-                        );
-                        command.ReferenceFileIds.Add(newFile.FileId.Value);
-                    }
+                    FileModel newFile = await _fileService.CreateFileAsync(
+                        nameof(EntityFramework.Entities.ProcedureStep),
+                        0, // will be attached after checking perms
+                        file
+                    );
+                    command.ReferenceFileIds.Add(newFile.FileId.Value);
                 }
             }
 
@@ -326,7 +323,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             else
             {
                 _unitOfWork.ProcedureSteps.LoadReference(current, x => x.Procedure);
-                int procApprovalId = await flagProcedureForApproval(
+                int procApprovalId = await FlagProcedureForApproval(
                     current.Procedure, current.ProcedureId
                 );
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
@@ -420,7 +417,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         // Add the procedure approval record if it doesn't already exist.  Used
         // to wrap up all changes to steps in a single approval on the workflow screen.
-        private async Task<int> flagProcedureForApproval(EntityFramework.Entities.Procedure currentProcedure, int procedureId)
+        private async Task<int> FlagProcedureForApproval(EntityFramework.Entities.Procedure currentProcedure, int procedureId)
         {
             var existing = _unitOfWork.ProcedureApprovals
                 .Query()
