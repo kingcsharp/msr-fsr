@@ -18,6 +18,7 @@ export class GridFileViewerComponent implements OnInit {
   display: boolean = false;
   viewer: string;
   selectedFile: FileModel;
+  images: any;
 
   @Input() files: FileModel[];
   @Input() menuItem: EnumMenuItem;
@@ -38,6 +39,16 @@ export class GridFileViewerComponent implements OnInit {
         if (resp.object.length === 0) {
           // err
         } else {
+          if (this.viewer === 'img') {
+            this.images = [];
+            this.images.push({
+              id: resp.object[0].fileId,
+              previewImageSrc: resp.object[0].fileURL,
+              thumbnailImageSrc: resp.object[0].fileURL,
+              alt: '',
+              title: ''
+            });
+          }
           this.selectedDocUrl = resp.object[0].fileURL;
           this.display = true;
         }
@@ -62,12 +73,13 @@ export class GridFileViewerComponent implements OnInit {
         return 'google';
       case 'application/pdf':
         return 'pdf';
-      case 'text/plain':
       case 'image/gif':
       case 'image/tiff':
       case 'image/webp':
       case 'image/jpeg':
       case 'image/png':
+        return 'img';
+      case 'text/plain':
       default:
         return 'url';
     }

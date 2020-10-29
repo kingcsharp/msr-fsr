@@ -115,11 +115,11 @@ namespace MSR.Infrastructure.Resources.Services
             var tableName = mapEntityToTable(entityName);
 
             var url = await _fileUploader.UploadFile(file, tableName, entityId);
-
+            
             var efFile = new File()
             {
                 ContentType = file.ContentType,
-                FileURL = $"{entityName}-{entityId}-{file.Name}",
+                FileURL = $"{tableName}-{entityId}-{file.Name}",
                 Name = file.Name
             };
 
