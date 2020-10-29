@@ -366,7 +366,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private async Task<string> GetJWTToken(User efUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtData.Secret + _generalInformation.Environment);
+            var key = Encoding.ASCII.GetBytes(_jwtData.Secret);
             var userPrivileges = JsonConvert.SerializeObject(GetTokenUserRoles(efUser));
 
             var approvalPrivileges = JsonConvert.SerializeObject(await GetTokenUserActivityRoles(efUser));
