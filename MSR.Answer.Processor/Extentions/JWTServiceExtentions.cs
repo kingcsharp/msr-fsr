@@ -18,11 +18,11 @@ namespace MSR.Answer.Processor.Extentions
 {
     public static class JWTServiceExtentions
     {
-        public static IServiceCollection AddJWTServices(this IServiceCollection services, IConfiguration config, string environment)
+        public static IServiceCollection AddJWTServices(this IServiceCollection services, IConfiguration config)
         {
             var jwtData = config.GetSection(nameof(JwtData)).Get<JwtData>();
             services.AddSingleton(jwtData);
-            var key = Encoding.ASCII.GetBytes(jwtData.Secret+ environment);
+            var key = Encoding.ASCII.GetBytes(jwtData.Secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
