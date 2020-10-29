@@ -36,6 +36,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { TableModule } from 'primeng/table';
 import { GridComponent } from '../../../app/components/grid/grid.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { GalleriaModule } from 'primeng/galleria';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     CKEditorModule,
     TableModule,
     HighchartsChartModule,
+    GalleriaModule
   ],
   providers: [DatePipe]
 })
