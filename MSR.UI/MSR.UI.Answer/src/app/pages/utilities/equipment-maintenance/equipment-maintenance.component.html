@@ -237,10 +237,10 @@
               >
               <button
                 type="button"
-                class="input-group-addon bg-secondary"
+                class="input-group-addon bg-primary btn"
                 (click)="getLocations()"
               >
-                Lookup
+                Lookup <i [class]="isLooking ? 'fa fa-refresh fa-spin ml-2' : 'fa fa-search ml-2'"></i>
               </button>
             </div>
           </div>
