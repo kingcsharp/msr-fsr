@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Views;
+using System.Reflection;
 
 namespace MSR.Infrastructure.Resources.Services
 {
@@ -302,34 +303,103 @@ namespace MSR.Infrastructure.Resources.Services
             }
         }
 
+        private List<string> Compare(object a, object b)
+        {
+            List<string> changes = new List<string>();
+            Type aType = a.GetType();
+            MethodInfo[] aMethods = aType.GetMethods();
+
+            Type bType = b.GetType();
+            MethodInfo[] bMethods = bType.GetMethods();
+            Dictionary<string, MethodInfo> bMethodMap =
+                new Dictionary<string, MethodInfo>();
+
+            foreach (MethodInfo m in bMethods)
+            {
+                if (m.Name.Contains("CreatedBy") ||
+                    m.Name.Contains("UpdatedBy") ||
+                    m.Name.Equals("get_Id") ||
+                    !m.Name.StartsWith("get"))
+                {
+                    continue;
+                }
+
+                int intType = 0;
+                string stringType = "";
+                Type returnType = Nullable.GetUnderlyingType(m.ReturnType);
+
+                if (returnType == null)
+                {
+                    returnType = m.ReturnType;
+                }
+
+                if (returnType.Equals(intType.GetType()) ||
+                    returnType.Equals(stringType.GetType()))
+                {
+                    bMethodMap.Add(m.Name, m);
+                }
+            }
+
+            foreach (MethodInfo aMethod in aMethods)
+            {
+                if (bMethodMap.ContainsKey(aMethod.Name))
+                {
+                    MethodInfo bMethod = bMethodMap[aMethod.Name];
+                    object bValue = bMethod.Invoke(b, null);
+                    object aValue = aMethod.Invoke(a, null);
+                    if (aValue == null && bValue == null)
+                    {
+                        continue;
+                    }
+                    if (aValue == null)
+                    {
+                        aValue = new {};
+                    }
+                    if (!aValue.Equals(bValue))
+                    {
+                        string paramName = aMethod.Name.Replace("get_","");
+                        changes.Add($"{paramName} '{aValue}' to '{bValue}'");
+                    }
+                }
+            }
+            return changes;
+        }
+
+
         private void GetProcedureStepApprovals(PendingApprovalPopoverModel pendingApprovalModel, ICollection<ProcedureStep> procSteps, ICollection<ProcedureStepApproval> procStepApprovals)
         {
-            // FIXME: without a ProcedureStepApproval.ProcedureStepId field,
-            // we cannot make a direct comparison to the existing step.
+            foreach (ProcedureStepApproval newStep in procStepApprovals)
+            {
+                if (newStep.ProcedureStepId.HasValue && newStep.ProcedureStepId.Value > 0) {
+                    ProcedureStep oldStep = procSteps
+                        .Where(x => x.Id == newStep.ProcedureStepId)
+                        .FirstOrDefault();
+                    if (oldStep != null)
+                    {
+                        try {
+                            List<string> diff = Compare(oldStep, newStep);
+                            foreach(string s in diff)
+                            {
+                                pendingApprovalModel.Rows
+                                    .Add($"Procedure Step {oldStep.Id}: {s}");
+                            }
+                        } catch (Exception e) {
+                            // there was an error comparing
+                            // the objects, use generic message
+                            pendingApprovalModel.Rows
+                                .Add("Procedure Step "+
+                                     $"{oldStep.Id}: unknown update");
+                        }
+                    }
 
-            var from = "";
-            foreach (var procedure in procSteps)
-            {
-                from += procedure.Title + ",";
-            }
-            if (from.Length > 1)
-            {
-                from = from.Substring(0, from.Length - 1);
-            }
-
-            var to = "";
-            foreach (var procedureApproval in procStepApprovals)
-            {
-                to += procedureApproval.Title + ",";
-            }
-
-            if (to.Length > 1)
-            {
-                to = to.Substring(0, to.Length - 1);
-            }
-            if (from.Length > 0 || to.Length > 0)
-            {
-                pendingApprovalModel.AddRow("Procedure Steps", from, to);
+                    pendingApprovalModel.Rows
+                        .Add($"Procedure Step {oldStep.Id}: " +
+                             $"{newStep.ApprovalJSON}");
+                }
+                else
+                {
+                    pendingApprovalModel.AddRow("New Procedure Step", "", newStep.Title);
+                }
             }
         }
 
