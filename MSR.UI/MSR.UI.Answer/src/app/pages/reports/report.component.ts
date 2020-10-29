@@ -37,9 +37,10 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reportService.report(false, env.apiVersion).subscribe(responseHandler(response => {
-      this.data = response.object;
-    }));
+    this.reportService.report(false, env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data = response.object;
+      }));
 
   }
 

@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
 import { GridSaved } from '../../../models/lib/GridSaved';
 import { ReportCubeService } from '../reportcube.service';
+import { Subscription } from 'rxjs';
 
 declare let jQuery: any;
 
@@ -26,6 +27,7 @@ export class AdhocComponent implements OnInit {
     reportInfo: ReportModel;
     showReport: boolean;
     hasChart: boolean = false;
+    subscriptions: Subscription[] = [];
 
     constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
         private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
@@ -33,9 +35,10 @@ export class AdhocComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.route.params.subscribe(routeParams => {
+        const sub1 = this.route.params.subscribe(routeParams => {
             this.reportId = routeParams.id;
         });
+        this.subscriptions.push(sub1);
 
         this.getReportData();
     }

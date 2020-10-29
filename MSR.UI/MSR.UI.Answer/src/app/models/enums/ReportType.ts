@@ -8,5 +8,12 @@ export enum EnumReport {
     WorkOrdersNotInvoicedbyWorkOrder = 14,
     RevenuebyCustomerbyTimePeriod = 15,
     RevenuebyKitbyPartKit = 16,
-    CountofKitsbyPartKit = 18
+    CountofKitsbyPartKit = 18,
+    WorkReport = 19,
+    DeliveryTicket = 20,
+    NCRReport = 21,
+    TechnicalDataLabel = 22,
+    PartLabelRoll4in = 23,
+    WIPHistoryReport = 24,
+    PortalMonitorReport = 25
 }

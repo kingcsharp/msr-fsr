@@ -1,3 +1,4 @@
+import { ElementRef } from '@angular/core';
 import { EnumColumnType } from '../enums/EnumColumnType';
 
 export interface IColumnsSaved {
@@ -10,6 +11,8 @@ export interface IColumnsSaved {
     isRanged?: boolean | undefined;
     formattingMoment?: string | undefined;
     formattingAngular?: string | undefined;
+    templateName?: ElementRef | undefined;
+    styles?: any | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
     id?: string | undefined;
@@ -21,8 +24,9 @@ export class ColumnsSaved implements IColumnsSaved {
     // used only for date values at the time but can be extended if wanted
     formattingMoment: string = 'MM-YYYY';
     formattingAngular: string = 'MM-yyyy';
-
+    templateName?: ElementRef | undefined;
     isRanged?: boolean | undefined;
+    styles?: any = {};
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -52,6 +56,8 @@ export class ColumnsSaved implements IColumnsSaved {
             this.formattingMoment = _data['formattingMoment'];
             this.formattingAngular = _data['formattingAngular'];
             this.isRanged = _data['isRanged'];
+            this.templateName = _data['templateName'];
+            this.styles = _data['styles'];
         }
     }
 
@@ -66,6 +72,8 @@ export class ColumnsSaved implements IColumnsSaved {
         data['formattingMoment'] = this.formattingMoment;
         data['formattingAngular'] = this.formattingAngular;
         data['isRanged'] = this.isRanged;
+        data['templateName'] = this.templateName;
+        data['styles'] = this.styles;
 
         return data;
     }
