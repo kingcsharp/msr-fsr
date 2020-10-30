@@ -2057,9 +2057,6 @@ td {
   }
 }
 
-
-
-
 p-dropdown {
   width: 100%;
   .ui-dropdown-label {
@@ -2173,4 +2170,8 @@ p-dialog {
       }
     }
   }
+}
+
+p-calendar > span > input {
+  width: 100%;
 }

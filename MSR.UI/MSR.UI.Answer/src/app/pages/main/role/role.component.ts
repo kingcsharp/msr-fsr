@@ -75,9 +75,9 @@ export class RoleComponent implements OnInit {
 
     this.roleUsersPopupGrid = new GridSaved({
       columnsSaved: [
-        new ColumnsSaved({ id: 'fullName', label: 'Name', type: EnumColumnType.String, visible: true,styles: { 'width': '30rem' } }),
-        new ColumnsSaved({ id: 'certificationFromDate', label: 'Issue Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
-        new ColumnsSaved({ id: 'certificationToDate', label: 'Expiration Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+        new ColumnsSaved({ id: 'fullName', label: 'Name', type: EnumColumnType.String, visible: true,styles: { 'width': '23rem' } }),
+        new ColumnsSaved({ id: 'certificationFromDate', label: 'Issue Date', visible: true, type: EnumColumnType.InputDateTime, styles: { 'width': '7rem' } }),
+        new ColumnsSaved({ id: 'certificationToDate', label: 'Expiration Date', visible: true, type: EnumColumnType.InputDateTime, styles: { 'width': '7rem' } }),
       ],
       gridClass: 'formTbl',
       showMyViewsFeature: false,

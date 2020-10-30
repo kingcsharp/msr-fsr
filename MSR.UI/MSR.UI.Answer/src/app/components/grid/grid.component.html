@@ -94,6 +94,14 @@
             {{colsDataAndSettings.colData[colsDataAndSettings.col.id] | date: colsDataAndSettings.col.formattingAngular }}
         </div>
     </td>
+    <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.InputDateTime"
+        [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
+        <div data-cy="{{colsDataAndSettings.col.id}}" class="display-inline-block isActive">
+            <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="colsDataAndSettings.colData[colsDataAndSettings.col.id]"
+                dataType="string" [locale]="calendarEn" appendTo="body">
+            </p-calendar>
+        </div>
+    </td>
     <td *ngIf="colsDataAndSettings.col.type === enumColumnType.StringArray"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <span *ngFor="let item of colsDataAndSettings.colData[colsDataAndSettings.col.id]"
