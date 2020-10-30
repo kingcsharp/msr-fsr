@@ -29,7 +29,7 @@
                         <td> {{ procedureStep.id }} </td>
                         <td> {{ procedureStep.id }} </td>
                         <td> {{ procedureStep.title }} </td>
-                        <td> {{ procedureStep.stepText }} </td>
+                        <td  [innerHTML]="procedureStep.stepText"> </td>
                         <td> {{ procedureStep.laborTime }} </td>
                         <td> {{ procedureStep.equipmentTime }} </td>
                     </tr>

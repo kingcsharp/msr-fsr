@@ -30,14 +30,15 @@ export class TemplatesComponent implements OnInit {
   statusOptions: Array<SelectItem>;
   showConfirmDeleteDialog: boolean = false;
   procedureTemplateToDelete: ProcedureStepTemplateModel;
+  gridVersion: string;
 
-  constructor(private commonGrid: CommonGrid, private elementReference: ElementRef,
+  constructor(public commonGrid: CommonGrid, private elementReference: ElementRef,
     public globals: Globals, private procedureTemplateService: ProcedureTemplateService) { }
 
   ngOnInit(): void {
 
     this.gridStorageId = 'userGrid' + this.elementReference.nativeElement.tagName.toLowerCase();
-
+    this.gridVersion = '1.0.0';
     this.gridSettings = [
       new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
       new ColumnsSaved({ id: 'title', label: 'Title', visible: true }),
