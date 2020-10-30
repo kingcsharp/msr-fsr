@@ -33,7 +33,6 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<LocationModel>>))]
-        [HasPrivilegeApi("Locations", EnumPrivilege.CanRead)]
         public async Task<IActionResult> Get([FromQuery, Required] GetLocationRequest request)
         {
             var command = request.ToGetLocationCommand();
@@ -42,7 +41,6 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("{id}/Sensor"), SwaggerResponse(typeof(AuditActionResult<IEnumerable<SensorModel>>))]
-        [HasPrivilegeApi("Locations", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetSensorsForLocation([FromRoute] int id)
         {
             var command = new GetSensorsForLocation() { LocationId = id };

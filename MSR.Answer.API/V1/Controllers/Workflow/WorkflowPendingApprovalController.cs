@@ -31,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers
             _messageHub = messageHub;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<PendingApprovalModel>>)), HasPrivilegeApi("PendingApprovals", EnumPrivilege.CanRead)]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<PendingApprovalModel>>))]
         public async Task<IActionResult> Get([FromQuery, Required] GetPendingApprovalRequest request)
         {
             var command = request.ToGetPendingApprovalCommand();

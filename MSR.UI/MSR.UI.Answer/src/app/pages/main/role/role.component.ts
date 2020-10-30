@@ -7,7 +7,7 @@ import {
   CreateRoleRequest,
   AuditActionResultOfRole,
   UpdateUserRoleRequest,
-  UpdateRoleRequest
+  UpdateRoleRequest, RolesUsersView, ReportModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -19,7 +19,9 @@ import { CommonGrid } from '../../../models/lib/CommonGrid';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { AllowedActions } from '../../../../app/models/lib/AllowedActions';
-import { copyObj } from '../../../../app/models/lib/Utils';
+import { copyObj, pushIfNotExists, emptyArray } from '../../../../app/models/lib/Utils';
+import { GridSaved } from '../../../../app/models/lib/GridSaved';
+import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 
 declare let jQuery: any;
 
@@ -41,6 +43,12 @@ export class RoleComponent implements OnInit {
   data: Array<Role>;
   availableRoles: Array<Role>;
   isCertificationRole: any[];
+  rolesUsers: RolesUsersView[];
+  roleUsers: RolesUsersView[] = [];
+  showGrid: boolean = false;
+
+  roleUsersPopupGrid: GridSaved;
+  roleUsersPopupModel: ReportModel;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private roleService: RoleService) {
@@ -54,6 +62,7 @@ export class RoleComponent implements OnInit {
     new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),
     new ColumnsSaved({ id: 'isCertificationRole', label: 'Is Certification Role', visible: true }),
     new ColumnsSaved({ id: 'parentRoles', label: 'Parent Roles', visible: true }),
+    new ColumnsSaved({ id: 'assignedUsers', label: 'Assigned Users', visible: true }),
     new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
     new ColumnsSaved({ id: 'createdByName', label: 'Created By', visible: false }),
     new ColumnsSaved({ id: 'lastUpdatedOn', label: 'Updated On', visible: false }),
@@ -63,21 +72,68 @@ export class RoleComponent implements OnInit {
     this.isCertificationRole = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
     this.userPrivileges = this.globals.getEnumPrivileges(EnumMenuItem.Roles);
-    this.getRoles();
-    this.data = [];
 
+    this.roleUsersPopupGrid = new GridSaved({
+      columnsSaved: [
+        new ColumnsSaved({ id: 'fullName', label: 'Name', type: EnumColumnType.String, visible: true,styles: { 'width': '30rem' } }),
+        new ColumnsSaved({ id: 'certificationFromDate', label: 'Issue Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+        new ColumnsSaved({ id: 'certificationToDate', label: 'Expiration Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+      ],
+      gridClass: 'formTbl',
+      showMyViewsFeature: false,
+      paginator: false,
+      storageId: 'roleUsersPopupGrid',
+      version: '1.0.0'
+    });
+
+    this.roleUsersPopupModel = new ReportModel({
+      name: ''
+    });
+
+    this.getRolesUsers();
+    this.data = [];
   }
 
   getRoles() {
     this.globals.showLoader(true);
-    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler(response => {
-      this.data = response.object;
-    }));
+    this.roleService.roleGet(env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data = response.object.map(x => {
+          x.assignedUsers = this.getRoleUsersByRoleId(x.id);
+          return x;
+        });
+        this.showGrid = true;
+      }));
+  }
+
+  getRolesUsers() {
+    this.roleService.rolesUsers(env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.rolesUsers = response.object.map(x => {
+          x.fullName = x.user.fullName;
+          return x;
+        });
+        this.getRoles();
+      }));
+  }
+
+  getRoleUsersByRoleId(roleId) {
+    const assignedUsers = [];
+    this.rolesUsers.forEach(x => {
+      if (x.roleId === roleId) {
+        pushIfNotExists(x, assignedUsers, 'userId');
+      }
+    });
+    return assignedUsers;
   }
 
   showDialog(roleView: Role) {
     this.currentRole = this.getCurrentRole(roleView);
     this.availableRoles = this.data.filter((elem) => elem.id !== this.currentRole.id);
+    if (roleView?.id) {
+      this.roleUsers = this.getRoleUsersByRoleId(roleView.id);
+    }
+
     this.display = true;
   }
 

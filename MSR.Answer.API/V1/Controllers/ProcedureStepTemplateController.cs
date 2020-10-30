@@ -37,7 +37,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepTemplateModel>>))]
         public async Task<IActionResult> GetProcedureStepTemplate(int? id)
         {

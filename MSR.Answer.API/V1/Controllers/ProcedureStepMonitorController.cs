@@ -69,7 +69,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="stepId"></param>
         /// <response code="200"></response>
         [HttpGet("procedurestep/{stepId}")]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepMonitor>>))]
         public async Task<IActionResult> GetProcedureStepMonitor([FromRoute]int stepId, int? monitorId)
         {

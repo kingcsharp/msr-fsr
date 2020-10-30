@@ -5497,6 +5497,57 @@ export class RoleService {
         return _observableOf<AuditActionResultOfRole>(<any>null);
     }
 
+    rolesUsers(version: string): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
+        let url_ = this.baseUrl + "/v{version}/Role/RolesUsers";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolesUsers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolesUsers(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfRolesUsersView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfRolesUsersView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRolesUsers(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfRolesUsersView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfRolesUsersView>(<any>null);
+    }
+
     roleDelete(id: number, version: string): Observable<AuditActionResult> {
         let url_ = this.baseUrl + "/v{version}/Role/{id}";
         if (id === undefined || id === null)
@@ -17632,6 +17683,101 @@ export class AuditActionResultOfICollectionOfRole extends AuditActionResult impl
 /** Base class for an API call with a typed result */
 export interface IAuditActionResultOfICollectionOfRole extends IAuditActionResult {
     object?: Role[] | undefined;
+}
+
+/** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfRolesUsersView extends AuditActionResult implements IAuditActionResultOfICollectionOfRolesUsersView {
+    object?: RolesUsersView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfRolesUsersView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(RolesUsersView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfRolesUsersView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfRolesUsersView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfRolesUsersView extends IAuditActionResult {
+    object?: RolesUsersView[] | undefined;
+}
+
+export class RolesUsersView implements IRolesUsersView {
+    roleId?: number;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+    userId?: number;
+    user?: UserModel | undefined;
+
+    constructor(data?: IRolesUsersView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roleId = _data["roleId"];
+            this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
+            this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? UserModel.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RolesUsersView {
+        data = typeof data === 'object' ? data : {};
+        let result = new RolesUsersView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roleId"] = this.roleId;
+        data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
+        data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IRolesUsersView {
+    roleId?: number;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+    userId?: number;
+    user?: UserModel | undefined;
 }
 
 /** Base class for an API call with a typed result */

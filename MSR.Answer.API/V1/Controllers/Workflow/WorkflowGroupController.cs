@@ -31,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowGroupModel>>)), HasPrivilegeApi("ApprovalGroups", EnumPrivilege.CanRead)]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowGroupModel>>))]
         public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowGroupRequest request)
         {
             var command = request.ToGetWorkflowGroupCommand();

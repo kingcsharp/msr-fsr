@@ -31,7 +31,6 @@ namespace MSR.Answer.API.V1.Controllers
             _messageHub = messageHub;
         }
 
-        [HttpGet, HasPrivilegeApi(PrivilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<PurchaseOrderView>>))]
         public async Task<IActionResult> GetPurchaseOrders([FromQuery] GetPurchaseOrderRequest filters)
         {
