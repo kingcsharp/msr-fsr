@@ -56,8 +56,7 @@
                         <td [hidden]="!commonGrid.isVisibleCol('title', gridSettings)">
                             {{model.title}}
                         </td>
-                        <td [hidden]="!commonGrid.isVisibleCol('text', gridSettings)">
-                            {{model.text}}
+                        <td [hidden]="!commonGrid.isVisibleCol('text', gridSettings)"  [innerHTML]="model.text">
                         </td>
                         <td>
                             <grid-file-viewer [menuItem]="model.referenceFiles" [files]="model.referenceFiles"></grid-file-viewer>
