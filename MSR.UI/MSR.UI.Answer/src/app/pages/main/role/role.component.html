@@ -46,8 +46,14 @@
                         [datatable]="dt">
                     </multiselect-wrapper>
                 </th>
+                <th [hidden]="!cg.isVisibleCol('assignedUsers',gridSettings)" data-cy="assignedUserRoles-grid">
+                    <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="data" filterProp="fullName"
+                        defaultId="userId" filterId="assignedUsers" [multipleValues]="true"
+                        defaultText="Select Asigned Users" defaultTextTooltip="" [datatable]="dt">
+                    </multiselect-wrapper>
+                </th>
                 <th [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
-                    <div class="position-relative" tooltip="Search by Created Date"  data-cy="createdOn-grid">
+                    <div class="position-relative" tooltip="Search by Created Date" data-cy="createdOn-grid">
                         <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="createdOn" [datatable]="dt">
                         </pcalendar-wrapper>
                     </div>
@@ -55,7 +61,7 @@
                 <th grid-input-filter [dt]="dt" searchField="createdByName"
                     [hidden]="!cg.isVisibleCol('createdByName',gridSettings)" [gridSettings]="gridSettings">
                 </th>
-                <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)"  data-cy="lastUpdatedOn-grid">
+                <th [hidden]="!cg.isVisibleCol('lastUpdatedOn',gridSettings)" data-cy="lastUpdatedOn-grid">
                     <div class="position-relative" tooltip="Search by Last Updated On Date">
                         <pcalendar-wrapper [gridStorageId]="gridStorageId" filterId="lastUpdatedOn" [datatable]="dt">
                         </pcalendar-wrapper>
@@ -81,6 +87,10 @@
                 </td>
                 <td [hidden]="!cg.isVisibleCol('parentRoles',gridSettings)">
                     <span *ngFor="let role of role.parentRoles" class="badge mr-xs badge-secondary">{{role.name}}</span>
+                </td>
+                <td [hidden]="!cg.isVisibleCol('assignedUsers',gridSettings)">
+                    <span *ngFor="let user of role.assignedUsers"
+                        class="badge mr-xs badge-secondary">{{user.fullName}}</span>
                 </td>
                 <td [hidden]="!cg.isVisibleCol('createdOn',gridSettings)">
                     {{role.createdOn | userTimezone }}
@@ -150,11 +160,22 @@
                     </div>
                     <div class="form-group row">
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
-                           Parent Roles
+                            Parent Roles
                         </label>
-                        <div class="col-md-10 col-12" data-cy="parentroles-modal">
+                        <div class="col-md-10 col-12">
                             <multiselect-wrapper-form [options]="availableRoles" defaultId="id" [limit]="30"
-                                [(model)]="currentRole.parentRoles"  defaultLabel="Select Parent Roles">
+                                [(model)]="currentRole.parentRoles" defaultLabel="Select Parent Roles">
+                            </multiselect-wrapper-form>
+                        </div>
+                    </div>
+                    <div class="form-group row" *ngIf="currentRole.id !== undefined">
+                        <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
+                            Assigned Users
+                        </label>
+                        <div class="col-md-10 col-12">
+                            <multiselect-wrapper-form name="assignedUsers" [options]="roleUsers" [limit]="10"
+                                [(model)]="roleUsers" defaultLabelProperty="fullName" defaultId="userId"
+                                defaultLabel="View Assigned Users">
                             </multiselect-wrapper-form>
                         </div>
                     </div>

@@ -17730,7 +17730,10 @@ export interface IAuditActionResultOfICollectionOfRolesUsersView extends IAuditA
 
 export class RolesUsersView implements IRolesUsersView {
     roleId?: number;
-    users?: UserModel[] | undefined;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+    userId?: number;
+    user?: UserModel | undefined;
 
     constructor(data?: IRolesUsersView) {
         if (data) {
@@ -17744,11 +17747,10 @@ export class RolesUsersView implements IRolesUsersView {
     init(_data?: any) {
         if (_data) {
             this.roleId = _data["roleId"];
-            if (Array.isArray(_data["users"])) {
-                this.users = [] as any;
-                for (let item of _data["users"])
-                    this.users!.push(UserModel.fromJS(item));
-            }
+            this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
+            this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? UserModel.fromJS(_data["user"]) : <any>undefined;
         }
     }
 
@@ -17762,18 +17764,20 @@ export class RolesUsersView implements IRolesUsersView {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["roleId"] = this.roleId;
-        if (Array.isArray(this.users)) {
-            data["users"] = [];
-            for (let item of this.users)
-                data["users"].push(item.toJSON());
-        }
+        data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
+        data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         return data; 
     }
 }
 
 export interface IRolesUsersView {
     roleId?: number;
-    users?: UserModel[] | undefined;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+    userId?: number;
+    user?: UserModel | undefined;
 }
 
 /** Base class for an API call with a typed result */
