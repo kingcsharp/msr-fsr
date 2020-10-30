@@ -27,7 +27,6 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<ReportModel>>))]
-        [HasPrivilegeApi("Reports", EnumPrivilege.CanRead)]
         public async Task<IActionResult> Get([FromQuery, Required] GetReportRequest request)
         {
             var command = request.ToGetReportCommand();
@@ -36,7 +35,6 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("Dashboard/{id}"), SwaggerResponse(typeof(AuditActionResult<ReportDashboardModel>))]
-        [HasPrivilegeApi("Reports", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetDashboard([FromRoute, Required] GetDashboardRequest request)
         {
             var command = request.ToGetDashboardCommand();

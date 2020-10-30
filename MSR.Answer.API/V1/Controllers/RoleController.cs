@@ -26,11 +26,17 @@ namespace MSR.Answer.API.V1.Controllers
 
 
         [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<Role>>))]
-        [HasPrivilegeApi("RoleModulePermission", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> GetRoles()
         {
             var ret = await _dispatcher.DispatchAsync(new GetRoles());
             return ret.ToOkObjectResponse<ICollection<Role>>();
+        }
+
+        [HttpGet("RolesUsers"), SwaggerResponse(typeof(AuditActionResult<ICollection<RolesUsersView>>))]
+        public async Task<IActionResult> GetRolesAssignedUsers()
+        {
+            var ret = await _dispatcher.DispatchAsync(new GetRolesUsers());
+            return ret.ToOkObjectResponse<ICollection<RolesUsersView>>();
         }
 
         [HttpPost, SwaggerResponse(typeof(AuditActionResult<Role>))]

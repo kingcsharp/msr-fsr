@@ -31,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             _dispatcher = dispatcher;
         }
 
-        [HttpGet("pending"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalNotification>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanRead)]
+        [HttpGet("pending"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalNotification>))]
         public async Task<IActionResult> GetPendingApprovals()
         {
             var ret = await _dispatcher.DispatchAsync(new GetPendingApprovalsModel());
@@ -39,7 +39,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<PendingApprovalNotification>();
         }
 
-        [HttpGet("activity"), SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowActivityModel>>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanRead)]
+        [HttpGet("activity"), SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowActivityModel>>))]
         public async Task<IActionResult> GetWorkflowActivities()
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkflowActivities());
@@ -47,7 +47,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             return ret.ToOkObjectResponse<ICollection<WorkflowActivityModel>>();
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowModel>>)), HasPrivilegeApi("ApprovalWorkflows", EnumPrivilege.CanRead)]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowModel>>))]
         public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowRequest request)
         {
             var command = request.ToGetWorkflowCommand();

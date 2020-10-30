@@ -29,7 +29,7 @@ namespace MSR.Answer.API.V1.Controllers
             _messageHub = messageHub;
         }
 
-        [HttpGet, HasPrivilegeApi("CustomersDepartments", EnumPrivilege.CanRead)]
+        [HttpGet]
         [SwaggerResponse(typeof(AuditActionResult<IEnumerable<Customer>>))]
         public async Task<IActionResult> GetCustomers([FromQuery] GetMultipleCustomersRequest filters)
         {

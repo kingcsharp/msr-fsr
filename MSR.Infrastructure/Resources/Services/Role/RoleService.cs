@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Models;
 
 namespace MSR.Infrastructure.Resources.Services.Role
 {
@@ -71,13 +72,13 @@ namespace MSR.Infrastructure.Resources.Services.Role
 
             var maps = await _unitOfWork.RoleChildRoleMaps.Query().Where(i => i.ChildRoleId == command.Id || i.ParentRoleId == command.Id).ToListAsync();
 
-            foreach(var map in maps)
+            foreach (var map in maps)
             {
                 _unitOfWork.RoleChildRoleMaps.Delete(false, map);
             }
 
             _unitOfWork.Roles.Delete(false, role);
-            await _unitOfWork.SaveChangesAsync();   
+            await _unitOfWork.SaveChangesAsync();
 
         }
 
@@ -94,7 +95,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             foreach (var role in roles)
             {
                 var domRole = _mapper.Map<Domain.Models.Role>(role);
-                
+
                 foreach (var menu in role.Menus)
                 {
                     var domMenu = _mapper.Map<Domain.Models.MenuItem>(menu.MenuItem);
@@ -123,11 +124,36 @@ namespace MSR.Infrastructure.Resources.Services.Role
             return result;
         }
 
+        public async Task<ICollection<UserModel>> GetRoleAssignedUsers(GetRoleUsers command)
+        {
+            var users = await _unitOfWork.UserRoles.Query().Include(x => x.User)
+                .Where(x => x.RoleId == command.RoleId)
+                .Select(x => _mapper.Map<UserModel>(x)).ToListAsync();
+
+            return users;
+        }
+
+        public async Task<ICollection<RolesUsersView>> GetRolesAssignedUsers(GetRolesUsers command)
+        {
+            var roleUsersModelList = new List<RolesUsersView>();
+
+            var roleIdsUserIds = await _unitOfWork.UserRoles.Query()
+                .Select(x => new RolesUsersView
+                {
+                    UserId = x.UserId,
+                    RoleId = x.RoleId,
+                    CertificationFromDate = x.CertificationFromDate,
+                    CertificationToDate = x.CertificationToDate,
+                    User = new UserModel() { FirstName = x.User.FirstName, LastName = x.User.LastName }
+                }).ToListAsync();
+            return roleIdsUserIds;
+        }
+
         public async Task<Domain.Models.Role> UpdateRoleAsync(UpdateRole command)
         {
             var role = await _unitOfWork.Roles.Query().Include(i => i.ParentRoles).FirstOrDefaultAsync(i => i.Id == command.Id);
 
-            if(role is null)
+            if (role is null)
             {
                 throw new DomainException($"Role with ID: {command.Id} not found", DomainError.NotFound);
             }

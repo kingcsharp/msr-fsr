@@ -35,7 +35,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<EquipmentMaintenanceModel>>))]
         public async Task<IActionResult> GetEquipmentMaintenance([FromQuery] GetEquipmentMaintenanceRequest filters)
         {

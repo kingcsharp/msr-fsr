@@ -28,7 +28,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet("Product"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [HttpGet("Product")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<QuotesProductsView>>))]
         public async Task<IActionResult> Get()
         {
@@ -53,7 +53,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<QuoteModel>("Quote was successfully added.");
         }
 
-        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<QuoteModel>>))]
         public async Task<IActionResult> GetQuote([FromQuery] GetQuoteRequest filters)
         {

@@ -64,15 +64,25 @@ export class RoleComponent implements OnInit {
     { label: 'No', value: false }];
     this.userPrivileges = this.globals.getEnumPrivileges(EnumMenuItem.Roles);
     this.getRoles();
+    this.getRolesUsers();
     this.data = [];
 
   }
 
   getRoles() {
     this.globals.showLoader(true);
-    this.roleService.roleGet(env.apiVersion).subscribe(responseHandler(response => {
-      this.data = response.object;
-    }));
+    this.roleService.roleGet(env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data = response.object;
+      }));
+  }
+
+  getRolesUsers() {
+    this.globals.showLoader(true);
+    this.roleService.rolesUsers(env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        console.log(response);
+      }));
   }
 
   showDialog(roleView: Role) {

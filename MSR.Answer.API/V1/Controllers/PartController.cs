@@ -41,7 +41,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpGet]
-        [HasPrivilegeApi("Parts", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<PartModel>>))]
         public async Task<IActionResult> GetPart([FromQuery] GetPartRequest req)
         {

@@ -2,15 +2,16 @@
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
+using MSR.Domain.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Role = MSR.Domain.Models.Role;
 
 namespace MSR.Application.ApplicationServices
 {
     public class RoleAppService :
         ICommandHandler<GetRoles>,
+        ICommandHandler<GetRolesUsers>,
         ICommandHandler<CreateRole>,
         ICommandHandler<UpdateRole>,
         ICommandHandler<DeleteRole>
@@ -28,6 +29,13 @@ namespace MSR.Application.ApplicationServices
             var ret = await _roleService.GetRolesMapAsync(command);
             return new CommandResponse<ICollection<Role>>(ret);
         }
+
+        public async Task<ICommandResponse> HandleAsync(GetRolesUsers command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _roleService.GetRolesAssignedUsers(command);
+            return new CommandResponse<ICollection<RolesUsersView>>(ret);
+        }
+
 
         public async Task<ICommandResponse> HandleAsync(CreateRole command, CancellationToken cancellationToken = default)
         {

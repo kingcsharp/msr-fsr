@@ -52,7 +52,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("History")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public async Task<IActionResult> WorkOrderGetHistory()
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrderHistory());
@@ -65,7 +64,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200"></response>
         [HttpGet("Menu")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderGridSummary>>))]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public async Task<IActionResult> WorkOrderGetMenu()
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrderMenu());
@@ -78,7 +76,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <response code="200">The WorkOrders that are either waiting to start or in Process</response>
         [HttpGet("Status")]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderStatus>>))]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         public async Task<IActionResult> WorkOrderGetStatus()
         {
             var ret = await _dispatcher.DispatchAsync(new GetWorkOrderStatus());
@@ -91,7 +88,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet]
-        [HasPrivilegeApi("WipStatus", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<WorkOrderModel>>))]
         public async Task<IActionResult> GetWorkOrder([FromQuery] GetWorkOrderRequest request)
         {
