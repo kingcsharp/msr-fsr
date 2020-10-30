@@ -144,7 +144,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     RoleId = x.RoleId,
                     CertificationFromDate = x.CertificationFromDate,
                     CertificationToDate = x.CertificationToDate,
-                    User = new UserModel() { FirstName = x.User.FirstName, LastName = x.User.LastName }
+                    User = new UserModel() { FirstName = x.User.FirstName, LastName = x.User.LastName, Id = x.UserId }
                 }).ToListAsync();
             return roleIdsUserIds;
         }
