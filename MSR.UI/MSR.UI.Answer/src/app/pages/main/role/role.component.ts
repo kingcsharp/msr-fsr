@@ -7,7 +7,7 @@ import {
   CreateRoleRequest,
   AuditActionResultOfRole,
   UpdateUserRoleRequest,
-  UpdateRoleRequest, RolesUsersView
+  UpdateRoleRequest, RolesUsersView, ReportModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
@@ -20,6 +20,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { AllowedActions } from '../../../../app/models/lib/AllowedActions';
 import { copyObj, pushIfNotExists, emptyArray } from '../../../../app/models/lib/Utils';
+import { GridSaved } from '../../../../app/models/lib/GridSaved';
+import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
 
 declare let jQuery: any;
 
@@ -45,6 +47,9 @@ export class RoleComponent implements OnInit {
   roleUsers: RolesUsersView[] = [];
   showGrid: boolean = false;
 
+  roleUsersPopupGrid: GridSaved;
+  roleUsersPopupModel: ReportModel;
+
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private roleService: RoleService) {
   }
@@ -67,6 +72,25 @@ export class RoleComponent implements OnInit {
     this.isCertificationRole = [{ label: 'Yes', value: true },
     { label: 'No', value: false }];
     this.userPrivileges = this.globals.getEnumPrivileges(EnumMenuItem.Roles);
+
+    this.roleUsersPopupGrid = new GridSaved({
+      columnsSaved: [
+        new ColumnsSaved({ id: 'fullName', label: 'Name', type: EnumColumnType.String, visible: true,styles: { 'width': '30rem' } }),
+        new ColumnsSaved({ id: 'certificationFromDate', label: 'From Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+        new ColumnsSaved({ id: 'certificationToDate', label: 'To Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+      ],
+      gridClass: 'formTbl',
+      showMyViewsFeature: false,
+      paginator: false,
+      storageId: 'roleUsersPopupGrid',
+      version: '1.0.0'
+    });
+
+    this.roleUsersPopupModel = new ReportModel({
+      // name: 'Work Orders' + custNameAdd
+      name: 'Assigned Users'
+    });
+
     this.getRolesUsers();
     this.data = [];
   }
@@ -80,7 +104,6 @@ export class RoleComponent implements OnInit {
           return x;
         });
         this.showGrid = true;
-
       }));
   }
 

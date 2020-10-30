@@ -2125,3 +2125,52 @@ p-dialog {
     background: #e4e4e4;
   }
 }
+
+.innerGrid .ui-table-customers {
+  background: #394554;
+  padding: 0 10px;
+}
+
+.csr-form {
+  section.widget,
+  .ui-panel,
+  .ui-panel-titlebar,
+  .ui-panel-content-wrapper,
+  .ui-panel .ui-panel-content {
+    color: #fff !important;
+    background: transparent !important;
+  }
+  ul.valid-errors {
+    list-style: disc;
+    padding: 0 40px 0;
+  }
+}
+
+.headerSearch {
+  button {
+    top: -5px;
+    position: relative;
+    margin-left: 5px;
+  }
+  .searchinput {
+    width: 200px;
+    margin-left: 5px;
+    input {
+      border: none;
+      color: #f8f8f8;
+      background-color: #1d232a;
+      border-radius: 3px;
+      height: calc(2.25rem);
+    }
+  }
+  .calendarSearch {
+    font-size: 14px;
+    margin-left: 55px;
+    p-calendar {
+      display: inline-block;
+      input {
+        border: none;
+      }
+    }
+  }
+}

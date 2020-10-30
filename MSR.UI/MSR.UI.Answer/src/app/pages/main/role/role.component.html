@@ -179,8 +179,16 @@
                             </multiselect-wrapper-form>
                         </div>
                     </div>
+
                 </fieldset>
             </div>
+        </section>
+        <section>
+            <widget *ngIf="currentRole.id !== undefined && currentRole.isCertificationRole">
+                <app-grid [gridSaved]="roleUsersPopupGrid" [showReport]="true" [reportInfo]="roleUsersPopupModel"
+                    [data]="roleUsers">
+                </app-grid>
+            </widget>
         </section>
         <p-footer>
             <div class="pull-right">
