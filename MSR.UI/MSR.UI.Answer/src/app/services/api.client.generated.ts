@@ -3754,14 +3754,14 @@ export class ProcedureStepTemplateService {
     /**
      * Add procedure step template
      */
-    procedureStepTemplatePost(version: string, newproc: CreateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
+    procedureStepTemplatePost(version: string, newTemplate: CreateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(newproc);
+        const content_ = JSON.stringify(newTemplate);
 
         let options_ : any = {
             body: content_,
@@ -3812,14 +3812,14 @@ export class ProcedureStepTemplateService {
     /**
      * Update procedure step template
      */
-    procedureStepTemplatePatch(version: string, newproc: UpdateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
+    procedureStepTemplatePatch(version: string, request: UpdateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(newproc);
+        const content_ = JSON.stringify(request);
 
         let options_ : any = {
             body: content_,
@@ -14026,7 +14026,7 @@ export interface IAuditActionResultOfICollectionOfProcedureStepTemplateModel ext
 }
 
 export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
-    id?: number | undefined;
+    id?: number;
     title?: string | undefined;
     text?: string | undefined;
     systemTaskId?: number | undefined;
@@ -14132,7 +14132,7 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
 }
 
 export interface IProcedureStepTemplateModel {
-    id?: number | undefined;
+    id?: number;
     title?: string | undefined;
     text?: string | undefined;
     systemTaskId?: number | undefined;
@@ -14198,8 +14198,6 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14208,10 +14206,14 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: ICreateProcedureStepTemplateRequest) {
         if (data) {
@@ -14238,21 +14240,26 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
                 for (let item of _data["referenceDocuments"])
                     this.referenceDocuments!.push(item);
             }
-            if (Array.isArray(_data["referenceFiles"])) {
-                this.referenceFiles = [] as any;
-                for (let item of _data["referenceFiles"])
-                    this.referenceFiles!.push(item);
-            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
+            this.comments = _data["comments"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(item);
             }
-            this.comments = _data["comments"];
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
+            }
         }
     }
 
@@ -14279,21 +14286,26 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
             for (let item of this.referenceDocuments)
                 data["referenceDocuments"].push(item);
         }
-        if (Array.isArray(this.referenceFiles)) {
-            data["referenceFiles"] = [];
-            for (let item of this.referenceFiles)
-                data["referenceFiles"].push(item);
-        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
+        data["comments"] = this.comments;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        data["comments"] = this.comments;
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -14312,8 +14324,6 @@ export interface ICreateProcedureStepTemplateRequest {
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14322,16 +14332,20 @@ export interface ICreateProcedureStepTemplateRequest {
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /**  */
 export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepTemplateRequest {
     /** ProcedureStepTemplate Id */
-    id?: number;
+    id!: number;
     /** Title */
     title?: string | undefined;
     /** StepText */
@@ -14344,8 +14358,6 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14354,10 +14366,14 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateProcedureStepTemplateRequest) {
         if (data) {
@@ -14385,21 +14401,26 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
                 for (let item of _data["referenceDocuments"])
                     this.referenceDocuments!.push(item);
             }
-            if (Array.isArray(_data["referenceFiles"])) {
-                this.referenceFiles = [] as any;
-                for (let item of _data["referenceFiles"])
-                    this.referenceFiles!.push(item);
-            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
+            this.comments = _data["comments"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(item);
             }
-            this.comments = _data["comments"];
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
+            }
         }
     }
 
@@ -14427,21 +14448,26 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
             for (let item of this.referenceDocuments)
                 data["referenceDocuments"].push(item);
         }
-        if (Array.isArray(this.referenceFiles)) {
-            data["referenceFiles"] = [];
-            for (let item of this.referenceFiles)
-                data["referenceFiles"].push(item);
-        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
+        data["comments"] = this.comments;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        data["comments"] = this.comments;
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -14449,7 +14475,7 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
 /**  */
 export interface IUpdateProcedureStepTemplateRequest {
     /** ProcedureStepTemplate Id */
-    id?: number;
+    id: number;
     /** Title */
     title?: string | undefined;
     /** StepText */
@@ -14462,8 +14488,6 @@ export interface IUpdateProcedureStepTemplateRequest {
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14472,10 +14496,14 @@ export interface IUpdateProcedureStepTemplateRequest {
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
