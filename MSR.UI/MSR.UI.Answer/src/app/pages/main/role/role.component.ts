@@ -76,8 +76,8 @@ export class RoleComponent implements OnInit {
     this.roleUsersPopupGrid = new GridSaved({
       columnsSaved: [
         new ColumnsSaved({ id: 'fullName', label: 'Name', type: EnumColumnType.String, visible: true,styles: { 'width': '30rem' } }),
-        new ColumnsSaved({ id: 'certificationFromDate', label: 'From Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
-        new ColumnsSaved({ id: 'certificationToDate', label: 'To Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '8rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+        new ColumnsSaved({ id: 'certificationFromDate', label: 'Issue Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+        new ColumnsSaved({ id: 'certificationToDate', label: 'Expiration Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
       ],
       gridClass: 'formTbl',
       showMyViewsFeature: false,
@@ -87,8 +87,7 @@ export class RoleComponent implements OnInit {
     });
 
     this.roleUsersPopupModel = new ReportModel({
-      // name: 'Work Orders' + custNameAdd
-      name: 'Assigned Users'
+      name: ''
     });
 
     this.getRolesUsers();
