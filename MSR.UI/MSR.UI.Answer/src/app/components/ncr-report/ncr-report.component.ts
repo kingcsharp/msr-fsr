@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ProcedureStepMonitor, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { Component, Input, OnInit, Output,EventEmitter } from '@angular/core';
+import { FileModel, ProcedureStepMonitor, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { Globals } from '../../models/lib/globals';
 import { ProcedureStepType } from '../../models/enums/ProcedureStepType';
 @Component({
@@ -14,6 +14,9 @@ export class NcrReportComponent implements OnInit {
   taskSummaries: Array<any> = new Array<any>();
   technicianFullName: string;
   date: Date;
+  associatedDigitalPictures: Array<FileModel> = new Array<FileModel>();
+  showImagePreview: boolean = false;
+  imagePreview: FileModel = new FileModel();
 
   constructor(private globals: Globals) { }
 
@@ -35,8 +38,6 @@ export class NcrReportComponent implements OnInit {
   }
 
   generateMonitorSummaries() {
-
-
 
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
 
@@ -62,11 +63,16 @@ export class NcrReportComponent implements OnInit {
 
         this.taskSummaries.push(taskSummary);
 
+        this.associatedDigitalPictures = this.associatedDigitalPictures.concat(workOrderTask.referenceFiles);
+
       }
 
 
     });
-
   }
 
+  showImagePreviewDialog(fileModel: FileModel) {
+      this.imagePreview = fileModel;
+      this.showImagePreview = !this.showImagePreview;
+  }
 }
