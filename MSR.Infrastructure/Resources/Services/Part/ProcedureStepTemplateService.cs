@@ -178,21 +178,37 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         }
 
-        public async Task<bool> DeleteProcedureStepTemplateAsync(DeleteProcedureStepTemplate command)
+        public async Task DeleteProcedureStepTemplateAsync(DeleteProcedureStepTemplate command)
         {
-            var current = await _unitOfWork.ProcedureStepTemplates.FirstOrDefaultAsync(false, i => i.Id == command.Id);
+            var current = await _unitOfWork.ProcedureStepTemplates
+                .Query()
+                .Include(x => x.ReferenceFiles)
+                .ThenInclude(y => y.FileObject)
+                .FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if(current is null)
             {
                 throw new DomainException($"{nameof(EntityFramework.Entities.ProcedureStepTemplate)} not found with ID: {command.Id}", DomainError.NotFound);
             }
 
-            if (CurrentUser.HasPrivilege(EnumMenuItem.RunnableProcedures, EnumPrivilege.CanDelete)) {
+            if (CurrentUser.HasPrivilege(EnumMenuItem.Templates, EnumPrivilege.CanDelete)) {
+               
+                foreach (FileEntityMap map in current.ReferenceFiles)
+                {
+                    if (map.EntityTableName != nameof(EntityFramework.Entities.ProcedureStepTemplate))
+                    {
+                        continue;
+                    }
+                    _unitOfWork.FileEntityMap.Delete(false, map);
+                }
+
                 _unitOfWork.ProcedureStepTemplates.Delete(false, current);
+                
             } else {
                 throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepTemplateModel)} uid {CurrentUser.GetId()}");
             }
-            return true;
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
