@@ -5388,6 +5388,55 @@
       }
     },
     "/v{version}/WorkOrderPart": {
+      "get": {
+        "tags": [
+          "WorkOrderPart"
+        ],
+        "operationId": "WorkOrderPart_Get",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "WorkOrderId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActionResultOfICollectionOfWorkOrderPartModel"
+                }
+              }
+            }
+          }
+        }
+      },
       "patch": {
         "tags": [
           "WorkOrderPart"
@@ -13742,6 +13791,27 @@
             "minLength": 1
           }
         }
+      },
+      "AuditActionResultOfICollectionOfWorkOrderPartModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditActionResult"
+          },
+          {
+            "type": "object",
+            "description": "Base class for an API call with a typed result",
+            "additionalProperties": false,
+            "properties": {
+              "object": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/WorkOrderPartModel"
+                }
+              }
+            }
+          }
+        ]
       },
       "AuditActionResultOfWorkOrderPartModel": {
         "allOf": [
