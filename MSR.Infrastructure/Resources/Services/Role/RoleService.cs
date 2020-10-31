@@ -140,6 +140,7 @@ namespace MSR.Infrastructure.Resources.Services.Role
             var roleIdsUserIds = await _unitOfWork.UserRoles.Query()
                 .Select(x => new RolesUsersView
                 {
+                    Id = x.Id,
                     UserId = x.UserId,
                     RoleId = x.RoleId,
                     CertificationFromDate = x.CertificationFromDate,
@@ -186,6 +187,20 @@ namespace MSR.Infrastructure.Resources.Services.Role
                     ChildRole = role
                 };
                 await _unitOfWork.RoleChildRoleMaps.AddAsync(map);
+            }
+
+            if (command.IsCertificationRole)
+            {
+                var userRoleIds = command.UserRoles.Select(x => x.UserRoleId).ToList();
+
+                var userRoles = await _unitOfWork.UserRoles.Query().Where(x => userRoleIds.Contains(x.Id)).ToListAsync();
+                foreach (var item in userRoles)
+                {
+                    var commandUserRole = command.UserRoles.FirstOrDefault(x => x.UserRoleId == item.Id);
+                    item.CertificationFromDate = commandUserRole.CertificationFromDate;
+                    item.CertificationToDate = commandUserRole.CertificationToDate;
+                    _unitOfWork.UserRoles.Update(item);
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();
