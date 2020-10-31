@@ -9,7 +9,7 @@ namespace MSR.Domain.Models
         {
 
         }
-
+        public int Id { get; set; }
         public int RoleId { get; set; }
 
         public DateTime? CertificationFromDate { get; set; }

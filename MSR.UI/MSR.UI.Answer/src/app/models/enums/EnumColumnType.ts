@@ -4,7 +4,8 @@ export enum EnumColumnType {
     String = 2,
     Money = 3,
     Boolean = 4,
-    StringArray= 5,
-    Template
+    StringArray = 5,
+    Template = 6,
+    InputNumber = 7,
+    InputDateTime = 7,
 }
- 

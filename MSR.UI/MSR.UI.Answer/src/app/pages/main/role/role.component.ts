@@ -6,7 +6,7 @@ import {
   MenuItem, Role,
   CreateRoleRequest,
   AuditActionResultOfRole,
-  UpdateUserRoleRequest,
+  UpdateUserRoleRequest, UserRoleModel,
   UpdateRoleRequest, RolesUsersView, ReportModel
 } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
@@ -22,6 +22,7 @@ import { AllowedActions } from '../../../../app/models/lib/AllowedActions';
 import { copyObj, pushIfNotExists, emptyArray } from '../../../../app/models/lib/Utils';
 import { GridSaved } from '../../../../app/models/lib/GridSaved';
 import { EnumColumnType } from '../../../../app/models/enums/EnumColumnType';
+import * as moment from 'moment';
 
 declare let jQuery: any;
 
@@ -75,9 +76,9 @@ export class RoleComponent implements OnInit {
 
     this.roleUsersPopupGrid = new GridSaved({
       columnsSaved: [
-        new ColumnsSaved({ id: 'fullName', label: 'Name', type: EnumColumnType.String, visible: true,styles: { 'width': '30rem' } }),
-        new ColumnsSaved({ id: 'certificationFromDate', label: 'Issue Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
-        new ColumnsSaved({ id: 'certificationToDate', label: 'Expiration Date', visible: true, type: EnumColumnType.Date, isRanged: true,styles: { 'width': '10rem' }, formattingAngular: 'MM-dd-yyyy', formattingMoment: 'MM-dd-YYYY' }),
+        new ColumnsSaved({ id: 'fullName', label: 'Name', type: EnumColumnType.String, visible: true, styles: { 'width': '23rem' } }),
+        new ColumnsSaved({ id: 'certificationFromDate', label: 'Issue Date', visible: true, type: EnumColumnType.InputDateTime, styles: { 'width': '10rem' } }),
+        new ColumnsSaved({ id: 'certificationToDate', label: 'Expiration Date', visible: true, type: EnumColumnType.InputDateTime, styles: { 'width': '10rem' } }),
       ],
       gridClass: 'formTbl',
       showMyViewsFeature: false,
@@ -98,12 +99,16 @@ export class RoleComponent implements OnInit {
     this.globals.showLoader(true);
     this.roleService.roleGet(env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
-        this.data = response.object.map(x => {
-          x.assignedUsers = this.getRoleUsersByRoleId(x.id);
-          return x;
-        });
+        this.setAssignedUsers(response.object);
         this.showGrid = true;
       }));
+  }
+
+  setAssignedUsers(data){
+    this.data = data.map(x => {
+      x.assignedUsers = this.getRoleUsersByRoleId(x.id);
+      return x;
+    });
   }
 
   getRolesUsers() {
@@ -144,13 +149,30 @@ export class RoleComponent implements OnInit {
       this.globals.showLoader(true);
       let method: Observable<AuditActionResultOfRole> = null;
 
+
       let data = {
         id: this.currentRole.id,
         name: this.currentRole.name, isCertificationRole: this.currentRole.isCertificationRole,
-        parentRoleIds: this.currentRole.parentRoles.map((role) => role.id)
+        parentRoleIds: this.currentRole.parentRoles.map((role) => role.id),
+        userRoles: []
       };
 
       if (this.currentRole.id !== undefined) {
+        if (data.isCertificationRole) {
+          data.userRoles = [];
+          this.roleUsers.forEach((x: any) => {
+            var userRoleModel = new UserRoleModel(x);
+            userRoleModel.userRoleId = x.id;
+            if (userRoleModel.certificationFromDate !== undefined) {
+              userRoleModel.certificationFromDate = moment(userRoleModel.certificationFromDate, 'MM/DD/YYYY').toDate();
+            }
+            if (userRoleModel.certificationToDate !== undefined) {
+              userRoleModel.certificationToDate = moment(userRoleModel.certificationToDate, 'MM/DD/YYYY').toDate();
+            }
+            data.userRoles.push(userRoleModel);
+          });
+        }
+
         let postRoleData = new UpdateRoleRequest(data);
         method = this.roleService.rolePatch(env.apiVersion, postRoleData);
       } else {
@@ -161,6 +183,7 @@ export class RoleComponent implements OnInit {
       method.pipe(take(1)).subscribe(responseHandler((resp) => {
         if (!resp.hasErrors) {
           resp.object.parentRoles = this.currentRole.parentRoles;
+          resp.object.assignedUsers = this.getRoleUsersByRoleId(this.currentRole.id);
           if (ctrl.currentRole.id === undefined) {
             ctrl.data.push(resp.object);
             this.data = this.data.slice(0);

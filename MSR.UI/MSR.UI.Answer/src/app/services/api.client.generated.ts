@@ -17729,6 +17729,7 @@ export interface IAuditActionResultOfICollectionOfRolesUsersView extends IAuditA
 }
 
 export class RolesUsersView implements IRolesUsersView {
+    id?: number;
     roleId?: number;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
@@ -17746,6 +17747,7 @@ export class RolesUsersView implements IRolesUsersView {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.roleId = _data["roleId"];
             this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
             this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
@@ -17763,6 +17765,7 @@ export class RolesUsersView implements IRolesUsersView {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["roleId"] = this.roleId;
         data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
         data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
@@ -17773,6 +17776,7 @@ export class RolesUsersView implements IRolesUsersView {
 }
 
 export interface IRolesUsersView {
+    id?: number;
     roleId?: number;
     certificationFromDate?: Date | undefined;
     certificationToDate?: Date | undefined;
@@ -17869,6 +17873,7 @@ export interface ICreateRoleRequest {
 
 export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleRequest {
     id?: number;
+    userRoles?: UserRoleModel[] | undefined;
 
     constructor(data?: IUpdateRoleRequest) {
         super(data);
@@ -17878,6 +17883,11 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
         super.init(_data);
         if (_data) {
             this.id = _data["id"];
+            if (Array.isArray(_data["userRoles"])) {
+                this.userRoles = [] as any;
+                for (let item of _data["userRoles"])
+                    this.userRoles!.push(UserRoleModel.fromJS(item));
+            }
         }
     }
 
@@ -17891,6 +17901,11 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        if (Array.isArray(this.userRoles)) {
+            data["userRoles"] = [];
+            for (let item of this.userRoles)
+                data["userRoles"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
@@ -17898,6 +17913,59 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
 
 export interface IUpdateRoleRequest extends ICreateRoleRequest {
     id?: number;
+    userRoles?: UserRoleModel[] | undefined;
+}
+
+export class UserRoleModel implements IUserRoleModel {
+    userRoleId!: number;
+    userId?: number | undefined;
+    roleId?: number | undefined;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+
+    constructor(data?: IUserRoleModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userRoleId = _data["userRoleId"];
+            this.userId = _data["userId"];
+            this.roleId = _data["roleId"];
+            this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
+            this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserRoleModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserRoleModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userRoleId"] = this.userRoleId;
+        data["userId"] = this.userId;
+        data["roleId"] = this.roleId;
+        data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
+        data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IUserRoleModel {
+    userRoleId: number;
+    userId?: number | undefined;
+    roleId?: number | undefined;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
 }
 
 /** Base class for an API call with a typed result */
