@@ -6,7 +6,7 @@ import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
   RoleService, Procedure, ProcedureStepModel, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService, SensorService,
   ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, UpdateProcedureStepRequest,
-  RoleRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, IUpdateProcedureStepRequest
+  RoleRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, IUpdateProcedureStepRequest, ProcedureStepTemplateModel, IRoleRequest, FileRequest
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -300,7 +300,7 @@ export class ProcedureEditComponent implements OnInit {
 
   addProcedureStep() {
 
-    if (this.selectedProcedureStepTemplate === undefined) {
+    if (this.selectedProcedureStepTemplate === undefined || this.selectedProcedureStepTemplate === null) {
 
       let createProcedureStepRequest = new CreateProcedureStepRequest({
         duration: 0,
@@ -321,68 +321,74 @@ export class ProcedureEditComponent implements OnInit {
         referenceFileIds: new Array<number>()
       } as ICreateProcedureStepRequest);
 
-      this.globals.showLoader(true);
-      this.procedureService.stepPost(this.procedure.id, env.apiVersion, createProcedureStepRequest).pipe(take(1)).subscribe(responseHandler(response => {
-
-        let procedureStepToAdd: any = {};
-        procedureStepToAdd.id = response.object.id;
-        procedureStepToAdd.duration = createProcedureStepRequest.duration;
-        procedureStepToAdd.durationType = createProcedureStepRequest.durationType;
-        procedureStepToAdd.equipmentTime = createProcedureStepRequest.equipmentTime;
-        procedureStepToAdd.laborTime = createProcedureStepRequest.laborTime;
-        procedureStepToAdd.printOrder = createProcedureStepRequest.printOrder;
-        procedureStepToAdd.procedureId = createProcedureStepRequest.procedureId;
-        procedureStepToAdd.referenceFiles = [];
-        procedureStepToAdd.replacementCost = createProcedureStepRequest.replacementCost;
-        procedureStepToAdd.roles = createProcedureStepRequest.roles;
-        procedureStepToAdd.selectedRoles = new Array<Role>();
-        procedureStepToAdd.stepText = createProcedureStepRequest.stepText;
-        procedureStepToAdd.title = createProcedureStepRequest.title;
-        procedureStepToAdd.usefulLife = createProcedureStepRequest.usefulLife;
-        procedureStepToAdd.utilization = createProcedureStepRequest.utilization;
-        procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1]?.title;
-        procedureStepToAdd.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === 1)?.value;
-        this.procedureSteps.push(procedureStepToAdd);
-        this.procedureSteps = [...this.procedureSteps];
-
-      }));
+      this.addProcedureStepToProcedure(createProcedureStepRequest, undefined);
 
 
 
     } else {
+
       this.globals.showLoader(true);
-      this.procedureTemplateService.procedureTemplateGet(this.selectedProcedureStepTemplate, env.apiVersion).pipe(take(1)).subscribe(responseHandler((response) => {
+      this.procedureTemplateService.procedureTemplateGet(this.selectedProcedureStepTemplate, env.apiVersion).pipe(take(1)).subscribe(responseHandler(response => {
 
-        let procedureStepTemplateToAdd = response.object[0];
-        let procedureStepToAdd: any = {};
-        procedureStepToAdd.id = 0;
-        procedureStepToAdd.duration = procedureStepTemplateToAdd.estimatedStepDuration;
-        procedureStepToAdd.durationType = '0';
-        procedureStepToAdd.laborTime = 0;
-        procedureStepToAdd.printOrder = this.procedureSteps.length === 0 ? 1 : this.procedureSteps.length + 1;
-        procedureStepToAdd.procedureId = this.procedure.id;
-        procedureStepToAdd.referenceFiles = procedureStepTemplateToAdd.referenceFiles === undefined ? [] : procedureStepTemplateToAdd.referenceFiles;
-        procedureStepToAdd.replacementCost = 0;
-        procedureStepToAdd.stepText = '';
-        procedureStepToAdd.roles = procedureStepTemplateToAdd.roles;
-        procedureStepToAdd.selectedRoles = new Array<Role>();
-        procedureStepTemplateToAdd.roles?.forEach(role => {
+        let procedureStepTemplateToAdd = <ProcedureStepTemplateModel>response.object[0];
 
-          procedureStepToAdd.selectedRoles.push(role);
+        let createProcedureStepRequest = new CreateProcedureStepRequest({
+          duration: 0,
+          durationType: null,
+          equipmentTime: procedureStepTemplateToAdd.equipmentTime === null ? 0 : procedureStepTemplateToAdd.equipmentTime,
+          laborTime: procedureStepTemplateToAdd.laborTime === null ? 0 : procedureStepTemplateToAdd.laborTime,
+          predecessorStepId: this.procedureSteps[this.procedureSteps.length - 1]?.id,
+          printOrder: this.procedureSteps.length === 0 ? 1 : this.procedureSteps[this.procedureSteps.length - 1]?.printOrder + 1,
+          procedureId: this.procedure.id,
+          replacementCost: procedureStepTemplateToAdd.replacementCost,
+          roles: procedureStepTemplateToAdd.roles.map(s => new RoleRequest({
+            id: s
+          } as IRoleRequest)),
+          stepText: procedureStepTemplateToAdd.text,
+          title: procedureStepTemplateToAdd.title,
+          usefulLife: procedureStepTemplateToAdd.usefulLife,
+          utilization: procedureStepTemplateToAdd.utilization,
+          procedureStepTypeId: 1,
+          referenceFiles: new Array<FileRequest>(),
+          referenceFileIds: procedureStepTemplateToAdd.referenceFiles.map(s => s.fileId)
+        } as ICreateProcedureStepRequest);
 
-        });
-        procedureStepToAdd.stepText = procedureStepTemplateToAdd.text === undefined ? '' : procedureStepTemplateToAdd.text;
-        procedureStepToAdd.title = procedureStepTemplateToAdd.title;
-        procedureStepToAdd.usefulLife = procedureStepTemplateToAdd.usefulLife;
-        procedureStepToAdd.equipmentTime = 0;
-        procedureStepToAdd.utilization = procedureStepTemplateToAdd.utilization;
-        procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1]?.title;
-        this.procedureSteps.push(procedureStepToAdd);
-        this.selectedProcedureStepTemplate = undefined;
-        this.procedureSteps = [...this.procedureSteps];
+        this.addProcedureStepToProcedure(createProcedureStepRequest, procedureStepTemplateToAdd.referenceFiles);
+
       }));
 
     }
+
+  }
+
+  addProcedureStepToProcedure(createProcedureStepRequest: CreateProcedureStepRequest, fileModels: Array<FileModel>) {
+
+    this.globals.showLoader(true);
+    this.procedureService.stepPost(this.procedure.id, env.apiVersion, createProcedureStepRequest).pipe(take(1)).subscribe(responseHandler(stepPostResponse => {
+
+      let procedureStepToAdd: any = {};
+      procedureStepToAdd.id = stepPostResponse.object.id;
+      procedureStepToAdd.duration = createProcedureStepRequest.duration;
+      procedureStepToAdd.durationType = createProcedureStepRequest.durationType;
+      procedureStepToAdd.equipmentTime = createProcedureStepRequest.equipmentTime;
+      procedureStepToAdd.laborTime = createProcedureStepRequest.laborTime;
+      procedureStepToAdd.printOrder = createProcedureStepRequest.printOrder;
+      procedureStepToAdd.procedureId = createProcedureStepRequest.procedureId;
+      procedureStepToAdd.referenceFiles = [];
+      procedureStepToAdd.replacementCost = createProcedureStepRequest.replacementCost;
+      procedureStepToAdd.roles = createProcedureStepRequest.roles;
+      procedureStepToAdd.selectedRoles = new Array<Role>();
+      procedureStepToAdd.stepText = createProcedureStepRequest.stepText;
+      procedureStepToAdd.title = createProcedureStepRequest.title;
+      procedureStepToAdd.usefulLife = createProcedureStepRequest.usefulLife;
+      procedureStepToAdd.utilization = createProcedureStepRequest.utilization;
+      procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1]?.title;
+      procedureStepToAdd.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === 1)?.value;
+      procedureStepToAdd.referenceFiles = fileModels === undefined ? new Array<FileModel>() : fileModels;
+      this.procedureSteps.push(procedureStepToAdd);
+      this.procedureSteps = [...this.procedureSteps];
+
+    }));
 
   }
 

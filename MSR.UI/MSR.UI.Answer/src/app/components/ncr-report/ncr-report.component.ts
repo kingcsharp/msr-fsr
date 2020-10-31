@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ProcedureStepMonitor, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { Component, Input, OnInit, Output,EventEmitter } from '@angular/core';
+import { FileModel, ProcedureStepMonitor, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { Globals } from '../../models/lib/globals';
+import { ProcedureStepType } from '../../models/enums/ProcedureStepType';
 @Component({
   selector: 'ncr-report',
   templateUrl: './ncr-report.component.html',
@@ -13,12 +14,16 @@ export class NcrReportComponent implements OnInit {
   taskSummaries: Array<any> = new Array<any>();
   technicianFullName: string;
   date: Date;
+  associatedDigitalPictures: Array<FileModel> = new Array<FileModel>();
+  showImagePreview: boolean = false;
+  imagePreview: FileModel = new FileModel();
+
   constructor(private globals: Globals) { }
 
   ngOnInit(): void {
 
     this.technicianFullName = this.globals.getCurrentUser().fullName;
-    this.date =  new Date();
+    this.date = new Date();
 
     this.WorkOrder.workOrderTasks.map(s => {
 
@@ -36,27 +41,38 @@ export class NcrReportComponent implements OnInit {
 
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
 
-      let taskSummary = {
-        taskName: workOrderTask.procedureStep.title,
-        taskId: workOrderTask.id,
-        procedureStepType: workOrderTask.procedureStepType.name,
-        monitors: new Array<any>()
-      };
+      if (workOrderTask.procedureStepTypeId === ProcedureStepType.NCR) {
 
-      workOrderTask.workOrderTaskMonitors.forEach(workOrderTaskMonitor => {
+        let taskSummary = {
+          taskName: workOrderTask.procedureStep.title,
+          taskId: workOrderTask.id,
+          procedureStepType: workOrderTask.procedureStepType.name,
+          monitors: new Array<any>()
+        };
 
-        taskSummary.monitors.push({
-          monitorTitle: workOrderTaskMonitor.procedureStepMonitor?.description,
-          result: workOrderTaskMonitor.textVal,
-          comment: workOrderTaskMonitor.comment
+        workOrderTask.workOrderTaskMonitors.forEach(workOrderTaskMonitor => {
+
+          taskSummary.monitors.push({
+            monitorTitle: workOrderTaskMonitor.procedureStepMonitor?.description,
+            result: workOrderTaskMonitor.textVal,
+            comment: workOrderTaskMonitor.comment
+
+          });
 
         });
 
-      });
+        this.taskSummaries.push(taskSummary);
 
-      this.taskSummaries.push(taskSummary);
+        this.associatedDigitalPictures = this.associatedDigitalPictures.concat(workOrderTask.referenceFiles);
+
+      }
+
+
     });
-
   }
 
+  showImagePreviewDialog(fileModel: FileModel) {
+      this.imagePreview = fileModel;
+      this.showImagePreview = !this.showImagePreview;
+  }
 }

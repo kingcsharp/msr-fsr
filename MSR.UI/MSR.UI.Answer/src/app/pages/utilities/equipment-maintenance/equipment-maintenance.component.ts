@@ -103,6 +103,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
   users: any[] = [];
   getUsersFlag: boolean = false;
   internalAddress: string;
+  isLooking: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -159,8 +160,12 @@ export class EquipmentMaintenanceComponent implements OnInit {
   }
 
   getLocations() {
+    if (this.getLocationsFlag === false || !this.internalAddress) {
+      return;
+    }
     if (this.internalAddress) {
       this.getLocationsFlag = false;
+      this.isLooking = true;
       this.locationService.locationGet(null, null, this.internalAddress, env.apiVersion).pipe(take(1))
       .subscribe(responseHandler(response => {
         this.locations = [];
@@ -171,6 +176,7 @@ export class EquipmentMaintenanceComponent implements OnInit {
           this.currentEM.locationId = this.locations[0].value;
         }
         this.getLocationsFlag = true;
+        this.isLooking = false;
       }));
     }
   }
