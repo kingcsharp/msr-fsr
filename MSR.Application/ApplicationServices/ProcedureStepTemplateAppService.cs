@@ -49,8 +49,8 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(DeleteProcedureStepTemplate command, CancellationToken cancellationToken = default)
         {
-            var ret = await _procedureService.DeleteProcedureStepTemplateAsync(command);
-            return new CommandResponse<bool>(ret);
+            await _procedureService.DeleteProcedureStepTemplateAsync(command);
+            return CommandResponse.SuccessCommand;
         }
     }
 }

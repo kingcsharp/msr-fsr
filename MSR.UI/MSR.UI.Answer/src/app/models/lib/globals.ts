@@ -160,6 +160,9 @@ export class Globals {
 
     getSingularMenuName(menuItem) {
         let name = EnumMenuItem[menuItem];
+        if (menuItem === EnumMenuItem.Templates) {
+          name = 'ProcedureStepTemplate';
+        }
         return name.replace(/s$/, '');
     }
 

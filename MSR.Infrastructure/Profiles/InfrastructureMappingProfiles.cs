@@ -263,7 +263,6 @@ namespace MSR.Infrastructure.Profiles
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',', src.Roles)))
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()

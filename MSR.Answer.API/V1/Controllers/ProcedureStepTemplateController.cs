@@ -20,6 +20,7 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     public class ProcedureStepTemplateController : BaseApiController
     {
+        private const string privilegeApiName = "Templates";
         private ICommandDispatcher _dispatcher;
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepTemplateModel>>))]
         public async Task<IActionResult> GetProcedureStepTemplate(int? id)
         {
@@ -49,14 +50,13 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Add procedure step template
         /// </summary>
-        /// <param name="newproc"></param>
+        /// <param name="newTemplate"></param>
         /// <returns></returns>
-        [HttpPost]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanCreate)]
+        [HttpPost, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanCreate)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplateModel>))]
-        public async Task<IActionResult> AddProcedureStepTemplate(CreateProcedureStepTemplateRequest newproc)
+        public async Task<IActionResult> AddProcedureStepTemplate(CreateProcedureStepTemplateRequest newTemplate)
         {
-            var command = newproc.ToCreateProcedureStepTemplateCommand();
+            var command = newTemplate.ToCreateProcedureStepTemplateCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureStepTemplateModel>("New procedure template successfully submitted");
         }
@@ -64,16 +64,30 @@ namespace MSR.Answer.API.V1.Controllers
         /// <summary>
         /// Update procedure step template
         /// </summary>
-        /// <param name="newproc"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPatch]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanEdit)]
+        [HttpPatch, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanEdit)]
         [SwaggerResponse(typeof(AuditActionResult<ProcedureStepTemplateModel>))]
-        public async Task<IActionResult> UpdateProcedureStepTemplate(UpdateProcedureStepTemplateRequest newproc)
+        public async Task<IActionResult> UpdateProcedureStepTemplate(UpdateProcedureStepTemplateRequest request)
         {
-            var command = newproc.ToUpdateProcedureStepTemplateCommand();
+            var command = request.ToUpdateProcedureStepTemplateCommand();
             var ret = await _dispatcher.DispatchAsync(command);
             return ret.ToOkObjectResponse<ProcedureStepTemplateModel>("Procedure template successfully updated");
+        }
+
+        /// <summary>
+        /// Deletes any ProcedureStepTemplate with a matching Id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}"), HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanDelete)]
+        [SwaggerResponse(typeof(AuditActionResult))]
+        public async Task<IActionResult> DeleteProcedureStepTemplate(int id)
+        {
+            var command = new DeleteProcedureStepTemplate() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse("ProcedureStepTemplate has been sucessfully deleted.");
         }
     }
 }

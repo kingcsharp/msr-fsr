@@ -265,7 +265,7 @@ export class RoleassignmentsComponent implements OnInit {
 
   }
 
-  generateUniqueUpdateRoleModelRequests(permissionChanges): Array<UpdateMenuRoleMapRequest>{
+  generateUniqueUpdateRoleModelRequests(permissionChanges): Array<UpdateMenuRoleMapRequest> {
 
     let uniquePermissionChanges = new Array<UpdateMenuRoleMapRequest>();
 
@@ -318,7 +318,7 @@ export class RoleassignmentsComponent implements OnInit {
         }));
 
       } else {
- 
+
         this.menuService.roleDelete(roleChange.menuModule.id, roleChange.roleModule.id, env.apiVersion).subscribe(responseHandler((response) => {
 
         }));
