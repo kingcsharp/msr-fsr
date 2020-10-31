@@ -22,7 +22,7 @@ namespace MSR.Domain.Models
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id")]
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or Sets Title
