@@ -60,7 +60,7 @@
             <td [hidden]="!commonGrid.isVisibleCol('text', gridSettings)"  [innerHTML]="model.text">
             </td>
             <td>
-              <grid-file-viewer [menuItem]="model.referenceFiles" [files]="model.referenceFiles"></grid-file-viewer>
+              <grid-file-viewer [menuItem]="menuItems.Templates" [files]="model.referenceFiles"></grid-file-viewer>
             </td>
             <td>
               <i *ngIf="templatesPrivileges.canEdit" class="far fa-edit pointer" tooltip="Edit Procedure Template" data-cy="edit-button"
