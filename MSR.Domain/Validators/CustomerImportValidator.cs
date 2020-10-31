@@ -1,4 +1,6 @@
 ﻿using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using System.Collections.Generic;
@@ -35,6 +37,14 @@ namespace MSR.Domain.Validators
 
             importErrors = errors.Any() ? errors : null;
             return !errors.Any();
+        }
+
+        public bool ValidateImportData(byte[] binData, out IEnumerable<ImportError> importErrors)
+        {
+            throw new DomainException(
+                $"{nameof(CustomerImportValidator)} cannot import binary data",
+                DomainError.BadRequest
+            );
         }
     }
 }

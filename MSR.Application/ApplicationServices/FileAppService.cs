@@ -78,13 +78,6 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(ImportFile command, CancellationToken cancellationToken = default)
         {
-            var base64File = Base64Helper.Parse(command.Base64Data);
-            var csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
-            if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
-            {
-                csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
-            }
-
             if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate)) {
                 // Importing data through workflow is not supported.
                 throw new DomainException("Permission denied for import " +
@@ -92,16 +85,44 @@ namespace MSR.Application.ApplicationServices
                     DomainError.BadRequest);
             }
 
+            var base64File = Base64Helper.Parse(command.Base64Data);
+            string csvData = "";
+            byte[] binData = new byte[0];
             var validator = _validationFactory.Create(command.MenuItem);
 
-            if (!validator.ValidateImportData(csvData, out var importErrors))
+            if (base64File.ContentType.ToUpper().Equals("TEXT/CSV"))
             {
-                return new CommandResponse<IEnumerable<ImportError>>(importErrors);
+                csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
+                if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
+                {
+                    csvData = csvData.Remove(0, Base64Helper.ByteOrderMarkUtf8.Length);
+                }
+
+                if (!validator.ValidateImportData(csvData, out var importErrors))
+                {
+                    return new CommandResponse<IEnumerable<ImportError>>(importErrors);
+                }
+            }
+            else if (base64File.ContentType.ToUpper().Equals("APPLICATION/VND.MS-EXCEL"))
+            {
+                binData = base64File.FileContents;
+                if (!validator.ValidateImportData(binData, out var importErrors))
+                {
+                    return new CommandResponse<IEnumerable<ImportError>>(importErrors);
+                }
+            }
+            else
+            {
+                throw new DomainException(
+                    $"Invalid Import file type: {base64File.ContentType}",
+                    DomainError.BadRequest
+                );
             }
 
             var importEvent = new ImportEvent()
             {
                 CsvData = csvData,
+                BinData = binData,
                 MenuItem = command.MenuItem
             };
 

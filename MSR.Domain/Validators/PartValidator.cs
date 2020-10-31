@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using System;
@@ -73,5 +75,12 @@ namespace MSR.Domain.Validators
             return parts;
         }
 
+        public bool ValidateImportData(byte[] binData, out IEnumerable<ImportError> importErrors)
+        {
+            throw new DomainException(
+                $"{nameof(PartValidator)} cannot import binary data",
+                DomainError.BadRequest
+            );
+        }
     }
 }

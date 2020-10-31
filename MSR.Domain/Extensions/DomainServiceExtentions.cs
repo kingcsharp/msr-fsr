@@ -28,6 +28,7 @@ namespace MSR.Domain.Extensions
             services.AddTransient<CustomerImportValidator>();
             services.AddTransient<LocationImportValidator>();
             services.AddTransient<PartValidator>();
+            services.AddTransient<ProcedureValidator>();
 
             return services;
         }
