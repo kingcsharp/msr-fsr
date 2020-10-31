@@ -104,7 +104,7 @@ export class RoleComponent implements OnInit {
       }));
   }
 
-  setAssignedUsers(data){
+  setAssignedUsers(data) {
     this.data = data.map(x => {
       x.assignedUsers = this.getRoleUsersByRoleId(x.id);
       return x;
@@ -161,7 +161,7 @@ export class RoleComponent implements OnInit {
         if (data.isCertificationRole) {
           data.userRoles = [];
           this.roleUsers.forEach((x: any) => {
-            var userRoleModel = new UserRoleModel(x);
+            let userRoleModel = new UserRoleModel(x);
             userRoleModel.userRoleId = x.id;
             if (userRoleModel.certificationFromDate !== undefined) {
               userRoleModel.certificationFromDate = moment(userRoleModel.certificationFromDate, 'MM/DD/YYYY').toDate();
