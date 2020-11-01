@@ -114,7 +114,7 @@
           <ng-template pTemplate="body" let-filemodel>
             <tr class="ui-selectable-row" data-cy="row">
               <td>
-                <p-checkbox [value]="filemodel"  [(ngModel)]="selectedFiles" [inputId]="filemodel"></p-checkbox>
+                <p-checkbox [value]="filemodel"  [(ngModel)]="selectedFiles" [inputId]="'file_'+filemodel.fileId"></p-checkbox>
               </td>
               <td>
                 {{filemodel.fileId}}
