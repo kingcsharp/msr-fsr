@@ -97,7 +97,7 @@
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.InputDateTime"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <div data-cy="{{colsDataAndSettings.col.id}}" class="display-inline-block isActive">
-            <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="colsDataAndSettings.colData[colsDataAndSettings.col.id]"
+        <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="colsDataAndSettings.colData[colsDataAndSettings.col.id]"
                 dataType="string" [locale]="calendarEn" appendTo="body">
             </p-calendar>
         </div>

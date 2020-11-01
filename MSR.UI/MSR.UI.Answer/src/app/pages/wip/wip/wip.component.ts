@@ -17,7 +17,6 @@ import { take } from 'rxjs/operators';
 export class WipComponent implements OnInit {
 
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridStorageId: string;
   data: Array<any> = new Array<any>();
   statusOptions: Array<SelectItem>;
@@ -86,7 +85,6 @@ export class WipComponent implements OnInit {
       this.locationOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.locationName === thing.locationName) === i
       ).map(x => ({ label: x.locationName, value: x.locationName }));
-      this.loading = false;
 
     }));
 

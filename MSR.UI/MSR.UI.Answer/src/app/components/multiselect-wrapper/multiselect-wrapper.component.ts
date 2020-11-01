@@ -70,6 +70,14 @@ export class MultiselectWrapperComponent implements OnInit {
     this.subscriptions.push(sub2);
   }
 
+  clear() {
+    let length = this.selectedColumns.length;
+    while (length--) {
+      this.selectedColumns.pop();
+    }
+    this.filterGrid();
+  }
+
   ngDoCheck() {
     if (this.options === undefined) {
       return;

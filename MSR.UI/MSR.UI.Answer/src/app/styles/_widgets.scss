@@ -2175,3 +2175,14 @@ p-dialog {
 p-calendar > span > input {
   width: 100%;
 }
+
+.multiselectWrapper {
+  position: relative;
+  .clear {
+    position: absolute;
+    top: 7px;
+    right: 28px;
+    color: #848484;
+    font-size: 1.25em;
+  }
+}
