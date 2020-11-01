@@ -159,11 +159,11 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.DocumentApproval))
             {
+                _mapper.Map(command, currentDocument);
                 currentDocument.Revision += 1;
 
-                _mapper.Map(command, currentDocument);
-
                 _unitOfWork.Documents.Update(currentDocument);
+
                 await _unitOfWork.LogApprovalTransaction(currentDocument, currentDocument.Id);
 
                 retDocument = _mapper.Map<DocumentView>(currentDocument);
@@ -209,9 +209,7 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
                 foreach (var addFileId in fileIdsToAdd)
                 {
-                    var fileModel = await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Document), command.Id, addFileId);
-
-                    fileReferences.Add(fileModel);
+                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Document), command.Id, addFileId);
                 }
 
                 foreach (var removeFileId in fileIdsToRemove)
