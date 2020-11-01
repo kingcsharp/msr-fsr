@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FilterUtils } from 'primeng/utils';
 
@@ -6,7 +6,7 @@ import { FilterUtils } from 'primeng/utils';
   selector: 'multiselect-wrapper',
   templateUrl: './multiselect-wrapper.component.html'
 })
-export class MultiselectWrapperComponent implements OnInit, OnDestroy {
+export class MultiselectWrapperComponent implements OnInit {
   selectedColumns: Array<any>;
   subscriptions: Subscription[] = [];
   multiselectName: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -68,6 +68,14 @@ export class MultiselectWrapperComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(sub1);
     this.subscriptions.push(sub2);
+  }
+
+  clear() {
+    let length = this.selectedColumns.length;
+    while (length--) {
+      this.selectedColumns.pop();
+    }
+    this.filterGrid();
   }
 
   ngDoCheck() {
@@ -182,7 +190,7 @@ export class MultiselectWrapperComponent implements OnInit, OnDestroy {
     if (filters === undefined || filters.value.length === 0) {
       return;
     }
-    options.forEach(element => {
+    options?.forEach(element => {
       if (filters.value.indexOf(element.value) > -1) {
         this.selectedColumns.push(element.value);
       }
