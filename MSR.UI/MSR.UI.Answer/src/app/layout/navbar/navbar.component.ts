@@ -4,6 +4,8 @@ import { Globals } from '../../models/lib/globals';
 import { NotificationService } from './notification.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { EnumMenuItem } from '../../../app/services/api.client.generated';
+import { EnumPrivilege } from '../../../app/models/enums/privileges';
 
 @Component({
   selector: '[navbar]',
@@ -22,6 +24,7 @@ export class Navbar implements OnInit {
   };
   searchValue: string;
   hideImg: boolean = false;
+  canViewNotifications: boolean = false;
 
   constructor(
     private renderer: Renderer2,
@@ -36,7 +39,14 @@ export class Navbar implements OnInit {
 
   ngOnInit(): void {
     this.searchValue = '';
-    this.notificationservice.getNotifications();
+    this.canViewNotifications = this.allowNotification();
+    if (this.canViewNotifications) {
+      this.notificationservice.getNotifications();
+    }
+  }
+
+  allowNotification() {
+    return this.globals.hasPrivilege(EnumMenuItem.ApprovalWorkflows, EnumPrivilege.CanRead);
   }
 
   updateUrl(ev) {
