@@ -29,7 +29,7 @@ export class GridOptionsComponent implements OnInit {
 
   @Input() defaultColumns: Array<ColumnsSaved>;
   @Output() defaultColumnsChange: EventEmitter<Array<ColumnsSaved>> = new EventEmitter<Array<ColumnsSaved>>();
-  @Input() visibleColumnsCount: number;
+  @Input() visibleColumnsCount: number=0;
   @Output() visibleColumnsCountChange: EventEmitter<number> = new EventEmitter<number>();
   @Input() gridStorageId: string;
   @Input() gridVersion: string;
@@ -55,7 +55,8 @@ export class GridOptionsComponent implements OnInit {
 
   getNewView() {
     return new ViewSaved({
-      version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, viewName: ''
+      version: this.gridVersion, isDefault: false,
+      gridId: this.gridStorageId, viewName: ''
     });
   }
 
@@ -88,10 +89,11 @@ export class GridOptionsComponent implements OnInit {
     if (view === null || view.columns === undefined) {
       return;
     }
+
     this.defaultColumns.forEach((elem) => {
+      this.visibleColumnsCount++;
       elem.visible = view.columns.find(x => x.id === elem.id).visible;
     });
-    this.visibleColumnsCount = this.selectedColumns.length;
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     this.defaultColumnsChange.emit(this.defaultColumns);
   }
@@ -192,7 +194,10 @@ export class GridOptionsComponent implements OnInit {
   public showSaveViewDiv() {
     try {
       if (!this.showSaveView) {
-        const viewData = { version: this.gridVersion, isDefault: false, gridId: this.gridStorageId, columns: this.defaultColumns };
+        const viewData = {
+          version: this.gridVersion, isDefault: false,
+          gridId: this.gridStorageId, columns: this.defaultColumns
+        };
         this.viewToSave = new ViewSaved(viewData);
       }
       this.showSaveView = !this.showSaveView;
