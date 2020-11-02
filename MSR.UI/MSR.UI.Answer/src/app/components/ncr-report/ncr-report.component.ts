@@ -48,7 +48,7 @@ export class NcrReportComponent implements OnInit {
         let taskSummary = {
           taskName: workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
-          procedureStepType: workOrderTask.procedureStepType.name,
+          // procedureStepType: workOrderTask.procedureStepType.name,
           monitors: new Array<any>()
         };
 

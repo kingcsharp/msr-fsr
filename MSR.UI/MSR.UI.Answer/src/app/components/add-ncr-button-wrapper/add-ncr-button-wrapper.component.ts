@@ -66,7 +66,7 @@ export class AddNcrButtonWrapperComponent implements OnInit {
 
         arrayOfPostWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPost(env.apiVersion, createWorkOrderTaskRequest));
 
-
+        procedureStep.procedure = ncrProcedure;
       });
 
       forkJoin(arrayOfPostWorkOrderTaskRequests).subscribe((postWorkOrderTaskResponses) => {
