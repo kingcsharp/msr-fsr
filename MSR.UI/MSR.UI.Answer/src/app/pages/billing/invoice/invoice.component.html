@@ -125,7 +125,7 @@
     </p-table>
 </widget>
 <p-dialog *ngIf="display" header="{{ currentInvoice.id === undefined ?'Create Invoice':'Edit Invoice'}}"
-    [(visible)]="display" [style]="{width: '100vw'}" data-cy="user-header" [modal]='true'>
+    [(visible)]="display" [style]="{width: '90vw'}" data-cy="user-header" [modal]='true'>
     <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
         data-parsley-priority-enabled="false" (ngSubmit)="onInvoiceSubmit()" novalidate="novalidate">
         <section class="widget mrg-btm-sm" widget>
@@ -215,7 +215,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row" *ngIf="showWorkOrders">
                         <label class="form-control-label col-md-2 col-12 text-md-right" for="role">
                             Work Orders
                         </label>
@@ -229,7 +229,7 @@
                 </fieldset>
             </div>
         </section>
-        <section>
+        <section *ngIf="showWorkOrders">
             <header>
                 <h5>
                     <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
@@ -252,6 +252,10 @@
                         </tr>
                         <tr>
                             <th>
+                            </th>
+                            <th grid-input-filter [dt]="dt2" searchField="customerName"
+                                [hidden]="!cg.isVisibleCol('customerName',gridWoSettings)"
+                                [gridSettings]="gridWoSettings">
                             </th>
                             <th grid-input-filter [dt]="dt2" searchField="purchase.customerPurchaseNumber"
                                 [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)"
@@ -291,6 +295,10 @@
                             <td data-cy="work-order-checkbox">
                                 <p-checkbox [(ngModel)]="workOrderModel.checked" [ngModelOptions]="{standalone: true}"
                                     (onChange)="selectWorkOrder($event,workOrderModel)" binary="true"></p-checkbox>
+                            </td>
+                            <td class="text-capitalize"
+                                [hidden]="!cg.isVisibleCol('customerName',gridWoSettings)">
+                                {{workOrderModel.customerName}}
                             </td>
                             <td class="text-capitalize"
                                 [hidden]="!cg.isVisibleCol('purchase.customerPurchaseNumber',gridWoSettings)">

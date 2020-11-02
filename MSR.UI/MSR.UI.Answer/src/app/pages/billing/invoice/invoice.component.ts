@@ -58,6 +58,7 @@ export class InvoiceComponent implements OnInit {
   showInvoiceItems: boolean = true;
   workorders: Array<WorkOrderModel> = new Array<WorkOrderModel>();
   calendarEn: any;
+
   constructor(public globals: Globals, private invoiceService: InvoiceService, public cg: CommonGrid,
     private elem: ElementRef, private toastr: ToastrService, private customerService: CustomerService,
     private locationService: LocationService, private workOrderService: WorkOrderService) {
@@ -82,6 +83,7 @@ export class InvoiceComponent implements OnInit {
 
     this.gridWoStorageId = 'invoiceWorkorderGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridWoSettings = [
+      new ColumnsSaved({ id: 'customerName', label: 'Customer Name', visible: true }),
       new ColumnsSaved({ id: 'purchase.customerPurchaseNumber', label: 'Customer Puchase Number', visible: true }),
       new ColumnsSaved({ id: 'purchase.customerLineNumber', label: 'Customer Line', visible: true }),
       new ColumnsSaved({ id: 'serialNumber', label: 'Work Order Item', visible: true }),
@@ -104,20 +106,20 @@ export class InvoiceComponent implements OnInit {
   }
 
   getWorkOrders() {
-    if (this.currentInvoice.customerId !== undefined && this.currentInvoice.locationId !== undefined) {
-      this.globals.showLoader(true);
-      this.workOrderService.workOrder(null, this.currentInvoice.customerId,
-        this.currentInvoice.locationId, null, null , env.apiVersion).pipe(take(1))
-        .subscribe(responseHandler(response => {
-          response.object.forEach((wo) => {
-            const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
-            if (firstPartWithNullParent !== undefined) {
-              wo.serialNumber = firstPartWithNullParent.serialNumber;
-            }
-          });
-          replaceArrayItems(this.workorders, response.object);
-        }));
-    }
+    this.globals.showLoader(true);
+    this.showWorkOrders = false;
+    this.workOrderService.workOrder(null, this.currentInvoice.customerId,
+      this.currentInvoice.locationId, null, null , env.apiVersion).pipe(take(1))
+      .subscribe(responseHandler(response => {
+        response.object.forEach((wo) => {
+          const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
+          if (firstPartWithNullParent !== undefined) {
+            wo.serialNumber = firstPartWithNullParent.serialNumber;
+          }
+        });
+        replaceArrayItems(this.workorders, response.object);
+        this.showWorkOrders = true;
+      }));
   }
 
   locationChanged() {

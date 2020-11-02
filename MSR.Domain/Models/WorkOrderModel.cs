@@ -25,6 +25,9 @@ namespace MSR.Domain.Models
         [DataMember(Name="id")]
         public int? Id { get; set; }
 
+        [DataMember(Name = "customerName")]
+        public string? CustomerName { get; set; }
+
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
