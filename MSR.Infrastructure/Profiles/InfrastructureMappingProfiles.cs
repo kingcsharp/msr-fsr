@@ -234,7 +234,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => splitRoles(src)));
 
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
-            CreateMap<WorkOrder, WorkOrderModel>();
+            CreateMap<WorkOrder, WorkOrderModel>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => GetCustomerName(src)));
             CreateMap<CreateWorkOrder, WorkOrder>();
             CreateMap<UpdateWorkOrder, WorkOrder>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
@@ -537,6 +538,11 @@ namespace MSR.Infrastructure.Profiles
         private int? GetLocationId(Invoice src)
         {
             return src.InvoiceItems?.FirstOrDefault()?.WorkOrder?.Purchase?.LocationId;
+        }
+
+        private string? GetCustomerName(WorkOrder src)
+        {
+            return src.Purchase?.PurchaseOrder?.Customer?.Name;
         }
 
         private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)

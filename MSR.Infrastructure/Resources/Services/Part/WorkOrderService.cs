@@ -40,7 +40,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             
             IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
-            if (command.Id.HasValue)
+            if (command.Id.HasValue && command.Id > 0)
             {
                 query = query.Where(x => x.Id == command.Id.Value);
             }
@@ -82,6 +82,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(x =>
                     x.WorkOrderTasks.Any(y =>
                         y.AssignedTo == command.assignedToId));
+            }
+
+            if (command.LocationId.HasValue && command.LocationId > 0)
+            {
+                query = query.Where(x => x.LocationId == command.LocationId);
             }
 
             List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
