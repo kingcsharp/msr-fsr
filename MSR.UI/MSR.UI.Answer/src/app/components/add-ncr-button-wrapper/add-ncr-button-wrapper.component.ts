@@ -3,7 +3,7 @@ import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
   Procedure, WorkOrderPartService,
   WorkOrderModel, WorkOrderService, ProcedureStepMonitorService, ProcedureStepModel, CreateWorkOrderTaskRequest, ICreateWorkOrderTaskRequest,
-  WorkOrderTaskModel, WorkOrderTaskMonitorModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel
+  WorkOrderTaskModel, UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, AuditActionResultOfWorkOrderTaskModel
 } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
@@ -66,7 +66,7 @@ export class AddNcrButtonWrapperComponent implements OnInit {
 
         arrayOfPostWorkOrderTaskRequests.push(this.workOrderTaskService.workOrderTaskPost(env.apiVersion, createWorkOrderTaskRequest));
 
-
+        procedureStep.procedure = ncrProcedure;
       });
 
       forkJoin(arrayOfPostWorkOrderTaskRequests).subscribe((postWorkOrderTaskResponses) => {
@@ -102,6 +102,7 @@ export class AddNcrButtonWrapperComponent implements OnInit {
       updatedWorkOrderTasks.map(workOrderTask => {
 
         workOrderTask.procedureStep = procedureSteps.find(s => s.id === workOrderTask.procedureStepId);
+        workOrderTask.workOrderTaskMonitors = workOrderTasks.find(s => s.id === workOrderTask.id).workOrderTaskMonitors;
 
       });
 
