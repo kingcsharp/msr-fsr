@@ -1,7 +1,9 @@
-<p-multiSelect name="{{multiselectName}}" [options]="currentOptions" [(ngModel)]="selectedColumns"
-    (onChange)="filterGrid()" [itemSize]="15">
-    <ng-template pTemplate="selectedItems">
-        <div>{{defaultText}}</div>
-    </ng-template>
-</p-multiSelect>
-
+<div class="multiselectWrapper">
+    <p-multiSelect name="{{multiselectName}}" [options]="currentOptions" [(ngModel)]="selectedColumns"
+        (onChange)="filterGrid()" [itemSize]="15">
+        <ng-template pTemplate="selectedItems">
+            <div>{{defaultText}}</div>
+        </ng-template>
+    </p-multiSelect>
+    <i *ngIf="selectedColumns.length>0" tooltip="Reset Filter" (click)="clear()" class="clear pi pi-times pointer"></i>
+</div>

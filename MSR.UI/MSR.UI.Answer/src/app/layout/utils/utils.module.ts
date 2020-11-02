@@ -28,7 +28,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CsvImportComponent } from '../../../app/components/csv-import/csv-import.component';
 import { CmhFileUploaderComponent } from '../../../app/components/cmh-file-uploader/cmh-file-uploader.component';
 import { GridInputFilterComponent } from '../../../app/components/grid-input-filter/grid-input-filter.component';
-import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
+// import { HelpbuttonWrapperComponent } from '../../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { TimeZonePipe } from '../../../app/pipes/timezone.pipe';
 import { BootstrapSwitchComponent } from '../../../app/components/bootstrap-switch/bootstrap-switch.component';
 import { CkeditorWrapperComponent } from '../../components/ckeditor-wrapper/ckeditor-wrapper.component';
@@ -50,7 +50,6 @@ import { GalleriaModule } from 'primeng/galleria';
     CsvImportComponent,
     CmhFileUploaderComponent,
     GridInputFilterComponent,
-    HelpbuttonWrapperComponent,
     GridOptionsComponent,
     TimeZonePipe,
     BootstrapSwitchComponent,
@@ -77,7 +76,6 @@ import { GalleriaModule } from 'primeng/galleria';
     DialogModule,
     CalendarModule,
     GridOptionsComponent,
-    HelpbuttonWrapperComponent,
     TimeZonePipe,
     BootstrapSwitchComponent,
     CkeditorWrapperComponent

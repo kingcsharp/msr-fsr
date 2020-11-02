@@ -2158,3 +2158,19 @@ p-dialog {
     }
   }
 }
+
+.multiselectWrapper {
+  position: relative;
+  .clear {
+    position: absolute;
+    top: 7px;
+    right: 28px;
+    color: #848484;
+    font-size: 1.25em;
+  }
+}
+
+.helpbtn {
+  top: 2px;
+  position: relative;
+}

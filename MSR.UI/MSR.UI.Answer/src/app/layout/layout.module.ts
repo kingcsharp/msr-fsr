@@ -7,6 +7,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { UtilsModule } from '../layout/utils/utils.module';
 import { ROUTES } from './layout.routes';
+import { HelpbuttonWrapperComponent } from '../components/helpbutton-wrapper/helpbutton-wrapper.component';
 
 import { Layout } from './layout.component';
 import { Sidebar } from './sidebar/sidebar.component';
@@ -28,7 +29,10 @@ import { ApprovalCommentComponent } from '../components/approval-comment/approva
     UtilsModule,
     DialogModule
   ],
-  declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent]
+  declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent, HelpbuttonWrapperComponent],
+  exports:[
+    HelpbuttonWrapperComponent
+  ]
 })
 export class LayoutModule {
 }

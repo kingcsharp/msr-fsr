@@ -18,7 +18,6 @@ export class LocationsComponent implements OnInit {
   approvalTables = EnumApprovalTables;
   privileges = EnumPrivilege;
   gridSettings: Array<ColumnsSaved> = new Array<ColumnsSaved>();
-  loading: boolean = true;
   gridVersion: string;
   gridStorageId: string;
   locationToDelete: LocationModel;
@@ -86,7 +85,6 @@ export class LocationsComponent implements OnInit {
       this.statusOptions = this.data.filter(
         (thing, i, arr) => arr.findIndex(t => t.status === thing.status) === i
       ).map(x => ({ label: x.status, value: x.status }));
-      this.loading = false;
     }));
   }
 
