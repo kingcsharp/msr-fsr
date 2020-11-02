@@ -102,6 +102,7 @@ export class AddNcrButtonWrapperComponent implements OnInit {
       updatedWorkOrderTasks.map(workOrderTask => {
 
         workOrderTask.procedureStep = procedureSteps.find(s => s.id === workOrderTask.procedureStepId);
+        workOrderTask.workOrderTaskMonitors = workOrderTasks.find(s => s.id === workOrderTask.id).workOrderTaskMonitors;
 
       });
 

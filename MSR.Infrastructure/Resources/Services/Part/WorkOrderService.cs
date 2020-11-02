@@ -457,6 +457,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
+            _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
+            _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
             if (step != null && step.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC)
             {
