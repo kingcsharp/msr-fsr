@@ -15476,6 +15476,7 @@ export interface IQuoteItemModel {
 
 export class WorkOrderModel implements IWorkOrderModel {
     id?: number | undefined;
+    customerName?: string | undefined;
     productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
@@ -15503,6 +15504,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.customerName = _data["customerName"];
             this.productId = _data["productId"];
             this.price = _data["price"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
@@ -15538,6 +15540,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["customerName"] = this.customerName;
         data["productId"] = this.productId;
         data["price"] = this.price;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
@@ -15566,6 +15569,7 @@ export class WorkOrderModel implements IWorkOrderModel {
 
 export interface IWorkOrderModel {
     id?: number | undefined;
+    customerName?: string | undefined;
     productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
