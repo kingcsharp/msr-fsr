@@ -29,7 +29,7 @@ export class GridOptionsComponent implements OnInit {
 
   @Input() defaultColumns: Array<ColumnsSaved>;
   @Output() defaultColumnsChange: EventEmitter<Array<ColumnsSaved>> = new EventEmitter<Array<ColumnsSaved>>();
-  @Input() visibleColumnsCount: number=0;
+  @Input() visibleColumnsCount: number = 0;
   @Output() visibleColumnsCountChange: EventEmitter<number> = new EventEmitter<number>();
   @Input() gridStorageId: string;
   @Input() gridVersion: string;
@@ -38,14 +38,16 @@ export class GridOptionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId));
+    this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId, this.gridVersion));
 
     this.columnPicker = this.defaultColumns.map((elem) => {
       return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } };
     });
+
     this.selectedColumns = this.defaultColumns.filter(x => x.visible).map((elem) => {
       return { id: elem.id, name: elem.label, visible: elem.visible };
     });
+
     this.visibleColumnsCount = this.selectedColumns.length;
 
     this.viewToSave = this.getNewView();
@@ -130,6 +132,11 @@ export class GridOptionsComponent implements OnInit {
 
   restoreState(view: ViewSaved) {
     let state: TableState = JSON.parse(view.gridPagingData);
+    //to be added whenever grid paging data works.
+    // if (state === null) {
+    //   this.resetgr();
+    //   return;
+    // }
 
     if (this.ptable.paginator) {
       this.ptable.first = state.first;

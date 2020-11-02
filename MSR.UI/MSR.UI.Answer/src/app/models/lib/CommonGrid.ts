@@ -66,6 +66,7 @@ export class CommonGrid {
             return;
         }
         view.gridPagingData = localStorage.getItem(view.gridId);
+        //TO BE REMOVED to allow gridPagingData === null
         if (view.gridPagingData === null) {
             this.toastr.error(`Sorry there are no filters applied to the grid to save this as a template.`);
             return;
@@ -127,10 +128,18 @@ export class CommonGrid {
         });
     }
 
-    getDefaultView(gridId: string): ViewSaved {
+    getDefaultView(gridId: string, gridVersion: string): ViewSaved {
         const viewIndex = this.views.findIndex(x => x.gridId === gridId && x.isDefault);
         if (viewIndex === -1) {
             localStorage.removeItem(gridId);
+            return null;
+        } else if (this.views[viewIndex].version !== gridVersion) {
+            const views = this.views.filter(x => x.gridId === gridId && x.version !== gridVersion);
+            views.forEach(element => {
+                this.deleteView(element);
+            });
+
+            this.toastr.warning(`Current grid was updated and old views will need to be re-created. Sorry for any inconvenience`);
             return null;
         } else {
             const view = this.views[viewIndex];

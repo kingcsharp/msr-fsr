@@ -68,7 +68,7 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     this.data = [];
     this.currUser = new UserModel();
-    this.gridVersion = '1.0.0';
+    this.gridVersion = '1.0.1';
     this.gridStorageId = 'userGrid' + this.elem.nativeElement.tagName.toLowerCase();
     // SET DEFAULT VIEW COLS
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
