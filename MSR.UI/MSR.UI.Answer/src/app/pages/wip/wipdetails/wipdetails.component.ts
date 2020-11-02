@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, ChangeDetectorRef, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ChangeDetectorRef, Inject, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
@@ -16,7 +16,6 @@ import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
 import { take } from 'rxjs/operators';
 
-const moment = require('moment');
 
 @Component({
   selector: 'app-wipdetails',

@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { FileModel, ProcedureStepMonitor, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
+import { Component, Input, OnInit } from '@angular/core';
+import { FileModel, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { Globals } from '../../models/lib/globals';
-import { ProcedureStepType } from '../../models/enums/ProcedureStepType';
 import { ProcedureType } from '../../models/enums/ProcedureType';
 
 @Component({
@@ -48,7 +47,6 @@ export class NcrReportComponent implements OnInit {
         let taskSummary = {
           taskName: workOrderTask.procedureStep.title,
           taskId: workOrderTask.id,
-          // procedureStepType: workOrderTask.procedureStepType.name,
           monitors: new Array<any>()
         };
 
