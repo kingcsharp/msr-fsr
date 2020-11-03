@@ -128,13 +128,23 @@ export class GridOptionsComponent implements OnInit {
     } else {
       this.ptable.totalRecords = (this.ptable._value ? this.ptable._value.length : 0);
     }
+
+    localStorage.setItem(this.gridStorageId, JSON.stringify({ "first": 0, "rows": 10 }));
   }
 
   restoreState(view: ViewSaved) {
     let state: TableState = JSON.parse(view.gridPagingData);
     //to be added whenever grid paging data works.
-    // if (state === null) {
+
+    if (state.filters === undefined) {
+      this.resetgr();
+      this.updateDefaultColumns(view);
+      return;
+    }
+    // if (Object.keys(state.filters).length === 0) {
     //   this.resetgr();
+    //   this.visibleColumnsCount = this.selectedColumns.length;
+    //   this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     //   return;
     // }
 
@@ -184,6 +194,7 @@ export class GridOptionsComponent implements OnInit {
       this.ptable._filter();
       this.ptable.filterTimeout = null;
     }, this.ptable.filterDelay);
+
     this.visibleColumnsCount = this.selectedColumns.length;
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
   }

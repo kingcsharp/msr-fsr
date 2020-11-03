@@ -59,7 +59,7 @@ export class PcalendarWrapperComponent implements OnInit {
     });
 
     const sub2 = this.datatable.onStateRestore.subscribe((elem) => {
-      if (elem.filters[ctrl.filterId] === undefined) {
+      if (elem.filters === undefined || elem.filters[ctrl.filterId] === undefined) {
         this.selectedDate = undefined;
       } else {
         const restoredVal = elem.filters[ctrl.filterId].value;
