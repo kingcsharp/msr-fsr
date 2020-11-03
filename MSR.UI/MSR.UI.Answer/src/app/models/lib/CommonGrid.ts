@@ -67,12 +67,6 @@ export class CommonGrid {
         }
         view.gridPagingData = localStorage.getItem(view.gridId);
 
-        //TO BE REMOVED to allow gridPagingData === null
-        // if (view.gridPagingData === null || view.gridPagingData === undefined) {
-        //     view.gridPagingData = '{"first":0,"rows":10,"filters":{}}';
-        //     // this.toastr.error(`Sorry there are no filters applied to the grid to save this as a template.`);
-        //     // return;
-        // }
         this.views.push(view);
         if (view.isDefault) {
             this.setAsDefault(view, false);

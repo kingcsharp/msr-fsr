@@ -45,9 +45,6 @@ export class PcalendarWrapperComponent implements OnInit {
       } else {
         return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);
       }
-
-      // // IF WE USE RANGE AS FILTER THEN it would just be setting range in the pcalendar-wrapper selectionMode='range' and here filter would be an array.
-      // return moment(filter).startOf('day').isBefore(value) && moment(filter).endOf('day').isAfter(value);
     };
 
     this.setSelectedDate(this.datatable.filters[this.filterId]);
