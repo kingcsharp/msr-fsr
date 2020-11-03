@@ -44,6 +44,7 @@ export class PartsComponent implements OnInit {
   isActive: any[];
   uploadedFinished: boolean = false;
   showApproveButtons: boolean = true;
+  gridVersion: string;
 
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private partsService: PartService) {
@@ -51,6 +52,7 @@ export class PartsComponent implements OnInit {
 
   ngOnInit(): void {
     this.currPart = this.getPart(undefined);
+    this.gridVersion = '1.0.1';
     this.gridStorageId = 'partsGrid' + this.elem.nativeElement.tagName.toLowerCase();
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'name', label: 'Name', visible: true }),

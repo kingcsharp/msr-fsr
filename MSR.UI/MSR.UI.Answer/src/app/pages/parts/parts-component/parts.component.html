@@ -235,10 +235,8 @@
             </label>
             <div class="col-md-4 ">
               <div class="display-inline-block isActive">
-                <label class="form-check-label" for="isKit" class="switch">
-                  <input class="form-check-input" [(ngModel)]="currPart.isKit" name="isKit" type="checkbox" class="ios"
-                    checked id="isKit" disabled="disabled" />
-                  <i data-cy="isKit-checkbox"></i>
+                <label class="form-check-label" for="isKit" class="col-form-label">
+                  {{isKit?'Yes':'No'}}
                 </label>
               </div>
             </div>

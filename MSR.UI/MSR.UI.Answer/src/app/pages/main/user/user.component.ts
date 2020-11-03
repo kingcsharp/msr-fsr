@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 import { CommonGrid } from '../../../models/lib/CommonGrid';
-import { replaceArrayItems, pushIfNotExists, emptyArray, copyObj } from '../../../models/lib/Utils';
+import { copyObj } from '../../../models/lib/Utils';
 
 declare let jQuery: any;
 
@@ -68,7 +68,7 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     this.data = [];
     this.currUser = new UserModel();
-    this.gridVersion = '1.0.0';
+    this.gridVersion = '1.0.2';
     this.gridStorageId = 'userGrid' + this.elem.nativeElement.tagName.toLowerCase();
     // SET DEFAULT VIEW COLS
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),

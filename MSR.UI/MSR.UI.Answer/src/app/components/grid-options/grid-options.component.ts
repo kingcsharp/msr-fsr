@@ -4,6 +4,7 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { Globals } from '../../models/lib/globals';
 import { TableState } from 'primeng/api';
+import { deepCopy } from '../../models/lib/Utils';
 
 @Component({
   host: {
@@ -29,7 +30,7 @@ export class GridOptionsComponent implements OnInit {
 
   @Input() defaultColumns: Array<ColumnsSaved>;
   @Output() defaultColumnsChange: EventEmitter<Array<ColumnsSaved>> = new EventEmitter<Array<ColumnsSaved>>();
-  @Input() visibleColumnsCount: number=0;
+  @Input() visibleColumnsCount: number = 0;
   @Output() visibleColumnsCountChange: EventEmitter<number> = new EventEmitter<number>();
   @Input() gridStorageId: string;
   @Input() gridVersion: string;
@@ -38,14 +39,17 @@ export class GridOptionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId));
+    this.gridSettings = deepCopy(this.defaultColumns);
+    this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId, this.gridVersion));
 
     this.columnPicker = this.defaultColumns.map((elem) => {
       return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } };
     });
+
     this.selectedColumns = this.defaultColumns.filter(x => x.visible).map((elem) => {
       return { id: elem.id, name: elem.label, visible: elem.visible };
     });
+
     this.visibleColumnsCount = this.selectedColumns.length;
 
     this.viewToSave = this.getNewView();
@@ -86,13 +90,14 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public updateDefaultColumns(view: ViewSaved) {
-    if (view === null || view.columns === undefined) {
-      return;
-    }
 
     this.defaultColumns.forEach((elem) => {
       this.visibleColumnsCount++;
-      elem.visible = view.columns.find(x => x.id === elem.id).visible;
+      if (view === null || view.columns === undefined) {
+        elem.visible = this.gridSettings.find(x => x.id === elem.id).visible;
+      } else {
+        elem.visible = view.columns.find(x => x.id === elem.id).visible;
+      }
     });
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     this.defaultColumnsChange.emit(this.defaultColumns);
@@ -104,7 +109,7 @@ export class GridOptionsComponent implements OnInit {
     this.defaultView = view;
   }
 
-  public resetgr() {
+  public resetgrid() {
     this.ptable.onFilter.emit({
       filters: {},
       filteredValue: null
@@ -126,10 +131,18 @@ export class GridOptionsComponent implements OnInit {
     } else {
       this.ptable.totalRecords = (this.ptable._value ? this.ptable._value.length : 0);
     }
+
+    localStorage.setItem(this.gridStorageId, JSON.stringify({ "first": 0, "rows": 10 }));
   }
 
   restoreState(view: ViewSaved) {
     let state: TableState = JSON.parse(view.gridPagingData);
+
+    if (state.filters === undefined) {
+      this.resetgrid();
+      this.updateDefaultColumns(view);
+      return;
+    }
 
     if (this.ptable.paginator) {
       this.ptable.first = state.first;
@@ -177,6 +190,7 @@ export class GridOptionsComponent implements OnInit {
       this.ptable._filter();
       this.ptable.filterTimeout = null;
     }, this.ptable.filterDelay);
+
     this.visibleColumnsCount = this.selectedColumns.length;
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
   }
