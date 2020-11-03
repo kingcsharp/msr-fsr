@@ -75,7 +75,7 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
             var invoice = await _unitOfWork.Invoices
                                 .Query()
                                 .Include(i => i.InvoiceItems)
-                                .Include(i=>i.Customer)
+                                .Include(i => i.Customer)
                                 .FirstOrDefaultAsync(i => i.Id == command.Id);
 
             if (invoice is null)
@@ -226,7 +226,8 @@ namespace MSR.Infrastructure.Resources.Services.Invoices
         private void CalculateTotals(Invoice invoice)
         {
             invoice.Subtotal = invoice.InvoiceItems.Sum(x => x.WorkOrder.Price);
-            invoice.Total = (decimal)((invoice.Subtotal + (invoice.Subtotal * invoice.TaxPercentage / 100)));
+            var taxPercentage = invoice.TaxPercentage == null ? 0 : invoice.TaxPercentage;
+            invoice.Total = (decimal)((invoice.Subtotal + (invoice.Subtotal * taxPercentage / 100)));
         }
 
         private IQueryable<Invoice> GetFilteredInvoices(GetInvoices command)

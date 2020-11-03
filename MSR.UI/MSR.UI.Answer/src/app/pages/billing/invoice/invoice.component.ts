@@ -106,20 +106,22 @@ export class InvoiceComponent implements OnInit {
   }
 
   getWorkOrders() {
-    this.globals.showLoader(true);
-    this.showWorkOrders = false;
-    this.workOrderService.workOrder(null, this.currentInvoice.customerId,
-      this.currentInvoice.locationId, null, null , env.apiVersion).pipe(take(1))
-      .subscribe(responseHandler(response => {
-        response.object.forEach((wo) => {
-          const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
-          if (firstPartWithNullParent !== undefined) {
-            wo.serialNumber = firstPartWithNullParent.serialNumber;
-          }
-        });
-        replaceArrayItems(this.workorders, response.object);
-        this.showWorkOrders = true;
-      }));
+    if (this.currentInvoice.customerId !== undefined && this.currentInvoice.locationId !== undefined) {
+      this.globals.showLoader(true);
+      this.showWorkOrders = false;
+      this.workOrderService.workOrder(null, this.currentInvoice.customerId,
+        this.currentInvoice.locationId, null, null, env.apiVersion).pipe(take(1))
+        .subscribe(responseHandler(response => {
+          response.object.forEach((wo) => {
+            const firstPartWithNullParent = wo.workOrderParts.find(x => x.parentId === undefined || x.parentId === null);
+            if (firstPartWithNullParent !== undefined) {
+              wo.serialNumber = firstPartWithNullParent.serialNumber;
+            }
+          });
+          replaceArrayItems(this.workorders, response.object);
+          this.showWorkOrders = true;
+        }));
+    }
   }
 
   locationChanged() {
@@ -243,7 +245,7 @@ export class InvoiceComponent implements OnInit {
       if (this.currentInvoice.id !== undefined) {
         basicReqData.id = this.currentInvoice.id;
         basicReqData.invoiceItems = this.currentInvoice.invoiceItems.map((item) => {
-          return new UpdateInvoiceItemRequest({id: item.workOrderId});
+          return new UpdateInvoiceItemRequest({ id: item.workOrderId });
         });
         method = this.invoiceService.invoicePatch(env.apiVersion, new UpdateInvoiceRequest(basicReqData));
       } else {
