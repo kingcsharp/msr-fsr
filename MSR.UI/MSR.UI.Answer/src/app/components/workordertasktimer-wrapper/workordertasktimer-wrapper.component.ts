@@ -24,11 +24,13 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
   @Input() currentUser: UserModel;
   @Input() workOrderIsComplete: boolean = false;
   @Input() hasAccessToTaskBeingViewed: boolean = true;
+  @Input() areMonitorsValid: boolean = false;
   @Output() workOrderTasksChange = new EventEmitter<any>();
   @Output() workOrderTaskInProgressChange = new EventEmitter<any>();
   @Output() workOrderTaskToViewChange = new EventEmitter<any>();
   @Output() updateWorkOrderTaskToViewAndInProgress = new EventEmitter<any>();
   @Output() slideToTaskInProgress = new EventEmitter<any>();
+  @Output() areMonitorsValidCheck = new EventEmitter<{ areValid: Function }>();
 
   stepTimer;
   stepSeconds: number = 0;
@@ -86,31 +88,37 @@ export class WorkordertasktimerWrapperComponent implements OnInit {
 
   setTimerDisplay(seconds: number, justForDisplay: boolean) {
 
-    this.stepSeconds = justForDisplay ? this.workOrderTaskInProgress.totalTaskTime : this.workOrderTaskInProgress.totalTaskTime++ ;
+    this.stepSeconds = justForDisplay ? this.workOrderTaskInProgress.totalTaskTime : this.workOrderTaskInProgress.totalTaskTime++;
     this.stepMinutes = Math.floor(this.stepSeconds / 60);
     this.stepHours = Math.floor(this.stepMinutes / 60);
 
   }
 
+
   completeTask() {
 
-    this.workOrderTaskInProgress.taskIsRunning = false;
-    this.workOrderTaskInProgress.taskRunningSince = null;
-    clearInterval(this.stepTimer);
-    this.stepSeconds = 0;
-    this.stepMinutes = 0;
-    this.stepHours = 0;
+    this.areMonitorsValidCheck.emit({
+      areValid: (result) => {
 
-    this.workOrderTaskInProgress.statusId = 3;
-    this.workOrderTaskInProgress.status = new StatusModel({
-      id: 3,
-      name: 'Complete'
-    } as IStatusModel);
-    this.workOrderTaskInProgress.lastUpdatedOn = moment().toDate();
+        this.workOrderTaskInProgress.taskIsRunning = false;
+        this.workOrderTaskInProgress.taskRunningSince = null;
+        clearInterval(this.stepTimer);
+        this.stepSeconds = 0;
+        this.stepMinutes = 0;
+        this.stepHours = 0;
 
-    this.saveTaskTimerState(true);
-    this.setStateOfNextTaskToInProgressIfExist();
+        this.workOrderTaskInProgress.statusId = 3;
+        this.workOrderTaskInProgress.status = new StatusModel({
+          id: 3,
+          name: 'Complete'
+        } as IStatusModel);
+        this.workOrderTaskInProgress.lastUpdatedOn = moment().toDate();
 
+        this.saveTaskTimerState(true);
+        this.setStateOfNextTaskToInProgressIfExist();
+
+      }
+    });
   }
 
   setStateOfNextTaskToInProgressIfExist() {
