@@ -58,6 +58,8 @@ export class MultiselectWrapperComponent implements OnInit {
     const sub1 = this.datatable.onFilter.subscribe((elem) => {
       if (elem.filters === undefined || elem.filters[this.filterId] === undefined) {
         this.selectedColumns = [];
+      } else {
+        this.selectedColumns = elem.filters[this.filterId].value;
       }
     });
     const sub2 = this.datatable.onStateRestore.subscribe((elem) => {

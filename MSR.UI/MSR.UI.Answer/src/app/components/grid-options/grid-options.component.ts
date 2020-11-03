@@ -4,6 +4,7 @@ import { CommonGrid } from '../../models/lib/CommonGrid';
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { Globals } from '../../models/lib/globals';
 import { TableState } from 'primeng/api';
+import { deepCopy } from '../../models/lib/Utils';
 
 @Component({
   host: {
@@ -38,6 +39,7 @@ export class GridOptionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.gridSettings = deepCopy(this.defaultColumns);
     this.updateDefaultColumns(this.cg.getDefaultView(this.gridStorageId, this.gridVersion));
 
     this.columnPicker = this.defaultColumns.map((elem) => {
@@ -88,13 +90,14 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public updateDefaultColumns(view: ViewSaved) {
-    if (view === null || view.columns === undefined) {
-      return;
-    }
 
     this.defaultColumns.forEach((elem) => {
       this.visibleColumnsCount++;
-      elem.visible = view.columns.find(x => x.id === elem.id).visible;
+      if (view === null || view.columns === undefined) {
+        elem.visible = this.gridSettings.find(x => x.id === elem.id).visible;
+      } else {
+        elem.visible = view.columns.find(x => x.id === elem.id).visible;
+      }
     });
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     this.defaultColumnsChange.emit(this.defaultColumns);
@@ -134,19 +137,12 @@ export class GridOptionsComponent implements OnInit {
 
   restoreState(view: ViewSaved) {
     let state: TableState = JSON.parse(view.gridPagingData);
-    //to be added whenever grid paging data works.
 
     if (state.filters === undefined) {
       this.resetgr();
       this.updateDefaultColumns(view);
       return;
     }
-    // if (Object.keys(state.filters).length === 0) {
-    //   this.resetgr();
-    //   this.visibleColumnsCount = this.selectedColumns.length;
-    //   this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
-    //   return;
-    // }
 
     if (this.ptable.paginator) {
       this.ptable.first = state.first;
