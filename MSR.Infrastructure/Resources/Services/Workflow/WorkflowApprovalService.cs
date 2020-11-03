@@ -678,8 +678,8 @@ namespace MSR.Infrastructure.Resources.Services
                     var rolesToRemove = curRoleIds.Except(supportingData["RoleIds"] ?? new List<int>());
                     var filesToRemove = curFileIds.Except(supportingData["ReferenceFileIds"] ?? new List<int>());
                     //Does not Exist in DB: Add
-                    var rolesToAdd = supportingData["RoleIds"] ?? new List<int>().Except(curRoleIds);
-                    var filesToAdd = supportingData["ReferenceFileIds"] ?? new List<int>().Except(curFileIds);
+                    var rolesToAdd = (supportingData["RoleIds"] ?? new List<int>()).Except(curRoleIds);
+                    var filesToAdd = (supportingData["ReferenceFileIds"] ?? new List<int>()).Except(curFileIds);
 
                     var removeRoles = await _unitOfWork.DocumentRoles.Query().Where(i => i.DocumentId == document.Id && rolesToRemove.Contains(i.RoleId)).ToListAsync();
                     foreach (var role in removeRoles)
