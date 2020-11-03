@@ -231,16 +231,15 @@ namespace MSR.Infrastructure.Resources.Services.Document
             }
             else
             {
-                var documentApproval = _mapper.Map<DocumentApproval>(currentDocument);
-                _mapper.Map(command, documentApproval);
+                var documentApproval = _mapper.Map<DocumentApproval>(command);
 
-                documentApproval.DocumentId = currentDocument.Id;
                 documentApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(documentApproval);
                 documentApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(documentApproval.Workflow?.Id ?? 0);
                 documentApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
-                documentApproval.ApprovalJSON = JsonConvert.SerializeObject(new { command.RoleIds, command.ReferenceFileIds });
+                documentApproval.ApprovalJSON = JsonConvert.SerializeObject(new { command.RoleIds, command.ReferenceFileIds, command.ReferenceFiles });
 
-                await _unitOfWork.DocumentApprovals.UpdateAndSaveChangesAsync(documentApproval);
+                _unitOfWork.DocumentApprovals.Add(documentApproval);
+                await _unitOfWork.SaveChangesAsync();
 
                 retDocument = _mapper.Map<DocumentView>(documentApproval);
             }

@@ -477,10 +477,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateDocument, Document>();
             CreateMap<CreateDocument, DocumentApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
-            CreateMap<DocumentApproval, DocumentView>();
+            CreateMap<Document, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentApproval, DocumentView>();
             CreateMap<UpdateDocument, Document>();
-            CreateMap<UpdateDocument, DocumentApproval>();
+            CreateMap<UpdateDocument, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentRoleMap, RoleView>();
             CreateMap<WorkOrder, PortalWorkOrderView>()
                 .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId));
