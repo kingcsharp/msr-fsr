@@ -122,7 +122,12 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   }
 
-  areMonitorsInValidStateToCloseTask(): boolean{
+  areMonitorsInValidStateToCloseTask(): boolean {
+
+    if(this.workOrderMonitorsToView.length === 0){
+      return true;
+    }
+
     jQuery('.parsleyjs').parsley().validate();
 
     return (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid());
