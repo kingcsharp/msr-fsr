@@ -234,7 +234,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => splitRoles(src)));
 
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
-            CreateMap<WorkOrder, WorkOrderModel>();
+            CreateMap<WorkOrder, WorkOrderModel>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => GetCustomerName(src)));
             CreateMap<CreateWorkOrder, WorkOrder>();
             CreateMap<UpdateWorkOrder, WorkOrder>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
@@ -476,10 +477,14 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateDocument, Document>();
             CreateMap<CreateDocument, DocumentApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
-            CreateMap<DocumentApproval, DocumentView>();
+            CreateMap<Document, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentApproval, DocumentView>();
             CreateMap<UpdateDocument, Document>();
-            CreateMap<UpdateDocument, DocumentApproval>();
+            CreateMap<UpdateDocument, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentRoleMap, RoleView>();
             CreateMap<WorkOrder, PortalWorkOrderView>()
                 .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId));
@@ -537,6 +542,11 @@ namespace MSR.Infrastructure.Profiles
         private int? GetLocationId(Invoice src)
         {
             return src.InvoiceItems?.FirstOrDefault()?.WorkOrder?.Purchase?.LocationId;
+        }
+
+        private string? GetCustomerName(WorkOrder src)
+        {
+            return src.Purchase?.PurchaseOrder?.Customer?.Name;
         }
 
         private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)
