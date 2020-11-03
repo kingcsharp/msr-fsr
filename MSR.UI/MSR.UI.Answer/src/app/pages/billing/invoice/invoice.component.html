@@ -224,6 +224,20 @@
                                 [(model)]="currentInvoice.invoiceItems" defaultId="workOrderId"
                                 defaultLabelProperty="purchaseNumber" defaultLabel="Select Work Orders">
                             </multiselect-wrapper-form>
+                            <input
+                              pInputText
+                              type="text"
+                              hidden
+                              class="form-control input-transparent"
+                              name="invoiceitemshdn"
+                              [value]="currentInvoice.invoiceItems.length"
+                              data-validate="parsley"
+                              data-parsley-trigger="change"
+                              data-parsley-type="integer"
+                              data-parsley-min="1"
+                              data-parsley-error-message="Invoice must contain at least one WorkOrder."
+                              data-parsley-required="true"
+                            >
                         </div>
                     </div>
                 </fieldset>
@@ -293,7 +307,7 @@
                     <ng-template pTemplate="body" let-workOrderModel>
                         <tr class="ui-selectable-row">
                             <td data-cy="work-order-checkbox">
-                                <p-checkbox [(ngModel)]="workOrderModel.checked" [ngModelOptions]="{standalone: true}"
+                                <p-checkbox name="wo_{{workOrderModel.id}}" [(ngModel)]="workOrderModel.checked" [ngModelOptions]="{standalone: true}"
                                     (onChange)="selectWorkOrder($event,workOrderModel)" binary="true"></p-checkbox>
                             </td>
                             <td class="text-capitalize"
