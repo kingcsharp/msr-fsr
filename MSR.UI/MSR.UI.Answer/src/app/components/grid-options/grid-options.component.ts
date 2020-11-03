@@ -109,7 +109,7 @@ export class GridOptionsComponent implements OnInit {
     this.defaultView = view;
   }
 
-  public resetgr() {
+  public resetgrid() {
     this.ptable.onFilter.emit({
       filters: {},
       filteredValue: null
@@ -139,7 +139,7 @@ export class GridOptionsComponent implements OnInit {
     let state: TableState = JSON.parse(view.gridPagingData);
 
     if (state.filters === undefined) {
-      this.resetgr();
+      this.resetgrid();
       this.updateDefaultColumns(view);
       return;
     }
