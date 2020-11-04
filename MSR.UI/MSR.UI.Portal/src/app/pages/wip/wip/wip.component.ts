@@ -327,6 +327,7 @@ export class WipComponent implements OnInit, AfterViewInit {
       .subscribe(responseHandler(response => {
         this.data = response.object.map((x: any) => {
           x.serialNumber = x.serialNumber === null ? 'N/A' : x.serialNumber;
+          x.hasNCRs = true;
           let ret = new PortalWorkOrderPartsView(x);
           this.setSubpartspropertiesToWoSubparts(ret);
           return ret;
