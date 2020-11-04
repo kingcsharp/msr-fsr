@@ -94,7 +94,8 @@ namespace MSR.Infrastructure.Resources.Services.Document
             document.Revision = 1;
 
             await _unitOfWork.Documents.AddAsync(document);
-            await _unitOfWork.LogApprovalTransaction(document, document.Id);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.LogApprovalTransaction(document, document.Id,comments: "Auto Approved");
 
             var retDocument = _mapper.Map<DocumentView>(document);
 
@@ -136,12 +137,12 @@ namespace MSR.Infrastructure.Resources.Services.Document
             foreach (var file in command.ReferenceFiles)
             {
                 var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Document), retDocument.Id, file);
-
+                await _fileService.EditPdfFile(fileModel, retDocument, nameof(EntityFramework.Entities.Document));
                 fileReferences.Add(fileModel);
             }
 
             retDocument.ReferenceFiles = fileReferences;
-            retDocument.ReferenceFileIds = fileReferences.Select(f => f.FileId).Cast<int>().ToList();
+            retDocument.ReferenceFileIds = fileReferences.Where(i => i.FileId.HasValue).Select(f => f.FileId.Value).ToList();
 
             return retDocument;
         }

@@ -733,7 +733,7 @@ namespace MSR.Infrastructure.Resources.Services
 
             foreach (var file in files)
             {
-                await _fileService.EditPdfFile(_mapper.Map<FileModel>(file), document);
+                await _fileService.EditPdfFile(_mapper.Map<FileModel>(file), document, nameof(EntityFramework.Entities.Document));
             }
         }
 
