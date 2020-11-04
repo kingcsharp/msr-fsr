@@ -56,14 +56,14 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets TargetValue
         /// </summary>
-        [DataMember(Name="targetValue")]
-        public string TargetValue { get; set; }
+        [DataMember(Name="target")]
+        public float Target { get; set; }
 
         /// <summary>
         /// Gets or Sets FaultHandling
         /// </summary>
-        [DataMember(Name="faultHandling")]
-        public string FaultHandling { get; set; }
+        [DataMember(Name="failAction")]
+        public string FailAction { get; set; }
 
         /// <summary>
         /// Gets or Sets Description
@@ -74,8 +74,8 @@ namespace MSR.Answer.API.V1.Models
         /// <summary>
         /// Gets or Sets SendEmailNotification
         /// </summary>
-        [DataMember(Name="sendEmailNotification")]
-        public bool? SendEmailNotification { get; set; }
+        [DataMember(Name= "sendNCREmail")]
+        public bool? SendNCREmail { get; set; }
 
         /// <summary>
         /// HighTarget

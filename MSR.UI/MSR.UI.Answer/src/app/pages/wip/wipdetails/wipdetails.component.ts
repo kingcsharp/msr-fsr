@@ -12,6 +12,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Globals } from '../../../models/lib/globals';
 import { WorkordertasktimerWrapperComponent } from '../../../components/workordertasktimer-wrapper/workordertasktimer-wrapper.component';
 import { SelectWorkOrderDropDownWrapperComponent } from '../../../components/select-work-order-drop-down-wrapper/select-work-order-drop-down-wrapper.component';
+import { WorkordertaskmonitosWrapperComponent } from '../../../components/workordertaskmonitos-wrapper/workordertaskmonitos-wrapper.component';
 import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
 import { take } from 'rxjs/operators';
@@ -31,6 +32,7 @@ export class WipdetailsComponent implements OnInit {
   @ViewChild('workordertasktimer') workOrderTaskTimer: WorkordertasktimerWrapperComponent;
   @ViewChild('selectworkorderdropdown') selectWorkOrderDropDown: SelectWorkOrderDropDownWrapperComponent;
   @ViewChild('stepCarousel') carousel: CarouselComponent;
+  @ViewChild('workordertaskmonitors') workordertaskmonitors: WorkordertaskmonitosWrapperComponent;
   workOrderModel: WorkOrderModel = new WorkOrderModel();
   parentPart: WorkOrderPartModel = new WorkOrderPartModel();
   procedure: Procedure = new Procedure();
@@ -55,6 +57,8 @@ export class WipdetailsComponent implements OnInit {
   rolesRequiredMessage: string = undefined;
   nameOfTaskThatIsRestricted: string;
   hasAccessToTaskBeingViewed: boolean = false;
+  areMonitorsValid: boolean = false;
+  monitorsAreInvalidDialog: boolean = false;
 
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
@@ -491,6 +495,18 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderModel.workOrderTasks.find(s => s.id === this.workOrderTaskInProgress.id).referenceFiles = response.object.referenceFiles;
 
     });
+
+  }
+
+  areMonitorsValidCheck(areValid) {
+    this.areMonitorsValid = this.workordertaskmonitors.areMonitorsInValidStateToCloseTask();
+
+    if (this.areMonitorsValid) {
+      areValid(this.areMonitorsValid);
+    } else {
+      this.monitorsAreInvalidDialog = true;
+    }
+
 
   }
 }

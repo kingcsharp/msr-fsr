@@ -122,12 +122,20 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   }
 
+  areMonitorsInValidStateToCloseTask(): boolean {
 
+    if(this.workOrderMonitorsToView.length === 0){
+      return true;
+    }
 
-  saveMonitors() {
     jQuery('.parsleyjs').parsley().validate();
 
-    if (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid()) {
+    return (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid());
+  }
+
+  saveMonitors() {
+
+    if (this.areMonitorsInValidStateToCloseTask()) {
 
       this.updateMonitors(false);
 
@@ -135,9 +143,8 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
   }
 
   saveMonitorsAndCloseTask() {
-    jQuery('.parsleyjs').parsley().validate();
 
-    if (jQuery('.parsleyjs').parsley().isValid() && this.areDropDownsValid()) {
+    if (this.areMonitorsInValidStateToCloseTask()) {
 
       this.updateMonitors(true);
 

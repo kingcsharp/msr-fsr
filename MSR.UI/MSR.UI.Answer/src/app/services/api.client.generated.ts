@@ -13946,13 +13946,13 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
+    target?: number;
     /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -13976,10 +13976,10 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
             this.sensorName = _data["sensorName"];
             this.monitorType = _data["monitorType"];
             this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
+            this.sendNCREmail = _data["sendNCREmail"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
@@ -14000,10 +14000,10 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data["sensorName"] = this.sensorName;
         data["monitorType"] = this.monitorType;
         data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
+        data["sendNCREmail"] = this.sendNCREmail;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
@@ -14024,13 +14024,13 @@ export interface IUpdateProcedureStepMonitorRequest {
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
+    target?: number;
     /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
