@@ -103,6 +103,11 @@ namespace MSR.Domain.Models
         public List<Role> Roles { get; set; }
 
         /// <summary>
+        /// Gets or Sets Documents
+        /// </summary>
+        public List<int> ReferenceDocumentIds { get; set; }
+
+        /// <summary>
         /// Copy of the status field of the ProductApproval row
         /// </summary>
         public string ApprovalStatus;
