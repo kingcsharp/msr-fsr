@@ -97,7 +97,8 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = new DeleteProcedureStep() { procedureID = id, procedureStepID = stepid };
             var ret = await _dispatcher.DispatchAsync(command);
-            return ret.ToOkObjectResponse(await DetermineStepResponseMessage(ret, "delete"));
+            var responseMessage = await DetermineStepResponseMessage(ret, "delete");
+            return ret.ToOkObjectResponse(responseMessage);
         }
 
         /// <summary>

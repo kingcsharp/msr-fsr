@@ -372,7 +372,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return true;
         }
 
-        public async Task<bool> DeleteProcedureStepAsync(DeleteProcedureStep command)
+        public async Task<ProcedureStepModel> DeleteProcedureStepAsync(DeleteProcedureStep command)
         {
             var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
                 i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
@@ -398,7 +398,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepModel)} uid {CurrentUser.GetId()}");
             }
 
-            return true;
+            var ProcedureStepModel = _mapper.Map<ProcedureStepModel>(current);
+
+            return ProcedureStepModel;
         }
 
         public async Task<ICollection<Domain.Models.ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command)
