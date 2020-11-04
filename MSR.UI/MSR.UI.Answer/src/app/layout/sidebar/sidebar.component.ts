@@ -36,14 +36,17 @@ export class Sidebar {
   }
 
   generateMenuItems(menuItems: any, menuStructure: any[]) {
+    const ctrl = this;
     // show tooltip add .
     // description
     menuItems.forEach(function (item) {
       const elem = menuStructure.find(x => x.name === item.menuGroup?.name);
       if (elem === undefined) {
-        let menuItem = { submenu: [{ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info }] };
-        Object.assign(menuItem, item.menuGroup);
-        menuStructure.push(menuItem);
+        if (ctrl.isMenuItemAllowed(item)) {
+          let menuItem = { submenu: [{ name: item.name, url: item.url, icon: item.icon, orderNr: item.orderNumber, info: item.info }] };
+          Object.assign(menuItem, item.menuGroup);
+          menuStructure.push(menuItem);
+        }
       } else {
         const submenuItem = elem.submenu.find(x => x.name === item.name);
         if (submenuItem === undefined) {
@@ -51,6 +54,13 @@ export class Sidebar {
         }
       }
     });
+  }
+
+  isMenuItemAllowed(menuElement) {
+    if (menuElement.name === "Monitors") {
+      return false;
+    }
+    return true;
   }
 
   setSidebarHeight(event) {

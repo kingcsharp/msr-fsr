@@ -24,6 +24,7 @@ export class NotificationService {
   }
 
   getNotifications() {
+    this.resetNotifications();
     this.workflowService.pending(env.apiVersion)
       .pipe(take(1))
       .subscribe(responseHandler(response => {
@@ -39,6 +40,12 @@ export class NotificationService {
       total += element.count;
     });
     this.notificationCount = total;
+  }
+
+  resetNotifications() {
+    this.notificationCount = 0;
+    this.notificationData = new PendingNotificationItem();
+    this.notificationData.items = new Array<PendingNotificationItem>();
   }
 
 }
