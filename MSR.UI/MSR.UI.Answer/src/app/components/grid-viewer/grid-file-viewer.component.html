@@ -1,4 +1,4 @@
-<span class="pointer" *ngFor="let file of files" (click)="showViewer(file)">
+<span class="pointer m-1" *ngFor="let file of files" (click)="showViewer(file)">
   <i tooltip="{{file.name}}" *ngIf="file.contentType == 'application/msword'" class="fad fa-file-word"></i>
   <i tooltip="{{file.name}}"
     *ngIf="file.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"
