@@ -92,7 +92,7 @@ export class GridOptionsComponent implements OnInit {
   public updateDefaultColumns(view: ViewSaved) {
     let visibleCols = 0;
     this.defaultColumns.forEach((elem) => {
-      if (view === null || view.columns === undefined) {
+      if (view === null || view === undefined || view.columns === undefined) {
         elem.visible = this.gridSettings.find(x => x.id === elem.id).visible;
       } else {
         elem.visible = view.columns.find(x => x.id === elem.id).visible;
@@ -104,6 +104,10 @@ export class GridOptionsComponent implements OnInit {
     this.visibleColumnsCount = visibleCols;
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     this.defaultColumnsChange.emit(this.defaultColumns);
+
+    this.selectedColumns = this.defaultColumns.filter(x => x.visible).map((elem) => {
+      return { id: elem.id, name: elem.label, visible: elem.visible };
+    });
   }
 
   public savedViewChange(view: ViewSaved) {
@@ -112,7 +116,7 @@ export class GridOptionsComponent implements OnInit {
     this.defaultView = view;
   }
 
-  public resetgrid() {
+  public resetgrid(view) {
     this.ptable.onFilter.emit({
       filters: {},
       filteredValue: null
@@ -136,14 +140,14 @@ export class GridOptionsComponent implements OnInit {
     }
 
     localStorage.setItem(this.gridStorageId, JSON.stringify({ 'first': 0, 'rows': 10 }));
+    this.updateDefaultColumns(view);
   }
 
   restoreState(view: ViewSaved) {
     let state: TableState = JSON.parse(view.gridPagingData);
 
     if (state === null || state.filters === undefined) {
-      this.resetgrid();
-      this.updateDefaultColumns(view);
+      this.resetgrid(view);
       return;
     }
 
@@ -194,6 +198,7 @@ export class GridOptionsComponent implements OnInit {
       this.ptable.filterTimeout = null;
     }, this.ptable.filterDelay);
 
+    this.updateDefaultColumns(view);
     this.visibleColumnsCount = this.selectedColumns.length;
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
   }
@@ -208,27 +213,16 @@ export class GridOptionsComponent implements OnInit {
     this.showRemove = false;
   }
 
-  public showSaveViewDiv() {
-    try {
-      if (!this.showSaveView) {
-        const viewData = {
-          version: this.gridVersion, isDefault: false,
-          gridId: this.gridStorageId, columns: this.defaultColumns
-        };
-        this.viewToSave = new ViewSaved(viewData);
-      }
-      this.showSaveView = !this.showSaveView;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   public updateTemplateWithCurrentView(tplView: ViewSaved) {
-    this.cg.updateView(tplView, this.viewToSave);
+    const columns = deepCopy(this.defaultColumns).map(e=>new ColumnsSaved(e));
+    const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: columns });
+    Object.assign(savedView, this.viewToSave);
+    this.cg.updateView(tplView, savedView);
   }
 
   public saveView() {
-    const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: this.defaultColumns });
+    const columns = deepCopy(this.defaultColumns).map(e=>new ColumnsSaved(e));
+    const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: columns });
     Object.assign(savedView, this.viewToSave);
     this.cg.addView(savedView);
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
