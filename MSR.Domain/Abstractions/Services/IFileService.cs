@@ -26,6 +26,6 @@ namespace MSR.Domain.Abstractions.Services
         /// <param name="uploadedFileId"></param>
         /// <returns></returns>
         Task<FileModel> MapUploadedFileAsync(string entityName, int entityId, int uploadedFileId);
-        Task<bool> EditPdfFile(FileModel file, DocumentView document);
+        Task<bool> EditPdfFile(FileModel file, DocumentView document, string entityName);
     }
 }

@@ -487,14 +487,16 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentRoleMap, RoleView>();
             CreateMap<WorkOrder, PortalWorkOrderView>()
-                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId));
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId))
+                .ForMember(dest => dest.HasNCRs, opts => opts.MapFrom(src => src.HasNCR));
             CreateMap<PortalWorkOrder, PortalWorkOrderView>();
             CreateMap<WorkOrderMessage, WorkOrderMessageModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.CreatedOn))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Created.GetFullName()))
                 .ForMember(dest => dest.Message, opts => opts.MapFrom(src => src.Message));
             CreateMap<WorkOrderModel, PortalWorkOrderView>()
-                .ForMember(dest => dest.WorkOrderId, opts => opts.MapFrom(src => src.Id));
+                .ForMember(dest => dest.WorkOrderId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.HasNCRs, opts => opts.MapFrom(src => src.HasNCR));
         }
 
         private static bool ignoreNullOrZero(object srcMember)

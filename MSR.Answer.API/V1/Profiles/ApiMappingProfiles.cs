@@ -44,10 +44,7 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
                 .ForMember(dest => dest.Target, opts => opts.MapFrom(src => Convert.ToSingle(src.TargetValue)))
                 .ForMember(dest => dest.SendNCREmail, opts => opts.MapFrom(src => src.SendEmailNotification));
-            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>()
-                .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
-                .ForMember(dest => dest.Target, opts => opts.MapFrom(src => Convert.ToSingle(src.TargetValue)))
-                .ForMember(dest => dest.SendNCREmail, opts => opts.MapFrom(src => src.SendEmailNotification));
+            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>();
             CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>()
                 .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
                 .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));

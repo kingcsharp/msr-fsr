@@ -53,7 +53,7 @@
                     <input type="checkbox" class="form-check-input" id="{{ permissionModule.id }}" [checked]="permissionModule.value" [attr.data-cy]="permissionModule.name"
                      (change)="permissionChanged($event,selectedMenuModule,selectedRoleModule,permissionModule)" [disabled]="permissionModule.inheritedPermission">
                     <label class="form-check-label" for="{{ permissionModule.id }}">{{ permissionModule.name }} </label>
-                    <i class="fas fa-lock fa-lg" *ngIf="permissionModule.inheritedPermission"></i>
+                    <i class="fas fa-check fa-lg" data-toggle="tooltip" data-placement="left" title="This is an Inherited Permission" *ngIf="permissionModule.inheritedPermission"></i>
                 </li>
             </ul>
         </div>

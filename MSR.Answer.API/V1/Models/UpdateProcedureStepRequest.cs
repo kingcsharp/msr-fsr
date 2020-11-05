@@ -125,6 +125,12 @@ namespace MSR.Answer.API.V1.Models
         public List<RoleRequest> Roles { get; set; }
 
         /// <summary>
+        /// Gets or Sets Documents
+        /// </summary>
+        [DataMember(Name = "referenceDocumentIds")]
+        public List<int> ReferenceDocumentIds { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>

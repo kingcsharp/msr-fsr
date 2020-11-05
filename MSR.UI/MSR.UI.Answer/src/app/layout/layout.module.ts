@@ -30,7 +30,7 @@ import { ApprovalCommentComponent } from '../components/approval-comment/approva
     DialogModule
   ],
   declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent, HelpbuttonWrapperComponent],
-  exports:[
+  exports: [
     HelpbuttonWrapperComponent
   ]
 })

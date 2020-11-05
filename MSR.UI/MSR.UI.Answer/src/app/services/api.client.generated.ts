@@ -9480,6 +9480,7 @@ export enum EnumMenuItem {
     WorkOrders = 33,
     WorkOrderParts = 34,
     WorkOrderTasks = 35,
+    ProcedureStep = 36,
 }
 
 export class FileModel implements IFileModel {
@@ -12865,6 +12866,8 @@ export class ProcedureStepModel implements IProcedureStepModel {
     usefulLife?: number | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
+    referenceDocumentIds?: number[] | undefined;
+    referenceDocument?: FileModel[] | undefined;
 
     constructor(data?: IProcedureStepModel) {
         if (data) {
@@ -12903,6 +12906,16 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(Role.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceDocumentIds"])) {
+                this.referenceDocumentIds = [] as any;
+                for (let item of _data["referenceDocumentIds"])
+                    this.referenceDocumentIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceDocument"])) {
+                this.referenceDocument = [] as any;
+                for (let item of _data["referenceDocument"])
+                    this.referenceDocument!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -12943,6 +12956,16 @@ export class ProcedureStepModel implements IProcedureStepModel {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceDocumentIds)) {
+            data["referenceDocumentIds"] = [];
+            for (let item of this.referenceDocumentIds)
+                data["referenceDocumentIds"].push(item);
+        }
+        if (Array.isArray(this.referenceDocument)) {
+            data["referenceDocument"] = [];
+            for (let item of this.referenceDocument)
+                data["referenceDocument"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -12967,6 +12990,8 @@ export interface IProcedureStepModel {
     usefulLife?: number | undefined;
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
+    referenceDocumentIds?: number[] | undefined;
+    referenceDocument?: FileModel[] | undefined;
 }
 
 /**  */
@@ -13003,6 +13028,7 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
     referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
+    referenceDocumentIds?: number[] | undefined;
 
     constructor(data?: ICreateProcedureStepRequest) {
         if (data) {
@@ -13042,6 +13068,11 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(RoleRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceDocumentIds"])) {
+                this.referenceDocumentIds = [] as any;
+                for (let item of _data["referenceDocumentIds"])
+                    this.referenceDocumentIds!.push(item);
             }
         }
     }
@@ -13083,6 +13114,11 @@ export class CreateProcedureStepRequest implements ICreateProcedureStepRequest {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceDocumentIds)) {
+            data["referenceDocumentIds"] = [];
+            for (let item of this.referenceDocumentIds)
+                data["referenceDocumentIds"].push(item);
+        }
         return data; 
     }
 }
@@ -13121,6 +13157,7 @@ export interface ICreateProcedureStepRequest {
     referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
+    referenceDocumentIds?: number[] | undefined;
 }
 
 /**  */
@@ -13537,6 +13574,8 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
     referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
+    /** Gets or Sets Documents */
+    referenceDocumentIds?: number[] | undefined;
 
     constructor(data?: IUpdateProcedureStepRequest) {
         if (data) {
@@ -13577,6 +13616,11 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(RoleRequest.fromJS(item));
+            }
+            if (Array.isArray(_data["referenceDocumentIds"])) {
+                this.referenceDocumentIds = [] as any;
+                for (let item of _data["referenceDocumentIds"])
+                    this.referenceDocumentIds!.push(item);
             }
         }
     }
@@ -13619,6 +13663,11 @@ export class UpdateProcedureStepRequest implements IUpdateProcedureStepRequest {
             for (let item of this.roles)
                 data["roles"].push(item.toJSON());
         }
+        if (Array.isArray(this.referenceDocumentIds)) {
+            data["referenceDocumentIds"] = [];
+            for (let item of this.referenceDocumentIds)
+                data["referenceDocumentIds"].push(item);
+        }
         return data; 
     }
 }
@@ -13659,6 +13708,8 @@ export interface IUpdateProcedureStepRequest {
     referenceFileIds?: number[] | undefined;
     /** Gets or Sets Roles */
     roles?: RoleRequest[] | undefined;
+    /** Gets or Sets Documents */
+    referenceDocumentIds?: number[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -13946,13 +13997,13 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
+    target?: number;
     /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -13976,10 +14027,10 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
             this.sensorName = _data["sensorName"];
             this.monitorType = _data["monitorType"];
             this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
+            this.sendNCREmail = _data["sendNCREmail"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
@@ -14000,10 +14051,10 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data["sensorName"] = this.sensorName;
         data["monitorType"] = this.monitorType;
         data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
+        data["sendNCREmail"] = this.sendNCREmail;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
@@ -14024,13 +14075,13 @@ export interface IUpdateProcedureStepMonitorRequest {
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
+    target?: number;
     /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */

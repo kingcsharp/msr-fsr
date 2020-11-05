@@ -149,6 +149,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     }).ToList();
                 }
 
+                current.IsKit = current.Subparts.Count > 0;
                 _unitOfWork.Parts.Update(current);
                 // This will call SaveChangesAsync
                 await _unitOfWork.LogApprovalTransaction(current, current.Id, "Approved", command.Comment);
@@ -164,6 +165,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _unitOfWork.PartApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
+                current.IsKit = command.SubParts.Count > 0;
                 ret = _mapper.Map<PartModel>(current);
                 ret.IsPending = true;
             }

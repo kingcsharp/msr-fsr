@@ -9,6 +9,7 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commands;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Models.Config;
 using MSR.Domain.Views;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
@@ -28,14 +29,16 @@ namespace MSR.Infrastructure.Resources.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly GeneralInformation _generalInformation;
 
-        public FileService(IFileHandlerFactory fileHanderFactory, IUnitOfWork unitOfWork, IMapper mapper, ILogger<FileService> logger)
+        public FileService(IFileHandlerFactory fileHanderFactory, IUnitOfWork unitOfWork, IMapper mapper, ILogger<FileService> logger, GeneralInformation generalInformation)
         {
             _fileUploader = fileHanderFactory.CreateUploader(FileProvider.S3);
             _fileDownloader = fileHanderFactory.CreateDownloader(FileProvider.S3);
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _generalInformation = generalInformation;
         }
 
         public static string GetURLEncodedBase64(string rawb64, string type)
@@ -279,8 +282,9 @@ namespace MSR.Infrastructure.Resources.Services
             };
         }
 
-        public async Task<bool> EditPdfFile(FileModel file, DocumentView document)
+        public async Task<bool> EditPdfFile(FileModel file, DocumentView document, string entityName)
         {
+            License.LicenseKey = _generalInformation.IronPDFLicense;
             try
             {
                 var currentUser = await _unitOfWork.Users.FirstOrDefaultAsync(false, i => i.Id == CurrentUser.GetId());
@@ -289,7 +293,7 @@ namespace MSR.Infrastructure.Resources.Services
 
                 using (var memStream = new MemoryStream())
                 {
-                    var stream = await _fileDownloader.DownloadFile(file.FileURL);
+                    var stream = await _fileDownloader.DownloadFile($"{entityName}-{file.EntityId}-{file.Name}");
                     stream.CopyTo(memStream);
                     pdfDoc = new PdfDocument(memStream.ToArray());
                 }
@@ -407,10 +411,13 @@ namespace MSR.Infrastructure.Resources.Services
 
         private async Task<string> GetRevisionTable(DocumentView document)
         {
-            var historyList = await _unitOfWork.ApprovalTransactionLogs.Query().Where(i => i.ApprovalEntity == nameof(EntityFramework.Entities.Document) && i.ApprovalEntityId == document.Id).ToListAsync();
+            var historyList = await _unitOfWork.ApprovalTransactionLogs.Query()
+                                                                       .Where(i => i.ApprovalEntity == nameof(EntityFramework.Entities.Document) 
+                                                                                && i.ApprovalEntityId == document.Id)
+                                                                       .ToListAsync();
 
             var historyTable = @"<style> table { border-collapse: collapse; } td, th { border: 1px solid black; } th { background: lightgrey;}</style><h1 style=""margin-top:100px"">Revision History</h1><table><thead><th width=""10%"">Rev. ID</th><th width=""10%"">Date</th><th width=""80%"">Changes</th></thead><tbody>";
-            var revision = 0;
+            var revision = 1;
             foreach (var history in historyList.OrderBy(i => i.Id))
             {
                 historyTable += $@"<tr><td align=""center""><strong>{revision++}</strong></td><td align=""center"">{history.ProcessedOn}</td><td>{history.Comments}</td></tr>";
