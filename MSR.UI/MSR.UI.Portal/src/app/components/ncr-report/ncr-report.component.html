@@ -28,16 +28,25 @@
     <div class="col-12 border mb-2">
         <div class="row">
             <div class="col-3 font-weight-bold text-right">Associated Documents:</div><div class="col-9"></div>
-            <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div><div class="col-9"></div>
+            <div class="col-3 font-weight-bold text-right">Associated Digital Pictures:</div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-4 mt-4" *ngFor="let fileModel of associatedDigitalPictures">
+                        <a href="{{fileModel.fileURL}}" target="_blank">
+                            <img class="card-img-top" src="{{fileModel.fileURL}}" alt="{{fileModel.name}}" (click)="showImagePreviewDialog(fileModel)">
+                        </a>
+                    </div>
+                </div>
+            </div>
             <div class="col-3 font-weight-bold text-right">Comments:</div><div class="col-9"></div>
         </div>
     </div>
     <div class="col-12">
         <div class="row" *ngFor="let taskSummary of taskSummaries">
-            <div class="col-12 border text-light bg-dark p-2">{{taskSummary.taskName}}</div>
-            <div class="col-6 border bg-secondary text-dark p-2">Monitor {{taskSummary.taskId}}</div>
-            <div class="col-3 border bg-secondary text-dark p-2">Result</div>
-            <div class="col-3 border bg-secondary text-dark p-2">Comment</div>
+            <div class="col-12 border bg-dark p-2">{{taskSummary.taskName}}</div>
+            <div class="col-6 border bg-secondary p-2">Monitor {{taskSummary.taskId}}</div>
+            <div class="col-3 border bg-secondary p-2">Result</div>
+            <div class="col-3 border bg-secondary p-2">Comment</div>
             <div class="col-12">
                 <div class="row" *ngFor="let monitorSummary of taskSummary.monitors">
                     <div class="col-6 border p-2">{{monitorSummary.monitorTitle}}</div>

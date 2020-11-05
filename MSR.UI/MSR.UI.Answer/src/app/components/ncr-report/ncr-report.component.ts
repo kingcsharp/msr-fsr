@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FileModel, WorkOrderModel, WorkOrderPartModel, WorkOrderTaskMonitorModel } from '../../services/api.client.generated';
 import { Globals } from '../../models/lib/globals';
-import { ProcedureType } from '../../models/enums/ProcedureType';
+import { EnumProcedureType } from '../../models/enums/EnumProcedureType';
 
 @Component({
   selector: 'ncr-report',
@@ -42,7 +42,7 @@ export class NcrReportComponent implements OnInit {
 
     this.WorkOrder.workOrderTasks.forEach(workOrderTask => {
 
-      if (workOrderTask.procedureStep?.procedure?.procedureTypeId === ProcedureType.NCR) {
+      if (workOrderTask.procedureStep?.procedure?.procedureTypeId === EnumProcedureType.NCR) {
 
         let taskSummary = {
           taskName: workOrderTask.procedureStep.title,
