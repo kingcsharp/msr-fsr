@@ -124,7 +124,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
   areMonitorsInValidStateToCloseTask(): boolean {
 
-    if(this.workOrderMonitorsToView.length === 0){
+    if (this.workOrderMonitorsToView.length === 0) {
       return true;
     }
 
