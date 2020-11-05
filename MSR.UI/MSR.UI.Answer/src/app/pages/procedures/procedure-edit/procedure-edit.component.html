@@ -292,16 +292,10 @@
                                         </label>
                                     </div>
                                     <div class="col-9">
-                                        <div class="input-group">
-                                            <input type="text" name="documents" class="form-control input-transparent"
-                                                tooltip="Linked Documents">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" tooltip="Select Documents"><i
-                                                        class="fas fa-folder"></i></span>
-                                                <span class="input-group-text" tooltip="Remove Documents"><i
-                                                        class="far fa-trash-alt"></i></span>
-                                            </div>
-                                        </div>
+                                        <multiselect-wrapper-form [options]="documentsAvailable" [limit]="3"
+                                            [(model)]="procedureStep.value.referenceDocuments" defaultLabelProperty="label" defaultId="value"
+                                            defaultLabel="Select Documents">
+                                        </multiselect-wrapper-form>
                                     </div>
                                 </div>
                             </div>

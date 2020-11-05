@@ -5,7 +5,7 @@ import { SelectItem } from 'primeng/api';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import {
   RoleService, Procedure, ProcedureStepModel, ProcedureTemplateService, UpdateProcedureRequest, ProcedureStepTypeService, SensorService,
-  ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, UpdateProcedureStepRequest,
+  ProcedureService, ProcedureStepMonitorService, EnumMenuItem, ProcedureTypeService, UpdateProcedureStepRequest, DocumentService,
   RoleRequest, CreateProcedureStepRequest, Role, FileModel, ICreateProcedureStepRequest, IUpdateProcedureStepRequest, ProcedureStepTemplateModel, IRoleRequest, FileRequest
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
@@ -19,7 +19,7 @@ import { take } from 'rxjs/operators';
   templateUrl: './procedure-edit.component.html',
   styleUrls: ['./procedure-edit.component.scss'],
   providers: [DraggableItemService, ProcedureTemplateService, ProcedureService, ProcedureStepMonitorService,
-    ProcedureTypeService, ProcedureStepTypeService, SensorService]
+    ProcedureTypeService, ProcedureStepTypeService, SensorService, DocumentService]
 })
 export class ProcedureEditComponent implements OnInit {
 
@@ -39,10 +39,10 @@ export class ProcedureEditComponent implements OnInit {
   availableProcedureStepTemplates: Array<SelectItem>;
   selectedProcedureStepTemplate: number;
   lastSavedProcedureStepOrder: Array<number>;
+  documentsAvailable: Array<SelectItem>;
 
 
-
-  constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef,
+  constructor(private route: ActivatedRoute, public globals: Globals, public elementReference: ElementRef, private documentService: DocumentService,
     private router: Router, private roleService: RoleService, private procedureTemplateService: ProcedureTemplateService,
     private procedureService: ProcedureService, private procedureStepTypeService: ProcedureStepTypeService, private procedureTypeService: ProcedureTypeService) { }
 
@@ -72,7 +72,13 @@ export class ProcedureEditComponent implements OnInit {
 
             this.procedureStepTypeOptions = procedureStepTypeResponse.object.map(s => ({ label: s.name, value: s.id }));
 
-            this.getProcedure();
+            this.globals.showLoader(true);
+            this.documentService.documentGet(null, env.apiVersion).pipe(take(1)).subscribe(responseHandler(documentServiceResponse => {
+
+              this.documentsAvailable = documentServiceResponse.object.map(s => ({ label: s.name, value: s.id }));
+              this.getProcedure();
+
+            }));
 
           }));
 
@@ -135,6 +141,14 @@ export class ProcedureEditComponent implements OnInit {
         if (procedureStep.referenceFiles === undefined) {
           procedureStep.referenceFiles = [];
         }
+
+        procedureStep.referenceDocuments = new Array<SelectItem>();
+
+        procedureStep.referenceDocumentIds?.forEach(referenceDocumentId => {
+          let document = this.documentsAvailable.find(s => s.value === referenceDocumentId);
+          procedureStep.referenceDocuments.push(document);
+        });
+
         procedureStep.originalPrintOrder = procedureStep.printOrder - 1;
         if (procedureStep.printOrder !== 1) {
           procedureStep.predecessorStepId = getGetResponse.object.find(s => s.printOrder === procedureStep.printOrder - 1)?.id;
@@ -219,7 +233,8 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepTypeId: procedureStep.selectedProcedureStepTypeId,
       printOrder: this.procedureSteps.findIndex(s => s.id === procedureStep.id) + 1,
       referenceFiles: new Array<FileModel>(),
-      referenceFileIds: new Array<number>()
+      referenceFileIds: new Array<number>(),
+      referenceDocumentIds: procedureStep.referenceDocuments.map(s => s.value)
     } as IUpdateProcedureStepRequest);
 
     procedureStep.referenceFiles.map((referenceFile: FileModel) => {
@@ -263,6 +278,7 @@ export class ProcedureEditComponent implements OnInit {
           updateAffectedProcedureStepRequest.utilization = procedureStepToUpdate.utilization;
           updateAffectedProcedureStepRequest.procedureStepTypeId = procedureStepToUpdate.selectedProcedureStepTypeId;
           updateAffectedProcedureStepRequest.printOrder = this.procedureSteps.findIndex(s => s.id === procedureStepToUpdate.id) + 1;
+          updateAffectedProcedureStepRequest.referenceDocumentIds = procedureStepToUpdate.referenceDocuments.map(s => s.value);
           updateAffectedProcedureStepRequests.push(updateAffectedProcedureStepRequest);
 
         }
@@ -318,7 +334,8 @@ export class ProcedureEditComponent implements OnInit {
         utilization: 0,
         procedureStepTypeId: 1,
         referenceFiles: new Array<FileModel>(),
-        referenceFileIds: new Array<number>()
+        referenceFileIds: new Array<number>(),
+        referenceDocumentIds: new Array<number>()
       } as ICreateProcedureStepRequest);
 
       this.addProcedureStepToProcedure(createProcedureStepRequest, undefined);
@@ -350,7 +367,8 @@ export class ProcedureEditComponent implements OnInit {
           utilization: procedureStepTemplateToAdd.utilization,
           procedureStepTypeId: 1,
           referenceFiles: new Array<FileRequest>(),
-          referenceFileIds: procedureStepTemplateToAdd.referenceFiles.map(s => s.fileId)
+          referenceFileIds: procedureStepTemplateToAdd.referenceFiles.map(s => s.fileId),
+          referenceDocumentIds: new Array<number>()
         } as ICreateProcedureStepRequest);
 
         this.addProcedureStepToProcedure(createProcedureStepRequest, procedureStepTemplateToAdd.referenceFiles);
@@ -385,6 +403,7 @@ export class ProcedureEditComponent implements OnInit {
       procedureStepToAdd.predecessorStepName = this.procedureSteps[this.procedureSteps.length - 1]?.title;
       procedureStepToAdd.selectedProcedureStepTypeId = this.procedureStepTypeOptions.find(s => s.value === 1)?.value;
       procedureStepToAdd.referenceFiles = fileModels === undefined ? new Array<FileModel>() : fileModels;
+      procedureStepToAdd.referenceDocuments = new Array<SelectItem>();
       this.procedureSteps.push(procedureStepToAdd);
       this.procedureSteps = [...this.procedureSteps];
 

@@ -11,7 +11,11 @@ namespace MSR.Domain.Models
     /// </summary>
     public class ProcedureStepModel
     {
-        public ProcedureStepModel() { }
+        public ProcedureStepModel()
+        {
+            ReferenceFiles = new List<FileModel>();
+            ReferenceDocumentIds = new List<int>();
+        }
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -101,6 +105,16 @@ namespace MSR.Domain.Models
         /// Gets or Sets Roles
         /// </summary>
         public List<Role> Roles { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Documents
+        /// </summary>
+        public List<int> ReferenceDocumentIds { get; set; }
+
+        /// <summary>
+        /// Gets or Sets DocumentFiles
+        /// </summary>
+        public List<FileModel> ReferenceDocument { get; set; }
 
         /// <summary>
         /// Copy of the status field of the ProductApproval row
