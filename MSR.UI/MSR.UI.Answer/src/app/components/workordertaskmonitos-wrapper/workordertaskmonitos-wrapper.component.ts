@@ -95,7 +95,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
         if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
           || m.procedureStepMonitor.monitorType === 'Yes or No')) {
           dropDownsAreValid = false;
-        } else if (m.procedureStepMonitor.monitorType === 'Select' && m.numVal === undefined) {
+        } else if (m.procedureStepMonitor.monitorType === 'Select' && (m.numVal === undefined || m.numVal === null)) {
           dropDownsAreValid = false;
         }
 

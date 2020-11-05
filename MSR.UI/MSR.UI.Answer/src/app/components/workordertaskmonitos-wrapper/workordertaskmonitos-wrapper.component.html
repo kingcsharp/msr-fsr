@@ -177,7 +177,7 @@
                 [showClear]="true" [(ngModel)]="workOrderTaskMonitor.numVal">
               </p-dropdown>
               <ul class="parsley-errors-list filled"
-                *ngIf="workOrderTaskMonitor.numVal === undefined && workOrderTaskMonitor.holdIfFails">
+                *ngIf="(workOrderTaskMonitor.numVal === undefined || workOrderTaskMonitor.numVal === null) && workOrderTaskMonitor.holdIfFails">
                 <li class="parsley-custom-error-message">You must select a Result</li>
               </ul>
             </div>
