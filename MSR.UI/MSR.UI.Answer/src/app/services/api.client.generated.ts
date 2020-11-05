@@ -9480,6 +9480,7 @@ export enum EnumMenuItem {
     WorkOrders = 33,
     WorkOrderParts = 34,
     WorkOrderTasks = 35,
+    ProcedureStep = 36,
 }
 
 export class FileModel implements IFileModel {
@@ -12866,6 +12867,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
+    referenceDocument?: FileModel[] | undefined;
 
     constructor(data?: IProcedureStepModel) {
         if (data) {
@@ -12909,6 +12911,11 @@ export class ProcedureStepModel implements IProcedureStepModel {
                 this.referenceDocumentIds = [] as any;
                 for (let item of _data["referenceDocumentIds"])
                     this.referenceDocumentIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceDocument"])) {
+                this.referenceDocument = [] as any;
+                for (let item of _data["referenceDocument"])
+                    this.referenceDocument!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -12954,6 +12961,11 @@ export class ProcedureStepModel implements IProcedureStepModel {
             for (let item of this.referenceDocumentIds)
                 data["referenceDocumentIds"].push(item);
         }
+        if (Array.isArray(this.referenceDocument)) {
+            data["referenceDocument"] = [];
+            for (let item of this.referenceDocument)
+                data["referenceDocument"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -12979,6 +12991,7 @@ export interface IProcedureStepModel {
     referenceFiles?: FileModel[] | undefined;
     roles?: Role[] | undefined;
     referenceDocumentIds?: number[] | undefined;
+    referenceDocument?: FileModel[] | undefined;
 }
 
 /**  */
