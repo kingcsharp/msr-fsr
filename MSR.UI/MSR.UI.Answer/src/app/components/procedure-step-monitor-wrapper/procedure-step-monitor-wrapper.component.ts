@@ -184,14 +184,15 @@ export class ProcedureStepMonitorWrapperComponent implements OnInit {
         monitorType: this.procedureStepMonitor.monitorType,
         inputType: this.procedureStepMonitor.inputType,
         shouldBe: this.procedureStepMonitor.shouldBe,
-        targetValue: this.procedureStepMonitor.targetValue?.toString(),
-        faultHandling: this.procedureStepMonitor.faultHandling,
         description: this.procedureStepMonitor.description,
-        sendEmailNotification: this.procedureStepMonitor.sendEmailNotification,
         id: this.procedureStepMonitor.id,
         lowTarget: this.procedureStepMonitor.lowTarget,
         highTarget: this.procedureStepMonitor.highTarget,
-        sensorName: this.procedureStepMonitor.sensorName
+        sensorName: this.procedureStepMonitor.sensorName,
+        failAction: this.procedureStepMonitor.faultHandling,
+        monitorListId: this.procedureStepMonitor.monitorListId,
+        sendNCREmail: this.procedureStepMonitor.sendEmailNotification,
+        target: Number(this.procedureStepMonitor.targetValue)
       } as IUpdateProcedureStepMonitorRequest);
 
       this.globals.showLoader(true);

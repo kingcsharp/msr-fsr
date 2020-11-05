@@ -135,7 +135,7 @@ export class GridOptionsComponent implements OnInit {
       this.ptable.totalRecords = (this.ptable._value ? this.ptable._value.length : 0);
     }
 
-    localStorage.setItem(this.gridStorageId, JSON.stringify({ "first": 0, "rows": 10 }));
+    localStorage.setItem(this.gridStorageId, JSON.stringify({ 'first': 0, 'rows': 10 }));
   }
 
   restoreState(view: ViewSaved) {

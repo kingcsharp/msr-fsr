@@ -91,7 +91,8 @@
                   'bg-light': workOrderTask.status?.name === 'In Progress',
                   'text-dark': workOrderTask.status?.name === 'In Progress',
                   'step-complete': workOrderTask.status?.name === 'Complete' || workOrderTask.status?.name === 'Completed' 
-                  || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled'}">
+                  || workOrderTask.status?.name === 'Closed' || workOrderTask.status?.name === 'Cancelled',
+                  'step-viewed': workOrderTaskToView.id === workOrderTask.id}">
               <div class="h-100 d-flex">
                 <div class="carousel-step-title m-auto">{{ workOrderTask.procedureStep?.title}}</div>
               </div>
@@ -103,8 +104,8 @@
           <workordertasktimer-wrapper [(workOrderTasks)]="workOrderModel.workOrderTasks"
             [hasAccessToTaskBeingViewed]="hasAccessToTaskBeingViewed" [workOrderIsComplete]="workOrderIsComplete"
             [(workOrderTaskInProgress)]="workOrderTaskInProgress" (slideToTaskInProgress)="slideToTaskInProgress()"
-            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id"
-            (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)"
+            *ngIf="workOrderTaskInProgress !== undefined && workOrderTaskInProgress.assignedTo === globals.getCurrentUser().id" [areMonitorsValid]="areMonitorsValid"
+            (updateWorkOrderTaskToViewAndInProgress)="updateWorkOrderTaskToViewAndInProgress($event)" (areMonitorsValidCheck)="areMonitorsValidCheck($event.areValid)"
             [(workOrderTaskToView)]="workOrderTaskToView" #workordertasktimer>
           </workordertasktimer-wrapper>
         </div>
@@ -200,7 +201,7 @@
               *ngIf="hasAccessToTaskBeingViewed && workOrderTaskToView.workOrderTaskMonitors !== undefined && workOrderModel !== undefined">
               <workordertaskmonitos-wrapper [workOrderMonitorsToView]="workOrderTaskToView.workOrderTaskMonitors"
                 [doNotAllowEditing]="workOrderTaskToView.id === workOrderTaskInProgress.id"
-                [workOrderModel]="workOrderModel" (closeCurrentTaskInProgress)="closeCurrentTask()">
+                [workOrderModel]="workOrderModel" (closeCurrentTaskInProgress)="closeCurrentTask()" #workordertaskmonitors>
               </workordertaskmonitos-wrapper>
             </span>
           </p-tabPanel>
@@ -254,6 +255,21 @@
       </button>
       <button type="button" (click)="toggleCancelRemainingStepsDialog()" class="btn btn-danger mb-xs" role="button">
         <i class="fas fa-times-circle mx-1"></i>Cancel
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+<p-dialog header="Error" [(visible)]="monitorsAreInvalidDialog" appendTo="body"
+  [baseZIndex]="100001" [modal]='true' [style]="{width: '50vw'}" data-cy="user-header">
+  <div class="container">
+    <div class="row">
+      Cannot close step until monitors that require passing results are fixed
+    </div>
+  </div>
+  <p-footer>
+    <div class="pull-right">
+      <button type="button" (click)="monitorsAreInvalidDialog = false" class="btn btn-danger mb-xs" role="button">
+        <i class="fas fa-times-circle mx-1"></i>Close
       </button>
     </div>
   </p-footer>
