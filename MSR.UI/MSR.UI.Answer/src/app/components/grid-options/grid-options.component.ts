@@ -90,15 +90,18 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public updateDefaultColumns(view: ViewSaved) {
-
+    let visibleCols = 0;
     this.defaultColumns.forEach((elem) => {
-      this.visibleColumnsCount++;
       if (view === null || view.columns === undefined) {
         elem.visible = this.gridSettings.find(x => x.id === elem.id).visible;
       } else {
         elem.visible = view.columns.find(x => x.id === elem.id).visible;
       }
+      if (elem.visible) {
+        visibleCols++;
+      }
     });
+    this.visibleColumnsCount = visibleCols;
     this.visibleColumnsCountChange.emit(this.visibleColumnsCount);
     this.defaultColumnsChange.emit(this.defaultColumns);
   }
@@ -138,7 +141,7 @@ export class GridOptionsComponent implements OnInit {
   restoreState(view: ViewSaved) {
     let state: TableState = JSON.parse(view.gridPagingData);
 
-    if (state.filters === undefined) {
+    if (state === null || state.filters === undefined) {
       this.resetgrid();
       this.updateDefaultColumns(view);
       return;
@@ -225,7 +228,7 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public saveView() {
-    const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false });
+    const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: this.defaultColumns });
     Object.assign(savedView, this.viewToSave);
     this.cg.addView(savedView);
     this.viewsSaved = this.cg.getViews(this.gridStorageId);
