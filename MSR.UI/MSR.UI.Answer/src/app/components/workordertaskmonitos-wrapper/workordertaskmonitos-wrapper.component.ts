@@ -6,6 +6,7 @@ import { responseHandler } from '../../utils/responseHandler';
 import { forkJoin } from 'rxjs';
 
 declare let jQuery: any;
+declare let Parsley: any;
 
 @Component({
   selector: 'workordertaskmonitos-wrapper',
@@ -71,6 +72,16 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
     });
 
+    Parsley.addValidator('equaltotarget', {
+      requirementType: 'number',
+      validateString: function (value, requirement) {
+        return Number(value) === Number(requirement);
+      },
+      messages: {
+        en: 'Value must be equal to Target'
+      }
+    });
+
   }
 
   areDropDownsValid(): boolean {
@@ -84,7 +95,7 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
         if (m.procedureStepMonitor.targetValue !== m.numVal && (m.procedureStepMonitor.monitorType === 'Pass or Fail'
           || m.procedureStepMonitor.monitorType === 'Yes or No')) {
           dropDownsAreValid = false;
-        } else if (m.procedureStepMonitor.monitorType === 'Select' && m.numVal === undefined) {
+        } else if (m.procedureStepMonitor.monitorType === 'Select' && (m.numVal === undefined || m.numVal === null)) {
           dropDownsAreValid = false;
         }
 
