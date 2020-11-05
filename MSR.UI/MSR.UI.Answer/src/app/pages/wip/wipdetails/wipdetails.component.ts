@@ -2,10 +2,10 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ChangeDetectorRef, Inj
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ProcedureService, WorkOrderTaskService, LocationService, UserService,
-  Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService,
+  Customer, Procedure, PurchaseModel, WorkOrderPartService, InvoiceService, DocumentService,
   WorkOrderModel, WorkOrderPartModel, EnumMenuItem, WorkOrderService, WorkOrderTaskModel,
   ProcedureStepMonitorService, FileModel, UpdateWorkOrderPartRequest, IUpdateWorkOrderPartRequest,
-  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel, ProcedureStepModel
+  UpdateWorkOrderTaskRequest, IUpdateWorkOrderTaskRequest, ProductModel, AuditActionResultOfICollectionOfProcedureStepModel, ProcedureStepModel, DocumentView
 } from '../../../services/api.client.generated';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
@@ -17,6 +17,7 @@ import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { SelectItem } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
+import { DocumentsComponent } from '../../documents/documents/documents.component';
 
 
 @Component({
@@ -26,7 +27,7 @@ import { forkJoin, Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true,
   providers: [WorkOrderService, ProcedureStepMonitorService, WorkOrderPartService, ProcedureService, WorkOrderTaskService,
-    LocationService, UserService, UserService, InvoiceService]
+    LocationService, UserService, UserService, InvoiceService, DocumentService]
 })
 export class WipdetailsComponent implements OnInit {
 
@@ -63,7 +64,7 @@ export class WipdetailsComponent implements OnInit {
 
 
   constructor(private route: ActivatedRoute, private workOrdersService: WorkOrderService, private workOrderPartService: WorkOrderPartService,
-    @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService,
+    @Inject(ChangeDetectorRef) private changeDetectorRef: ChangeDetectorRef, private procedureService: ProcedureService, private documentService: DocumentService,
     public globals: Globals, private router: Router, private workOrderTaskService: WorkOrderTaskService) { }
 
   @HostListener('window:resize', ['$event'])
@@ -148,6 +149,35 @@ export class WipdetailsComponent implements OnInit {
         workOrderTask.procedureStep.referenceDocumentIds = procedureStepModel.referenceDocumentIds;
         workOrderTask.procedureStep.referenceFiles = procedureStepModel.referenceFiles;
       });
+
+      let documentRequests = new Array<any>();
+
+      let documentIds = [].concat(...workOrderModel.workOrderTasks.map(workOrderTask => workOrderTask.procedureStep?.referenceDocumentIds)).filter((item, i, ar) => ar.indexOf(item) === i);
+
+      documentIds.forEach(documentId => {
+
+        documentRequests.push(this.documentService.documentGet(documentId, env.apiVersion));
+
+      });
+
+      forkJoin(documentRequests).subscribe(responseHandler(documentResponses => {
+
+        let documents = documentResponses.map(s => s.object[0]);
+        workOrderModel.workOrderTasks.map(workOrderTask => {
+
+          workOrderTask.procedureStep.referenceDocument = new Array<FileModel>();
+
+          workOrderTask.procedureStep.referenceDocumentIds.forEach(documentId => {
+            let documentReferenceFiles = <Array<FileModel>>documents.find(s => s.id === documentId)?.referenceFiles;
+            documentReferenceFiles.map(documentReferenceFile => {
+              workOrderTask.procedureStep.referenceDocument.push(documentReferenceFile);
+            });
+
+          });
+
+        });
+
+      }));
 
     }));
 
