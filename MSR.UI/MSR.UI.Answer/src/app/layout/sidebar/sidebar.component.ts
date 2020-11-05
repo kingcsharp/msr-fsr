@@ -57,7 +57,7 @@ export class Sidebar {
   }
 
   isMenuItemAllowed(menuElement) {
-    if (menuElement.name === "Monitors") {
+    if (menuElement.name === 'Monitors') {
       return false;
     }
     return true;
