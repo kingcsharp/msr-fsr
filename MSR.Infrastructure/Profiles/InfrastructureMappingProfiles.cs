@@ -487,7 +487,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentRoleMap, RoleView>();
             CreateMap<WorkOrder, PortalWorkOrderView>()
-                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId));
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId))
+                .ForMember(dest => dest.HasNCRs, opts => opts.MapFrom(src => src.HasNCR));
             CreateMap<PortalWorkOrder, PortalWorkOrderView>();
             CreateMap<WorkOrderMessage, WorkOrderMessageModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.CreatedOn))
