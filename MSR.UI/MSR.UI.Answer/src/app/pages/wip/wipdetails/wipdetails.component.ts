@@ -509,6 +509,8 @@ export class WipdetailsComponent implements OnInit {
       this.workOrderModel.workOrderTasks.push(workOrderTask);
     });
 
+    this.getDocumentsAndReferenceFilesForProcedureSteps(this.workOrderModel);
+
     this.changeDetectorRef.detectChanges();
     this.showCarousel = true;
   }
