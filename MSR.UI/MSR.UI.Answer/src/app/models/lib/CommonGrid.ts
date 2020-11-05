@@ -102,7 +102,7 @@ export class CommonGrid {
     }
 
     updateView(templateView: ViewSaved, currentView: ViewSaved) {
-        let view = this.views.find(x => x.gridId === templateView.gridId && x.viewName === templateView.viewName);
+        let view: ViewSaved = this.views.find(x => x.gridId === templateView.gridId && x.viewName === templateView.viewName);
         view.columns = currentView.columns;
         view.gridPagingData = localStorage.getItem(view.gridId);
         view.pagingTotal = currentView.pagingTotal;

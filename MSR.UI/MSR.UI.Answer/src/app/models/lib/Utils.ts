@@ -22,6 +22,7 @@ export function copyObj(objToCopy: any): any {
 }
 
 export function deepCopy(data: any) {
+    //WARNING it does not copy the type of the object.
     let node;
     if (Array.isArray(data)) {
         node = data.length > 0 ? data.slice(0) : [];
