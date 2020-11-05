@@ -322,7 +322,11 @@ namespace MSR.Infrastructure.Resources.Services.Users
         public async Task<Domain.Models.UserModel> GetLoggedInUserData(int Id)
         {
             var childRoles = await _unitOfWork.RoleChildRoleMaps.Query().ToListAsync();
-            var user = await _unitOfWork.Users.Query().Include(x => x.Location).Include(x => x.Roles).ThenInclude(x => x.Role)
+            var user = await _unitOfWork.Users.Query()
+                .Include(x => x.Location)
+                .Include(x => x.Roles)
+                .ThenInclude(x => x.Role)
+                .Include(x => x.TimeZone)
                 .Where(x => x.Id == CurrentUser.GetId()).Select(x => new User()
                 {
                     CustomerId = x.CustomerId,
@@ -335,6 +339,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     Phone = x.Phone,
                     UserName = x.UserName,
                     TimeZoneId = x.TimeZoneId,
+                    TimeZone = x.TimeZone,
                     Roles = x.Roles.Select(x => new UserRole()
                     {
                         Id = x.Id,
