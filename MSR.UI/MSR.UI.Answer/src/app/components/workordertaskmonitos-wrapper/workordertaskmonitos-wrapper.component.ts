@@ -6,6 +6,7 @@ import { responseHandler } from '../../utils/responseHandler';
 import { forkJoin } from 'rxjs';
 
 declare let jQuery: any;
+declare let Parsley: any;
 
 @Component({
   selector: 'workordertaskmonitos-wrapper',
@@ -69,6 +70,16 @@ export class WorkordertaskmonitosWrapperComponent implements OnInit {
 
       monitor.holdIfFails = monitor.procedureStepMonitor.faultHandling === 'STOP UNTIL FAULT CLEARED' ? true : false;
 
+    });
+
+    Parsley.addValidator('equaltotarget', {
+      requirementType: 'number',
+      validateString: function (value, requirement) {
+        return Number(value) === Number(requirement);
+      },
+      messages: {
+        en: 'Value must be equal to Target'
+      }
     });
 
   }
