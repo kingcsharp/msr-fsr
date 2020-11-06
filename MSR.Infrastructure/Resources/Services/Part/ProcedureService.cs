@@ -15,6 +15,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using AutoMapper.Mappers;
+using MSR.Domain.Validators;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -443,6 +444,44 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
 
             return procedureApprovalId;
+        }
+
+        public async Task<ICollection<Domain.Models.Procedure>> ImportProcedures(byte[] xlsData)
+        {
+            ProcedureValidator validator = new ProcedureValidator(_mapper);
+            IEnumerable<ImportError> importErrors;
+            List<Domain.Models.Procedure> createdProcs = new List<Domain.Models.Procedure>();
+
+            ParsedProcedureImport import =
+                validator.ValidateAndReturnImportData(xlsData, out importErrors);
+
+            // Iterate through each procedure and add it, adding
+            // each procedure's step along the way.
+            foreach (string procid in import.procedures.Keys) {
+                CreateProcedure newProc = import.procedures[procid];
+
+                // set defaults not included in import
+                if (newProc.DurationType == null) {
+                    newProc.DurationType = "hours";
+                }
+
+                Domain.Models.Procedure procObj = await CreateProcedureAsync(newProc);
+
+                if (import.procedureSteps.ContainsKey(procid)) {
+                    List<CreateProcedureStep> steps = import.procedureSteps[procid];
+                    foreach (var step in steps) {
+                        step.procedureId = procObj.Id;
+                        ProcedureStepModel newStep =
+                            await CreateProcedureStepAsync(step);
+                        // TODO: there's no place in the procedure model to store
+                        // the new procedure step ids.
+                    }
+                }
+
+                createdProcs.Add(procObj);
+            }
+
+            return createdProcs;
         }
     }
 }

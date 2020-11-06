@@ -22,9 +22,10 @@ namespace MSR.Application.EventServices
         IEventHandler<ImportEvent>,
         IEventHandler<WorkOrderCreateEvent>
     {
-        private ICustomerService _customerService;
-        private ILocationService _locationService;
-        private IPartService _partService;
+        private readonly ICustomerService _customerService;
+        private readonly ILocationService _locationService;
+        private readonly IPartService _partService;
+        private readonly IProcedureService _procedureService;
         private IMessageHubClient _messageHub;
         private GeneralInformation _processorConfig;
         private IWorkOrderService _workOrderService;
@@ -35,6 +36,7 @@ namespace MSR.Application.EventServices
             ICustomerService customerService,
             ILocationService locationService,
             IPartService partService,
+            IProcedureService procedureService,
             GeneralInformation processorConfig,
             IWorkOrderService workOrderService,
             IMapper mapper,
@@ -44,6 +46,7 @@ namespace MSR.Application.EventServices
             _customerService = customerService;
             _locationService = locationService;
             _partService = partService;
+            _procedureService = procedureService;
             _processorConfig = processorConfig;
             _messageHub = messageHub;
             _workOrderService = workOrderService;
@@ -74,6 +77,10 @@ namespace MSR.Application.EventServices
                         var importedParts = await _partService.ImportLocations(handledEvent.CsvData);
                         count = importedParts.Count();
                         break;
+                    case EnumMenuItem.RunnableProcedures:
+                        var imported = await _procedureService.ImportProcedures(handledEvent.BinData);
+                        count = imported.Count();
+                        break;
                     default:
                         throw new DomainException("Import function not found for " +
                             Enum.GetName(handledEvent.MenuItem.GetType(), handledEvent.MenuItem));
@@ -96,6 +103,7 @@ namespace MSR.Application.EventServices
                               $"ERROR: {e.Message}",
                     Status = EnumToasterStatus.Error
                 });
+                throw;
             }
         }
 
