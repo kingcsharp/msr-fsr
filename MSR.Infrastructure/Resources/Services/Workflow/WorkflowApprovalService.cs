@@ -81,9 +81,8 @@ namespace MSR.Infrastructure.Resources.Services
                     }
 
                     var part = await _unitOfWork.Parts.Query().FirstOrDefaultAsync(x => x.Id == partApproval.PartId);
-                    partApproval.Status = status;
                     _mapper.Map(partApproval, part);
-                    _unitOfWork.PartApprovals.Update(partApproval);
+                    _unitOfWork.PartApprovals.Delete(false, partApproval, true);
                     _unitOfWork.SaveChanges();
                     await _unitOfWork.LogApprovalTransaction(partApproval, partApproval.Id, status.Name, command.Comments);
                     result = partApproval;
