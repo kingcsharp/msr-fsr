@@ -2210,3 +2210,38 @@ body .ui-tabview.ui-tabview-left .ui-tabview-nav li:focus,
 body .ui-tabview.ui-tabview-right .ui-tabview-nav li:focus {
   box-shadow: 0 0 0 0.1em #424f5f;
 }
+
+
+@media (max-width: 575.98px) {
+  .modal-dialog {
+     width: 98vw !important;
+  }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) { 
+  .modal-dialog {
+     width: 95vw !important;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) { 
+  .modal-dialog {
+     width: 90vw !important;
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 1199.99px)  { 
+  .modal-dialog {
+     width: 75vw !important;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1439.99px) { 
+     .modal-dialog {
+     width: 50vw !important;
+  }
+}
