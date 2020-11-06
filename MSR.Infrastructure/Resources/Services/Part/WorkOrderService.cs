@@ -37,7 +37,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
         public async Task<ICollection<WorkOrderModel>> GetWorkOrderAsync(GetWorkOrder command)
         {
-            
+
             IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
             if (command.Id.HasValue && command.Id > 0)
@@ -89,12 +89,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(x => x.LocationId == command.LocationId);
             }
 
-            List<WorkOrder> workOrderEntities = await query.ToListAsync();
-
-            var workOrderEntitiesIds = workOrderEntities.Select(x => x.Id);
-
-            _ = _unitOfWork.WorkOrderParts.Query().Where(x => workOrderEntitiesIds.Contains(x.WorkOrderId)).ToList();
-
+            List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
             List<int> workOrderIds = workOrderEntities.Select(m => m.Id).ToList();
             _ = await _unitOfWork.WorkOrderParts.Query().Include(m => m.Part).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
             List<WorkOrderTask> workOrderTaskEntities = await _unitOfWork.WorkOrderTasks.Query().Include(u => u.ReferenceFiles).Where(s => workOrderIds.Contains(s.WorkOrderId)).ToListAsync();
@@ -112,7 +107,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _ = await _unitOfWork.Products.Query()
                 .Include(u => u.Part)
                 .Include(t => t.Customer)
-                .Include(v =>v.Procedure)
+                .Include(v => v.Procedure)
                 .Where(s => workOrderEntities.Select(m => m.ProductId).Contains(s.Id)).ToListAsync();
 
             _ = await _unitOfWork.Purchases.Query()
@@ -389,7 +384,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (command.Id.HasValue)
             {
                 query = query.Where(s => s.Id == command.Id);
-                
+
             }
 
             if (command.WorkOrderId.HasValue)
@@ -403,7 +398,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             // We have to null out the array of children for WorkOrderParts or else the depth of the data structure is too deep for the return object
             // TODO: Since we track if WorkOrderPart is child based on parentId and parent property, the child property is not needed and should be removed
-            foreach (var workOrderPartModel in workOrderPartModels) 
+            foreach (var workOrderPartModel in workOrderPartModels)
             {
                 workOrderPartModel.Children = null;
             }
@@ -498,7 +493,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 _mapper.Map<List<WorkOrderTaskMonitor>>(step.ProcedureStepMonitors);
 
             var created = _unitOfWork.WorkOrderTasks.Add(newTask);
-            _unitOfWork.SaveChanges();
 
             // This will call SaveChangesAsync
             await _unitOfWork.LogApprovalTransaction(newTask, newTask.Id);
@@ -872,7 +866,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     var (completedDenominator, completedNumerator, percentComplete, expectedDurationNumerator, expectedDurationDenominator, percentExpectedDuration) = GetStatusValues(associatedWorkOrder);
                     var parentPart = associatedWorkOrder.WorkOrderParts.Any() ? associatedWorkOrder.WorkOrderParts.FirstOrDefault(i => i.Part != null && i.ParentId == null) : (new WorkOrderPartModel());
                     var inProgressTask = associatedWorkOrder.WorkOrderTasks.FirstOrDefault(i => i.StatusId == (int)WorkOrderStatusEnum.InProgress);
-                    if(inProgressTask != null)
+                    if (inProgressTask != null)
                     {
                         portalView.StepText = inProgressTask.ProcedureStep?.Title;
                     }
