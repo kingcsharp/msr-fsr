@@ -106,9 +106,9 @@ namespace MSR.Domain.Validators
             //
             isHeader = true;
             fieldMap = new Dictionary<string, int>();
-            Dictionary <string, CreateProcedure> newProcs = 
+            Dictionary <string, CreateProcedure> newProcs =
                 new Dictionary <string, CreateProcedure>();
-            Dictionary <string, CreateProcedureImport> newProcsExtra = 
+            Dictionary <string, CreateProcedureImport> newProcsExtra =
                 new Dictionary <string, CreateProcedureImport>();
             foreach (DataRow proc in procedures.Rows) {
                 string procedureIdString = "";
@@ -151,9 +151,9 @@ namespace MSR.Domain.Validators
             //
             isHeader = true;
             fieldMap = new Dictionary<string, int>();
-            Dictionary <string, CreateProcedureStep> newSteps = 
+            Dictionary <string, CreateProcedureStep> newSteps =
                 new Dictionary <string, CreateProcedureStep>();
-            Dictionary <string, CreateProcedureStepImport> newStepsExtra = 
+            Dictionary <string, CreateProcedureStepImport> newStepsExtra =
                 new Dictionary <string, CreateProcedureStepImport>();
             foreach (DataRow step in procedureSteps.Rows) {
                 string procedureIdString = "";

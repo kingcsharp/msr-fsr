@@ -90,7 +90,8 @@ namespace MSR.Application.ApplicationServices
             byte[] binData = new byte[0];
             var validator = _validationFactory.Create(command.MenuItem);
 
-            if (base64File.ContentType.ToUpper().Equals("TEXT/CSV"))
+            if (base64File.ContentType.ToUpper().Equals("TEXT/CSV") ||
+                base64File.ContentType.ToUpper().Equals("TEXT/PLAIN"))
             {
                 csvData = Encoding.UTF8.GetString(base64File.FileContents).Replace("\r", "").Trim();
                 if (csvData.StartsWith(Base64Helper.ByteOrderMarkUtf8, StringComparison.Ordinal))
