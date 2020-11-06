@@ -1,25 +1,25 @@
-﻿using AutoMapper;
-using MSR.Answer.Domain.Models;
-using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding;
-using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
-using MSR.Domain.Helpers;
-using MSR.Domain.SQSEventing.Abstractions;
-using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using MSR.Answer.Domain.Models;
+using MSR.Domain.Abstractions.Services;
+using MSR.Domain.Commanding;
+using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
+using MSR.Domain.Commands;
 using MSR.Domain.Events;
-using MSR.Domain.SQSEventing.Models;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
+using MSR.Domain.Models;
+using MSR.Domain.SQSEventing.Abstractions;
+using MSR.Domain.SQSEventing.Models;
 
 namespace MSR.Application.ApplicationServices
 {
-    public class FileAppService :
+    public class FileAppService:
         ICommandHandler<GetFiles>,
         ICommandHandler<CreateFile>,
         ICommandHandler<DetachFile>,
@@ -38,7 +38,7 @@ namespace MSR.Application.ApplicationServices
             IImportValidatorFactory validationFactory,
             ISendSQSMessages bus,
             IAccountService accountService
-            )
+        )
         {
             _fileService = fileService;
             _mapper = mapper;
@@ -78,7 +78,8 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(ImportFile command, CancellationToken cancellationToken = default)
         {
-            if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate)) {
+            if (!CurrentUser.HasPrivilege(command.MenuItem, EnumPrivilege.CanCreate))
+            {
                 // Importing data through workflow is not supported.
                 throw new DomainException("Permission denied for import " +
                     Enum.GetName(command.MenuItem.GetType(), command.MenuItem),
@@ -131,7 +132,7 @@ namespace MSR.Application.ApplicationServices
 
             await _bus.SendMessage(envelope);
 
-            return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>)null);
+            return new CommandResponse<IEnumerable<ImportError>>((IEnumerable<ImportError>) null);
         }
     }
 }

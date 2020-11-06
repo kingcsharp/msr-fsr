@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.Mappers;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
@@ -6,16 +10,11 @@ using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
 using MSR.Domain.Models;
+using MSR.Domain.Validators;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using AutoMapper.Mappers;
-using MSR.Domain.Validators;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -100,7 +99,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureApproval>(command);
                 approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
                 approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
-                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int) ApprovalStatusEnum.Pending);
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -140,7 +139,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureApproval>(command);
                 approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
                 approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
-                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int) ApprovalStatusEnum.Pending);
                 _unitOfWork.ProcedureApprovals.Add(approval);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -154,10 +153,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
         {
             List<EntityFramework.Entities.ProcedureStep> steps;
             var query = _unitOfWork.ProcedureSteps
-                    .Query()
-                    .Include(x => x.StepType)
-                    .Include(x => x.ProcedureStepRoles)
-                    .ThenInclude(y => y.Role);
+                .Query()
+                .Include(x => x.StepType)
+                .Include(x => x.ProcedureStepRoles)
+                .ThenInclude(y => y.Role);
 
             if (command.stepId.HasValue)
             {
@@ -181,7 +180,6 @@ namespace MSR.Infrastructure.Resources.Services.Part
             {
                 procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
             });
-
 
             return result;
         }
@@ -237,7 +235,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
             if (command.ReferenceFiles != null &&
                 command.ReferenceFiles.Count > 0)
             {
-                if (command.ReferenceFileIds == null) {
+                if (command.ReferenceFileIds == null)
+                {
                     command.ReferenceFileIds = new List<int>();
                 }
                 foreach (FileModel file in command.ReferenceFiles)
@@ -273,7 +272,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                         nameof(EntityFramework.Entities.ProcedureStep),
                         current.Id);
 
-                    foreach(int fileId in command.ReferenceFileIds)
+                    foreach (int fileId in command.ReferenceFileIds)
                     {
                         await _fileService.MapUploadedFileAsync(
                             nameof(EntityFramework.Entities.ProcedureStep),
@@ -295,9 +294,10 @@ namespace MSR.Infrastructure.Resources.Services.Part
                     {
                         _unitOfWork.DocumentEntityMap.Delete(false, id);
                     }
-                    foreach(int newDocId in command.ReferenceDocumentIds)
+                    foreach (int newDocId in command.ReferenceDocumentIds)
                     {
-                        var ndem = new DocumentEntityMap() {
+                        var ndem = new DocumentEntityMap()
+                        {
                             EntityId = current.Id,
                             EntityTableName = nameof(EntityFramework.Entities.ProcedureStep),
                             DocumentId = newDocId
@@ -330,10 +330,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureStepApproval>(command);
                 approval.ProcedureApprovalId = procApprovalId;
 
-                string json = JsonConvert.SerializeObject(new {
+                string json = JsonConvert.SerializeObject(new
+                {
                     roleIds = command.Roles.Select(x => x.Id).ToList(),
-                    fileIds = command.ReferenceFileIds,
-                    documentIds = command.ReferenceDocumentIds,
+                        fileIds = command.ReferenceFileIds,
+                        documentIds = command.ReferenceDocumentIds,
                 });
                 approval.ApprovalJSON = json;
 
@@ -430,7 +431,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 var approval = _mapper.Map<ProcedureApproval>(currentProcedure);
                 approval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(approval);
                 approval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(approval.Workflow?.Id ?? 0);
-                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
+                approval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int) ApprovalStatusEnum.Pending);
 
                 await _unitOfWork.ProcedureApprovals.AddAsync(approval);
                 await _unitOfWork.SaveChangesAsync();
@@ -457,19 +458,23 @@ namespace MSR.Infrastructure.Resources.Services.Part
 
             // Iterate through each procedure and add it, adding
             // each procedure's step along the way.
-            foreach (string procid in import.procedures.Keys) {
+            foreach (string procid in import.procedures.Keys)
+            {
                 CreateProcedure newProc = import.procedures[procid];
 
                 // set defaults not included in import
-                if (newProc.DurationType == null) {
+                if (newProc.DurationType == null)
+                {
                     newProc.DurationType = "hours";
                 }
 
                 Domain.Models.Procedure procObj = await CreateProcedureAsync(newProc);
 
-                if (import.procedureSteps.ContainsKey(procid)) {
+                if (import.procedureSteps.ContainsKey(procid))
+                {
                     List<CreateProcedureStep> steps = import.procedureSteps[procid];
-                    foreach (var step in steps) {
+                    foreach (var step in steps)
+                    {
                         step.procedureId = procObj.Id;
                         ProcedureStepModel newStep =
                             await CreateProcedureStepAsync(step);

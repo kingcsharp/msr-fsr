@@ -1,15 +1,15 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Runtime.CompilerServices;
+using AutoMapper;
 using ExcelDataReader;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Runtime.CompilerServices;
 
 namespace MSR.Domain.Validators
 {
@@ -45,7 +45,8 @@ namespace MSR.Domain.Validators
     {
         private readonly IMapper _mapper;
 
-        public ProcedureValidator(IMapper mapper) {
+        public ProcedureValidator(IMapper mapper)
+        {
             _mapper = mapper;
         }
 
@@ -73,7 +74,8 @@ namespace MSR.Domain.Validators
             var result = reader.AsDataSet();
             DataTableCollection tables = result.Tables;
 
-            if (tables.Count != 2) {
+            if (tables.Count != 2)
+            {
                 errorStrings.Add($"Invalid table count {tables.Count} != 2");
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
@@ -83,28 +85,32 @@ namespace MSR.Domain.Validators
             DataTable procedureSteps = tables[0];
             DataTable procedures = tables[1];
 
-            if (!procedureSteps.TableName.ToUpper().Equals("PROC_STEP_EXPORT")) {
+            if (!procedureSteps.TableName.ToUpper().Equals("PROC_STEP_EXPORT"))
+            {
                 errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != PROC_STEP_EXPORT");
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
                 return null;
             }
 
-            if (!procedures.TableName.ToUpper().Equals("PROCEDURE_NAME_EXPORT")) {
+            if (!procedures.TableName.ToUpper().Equals("PROCEDURE_NAME_EXPORT"))
+            {
                 errorStrings.Add($"Invalid table name: {procedureSteps.TableName} != PROCEDURE_NAME_EXPORT");
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
                 return null;
             }
 
-            if (procedureSteps.Columns.Count != 13) {
+            if (procedureSteps.Columns.Count != 13)
+            {
                 errorStrings.Add($"Invalid PROC_STEP_EXPORT row count {procedureSteps.Columns.Count} != 13");
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
                 return null;
             }
 
-            if (procedures.Columns.Count != 4) {
+            if (procedures.Columns.Count != 4)
+            {
                 errorStrings.Add($"Invalid PROC_STEP_EXPORT row count {procedures.Columns.Count} != 4");
                 errors.Add(new ImportError() { Errors = errorStrings });
                 importErrors = errors;
@@ -120,16 +126,20 @@ namespace MSR.Domain.Validators
             //
             isHeader = true;
             fieldMap = new Dictionary<string, int>();
-            Dictionary <string, CreateProcedure> newProcs =
-                new Dictionary <string, CreateProcedure>();
-            Dictionary <string, CreateProcedureImport> newProcsExtra =
-                new Dictionary <string, CreateProcedureImport>();
-            foreach (DataRow proc in procedures.Rows) {
+            Dictionary<string, CreateProcedure> newProcs =
+                new Dictionary<string, CreateProcedure>();
+            Dictionary<string, CreateProcedureImport> newProcsExtra =
+                new Dictionary<string, CreateProcedureImport>();
+            foreach (DataRow proc in procedures.Rows)
+            {
                 string procedureIdString = "";
-                try {
-                    if (isHeader) {
+                try
+                {
+                    if (isHeader)
+                    {
                         int i = 0;
-                        foreach(string item in proc.ItemArray) {
+                        foreach (string item in proc.ItemArray)
+                        {
                             fieldMap.Add(item, i);
                             i += 1;
                         }
@@ -144,22 +154,26 @@ namespace MSR.Domain.Validators
                     procedureIdString = proc.ItemArray[fieldMap["PROCEDURE_ID"]].ToString();
                     newProc.Name = proc.ItemArray[fieldMap["PROCEDURE_NAME"]].ToString();
                     newProcExtra.ANS_ID = proc.ItemArray[fieldMap["ANS_ID"]].ToString();
-                    newProc.ProcedureTypeId = Convert.ToInt32((double)proc.ItemArray[fieldMap["PROC_TYPE_ID"]]);
+                    newProc.ProcedureTypeId = Convert.ToInt32((double) proc.ItemArray[fieldMap["PROC_TYPE_ID"]]);
 
                     // Store the new procedure data in memory.
-                    if (newProcs.ContainsKey(procedureIdString)) {
+                    if (newProcs.ContainsKey(procedureIdString))
+                    {
                         errorStrings = new List<string>();
                         errorStrings.Add($"Import ERROR: duplicate key '{procedureIdString}'");
                         errors.Add(new ImportError() { Errors = errorStrings });
                     }
                     newProcs.Add(procedureIdString, newProc);
                     newProcsExtra.Add(procedureIdString, newProcExtra);
-                } catch (InvalidCastException e) {
+                }
+                catch (InvalidCastException e)
+                {
                     errorStrings = new List<string>();
                     errorStrings.Add($"PROC({procedureIdString}) Parse Error: {e.Message}");
-                    errors.Add(new ImportError() {
+                    errors.Add(new ImportError()
+                    {
                         Errors = errorStrings,
-                        Line = lineNumber
+                            Line = lineNumber
                     });
                 }
                 lineNumber += 1;
@@ -170,16 +184,20 @@ namespace MSR.Domain.Validators
             //
             isHeader = true;
             fieldMap = new Dictionary<string, int>();
-            Dictionary <string, List<CreateProcedureStep>> newSteps =
-                new Dictionary <string, List<CreateProcedureStep>>();
-            Dictionary <string, List<CreateProcedureStepImport>> newStepsExtra =
-                new Dictionary <string, List<CreateProcedureStepImport>>();
-            foreach (DataRow step in procedureSteps.Rows) {
+            Dictionary<string, List<CreateProcedureStep>> newSteps =
+                new Dictionary<string, List<CreateProcedureStep>>();
+            Dictionary<string, List<CreateProcedureStepImport>> newStepsExtra =
+                new Dictionary<string, List<CreateProcedureStepImport>>();
+            foreach (DataRow step in procedureSteps.Rows)
+            {
                 string procedureIdString = "";
-                try {
-                    if (isHeader) {
+                try
+                {
+                    if (isHeader)
+                    {
                         int i = 0;
-                        foreach(string item in step.ItemArray) {
+                        foreach (string item in step.ItemArray)
+                        {
                             fieldMap.Add(item, i);
                             i += 1;
                         }
@@ -194,11 +212,11 @@ namespace MSR.Domain.Validators
 
                     procedureIdString = step.ItemArray[fieldMap["PROCEDURE_ID"]].ToString();
                     newStep.StepText = step.ItemArray[fieldMap["STEP_TEXT"]].ToString();
-                    newStep.PrintOrder = Convert.ToInt32((double)step.ItemArray[fieldMap["PRINT_ORDER"]]);
+                    newStep.PrintOrder = Convert.ToInt32((double) step.ItemArray[fieldMap["PRINT_ORDER"]]);
                     newStepExtra.COMMENT = step.ItemArray[fieldMap["COMMENT"]].ToString();
-                    newStep.LaborTime = Convert.ToInt32(((double)step.ItemArray[fieldMap["STEP_TIME"]]));
+                    newStep.LaborTime = Convert.ToInt32(((double) step.ItemArray[fieldMap["STEP_TIME"]]));
                     newStepExtra.EXTRA_NOTE1 = step.ItemArray[fieldMap["EXTRA_NOTE1"]].ToString();
-                    newStep.Roles = ((double)step.ItemArray[fieldMap["DEFAULT_ROLE_ID"]]).ToString();
+                    newStep.Roles = ((double) step.ItemArray[fieldMap["DEFAULT_ROLE_ID"]]).ToString();
                     newStepExtra.SERIALIZE = step.ItemArray[fieldMap["SERIALIZE"]].ToString();
                     newStepExtra.SUCCESS_MONITOR = step.ItemArray[fieldMap["SUCCESS_MONITOR"]].ToString();
                     newStepExtra.INTERNAL_LOCATION = step.ItemArray[fieldMap["INTERNAL_LOCATION"]].ToString();
@@ -212,39 +230,49 @@ namespace MSR.Domain.Validators
                     // The IDs used in the spreadsheet will need to be collated at creation
                     // time, so for now we just store a separate mapping.
                     List<CreateProcedureStep> psmImport;
-                    if (newSteps.ContainsKey(procedureIdString)) {
+                    if (newSteps.ContainsKey(procedureIdString))
+                    {
                         psmImport = newSteps[procedureIdString];
-                    } else {
+                    }
+                    else
+                    {
                         psmImport = new List<CreateProcedureStep>();
                         newSteps.Add(procedureIdString, psmImport);
                     }
                     psmImport.Add(newStep);
 
                     List<CreateProcedureStepImport> psmiImport;
-                    if (newStepsExtra.ContainsKey(procedureIdString)) {
+                    if (newStepsExtra.ContainsKey(procedureIdString))
+                    {
                         psmiImport = newStepsExtra[procedureIdString];
-                    } else {
+                    }
+                    else
+                    {
                         psmiImport = new List<CreateProcedureStepImport>();
                         newStepsExtra.Add(procedureIdString, psmiImport);
                     }
                     psmiImport.Add(newStepExtra);
-                } catch (InvalidCastException e) {
+                }
+                catch (InvalidCastException e)
+                {
                     errorStrings = new List<string>();
                     errorStrings.Add($"STEP({procedureIdString}) Parse Error: {e.Message}");
-                    errors.Add(new ImportError() {
+                    errors.Add(new ImportError()
+                    {
                         Errors = errorStrings,
-                        Line = lineNumber
+                            Line = lineNumber
                     });
                 }
                 lineNumber += 1;
             }
 
             importErrors = errors;
-            return new ParsedProcedureImport() {
+            return new ParsedProcedureImport()
+            {
                 procedures = newProcs,
-                procedureExtras = newProcsExtra,
-                procedureSteps = newSteps,
-                procedureStepExtras = newStepsExtra
+                    procedureExtras = newProcsExtra,
+                    procedureSteps = newSteps,
+                    procedureStepExtras = newStepsExtra
             };
         }
     }
