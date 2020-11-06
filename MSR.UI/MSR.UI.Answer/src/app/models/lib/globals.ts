@@ -205,4 +205,15 @@ export class Globals {
         return this.login;
     }
 
+    hasRole(roleName) {
+      if (this.user.roles.length > 0) {
+        const index = this.user.roles.findIndex((role) => role.name === roleName);
+        if (index > -1) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
 }

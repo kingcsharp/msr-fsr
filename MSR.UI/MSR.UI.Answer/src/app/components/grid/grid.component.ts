@@ -19,6 +19,7 @@ import { GridSaved } from '../../models/lib/GridSaved';
 import { ReportCubeService } from '../../pages/reports/reportcube.service';
 import * as Highcharts from 'highcharts';
 import { ChartInfo } from '../../../app/models/lib/ChartInfo';
+import { CSVConverterService } from '../../services/csvconverter.service';
 
 @Component({
   selector: 'app-grid',
@@ -41,11 +42,12 @@ export class GridComponent implements OnInit {
   privileges = EnumPrivilege;
   enumColumnType = EnumColumnType;
   calendarEn;
+  filteredData: any;
 
   // expanded: boolean = false;
   constructor(public globals: Globals, public cg: CommonGrid, private toastr: ToastrService,
     private elem: ElementRef, private reportService: ReportService, private route: ActivatedRoute,
-    private reportCubeService: ReportCubeService) {
+    private reportCubeService: ReportCubeService, private cSVConverterService: CSVConverterService) {
 
   }
 
@@ -64,12 +66,13 @@ export class GridComponent implements OnInit {
   }
 
   handleFilter(ev, filteredData) {
+    this.filteredData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
     if (!this.hasChart) {
       return;
     }
 
     this.globals.showLoader(true);
-    this.chartInfo.gridData = filteredData.filteredValue === null ? filteredData.value : filteredData.filteredValue;
+    this.chartInfo.gridData = this.filteredData;
 
     this.showCharts = false;
     setTimeout(() => {
@@ -84,6 +87,7 @@ export class GridComponent implements OnInit {
   getReport(data: any, reportInfo?: ReportModel) {
     if (reportInfo === undefined || reportInfo.apiEndPointURL === undefined) {
       this.gridData = data;
+      this.filteredData = this.gridData;
     } else {
       this.globals.showLoader(true);
       this.reportCubeService.getReport(reportInfo).then((resp) => {
@@ -96,9 +100,14 @@ export class GridComponent implements OnInit {
         } else {
           this.gridData = resp;
         }
+        this.filteredData = this.gridData;
         this.globals.showLoader(false);
       });
     }
+  }
+
+  printCsvReport() {
+    this.cSVConverterService.downloadFile(this.filteredData, this.gridSaved.columnsSaved, this.reportInfo.name);
   }
 
 }
