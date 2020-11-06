@@ -20,6 +20,10 @@ namespace MSR.Answer.Processor
             configuration = builder.Build();
 
             Configuration = configuration;
+
+            // required to load older XLS files with DOS-era encodings
+            // see: https://github.com/ExcelDataReader/ExcelDataReader#important-note-on-net-core
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
         public IConfiguration Configuration { get; }
