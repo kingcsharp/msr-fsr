@@ -550,9 +550,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
             // attach files, if any
-            if (command.ReferenceFilesIds != null &&
-                command.ReferenceFilesIds.Count > 0 &&
-                command.ReferenceFilesIds.Any(x => x > 0))
+            if (command.ReferenceFilesIds != null)
             {
                 // First, blank the existing list and the attach the new one.
                 List<int> origList = _unitOfWork.FileEntityMap.Query().Where(x =>
