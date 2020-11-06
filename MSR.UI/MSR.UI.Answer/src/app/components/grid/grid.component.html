@@ -19,6 +19,9 @@
                 [(visibleColumnsCount)]="gridSaved.visibleColumns">
             </grid-options>
         </div>
+        <div class="pull-right">
+            <i class="fad fa-file-csv exportCsv" tooltip="Export CSV" (click)="printCsvReport()"></i>
+        </div>
     </ng-template>
     <ng-template pTemplate="header">
         <tr>
@@ -38,7 +41,8 @@
     <ng-template pTemplate="body" let-itemData let-expanded="expanded">
         <tr class="ui-selectable-row">
             <td *ngIf="gridSaved.expandRows">
-                <i *ngIf="itemData[gridSaved.expandRowProperty].length>0" class="fad pointer" [pRowToggler]="itemData" (click)="expandRow(expanded,itemData)"
+                <i *ngIf="itemData[gridSaved.expandRowProperty].length>0" class="fad pointer" [pRowToggler]="itemData"
+                    (click)="expandRow(expanded,itemData)"
                     [ngClass]="{'fa-plus': expanded !== true, 'fa-minus':expanded===true}"></i>
             </td>
             <ng-container *ngFor="let col of gridSaved.columnsSaved" [ngTemplateOutlet]="rowViewData"
@@ -97,8 +101,9 @@
     <td container="body" class="text-capitalize" *ngIf="colsDataAndSettings.col.type === enumColumnType.InputDateTime"
         [hidden]="!cg.isVisibleCol(colsDataAndSettings.col.id,colsDataAndSettings.colsSaved)">
         <div data-cy="{{colsDataAndSettings.col.id}}" class="display-inline-block isActive">
-        <p-calendar [ngModelOptions]="{standalone: true}" [(ngModel)]="colsDataAndSettings.colData[colsDataAndSettings.col.id]"
-                dataType="string" [locale]="calendarEn" appendTo="body">
+            <p-calendar [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="colsDataAndSettings.colData[colsDataAndSettings.col.id]" dataType="string"
+                [locale]="calendarEn" appendTo="body">
             </p-calendar>
         </div>
     </td>
