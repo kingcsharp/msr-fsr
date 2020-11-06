@@ -8,7 +8,7 @@ import { take } from 'rxjs/operators';
   selector: 'part-label-roll',
   templateUrl: './part-label-roll.component.html',
   styleUrls: ['./part-label-roll.component.scss'],
-  providers:[WorkOrderPartService]
+  providers: [WorkOrderPartService]
 })
 export class PartLabelRollComponent implements OnInit {
 

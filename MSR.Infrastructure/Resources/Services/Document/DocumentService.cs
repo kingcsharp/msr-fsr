@@ -94,7 +94,8 @@ namespace MSR.Infrastructure.Resources.Services.Document
             document.Revision = 1;
 
             await _unitOfWork.Documents.AddAsync(document);
-            await _unitOfWork.LogApprovalTransaction(document, document.Id);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.LogApprovalTransaction(document, document.Id,comments: "Auto Approved");
 
             var retDocument = _mapper.Map<DocumentView>(document);
 
@@ -136,12 +137,12 @@ namespace MSR.Infrastructure.Resources.Services.Document
             foreach (var file in command.ReferenceFiles)
             {
                 var fileModel = await _fileService.CreateFileAsync(nameof(EntityFramework.Entities.Document), retDocument.Id, file);
-
+                await _fileService.EditPdfFile(fileModel, retDocument, nameof(EntityFramework.Entities.Document));
                 fileReferences.Add(fileModel);
             }
 
             retDocument.ReferenceFiles = fileReferences;
-            retDocument.ReferenceFileIds = fileReferences.Select(f => f.FileId).Cast<int>().ToList();
+            retDocument.ReferenceFileIds = fileReferences.Where(i => i.FileId.HasValue).Select(f => f.FileId.Value).ToList();
 
             return retDocument;
         }
@@ -159,11 +160,11 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
             if (CurrentUser.CanApproveActivity(EnumApprovalTables.DocumentApproval))
             {
+                _mapper.Map(command, currentDocument);
                 currentDocument.Revision += 1;
 
-                _mapper.Map(command, currentDocument);
-
                 _unitOfWork.Documents.Update(currentDocument);
+
                 await _unitOfWork.LogApprovalTransaction(currentDocument, currentDocument.Id);
 
                 retDocument = _mapper.Map<DocumentView>(currentDocument);
@@ -209,9 +210,7 @@ namespace MSR.Infrastructure.Resources.Services.Document
 
                 foreach (var addFileId in fileIdsToAdd)
                 {
-                    var fileModel = await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Document), command.Id, addFileId);
-
-                    fileReferences.Add(fileModel);
+                    await _fileService.MapUploadedFileAsync(nameof(EntityFramework.Entities.Document), command.Id, addFileId);
                 }
 
                 foreach (var removeFileId in fileIdsToRemove)
@@ -236,13 +235,12 @@ namespace MSR.Infrastructure.Resources.Services.Document
                 var documentApproval = _mapper.Map<DocumentApproval>(currentDocument);
                 _mapper.Map(command, documentApproval);
 
-                documentApproval.DocumentId = currentDocument.Id;
                 documentApproval.Workflow = await _unitOfWork.GetWorkflowForEntityAsync(documentApproval);
                 documentApproval.WorkflowGroup = await _unitOfWork.GetWorkFlowGroupForWorkFlow(documentApproval.Workflow?.Id ?? 0);
                 documentApproval.Status = await _unitOfWork.Status.FirstOrDefaultAsync(false, i => i.Id == (int)ApprovalStatusEnum.Pending);
-                documentApproval.ApprovalJSON = JsonConvert.SerializeObject(new { command.RoleIds, command.ReferenceFileIds });
+                documentApproval.ApprovalJSON = JsonConvert.SerializeObject(new { command.RoleIds, command.ReferenceFileIds, command.ReferenceFiles });
 
-                await _unitOfWork.DocumentApprovals.UpdateAndSaveChangesAsync(documentApproval);
+                await _unitOfWork.DocumentApprovals.AddAndSaveChangesAsync(documentApproval);
 
                 retDocument = _mapper.Map<DocumentView>(documentApproval);
             }

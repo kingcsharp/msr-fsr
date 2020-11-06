@@ -41,7 +41,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ICollection<DocumentView>>))]
         public async Task<IActionResult> GetDocuments([FromQuery] GetDocumentRequest filters)
         {

@@ -64,7 +64,7 @@ pipeline {
                             }
 
                             try {
-                                sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                                sh "sh update_image.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
                                 sh "cat ${UI_COMPOSE}"
 
                                 //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
@@ -201,7 +201,7 @@ pipeline {
                                 sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
                             }
 
-                            sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                            sh "sh update_image.sh Stage ${env.GIT_COMMIT} ${UI_COMPOSE}"
                             sh "cat ${UI_COMPOSE}"
 
                             deploy("${UI_COMPOSE}", "${UAT_PROJECT_UI}", "${UAT_UI_TARGET_ARN}", "app")
@@ -257,7 +257,7 @@ pipeline {
                                 sh "docker push ${ACCOUNT_URL}/msr-ui:${env.GIT_COMMIT}"
                             }
 
-                            sh "sh update_image.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                            sh "sh update_image.sh Production ${env.GIT_COMMIT} ${UI_COMPOSE}"
                             sh "cat ${UI_COMPOSE}"
 
                             deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")

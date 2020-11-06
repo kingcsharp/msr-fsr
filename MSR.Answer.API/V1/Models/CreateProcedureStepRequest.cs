@@ -118,6 +118,9 @@ namespace MSR.Answer.API.V1.Models
         [DataMember(Name="roles")]
         public List<RoleRequest> Roles { get; set; }
 
+        [DataMember(Name = "referenceDocumentIds")]
+        public List<int> ReferenceDocumentIds { get; set; }
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -40,7 +40,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             
             IQueryable<WorkOrder> query = _unitOfWork.WorkOrders.Query();
 
-            if (command.Id.HasValue)
+            if (command.Id.HasValue && command.Id > 0)
             {
                 query = query.Where(x => x.Id == command.Id.Value);
             }
@@ -82,6 +82,11 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 query = query.Where(x =>
                     x.WorkOrderTasks.Any(y =>
                         y.AssignedTo == command.assignedToId));
+            }
+
+            if (command.LocationId.HasValue && command.LocationId > 0)
+            {
+                query = query.Where(x => x.LocationId == command.LocationId);
             }
 
             List<WorkOrder> workOrderEntities = await query.Include(s => s.WorkOrderParts).ToListAsync();
@@ -452,6 +457,8 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 .Include(x => x.ProcedureStepMonitors)
                 .FirstOrDefault(x => x.Id == command.ProcedureStepId);
 
+            _ = await _unitOfWork.MonitorTypes.Query().ToListAsync();
+            _ = await _unitOfWork.MonitorInputTypes.Query().ToListAsync();
 
             if (step != null && step.ProcedureStepTypeId == PROCEDURE_STEP_TYPE_NC)
             {
@@ -543,9 +550,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             _unitOfWork.WorkOrderTasks.Update(workOrderTaskEntity);
 
             // attach files, if any
-            if (command.ReferenceFilesIds != null &&
-                command.ReferenceFilesIds.Count > 0 &&
-                command.ReferenceFilesIds.Any(x => x > 0))
+            if (command.ReferenceFilesIds != null)
             {
                 // First, blank the existing list and the attach the new one.
                 List<int> origList = _unitOfWork.FileEntityMap.Query().Where(x =>

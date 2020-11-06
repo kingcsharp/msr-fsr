@@ -8,9 +8,6 @@
                 <span *ngIf="helpPageToEdit.id !== undefined" data-cy="page-title">Edit Help Page</span>
             </h1>
         </div>
-        <div class="col-6" [ngClass]="['d-flex', 'justify-content-end']">
-            <helpbutton-wrapper [ngClass]="['my-auto']"></helpbutton-wrapper>
-        </div>
     </div>
     <div class="row" *ngIf="helpPageToEdit != null">
         <form class="col-12">

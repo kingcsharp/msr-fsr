@@ -67,7 +67,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureType>>))]
         public async Task<IActionResult> GetProcedureType(int? id)
         {

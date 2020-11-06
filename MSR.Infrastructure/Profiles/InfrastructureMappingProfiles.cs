@@ -234,7 +234,8 @@ namespace MSR.Infrastructure.Profiles
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => splitRoles(src)));
 
             CreateMap<ProcedureType, Domain.Models.ProcedureType>();
-            CreateMap<WorkOrder, WorkOrderModel>();
+            CreateMap<WorkOrder, WorkOrderModel>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => GetCustomerName(src)));
             CreateMap<CreateWorkOrder, WorkOrder>();
             CreateMap<UpdateWorkOrder, WorkOrder>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
@@ -263,7 +264,6 @@ namespace MSR.Infrastructure.Profiles
                     srcMember != null && !srcMember.Equals(0)));
             CreateMap<CreateProcedureStepTemplate, ProcedureStepTemplate>()
                 .ForMember(dest => dest.ReferenceFiles, opts => opts.Ignore())
-                .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text))
                 .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => String.Join(',', src.Roles)))
                 .ForMember(dest => dest.StepText, opts => opts.MapFrom(src => src.Text));
             CreateMap<UpdateProcedureStepTemplate, ProcedureStepTemplate>()
@@ -477,20 +477,26 @@ namespace MSR.Infrastructure.Profiles
             CreateMap<CreateDocument, Document>();
             CreateMap<CreateDocument, DocumentApproval>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore());
-            CreateMap<DocumentApproval, DocumentView>();
+            CreateMap<Document, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentApproval, DocumentView>();
             CreateMap<UpdateDocument, Document>();
-            CreateMap<UpdateDocument, DocumentApproval>();
+            CreateMap<UpdateDocument, DocumentApproval>()
+                .ForMember(dest => dest.Id, opts => opts.Ignore())
+                .ForMember(dest => dest.DocumentId, opts => opts.MapFrom(src => src.Id));
             CreateMap<DocumentRoleMap, RoleView>();
             CreateMap<WorkOrder, PortalWorkOrderView>()
-                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId));
+                .ForMember(dest => dest.CustomerId, opts => opts.MapFrom(src => src.Purchase.PurchaseOrder.CustomerId))
+                .ForMember(dest => dest.HasNCRs, opts => opts.MapFrom(src => src.HasNCR));
             CreateMap<PortalWorkOrder, PortalWorkOrderView>();
             CreateMap<WorkOrderMessage, WorkOrderMessageModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.CreatedOn))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Created.GetFullName()))
                 .ForMember(dest => dest.Message, opts => opts.MapFrom(src => src.Message));
             CreateMap<WorkOrderModel, PortalWorkOrderView>()
-                .ForMember(dest => dest.WorkOrderId, opts => opts.MapFrom(src => src.Id));
+                .ForMember(dest => dest.WorkOrderId, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.HasNCRs, opts => opts.MapFrom(src => src.HasNCR));
         }
 
         private static bool ignoreNullOrZero(object srcMember)
@@ -538,6 +544,11 @@ namespace MSR.Infrastructure.Profiles
         private int? GetLocationId(Invoice src)
         {
             return src.InvoiceItems?.FirstOrDefault()?.WorkOrder?.Purchase?.LocationId;
+        }
+
+        private string? GetCustomerName(WorkOrder src)
+        {
+            return src.Purchase?.PurchaseOrder?.Customer?.Name;
         }
 
         private int? WorkOrderPart_to_WorkOrderPartModel_qty(WorkOrderPart src)

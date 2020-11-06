@@ -8,7 +8,6 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { UtilsModule } from '../layout/utils/utils.module';
 import { ROUTES } from './layout.routes';
-
 import { Layout } from './layout.component';
 import { Sidebar } from './sidebar/sidebar.component';
 import { Navbar } from './navbar/navbar.component';
@@ -16,6 +15,7 @@ import { BlockUIModule } from 'primeng/blockui';
 import { DialogModule } from 'primeng/dialog';
 import { ApprovalCommentComponent } from '../components/approval-comment/approval-comment.component';
 import { PanelModule } from 'primeng/panel';
+import { HelpbuttonWrapperComponent } from '../components/helpbutton-wrapper/helpbutton-wrapper.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
@@ -34,7 +34,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     PanelModule,
     InputSwitchModule
   ],
-  declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent]
+  declarations: [Layout, Sidebar, Navbar, ApprovalCommentComponent, HelpbuttonWrapperComponent],
+  exports: [HelpbuttonWrapperComponent]
 })
 export class LayoutModule {
 }

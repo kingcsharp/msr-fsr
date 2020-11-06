@@ -43,5 +43,6 @@
         , WorkOrders = 33
         , WorkOrderParts = 34
         , WorkOrderTasks = 35
+        , ProcedureStep = 36
     }
 }

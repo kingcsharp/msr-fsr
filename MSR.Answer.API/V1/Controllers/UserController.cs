@@ -48,7 +48,7 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<UserModel>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<UserModel>>))]
         public async Task<IActionResult> GetUsers([FromQuery, Required] GetUsersRequest request)
         {
             var command = request.ToGetUsersCommand();

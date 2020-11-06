@@ -132,10 +132,11 @@ export class ProfileComponent implements OnInit {
     this.globals.showLoader(true);
     this.userService.userPatch(env.apiVersion, updateUserReq)
       .pipe(take(1)).subscribe(responseHandler(response => {
-        this.globals.showLoader(false);
+        this.user = response.object;
         let user = this.globals.getCurrentUser();
-        user.timezone = this.user.timeZone;
-        user.file = this.user.fileModel;
+        user.timeZoneId = this.user.timeZoneId;
+        user.timeZone = this.user.timeZone;
+        user.fileModel = this.user.fileModel;
         this.globals.updateUser(user);
       }));
   }

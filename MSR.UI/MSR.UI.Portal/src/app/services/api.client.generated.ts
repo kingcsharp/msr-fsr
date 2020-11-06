@@ -3754,14 +3754,14 @@ export class ProcedureStepTemplateService {
     /**
      * Add procedure step template
      */
-    procedureStepTemplatePost(version: string, newproc: CreateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
+    procedureStepTemplatePost(version: string, newTemplate: CreateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(newproc);
+        const content_ = JSON.stringify(newTemplate);
 
         let options_ : any = {
             body: content_,
@@ -3812,14 +3812,14 @@ export class ProcedureStepTemplateService {
     /**
      * Update procedure step template
      */
-    procedureStepTemplatePatch(version: string, newproc: UpdateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
+    procedureStepTemplatePatch(version: string, request: UpdateProcedureStepTemplateRequest): Observable<AuditActionResultOfProcedureStepTemplateModel> {
         let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
         url_ = url_.replace("{version}", encodeURIComponent("" + version));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(newproc);
+        const content_ = JSON.stringify(request);
 
         let options_ : any = {
             body: content_,
@@ -3865,6 +3865,63 @@ export class ProcedureStepTemplateService {
             }));
         }
         return _observableOf<AuditActionResultOfProcedureStepTemplateModel>(<any>null);
+    }
+
+    /**
+     * Deletes any ProcedureStepTemplate with a matching Id.
+     */
+    procedureStepTemplateDelete(id: number, version: string): Observable<AuditActionResult> {
+        let url_ = this.baseUrl + "/v{version}/ProcedureStepTemplate/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcedureStepTemplateDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcedureStepTemplateDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResult>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResult>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcedureStepTemplateDelete(response: HttpResponseBase): Observable<AuditActionResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResult>(<any>null);
     }
 }
 
@@ -5495,6 +5552,57 @@ export class RoleService {
             }));
         }
         return _observableOf<AuditActionResultOfRole>(<any>null);
+    }
+
+    rolesUsers(version: string): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
+        let url_ = this.baseUrl + "/v{version}/Role/RolesUsers";
+        if (version === undefined || version === null)
+            throw new Error("The parameter 'version' must be defined.");
+        url_ = url_.replace("{version}", encodeURIComponent("" + version));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolesUsers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolesUsers(<any>response_);
+                } catch (e) {
+                    return <Observable<AuditActionResultOfICollectionOfRolesUsersView>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AuditActionResultOfICollectionOfRolesUsersView>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRolesUsers(response: HttpResponseBase): Observable<AuditActionResultOfICollectionOfRolesUsersView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfICollectionOfRolesUsersView.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AuditActionResultOfICollectionOfRolesUsersView>(<any>null);
     }
 
     roleDelete(id: number, version: string): Observable<AuditActionResult> {
@@ -12738,6 +12846,7 @@ export interface IAuditActionResultOfProcedureStepModel extends IAuditActionResu
 }
 
 export class ProcedureStepModel implements IProcedureStepModel {
+    approvalStatus?: string | undefined;
     id?: number;
     procedure?: Procedure | undefined;
     procedureId?: number | undefined;
@@ -12768,6 +12877,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
 
     init(_data?: any) {
         if (_data) {
+            this.approvalStatus = _data["approvalStatus"];
             this.id = _data["id"];
             this.procedure = _data["procedure"] ? Procedure.fromJS(_data["procedure"]) : <any>undefined;
             this.procedureId = _data["procedureId"];
@@ -12806,6 +12916,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["approvalStatus"] = this.approvalStatus;
         data["id"] = this.id;
         data["procedure"] = this.procedure ? this.procedure.toJSON() : <any>undefined;
         data["procedureId"] = this.procedureId;
@@ -12837,6 +12948,7 @@ export class ProcedureStepModel implements IProcedureStepModel {
 }
 
 export interface IProcedureStepModel {
+    approvalStatus?: string | undefined;
     id?: number;
     procedure?: Procedure | undefined;
     procedureId?: number | undefined;
@@ -13834,13 +13946,13 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
+    target?: number;
     /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -13864,10 +13976,10 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
             this.sensorName = _data["sensorName"];
             this.monitorType = _data["monitorType"];
             this.shouldBe = _data["shouldBe"];
-            this.targetValue = _data["targetValue"];
-            this.faultHandling = _data["faultHandling"];
+            this.target = _data["target"];
+            this.failAction = _data["failAction"];
             this.description = _data["description"];
-            this.sendEmailNotification = _data["sendEmailNotification"];
+            this.sendNCREmail = _data["sendNCREmail"];
             this.highTarget = _data["highTarget"];
             this.lowTarget = _data["lowTarget"];
             this.monitorListId = _data["monitorListId"];
@@ -13888,10 +14000,10 @@ export class UpdateProcedureStepMonitorRequest implements IUpdateProcedureStepMo
         data["sensorName"] = this.sensorName;
         data["monitorType"] = this.monitorType;
         data["shouldBe"] = this.shouldBe;
-        data["targetValue"] = this.targetValue;
-        data["faultHandling"] = this.faultHandling;
+        data["target"] = this.target;
+        data["failAction"] = this.failAction;
         data["description"] = this.description;
-        data["sendEmailNotification"] = this.sendEmailNotification;
+        data["sendNCREmail"] = this.sendNCREmail;
         data["highTarget"] = this.highTarget;
         data["lowTarget"] = this.lowTarget;
         data["monitorListId"] = this.monitorListId;
@@ -13912,13 +14024,13 @@ export interface IUpdateProcedureStepMonitorRequest {
     /** Gets or Sets ShouldBe */
     shouldBe?: string | undefined;
     /** Gets or Sets TargetValue */
-    targetValue?: string | undefined;
+    target?: number;
     /** Gets or Sets FaultHandling */
-    faultHandling?: string | undefined;
+    failAction?: string | undefined;
     /** Gets or Sets Description */
     description?: string | undefined;
     /** Gets or Sets SendEmailNotification */
-    sendEmailNotification?: boolean | undefined;
+    sendNCREmail?: boolean | undefined;
     /** HighTarget */
     highTarget?: number | undefined;
     /** LowTarget */
@@ -13971,7 +14083,7 @@ export interface IAuditActionResultOfICollectionOfProcedureStepTemplateModel ext
 }
 
 export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
-    id?: number | undefined;
+    id?: number;
     title?: string | undefined;
     text?: string | undefined;
     systemTaskId?: number | undefined;
@@ -14077,7 +14189,7 @@ export class ProcedureStepTemplateModel implements IProcedureStepTemplateModel {
 }
 
 export interface IProcedureStepTemplateModel {
-    id?: number | undefined;
+    id?: number;
     title?: string | undefined;
     text?: string | undefined;
     systemTaskId?: number | undefined;
@@ -14143,8 +14255,6 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14153,10 +14263,14 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: ICreateProcedureStepTemplateRequest) {
         if (data) {
@@ -14183,21 +14297,26 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
                 for (let item of _data["referenceDocuments"])
                     this.referenceDocuments!.push(item);
             }
-            if (Array.isArray(_data["referenceFiles"])) {
-                this.referenceFiles = [] as any;
-                for (let item of _data["referenceFiles"])
-                    this.referenceFiles!.push(item);
-            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
+            this.comments = _data["comments"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(item);
             }
-            this.comments = _data["comments"];
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
+            }
         }
     }
 
@@ -14224,21 +14343,26 @@ export class CreateProcedureStepTemplateRequest implements ICreateProcedureStepT
             for (let item of this.referenceDocuments)
                 data["referenceDocuments"].push(item);
         }
-        if (Array.isArray(this.referenceFiles)) {
-            data["referenceFiles"] = [];
-            for (let item of this.referenceFiles)
-                data["referenceFiles"].push(item);
-        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
+        data["comments"] = this.comments;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        data["comments"] = this.comments;
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -14257,8 +14381,6 @@ export interface ICreateProcedureStepTemplateRequest {
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14267,16 +14389,20 @@ export interface ICreateProcedureStepTemplateRequest {
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /**  */
 export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepTemplateRequest {
     /** ProcedureStepTemplate Id */
-    id?: number;
+    id!: number;
     /** Title */
     title?: string | undefined;
     /** StepText */
@@ -14289,8 +14415,6 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14299,10 +14423,14 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 
     constructor(data?: IUpdateProcedureStepTemplateRequest) {
         if (data) {
@@ -14330,21 +14458,26 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
                 for (let item of _data["referenceDocuments"])
                     this.referenceDocuments!.push(item);
             }
-            if (Array.isArray(_data["referenceFiles"])) {
-                this.referenceFiles = [] as any;
-                for (let item of _data["referenceFiles"])
-                    this.referenceFiles!.push(item);
-            }
             this.equipmentTime = _data["equipmentTime"];
             this.replacementCost = _data["replacementCost"];
             this.utilization = _data["utilization"];
             this.usefulLife = _data["usefulLife"];
+            this.comments = _data["comments"];
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
                 for (let item of _data["roles"])
                     this.roles!.push(item);
             }
-            this.comments = _data["comments"];
+            if (Array.isArray(_data["referenceFileIds"])) {
+                this.referenceFileIds = [] as any;
+                for (let item of _data["referenceFileIds"])
+                    this.referenceFileIds!.push(item);
+            }
+            if (Array.isArray(_data["referenceFiles"])) {
+                this.referenceFiles = [] as any;
+                for (let item of _data["referenceFiles"])
+                    this.referenceFiles!.push(FileModel.fromJS(item));
+            }
         }
     }
 
@@ -14372,21 +14505,26 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
             for (let item of this.referenceDocuments)
                 data["referenceDocuments"].push(item);
         }
-        if (Array.isArray(this.referenceFiles)) {
-            data["referenceFiles"] = [];
-            for (let item of this.referenceFiles)
-                data["referenceFiles"].push(item);
-        }
         data["equipmentTime"] = this.equipmentTime;
         data["replacementCost"] = this.replacementCost;
         data["utilization"] = this.utilization;
         data["usefulLife"] = this.usefulLife;
+        data["comments"] = this.comments;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        data["comments"] = this.comments;
+        if (Array.isArray(this.referenceFileIds)) {
+            data["referenceFileIds"] = [];
+            for (let item of this.referenceFileIds)
+                data["referenceFileIds"].push(item);
+        }
+        if (Array.isArray(this.referenceFiles)) {
+            data["referenceFiles"] = [];
+            for (let item of this.referenceFiles)
+                data["referenceFiles"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -14394,7 +14532,7 @@ export class UpdateProcedureStepTemplateRequest implements IUpdateProcedureStepT
 /**  */
 export interface IUpdateProcedureStepTemplateRequest {
     /** ProcedureStepTemplate Id */
-    id?: number;
+    id: number;
     /** Title */
     title?: string | undefined;
     /** StepText */
@@ -14407,8 +14545,6 @@ export interface IUpdateProcedureStepTemplateRequest {
     referenceProcedures?: number[] | undefined;
     /** ReferenceDocuments */
     referenceDocuments?: number[] | undefined;
-    /** ReferenceFiles */
-    referenceFiles?: number[] | undefined;
     /** EquipmentTime */
     equipmentTime?: number | undefined;
     /** ReplacementCost */
@@ -14417,10 +14553,14 @@ export interface IUpdateProcedureStepTemplateRequest {
     utilization?: number | undefined;
     /** UsefulLife */
     usefulLife?: number | undefined;
-    /** Role list */
-    roles?: number[] | undefined;
     /** Comments */
     comments?: string | undefined;
+    /** Role list */
+    roles?: number[] | undefined;
+    /** ReferenceFileIds - Existing fileIds */
+    referenceFileIds?: number[] | undefined;
+    /** ReferenceFiles - new files */
+    referenceFiles?: FileModel[] | undefined;
 }
 
 /** Base class for an API call with a typed result */
@@ -15336,6 +15476,7 @@ export interface IQuoteItemModel {
 
 export class WorkOrderModel implements IWorkOrderModel {
     id?: number | undefined;
+    customerName?: string | undefined;
     productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
@@ -15363,6 +15504,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.customerName = _data["customerName"];
             this.productId = _data["productId"];
             this.price = _data["price"];
             this.scheduledStartDate = _data["scheduledStartDate"] ? new Date(_data["scheduledStartDate"].toString()) : <any>undefined;
@@ -15398,6 +15540,7 @@ export class WorkOrderModel implements IWorkOrderModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["customerName"] = this.customerName;
         data["productId"] = this.productId;
         data["price"] = this.price;
         data["scheduledStartDate"] = this.scheduledStartDate ? this.scheduledStartDate.toISOString() : <any>undefined;
@@ -15426,6 +15569,7 @@ export class WorkOrderModel implements IWorkOrderModel {
 
 export interface IWorkOrderModel {
     id?: number | undefined;
+    customerName?: string | undefined;
     productId?: number | undefined;
     price?: number | undefined;
     scheduledStartDate?: Date | undefined;
@@ -17631,6 +17775,105 @@ export interface IAuditActionResultOfICollectionOfRole extends IAuditActionResul
 }
 
 /** Base class for an API call with a typed result */
+export class AuditActionResultOfICollectionOfRolesUsersView extends AuditActionResult implements IAuditActionResultOfICollectionOfRolesUsersView {
+    object?: RolesUsersView[] | undefined;
+
+    constructor(data?: IAuditActionResultOfICollectionOfRolesUsersView) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["object"])) {
+                this.object = [] as any;
+                for (let item of _data["object"])
+                    this.object!.push(RolesUsersView.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfICollectionOfRolesUsersView {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfICollectionOfRolesUsersView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.object)) {
+            data["object"] = [];
+            for (let item of this.object)
+                data["object"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** Base class for an API call with a typed result */
+export interface IAuditActionResultOfICollectionOfRolesUsersView extends IAuditActionResult {
+    object?: RolesUsersView[] | undefined;
+}
+
+export class RolesUsersView implements IRolesUsersView {
+    id?: number;
+    roleId?: number;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+    userId?: number;
+    user?: UserModel | undefined;
+
+    constructor(data?: IRolesUsersView) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.roleId = _data["roleId"];
+            this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
+            this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? UserModel.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RolesUsersView {
+        data = typeof data === 'object' ? data : {};
+        let result = new RolesUsersView();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["roleId"] = this.roleId;
+        data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
+        data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IRolesUsersView {
+    id?: number;
+    roleId?: number;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+    userId?: number;
+    user?: UserModel | undefined;
+}
+
+/** Base class for an API call with a typed result */
 export class AuditActionResultOfRole extends AuditActionResult implements IAuditActionResultOfRole {
     object?: Role | undefined;
 
@@ -17719,6 +17962,7 @@ export interface ICreateRoleRequest {
 
 export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleRequest {
     id?: number;
+    userRoles?: UserRoleModel[] | undefined;
 
     constructor(data?: IUpdateRoleRequest) {
         super(data);
@@ -17728,6 +17972,11 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
         super.init(_data);
         if (_data) {
             this.id = _data["id"];
+            if (Array.isArray(_data["userRoles"])) {
+                this.userRoles = [] as any;
+                for (let item of _data["userRoles"])
+                    this.userRoles!.push(UserRoleModel.fromJS(item));
+            }
         }
     }
 
@@ -17741,6 +17990,11 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        if (Array.isArray(this.userRoles)) {
+            data["userRoles"] = [];
+            for (let item of this.userRoles)
+                data["userRoles"].push(item.toJSON());
+        }
         super.toJSON(data);
         return data; 
     }
@@ -17748,6 +18002,59 @@ export class UpdateRoleRequest extends CreateRoleRequest implements IUpdateRoleR
 
 export interface IUpdateRoleRequest extends ICreateRoleRequest {
     id?: number;
+    userRoles?: UserRoleModel[] | undefined;
+}
+
+export class UserRoleModel implements IUserRoleModel {
+    userRoleId!: number;
+    userId?: number | undefined;
+    roleId?: number | undefined;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
+
+    constructor(data?: IUserRoleModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userRoleId = _data["userRoleId"];
+            this.userId = _data["userId"];
+            this.roleId = _data["roleId"];
+            this.certificationFromDate = _data["certificationFromDate"] ? new Date(_data["certificationFromDate"].toString()) : <any>undefined;
+            this.certificationToDate = _data["certificationToDate"] ? new Date(_data["certificationToDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserRoleModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserRoleModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userRoleId"] = this.userRoleId;
+        data["userId"] = this.userId;
+        data["roleId"] = this.roleId;
+        data["certificationFromDate"] = this.certificationFromDate ? this.certificationFromDate.toISOString() : <any>undefined;
+        data["certificationToDate"] = this.certificationToDate ? this.certificationToDate.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IUserRoleModel {
+    userRoleId: number;
+    userId?: number | undefined;
+    roleId?: number | undefined;
+    certificationFromDate?: Date | undefined;
+    certificationToDate?: Date | undefined;
 }
 
 /** Base class for an API call with a typed result */

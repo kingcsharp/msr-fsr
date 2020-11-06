@@ -30,7 +30,7 @@ namespace MSR.Answer.API.V1.Controllers.Workflow
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowStageModel>>)), HasPrivilegeApi("ApprovalStages", EnumPrivilege.CanRead)]
+        [HttpGet, SwaggerResponse(typeof(AuditActionResult<ICollection<WorkflowStageModel>>))]
         public async Task<IActionResult> Get([FromQuery, Required] GetWorkflowStageRequest request)
         {
             var command = request.ToGetWorkflowStageCommand();

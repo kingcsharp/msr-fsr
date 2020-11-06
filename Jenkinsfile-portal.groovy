@@ -39,7 +39,7 @@ pipeline {
                     }
 
                     try {
-                        sh "sh update_image_portal.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                        sh "sh update_image_portal.sh QA ${env.GIT_COMMIT} ${UI_COMPOSE}"
                         sh "cat ${UI_COMPOSE}"
 
                             if(env.BRANCH_NAME == 'Develop') {
@@ -88,7 +88,7 @@ pipeline {
                         sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
                     }
 
-                    sh "sh update_image_portal.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                    sh "sh update_image_portal.sh UAT ${env.GIT_COMMIT} ${UI_COMPOSE}"
                     sh "cat ${UI_COMPOSE}"
 
                     deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
@@ -128,7 +128,7 @@ pipeline {
                         sh "docker push ${ACCOUNT_URL}/msr-ui:portal${env.GIT_COMMIT}"
                     }
 
-                    sh "sh update_image_portal.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${UI_COMPOSE}"
+                    sh "sh update_image_portal.sh Production ${env.GIT_COMMIT} ${UI_COMPOSE}"
                     sh "cat ${UI_COMPOSE}"
 
                     deploy("${UI_COMPOSE}", "${PROD_PROJECT_UI}", "${PROD_UI_TARGET_ARN}", "app")

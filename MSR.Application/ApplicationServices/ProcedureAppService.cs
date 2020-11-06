@@ -67,7 +67,7 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(DeleteProcedureStep command, CancellationToken cancellationToken = default)
         {
             var ret = await _procedureService.DeleteProcedureStepAsync(command);
-            return new CommandResponse<bool>(ret);
+            return new CommandResponse<ProcedureStepModel>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(GetProcedureStepType command, CancellationToken cancellationToken = default)

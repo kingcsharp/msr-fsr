@@ -10,4 +10,4 @@ services:
       options:
         awslogs-group: answer3
         awslogs-region: us-west-2
-        awslogs-stream-prefix: answer3-ui-dev
+        awslogs-stream-prefix: answer3-portal-ui-dev

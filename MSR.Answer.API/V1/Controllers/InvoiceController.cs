@@ -28,7 +28,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
+        [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<IEnumerable<InvoiceView>>))]
         public async Task<IActionResult> GetInvoices([FromQuery] GetInvoicesRequest filters)
         {

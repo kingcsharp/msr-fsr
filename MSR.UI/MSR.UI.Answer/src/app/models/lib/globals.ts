@@ -160,6 +160,9 @@ export class Globals {
 
     getSingularMenuName(menuItem) {
         let name = EnumMenuItem[menuItem];
+        if (menuItem === EnumMenuItem.Templates) {
+          name = 'ProcedureStepTemplate';
+        }
         return name.replace(/s$/, '');
     }
 
@@ -200,6 +203,17 @@ export class Globals {
 
     getLogin() {
         return this.login;
+    }
+
+    hasRole(roleName) {
+      if (this.user.roles.length > 0) {
+        const index = this.user.roles.findIndex((role) => role.name === roleName);
+        if (index > -1) {
+          return true;
+        }
+      }
+
+      return false;
     }
 
 }

@@ -121,7 +121,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.UserModel> UpdateUserAsync(UpdateUser command)
         {
-            var efUser = _unitOfWork.Users.Query().Include(x => x.Roles).FirstOrDefault(i => i.Id == command.Id);
+            var efUser = _unitOfWork.Users.Query().Include(x => x.Roles).Include(x => x.TimeZone).FirstOrDefault(i => i.Id == command.Id);
 
             if (efUser == null)
             {
@@ -162,14 +162,14 @@ namespace MSR.Infrastructure.Resources.Services.Users
             if (command.TimeZoneId != 0)
             {
                 efUser.TimeZoneId = command.TimeZoneId;
+                efUser.TimeZone = await _unitOfWork.Timezones.FirstOrDefaultAsync(false, i => i.Id == command.TimeZoneId);
             }
             else
             {
                 efUser.TimeZoneId = timezone;
             }
-
-            _unitOfWork.Users.Update(efUser);
-            await _unitOfWork.SaveChangesAsync();
+            
+            await _unitOfWork.Users.UpdateAndSaveChangesAsync(efUser);
 
             var domainUser = _mapper.Map<Domain.Models.UserModel>(efUser);
             SetRolesToUser(efUser, domainUser);
@@ -322,7 +322,11 @@ namespace MSR.Infrastructure.Resources.Services.Users
         public async Task<Domain.Models.UserModel> GetLoggedInUserData(int Id)
         {
             var childRoles = await _unitOfWork.RoleChildRoleMaps.Query().ToListAsync();
-            var user = await _unitOfWork.Users.Query().Include(x => x.Location).Include(x => x.Roles).ThenInclude(x => x.Role)
+            var user = await _unitOfWork.Users.Query()
+                .Include(x => x.Location)
+                .Include(x => x.Roles)
+                .ThenInclude(x => x.Role)
+                .Include(x => x.TimeZone)
                 .Where(x => x.Id == CurrentUser.GetId()).Select(x => new User()
                 {
                     CustomerId = x.CustomerId,
@@ -335,6 +339,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                     Phone = x.Phone,
                     UserName = x.UserName,
                     TimeZoneId = x.TimeZoneId,
+                    TimeZone = x.TimeZone,
                     Roles = x.Roles.Select(x => new UserRole()
                     {
                         Id = x.Id,

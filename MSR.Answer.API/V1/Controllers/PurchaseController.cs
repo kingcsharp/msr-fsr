@@ -38,7 +38,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        [HttpGet, HasPrivilegeApi(privilegeApiName, EnumPrivilege.CanRead)]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AuditActionResult<ICollection<PurchaseModel>>))]
         public async Task<IActionResult> GetPurchases([FromQuery] GetPurchasesRequest filters)
         {

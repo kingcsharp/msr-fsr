@@ -73,6 +73,7 @@ export class ProductDefinitionComponent implements OnInit {
   adminCostSettings: AdminCostSettingsModel;
   getAdminCostSettingsFlag: boolean = false;
   productSteps: any[] = [];
+  isEditableHiddenColumns: boolean = false;
 
   constructor(
     public globals: Globals,
@@ -91,11 +92,11 @@ export class ProductDefinitionComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.id = parseInt(params.get('id'), 10);
       this.mode = params.get('mode');
+      this.isEditableHiddenColumns = this.globals.hasRole('CFO');
       this.globals.showLoader(true);
       this.getAdminCostSettings();
     });
   }
-
   getAdminCostSettings() {
     this.adminCostSettingsService.adminCostSettingsGet(env.apiVersion)
       .pipe(take(1))
@@ -162,6 +163,9 @@ export class ProductDefinitionComponent implements OnInit {
 
         if (isCreateMode) {
           this.productData = new CreateProductRequest();
+          if (this.quoteData.customerRequirementJson) {
+            this.productData.name =  this.customerRequirementJson.RequirementName;
+          }
           this.productData.quoteId = this.quoteData.id;
           this.productData.customerId = null;
           this.productData.partId = null;
@@ -453,6 +457,111 @@ export class ProductDefinitionComponent implements OnInit {
     }
   }
 
+  onChangeReplacementCost($event, index: number) {
+    jQuery(`#replacementcost_${index}`).parsley().validate();
+    if (jQuery(`#replacementcost_${index}`).parsley().isValid()) {
+      let replacementCost = null;
+
+      if ($event.target.value) {
+        replacementCost = parseInt($event.target.value, 10);
+      }
+
+      this.productSteps[index].replacementCost = replacementCost;
+
+      this.productSteps[index].rmAnnualRate = replacementCost ? replacementCost * this.adminCostSettings.rmAnnualRate : 0;
+      this.calculateEquipPerMinute(index);
+    }
+  }
+
+  onChangeUtilization($event, index: number) {
+    jQuery(`#utilization_${index}`).parsley().validate();
+    if (jQuery(`#utilization_${index}`).parsley().isValid()) {
+      let utilization = null;
+
+      if ($event.target.value) {
+        utilization = parseFloat($event.target.value);
+      }
+
+      this.productSteps[index].utilization = utilization;
+
+      this.productSteps[index].rmPerMinuteRate = utilization ? (this.adminCostSettings.rmAnnualRate / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * utilization)) : 0;
+      this.calculateEquipPerMinute(index);
+    }
+  }
+
+  onChangeUsefulLife($event, index: number) {
+    jQuery(`#usefulLife_${index}`).parsley().validate();
+    if (jQuery(`#usefulLife_${index}`).parsley().isValid()) {
+      let usefulLife = null;
+
+      if ($event.target.value) {
+        usefulLife = parseInt($event.target.value, 10);
+      }
+
+      this.productSteps[index].usefulLife = usefulLife;
+      this.calculateEquipPerMinute(index);
+    }
+  }
+
+  onChangeEquipPerMin($event, index: number) {
+    jQuery(`#equipPerMin_${index}`).parsley().validate();
+    if (jQuery(`#equipPerMin_${index}`).parsley().isValid()) {
+      let equipmentExpensePerMinute = null;
+
+      if ($event.target.value) {
+        equipmentExpensePerMinute = parseFloat($event.target.value);
+      }
+
+      this.productSteps[index].equipmentExpensePerMinute = equipmentExpensePerMinute;
+      this.calculateCharge(index);
+    }
+  }
+
+  onChangeAnualRM($event, index: number) {
+    jQuery(`#anualRM_${index}`).parsley().validate();
+    if (jQuery(`#anualRM_${index}`).parsley().isValid()) {
+      let rmAnnualRate = null;
+
+      if ($event.target.value) {
+        rmAnnualRate = parseFloat($event.target.value);
+      }
+
+      this.productSteps[index].rmAnnualRate = rmAnnualRate;
+    }
+  }
+
+  onChangeRMPerMin($event, index: number) {
+    jQuery(`#rmPerMin_${index}`).parsley().validate();
+    if (jQuery(`#rmPerMin_${index}`).parsley().isValid()) {
+      let rmPerMinuteRate = null;
+
+      if ($event.target.value) {
+        rmPerMinuteRate = parseFloat($event.target.value);
+      }
+
+      this.productSteps[index].rmPerMinuteRate = rmPerMinuteRate;
+      this.calculateCharge(index);
+    }
+  }
+
+  calculateEquipPerMinute(index: number) {
+    this.productSteps[index].equipmentExpensePerMinute =
+        (this.productSteps[index].replacementCost && this.productSteps[index].utilization && this.productSteps[index].usefulLife)
+          ? (this.productSteps[index].replacementCost / this.productSteps[index].usefulLife) / (this.adminCostSettings.yearsHours * this.adminCostSettings.hourMinutes * this.productSteps[index].utilization)
+          : 0;
+    this.calculateCharge(index);
+  }
+
+  calculateCharge(index: number) {
+    this.productSteps[index].laborCharge = this.productSteps[index].laborMinutes ? this.productSteps[index].laborMinutes * this.adminCostSettings.laborRateMinute : 0;
+
+    this.productSteps[index].equipmentCharge = this.productSteps[index].equipmentMinutes
+      ? (this.productSteps[index].equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute +  this.productSteps[index].equipmentMinutes * this.productSteps[index].rmPerMinuteRate)
+      : 0;
+
+    this.getStepsValues(true);
+  }
+
   calculateProductStepValues(step: ProductStepModel) {
     const rmAnnualRate = step.rmAnnualRate ? step.rmAnnualRate : (step.replacementCost ? step.replacementCost * this.adminCostSettings.rmAnnualRate : 0);
 
@@ -466,7 +575,7 @@ export class ProductDefinitionComponent implements OnInit {
 
     const laborCharge = step.laborMinutes ? step.laborMinutes * this.adminCostSettings.laborRateMinute : 0;
 
-    const equipmentCharge = step.equipmentMinutes ? step.equipmentMinutes * equipmentExpensePerMinute + step.equipmentMinutes * rmPerMinuteRate : 0;
+    const equipmentCharge = step.equipmentMinutes ? (step.equipmentMinutes * equipmentExpensePerMinute + step.equipmentMinutes * rmPerMinuteRate) : 0;
 
     return {
       ...step,

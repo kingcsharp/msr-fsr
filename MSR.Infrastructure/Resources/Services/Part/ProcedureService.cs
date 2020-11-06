@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using AutoMapper.Mappers;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
@@ -14,7 +10,12 @@ using MSR.Domain.Validators;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Part
 {
@@ -176,9 +177,15 @@ namespace MSR.Infrastructure.Resources.Services.Part
             }
             var result = steps.Select(x => _mapper.Map<Domain.Models.ProcedureStepModel>(x)).OrderBy(x => x.PrintOrder).ToList();
 
+            var procedureStepIds = result.Select(m => m.Id).ToList();
+            var documentEntityMaps = await _unitOfWork.DocumentEntityMap.Query().Where(s =>
+                procedureStepIds.Contains(s.EntityId) &&
+                s.EntityTableName == nameof(EntityFramework.Entities.ProcedureStep)).ToListAsync();
+
             result.ForEach(procedureStep =>
             {
                 procedureStep.ReferenceFiles = _fileService.ListFiles(nameof(EntityFramework.Entities.ProcedureStep), procedureStep.Id).ToList();
+                procedureStep.ReferenceDocumentIds = documentEntityMaps.Where(s => s.EntityId == procedureStep.Id).Select(m => m.DocumentId).ToList();
             });
 
             return result;
@@ -367,7 +374,7 @@ namespace MSR.Infrastructure.Resources.Services.Part
             return true;
         }
 
-        public async Task<bool> DeleteProcedureStepAsync(DeleteProcedureStep command)
+        public async Task<ProcedureStepModel> DeleteProcedureStepAsync(DeleteProcedureStep command)
         {
             var current = await _unitOfWork.ProcedureSteps.FirstOrDefaultAsync(false,
                 i => i.ProcedureId == command.procedureID && i.Id == command.procedureStepID
@@ -393,7 +400,9 @@ namespace MSR.Infrastructure.Resources.Services.Part
                 throw new DomainException($"Permission deined for {nameof(Domain.Models.ProcedureStepModel)} uid {CurrentUser.GetId()}");
             }
 
-            return true;
+            var ProcedureStepModel = _mapper.Map<ProcedureStepModel>(current);
+
+            return ProcedureStepModel;
         }
 
         public async Task<ICollection<Domain.Models.ProcedureStepTypeModel>> GetProcedureStepType(GetProcedureStepType command)

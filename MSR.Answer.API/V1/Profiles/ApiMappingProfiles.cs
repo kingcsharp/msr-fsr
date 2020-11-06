@@ -9,7 +9,7 @@ namespace MSR.Answer.API.V1.Profiles
     /// <summary>
     ///
     /// </summary>
-    public class ApiMappingProfiles: Profile
+    public class ApiMappingProfiles : Profile
     {
         /// <summary>
         ///
@@ -34,7 +34,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<CreatePartRequest, CreatePart>()
             .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
             CreateMap<UpdatePartRequest, UpdatePart>()
-                .ForMember(dest=>dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
+                .ForMember(dest => dest.SubParts, opts => opts.MapFrom(src => src.CreateSubParts));
 
             CreateMap<CreateProcedureRequest, CreateProcedure>();
             CreateMap<UpdateProcedureRequest, UpdateProcedure>();
@@ -44,10 +44,7 @@ namespace MSR.Answer.API.V1.Profiles
                 .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
                 .ForMember(dest => dest.Target, opts => opts.MapFrom(src => Convert.ToSingle(src.TargetValue)))
                 .ForMember(dest => dest.SendNCREmail, opts => opts.MapFrom(src => src.SendEmailNotification));
-            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>()
-                .ForMember(dest => dest.FailAction, opts => opts.MapFrom(src => src.FaultHandling))
-                .ForMember(dest => dest.Target, opts => opts.MapFrom(src => Convert.ToSingle(src.TargetValue)))
-                .ForMember(dest => dest.SendNCREmail, opts => opts.MapFrom(src => src.SendEmailNotification));
+            CreateMap<UpdateProcedureStepMonitorRequest, UpdateProcedureStepMonitor>();
             CreateMap<CreateProcedureStepTemplateRequest, CreateProcedureStepTemplate>()
                 .ForMember(dest => dest.SystemTaskId, opts => opts.MapFrom(src => src.ProcedureStepTypeId))
                 .ForMember(dest => dest.Text, opts => opts.MapFrom(src => src.StepText));
@@ -95,6 +92,7 @@ namespace MSR.Answer.API.V1.Profiles
             CreateMap<ProductStep, ProductStepModel>();
             CreateMap<CreateRoleRequest, CreateRole>();
             CreateMap<UpdateRoleRequest, UpdateRole>();
+            CreateMap<Models.UserRoleModel, MSR.Domain.Models.UserRoleModel>();
             CreateMap<CreatePurchaseOrderRequest, CreatePurchaseOrder>();
             CreateMap<UpdatePurchaseOrderRequest, UpdatePurchaseOrder>();
             CreateMap<GetWorkOrderStatus, GetWorkOrder>();

@@ -5,6 +5,7 @@
 
 # 1=Environment, 2=commit hash, 3=docker-compose file
 sed -i 's/msr-ui:.*/msr-ui:'"$2"'/' $3
+sed -i 's/answer3-ui-.*/answer3-ui-'"$1"'/' $3
 
 IMAGE=$(grep 'image' $3)
 

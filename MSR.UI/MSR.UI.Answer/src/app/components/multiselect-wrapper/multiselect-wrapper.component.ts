@@ -56,18 +56,29 @@ export class MultiselectWrapperComponent implements OnInit {
     this.pushOptions();
     this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
     const sub1 = this.datatable.onFilter.subscribe((elem) => {
-      if (elem.filters[this.filterId] === undefined) {
+      if (elem.filters === undefined || elem.filters[this.filterId] === undefined) {
         this.selectedColumns = [];
+      } else {
+        this.selectedColumns = elem.filters[this.filterId].value;
       }
     });
     const sub2 = this.datatable.onStateRestore.subscribe((elem) => {
-      if (elem.filters[this.filterId] === undefined) {
+      if (elem.filters === undefined || elem.filters[this.filterId] === undefined) {
         this.selectedColumns = [];
+      } else {
+        this.selectedColumns = elem.filters[this.filterId].value;
       }
-      this.selectedColumns = elem.filters[this.filterId].value;
     });
     this.subscriptions.push(sub1);
     this.subscriptions.push(sub2);
+  }
+
+  clear() {
+    let length = this.selectedColumns.length;
+    while (length--) {
+      this.selectedColumns.pop();
+    }
+    this.filterGrid();
   }
 
   ngDoCheck() {

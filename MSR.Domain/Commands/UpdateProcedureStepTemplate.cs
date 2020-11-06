@@ -1,10 +1,17 @@
 ﻿using MSR.Domain.Commanding;
 using System.Collections.Generic;
+using MSR.Domain.Models;
 
 namespace MSR.Domain.Commands
 {
     public class UpdateProcedureStepTemplate : Command
     {
+        public UpdateProcedureStepTemplate()
+        {
+            ReferenceFileIds = new List<int>();
+            ReferenceFiles = new List<FileModel>();
+        }
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -56,13 +63,23 @@ namespace MSR.Domain.Commands
         public int? UsefulLife { get; set; }
 
         /// <summary>
-        /// Role list
+        /// Gets or Sets Comments
+        /// </summary>
+        public string Comments { get; set; }
+
+        /// <summary>
+        /// RoleIds list
         /// </summary>
         public List<int> Roles { get; set; }
 
         /// <summary>
-        /// Gets or Sets Comments
+        /// ReferenceFileIds - Existing fileIds
         /// </summary>
-        public string Comments { get; set; }
+        public ICollection<int> ReferenceFileIds { get; set; }
+
+        /// <summary>
+        /// ReferenceFiles - new files
+        /// </summary>
+        public ICollection<FileModel> ReferenceFiles { get; set; }
     }
 }

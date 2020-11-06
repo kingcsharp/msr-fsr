@@ -311,41 +311,105 @@
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input pInputText type="text" readonly class="form-control input-transparent"
-                      [value]="productSteps[i].replacementCost" data-cy="procedure-step-replacementcost">
+                    <input
+                      id="replacementcost_{{i}}"
+                      pInputText
+                      type="text"
+                      [readonly]="mode === productPageModes.View || !isEditableHiddenColumns"
+                      (change)="onChangeReplacementCost($event, i)"
+                      class="form-control input-transparent"
+                      [value]="productSteps[i].replacementCost"
+                      data-cy="procedure-step-replacementcost"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-type="integer"
+                    >
                     <span class="input-group-addon bg-secondary">.00</span>
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
-                    <input pInputText class="form-control form-control input-transparent " readonly type="text"
-                      [value]="productSteps[i].utilization" data-cy="procedure-step-utilization">
+                    <input
+                      id="utilization_{{i}}"
+                      pInputText
+                      class="form-control form-control input-transparent "
+                      [readonly]="mode === productPageModes.View || !isEditableHiddenColumns"
+                      (change)="onChangeUtilization($event, i)"
+                      type="text"
+                      [value]="productSteps[i].utilization"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-type="number"
+                      data-cy="procedure-step-utilization"
+                    >
                     <span class="input-group-addon bg-secondary">%</span>
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
-                  <input pInputText class="form-control form-control input-transparent useful-life" readonly type="text"
-                    [value]="productSteps[i].usefulLife" data-cy="procedure-step-usefullife">
+                  <input
+                    id="usefulLife_{{i}}"
+                    pInputText
+                    class="form-control form-control input-transparent useful-life"
+                    [readonly]="mode === productPageModes.View || !isEditableHiddenColumns"
+                    (change)="onChangeUsefulLife($event, i)"
+                    type="text"
+                    [value]="productSteps[i].usefulLife"
+                    data-validate="parsley"
+                    data-parsley-trigger="change"
+                    data-parsley-type="integer"
+                    data-cy="procedure-step-usefullife"
+                  >
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input pInputText class="form-control input-transparent" readonly type="text"
-                      [value]="productSteps[i].equipmentExpensePerMinute" data-cy="equip-per-min">
+                    <input
+                      id="equipPerMin_{{i}}"
+                      pInputText
+                      class="form-control input-transparent"
+                      [readonly]="mode === productPageModes.View || !isEditableHiddenColumns"
+                      (change)="onChangeEquipPerMin($event, i)"
+                      type="text"
+                      [value]="productSteps[i].equipmentExpensePerMinute"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-type="number"
+                      data-cy="equip-per-min"
+                    >
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input pInputText class="form-control input-transparent" readonly type="text"
-                      [value]="productSteps[i].rmAnnualRate" data-cy="anual-rm">
+                    <input
+                      id="anualRM_{{i}}"
+                      pInputText
+                      class="form-control input-transparent"
+                      [readonly]="mode === productPageModes.View || !isEditableHiddenColumns"
+                      (change)="onChangeAnualRM($event, i)"
+                      type="text"
+                      [value]="productSteps[i].rmAnnualRate"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-type="number"
+                      data-cy="anual-rm"
+                    >
                   </div>
                 </td>
                 <td class="text-center" [class.hide]="!showAllStepColumns">
                   <div class="input-group input-group-transparent">
                     <span class="input-group-addon bg-secondary">$</span>
-                    <input pInputText class="form-control input-transparent" readonly="readonly" type="text"
-                      [value]="productSteps[i].rmPerMinuteRate" data-cy="rm-per-min">
+                    <input
+                      id="rmPerMin_{{i}}"
+                      pInputText class="form-control input-transparent"
+                      [readonly]="mode === productPageModes.View || !isEditableHiddenColumns"
+                      (change)="onChangeRMPerMin($event, i)"
+                      type="text"
+                      [value]="productSteps[i].rmPerMinuteRate"
+                      data-validate="parsley"
+                      data-parsley-trigger="change"
+                      data-parsley-type="number"
+                      data-cy="rm-per-min">
                   </div>
                 </td>
               </tr>

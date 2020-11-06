@@ -106,7 +106,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="id"></param>
         /// <response code="200"></response>
         [HttpGet]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<Procedure>>))]
         public async Task<IActionResult> ProcedureGetProcedure(int? id)
         {
@@ -124,7 +123,6 @@ namespace MSR.Answer.API.V1.Controllers
         /// <param name="stepid"></param>
         /// <response code="200"></response>
         [HttpGet("{id}/step")]
-        [HasPrivilegeApi("RunnableProcedures", EnumPrivilege.CanRead)]
         [SwaggerResponse(typeof(AuditActionResult<ICollection<ProcedureStepModel>>))]
         public async Task<IActionResult> GetProcedureStep(int id, int? stepid)
         {
