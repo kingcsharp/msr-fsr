@@ -214,14 +214,14 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public updateTemplateWithCurrentView(tplView: ViewSaved) {
-    const columns = deepCopy(this.defaultColumns).map(e=>new ColumnsSaved(e));
+    const columns = deepCopy(this.defaultColumns).map(e => new ColumnsSaved(e));
     const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: columns });
     Object.assign(savedView, this.viewToSave);
     this.cg.updateView(tplView, savedView);
   }
 
   public saveView() {
-    const columns = deepCopy(this.defaultColumns).map(e=>new ColumnsSaved(e));
+    const columns = deepCopy(this.defaultColumns).map(e => new ColumnsSaved(e));
     const savedView = new ViewSaved({ version: this.gridVersion, isDefault: false, columns: columns });
     Object.assign(savedView, this.viewToSave);
     this.cg.addView(savedView);

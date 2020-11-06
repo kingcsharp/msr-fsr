@@ -555,7 +555,9 @@ export class ProductDefinitionComponent implements OnInit {
   calculateCharge(index: number) {
     this.productSteps[index].laborCharge = this.productSteps[index].laborMinutes ? this.productSteps[index].laborMinutes * this.adminCostSettings.laborRateMinute : 0;
 
-    this.productSteps[index].equipmentCharge =  this.productSteps[index].equipmentMinutes ?  (this.productSteps[index].equipmentMinutes *  this.productSteps[index].equipmentExpensePerMinute +  this.productSteps[index].equipmentMinutes *  this.productSteps[index].rmPerMinuteRate) : 0;
+    this.productSteps[index].equipmentCharge = this.productSteps[index].equipmentMinutes
+      ? (this.productSteps[index].equipmentMinutes * this.productSteps[index].equipmentExpensePerMinute +  this.productSteps[index].equipmentMinutes * this.productSteps[index].rmPerMinuteRate)
+      : 0;
 
     this.getStepsValues(true);
   }
