@@ -268,7 +268,7 @@
   </p-footer>
 </p-dialog>
 
-<p-dialog header="New Requirements" [(visible)]="showCSRDialog" [baseZIndex]="100001" [modal]='true'
+<p-dialog header="New Requirements" [(visible)]="showCSRDialog" [appendTo]="'body'" [modal]='true'
   [style]="{width: '70vw'}" data-cy="csr-header">
   <form data-parsley-validate class="csr-form form-horizontal form-label-left parsleyjs"
     data-parsley-priority-enabled="false" (ngSubmit)="onCSRSubmit()" novalidate="novalidate">
